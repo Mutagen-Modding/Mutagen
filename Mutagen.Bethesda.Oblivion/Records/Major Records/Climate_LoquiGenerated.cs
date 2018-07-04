@@ -1978,9 +1978,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "WLST":
+                case 0x54534C57: // WLST
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<WeatherChance>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);
-                case "FNAM":
+                case 0x4D414E46: // FNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2018,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
-                case "GNAM":
+                case 0x4D414E47: // GNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2046,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.Model);
@@ -2072,7 +2072,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
-                case "TNAM":
+                case 0x4D414E54: // TNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {

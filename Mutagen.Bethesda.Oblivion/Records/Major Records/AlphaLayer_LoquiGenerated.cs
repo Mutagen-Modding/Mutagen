@@ -845,9 +845,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "VTXT":
+                case 0x54585456: // VTXT
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

@@ -1659,16 +1659,16 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "EFID":
+                case 0x44494645: // EFID
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.MagicEffect) return TryGet<int?>.Failure;
                     SpecialParse_EffectInitial(
                         item: item,
                         frame: frame,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed(lastParsed);
-                case "EFIT":
+                case 0x54494645: // EFIT
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.ActorValue);
-                case "SCIT":
+                case 0x54494353: // SCIT
                     try
                     {
                         errorMask?.PushIndex((int)Effect_FieldIndex.ScriptEffect);

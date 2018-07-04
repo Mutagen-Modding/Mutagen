@@ -235,14 +235,14 @@ namespace Mutagen.Bethesda.Generation
                             }
                             else
                             {
-                                gen.AppendLine("switch (header.Type)");
+                                gen.AppendLine("switch (header.TypeInt)");
                                 using (new BraceWrapper(gen))
                                 {
                                     foreach (var item in subGenTypes)
                                     {
                                         foreach (var trigger in item.Key)
                                         {
-                                            gen.AppendLine($"case \"{trigger.Type}\":");
+                                            gen.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
                                         }
                                         LoquiType targetLoqui = list.SubTypeGeneration as LoquiType;
                                         LoquiType specificLoqui = item.Value as LoquiType;

@@ -1042,9 +1042,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Eye_FieldIndex.Icon);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

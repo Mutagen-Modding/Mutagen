@@ -807,9 +807,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     try
                     {
                         errorMask?.PushIndex((int)Static_FieldIndex.Model);

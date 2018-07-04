@@ -1119,9 +1119,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "XNAM":
+                case 0x4D414E58: // XNAM
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Faction_Registration.XNAM_HEADER,
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<Relation>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
-                case "CNAM":
+                case 0x4D414E43: // CNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1185,10 +1185,10 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
-                case "RNAM":
-                case "MNAM":
-                case "FNAM":
-                case "INAM":
+                case 0x4D414E52: // RNAM
+                case 0x4D414E4D: // MNAM
+                case 0x4D414E46: // FNAM
+                case 0x4D414E49: // INAM
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Rank_Registration.TriggeringRecordTypes,

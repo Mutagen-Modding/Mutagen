@@ -1188,9 +1188,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
-                case "VNML":
+                case 0x4C4D4E56: // VNML
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
-                case "VHGT":
+                case 0x54474856: // VHGT
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
-                case "VCLR":
+                case 0x524C4356: // VCLR
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1298,8 +1298,8 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
-                case "BTXT":
-                case "ATXT":
+                case 0x54585442: // BTXT
+                case 0x54585441: // ATXT
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
@@ -1309,14 +1309,14 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
-                            switch (header.Type)
+                            switch (header.TypeInt)
                             {
-                                case "BTXT":
+                                case 0x54585442: // BTXT
                                     return LoquiBinaryTranslation<BaseLayer>.Instance.Parse(
                                         frame: r.Spawn(snapToFinalPosition: false),
                                         item: out listSubItem,
                                         errorMask: listErrMask);
-                                case "ATXT":
+                                case 0x54585441: // ATXT
                                     return LoquiBinaryTranslation<AlphaLayer>.Instance.Parse(
                                         frame: r.Spawn(snapToFinalPosition: false),
                                         item: out listSubItem,
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
-                case "VTEX":
+                case 0x58455456: // VTEX
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),

@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
-            if (!next.Equals("GRUP")) return;
+            if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
             var id = frame.Reader.ReadUInt32();
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
                 while (!subFrame.Complete)
                 {
                     var persistGroup = HeaderTranslation.GetNextType(frame.Reader, out var persistLen, hopGroup: false);
-                    if (!persistGroup.Equals("GRUP"))
+                    if (!persistGroup.Equals(Group_Registration.GRUP_HEADER))
                     {
                         throw new ArgumentException();
                     }
@@ -132,9 +132,9 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 transl: (MutagenFrame r, RecordType header, out Placed placed, ErrorMaskBuilder errMaskInternal) =>
                 {
-                    switch (header.Type)
+                    switch (header.TypeInt)
                     {
-                        case "ACRE":
+                        case 0x45524341: // "ACRE":
                             if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
                                 frame: r,
                                 item: out var placedCrea,
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return true;
                             }
                             break;
-                        case "ACHR":
+                        case 0x52484341: //"ACHR":
                             if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
                                 frame: r,
                                 item: out var placedNPC,
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return true;
                             }
                             break;
-                        case "REFR":
+                        case 0x52464552: // "REFR":
                             if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
                                 frame: r,
                                 item: out var placedObj,
@@ -225,9 +225,9 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 transl: (MutagenFrame r, RecordType header, out Placed placed, ErrorMaskBuilder listSubMask) =>
                 {
-                    switch (header.Type)
+                    switch (header.TypeInt)
                     {
-                        case "ACRE":
+                        case 0x45524341: // "ACRE":
                             if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
                                 frame: r,
                                 item: out var placedCrea,
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return true;
                             }
                             break;
-                        case "ACHR":
+                        case 0x52484341: //"ACHR":
                             if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
                                 frame: r,
                                 item: out var placedNPC,
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return true;
                             }
                             break;
-                        case "REFR":
+                        case 0x52464552: // "REFR":
                             if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
                                 frame: r,
                                 item: out var placedObj,

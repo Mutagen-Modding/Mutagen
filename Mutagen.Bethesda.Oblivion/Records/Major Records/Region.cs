@@ -12,11 +12,18 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Region
     {
         public static readonly int RDAT_LEN = 14;
+        public static readonly RecordType RDOT = new RecordType("RDOT");
+        public static readonly RecordType RDWT = new RecordType("RDWT");
+        public static readonly RecordType RDMP = new RecordType("RDMP");
+        public static readonly RecordType ICON = new RecordType("ICON");
+        public static readonly RecordType RDGS = new RecordType("RDGS");
+        public static readonly RecordType RDSD = new RecordType("RDSD");
+        public static readonly RecordType RDMD = new RecordType("RDMD");
 
         static partial void FillBinary_RegionAreaLogic_Custom(MutagenFrame frame, Region item, ErrorMaskBuilder errorMask)
         {
             var rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var rdatType);
-            while (rdat.Type.Equals("RDAT"))
+            while (rdat.Equals(Region_Registration.RDAT_HEADER))
             {
                 ParseRegionData(frame, item, errorMask);
                 rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out rdatType);
@@ -33,37 +40,37 @@ namespace Mutagen.Bethesda.Oblivion
             switch (dataType)
             {
                 case RegionData.RegionDataType.Objects:
-                    if (!recType.Equals("RDOT"))
+                    if (!recType.Equals(RDOT))
                     {
                         len = -6;
                     }
                     break;
                 case RegionData.RegionDataType.Weather:
-                    if (!recType.Equals("RDWT"))
+                    if (!recType.Equals(RDWT))
                     {
                         len = -6;
                     }
                     break;
                 case RegionData.RegionDataType.MapName:
-                    if (!recType.Equals("RDMP"))
+                    if (!recType.Equals(RDMP))
                     {
                         len = -6;
                     }
                     break;
                 case RegionData.RegionDataType.Icon:
-                    if (!recType.Equals("ICON"))
+                    if (!recType.Equals(ICON))
                     {
                         len = -6;
                     }
                     break;
                 case RegionData.RegionDataType.Grasses:
-                    if (!recType.Equals("RDGS"))
+                    if (!recType.Equals(RDGS))
                     {
                         len = -6;
                     }
                     break;
                 case RegionData.RegionDataType.Sounds:
-                    if (!recType.Equals("RDSD") && !recType.Equals("RDMD"))
+                    if (!recType.Equals(RDSD) && !recType.Equals(RDMD))
                     {
                         len = -6;
                     }
@@ -100,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += len;
                     var nextRec = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var nextLen);
                     frame.Position = origPos;
-                    if (nextRec.Type.Equals("RDSD") || nextRec.Equals("RDMD"))
+                    if (nextRec.Equals(RDSD) || nextRec.Equals(RDMD))
                     {
                         len += nextLen + 6;
                     }

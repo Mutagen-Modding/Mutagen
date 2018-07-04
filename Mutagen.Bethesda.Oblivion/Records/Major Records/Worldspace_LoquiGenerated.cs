@@ -2627,9 +2627,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "WNAM":
+                case 0x4D414E57: // WNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2637,7 +2637,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Parent_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
-                case "CNAM":
+                case 0x4D414E43: // CNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2645,7 +2645,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Climate_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
-                case "NAM2":
+                case 0x324D414E: // NAM2
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2653,7 +2653,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Water_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2681,7 +2681,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Icon);
-                case "MNAM":
+                case 0x4D414E4D: // MNAM
                     try
                     {
                         errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
@@ -2707,7 +2707,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2734,7 +2734,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
-                case "NAM0":
+                case 0x304D414E: // NAM0
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2761,7 +2761,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMin);
-                case "NAM9":
+                case 0x394D414E: // NAM9
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2788,7 +2788,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMax);
-                case "SNAM":
+                case 0x4D414E53: // SNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2815,7 +2815,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
-                case "XXXX":
+                case 0x58585858: // XXXX
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_OffsetLength_Custom(
@@ -2824,7 +2824,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed(null);
-                case "OFST":
+                case 0x5453464F: // OFST
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_OffsetData_Custom(

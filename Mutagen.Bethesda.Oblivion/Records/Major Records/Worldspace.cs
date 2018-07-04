@@ -28,14 +28,14 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_OffsetLength_Custom(MutagenFrame frame, Worldspace item, ErrorMaskBuilder errorMask)
         {
             item.usingOffsetLength = true;
-            if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var xLen).Type.Equals("XXXX")
+            if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var xLen).Equals(Worldspace_Registration.XXXX_HEADER)
                 || xLen != 4)
             {
                 errorMask.ReportExceptionOrThrow(new ArgumentException());
                 return;
             }
             var contentLen = frame.Reader.ReadInt32();
-            if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var oLen).Type.Equals("OFST")
+            if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var oLen).Equals(Worldspace_Registration.OFST_HEADER)
                 || oLen != 0)
             {
                 errorMask.ReportExceptionOrThrow(new ArgumentException());
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_OffsetData_Custom(MutagenFrame frame, Worldspace item, ErrorMaskBuilder errorMask)
         {
             if (item.usingOffsetLength) return;
-            if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Type.Equals("OFST"))
+            if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
             {
                 throw new ArgumentException();
             }
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
-            if (!next.Equals("GRUP")) return;
+            if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
             var id = frame.Reader.ReadUInt32();
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
@@ -107,23 +107,23 @@ namespace Mutagen.Bethesda.Oblivion
                     if (subFrame.Complete) return;
                     var subType = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var subLen);
                     subFrame.Reader.Position -= 6;
-                    switch (subType.Type)
+                    switch (subType.TypeInt)
                     {
-                        case "ROAD":
+                        case 0x44414F52: // "ROAD":
                             LoquiBinaryTranslation<Road>.Instance.ParseInto(
                                 frame: subFrame,
                                 item: obj.Road_Property,
                                 fieldIndex: (int)Worldspace_FieldIndex.Road,
                                 errorMask: errorMask);
                             break;
-                        case "CELL":
+                        case 0x4C4C4543: // "CELL":
                             LoquiBinaryTranslation<Cell>.Instance.ParseInto(
                                 frame: subFrame,
                                 item: obj.TopCell_Property,
                                 fieldIndex: (int)Worldspace_FieldIndex.TopCell,
                                 errorMask: errorMask);
                             break;
-                        case "GRUP":
+                        case 0x50555247: // "GRUP":
                             Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
                                 frame: frame,
                                 item: obj._SubCells,

@@ -1212,9 +1212,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "GRUP":
+                case 0x50555247: // GRUP
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: CellBlock_Registration.GRUP_HEADER,

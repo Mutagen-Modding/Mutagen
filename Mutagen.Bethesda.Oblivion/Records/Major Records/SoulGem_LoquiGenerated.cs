@@ -1806,9 +1806,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Model);
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1862,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Icon);
-                case "SCRI":
+                case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Script);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Weight);
-                case "SOUL":
+                case 0x4C554F53: // SOUL
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1951,7 +1951,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.ContainedSoul);
-                case "SLCP":
+                case 0x50434C53: // SLCP
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

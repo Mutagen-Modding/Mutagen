@@ -1991,9 +1991,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -2047,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Flags);
-                case "QSTI":
+                case 0x49545351: // QSTI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2055,7 +2055,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Quest_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
-                case "PNAM":
+                case 0x4D414E50: // PNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2063,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.PreviousTopic_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
-                case "NAME":
+                case 0x454D414E: // NAME
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.NAME_HEADER,
@@ -2073,7 +2073,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
-                case "TRDT":
+                case 0x54445254: // TRDT
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.TRDT_HEADER,
@@ -2083,7 +2083,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<DialogResponse>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
-                case "CTDA":
+                case 0x41445443: // CTDA
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_Conditions_Custom(
@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
-                case "CTDT":
+                case 0x54445443: // CTDT
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_ConditionsOld_Custom(
@@ -2101,7 +2101,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed(null);
-                case "TCLT":
+                case 0x544C4354: // TCLT
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.TCLT_HEADER,
@@ -2111,7 +2111,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
-                case "TCLF":
+                case 0x464C4354: // TCLF
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.TCLF_HEADER,
@@ -2121,7 +2121,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
-                case "SCHR":
+                case 0x52484353: // SCHR
                     using (errorMask.PushIndex((int)DialogItem_FieldIndex.MetadataSummary))
                     {
                         var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
@@ -2136,7 +2136,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.MetadataSummary);
-                case "SCHD":
+                case 0x44484353: // SCHD
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_MetadataSummaryOld_Custom(
@@ -2145,7 +2145,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed(null);
-                case "SCDA":
+                case 0x41444353: // SCDA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2172,7 +2172,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.CompiledScript);
-                case "SCTX":
+                case 0x58544353: // SCTX
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2200,7 +2200,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.SourceCode);
-                case "SCRO":
+                case 0x4F524353: // SCRO
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectReference>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.SCRO_HEADER,

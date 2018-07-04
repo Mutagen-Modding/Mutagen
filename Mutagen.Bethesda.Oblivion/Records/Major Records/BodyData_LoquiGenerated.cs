@@ -841,9 +841,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
                     try
                     {
@@ -870,8 +870,8 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
-                case "INDX":
-                case "ICON":
+                case 0x58444E49: // INDX
+                case 0x4E4F4349: // ICON
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.ParseRepeatedItem(
                         frame: frame,

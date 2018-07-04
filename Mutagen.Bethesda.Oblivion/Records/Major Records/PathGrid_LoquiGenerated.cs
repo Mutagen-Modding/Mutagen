@@ -986,9 +986,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "DATA":
+                case 0x41544144: // DATA
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_PointToPointConnections_Custom(
@@ -997,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
-                case "PGAG":
+                case 0x47414750: // PGAG
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_Unknown_Custom(
@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.Unknown);
-                case "PGRI":
+                case 0x49524750: // PGRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<InterCellPoint>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
-                case "PGRL":
+                case 0x4C524750: // PGRL
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: PathGrid_Registration.PGRL_HEADER,

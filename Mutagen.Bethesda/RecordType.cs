@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,25 +10,24 @@ namespace Mutagen.Bethesda
 {
     public struct RecordType : IEquatable<RecordType>, IEquatable<string>
     {
-        public readonly string Type;
+        public readonly int TypeInt;
         public const byte HEADER_LENGTH = 4;
+        public string Type => GetStringType(this.TypeInt);
 
         [DebuggerStepThrough]
-        internal RecordType (string type, bool validate)
+        public RecordType (int type)
         {
-            this.Type = type;
-            if (!validate) return;
-            if (this.Type == null
-                || this.Type.Length != HEADER_LENGTH)
+            this.TypeInt = type;
+        }
+        
+        public RecordType(string type)
+        {
+            if (type == null
+                || type.Length != HEADER_LENGTH)
             {
                 throw new ArgumentException($"Type String not expected length: {HEADER_LENGTH}.");
             }
-        }
-
-        [DebuggerStepThrough]
-        public RecordType(string type)
-            : this(type, validate: true)
-        {
+            this.TypeInt = GetTypeInt(type);
         }
 
         public override bool Equals(object obj)
@@ -38,12 +38,14 @@ namespace Mutagen.Bethesda
 
         public bool Equals(RecordType other)
         {
-            return object.Equals(this.Type, other.Type);
+            return object.Equals(this.TypeInt, other.TypeInt);
         }
 
         public bool Equals(string other)
         {
-            return string.Equals(other, Type);
+            if (string.IsNullOrWhiteSpace(other)) return false;
+            if (other.Length != 4) return false;
+            return this.TypeInt == GetTypeInt(other);
         }
 
         public static bool operator ==(RecordType r1, RecordType r2)
@@ -58,12 +60,32 @@ namespace Mutagen.Bethesda
 
         public override int GetHashCode()
         {
-            return HashHelper.GetHashCode(this.Type);
+            return HashHelper.GetHashCode(this.TypeInt);
         }
 
         public override string ToString()
         {
             return this.Type;
+        }
+
+        public string GetStringType(int typeInt)
+        {
+            char[] chars = new char[HEADER_LENGTH];
+            chars[0] = (char)(typeInt & 0x000000FF);
+            chars[1] = (char)(typeInt >> 8 & 0x000000FF);
+            chars[2] = (char)(typeInt >> 16 & 0x000000FF);
+            chars[3] = (char)(typeInt >> 24 & 0x000000FF);
+            return new string(chars);
+        }
+
+        public static int GetTypeInt(string type)
+        {
+            byte[] b = new byte[4];
+            for (int i = 0; i < HEADER_LENGTH; i++)
+            {
+                b[i] = (byte)type[i];
+            }
+            return BitConverter.ToInt32(b, 0);
         }
     }
 }

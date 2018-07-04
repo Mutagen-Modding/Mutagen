@@ -1752,9 +1752,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     try
                     {
                         errorMask?.PushIndex((int)Ingredient_FieldIndex.Model);
@@ -1780,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Model);
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1808,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Icon);
-                case "SCRI":
+                case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1816,7 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Script);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Weight);
-                case "ENIT":
+                case 0x54494E45: // ENIT
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Flags);
-                case "EFID":
+                case 0x44494645: // EFID
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Ingredient_Registration.EFID_HEADER,

@@ -1031,9 +1031,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "BTXT":
+                case 0x54585442: // BTXT
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.LayerNumber) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))

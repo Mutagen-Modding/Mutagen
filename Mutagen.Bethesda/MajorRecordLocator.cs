@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda
             IBinaryReadStream reader)
         {
             var targetRec = HeaderTranslation.ReadNextRecordType(reader);
-            if (!targetRec.Type.Equals("GRUP"))
+            if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
             {
                 reader.Position -= 4;
                 return false;
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda
         {
             var grupLoc = frame.Position;
             var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-            if (!targetRec.Type.Equals("GRUP"))
+            if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
             {
                 throw new ArgumentException();
             }
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda
             {
                 var grupLoc = frame.Position;
                 var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                if (!targetRec.Type.Equals("GRUP"))
+                if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
                 {
                     throw new ArgumentException();
                 }
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda
             {
                 var grupLoc = frame.Position;
                 var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                if (!targetRec.Type.Equals("GRUP"))
+                if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
                 {
                     throw new ArgumentException();
                 }

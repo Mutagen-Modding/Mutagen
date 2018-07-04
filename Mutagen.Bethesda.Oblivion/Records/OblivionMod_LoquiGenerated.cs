@@ -3072,9 +3072,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "TES4":
+                case 0x34534554: // TES4
                     using (errorMask.PushIndex((int)OblivionMod_FieldIndex.TES4))
                     {
                         var tmpTES4 = TES4.Create_Binary(
@@ -3089,7 +3089,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.TES4);
-                case "GMST":
+                case 0x54534D47: // GMST
                     if (importMask?.GameSettings ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.GameSettings))
@@ -3111,7 +3111,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.GameSettings);
-                case "GLOB":
+                case 0x424F4C47: // GLOB
                     if (importMask?.Globals ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Globals))
@@ -3133,7 +3133,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
-                case "CLAS":
+                case 0x53414C43: // CLAS
                     if (importMask?.Classes ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Classes))
@@ -3155,7 +3155,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
-                case "FACT":
+                case 0x54434146: // FACT
                     if (importMask?.Factions ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Factions))
@@ -3177,7 +3177,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Factions);
-                case "HAIR":
+                case 0x52494148: // HAIR
                     if (importMask?.Hairs ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Hairs))
@@ -3199,7 +3199,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Hairs);
-                case "EYES":
+                case 0x53455945: // EYES
                     if (importMask?.Eyes ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Eyes))
@@ -3221,7 +3221,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Eyes);
-                case "RACE":
+                case 0x45434152: // RACE
                     if (importMask?.Races ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Races))
@@ -3243,7 +3243,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Races);
-                case "SOUN":
+                case 0x4E554F53: // SOUN
                     if (importMask?.Sounds ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Sounds))
@@ -3265,7 +3265,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Sounds);
-                case "SKIL":
+                case 0x4C494B53: // SKIL
                     if (importMask?.Skills ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Skills))
@@ -3287,7 +3287,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Skills);
-                case "MGEF":
+                case 0x4645474D: // MGEF
                     if (importMask?.MagicEffects ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.MagicEffects))
@@ -3309,7 +3309,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.MagicEffects);
-                case "SCPT":
+                case 0x54504353: // SCPT
                     if (importMask?.Scripts ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Scripts))
@@ -3331,7 +3331,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Scripts);
-                case "LTEX":
+                case 0x5845544C: // LTEX
                     if (importMask?.LandTextures ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LandTextures))
@@ -3353,7 +3353,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LandTextures);
-                case "ENCH":
+                case 0x48434E45: // ENCH
                     if (importMask?.Enchantments ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Enchantments))
@@ -3375,7 +3375,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Enchantments);
-                case "SPEL":
+                case 0x4C455053: // SPEL
                     if (importMask?.Spells ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Spells))
@@ -3397,7 +3397,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Spells);
-                case "BSGN":
+                case 0x4E475342: // BSGN
                     if (importMask?.Birthsigns ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Birthsigns))
@@ -3419,7 +3419,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Birthsigns);
-                case "ACTI":
+                case 0x49544341: // ACTI
                     if (importMask?.Activators ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Activators))
@@ -3441,7 +3441,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Activators);
-                case "APPA":
+                case 0x41505041: // APPA
                     if (importMask?.AlchemicalApparatus ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus))
@@ -3463,7 +3463,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AlchemicalApparatus);
-                case "ARMO":
+                case 0x4F4D5241: // ARMO
                     if (importMask?.Armors ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Armors))
@@ -3485,7 +3485,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Armors);
-                case "BOOK":
+                case 0x4B4F4F42: // BOOK
                     if (importMask?.Books ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Books))
@@ -3507,7 +3507,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Books);
-                case "CLOT":
+                case 0x544F4C43: // CLOT
                     if (importMask?.Clothes ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Clothes))
@@ -3529,7 +3529,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Clothes);
-                case "CONT":
+                case 0x544E4F43: // CONT
                     if (importMask?.Containers ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Containers))
@@ -3551,7 +3551,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Containers);
-                case "DOOR":
+                case 0x524F4F44: // DOOR
                     if (importMask?.Doors ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Doors))
@@ -3573,7 +3573,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Doors);
-                case "INGR":
+                case 0x52474E49: // INGR
                     if (importMask?.Ingredients ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Ingredients))
@@ -3595,7 +3595,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ingredients);
-                case "LIGH":
+                case 0x4847494C: // LIGH
                     if (importMask?.Lights ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Lights))
@@ -3617,7 +3617,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Lights);
-                case "MISC":
+                case 0x4353494D: // MISC
                     if (importMask?.Miscellaneous ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous))
@@ -3639,7 +3639,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Miscellaneous);
-                case "STAT":
+                case 0x54415453: // STAT
                     if (importMask?.Statics ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Statics))
@@ -3661,7 +3661,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Statics);
-                case "GRAS":
+                case 0x53415247: // GRAS
                     if (importMask?.Grasses ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Grasses))
@@ -3683,7 +3683,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Grasses);
-                case "TREE":
+                case 0x45455254: // TREE
                     if (importMask?.Trees ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Trees))
@@ -3705,7 +3705,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Trees);
-                case "FLOR":
+                case 0x524F4C46: // FLOR
                     if (importMask?.Flora ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Flora))
@@ -3727,7 +3727,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Flora);
-                case "FURN":
+                case 0x4E525546: // FURN
                     if (importMask?.Furnature ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Furnature))
@@ -3749,7 +3749,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Furnature);
-                case "WEAP":
+                case 0x50414557: // WEAP
                     if (importMask?.Weapons ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Weapons))
@@ -3771,7 +3771,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weapons);
-                case "AMMO":
+                case 0x4F4D4D41: // AMMO
                     if (importMask?.Ammo ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Ammo))
@@ -3793,7 +3793,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammo);
-                case "NPC_":
+                case 0x5F43504E: // NPC_
                     if (importMask?.NPCs ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.NPCs))
@@ -3815,7 +3815,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.NPCs);
-                case "CREA":
+                case 0x41455243: // CREA
                     if (importMask?.Creatures ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Creatures))
@@ -3837,7 +3837,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Creatures);
-                case "LVLC":
+                case 0x434C564C: // LVLC
                     if (importMask?.LeveledCreatures ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures))
@@ -3859,7 +3859,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledCreatures);
-                case "SLGM":
+                case 0x4D474C53: // SLGM
                     if (importMask?.SoulGems ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.SoulGems))
@@ -3881,7 +3881,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SoulGems);
-                case "KEYM":
+                case 0x4D59454B: // KEYM
                     if (importMask?.Keys ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Keys))
@@ -3903,7 +3903,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Keys);
-                case "ALCH":
+                case 0x48434C41: // ALCH
                     if (importMask?.Potions ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Potions))
@@ -3925,7 +3925,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Potions);
-                case "SBSP":
+                case 0x50534253: // SBSP
                     if (importMask?.Subspaces ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Subspaces))
@@ -3947,7 +3947,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Subspaces);
-                case "SGST":
+                case 0x54534753: // SGST
                     if (importMask?.SigilStones ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.SigilStones))
@@ -3969,7 +3969,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SigilStones);
-                case "LVLI":
+                case 0x494C564C: // LVLI
                     if (importMask?.LeveledItems ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledItems))
@@ -3991,7 +3991,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledItems);
-                case "WTHR":
+                case 0x52485457: // WTHR
                     if (importMask?.Weathers ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Weathers))
@@ -4013,7 +4013,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weathers);
-                case "CLMT":
+                case 0x544D4C43: // CLMT
                     if (importMask?.Climates ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Climates))
@@ -4035,7 +4035,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Climates);
-                case "REGN":
+                case 0x4E474552: // REGN
                     if (importMask?.Regions ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Regions))
@@ -4057,7 +4057,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Regions);
-                case "CELL":
+                case 0x4C4C4543: // CELL
                     if (importMask?.Cells ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Cells))
@@ -4079,7 +4079,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Cells);
-                case "WRLD":
+                case 0x444C5257: // WRLD
                     if (importMask?.Worldspaces ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Worldspaces))
@@ -4101,7 +4101,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Worldspaces);
-                case "DIAL":
+                case 0x4C414944: // DIAL
                     if (importMask?.DialogTopics ?? true)
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.DialogTopics))

@@ -2501,9 +2501,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     try
                     {
                         errorMask?.PushIndex((int)Weapon_FieldIndex.Model);
@@ -2529,7 +2529,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Model);
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2557,7 +2557,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icon);
-                case "SCRI":
+                case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2565,7 +2565,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Script);
-                case "ENAM":
+                case 0x4D414E45: // ENAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2573,7 +2573,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Enchantment_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Enchantment);
-                case "ANAM":
+                case 0x4D414E41: // ANAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2600,7 +2600,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentPoints);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {

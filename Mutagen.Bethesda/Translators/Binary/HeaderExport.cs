@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Binary
         {
             this.Writer = writer;
             this.Type = type;
-            writer.Write(record.Type.ToCharArray());
+            writer.Write(record.TypeInt);
             this.SizePosition = writer.Position;
             for (int i = 0; i < this.Type.GetLengthLength(); i++)
             {

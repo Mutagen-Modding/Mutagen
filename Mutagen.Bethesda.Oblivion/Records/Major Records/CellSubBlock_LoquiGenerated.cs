@@ -1212,9 +1212,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "CELL":
+                case 0x4C4C4543: // CELL
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: CellSubBlock_Registration.CELL_HEADER,

@@ -4370,9 +4370,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "CNAM":
+                case 0x4D414E43: // CNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -4400,7 +4400,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
-                case "DNAM":
+                case 0x4D414E44: // DNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -4428,7 +4428,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     try
                     {
                         errorMask?.PushIndex((int)Weather_FieldIndex.Model);
@@ -4454,7 +4454,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
-                case "NAM0":
+                case 0x304D414E: // NAM0
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
@@ -4464,7 +4464,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<WeatherType>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
-                case "FNAM":
+                case 0x4D414E46: // FNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -4566,7 +4566,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogNightFar);
-                case "HNAM":
+                case 0x4D414E48: // HNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -4908,7 +4908,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.HdrTreeDimmer);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -5226,7 +5226,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.LightningColor);
-                case "SNAM":
+                case 0x4D414E53: // SNAM
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Weather_Registration.SNAM_HEADER,

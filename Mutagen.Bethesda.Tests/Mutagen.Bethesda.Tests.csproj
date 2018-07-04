@@ -76,6 +76,7 @@
     <Compile Include="Generated\DataTarget_LoquiGenerated.cs">
       <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
     </Compile>
+    <Compile Include="RecordType_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ValueTuple">

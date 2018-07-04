@@ -1127,9 +1127,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "QSTI":
+                case 0x49545351: // QSTI
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Quest>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
-                case "FULL":
+                case 0x4C4C5546: // FULL
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

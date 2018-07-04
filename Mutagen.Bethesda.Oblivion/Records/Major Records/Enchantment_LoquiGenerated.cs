@@ -1366,9 +1366,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "ENIT":
+                case 0x54494E45: // ENIT
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -1470,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Flags);
-                case "EFID":
+                case 0x44494645: // EFID
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Enchantment_Registration.EFID_HEADER,

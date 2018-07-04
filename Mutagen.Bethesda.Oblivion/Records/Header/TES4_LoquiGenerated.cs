@@ -1589,9 +1589,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "HEDR":
+                case 0x52444548: // HEDR
                     try
                     {
                         errorMask?.PushIndex((int)TES4_FieldIndex.Header);
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Header);
-                case "OFST":
+                case 0x5453464F: // OFST
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1644,7 +1644,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.TypeOffsets);
-                case "DELE":
+                case 0x454C4544: // DELE
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1671,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Deleted);
-                case "CNAM":
+                case 0x4D414E43: // CNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1699,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Author);
-                case "SNAM":
+                case 0x4D414E53: // SNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1727,8 +1727,8 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Description);
-                case "MAST":
-                case "DATA":
+                case 0x5453414D: // MAST
+                case 0x41544144: // DATA
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: MasterReference_Registration.TriggeringRecordTypes,

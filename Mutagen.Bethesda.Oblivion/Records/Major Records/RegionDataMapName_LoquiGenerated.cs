@@ -824,9 +824,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "RDMP":
+                case 0x504D4452: // RDMP
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

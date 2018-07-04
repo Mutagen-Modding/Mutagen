@@ -572,9 +572,9 @@ namespace Mutagen.Bethesda
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "FULL":
+                case 0x4C4C5546: // FULL
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

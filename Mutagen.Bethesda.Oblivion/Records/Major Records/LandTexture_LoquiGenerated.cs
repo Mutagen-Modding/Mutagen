@@ -1283,9 +1283,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
-                case "HNAM":
+                case 0x4D414E48: // HNAM
                     try
                     {
                         errorMask?.PushIndex((int)LandTexture_FieldIndex.Havok);
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
-                case "SNAM":
+                case 0x4D414E53: // SNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
-                case "GNAM":
+                case 0x4D414E47: // GNAM
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Grass>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LandTexture_Registration.GNAM_HEADER,

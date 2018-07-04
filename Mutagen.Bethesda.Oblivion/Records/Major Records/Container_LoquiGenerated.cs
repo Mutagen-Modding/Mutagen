@@ -1359,9 +1359,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     try
                     {
                         errorMask?.PushIndex((int)Container_FieldIndex.Model);
@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Model);
-                case "SCRI":
+                case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1395,7 +1395,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Script);
-                case "CNTO":
+                case 0x4F544E43: // CNTO
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerItem>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Container_Registration.CNTO_HEADER,
@@ -1405,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<ContainerItem>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Items);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -1459,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Weight);
-                case "SNAM":
+                case 0x4D414E53: // SNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.OpenSound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.OpenSound);
-                case "QNAM":
+                case 0x4D414E51: // QNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),

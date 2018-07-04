@@ -868,9 +868,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "RDMD":
+                case 0x444D4452: // RDMD
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)RegionDataSounds_FieldIndex.MusicType);
-                case "RDSD":
+                case 0x44534452: // RDSD
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),

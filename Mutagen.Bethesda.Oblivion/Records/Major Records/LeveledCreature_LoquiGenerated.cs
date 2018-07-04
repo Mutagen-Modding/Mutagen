@@ -1132,9 +1132,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "LVLD":
+                case 0x444C564C: // LVLD
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.ChanceNone);
-                case "LVLF":
+                case 0x464C564C: // LVLF
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Flags);
-                case "LVLO":
+                case 0x4F4C564C: // LVLO
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NPCSpawn>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<LeveledEntry<NPCSpawn>>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);
-                case "SCRI":
+                case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
-                case "TNAM":
+                case 0x4D414E54: // TNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),

@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
-            if (!next.Equals("GRUP")) return;
+            if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
             var id = frame.Reader.ReadUInt32();
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();

@@ -1021,9 +1021,9 @@ namespace Mutagen.Bethesda
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MAST":
+                case 0x5453414D: // MAST
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
-                case "DATA":
+                case 0x41544144: // DATA
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.FileSize) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try

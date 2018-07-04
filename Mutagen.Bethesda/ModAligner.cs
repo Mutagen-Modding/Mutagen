@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda
                 {
                     throw new ArgumentException($"Encountered an unknown record: {recType}");
                 }
-                writer.Write(recType.Type);
+                writer.Write(recType.TypeInt);
                 writer.Write(len);
                 inputStream.WriteTo(writer.Writer.BaseStream, 12);
                 var endPos = inputStream.Position + len;
@@ -334,9 +334,9 @@ namespace Mutagen.Bethesda
                 var recType = HeaderTranslation.ReadNextRecordType(
                     inputStream,
                     out var len);
-                writer.Write(recType.Type);
+                writer.Write(recType.TypeInt);
                 writer.Write(len);
-                if (recType.Type != "GRUP")
+                if (!recType.Equals(Group_Registration.GRUP_HEADER))
                 {
                     throw new ArgumentException();
                 }

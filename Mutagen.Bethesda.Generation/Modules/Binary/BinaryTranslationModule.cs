@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add("contentLength: out var contentLength");
                         args.Add("recordTypeConverter: recordTypeConverter");
                     }
-                    fg.AppendLine("switch (nextRecordType.Type)");
+                    fg.AppendLine("switch (nextRecordType.TypeInt)");
                     using (new BraceWrapper(fg))
                     {
                         foreach (var field in obj.IterateFieldIndices(
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
                                 foreach (var trigger in gen.Key)
                                 {
-                                    fg.AppendLine($"case \"{trigger.Type}\":");
+                                    fg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
                                 }
                                 using (new DepthWrapper(fg))
                                 {

@@ -853,9 +853,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "CSDT":
+                case 0x54445343: // CSDT
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
@@ -883,8 +883,8 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.SoundType);
-                case "CSDI":
-                case "CSDC":
+                case 0x49445343: // CSDI
+                case 0x43445343: // CSDC
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.ParseRepeatedItem(
                         frame: frame,

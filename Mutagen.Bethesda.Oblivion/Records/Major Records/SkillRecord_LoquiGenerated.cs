@@ -2173,9 +2173,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "INDX":
+                case 0x58444E49: // INDX
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2202,7 +2202,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
-                case "DESC":
+                case 0x43534544: // DESC
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2230,7 +2230,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2258,7 +2258,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.UseValueSecond);
-                case "ANAM":
+                case 0x4D414E41: // ANAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2412,7 +2412,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
-                case "JNAM":
+                case 0x4D414E4A: // JNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2440,7 +2440,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
-                case "ENAM":
+                case 0x4D414E45: // ENAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2468,7 +2468,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
-                case "MNAM":
+                case 0x4D414E4D: // MNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

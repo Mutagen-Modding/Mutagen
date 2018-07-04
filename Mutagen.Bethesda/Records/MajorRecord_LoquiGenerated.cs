@@ -1119,9 +1119,9 @@ namespace Mutagen.Bethesda
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "EDID":
+                case 0x44494445: // EDID
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

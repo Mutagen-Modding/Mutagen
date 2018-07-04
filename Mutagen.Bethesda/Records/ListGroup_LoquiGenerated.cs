@@ -1245,7 +1245,7 @@ namespace Mutagen.Bethesda
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
                 default:
                     if (nextRecordType.Equals(T_RecordType))

@@ -2227,9 +2227,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2257,7 +2257,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
-                case "RCLR":
+                case 0x524C4352: // RCLR
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2285,7 +2285,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
-                case "WNAM":
+                case 0x4D414E57: // WNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2293,8 +2293,8 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Worldspace_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
-                case "RPLI":
-                case "RPLD":
+                case 0x494C5052: // RPLI
+                case 0x444C5052: // RPLD
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
@@ -2304,7 +2304,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<RegionArea>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
-                case "RDAT":
+                case 0x54414452: // RDAT
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_RegionAreaLogic_Custom(

@@ -49,9 +49,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (frame.Reader.Complete) break;
                 nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out len);
-                switch (nextRec.Type)
+                switch (nextRec.TypeInt)
                 {
-                    case "PGAG":
+                    case 0x47414750: //"PGAG":
                         using (errorMask.PushIndex((int)PathGrid_FieldIndex.Unknown))
                         {
                             using (var subFrame = frame.SpawnWithLength(len))
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                         break;
-                    case "PGRR":
+                    case 0x52524750: // "PGRR":
                         var connectionBytes = frame.Reader.ReadBytes(len);
                         using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
                         {

@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Binary
 
         protected override void WriteValue(MutagenWriter writer, RecordType item)
         {
-            writer.Write(item.Type);
+            writer.Write(item.TypeInt);
         }
 
         public void Write<T>(MutagenWriter writer, IEDIDLink<T> item, ErrorMaskBuilder errorMask)

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
             var pointBytes = frame.Reader.ReadBytes(len);
 
             nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out len);
-            switch (nextRec.Type)
+            switch (nextRec.TypeInt)
             {
-                case "PGRR":
+                case 0x52524750: // "PGRR":
                     var connectionBytes = frame.Reader.ReadBytes(len);
                     using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
                     {

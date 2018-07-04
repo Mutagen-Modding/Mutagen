@@ -28,10 +28,9 @@ namespace Mutagen.Bethesda
             Group<T> item,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer,
-                GRUP_RECORD_TYPE.Type,
-                nullTerminate: false,
+                GRUP_RECORD_TYPE.TypeInt,
                 errorMask: errorMask);
         }
     }

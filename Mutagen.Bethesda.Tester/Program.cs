@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Binary;
+﻿using Loqui;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Tests;
@@ -16,11 +17,14 @@ namespace Mutagen.Bethesda.Tester
     {
         static void Main(string[] args)
         {
+            LoquiRegistrationSettings.AutomaticRegistration = false;
+
             var tests = new Oblivion_Passthrough_Tests();
             tests.OblivionESM_Binary_Internal(deleteAfter: false).Wait();
 
             //var mod = OblivionMod.Create_Binary(
-            //    @"C:\Games\Oblivion\Data\Oblivion.esm",
+            //    //@"C:\Games\Oblivion\Data\Oblivion.esm",
+            //    @"C:\Users\Levia\AppData\Local\Temp\Mutagen_Oblivion_Binary\Oblivion.esm_Uncompressed",
             //    out var inputErrMask);
             //System.Console.WriteLine("DONE");
             //GC.Collect();

@@ -953,9 +953,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Icon);
-                case "DESC":
+                case 0x43534544: // DESC
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Description);
-                case "SPLO":
+                case 0x4F4C5053: // SPLO
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Birthsign_Registration.SPLO_HEADER,

@@ -2047,9 +2047,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "NAME":
+                case 0x454D414E: // NAME
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2057,7 +2057,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Base_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Base);
-                case "XPCI":
+                case 0x49435058: // XPCI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2084,7 +2084,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.XPCIFluff);
-                case "FULL":
+                case 0x4C4C5546: // FULL
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2111,7 +2111,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.FULLFluff);
-                case "XLOD":
+                case 0x444F4C58: // XLOD
                     try
                     {
                         errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DistantLODData);
@@ -2137,7 +2137,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.DistantLODData);
-                case "XESP":
+                case 0x50534558: // XESP
                     try
                     {
                         errorMask?.PushIndex((int)PlacedNPC_FieldIndex.EnableParent);
@@ -2163,7 +2163,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.EnableParent);
-                case "XMRC":
+                case 0x43524D58: // XMRC
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2171,7 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.MerchantContainer_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.MerchantContainer);
-                case "XHRS":
+                case 0x53524858: // XHRS
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -2179,7 +2179,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Horse_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Horse);
-                case "XRGD":
+                case 0x44475258: // XRGD
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2206,7 +2206,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.RagdollData);
-                case "XSCL":
+                case 0x4C435358: // XSCL
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2233,7 +2233,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Scale);
-                case "DATA":
+                case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {

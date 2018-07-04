@@ -1229,9 +1229,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
-                case "MODB":
+                case 0x42444F4D: // MODB
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
-                case "MODT":
+                case 0x54444F4D: // MODT
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

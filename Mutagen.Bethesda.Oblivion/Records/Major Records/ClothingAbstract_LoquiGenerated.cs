@@ -1872,9 +1872,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "SCRI":
+                case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Script);
-                case "ENAM":
+                case 0x4D414E45: // ENAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Enchantment_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Enchantment);
-                case "ANAM":
+                case 0x4D414E41: // ANAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
-                case "BMDT":
+                case 0x54444D42: // BMDT
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Flags);
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleBipedModel);
-                case "MOD2":
+                case 0x32444F4D: // MOD2
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
@@ -2024,7 +2024,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleWorldModel);
-                case "ICON":
+                case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleIcon);
-                case "MOD3":
+                case 0x33444F4D: // MOD3
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
@@ -2079,7 +2079,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
-                case "MOD4":
+                case 0x34444F4D: // MOD4
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
@@ -2106,7 +2106,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
-                case "ICO2":
+                case 0x324F4349: // ICO2
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

@@ -1307,9 +1307,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "SCHR":
+                case 0x52484353: // SCHR
                     using (errorMask.PushIndex((int)Script_FieldIndex.MetadataSummary))
                     {
                         var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
@@ -1324,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)Script_FieldIndex.MetadataSummary);
-                case "SCDA":
+                case 0x41444353: // SCDA
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Script_FieldIndex.CompiledScript);
-                case "SCTX":
+                case 0x58544353: // SCTX
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1379,8 +1379,8 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Script_FieldIndex.SourceCode);
-                case "SLSD":
-                case "SCVR":
+                case 0x44534C53: // SLSD
+                case 0x52564353: // SCVR
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
@@ -1390,8 +1390,8 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<LocalVariable>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Script_FieldIndex.LocalVariables);
-                case "SCRV":
-                case "SCRO":
+                case 0x56524353: // SCRV
+                case 0x4F524353: // SCRO
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
@@ -1401,14 +1401,14 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
-                            switch (header.Type)
+                            switch (header.TypeInt)
                             {
-                                case "SCRV":
+                                case 0x56524353: // SCRV
                                     return LoquiBinaryTranslation<ScriptVariableReference>.Instance.Parse(
                                         frame: r.Spawn(snapToFinalPosition: false),
                                         item: out listSubItem,
                                         errorMask: listErrMask);
-                                case "SCRO":
+                                case 0x4F524353: // SCRO
                                     return LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse(
                                         frame: r.Spawn(snapToFinalPosition: false),
                                         item: out listSubItem,

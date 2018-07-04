@@ -780,9 +780,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "FNAM":
+                case 0x4D414E46: // FNAM
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_TypeChar_Custom(
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)Global_FieldIndex.TypeChar);
-                case "FLTV":
+                case 0x56544C46: // FLTV
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

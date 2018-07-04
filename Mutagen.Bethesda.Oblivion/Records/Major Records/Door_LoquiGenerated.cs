@@ -1176,9 +1176,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MODL":
+                case 0x4C444F4D: // MODL
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.Model);
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Model);
-                case "SCRI":
+                case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
-                case "SNAM":
+                case 0x4D414E53: // SNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.OpenSound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
-                case "ANAM":
+                case 0x4D414E41: // ANAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.CloseSound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
-                case "BNAM":
+                case 0x4D414E42: // BNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item.LoopSound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
-                case "FNAM":
+                case 0x4D414E46: // FNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Flags);
-                case "TNAM":
+                case 0x4D414E54: // TNAM
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Door_Registration.TNAM_HEADER,

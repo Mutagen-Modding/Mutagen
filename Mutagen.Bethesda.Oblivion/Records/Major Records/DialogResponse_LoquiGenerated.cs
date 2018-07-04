@@ -1828,9 +1828,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "TRDT":
+                case 0x54445254: // TRDT
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Fluff2) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Fluff2);
-                case "NAM1":
+                case 0x314D414E: // NAM1
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1985,7 +1985,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
-                case "NAM2":
+                case 0x324D414E: // NAM2
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {

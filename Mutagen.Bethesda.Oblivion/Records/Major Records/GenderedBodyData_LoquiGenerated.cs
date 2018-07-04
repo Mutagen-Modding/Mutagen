@@ -899,9 +899,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "MNAM":
+                case 0x4D414E4D: // MNAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Male) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     try
@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)GenderedBodyData_FieldIndex.Male);
-                case "FNAM":
+                case 0x4D414E46: // FNAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Female) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     try

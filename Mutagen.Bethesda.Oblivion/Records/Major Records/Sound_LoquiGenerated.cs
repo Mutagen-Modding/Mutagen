@@ -1031,9 +1031,9 @@ namespace Mutagen.Bethesda.Oblivion
                 reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
+            switch (nextRecordType.TypeInt)
             {
-                case "FNAM":
+                case 0x4D414E46: // FNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
-                case "SNDD":
+                case 0x44444E53: // SNDD
                     try
                     {
                         errorMask?.PushIndex((int)Sound_FieldIndex.Data);
@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
-                case "SNDX":
+                case 0x58444E53: // SNDX
                     try
                     {
                         errorMask?.PushIndex((int)Sound_FieldIndex.Data);
