@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda
                         foreach (var item in grupMeta)
                         {
                             var grupLoc = item.Key;
-                            writer.BaseStream.Position = grupLoc + 4 + item.Value.Offset;
+                            fs.Position = grupLoc + 4 + item.Value.Offset;
                             writer.Write(item.Value.Length);
                         }
                     }

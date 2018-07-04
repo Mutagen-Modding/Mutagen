@@ -14,26 +14,29 @@ namespace Mutagen.Bethesda.Binary
         private bool dispose = true;
         public System.IO.BinaryWriter Writer;
         private static byte Zero = 0;
+        public Stream BaseStream { get; private set; }
 
         public long Position
         {
-            get => this.Writer.BaseStream.Position;
-            set => this.Writer.BaseStream.Position = value;
+            get => this.BaseStream.Position;
+            set => this.BaseStream.Position = value;
         }
 
         public long Length
         {
-            get => this.Writer.BaseStream.Length;
+            get => this.BaseStream.Length;
         }
 
         public MutagenWriter(string path)
         {
-            this.Writer = new BinaryWriter(new FileStream(path, FileMode.Create, FileAccess.Write));
+            this.BaseStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            this.Writer = new BinaryWriter(this.BaseStream);
         }
 
         public MutagenWriter(Stream stream, bool dispose = true)
         {
             this.dispose = dispose;
+            this.BaseStream = stream;
             this.Writer = new BinaryWriter(stream);
         }
 

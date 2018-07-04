@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda
                 MutagenWriter stream = new MutagenWriter(new MemoryStream(ret));
                 using (HeaderExport.ExportSubRecordHeader(stream, _recordType))
                 {
-                    inputStream.WriteTo(stream.Writer.BaseStream, subLen);
+                    inputStream.WriteTo(stream.BaseStream, subLen);
                 }
                 return ret;
             }
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda
                     stream = new MutagenWriter(new MemoryStream(data));
                     using (HeaderExport.ExportSubRecordHeader(stream, subType))
                     {
-                        inputStream.WriteTo(stream.Writer.BaseStream, subLen);
+                        inputStream.WriteTo(stream.BaseStream, subLen);
                     }
                     dataDict[subType] = data;
                 }
@@ -171,12 +171,12 @@ namespace Mutagen.Bethesda
                         {
                             if (grup <= mutaReader.Position) continue;
                             var noRecordLength = grup - mutaReader.Position;
-                            mutaReader.WriteTo(writer.Writer.BaseStream, (int)noRecordLength);
+                            mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
 
                             // If complete overall, return
                             if (mutaReader.Complete) break;
 
-                            mutaReader.WriteTo(writer.Writer.BaseStream, 12);
+                            mutaReader.WriteTo(writer.BaseStream, 12);
                             var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
                             writer.Write((int)grupType);
                             switch (grupType)
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda
                                     break;
                             }
                         }
-                        mutaReader.WriteTo(writer.Writer.BaseStream, checked((int)mutaReader.Remaining));
+                        mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                     }
                 }
 
@@ -201,12 +201,12 @@ namespace Mutagen.Bethesda
                         {
                             if (grup <= mutaReader.Position) continue;
                             var noRecordLength = grup - mutaReader.Position;
-                            mutaReader.WriteTo(writer.Writer.BaseStream, (int)noRecordLength);
+                            mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
 
                             // If complete overall, return
                             if (mutaReader.Complete) break;
 
-                            mutaReader.WriteTo(writer.Writer.BaseStream, 12);
+                            mutaReader.WriteTo(writer.BaseStream, 12);
                             var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
                             writer.Write((int)grupType);
                             switch (grupType)
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda
                                     break;
                             }
                         }
-                        mutaReader.WriteTo(writer.Writer.BaseStream, checked((int)mutaReader.Remaining));
+                        mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                     }
                 }
             }
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda
                 {
                     noRecordLength = inputStream.Remaining;
                 }
-                inputStream.WriteTo(writer.Writer.BaseStream, (int)noRecordLength);
+                inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
 
                 // If complete overall, return
                 if (inputStream.Complete) break;
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda
                 }
                 writer.Write(recType.TypeInt);
                 writer.Write(len);
-                inputStream.WriteTo(writer.Writer.BaseStream, 12);
+                inputStream.WriteTo(writer.BaseStream, 12);
                 var endPos = inputStream.Position + len;
                 Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
                 byte[] rest = null;
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda
                 {
                     noRecordLength = inputStream.Remaining;
                 }
-                inputStream.WriteTo(writer.Writer.BaseStream, (int)noRecordLength);
+                inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
 
                 // If complete overall, return
                 if (inputStream.Complete) break;
@@ -340,13 +340,13 @@ namespace Mutagen.Bethesda
                 {
                     throw new ArgumentException();
                 }
-                inputStream.WriteTo(writer.Writer.BaseStream, 4);
+                inputStream.WriteTo(writer.BaseStream, 4);
                 var groupType = (GroupTypeEnum)inputStream.ReadInt32();
                 writer.Write((int)groupType);
 
                 if (!alignmentRules.GroupAlignment.TryGetValue(groupType, out var groupRules)) continue;
 
-                inputStream.WriteTo(writer.Writer.BaseStream, 4);
+                inputStream.WriteTo(writer.BaseStream, 4);
                 Dictionary<RecordType, List<byte[]>> storage = new Dictionary<RecordType, List<byte[]>>();
                 List<byte[]> rest = new List<byte[]>();
                 using (var frame = MutagenFrame.ByLength(inputStream, len - 20))
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda
             BinaryReadStream mutaReader,
             MutagenWriter writer)
         {
-            mutaReader.WriteTo(writer.Writer.BaseStream, 4);
+            mutaReader.WriteTo(writer.BaseStream, 4);
             byte[] roadStorage = null;
             byte[] cellStorage = null;
             List<byte[]> grupBytes = new List<byte[]>();
