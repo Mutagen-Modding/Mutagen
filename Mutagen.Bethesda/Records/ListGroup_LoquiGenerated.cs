@@ -1094,12 +1094,20 @@ namespace Mutagen.Bethesda
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
-            using (var writer = new MutagenWriter(path))
+            using (var memStream = new MemoryTributary())
             {
-                Write_Binary(
-                    writer: writer,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        errorMask: out errorMask,
+                        doMasks: doMasks);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
             }
         }
 
@@ -1128,9 +1136,17 @@ namespace Mutagen.Bethesda
 
         public void Write_Binary(string path)
         {
-            using (var writer = new MutagenWriter(path))
+            using (var memStream = new MemoryTributary())
             {
-                Write_Binary(writer: writer);
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(writer: writer);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
             }
         }
 

@@ -691,10 +691,20 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine("using (var writer = new MutagenWriter(path))");
+            fg.AppendLine("using (var memStream = new MemoryTributary())");
             using (new BraceWrapper(fg))
             {
-                internalToDo(this.MainAPI.WriterMemberNames(obj));
+                fg.AppendLine("using (var writer = new MutagenWriter(memStream, dispose: false))");
+                using (new BraceWrapper(fg))
+                {
+                    internalToDo(this.MainAPI.WriterMemberNames(obj));
+                }
+                fg.AppendLine("using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"memStream.Position = 0;");
+                    fg.AppendLine($"memStream.CopyTo(fs);");
+                }
             }
         }
 

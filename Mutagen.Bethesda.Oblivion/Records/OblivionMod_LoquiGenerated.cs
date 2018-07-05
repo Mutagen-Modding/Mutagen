@@ -2978,13 +2978,21 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(path))
+            using (var memStream = new MemoryTributary())
             {
-                Write_Binary(
-                    writer: writer,
-                    importMask: importMask,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        importMask: importMask,
+                        errorMask: out errorMask,
+                        doMasks: doMasks);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
             }
         }
 
@@ -3019,11 +3027,19 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             GroupMask importMask = null)
         {
-            using (var writer = new MutagenWriter(path))
+            using (var memStream = new MemoryTributary())
             {
-                Write_Binary(
-                    writer: writer,
-                    importMask: importMask);
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        importMask: importMask);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
             }
         }
 

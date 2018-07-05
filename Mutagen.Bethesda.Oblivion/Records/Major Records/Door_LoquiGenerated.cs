@@ -1095,12 +1095,20 @@ namespace Mutagen.Bethesda.Oblivion
             out Door_ErrorMask errorMask,
             bool doMasks = true)
         {
-            using (var writer = new MutagenWriter(path))
+            using (var memStream = new MemoryTributary())
             {
-                Write_Binary(
-                    writer: writer,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        errorMask: out errorMask,
+                        doMasks: doMasks);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
             }
         }
 
@@ -1128,9 +1136,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Binary(string path)
         {
-            using (var writer = new MutagenWriter(path))
+            using (var memStream = new MemoryTributary())
             {
-                Write_Binary(writer: writer);
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(writer: writer);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
             }
         }
 
