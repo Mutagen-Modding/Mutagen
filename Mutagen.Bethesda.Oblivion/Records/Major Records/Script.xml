@@ -2,7 +2,13 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Script" objType="Record" recordType="SCPT" baseClass="Bethesda.MajorRecord" GUID="4eda2162-86bb-49f3-babd-a9ea5ad8d928" ID="46">
     <Fields>
-      <RefDirect name="MetadataSummary" refName="ScriptMetaSummary" nullable="Singleton" />
+      <RefDirect name="Fields" refName="ScriptFields" nullable="Singleton" />
+    </Fields>
+  </Object>
+  <Object name="ScriptFields" objType="Subrecord" GUID="9b6e1edf-a601-4625-be5c-90b106975b45" ID="152">
+    <Fields>
+      <RefDirect name="MetadataSummary" recordType="SCHR" refName="ScriptMetaSummary" nullable="Singleton" />
+      <CustomLogic name="MetadataSummaryOld" recordType="SCHD" />
       <ByteArray name="CompiledScript" recordType="SCDA" />
       <String name="SourceCode" recordType="SCTX" nullTerminate="false" />
       <RefList name="LocalVariables" refName="LocalVariable" />
@@ -15,7 +21,7 @@
       <UInt32 name="RefCount" />
       <Int32 name="CompiledSize" derivative="true" customBinary="true" />
       <UInt32 name="VariableCount" />
-      <Enum name="Type" enumName="Script.ScriptType" byteLength="4" />
+      <Enum name="Type" enumName="ScriptFields.ScriptType" byteLength="4" />
     </Fields>
   </Object>
   <Object name="LocalVariable" objType="Subrecord" GUID="b77aa416-b182-4265-8276-44b34bace18f" ID="48">

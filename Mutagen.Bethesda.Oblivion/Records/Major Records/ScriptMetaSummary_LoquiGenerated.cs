@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Byte[]>,
         IPropertySupporter<UInt32>,
         IPropertySupporter<Int32>,
-        IPropertySupporter<Script.ScriptType>,
+        IPropertySupporter<ScriptFields.ScriptType>,
         IEquatable<ScriptMetaSummary>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -240,17 +240,17 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.VariableCount_Property => this.VariableCount_Property;
         #endregion
         #region Type
-        protected Script.ScriptType _Type;
-        protected PropertyForwarder<ScriptMetaSummary, Script.ScriptType> _TypeForwarder;
-        public INotifyingSetItem<Script.ScriptType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<ScriptMetaSummary, Script.ScriptType>(this, (int)ScriptMetaSummary_FieldIndex.Type));
+        protected ScriptFields.ScriptType _Type;
+        protected PropertyForwarder<ScriptMetaSummary, ScriptFields.ScriptType> _TypeForwarder;
+        public INotifyingSetItem<ScriptFields.ScriptType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<ScriptMetaSummary, ScriptFields.ScriptType>(this, (int)ScriptMetaSummary_FieldIndex.Type));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Script.ScriptType Type
+        public ScriptFields.ScriptType Type
         {
             get => this._Type;
             set => this.SetType(value);
         }
         protected void SetType(
-            Script.ScriptType item,
+            ScriptFields.ScriptType item,
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
@@ -260,11 +260,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.Type] = hasBeenSet;
             }
-            if (_ScriptScriptType_subscriptions != null)
+            if (_ScriptFieldsScriptType_subscriptions != null)
             {
                 var tmp = Type;
                 _Type = item;
-                _ScriptScriptType_subscriptions.FireSubscriptions(
+                _ScriptFieldsScriptType_subscriptions.FireSubscriptions(
                     index: (int)ScriptMetaSummary_FieldIndex.Type,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
@@ -280,12 +280,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected void UnsetType()
         {
             _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.Type] = false;
-            Type = default(Script.ScriptType);
+            Type = default(ScriptFields.ScriptType);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Script.ScriptType> IScriptMetaSummary.Type_Property => this.Type_Property;
+        INotifyingItem<ScriptFields.ScriptType> IScriptMetaSummary.Type_Property => this.Type_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Script.ScriptType> IScriptMetaSummaryGetter.Type_Property => this.Type_Property;
+        INotifyingItemGetter<ScriptFields.ScriptType> IScriptMetaSummaryGetter.Type_Property => this.Type_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -707,9 +707,9 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Type);
-                        if (EnumXmlTranslation<Script.ScriptType>.Instance.Parse(
+                        if (EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Parse(
                             root: root,
-                            item: out Script.ScriptType TypeParse,
+                            item: out ScriptFields.ScriptType TypeParse,
                             errorMask: errorMask))
                         {
                             item.Type = TypeParse;
@@ -1146,40 +1146,40 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region IPropertySupporter Script.ScriptType
-        protected ObjectCentralizationSubscriptions<Script.ScriptType> _ScriptScriptType_subscriptions;
-        Script.ScriptType IPropertySupporter<Script.ScriptType>.Get(int index)
+        #region IPropertySupporter ScriptFields.ScriptType
+        protected ObjectCentralizationSubscriptions<ScriptFields.ScriptType> _ScriptFieldsScriptType_subscriptions;
+        ScriptFields.ScriptType IPropertySupporter<ScriptFields.ScriptType>.Get(int index)
         {
-            return GetScriptScriptType(index: index);
+            return GetScriptFieldsScriptType(index: index);
         }
 
-        protected Script.ScriptType GetScriptScriptType(int index)
+        protected ScriptFields.ScriptType GetScriptFieldsScriptType(int index)
         {
             switch ((ScriptMetaSummary_FieldIndex)index)
             {
                 case ScriptMetaSummary_FieldIndex.Type:
                     return Type;
                 default:
-                    throw new ArgumentException($"Unknown index for field type Script.ScriptType: {index}");
+                    throw new ArgumentException($"Unknown index for field type ScriptFields.ScriptType: {index}");
             }
         }
 
-        void IPropertySupporter<Script.ScriptType>.Set(
+        void IPropertySupporter<ScriptFields.ScriptType>.Set(
             int index,
-            Script.ScriptType item,
+            ScriptFields.ScriptType item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            SetScriptScriptType(
+            SetScriptFieldsScriptType(
                 index: index,
                 item: item,
                 hasBeenSet: hasBeenSet,
                 cmds: cmds);
         }
 
-        protected void SetScriptScriptType(
+        protected void SetScriptFieldsScriptType(
             int index,
-            Script.ScriptType item,
+            ScriptFields.ScriptType item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
@@ -1189,32 +1189,32 @@ namespace Mutagen.Bethesda.Oblivion
                     SetType(item, hasBeenSet, cmds);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type Script.ScriptType: {index}");
+                    throw new ArgumentException($"Unknown index for field type ScriptFields.ScriptType: {index}");
             }
         }
 
-        bool IPropertySupporter<Script.ScriptType>.GetHasBeenSet(int index)
+        bool IPropertySupporter<ScriptFields.ScriptType>.GetHasBeenSet(int index)
         {
             return _hasBeenSetTracker[index];
         }
 
-        void IPropertySupporter<Script.ScriptType>.SetHasBeenSet(
+        void IPropertySupporter<ScriptFields.ScriptType>.SetHasBeenSet(
             int index,
             bool on)
         {
             _hasBeenSetTracker[index] = on;
         }
 
-        void IPropertySupporter<Script.ScriptType>.Unset(
+        void IPropertySupporter<ScriptFields.ScriptType>.Unset(
             int index,
             NotifyingUnsetParameters cmds)
         {
-            UnsetScriptScriptType(
+            UnsetScriptFieldsScriptType(
                 index: index,
                 cmds: cmds);
         }
 
-        protected void UnsetScriptScriptType(
+        protected void UnsetScriptFieldsScriptType(
             int index,
             NotifyingUnsetParameters cmds)
         {
@@ -1222,25 +1222,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ScriptMetaSummary_FieldIndex.Type:
                     _hasBeenSetTracker[index] = false;
-                    Type = default(Script.ScriptType);
+                    Type = default(ScriptFields.ScriptType);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type Script.ScriptType: {index}");
+                    throw new ArgumentException($"Unknown index for field type ScriptFields.ScriptType: {index}");
             }
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<Script.ScriptType>.Subscribe(
+        void IPropertySupporter<ScriptFields.ScriptType>.Subscribe(
             int index,
             object owner,
-            NotifyingSetItemInternalCallback<Script.ScriptType> callback,
+            NotifyingSetItemInternalCallback<ScriptFields.ScriptType> callback,
             NotifyingSubscribeParameters cmds)
         {
-            if (_ScriptScriptType_subscriptions == null)
+            if (_ScriptFieldsScriptType_subscriptions == null)
             {
-                _ScriptScriptType_subscriptions = new ObjectCentralizationSubscriptions<Script.ScriptType>();
+                _ScriptFieldsScriptType_subscriptions = new ObjectCentralizationSubscriptions<ScriptFields.ScriptType>();
             }
-            _ScriptScriptType_subscriptions.Subscribe(
+            _ScriptFieldsScriptType_subscriptions.Subscribe(
                 index: index,
                 owner: owner,
                 prop: this,
@@ -1249,31 +1249,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<Script.ScriptType>.Unsubscribe(
+        void IPropertySupporter<ScriptFields.ScriptType>.Unsubscribe(
             int index,
             object owner)
         {
-            _ScriptScriptType_subscriptions?.Unsubscribe(index, owner);
+            _ScriptFieldsScriptType_subscriptions?.Unsubscribe(index, owner);
         }
 
-        void IPropertySupporter<Script.ScriptType>.SetCurrentAsDefault(int index)
+        void IPropertySupporter<ScriptFields.ScriptType>.SetCurrentAsDefault(int index)
         {
             throw new NotImplementedException();
         }
 
-        Script.ScriptType IPropertySupporter<Script.ScriptType>.DefaultValue(int index)
+        ScriptFields.ScriptType IPropertySupporter<ScriptFields.ScriptType>.DefaultValue(int index)
         {
-            return DefaultValueScriptScriptType(index: index);
+            return DefaultValueScriptFieldsScriptType(index: index);
         }
 
-        protected Script.ScriptType DefaultValueScriptScriptType(int index)
+        protected ScriptFields.ScriptType DefaultValueScriptFieldsScriptType(int index)
         {
             switch ((ScriptMetaSummary_FieldIndex)index)
             {
                 case ScriptMetaSummary_FieldIndex.Type:
-                    return default(Script.ScriptType);
+                    return default(ScriptFields.ScriptType);
                 default:
-                    throw new ArgumentException($"Unknown index for field type Script.ScriptType: {index}");
+                    throw new ArgumentException($"Unknown index for field type ScriptFields.ScriptType: {index}");
             }
         }
 
@@ -1582,9 +1582,9 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Type);
-                if (EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
+                if (EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(
                     frame: frame.SpawnWithLength(4),
-                    item: out Script.ScriptType TypeParse,
+                    item: out ScriptFields.ScriptType TypeParse,
                     errorMask: errorMask))
                 {
                     item.Type = TypeParse;
@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ScriptMetaSummary_FieldIndex.Type:
                     this.SetType(
-                        (Script.ScriptType)obj,
+                        (ScriptFields.ScriptType)obj,
                         cmds: cmds);
                     break;
                 default:
@@ -1805,7 +1805,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ScriptMetaSummary_FieldIndex.Type:
                     obj.SetType(
-                        (Script.ScriptType)pair.Value,
+                        (ScriptFields.ScriptType)pair.Value,
                         cmds: null);
                     break;
                 default:
@@ -1832,8 +1832,8 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt32 VariableCount { get; set; }
         new INotifyingItem<UInt32> VariableCount_Property { get; }
 
-        new Script.ScriptType Type { get; set; }
-        new INotifyingItem<Script.ScriptType> Type_Property { get; }
+        new ScriptFields.ScriptType Type { get; set; }
+        new INotifyingItem<ScriptFields.ScriptType> Type_Property { get; }
 
     }
 
@@ -1860,8 +1860,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Type
-        Script.ScriptType Type { get; }
-        INotifyingItemGetter<Script.ScriptType> Type_Property { get; }
+        ScriptFields.ScriptType Type { get; }
+        INotifyingItemGetter<ScriptFields.ScriptType> Type_Property { get; }
 
         #endregion
 
@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     return typeof(UInt32);
                 case ScriptMetaSummary_FieldIndex.Type:
-                    return typeof(Script.ScriptType);
+                    return typeof(ScriptFields.ScriptType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2233,7 +2233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.VariableCount = default(UInt32);
                     break;
                 case ScriptMetaSummary_FieldIndex.Type:
-                    obj.Type = default(Script.ScriptType);
+                    obj.Type = default(ScriptFields.ScriptType);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2287,7 +2287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
             item.RefCount = default(UInt32);
             item.VariableCount = default(UInt32);
-            item.Type = default(Script.ScriptType);
+            item.Type = default(ScriptFields.ScriptType);
         }
 
         public static ScriptMetaSummary_Mask<bool> GetEqualsMask(
@@ -2429,7 +2429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.VariableCount_Property,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
-            EnumXmlTranslation<Script.ScriptType>.Instance.Write(
+            EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Write(
                 node: elem,
                 name: nameof(item.Type),
                 item: item.Type_Property,
@@ -2501,7 +2501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.VariableCount_Property,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Write(
                 writer,
                 item.Type_Property,
                 length: 4,

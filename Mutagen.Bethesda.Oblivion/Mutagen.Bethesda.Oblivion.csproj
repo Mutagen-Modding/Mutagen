@@ -295,7 +295,7 @@
     <Compile Include="Records\Major Records\Road.cs">
       <DependentUpon>Road.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Script.cs">
+    <Compile Include="Records\Major Records\ScriptFields.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ScriptMetaSummary.cs">
@@ -645,6 +645,9 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\Condition_LoquiGenerated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScriptFields_LoquiGenerated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

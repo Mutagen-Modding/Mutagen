@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>242ce527d01a36fe9169054fc15987e49c27b7d1</Sha>
+         <Sha>14ca5aad259849c9d203bdb4702d8cd5af10d1c6</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-09-2018 14:59:05</CommitDate>
-         <Description>Removed a debugger stepthrough</Description>
+         <CommitDate>07-09-2018 17:36:16</CommitDate>
+         <Description>Some object centralization fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
