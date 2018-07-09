@@ -788,7 +788,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static Tree Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -2012,7 +2011,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static Tree Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

@@ -146,7 +146,6 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static RecordInstruction Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)

@@ -455,7 +455,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static SigilStone Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -1583,7 +1582,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static SigilStone Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

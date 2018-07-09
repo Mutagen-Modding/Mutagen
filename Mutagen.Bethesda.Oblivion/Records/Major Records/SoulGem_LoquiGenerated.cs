@@ -492,7 +492,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static SoulGem Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -1644,7 +1643,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static SoulGem Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

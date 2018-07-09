@@ -374,7 +374,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static SpellUnleveled Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -1340,7 +1339,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static SpellUnleveled Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

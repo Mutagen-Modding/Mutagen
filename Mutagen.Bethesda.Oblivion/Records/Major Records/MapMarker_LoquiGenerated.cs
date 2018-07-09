@@ -286,7 +286,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static MapMarker Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -877,7 +876,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static MapMarker Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

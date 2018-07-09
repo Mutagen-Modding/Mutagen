@@ -565,7 +565,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static Climate Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -1690,7 +1689,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static Climate Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

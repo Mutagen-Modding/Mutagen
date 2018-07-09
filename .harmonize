@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>68c703df680db0ea11802bb555c2e8c9da74a8fb</Sha>
+         <Sha>242ce527d01a36fe9169054fc15987e49c27b7d1</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-04-2018 02:22:26</CommitDate>
-         <Description>LoquiRegistration upgrade for TryGet by type to handle on demand additions</Description>
+         <CommitDate>07-09-2018 14:59:05</CommitDate>
+         <Description>Removed a debugger stepthrough</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

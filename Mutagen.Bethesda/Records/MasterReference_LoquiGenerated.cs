@@ -258,7 +258,6 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static MasterReference Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -841,7 +840,6 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static MasterReference Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

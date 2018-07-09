@@ -514,7 +514,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static TES4 Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -1386,7 +1385,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static TES4 Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

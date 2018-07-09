@@ -480,7 +480,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static AlchemicalApparatus Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -1632,7 +1631,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static AlchemicalApparatus Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

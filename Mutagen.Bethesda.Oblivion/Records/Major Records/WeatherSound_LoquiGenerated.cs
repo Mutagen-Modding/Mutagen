@@ -203,7 +203,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static WeatherSound Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -644,7 +643,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static WeatherSound Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

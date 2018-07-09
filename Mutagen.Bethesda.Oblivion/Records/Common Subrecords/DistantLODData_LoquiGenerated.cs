@@ -294,7 +294,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static DistantLODData Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -794,7 +793,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static DistantLODData Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

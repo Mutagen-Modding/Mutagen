@@ -170,7 +170,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static Road Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -463,7 +462,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static Road Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

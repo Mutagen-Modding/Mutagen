@@ -253,7 +253,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static TeleportDestination Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -730,7 +729,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static TeleportDestination Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,

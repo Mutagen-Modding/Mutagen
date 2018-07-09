@@ -313,7 +313,6 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static ListGroup<T> Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
@@ -1008,7 +1007,6 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        [DebuggerStepThrough]
         public static ListGroup<T> Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
