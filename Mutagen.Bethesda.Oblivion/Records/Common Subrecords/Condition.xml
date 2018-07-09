@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Condition" objType="Subrecord" recordType="CTDA" GUID="b992280d-2cc5-46ce-b935-e1cfd5bdd34f" ID="151">
+    <Fields>
+      <Enum name="CompareOperator" enumName="CompareOperator" customBinary="true" />
+      <Enum name="Flags" enumName="Condition.Flag" customBinary="true" />
+      <ByteArray name="Fluff" length="4" nullable="NotNull" />
+      <Float name="ComparisonValue" />
+      <Enum name="Function" enumName="Function" byteLength="4" />
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+      <Int32 name="ThirdParameter" />
+    </Fields>
+  </Object>
+</Loqui>

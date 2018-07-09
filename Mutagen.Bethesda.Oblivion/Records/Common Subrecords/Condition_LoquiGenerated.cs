@@ -26,24 +26,24 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class DialogCondition : 
-        IDialogCondition,
-        ILoquiObject<DialogCondition>,
+    public partial class Condition : 
+        ICondition,
+        ILoquiObject<Condition>,
         ILoquiObjectSetter,
         IPropertySupporter<CompareOperator>,
-        IPropertySupporter<DialogCondition.Flag>,
+        IPropertySupporter<Condition.Flag>,
         IPropertySupporter<Byte[]>,
         IPropertySupporter<Single>,
         IPropertySupporter<Function>,
         IPropertySupporter<Int32>,
-        IEquatable<DialogCondition>
+        IEquatable<Condition>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogCondition_Registration.Instance;
-        public static DialogCondition_Registration Registration => DialogCondition_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
+        public static Condition_Registration Registration => Condition_Registration.Instance;
 
         #region Ctor
-        public DialogCondition()
+        public Condition()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region CompareOperator
         protected CompareOperator _CompareOperator;
-        protected PropertyForwarder<DialogCondition, CompareOperator> _CompareOperatorForwarder;
-        public INotifyingSetItem<CompareOperator> CompareOperator_Property => _CompareOperatorForwarder ?? (_CompareOperatorForwarder = new PropertyForwarder<DialogCondition, CompareOperator>(this, (int)DialogCondition_FieldIndex.CompareOperator));
+        protected PropertyForwarder<Condition, CompareOperator> _CompareOperatorForwarder;
+        public INotifyingSetItem<CompareOperator> CompareOperator_Property => _CompareOperatorForwarder ?? (_CompareOperatorForwarder = new PropertyForwarder<Condition, CompareOperator>(this, (int)Condition_FieldIndex.CompareOperator));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public CompareOperator CompareOperator
         {
@@ -66,18 +66,18 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogCondition_FieldIndex.CompareOperator];
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.CompareOperator];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CompareOperator == item) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)DialogCondition_FieldIndex.CompareOperator] = hasBeenSet;
+                _hasBeenSetTracker[(int)Condition_FieldIndex.CompareOperator] = hasBeenSet;
             }
             if (_CompareOperator_subscriptions != null)
             {
                 var tmp = CompareOperator;
                 _CompareOperator = item;
                 _CompareOperator_subscriptions.FireSubscriptions(
-                    index: (int)DialogCondition_FieldIndex.CompareOperator,
+                    index: (int)Condition_FieldIndex.CompareOperator,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -91,41 +91,41 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetCompareOperator()
         {
-            _hasBeenSetTracker[(int)DialogCondition_FieldIndex.CompareOperator] = false;
+            _hasBeenSetTracker[(int)Condition_FieldIndex.CompareOperator] = false;
             CompareOperator = default(CompareOperator);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<CompareOperator> IDialogCondition.CompareOperator_Property => this.CompareOperator_Property;
+        INotifyingItem<CompareOperator> ICondition.CompareOperator_Property => this.CompareOperator_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<CompareOperator> IDialogConditionGetter.CompareOperator_Property => this.CompareOperator_Property;
+        INotifyingItemGetter<CompareOperator> IConditionGetter.CompareOperator_Property => this.CompareOperator_Property;
         #endregion
         #region Flags
-        protected DialogCondition.Flag _Flags;
-        protected PropertyForwarder<DialogCondition, DialogCondition.Flag> _FlagsForwarder;
-        public INotifyingSetItem<DialogCondition.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<DialogCondition, DialogCondition.Flag>(this, (int)DialogCondition_FieldIndex.Flags));
+        protected Condition.Flag _Flags;
+        protected PropertyForwarder<Condition, Condition.Flag> _FlagsForwarder;
+        public INotifyingSetItem<Condition.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Condition, Condition.Flag>(this, (int)Condition_FieldIndex.Flags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public DialogCondition.Flag Flags
+        public Condition.Flag Flags
         {
             get => this._Flags;
             set => this.SetFlags(value);
         }
         protected void SetFlags(
-            DialogCondition.Flag item,
+            Condition.Flag item,
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogCondition_FieldIndex.Flags];
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.Flags];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)DialogCondition_FieldIndex.Flags] = hasBeenSet;
+                _hasBeenSetTracker[(int)Condition_FieldIndex.Flags] = hasBeenSet;
             }
-            if (_DialogConditionFlag_subscriptions != null)
+            if (_ConditionFlag_subscriptions != null)
             {
                 var tmp = Flags;
                 _Flags = item;
-                _DialogConditionFlag_subscriptions.FireSubscriptions(
-                    index: (int)DialogCondition_FieldIndex.Flags,
+                _ConditionFlag_subscriptions.FireSubscriptions(
+                    index: (int)Condition_FieldIndex.Flags,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -139,18 +139,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFlags()
         {
-            _hasBeenSetTracker[(int)DialogCondition_FieldIndex.Flags] = false;
-            Flags = default(DialogCondition.Flag);
+            _hasBeenSetTracker[(int)Condition_FieldIndex.Flags] = false;
+            Flags = default(Condition.Flag);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<DialogCondition.Flag> IDialogCondition.Flags_Property => this.Flags_Property;
+        INotifyingItem<Condition.Flag> ICondition.Flags_Property => this.Flags_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<DialogCondition.Flag> IDialogConditionGetter.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<Condition.Flag> IConditionGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Fluff
         protected Byte[] _Fluff;
-        protected PropertyForwarder<DialogCondition, Byte[]> _FluffForwarder;
-        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<DialogCondition, Byte[]>(this, (int)DialogCondition_FieldIndex.Fluff));
+        protected PropertyForwarder<Condition, Byte[]> _FluffForwarder;
+        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<Condition, Byte[]>(this, (int)Condition_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
@@ -162,18 +162,18 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogCondition_FieldIndex.Fluff];
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.Fluff];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)DialogCondition_FieldIndex.Fluff] = hasBeenSet;
+                _hasBeenSetTracker[(int)Condition_FieldIndex.Fluff] = hasBeenSet;
             }
             if (_ByteArr_subscriptions != null)
             {
                 var tmp = Fluff;
                 _Fluff = item;
                 _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)DialogCondition_FieldIndex.Fluff,
+                    index: (int)Condition_FieldIndex.Fluff,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -187,18 +187,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff()
         {
-            _hasBeenSetTracker[(int)DialogCondition_FieldIndex.Fluff] = false;
+            _hasBeenSetTracker[(int)Condition_FieldIndex.Fluff] = false;
             Fluff = default(Byte[]);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IDialogCondition.Fluff_Property => this.Fluff_Property;
+        INotifyingItem<Byte[]> ICondition.Fluff_Property => this.Fluff_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IDialogConditionGetter.Fluff_Property => this.Fluff_Property;
+        INotifyingItemGetter<Byte[]> IConditionGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region ComparisonValue
         protected Single _ComparisonValue;
-        protected PropertyForwarder<DialogCondition, Single> _ComparisonValueForwarder;
-        public INotifyingSetItem<Single> ComparisonValue_Property => _ComparisonValueForwarder ?? (_ComparisonValueForwarder = new PropertyForwarder<DialogCondition, Single>(this, (int)DialogCondition_FieldIndex.ComparisonValue));
+        protected PropertyForwarder<Condition, Single> _ComparisonValueForwarder;
+        public INotifyingSetItem<Single> ComparisonValue_Property => _ComparisonValueForwarder ?? (_ComparisonValueForwarder = new PropertyForwarder<Condition, Single>(this, (int)Condition_FieldIndex.ComparisonValue));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ComparisonValue
         {
@@ -210,18 +210,18 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogCondition_FieldIndex.ComparisonValue];
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.ComparisonValue];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ComparisonValue == item) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)DialogCondition_FieldIndex.ComparisonValue] = hasBeenSet;
+                _hasBeenSetTracker[(int)Condition_FieldIndex.ComparisonValue] = hasBeenSet;
             }
             if (_Single_subscriptions != null)
             {
                 var tmp = ComparisonValue;
                 _ComparisonValue = item;
                 _Single_subscriptions.FireSubscriptions(
-                    index: (int)DialogCondition_FieldIndex.ComparisonValue,
+                    index: (int)Condition_FieldIndex.ComparisonValue,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -235,18 +235,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetComparisonValue()
         {
-            _hasBeenSetTracker[(int)DialogCondition_FieldIndex.ComparisonValue] = false;
+            _hasBeenSetTracker[(int)Condition_FieldIndex.ComparisonValue] = false;
             ComparisonValue = default(Single);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IDialogCondition.ComparisonValue_Property => this.ComparisonValue_Property;
+        INotifyingItem<Single> ICondition.ComparisonValue_Property => this.ComparisonValue_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IDialogConditionGetter.ComparisonValue_Property => this.ComparisonValue_Property;
+        INotifyingItemGetter<Single> IConditionGetter.ComparisonValue_Property => this.ComparisonValue_Property;
         #endregion
         #region Function
         protected Function _Function;
-        protected PropertyForwarder<DialogCondition, Function> _FunctionForwarder;
-        public INotifyingSetItem<Function> Function_Property => _FunctionForwarder ?? (_FunctionForwarder = new PropertyForwarder<DialogCondition, Function>(this, (int)DialogCondition_FieldIndex.Function));
+        protected PropertyForwarder<Condition, Function> _FunctionForwarder;
+        public INotifyingSetItem<Function> Function_Property => _FunctionForwarder ?? (_FunctionForwarder = new PropertyForwarder<Condition, Function>(this, (int)Condition_FieldIndex.Function));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Function Function
         {
@@ -258,18 +258,18 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogCondition_FieldIndex.Function];
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.Function];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Function == item) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)DialogCondition_FieldIndex.Function] = hasBeenSet;
+                _hasBeenSetTracker[(int)Condition_FieldIndex.Function] = hasBeenSet;
             }
             if (_Function_subscriptions != null)
             {
                 var tmp = Function;
                 _Function = item;
                 _Function_subscriptions.FireSubscriptions(
-                    index: (int)DialogCondition_FieldIndex.Function,
+                    index: (int)Condition_FieldIndex.Function,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -283,18 +283,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFunction()
         {
-            _hasBeenSetTracker[(int)DialogCondition_FieldIndex.Function] = false;
+            _hasBeenSetTracker[(int)Condition_FieldIndex.Function] = false;
             Function = default(Function);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Function> IDialogCondition.Function_Property => this.Function_Property;
+        INotifyingItem<Function> ICondition.Function_Property => this.Function_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Function> IDialogConditionGetter.Function_Property => this.Function_Property;
+        INotifyingItemGetter<Function> IConditionGetter.Function_Property => this.Function_Property;
         #endregion
         #region FirstParameter
         protected Int32 _FirstParameter;
-        protected PropertyForwarder<DialogCondition, Int32> _FirstParameterForwarder;
-        public INotifyingSetItem<Int32> FirstParameter_Property => _FirstParameterForwarder ?? (_FirstParameterForwarder = new PropertyForwarder<DialogCondition, Int32>(this, (int)DialogCondition_FieldIndex.FirstParameter));
+        protected PropertyForwarder<Condition, Int32> _FirstParameterForwarder;
+        public INotifyingSetItem<Int32> FirstParameter_Property => _FirstParameterForwarder ?? (_FirstParameterForwarder = new PropertyForwarder<Condition, Int32>(this, (int)Condition_FieldIndex.FirstParameter));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 FirstParameter
         {
@@ -306,18 +306,18 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogCondition_FieldIndex.FirstParameter];
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.FirstParameter];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FirstParameter == item) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)DialogCondition_FieldIndex.FirstParameter] = hasBeenSet;
+                _hasBeenSetTracker[(int)Condition_FieldIndex.FirstParameter] = hasBeenSet;
             }
             if (_Int32_subscriptions != null)
             {
                 var tmp = FirstParameter;
                 _FirstParameter = item;
                 _Int32_subscriptions.FireSubscriptions(
-                    index: (int)DialogCondition_FieldIndex.FirstParameter,
+                    index: (int)Condition_FieldIndex.FirstParameter,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -331,18 +331,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFirstParameter()
         {
-            _hasBeenSetTracker[(int)DialogCondition_FieldIndex.FirstParameter] = false;
+            _hasBeenSetTracker[(int)Condition_FieldIndex.FirstParameter] = false;
             FirstParameter = default(Int32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IDialogCondition.FirstParameter_Property => this.FirstParameter_Property;
+        INotifyingItem<Int32> ICondition.FirstParameter_Property => this.FirstParameter_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IDialogConditionGetter.FirstParameter_Property => this.FirstParameter_Property;
+        INotifyingItemGetter<Int32> IConditionGetter.FirstParameter_Property => this.FirstParameter_Property;
         #endregion
         #region SecondParameter
         protected Int32 _SecondParameter;
-        protected PropertyForwarder<DialogCondition, Int32> _SecondParameterForwarder;
-        public INotifyingSetItem<Int32> SecondParameter_Property => _SecondParameterForwarder ?? (_SecondParameterForwarder = new PropertyForwarder<DialogCondition, Int32>(this, (int)DialogCondition_FieldIndex.SecondParameter));
+        protected PropertyForwarder<Condition, Int32> _SecondParameterForwarder;
+        public INotifyingSetItem<Int32> SecondParameter_Property => _SecondParameterForwarder ?? (_SecondParameterForwarder = new PropertyForwarder<Condition, Int32>(this, (int)Condition_FieldIndex.SecondParameter));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 SecondParameter
         {
@@ -354,18 +354,18 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogCondition_FieldIndex.SecondParameter];
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.SecondParameter];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SecondParameter == item) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)DialogCondition_FieldIndex.SecondParameter] = hasBeenSet;
+                _hasBeenSetTracker[(int)Condition_FieldIndex.SecondParameter] = hasBeenSet;
             }
             if (_Int32_subscriptions != null)
             {
                 var tmp = SecondParameter;
                 _SecondParameter = item;
                 _Int32_subscriptions.FireSubscriptions(
-                    index: (int)DialogCondition_FieldIndex.SecondParameter,
+                    index: (int)Condition_FieldIndex.SecondParameter,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -379,18 +379,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetSecondParameter()
         {
-            _hasBeenSetTracker[(int)DialogCondition_FieldIndex.SecondParameter] = false;
+            _hasBeenSetTracker[(int)Condition_FieldIndex.SecondParameter] = false;
             SecondParameter = default(Int32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IDialogCondition.SecondParameter_Property => this.SecondParameter_Property;
+        INotifyingItem<Int32> ICondition.SecondParameter_Property => this.SecondParameter_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IDialogConditionGetter.SecondParameter_Property => this.SecondParameter_Property;
+        INotifyingItemGetter<Int32> IConditionGetter.SecondParameter_Property => this.SecondParameter_Property;
         #endregion
         #region ThirdParameter
         protected Int32 _ThirdParameter;
-        protected PropertyForwarder<DialogCondition, Int32> _ThirdParameterForwarder;
-        public INotifyingSetItem<Int32> ThirdParameter_Property => _ThirdParameterForwarder ?? (_ThirdParameterForwarder = new PropertyForwarder<DialogCondition, Int32>(this, (int)DialogCondition_FieldIndex.ThirdParameter));
+        protected PropertyForwarder<Condition, Int32> _ThirdParameterForwarder;
+        public INotifyingSetItem<Int32> ThirdParameter_Property => _ThirdParameterForwarder ?? (_ThirdParameterForwarder = new PropertyForwarder<Condition, Int32>(this, (int)Condition_FieldIndex.ThirdParameter));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 ThirdParameter
         {
@@ -402,18 +402,18 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogCondition_FieldIndex.ThirdParameter];
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.ThirdParameter];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ThirdParameter == item) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)DialogCondition_FieldIndex.ThirdParameter] = hasBeenSet;
+                _hasBeenSetTracker[(int)Condition_FieldIndex.ThirdParameter] = hasBeenSet;
             }
             if (_Int32_subscriptions != null)
             {
                 var tmp = ThirdParameter;
                 _ThirdParameter = item;
                 _Int32_subscriptions.FireSubscriptions(
-                    index: (int)DialogCondition_FieldIndex.ThirdParameter,
+                    index: (int)Condition_FieldIndex.ThirdParameter,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -427,24 +427,24 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetThirdParameter()
         {
-            _hasBeenSetTracker[(int)DialogCondition_FieldIndex.ThirdParameter] = false;
+            _hasBeenSetTracker[(int)Condition_FieldIndex.ThirdParameter] = false;
             ThirdParameter = default(Int32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IDialogCondition.ThirdParameter_Property => this.ThirdParameter_Property;
+        INotifyingItem<Int32> ICondition.ThirdParameter_Property => this.ThirdParameter_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IDialogConditionGetter.ThirdParameter_Property => this.ThirdParameter_Property;
+        INotifyingItemGetter<Int32> IConditionGetter.ThirdParameter_Property => this.ThirdParameter_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected object GetNthObject(ushort index) => DialogConditionCommon.GetNthObject(index, this);
+        protected object GetNthObject(ushort index) => ConditionCommon.GetNthObject(index, this);
         object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
 
-        protected bool GetNthObjectHasBeenSet(ushort index) => DialogConditionCommon.GetNthObjectHasBeenSet(index, this);
+        protected bool GetNthObjectHasBeenSet(ushort index) => ConditionCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => DialogConditionCommon.UnsetNthObject(index, this, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ConditionCommon.UnsetNthObject(index, this, cmds);
         void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
@@ -452,49 +452,49 @@ namespace Mutagen.Bethesda.Oblivion
         #region Loqui Interface
         protected void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            DialogConditionCommon.SetNthObjectHasBeenSet(index, on, this);
+            ConditionCommon.SetNthObjectHasBeenSet(index, on, this);
         }
         void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
 
         #endregion
 
-        IMask<bool> IEqualsMask<DialogCondition>.GetEqualsMask(DialogCondition rhs) => DialogConditionCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IDialogConditionGetter>.GetEqualsMask(IDialogConditionGetter rhs) => DialogConditionCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Condition>.GetEqualsMask(Condition rhs) => ConditionCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IConditionGetter>.GetEqualsMask(IConditionGetter rhs) => ConditionCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
-            return DialogConditionCommon.ToString(this, printMask: null);
+            return ConditionCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            DialogCondition_Mask<bool> printMask = null)
+            Condition_Mask<bool> printMask = null)
         {
-            return DialogConditionCommon.ToString(this, name: name, printMask: printMask);
+            return ConditionCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            DialogConditionCommon.ToString(this, fg, name: name, printMask: null);
+            ConditionCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public DialogCondition_Mask<bool> GetHasBeenSetMask()
+        public Condition_Mask<bool> GetHasBeenSetMask()
         {
-            return DialogConditionCommon.GetHasBeenSetMask(this);
+            return ConditionCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is DialogCondition rhs)) return false;
+            if (!(obj is Condition rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(DialogCondition rhs)
+        public bool Equals(Condition rhs)
         {
             if (rhs == null) return false;
             if (this.CompareOperator != rhs.CompareOperator) return false;
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public static DialogCondition Create_XML(XElement root)
+        public static Condition Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -536,25 +536,25 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static DialogCondition Create_XML(
+        public static Condition Create_XML(
             XElement root,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_XML(
                 root: root,
                 errorMask: errorMaskBuilder);
-            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         [DebuggerStepThrough]
-        public static DialogCondition Create_XML(
+        public static Condition Create_XML(
             XElement root,
             ErrorMaskBuilder errorMask)
         {
-            var ret = new DialogCondition();
+            var ret = new Condition();
             try
             {
                 foreach (var elem in root.Elements())
@@ -574,15 +574,15 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DialogCondition Create_XML(string path)
+        public static Condition Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static DialogCondition Create_XML(
+        public static Condition Create_XML(
             string path,
-            out DialogCondition_ErrorMask errorMask)
+            out Condition_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -590,15 +590,15 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static DialogCondition Create_XML(Stream stream)
+        public static Condition Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static DialogCondition Create_XML(
+        public static Condition Create_XML(
             Stream stream,
-            out DialogCondition_ErrorMask errorMask)
+            out Condition_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DialogCondition>.Instance.CopyIn(
+            LoquiXmlTranslation<Condition>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -623,17 +623,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_XML(
             XElement root,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<DialogCondition>.Instance.CopyIn(
+            LoquiXmlTranslation<Condition>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
                 errorMask: errorMaskBuilder,
                 cmds: cmds);
-            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyIn_XML(
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Write
         public virtual void Write_XML(
             XElement node,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
@@ -694,12 +694,12 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder);
-            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_XML(
             string path,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             Stream stream,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             bool doMasks = true,
             string name = null)
         {
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             string name = null)
         {
-            DialogConditionCommon.Write_XML(
+            ConditionCommon.Write_XML(
                 item: this,
                 node: node,
                 name: name,
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void Fill_XML_Internal(
-            DialogCondition item,
+            Condition item,
             XElement root,
             string name,
             ErrorMaskBuilder errorMask)
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CompareOperator":
                     try
                     {
-                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.CompareOperator);
+                        errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
                         if (EnumXmlTranslation<CompareOperator>.Instance.Parse(
                             root: root,
                             item: out CompareOperator CompareOperatorParse,
@@ -809,10 +809,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Flags":
                     try
                     {
-                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.Flags);
-                        if (EnumXmlTranslation<DialogCondition.Flag>.Instance.Parse(
+                        errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Condition.Flag>.Instance.Parse(
                             root: root,
-                            item: out DialogCondition.Flag FlagsParse,
+                            item: out Condition.Flag FlagsParse,
                             errorMask: errorMask))
                         {
                             item.Flags = FlagsParse;
@@ -835,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Fluff":
                     try
                     {
-                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.Fluff);
+                        errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
                         if (ByteArrayXmlTranslation.Instance.Parse(
                             root: root,
                             item: out Byte[] FluffParse,
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ComparisonValue":
                     try
                     {
-                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.ComparisonValue);
+                        errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
                         if (FloatXmlTranslation.Instance.Parse(
                             root: root,
                             item: out Single ComparisonValueParse,
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Function":
                     try
                     {
-                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.Function);
+                        errorMask?.PushIndex((int)Condition_FieldIndex.Function);
                         if (EnumXmlTranslation<Function>.Instance.Parse(
                             root: root,
                             item: out Function FunctionParse,
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "FirstParameter":
                     try
                     {
-                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.FirstParameter);
+                        errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
                         if (Int32XmlTranslation.Instance.Parse(
                             root: root,
                             item: out Int32 FirstParameterParse,
@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SecondParameter":
                     try
                     {
-                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.SecondParameter);
+                        errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
                         if (Int32XmlTranslation.Instance.Parse(
                             root: root,
                             item: out Int32 SecondParameterParse,
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ThirdParameter":
                     try
                     {
-                        errorMask?.PushIndex((int)DialogCondition_FieldIndex.ThirdParameter);
+                        errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
                         if (Int32XmlTranslation.Instance.Parse(
                             root: root,
                             item: out Int32 ThirdParameterParse,
@@ -1005,9 +1005,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected CompareOperator GetCompareOperator(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     return CompareOperator;
                 default:
                     throw new ArgumentException($"Unknown index for field type CompareOperator: {index}");
@@ -1033,9 +1033,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     SetCompareOperator(item, hasBeenSet, cmds);
                     break;
                 default:
@@ -1068,9 +1068,9 @@ namespace Mutagen.Bethesda.Oblivion
             int index,
             NotifyingUnsetParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     _hasBeenSetTracker[index] = false;
                     CompareOperator = default(CompareOperator);
                     break;
@@ -1118,9 +1118,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected CompareOperator DefaultValueCompareOperator(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     return default(CompareOperator);
                 default:
                     throw new ArgumentException($"Unknown index for field type CompareOperator: {index}");
@@ -1129,101 +1129,101 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region IPropertySupporter DialogCondition.Flag
-        protected ObjectCentralizationSubscriptions<DialogCondition.Flag> _DialogConditionFlag_subscriptions;
-        DialogCondition.Flag IPropertySupporter<DialogCondition.Flag>.Get(int index)
+        #region IPropertySupporter Condition.Flag
+        protected ObjectCentralizationSubscriptions<Condition.Flag> _ConditionFlag_subscriptions;
+        Condition.Flag IPropertySupporter<Condition.Flag>.Get(int index)
         {
-            return GetDialogConditionFlag(index: index);
+            return GetConditionFlag(index: index);
         }
 
-        protected DialogCondition.Flag GetDialogConditionFlag(int index)
+        protected Condition.Flag GetConditionFlag(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     return Flags;
                 default:
-                    throw new ArgumentException($"Unknown index for field type DialogCondition.Flag: {index}");
+                    throw new ArgumentException($"Unknown index for field type Condition.Flag: {index}");
             }
         }
 
-        void IPropertySupporter<DialogCondition.Flag>.Set(
+        void IPropertySupporter<Condition.Flag>.Set(
             int index,
-            DialogCondition.Flag item,
+            Condition.Flag item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            SetDialogConditionFlag(
+            SetConditionFlag(
                 index: index,
                 item: item,
                 hasBeenSet: hasBeenSet,
                 cmds: cmds);
         }
 
-        protected void SetDialogConditionFlag(
+        protected void SetConditionFlag(
             int index,
-            DialogCondition.Flag item,
+            Condition.Flag item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     SetFlags(item, hasBeenSet, cmds);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type DialogCondition.Flag: {index}");
+                    throw new ArgumentException($"Unknown index for field type Condition.Flag: {index}");
             }
         }
 
-        bool IPropertySupporter<DialogCondition.Flag>.GetHasBeenSet(int index)
+        bool IPropertySupporter<Condition.Flag>.GetHasBeenSet(int index)
         {
             return _hasBeenSetTracker[index];
         }
 
-        void IPropertySupporter<DialogCondition.Flag>.SetHasBeenSet(
+        void IPropertySupporter<Condition.Flag>.SetHasBeenSet(
             int index,
             bool on)
         {
             _hasBeenSetTracker[index] = on;
         }
 
-        void IPropertySupporter<DialogCondition.Flag>.Unset(
+        void IPropertySupporter<Condition.Flag>.Unset(
             int index,
             NotifyingUnsetParameters cmds)
         {
-            UnsetDialogConditionFlag(
+            UnsetConditionFlag(
                 index: index,
                 cmds: cmds);
         }
 
-        protected void UnsetDialogConditionFlag(
+        protected void UnsetConditionFlag(
             int index,
             NotifyingUnsetParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     _hasBeenSetTracker[index] = false;
-                    Flags = default(DialogCondition.Flag);
+                    Flags = default(Condition.Flag);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type DialogCondition.Flag: {index}");
+                    throw new ArgumentException($"Unknown index for field type Condition.Flag: {index}");
             }
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<DialogCondition.Flag>.Subscribe(
+        void IPropertySupporter<Condition.Flag>.Subscribe(
             int index,
             object owner,
-            NotifyingSetItemInternalCallback<DialogCondition.Flag> callback,
+            NotifyingSetItemInternalCallback<Condition.Flag> callback,
             NotifyingSubscribeParameters cmds)
         {
-            if (_DialogConditionFlag_subscriptions == null)
+            if (_ConditionFlag_subscriptions == null)
             {
-                _DialogConditionFlag_subscriptions = new ObjectCentralizationSubscriptions<DialogCondition.Flag>();
+                _ConditionFlag_subscriptions = new ObjectCentralizationSubscriptions<Condition.Flag>();
             }
-            _DialogConditionFlag_subscriptions.Subscribe(
+            _ConditionFlag_subscriptions.Subscribe(
                 index: index,
                 owner: owner,
                 prop: this,
@@ -1232,31 +1232,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<DialogCondition.Flag>.Unsubscribe(
+        void IPropertySupporter<Condition.Flag>.Unsubscribe(
             int index,
             object owner)
         {
-            _DialogConditionFlag_subscriptions?.Unsubscribe(index, owner);
+            _ConditionFlag_subscriptions?.Unsubscribe(index, owner);
         }
 
-        void IPropertySupporter<DialogCondition.Flag>.SetCurrentAsDefault(int index)
+        void IPropertySupporter<Condition.Flag>.SetCurrentAsDefault(int index)
         {
             throw new NotImplementedException();
         }
 
-        DialogCondition.Flag IPropertySupporter<DialogCondition.Flag>.DefaultValue(int index)
+        Condition.Flag IPropertySupporter<Condition.Flag>.DefaultValue(int index)
         {
-            return DefaultValueDialogConditionFlag(index: index);
+            return DefaultValueConditionFlag(index: index);
         }
 
-        protected DialogCondition.Flag DefaultValueDialogConditionFlag(int index)
+        protected Condition.Flag DefaultValueConditionFlag(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Flags:
-                    return default(DialogCondition.Flag);
+                case Condition_FieldIndex.Flags:
+                    return default(Condition.Flag);
                 default:
-                    throw new ArgumentException($"Unknown index for field type DialogCondition.Flag: {index}");
+                    throw new ArgumentException($"Unknown index for field type Condition.Flag: {index}");
             }
         }
 
@@ -1271,9 +1271,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected Byte[] GetByteArr(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     return Fluff;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -1299,9 +1299,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     SetFluff(item, hasBeenSet, cmds);
                     break;
                 default:
@@ -1334,9 +1334,9 @@ namespace Mutagen.Bethesda.Oblivion
             int index,
             NotifyingUnsetParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     _hasBeenSetTracker[index] = false;
                     Fluff = default(Byte[]);
                     break;
@@ -1384,9 +1384,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected Byte[] DefaultValueByteArr(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     return default(Byte[]);
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -1404,9 +1404,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected Single GetSingle(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     return ComparisonValue;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -1432,9 +1432,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     SetComparisonValue(item, hasBeenSet, cmds);
                     break;
                 default:
@@ -1467,9 +1467,9 @@ namespace Mutagen.Bethesda.Oblivion
             int index,
             NotifyingUnsetParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     _hasBeenSetTracker[index] = false;
                     ComparisonValue = default(Single);
                     break;
@@ -1517,9 +1517,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected Single DefaultValueSingle(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     return default(Single);
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -1537,9 +1537,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected Function GetFunction(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     return Function;
                 default:
                     throw new ArgumentException($"Unknown index for field type Function: {index}");
@@ -1565,9 +1565,9 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     SetFunction(item, hasBeenSet, cmds);
                     break;
                 default:
@@ -1600,9 +1600,9 @@ namespace Mutagen.Bethesda.Oblivion
             int index,
             NotifyingUnsetParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     _hasBeenSetTracker[index] = false;
                     Function = default(Function);
                     break;
@@ -1650,9 +1650,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected Function DefaultValueFunction(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     return default(Function);
                 default:
                     throw new ArgumentException($"Unknown index for field type Function: {index}");
@@ -1670,13 +1670,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected Int32 GetInt32(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     return FirstParameter;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     return SecondParameter;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return ThirdParameter;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -1702,15 +1702,15 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     SetFirstParameter(item, hasBeenSet, cmds);
                     break;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     SetSecondParameter(item, hasBeenSet, cmds);
                     break;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     SetThirdParameter(item, hasBeenSet, cmds);
                     break;
                 default:
@@ -1743,17 +1743,17 @@ namespace Mutagen.Bethesda.Oblivion
             int index,
             NotifyingUnsetParameters cmds)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     _hasBeenSetTracker[index] = false;
                     FirstParameter = default(Int32);
                     break;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     _hasBeenSetTracker[index] = false;
                     SecondParameter = default(Int32);
                     break;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     _hasBeenSetTracker[index] = false;
                     ThirdParameter = default(Int32);
                     break;
@@ -1801,11 +1801,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected Int32 DefaultValueInt32(int index)
         {
-            switch ((DialogCondition_FieldIndex)index)
+            switch ((Condition_FieldIndex)index)
             {
-                case DialogCondition_FieldIndex.FirstParameter:
-                case DialogCondition_FieldIndex.SecondParameter:
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return default(Int32);
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -1815,13 +1815,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = DialogCondition_Registration.TRIGGERING_RECORD_TYPE;
+        public new static readonly RecordType GRUP_RECORD_TYPE = Condition_Registration.TRIGGERING_RECORD_TYPE;
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static DialogCondition Create_Binary(MutagenFrame frame)
+        public static Condition Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -1830,9 +1830,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static DialogCondition Create_Binary(
+        public static Condition Create_Binary(
             MutagenFrame frame,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1840,22 +1840,22 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         [DebuggerStepThrough]
-        public static DialogCondition Create_Binary(
+        public static Condition Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            var ret = new DialogCondition();
+            var ret = new Condition();
             try
             {
                 frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                     frame.Reader,
-                    recordTypeConverter.ConvertToCustom(DialogCondition_Registration.CTDA_HEADER)));
+                    recordTypeConverter.ConvertToCustom(Condition_Registration.CTDA_HEADER)));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DialogCondition Create_Binary(string path)
+        public static Condition Create_Binary(string path)
         {
             using (var reader = new BinaryReadStream(path))
             {
@@ -1881,9 +1881,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static DialogCondition Create_Binary(
+        public static Condition Create_Binary(
             string path,
-            out DialogCondition_ErrorMask errorMask)
+            out Condition_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
             {
@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static DialogCondition Create_Binary(Stream stream)
+        public static Condition Create_Binary(Stream stream)
         {
             using (var reader = new BinaryReadStream(stream))
             {
@@ -1903,9 +1903,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static DialogCondition Create_Binary(
+        public static Condition Create_Binary(
             Stream stream,
-            out DialogCondition_ErrorMask errorMask)
+            out Condition_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
             {
@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1929,12 +1929,12 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
             string path,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             bool doMasks = true)
         {
             using (var memStream = new MemoryTributary())
@@ -1956,7 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
@@ -2005,7 +2005,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            DialogConditionCommon.Write_Binary(
+            ConditionCommon.Write_Binary(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2015,17 +2015,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_CompareOperator_Custom(
             MutagenFrame frame,
-            DialogCondition item,
+            Condition item,
             ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_CompareOperator_Custom(
             MutagenWriter writer,
-            DialogCondition item,
+            Condition item,
             ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_CompareOperator(
             MutagenWriter writer,
-            DialogCondition item,
+            Condition item,
             ErrorMaskBuilder errorMask)
         {
             WriteBinary_CompareOperator_Custom(
@@ -2036,17 +2036,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_Flags_Custom(
             MutagenFrame frame,
-            DialogCondition item,
+            Condition item,
             ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_Flags_Custom(
             MutagenWriter writer,
-            DialogCondition item,
+            Condition item,
             ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_Flags(
             MutagenWriter writer,
-            DialogCondition item,
+            Condition item,
             ErrorMaskBuilder errorMask)
         {
             WriteBinary_Flags_Custom(
@@ -2056,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_Binary_Structs(
-            DialogCondition item,
+            Condition item,
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
@@ -2070,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
             try
             {
-                errorMask?.PushIndex((int)DialogCondition_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
                 if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                     frame: frame.SpawnWithLength(4),
                     item: out Byte[] FluffParse,
@@ -2094,7 +2094,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             try
             {
-                errorMask?.PushIndex((int)DialogCondition_FieldIndex.ComparisonValue);
+                errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                     frame: frame.Spawn(snapToFinalPosition: false),
                     item: out Single ComparisonValueParse,
@@ -2118,7 +2118,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             try
             {
-                errorMask?.PushIndex((int)DialogCondition_FieldIndex.Function);
+                errorMask?.PushIndex((int)Condition_FieldIndex.Function);
                 if (EnumBinaryTranslation<Function>.Instance.Parse(
                     frame: frame.SpawnWithLength(4),
                     item: out Function FunctionParse,
@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             try
             {
-                errorMask?.PushIndex((int)DialogCondition_FieldIndex.FirstParameter);
+                errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
                 if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                     frame: frame.Spawn(snapToFinalPosition: false),
                     item: out Int32 FirstParameterParse,
@@ -2166,7 +2166,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             try
             {
-                errorMask?.PushIndex((int)DialogCondition_FieldIndex.SecondParameter);
+                errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
                 if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                     frame: frame.Spawn(snapToFinalPosition: false),
                     item: out Int32 SecondParameterParse,
@@ -2190,7 +2190,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             try
             {
-                errorMask?.PushIndex((int)DialogCondition_FieldIndex.ThirdParameter);
+                errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
                 if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                     frame: frame.Spawn(snapToFinalPosition: false),
                     item: out Int32 ThirdParameterParse,
@@ -2216,29 +2216,29 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public DialogCondition Copy(
-            DialogCondition_CopyMask copyMask = null,
-            IDialogConditionGetter def = null)
+        public Condition Copy(
+            Condition_CopyMask copyMask = null,
+            IConditionGetter def = null)
         {
-            return DialogCondition.Copy(
+            return Condition.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static DialogCondition Copy(
-            IDialogCondition item,
-            DialogCondition_CopyMask copyMask = null,
-            IDialogConditionGetter def = null)
+        public static Condition Copy(
+            ICondition item,
+            Condition_CopyMask copyMask = null,
+            IConditionGetter def = null)
         {
-            DialogCondition ret;
-            if (item.GetType().Equals(typeof(DialogCondition)))
+            Condition ret;
+            if (item.GetType().Equals(typeof(Condition)))
             {
-                ret = new DialogCondition();
+                ret = new Condition();
             }
             else
             {
-                ret = (DialogCondition)System.Activator.CreateInstance(item.GetType());
+                ret = (Condition)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -2247,19 +2247,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DialogCondition Copy_ToLoqui(
-            IDialogConditionGetter item,
-            DialogCondition_CopyMask copyMask = null,
-            IDialogConditionGetter def = null)
+        public static Condition Copy_ToLoqui(
+            IConditionGetter item,
+            Condition_CopyMask copyMask = null,
+            IConditionGetter def = null)
         {
-            DialogCondition ret;
-            if (item.GetType().Equals(typeof(DialogCondition)))
+            Condition ret;
+            if (item.GetType().Equals(typeof(Condition)))
             {
-                ret = new DialogCondition() as DialogCondition;
+                ret = new Condition() as Condition;
             }
             else
             {
-                ret = (DialogCondition)System.Activator.CreateInstance(item.GetType());
+                ret = (Condition)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -2269,7 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IDialogConditionGetter rhs,
+            IConditionGetter rhs,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
@@ -2282,9 +2282,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IDialogConditionGetter rhs,
-            DialogCondition_CopyMask copyMask,
-            IDialogConditionGetter def = null,
+            IConditionGetter rhs,
+            Condition_CopyMask copyMask,
+            IConditionGetter def = null,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
@@ -2297,33 +2297,33 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IDialogConditionGetter rhs,
-            out DialogCondition_ErrorMask errorMask,
-            DialogCondition_CopyMask copyMask = null,
-            IDialogConditionGetter def = null,
+            IConditionGetter rhs,
+            out Condition_ErrorMask errorMask,
+            Condition_CopyMask copyMask = null,
+            IConditionGetter def = null,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            DialogConditionCommon.CopyFieldsFrom(
+            ConditionCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyFieldsFrom(
-            IDialogConditionGetter rhs,
+            IConditionGetter rhs,
             ErrorMaskBuilder errorMask,
-            DialogCondition_CopyMask copyMask = null,
-            IDialogConditionGetter def = null,
+            Condition_CopyMask copyMask = null,
+            IConditionGetter def = null,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            DialogConditionCommon.CopyFieldsFrom(
+            ConditionCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -2335,45 +2335,45 @@ namespace Mutagen.Bethesda.Oblivion
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     this.SetCompareOperator(
                         (CompareOperator)obj,
                         cmds: cmds);
                     break;
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     this.SetFlags(
-                        (DialogCondition.Flag)obj,
+                        (Condition.Flag)obj,
                         cmds: cmds);
                     break;
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     this.SetFluff(
                         (Byte[])obj,
                         cmds: cmds);
                     break;
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     this.SetComparisonValue(
                         (Single)obj,
                         cmds: cmds);
                     break;
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     this.SetFunction(
                         (Function)obj,
                         cmds: cmds);
                     break;
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     this.SetFirstParameter(
                         (Int32)obj,
                         cmds: cmds);
                     break;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     this.SetSecondParameter(
                         (Int32)obj,
                         cmds: cmds);
                     break;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     this.SetThirdParameter(
                         (Int32)obj,
                         cmds: cmds);
@@ -2393,64 +2393,64 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            DialogConditionCommon.Clear(this, cmds);
+            ConditionCommon.Clear(this, cmds);
         }
 
 
-        public static DialogCondition Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static Condition Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new DialogCondition();
+            var ret = new Condition();
             foreach (var pair in fields)
             {
-                CopyInInternal_DialogCondition(ret, pair);
+                CopyInInternal_Condition(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_DialogCondition(DialogCondition obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_Condition(Condition obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out DialogCondition_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Condition_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     obj.SetCompareOperator(
                         (CompareOperator)pair.Value,
                         cmds: null);
                     break;
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     obj.SetFlags(
-                        (DialogCondition.Flag)pair.Value,
+                        (Condition.Flag)pair.Value,
                         cmds: null);
                     break;
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     obj.SetFluff(
                         (Byte[])pair.Value,
                         cmds: null);
                     break;
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     obj.SetComparisonValue(
                         (Single)pair.Value,
                         cmds: null);
                     break;
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     obj.SetFunction(
                         (Function)pair.Value,
                         cmds: null);
                     break;
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     obj.SetFirstParameter(
                         (Int32)pair.Value,
                         cmds: null);
                     break;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     obj.SetSecondParameter(
                         (Int32)pair.Value,
                         cmds: null);
                     break;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     obj.SetThirdParameter(
                         (Int32)pair.Value,
                         cmds: null);
@@ -2459,7 +2459,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, DialogCondition obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Condition obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -2468,13 +2468,13 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IDialogCondition : IDialogConditionGetter, ILoquiClass<IDialogCondition, IDialogConditionGetter>, ILoquiClass<DialogCondition, IDialogConditionGetter>
+    public partial interface ICondition : IConditionGetter, ILoquiClass<ICondition, IConditionGetter>, ILoquiClass<Condition, IConditionGetter>
     {
         new CompareOperator CompareOperator { get; set; }
         new INotifyingItem<CompareOperator> CompareOperator_Property { get; }
 
-        new DialogCondition.Flag Flags { get; set; }
-        new INotifyingItem<DialogCondition.Flag> Flags_Property { get; }
+        new Condition.Flag Flags { get; set; }
+        new INotifyingItem<Condition.Flag> Flags_Property { get; }
 
         new Byte[] Fluff { get; set; }
         new INotifyingItem<Byte[]> Fluff_Property { get; }
@@ -2496,7 +2496,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IDialogConditionGetter : ILoquiObject
+    public partial interface IConditionGetter : ILoquiObject
     {
         #region CompareOperator
         CompareOperator CompareOperator { get; }
@@ -2504,8 +2504,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        DialogCondition.Flag Flags { get; }
-        INotifyingItemGetter<DialogCondition.Flag> Flags_Property { get; }
+        Condition.Flag Flags { get; }
+        INotifyingItemGetter<Condition.Flag> Flags_Property { get; }
 
         #endregion
         #region Fluff
@@ -2548,7 +2548,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum DialogCondition_FieldIndex
+    public enum Condition_FieldIndex
     {
         CompareOperator = 0,
         Flags = 1,
@@ -2562,9 +2562,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class DialogCondition_Registration : ILoquiRegistration
+    public class Condition_Registration : ILoquiRegistration
     {
-        public static readonly DialogCondition_Registration Instance = new DialogCondition_Registration();
+        public static readonly Condition_Registration Instance = new Condition_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
@@ -2573,27 +2573,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             msgID: 151,
             version: 0);
 
-        public const string GUID = "d744c161-2c6d-42a0-ada5-4cef3c179f12";
+        public const string GUID = "b992280d-2cc5-46ce-b935-e1cfd5bdd34f";
 
         public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(DialogCondition_Mask<>);
+        public static readonly Type MaskType = typeof(Condition_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(DialogCondition_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Condition_ErrorMask);
 
-        public static readonly Type ClassType = typeof(DialogCondition);
+        public static readonly Type ClassType = typeof(Condition);
 
-        public static readonly Type GetterType = typeof(IDialogConditionGetter);
+        public static readonly Type GetterType = typeof(IConditionGetter);
 
-        public static readonly Type SetterType = typeof(IDialogCondition);
+        public static readonly Type SetterType = typeof(ICondition);
 
-        public static readonly Type CommonType = typeof(DialogConditionCommon);
+        public static readonly Type CommonType = typeof(ConditionCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.DialogCondition";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.Condition";
 
-        public const string Name = "DialogCondition";
+        public const string Name = "Condition";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -2606,21 +2606,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (str.Upper)
             {
                 case "COMPAREOPERATOR":
-                    return (ushort)DialogCondition_FieldIndex.CompareOperator;
+                    return (ushort)Condition_FieldIndex.CompareOperator;
                 case "FLAGS":
-                    return (ushort)DialogCondition_FieldIndex.Flags;
+                    return (ushort)Condition_FieldIndex.Flags;
                 case "FLUFF":
-                    return (ushort)DialogCondition_FieldIndex.Fluff;
+                    return (ushort)Condition_FieldIndex.Fluff;
                 case "COMPARISONVALUE":
-                    return (ushort)DialogCondition_FieldIndex.ComparisonValue;
+                    return (ushort)Condition_FieldIndex.ComparisonValue;
                 case "FUNCTION":
-                    return (ushort)DialogCondition_FieldIndex.Function;
+                    return (ushort)Condition_FieldIndex.Function;
                 case "FIRSTPARAMETER":
-                    return (ushort)DialogCondition_FieldIndex.FirstParameter;
+                    return (ushort)Condition_FieldIndex.FirstParameter;
                 case "SECONDPARAMETER":
-                    return (ushort)DialogCondition_FieldIndex.SecondParameter;
+                    return (ushort)Condition_FieldIndex.SecondParameter;
                 case "THIRDPARAMETER":
-                    return (ushort)DialogCondition_FieldIndex.ThirdParameter;
+                    return (ushort)Condition_FieldIndex.ThirdParameter;
                 default:
                     return null;
             }
@@ -2628,17 +2628,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
-                case DialogCondition_FieldIndex.Flags:
-                case DialogCondition_FieldIndex.Fluff:
-                case DialogCondition_FieldIndex.ComparisonValue:
-                case DialogCondition_FieldIndex.Function:
-                case DialogCondition_FieldIndex.FirstParameter:
-                case DialogCondition_FieldIndex.SecondParameter:
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.Flags:
+                case Condition_FieldIndex.Fluff:
+                case Condition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.Function:
+                case Condition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2647,17 +2647,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
-                case DialogCondition_FieldIndex.Flags:
-                case DialogCondition_FieldIndex.Fluff:
-                case DialogCondition_FieldIndex.ComparisonValue:
-                case DialogCondition_FieldIndex.Function:
-                case DialogCondition_FieldIndex.FirstParameter:
-                case DialogCondition_FieldIndex.SecondParameter:
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.Flags:
+                case Condition_FieldIndex.Fluff:
+                case Condition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.Function:
+                case Condition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2666,17 +2666,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
-                case DialogCondition_FieldIndex.Flags:
-                case DialogCondition_FieldIndex.Fluff:
-                case DialogCondition_FieldIndex.ComparisonValue:
-                case DialogCondition_FieldIndex.Function:
-                case DialogCondition_FieldIndex.FirstParameter:
-                case DialogCondition_FieldIndex.SecondParameter:
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.Flags:
+                case Condition_FieldIndex.Fluff:
+                case Condition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.Function:
+                case Condition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2685,24 +2685,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     return "CompareOperator";
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     return "Flags";
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     return "Fluff";
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     return "ComparisonValue";
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     return "Function";
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     return "FirstParameter";
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     return "SecondParameter";
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return "ThirdParameter";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2711,17 +2711,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
-                case DialogCondition_FieldIndex.Flags:
-                case DialogCondition_FieldIndex.Fluff:
-                case DialogCondition_FieldIndex.ComparisonValue:
-                case DialogCondition_FieldIndex.Function:
-                case DialogCondition_FieldIndex.FirstParameter:
-                case DialogCondition_FieldIndex.SecondParameter:
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.Flags:
+                case Condition_FieldIndex.Fluff:
+                case Condition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.Function:
+                case Condition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2730,17 +2730,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
-                case DialogCondition_FieldIndex.Flags:
-                case DialogCondition_FieldIndex.Fluff:
-                case DialogCondition_FieldIndex.ComparisonValue:
-                case DialogCondition_FieldIndex.Function:
-                case DialogCondition_FieldIndex.FirstParameter:
-                case DialogCondition_FieldIndex.SecondParameter:
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.Flags:
+                case Condition_FieldIndex.Fluff:
+                case Condition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.Function:
+                case Condition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2749,24 +2749,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     return typeof(CompareOperator);
-                case DialogCondition_FieldIndex.Flags:
-                    return typeof(DialogCondition.Flag);
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Flags:
+                    return typeof(Condition.Flag);
+                case Condition_FieldIndex.Fluff:
                     return typeof(Byte[]);
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     return typeof(Single);
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     return typeof(Function);
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     return typeof(Int32);
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     return typeof(Int32);
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return typeof(Int32);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2808,20 +2808,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class DialogConditionCommon
+    public static partial class ConditionCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IDialogCondition item,
-            IDialogConditionGetter rhs,
-            IDialogConditionGetter def,
+            ICondition item,
+            IConditionGetter rhs,
+            IConditionGetter def,
             ErrorMaskBuilder errorMask,
-            DialogCondition_CopyMask copyMask,
+            Condition_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             if (copyMask?.CompareOperator ?? true)
             {
-                errorMask.PushIndex((int)DialogCondition_FieldIndex.CompareOperator);
+                errorMask.PushIndex((int)Condition_FieldIndex.CompareOperator);
                 try
                 {
                     item.CompareOperator_Property.Set(
@@ -2840,7 +2840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)DialogCondition_FieldIndex.Flags);
+                errorMask.PushIndex((int)Condition_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2859,7 +2859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask.PushIndex((int)DialogCondition_FieldIndex.Fluff);
+                errorMask.PushIndex((int)Condition_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -2878,7 +2878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.ComparisonValue ?? true)
             {
-                errorMask.PushIndex((int)DialogCondition_FieldIndex.ComparisonValue);
+                errorMask.PushIndex((int)Condition_FieldIndex.ComparisonValue);
                 try
                 {
                     item.ComparisonValue_Property.Set(
@@ -2897,7 +2897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Function ?? true)
             {
-                errorMask.PushIndex((int)DialogCondition_FieldIndex.Function);
+                errorMask.PushIndex((int)Condition_FieldIndex.Function);
                 try
                 {
                     item.Function_Property.Set(
@@ -2916,7 +2916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.FirstParameter ?? true)
             {
-                errorMask.PushIndex((int)DialogCondition_FieldIndex.FirstParameter);
+                errorMask.PushIndex((int)Condition_FieldIndex.FirstParameter);
                 try
                 {
                     item.FirstParameter_Property.Set(
@@ -2935,7 +2935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.SecondParameter ?? true)
             {
-                errorMask.PushIndex((int)DialogCondition_FieldIndex.SecondParameter);
+                errorMask.PushIndex((int)Condition_FieldIndex.SecondParameter);
                 try
                 {
                     item.SecondParameter_Property.Set(
@@ -2954,7 +2954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.ThirdParameter ?? true)
             {
-                errorMask.PushIndex((int)DialogCondition_FieldIndex.ThirdParameter);
+                errorMask.PushIndex((int)Condition_FieldIndex.ThirdParameter);
                 try
                 {
                     item.ThirdParameter_Property.Set(
@@ -2978,20 +2978,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IDialogCondition obj,
+            ICondition obj,
             NotifyingFireParameters cmds = null)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
-                case DialogCondition_FieldIndex.Flags:
-                case DialogCondition_FieldIndex.Fluff:
-                case DialogCondition_FieldIndex.ComparisonValue:
-                case DialogCondition_FieldIndex.Function:
-                case DialogCondition_FieldIndex.FirstParameter:
-                case DialogCondition_FieldIndex.SecondParameter:
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.Flags:
+                case Condition_FieldIndex.Fluff:
+                case Condition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.Function:
+                case Condition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
@@ -3001,34 +3001,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IDialogCondition obj,
+            ICondition obj,
             NotifyingUnsetParameters cmds = null)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     obj.CompareOperator = default(CompareOperator);
                     break;
-                case DialogCondition_FieldIndex.Flags:
-                    obj.Flags = default(DialogCondition.Flag);
+                case Condition_FieldIndex.Flags:
+                    obj.Flags = default(Condition.Flag);
                     break;
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     obj.Fluff = default(Byte[]);
                     break;
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     obj.ComparisonValue = default(Single);
                     break;
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     obj.Function = default(Function);
                     break;
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     obj.FirstParameter = default(Int32);
                     break;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     obj.SecondParameter = default(Int32);
                     break;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     obj.ThirdParameter = default(Int32);
                     break;
                 default:
@@ -3038,19 +3038,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IDialogCondition obj)
+            ICondition obj)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
-                case DialogCondition_FieldIndex.Flags:
-                case DialogCondition_FieldIndex.Fluff:
-                case DialogCondition_FieldIndex.ComparisonValue:
-                case DialogCondition_FieldIndex.Function:
-                case DialogCondition_FieldIndex.FirstParameter:
-                case DialogCondition_FieldIndex.SecondParameter:
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.Flags:
+                case Condition_FieldIndex.Fluff:
+                case Condition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.Function:
+                case Condition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3059,26 +3059,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static object GetNthObject(
             ushort index,
-            IDialogConditionGetter obj)
+            IConditionGetter obj)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     return obj.CompareOperator;
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     return obj.Flags;
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     return obj.Fluff;
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     return obj.ComparisonValue;
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     return obj.Function;
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     return obj.FirstParameter;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     return obj.SecondParameter;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return obj.ThirdParameter;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3086,11 +3086,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Clear(
-            IDialogCondition item,
+            ICondition item,
             NotifyingUnsetParameters cmds = null)
         {
             item.CompareOperator = default(CompareOperator);
-            item.Flags = default(DialogCondition.Flag);
+            item.Flags = default(Condition.Flag);
             item.Fluff = default(Byte[]);
             item.ComparisonValue = default(Single);
             item.Function = default(Function);
@@ -3099,19 +3099,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default(Int32);
         }
 
-        public static DialogCondition_Mask<bool> GetEqualsMask(
-            this IDialogConditionGetter item,
-            IDialogConditionGetter rhs)
+        public static Condition_Mask<bool> GetEqualsMask(
+            this IConditionGetter item,
+            IConditionGetter rhs)
         {
-            var ret = new DialogCondition_Mask<bool>();
+            var ret = new Condition_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IDialogConditionGetter item,
-            IDialogConditionGetter rhs,
-            DialogCondition_Mask<bool> ret)
+            IConditionGetter item,
+            IConditionGetter rhs,
+            Condition_Mask<bool> ret)
         {
             if (rhs == null) return;
             ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
@@ -3125,9 +3125,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static string ToString(
-            this IDialogConditionGetter item,
+            this IConditionGetter item,
             string name = null,
-            DialogCondition_Mask<bool> printMask = null)
+            Condition_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -3135,18 +3135,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IDialogConditionGetter item,
+            this IConditionGetter item,
             FileGeneration fg,
             string name = null,
-            DialogCondition_Mask<bool> printMask = null)
+            Condition_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(DialogCondition)} =>");
+                fg.AppendLine($"{nameof(Condition)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(DialogCondition)}) =>");
+                fg.AppendLine($"{name} ({nameof(Condition)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -3188,15 +3188,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static bool HasBeenSet(
-            this IDialogConditionGetter item,
-            DialogCondition_Mask<bool?> checkMask)
+            this IConditionGetter item,
+            Condition_Mask<bool?> checkMask)
         {
             return true;
         }
 
-        public static DialogCondition_Mask<bool> GetHasBeenSetMask(IDialogConditionGetter item)
+        public static Condition_Mask<bool> GetHasBeenSetMask(IConditionGetter item)
         {
-            var ret = new DialogCondition_Mask<bool>();
+            var ret = new Condition_Mask<bool>();
             ret.CompareOperator = true;
             ret.Flags = true;
             ret.Fluff = true;
@@ -3212,9 +3212,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Write
         public static void Write_XML(
             XElement node,
-            IDialogConditionGetter item,
+            IConditionGetter item,
             bool doMasks,
-            out DialogCondition_ErrorMask errorMask,
+            out Condition_ErrorMask errorMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -3223,68 +3223,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 name: name,
                 item: item,
                 errorMask: errorMaskBuilder);
-            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void Write_XML(
             XElement node,
-            IDialogConditionGetter item,
+            IConditionGetter item,
             ErrorMaskBuilder errorMask,
             string name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogCondition");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Condition");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogCondition");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Condition");
             }
             EnumXmlTranslation<CompareOperator>.Instance.Write(
                 node: elem,
                 name: nameof(item.CompareOperator),
                 item: item.CompareOperator_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.CompareOperator,
+                fieldIndex: (int)Condition_FieldIndex.CompareOperator,
                 errorMask: errorMask);
-            EnumXmlTranslation<DialogCondition.Flag>.Instance.Write(
+            EnumXmlTranslation<Condition.Flag>.Instance.Write(
                 node: elem,
                 name: nameof(item.Flags),
                 item: item.Flags_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.Flags,
+                fieldIndex: (int)Condition_FieldIndex.Flags,
                 errorMask: errorMask);
             ByteArrayXmlTranslation.Instance.Write(
                 node: elem,
                 name: nameof(item.Fluff),
                 item: item.Fluff_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.Fluff,
+                fieldIndex: (int)Condition_FieldIndex.Fluff,
                 errorMask: errorMask);
             FloatXmlTranslation.Instance.Write(
                 node: elem,
                 name: nameof(item.ComparisonValue),
                 item: item.ComparisonValue_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.ComparisonValue,
+                fieldIndex: (int)Condition_FieldIndex.ComparisonValue,
                 errorMask: errorMask);
             EnumXmlTranslation<Function>.Instance.Write(
                 node: elem,
                 name: nameof(item.Function),
                 item: item.Function_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.Function,
+                fieldIndex: (int)Condition_FieldIndex.Function,
                 errorMask: errorMask);
             Int32XmlTranslation.Instance.Write(
                 node: elem,
                 name: nameof(item.FirstParameter),
                 item: item.FirstParameter_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.FirstParameter,
+                fieldIndex: (int)Condition_FieldIndex.FirstParameter,
                 errorMask: errorMask);
             Int32XmlTranslation.Instance.Write(
                 node: elem,
                 name: nameof(item.SecondParameter),
                 item: item.SecondParameter_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.SecondParameter,
+                fieldIndex: (int)Condition_FieldIndex.SecondParameter,
                 errorMask: errorMask);
             Int32XmlTranslation.Instance.Write(
                 node: elem,
                 name: nameof(item.ThirdParameter),
                 item: item.ThirdParameter_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.ThirdParameter,
+                fieldIndex: (int)Condition_FieldIndex.ThirdParameter,
                 errorMask: errorMask);
         }
         #endregion
@@ -3295,10 +3295,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            DialogCondition item,
+            Condition item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out DialogCondition_ErrorMask errorMask)
+            out Condition_ErrorMask errorMask)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
@@ -3306,18 +3306,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
-            errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void Write_Binary(
             MutagenWriter writer,
-            DialogCondition item,
+            Condition item,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: DialogCondition_Registration.CTDA_HEADER,
+                record: Condition_Registration.CTDA_HEADER,
                 type: ObjectType.Subrecord))
             {
                 Write_Binary_Embedded(
@@ -3329,48 +3329,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            DialogCondition item,
+            Condition item,
             MutagenWriter writer,
             ErrorMaskBuilder errorMask)
         {
-            DialogCondition.WriteBinary_CompareOperator(
+            Condition.WriteBinary_CompareOperator(
                 writer: writer,
                 item: item,
                 errorMask: errorMask);
-            DialogCondition.WriteBinary_Flags(
+            Condition.WriteBinary_Flags(
                 writer: writer,
                 item: item,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.Fluff,
+                fieldIndex: (int)Condition_FieldIndex.Fluff,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.ComparisonValue,
+                fieldIndex: (int)Condition_FieldIndex.ComparisonValue,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Function>.Instance.Write(
                 writer,
                 item.Function_Property,
                 length: 4,
-                fieldIndex: (int)DialogCondition_FieldIndex.Function,
+                fieldIndex: (int)Condition_FieldIndex.Function,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FirstParameter_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.FirstParameter,
+                fieldIndex: (int)Condition_FieldIndex.FirstParameter,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SecondParameter_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.SecondParameter,
+                fieldIndex: (int)Condition_FieldIndex.SecondParameter,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ThirdParameter_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.ThirdParameter,
+                fieldIndex: (int)Condition_FieldIndex.ThirdParameter,
                 errorMask: errorMask);
         }
 
@@ -3382,14 +3382,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class DialogCondition_Mask<T> : IMask<T>, IEquatable<DialogCondition_Mask<T>>
+    public class Condition_Mask<T> : IMask<T>, IEquatable<Condition_Mask<T>>
     {
         #region Ctors
-        public DialogCondition_Mask()
+        public Condition_Mask()
         {
         }
 
-        public DialogCondition_Mask(T initialValue)
+        public Condition_Mask(T initialValue)
         {
             this.CompareOperator = initialValue;
             this.Flags = initialValue;
@@ -3416,11 +3416,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is DialogCondition_Mask<T> rhs)) return false;
+            if (!(obj is Condition_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(DialogCondition_Mask<T> rhs)
+        public bool Equals(Condition_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!object.Equals(this.CompareOperator, rhs.CompareOperator)) return false;
@@ -3465,14 +3465,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Translate
-        public DialogCondition_Mask<R> Translate<R>(Func<T, R> eval)
+        public Condition_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new DialogCondition_Mask<R>();
+            var ret = new Condition_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(DialogCondition_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Condition_Mask<R> obj, Func<T, R> eval)
         {
             obj.CompareOperator = eval(this.CompareOperator);
             obj.Flags = eval(this.Flags);
@@ -3497,16 +3497,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(DialogCondition_Mask<bool> printMask = null)
+        public string ToString(Condition_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, DialogCondition_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Condition_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(DialogCondition_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Condition_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -3549,7 +3549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class DialogCondition_ErrorMask : IErrorMask, IErrorMask<DialogCondition_ErrorMask>
+    public class Condition_ErrorMask : IErrorMask, IErrorMask<Condition_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -3578,24 +3578,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region IErrorMask
         public object GetNthMask(int index)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     return CompareOperator;
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     return Flags;
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     return Fluff;
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     return ComparisonValue;
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     return Function;
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     return FirstParameter;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     return SecondParameter;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     return ThirdParameter;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3604,31 +3604,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void SetNthException(int index, Exception ex)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     this.CompareOperator = ex;
                     break;
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     this.Flags = ex;
                     break;
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     this.Fluff = ex;
                     break;
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     this.ComparisonValue = ex;
                     break;
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     this.Function = ex;
                     break;
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     this.FirstParameter = ex;
                     break;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     this.SecondParameter = ex;
                     break;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     this.ThirdParameter = ex;
                     break;
                 default:
@@ -3638,31 +3638,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            DialogCondition_FieldIndex enu = (DialogCondition_FieldIndex)index;
+            Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
             {
-                case DialogCondition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.CompareOperator:
                     this.CompareOperator = (Exception)obj;
                     break;
-                case DialogCondition_FieldIndex.Flags:
+                case Condition_FieldIndex.Flags:
                     this.Flags = (Exception)obj;
                     break;
-                case DialogCondition_FieldIndex.Fluff:
+                case Condition_FieldIndex.Fluff:
                     this.Fluff = (Exception)obj;
                     break;
-                case DialogCondition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.ComparisonValue:
                     this.ComparisonValue = (Exception)obj;
                     break;
-                case DialogCondition_FieldIndex.Function:
+                case Condition_FieldIndex.Function:
                     this.Function = (Exception)obj;
                     break;
-                case DialogCondition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.FirstParameter:
                     this.FirstParameter = (Exception)obj;
                     break;
-                case DialogCondition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.SecondParameter:
                     this.SecondParameter = (Exception)obj;
                     break;
-                case DialogCondition_FieldIndex.ThirdParameter:
+                case Condition_FieldIndex.ThirdParameter:
                     this.ThirdParameter = (Exception)obj;
                     break;
                 default:
@@ -3695,7 +3695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("DialogCondition_ErrorMask =>");
+            fg.AppendLine("Condition_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -3727,9 +3727,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public DialogCondition_ErrorMask Combine(DialogCondition_ErrorMask rhs)
+        public Condition_ErrorMask Combine(Condition_ErrorMask rhs)
         {
-            var ret = new DialogCondition_ErrorMask();
+            var ret = new Condition_ErrorMask();
             ret.CompareOperator = this.CompareOperator.Combine(rhs.CompareOperator);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Fluff = this.Fluff.Combine(rhs.Fluff);
@@ -3740,7 +3740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ThirdParameter = this.ThirdParameter.Combine(rhs.ThirdParameter);
             return ret;
         }
-        public static DialogCondition_ErrorMask Combine(DialogCondition_ErrorMask lhs, DialogCondition_ErrorMask rhs)
+        public static Condition_ErrorMask Combine(Condition_ErrorMask lhs, Condition_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -3748,15 +3748,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static DialogCondition_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static Condition_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            return new DialogCondition_ErrorMask();
+            return new Condition_ErrorMask();
         }
         #endregion
 
     }
-    public class DialogCondition_CopyMask
+    public class Condition_CopyMask
     {
         #region Members
         public bool CompareOperator;

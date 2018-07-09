@@ -201,19 +201,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<DialogCondition> _Conditions = new NotifyingList<DialogCondition>();
-        public INotifyingList<DialogCondition> Conditions => _Conditions;
+        private readonly INotifyingList<Condition> _Conditions = new NotifyingList<Condition>();
+        public INotifyingList<Condition> Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<DialogCondition> ConditionsEnumerable
+        public IEnumerable<Condition> ConditionsEnumerable
         {
             get => _Conditions;
             set => _Conditions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<DialogCondition> IDialogItem.Conditions => _Conditions;
+        INotifyingList<Condition> IDialogItem.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<DialogCondition> IDialogItemGetter.Conditions => _Conditions;
+        INotifyingListGetter<Condition> IDialogItemGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -923,12 +923,12 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiXmlTranslation<DialogResponse>.Instance.Parse);
                     break;
                 case "Conditions":
-                    ListXmlTranslation<DialogCondition>.Instance.ParseInto(
+                    ListXmlTranslation<Condition>.Instance.ParseInto(
                         root: root,
                         item: item.Conditions,
                         fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                         errorMask: errorMask,
-                        transl: LoquiXmlTranslation<DialogCondition>.Instance.Parse);
+                        transl: LoquiXmlTranslation<Condition>.Instance.Parse);
                     break;
                 case "Choices":
                     ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseInto(
@@ -1929,27 +1929,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        static partial void FillBinary_Conditions_Custom(
-            MutagenFrame frame,
-            DialogItem item,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_Conditions_Custom(
-            MutagenWriter writer,
-            DialogItem item,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_Conditions(
-            MutagenWriter writer,
-            DialogItem item,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_Conditions_Custom(
-                writer: writer,
-                item: item,
-                errorMask: errorMask);
-        }
-
         static partial void FillBinary_ConditionsOld_Custom(
             MutagenFrame frame,
             DialogItem item,
@@ -2111,13 +2090,14 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<DialogResponse>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
                 case 0x41445443: // CTDA
-                    using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
-                    {
-                        FillBinary_Conditions_Custom(
-                            frame: subFrame,
-                            item: item,
-                            errorMask: errorMask);
-                    }
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: DialogItem_Registration.CTDA_HEADER,
+                        item: item.Conditions,
+                        fieldIndex: (int)DialogItem_FieldIndex.Conditions,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
+                        errorMask: errorMask,
+                        transl: LoquiBinaryTranslation<Condition>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
                 case 0x54445443: // CTDT
                     using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
@@ -2383,7 +2363,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Responses.SetTo((IEnumerable<DialogResponse>)obj, cmds);
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<DialogCondition>)obj, cmds);
+                    this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
                     break;
                 case DialogItem_FieldIndex.Choices:
                     this._Choices.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)obj, cmds);
@@ -2465,7 +2445,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Responses.SetTo((IEnumerable<DialogResponse>)pair.Value, null);
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<DialogCondition>)pair.Value, null);
+                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
                     break;
                 case DialogItem_FieldIndex.Choices:
                     obj._Choices.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)pair.Value, null);
@@ -2514,7 +2494,7 @@ namespace Mutagen.Bethesda.Oblivion
         new DialogItem PreviousTopic { get; set; }
         new INotifyingList<FormIDSetLink<DialogTopic>> Topics { get; }
         new INotifyingList<DialogResponse> Responses { get; }
-        new INotifyingList<DialogCondition> Conditions { get; }
+        new INotifyingList<Condition> Conditions { get; }
         new INotifyingList<FormIDSetLink<DialogTopic>> Choices { get; }
         new INotifyingList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
         new Byte[] CompiledScript { get; set; }
@@ -2555,7 +2535,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingListGetter<DialogResponse> Responses { get; }
         #endregion
         #region Conditions
-        INotifyingListGetter<DialogCondition> Conditions { get; }
+        INotifyingListGetter<Condition> Conditions { get; }
         #endregion
         #region Choices
         INotifyingListGetter<FormIDSetLink<DialogTopic>> Choices { get; }
@@ -2867,7 +2847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Responses:
                     return typeof(NotifyingList<DialogResponse>);
                 case DialogItem_FieldIndex.Conditions:
-                    return typeof(NotifyingList<DialogCondition>);
+                    return typeof(NotifyingList<Condition>);
                 case DialogItem_FieldIndex.Choices:
                     return typeof(NotifyingList<FormIDSetLink<DialogTopic>>);
                 case DialogItem_FieldIndex.LinkFrom:
@@ -3103,8 +3083,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(DialogCondition);
-                                    return DialogCondition.Copy(
+                                    if (r == null) return default(Condition);
+                                    return Condition.Copy(
                                         r,
                                         copyMask?.Conditions?.Specific,
                                         def: d);
@@ -3529,10 +3509,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Conditions.HasBeenSet)
                 {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogCondition_Mask<bool>>>>();
-                    ret.Conditions.Specific = item.Conditions.SelectAgainst<DialogCondition, MaskItem<bool, DialogCondition_Mask<bool>>>(rhs.Conditions, ((l, r) =>
+                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
+                    ret.Conditions.Specific = item.Conditions.SelectAgainst<Condition, MaskItem<bool, Condition_Mask<bool>>>(rhs.Conditions, ((l, r) =>
                     {
-                        MaskItem<bool, DialogCondition_Mask<bool>> itemRet;
+                        MaskItem<bool, Condition_Mask<bool>> itemRet;
                         itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
@@ -3541,13 +3521,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 else
                 {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogCondition_Mask<bool>>>>();
+                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
                     ret.Conditions.Overall = true;
                 }
             }
             else
             {
-                ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogCondition_Mask<bool>>>>();
+                ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
                 ret.Conditions.Overall = false;
             }
             if (item.Choices.HasBeenSet == rhs.Choices.HasBeenSet)
@@ -3814,7 +3794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.PreviousTopic = item.PreviousTopic_Property.HasBeenSet;
             ret.Topics = new MaskItem<bool, IEnumerable<bool>>(item.Topics.HasBeenSet, null);
             ret.Responses = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogResponse_Mask<bool>>>>(item.Responses.HasBeenSet, item.Responses.Select((i) => new MaskItem<bool, DialogResponse_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogCondition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, DialogCondition_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Choices = new MaskItem<bool, IEnumerable<bool>>(item.Choices.HasBeenSet, null);
             ret.LinkFrom = new MaskItem<bool, IEnumerable<bool>>(item.LinkFrom.HasBeenSet, null);
             ret.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(item.MetadataSummary_Property.HasBeenSet, ScriptMetaSummaryCommon.GetHasBeenSetMask(item.MetadataSummary));
@@ -3947,15 +3927,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Conditions.HasBeenSet)
             {
-                ListXmlTranslation<DialogCondition>.Instance.Write(
+                ListXmlTranslation<Condition>.Instance.Write(
                     node: elem,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    transl: (XElement subNode, DialogCondition subItem, ErrorMaskBuilder listSubMask) =>
+                    transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask) =>
                     {
-                        LoquiXmlTranslation<DialogCondition>.Instance.Write(
+                        LoquiXmlTranslation<Condition>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: "Item",
@@ -4147,10 +4127,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)DialogItem_FieldIndex.Responses,
                 errorMask: errorMask,
                 transl: LoquiBinaryTranslation<DialogResponse>.Instance.Write);
-            DialogItem.WriteBinary_Conditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
                 writer: writer,
-                item: item,
-                errorMask: errorMask);
+                items: item.Conditions,
+                fieldIndex: (int)DialogItem_FieldIndex.Conditions,
+                errorMask: errorMask,
+                transl: LoquiBinaryTranslation<Condition>.Instance.Write);
             DialogItem.WriteBinary_ConditionsOld(
                 writer: writer,
                 item: item,
@@ -4224,7 +4206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.PreviousTopic = initialValue;
             this.Topics = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.Responses = new MaskItem<T, IEnumerable<MaskItem<T, DialogResponse_Mask<T>>>>(initialValue, null);
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItem<T, DialogCondition_Mask<T>>>>(initialValue, null);
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>>(initialValue, null);
             this.Choices = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.LinkFrom = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.MetadataSummary = new MaskItem<T, ScriptMetaSummary_Mask<T>>(initialValue, new ScriptMetaSummary_Mask<T>(initialValue));
@@ -4241,7 +4223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T PreviousTopic;
         public MaskItem<T, IEnumerable<T>> Topics;
         public MaskItem<T, IEnumerable<MaskItem<T, DialogResponse_Mask<T>>>> Responses;
-        public MaskItem<T, IEnumerable<MaskItem<T, DialogCondition_Mask<T>>>> Conditions;
+        public MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>> Conditions;
         public MaskItem<T, IEnumerable<T>> Choices;
         public MaskItem<T, IEnumerable<T>> LinkFrom;
         public MaskItem<T, ScriptMetaSummary_Mask<T>> MetadataSummary { get; set; }
@@ -4443,18 +4425,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItem<R, DialogCondition_Mask<R>>>>();
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItem<R, Condition_Mask<R>>>>();
                 obj.Conditions.Overall = eval(this.Conditions.Overall);
                 if (Conditions.Specific != null)
                 {
-                    List<MaskItem<R, DialogCondition_Mask<R>>> l = new List<MaskItem<R, DialogCondition_Mask<R>>>();
+                    List<MaskItem<R, Condition_Mask<R>>> l = new List<MaskItem<R, Condition_Mask<R>>>();
                     obj.Conditions.Specific = l;
                     foreach (var item in Conditions.Specific)
                     {
-                        MaskItem<R, DialogCondition_Mask<R>> mask = default(MaskItem<R, DialogCondition_Mask<R>>);
+                        MaskItem<R, Condition_Mask<R>> mask = default(MaskItem<R, Condition_Mask<R>>);
                         if (item != null)
                         {
-                            mask = new MaskItem<R, DialogCondition_Mask<R>>();
+                            mask = new MaskItem<R, Condition_Mask<R>>();
                             mask.Overall = eval(item.Overall);
                             if (item.Specific != null)
                             {
@@ -4761,7 +4743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception PreviousTopic;
         public MaskItem<Exception, IEnumerable<Exception>> Topics;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogResponse_ErrorMask>>> Responses;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogCondition_ErrorMask>>> Conditions;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>> Conditions;
         public MaskItem<Exception, IEnumerable<Exception>> Choices;
         public MaskItem<Exception, IEnumerable<Exception>> LinkFrom;
         public MaskItem<Exception, ScriptMetaSummary_ErrorMask> MetadataSummary;
@@ -4831,7 +4813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Responses = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogResponse_ErrorMask>>>(ex, null);
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    this.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogCondition_ErrorMask>>>(ex, null);
+                    this.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(ex, null);
                     break;
                 case DialogItem_FieldIndex.Choices:
                     this.Choices = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
@@ -4881,7 +4863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Responses = (MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogResponse_ErrorMask>>>)obj;
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    this.Conditions = (MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogCondition_ErrorMask>>>)obj;
+                    this.Conditions = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>)obj;
                     break;
                 case DialogItem_FieldIndex.Choices:
                     this.Choices = (MaskItem<Exception, IEnumerable<Exception>>)obj;
@@ -5110,7 +5092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.PreviousTopic = this.PreviousTopic.Combine(rhs.PreviousTopic);
             ret.Topics = new MaskItem<Exception, IEnumerable<Exception>>(this.Topics.Overall.Combine(rhs.Topics.Overall), new List<Exception>(this.Topics.Specific.And(rhs.Topics.Specific)));
             ret.Responses = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogResponse_ErrorMask>>>(this.Responses.Overall.Combine(rhs.Responses.Overall), new List<MaskItem<Exception, DialogResponse_ErrorMask>>(this.Responses.Specific.And(rhs.Responses.Specific)));
-            ret.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogCondition_ErrorMask>>>(this.Conditions.Overall.Combine(rhs.Conditions.Overall), new List<MaskItem<Exception, DialogCondition_ErrorMask>>(this.Conditions.Specific.And(rhs.Conditions.Specific)));
+            ret.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(this.Conditions.Overall.Combine(rhs.Conditions.Overall), new List<MaskItem<Exception, Condition_ErrorMask>>(this.Conditions.Specific.And(rhs.Conditions.Specific)));
             ret.Choices = new MaskItem<Exception, IEnumerable<Exception>>(this.Choices.Overall.Combine(rhs.Choices.Overall), new List<Exception>(this.Choices.Specific.And(rhs.Choices.Specific)));
             ret.LinkFrom = new MaskItem<Exception, IEnumerable<Exception>>(this.LinkFrom.Overall.Combine(rhs.LinkFrom.Overall), new List<Exception>(this.LinkFrom.Specific.And(rhs.LinkFrom.Specific)));
             ret.MetadataSummary = new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(this.MetadataSummary.Overall.Combine(rhs.MetadataSummary.Overall), ((IErrorMask<ScriptMetaSummary_ErrorMask>)this.MetadataSummary.Specific).Combine(rhs.MetadataSummary.Specific));
@@ -5144,7 +5126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool PreviousTopic;
         public CopyOption Topics;
         public MaskItem<CopyOption, DialogResponse_CopyMask> Responses;
-        public MaskItem<CopyOption, DialogCondition_CopyMask> Conditions;
+        public MaskItem<CopyOption, Condition_CopyMask> Conditions;
         public CopyOption Choices;
         public CopyOption LinkFrom;
         public MaskItem<bool, ScriptMetaSummary_CopyMask> MetadataSummary;

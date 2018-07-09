@@ -44,58 +44,23 @@ namespace Mutagen.Bethesda.Oblivion
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("SCHR"),
                 new RecordType("SCHD")));
-
-        static partial void FillBinary_Conditions_Custom(MutagenFrame frame, DialogItem item, ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition>.Instance.ParseRepeatedItem(
-               frame: new MutagenFrame(frame.Reader),
-               triggeringRecord: DialogItem_Registration.CTDA_HEADER,
-               item: item.Conditions,
-               fieldIndex: (int)DialogItem_FieldIndex.Conditions,
-               lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-               errorMask: errorMask,
-               transl: (MutagenFrame r, out DialogCondition listItem, ErrorMaskBuilder listErrMask) =>
-               {
-                   return LoquiBinaryTranslation<DialogCondition>.Instance.Parse(
-                       frame: r.Spawn(snapToFinalPosition: false),
-                       item: out listItem,
-                       errorMask: errorMask);
-               });
-        }
-
-        static partial void WriteBinary_Conditions_Custom(MutagenWriter writer, DialogItem item, ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition>.Instance.Write(
-                writer: writer,
-                items: item.Conditions,
-                fieldIndex: (int)DialogItem_FieldIndex.Conditions,
-                errorMask: errorMask,
-                transl: (MutagenWriter subWriter, DialogCondition subItem, ErrorMaskBuilder listSubMask) =>
-                {
-                    LoquiBinaryTranslation<DialogCondition>.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        errorMask: listSubMask);
-                }
-                );
-        }
-
+        
         static partial void FillBinary_ConditionsOld_Custom(MutagenFrame frame, DialogItem item, ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogCondition>.Instance.ParseRepeatedItem(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
                frame: frame,
                triggeringRecord: new RecordType("CTDT"),
                item: item.Conditions,
                fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                errorMask: errorMask,
-               transl: (MutagenFrame r, out DialogCondition listItem, ErrorMaskBuilder listSubMask) =>
+               transl: (MutagenFrame r, out Condition listItem, ErrorMaskBuilder listSubMask) =>
                {
                    byte[] bytes = r.ReadBytes(0x1A);
                    bytes[4] = 0x18;
                    byte[] newBytes = new byte[bytes.Length + 4];
                    Array.Copy(bytes, newBytes, bytes.Length);
-                   return LoquiBinaryTranslation<DialogCondition>.Instance.Parse(
+                   return LoquiBinaryTranslation<Condition>.Instance.Parse(
                        frame: new MutagenFrame(new BinaryMemoryReadStream(newBytes)),
                        item: out listItem,
                        errorMask: listSubMask,

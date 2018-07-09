@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DialogCondition
+    public partial class Condition
     {
         public enum Flag
         {

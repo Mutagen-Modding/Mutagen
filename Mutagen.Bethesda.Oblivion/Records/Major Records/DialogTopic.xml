@@ -25,7 +25,7 @@
         <FormIDLink recordType="NAME" refName="DialogTopic" />
       </List>
       <RefList name="Responses" refName="DialogResponse" />
-      <RefList name="Conditions" refName="DialogCondition" customBinary="true" />
+      <RefList name="Conditions" refName="Condition" />
       <CustomLogic name="ConditionsOld" recordType="CTDT"/>
       <List name="Choices">
         <FormIDLink recordType="TCLT" refName="DialogTopic" />
@@ -53,18 +53,6 @@
       </Data>
       <String name="ResponseText" recordType="NAM1" />
       <String name="ActorNotes" recordType="NAM2" />
-    </Fields>
-  </Object>
-  <Object name="DialogCondition" objType="Subrecord" recordType="CTDA" GUID="d744c161-2c6d-42a0-ada5-4cef3c179f12" ID="151">
-    <Fields>
-      <Enum name="CompareOperator" enumName="CompareOperator" customBinary="true" />
-      <Enum name="Flags" enumName="DialogCondition.Flag" customBinary="true" />
-      <ByteArray name="Fluff" length="4" nullable="NotNull" />
-      <Float name="ComparisonValue" />
-      <Enum name="Function" enumName="Function" byteLength="4" />
-      <Int32 name="FirstParameter" />
-      <Int32 name="SecondParameter" />
-      <Int32 name="ThirdParameter" />
     </Fields>
   </Object>
 </Loqui>
