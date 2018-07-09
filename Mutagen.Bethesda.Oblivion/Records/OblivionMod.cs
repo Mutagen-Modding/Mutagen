@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.SubscribeToCells();
             this.SubscribeToWorldspaces();
+            this.SubscribeToDialogs();
         }
 
         #region Cell Subscription
@@ -228,6 +229,32 @@ namespace Mutagen.Bethesda.Oblivion
             worldspace.SubCells.Unsubscribe(_subscribeObject);
             worldspace.TopCell_Property.Unsubscribe(_subscribeObject);
             worldspace.Road_Property.Unsubscribe(_subscribeObject);
+        }
+        #endregion
+
+        #region Dialog Subscription
+        protected void SubscribeToDialogs()
+        {
+            _DialogTopics_Object.Items.Subscribe_Enumerable_Single((change) =>
+            {
+                switch (change.AddRem)
+                {
+                    case AddRemove.Add:
+                        change.Item.Value.Items.Subscribe_Enumerable_Single(
+                            _subscribeObject, 
+                            (r) => Utility.ModifyButThrow(_majorRecords, r));
+                        break;
+                    case AddRemove.Remove:
+                        foreach (var item in change.Item.Value.Items)
+                        {
+                            _majorRecords.Remove(item.FormID);
+                        }
+                        change.Item.Value.Items.Unsubscribe(_subscribeObject);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            });
         }
         #endregion
     }

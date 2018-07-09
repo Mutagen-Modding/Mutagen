@@ -1723,6 +1723,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = DialogItem_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -2036,6 +2042,11 @@ namespace Mutagen.Bethesda.Oblivion
                         finally
                         {
                             errorMask?.PopIndex();
+                        }
+                        if (dataFrame.Complete)
+                        {
+                            item.DATADataTypeState |= DATADataType.Break0;
+                            return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.DialogType);
                         }
                         try
                         {
@@ -4099,12 +4110,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     length: 2,
                     fieldIndex: (int)DialogItem_FieldIndex.DialogType,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogItem.Flag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 1,
-                    fieldIndex: (int)DialogItem_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if (!item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogItem.Flag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 1,
+                        fieldIndex: (int)DialogItem_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,

@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
                errorMask: errorMask,
                transl: (MutagenFrame r, out DialogCondition listItem, ErrorMaskBuilder listSubMask) =>
                {
-                   byte[] bytes = r.ReadBytes((int)r.Remaining);
+                   byte[] bytes = r.ReadBytes(0x1A);
                    bytes[4] = 0x18;
                    byte[] newBytes = new byte[bytes.Length + 4];
                    Array.Copy(bytes, newBytes, bytes.Length);
@@ -100,7 +100,8 @@ namespace Mutagen.Bethesda.Oblivion
                        item: out listItem,
                        errorMask: listSubMask,
                        recordTypeConverter: conditionConverter);
-               });
+               },
+               parseIndefinitely: true);
         }
 
         static partial void WriteBinary_ConditionsOld_Custom(MutagenWriter writer, DialogItem item, ErrorMaskBuilder errorMask)

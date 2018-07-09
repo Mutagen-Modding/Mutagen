@@ -60,6 +60,8 @@ namespace Mutagen.Bethesda.Tests
             ProcessRegions(stream, recType, instr, loc, processing);
             ProcessPlacedObject_Mismatch(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
             ProcessCells(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessDialogTopics(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessDialogItems(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
         }
 
         private void ProcessNPC_Mismatch(
@@ -477,6 +479,131 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        private void ProcessDialogTopics(
+            BinaryReadStream stream,
+            FormID formID,
+            Type recType,
+            Instruction instr,
+            RangeInt64 loc,
+            MajorRecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker,
+            bool processing)
+        {
+            if (!typeof(DialogTopic).Equals(recType)) return;
+
+            // Clean empty child groups
+            stream.Position = loc.Min + 4;
+            var len = stream.ReadUInt32();
+            stream.Position += len + 12;
+            var grupPos = stream.Position;
+            var grup = stream.ReadString(4);
+            if (grup.Equals("GRUP"))
+            {
+                var parentGrups = fileLocs.GetContainingGroupLocations(formID);
+                var grupLen = stream.ReadUInt32();
+                if (grupLen == 0x14)
+                {
+                    instr.Moves.Add(
+                        new Move()
+                        {
+                            SectionToMove = new RangeInt64(grupPos, grupPos + 0x14 - 1),
+                            LocationToMove = long.MaxValue
+                        });
+
+                    foreach (var parentGroup in parentGrups)
+                    {
+                        lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - 0x14);
+                    }
+                }
+            }
+        }
+
+        private void ProcessDialogItems(
+            BinaryReadStream stream,
+            FormID formID,
+            Type recType,
+            Instruction instr,
+            RangeInt64 loc,
+            MajorRecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker,
+            bool processing)
+        {
+            if (!typeof(DialogItem).Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var dataIndex = -1;
+            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
+            int amount = 0;
+            while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
+            {
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = dataIndex + loc.Min + 3,
+                        Data = new byte[] { (byte)'A', 0x18 }
+                    });
+                instr.Additions.Add(
+                    new DataTarget()
+                    {
+                        Data = new byte[4],
+                        Location = dataIndex + loc.Min + 0x1A
+                    });
+                foreach (var parentGroup in parentGrups)
+                {
+                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + 4);
+                }
+                amount += 4;
+            }
+
+            dataIndex = -1;
+            while ((dataIndex = str.IndexOf("SCHD", dataIndex + 1)) != -1)
+            {
+                stream.Position = loc.Min + dataIndex + 4;
+                var existingLen = stream.ReadUInt16();
+                var diff = existingLen - 0x14;
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = dataIndex + loc.Min + 3,
+                        Data = new byte[] { (byte)'R', 0x14 }
+                    });
+                if (diff == 0) continue;
+                var locToRemove = loc.Min + dataIndex + 6 + 0x14;
+                instr.Moves.Add(
+                    new Move()
+                    {
+                        SectionToMove = new RangeInt64(
+                             locToRemove,
+                             locToRemove + diff - 1),
+                        LocationToMove = long.MaxValue
+                    });
+                foreach (var parentGroup in parentGrups)
+                {
+                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - diff);
+                }
+                amount -= diff;
+            }
+
+            if (amount != 0)
+            {
+                // Modify Length
+                stream.Position = loc.Min + Constants.HEADER_LENGTH;
+                var existingLen = stream.ReadUInt16();
+                byte[] lenData = new byte[2];
+                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
+                {
+                    writer.Write((ushort)(existingLen + amount));
+                }
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = loc.Min + Constants.HEADER_LENGTH,
+                        Data = lenData
+                    });
+            }
+        }
+        
         private bool DynamicMove(
             string str,
             Instruction instr,
@@ -706,7 +833,7 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        private Dictionary<Type, List<FormID>> ImportExport(
+        public Dictionary<Type, List<FormID>> ImportExport(
             string inputPath,
             string outputPath)
         {

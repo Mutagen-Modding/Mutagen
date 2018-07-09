@@ -27,12 +27,13 @@ namespace Mutagen.Bethesda.Binary
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
-            BinarySubParseDelegate<T> transl)
+            BinarySubParseDelegate<T> transl,
+            bool parseIndefinitely = false)
         {
             var safeFrame = frame.Spawn(snapToFinalPosition: false);
             var ret = new List<T>();
             int i = 0;
-            while (!frame.Complete)
+            while ((parseIndefinitely || !frame.Complete) && !frame.Reader.Complete)
             {
                 try
                 {
@@ -75,7 +76,8 @@ namespace Mutagen.Bethesda.Binary
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
-            BinarySubParseDelegate<T> transl)
+            BinarySubParseDelegate<T> transl,
+            bool parseIndefinitely = false)
         {
             try
             {
@@ -86,7 +88,8 @@ namespace Mutagen.Bethesda.Binary
                     triggeringRecord,
                     lengthLength,
                     errorMask,
-                    transl))
+                    transl,
+                    parseIndefinitely: parseIndefinitely))
                 {
                     item.SetTo(enumer);
                 }

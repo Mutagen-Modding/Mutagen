@@ -15,6 +15,7 @@
       <Data>
         <Fields>
           <Enum name="DialogType" enumName="DialogType" byteLength="2" />
+          <Break />
           <Enum name="Flags" enumName="DialogItem.Flag" byteLength="1" />
         </Fields>
       </Data>
