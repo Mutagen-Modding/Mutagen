@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<GroupTypeEnum> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        protected Byte[] _LastModified;
+        protected Byte[] _LastModified = new byte[4];
         protected PropertyForwarder<Group<T>, Byte[]> _LastModifiedForwarder;
         public INotifyingSetItem<Byte[]> LastModified_Property => _LastModifiedForwarder ?? (_LastModifiedForwarder = new PropertyForwarder<Group<T>, Byte[]>(this, (int)Group_FieldIndex.LastModified));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -163,6 +163,10 @@ namespace Mutagen.Bethesda
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)Group_FieldIndex.LastModified];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(LastModified, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -188,8 +192,9 @@ namespace Mutagen.Bethesda
         }
         protected void UnsetLastModified()
         {
-            _hasBeenSetTracker[(int)Group_FieldIndex.LastModified] = false;
-            LastModified = default(Byte[]);
+            SetLastModified(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IGroup<T>.LastModified_Property => this.LastModified_Property;
@@ -573,6 +578,21 @@ namespace Mutagen.Bethesda
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((Group_FieldIndex)index)
+            {
+                case Group_FieldIndex.Items:
+                    return Items.HasBeenSet;
+                case Group_FieldIndex.ContainedRecordType:
+                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.LastModified:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter String
         protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
         String IPropertySupporter<String>.Get(int index)
@@ -622,7 +642,7 @@ namespace Mutagen.Bethesda
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -648,8 +668,9 @@ namespace Mutagen.Bethesda
             switch ((Group_FieldIndex)index)
             {
                 case Group_FieldIndex.ContainedRecordType:
-                    _hasBeenSetTracker[index] = false;
-                    ContainedRecordType = default(String);
+                    SetContainedRecordType(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");
@@ -755,7 +776,7 @@ namespace Mutagen.Bethesda
 
         bool IPropertySupporter<GroupTypeEnum>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<GroupTypeEnum>.SetHasBeenSet(
@@ -781,8 +802,9 @@ namespace Mutagen.Bethesda
             switch ((Group_FieldIndex)index)
             {
                 case Group_FieldIndex.GroupType:
-                    _hasBeenSetTracker[index] = false;
-                    GroupType = default(GroupTypeEnum);
+                    SetGroupType(
+                        item: default(GroupTypeEnum),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
@@ -888,7 +910,7 @@ namespace Mutagen.Bethesda
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -914,8 +936,9 @@ namespace Mutagen.Bethesda
             switch ((Group_FieldIndex)index)
             {
                 case Group_FieldIndex.LastModified:
-                    _hasBeenSetTracker[index] = false;
-                    LastModified = default(Byte[]);
+                    SetLastModified(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");

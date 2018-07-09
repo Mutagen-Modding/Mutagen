@@ -625,6 +625,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Subspace_FieldIndex)index)
+            {
+                case Subspace_FieldIndex.X:
+                case Subspace_FieldIndex.Y:
+                case Subspace_FieldIndex.Z:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Single
         protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
         Single IPropertySupporter<Single>.Get(int index)
@@ -684,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -710,16 +723,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Subspace_FieldIndex)index)
             {
                 case Subspace_FieldIndex.X:
-                    _hasBeenSetTracker[index] = false;
-                    X = default(Single);
+                    SetX(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Subspace_FieldIndex.Y:
-                    _hasBeenSetTracker[index] = false;
-                    Y = default(Single);
+                    SetY(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Subspace_FieldIndex.Z:
-                    _hasBeenSetTracker[index] = false;
-                    Z = default(Single);
+                    SetZ(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

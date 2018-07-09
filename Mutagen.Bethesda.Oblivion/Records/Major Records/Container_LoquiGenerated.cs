@@ -751,6 +751,27 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Container_FieldIndex)index)
+            {
+                case Container_FieldIndex.Model:
+                case Container_FieldIndex.Items:
+                    return _hasBeenSetTracker[index];
+                case Container_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case Container_FieldIndex.OpenSound:
+                    return OpenSound_Property.HasBeenSet;
+                case Container_FieldIndex.CloseSound:
+                    return CloseSound_Property.HasBeenSet;
+                case Container_FieldIndex.Flags:
+                case Container_FieldIndex.Weight:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -800,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -826,8 +847,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Container_FieldIndex)index)
             {
                 case Container_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -933,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Container.ContainerFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Container.ContainerFlag>.SetHasBeenSet(
@@ -959,8 +981,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Container_FieldIndex)index)
             {
                 case Container_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Container.ContainerFlag);
+                    SetFlags(
+                        item: default(Container.ContainerFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Container.ContainerFlag: {index}");
@@ -1066,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1092,8 +1115,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Container_FieldIndex)index)
             {
                 case Container_FieldIndex.Weight:
-                    _hasBeenSetTracker[index] = false;
-                    Weight = default(Single);
+                    SetWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

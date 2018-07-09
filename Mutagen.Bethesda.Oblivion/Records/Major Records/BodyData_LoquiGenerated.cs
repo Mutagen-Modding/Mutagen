@@ -501,6 +501,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((BodyData_FieldIndex)index)
+            {
+                case BodyData_FieldIndex.Model:
+                case BodyData_FieldIndex.BodyParts:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -550,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -576,8 +588,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((BodyData_FieldIndex)index)
             {
                 case BodyData_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");

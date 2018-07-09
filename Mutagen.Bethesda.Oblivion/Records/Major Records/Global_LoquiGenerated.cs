@@ -423,6 +423,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Global_FieldIndex)index)
+            {
+                case Global_FieldIndex.TypeChar:
+                case Global_FieldIndex.RawFloat:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Char
         protected ObjectCentralizationSubscriptions<Char> _Char_subscriptions;
         Char IPropertySupporter<Char>.Get(int index)
@@ -472,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Char>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Char>.SetHasBeenSet(
@@ -498,8 +510,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Global_FieldIndex)index)
             {
                 case Global_FieldIndex.TypeChar:
-                    _hasBeenSetTracker[index] = false;
-                    TypeChar = default(Char);
+                    SetTypeChar(
+                        item: default(Char),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Char: {index}");
@@ -605,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -631,8 +644,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Global_FieldIndex)index)
             {
                 case Global_FieldIndex.RawFloat:
-                    _hasBeenSetTracker[index] = false;
-                    RawFloat = default(Single);
+                    SetRawFloat(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

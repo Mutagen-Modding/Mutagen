@@ -458,6 +458,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((GlobalShort_FieldIndex)index)
+            {
+                case GlobalShort_FieldIndex.Data:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Int16
         protected ObjectCentralizationSubscriptions<Int16> _Int16_subscriptions;
         Int16 IPropertySupporter<Int16>.Get(int index)
@@ -507,7 +518,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int16>.SetHasBeenSet(
@@ -533,8 +544,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((GlobalShort_FieldIndex)index)
             {
                 case GlobalShort_FieldIndex.Data:
-                    _hasBeenSetTracker[index] = false;
-                    Data = default(Int16);
+                    SetData(
+                        item: default(Int16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int16: {index}");

@@ -865,6 +865,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((Effect_FieldIndex)index)
+            {
+                case Effect_FieldIndex.ScriptEffect:
+                    return _hasBeenSetTracker[index];
+                case Effect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Area:
+                case Effect_FieldIndex.Duration:
+                case Effect_FieldIndex.Type:
+                case Effect_FieldIndex.ActorValue:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter UInt32
         protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
         UInt32 IPropertySupporter<UInt32>.Get(int index)
@@ -924,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -950,16 +968,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Effect_FieldIndex)index)
             {
                 case Effect_FieldIndex.Magnitude:
-                    _hasBeenSetTracker[index] = false;
-                    Magnitude = default(UInt32);
+                    SetMagnitude(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 case Effect_FieldIndex.Area:
-                    _hasBeenSetTracker[index] = false;
-                    Area = default(UInt32);
+                    SetArea(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 case Effect_FieldIndex.Duration:
-                    _hasBeenSetTracker[index] = false;
-                    Duration = default(UInt32);
+                    SetDuration(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -1067,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Effect.EffectType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Effect.EffectType>.SetHasBeenSet(
@@ -1093,8 +1114,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Effect_FieldIndex)index)
             {
                 case Effect_FieldIndex.Type:
-                    _hasBeenSetTracker[index] = false;
-                    Type = default(Effect.EffectType);
+                    SetType(
+                        item: default(Effect.EffectType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Effect.EffectType: {index}");
@@ -1200,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ActorValueExtended>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ActorValueExtended>.SetHasBeenSet(
@@ -1226,8 +1248,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Effect_FieldIndex)index)
             {
                 case Effect_FieldIndex.ActorValue:
-                    _hasBeenSetTracker[index] = false;
-                    ActorValue = default(ActorValueExtended);
+                    SetActorValue(
+                        item: default(ActorValueExtended),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ActorValueExtended: {index}");
@@ -1333,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ScriptEffect>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ScriptEffect>.SetHasBeenSet(
@@ -1359,8 +1382,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Effect_FieldIndex)index)
             {
                 case Effect_FieldIndex.ScriptEffect:
-                    _hasBeenSetTracker[index] = false;
-                    ScriptEffect = default(ScriptEffect);
+                    SetScriptEffect(
+                        item: default(ScriptEffect),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ScriptEffect: {index}");

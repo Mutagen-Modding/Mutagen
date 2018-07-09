@@ -535,6 +535,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((SkillBoost_FieldIndex)index)
+            {
+                case SkillBoost_FieldIndex.Skill:
+                case SkillBoost_FieldIndex.Boost:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter ActorValue
         protected ObjectCentralizationSubscriptions<ActorValue> _ActorValue_subscriptions;
         ActorValue IPropertySupporter<ActorValue>.Get(int index)
@@ -584,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ActorValue>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ActorValue>.SetHasBeenSet(
@@ -610,8 +622,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SkillBoost_FieldIndex)index)
             {
                 case SkillBoost_FieldIndex.Skill:
-                    _hasBeenSetTracker[index] = false;
-                    Skill = default(ActorValue);
+                    SetSkill(
+                        item: default(ActorValue),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
@@ -717,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<SByte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<SByte>.SetHasBeenSet(
@@ -743,8 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SkillBoost_FieldIndex)index)
             {
                 case SkillBoost_FieldIndex.Boost:
-                    _hasBeenSetTracker[index] = false;
-                    Boost = default(SByte);
+                    SetBoost(
+                        item: default(SByte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type SByte: {index}");

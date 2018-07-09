@@ -1362,6 +1362,31 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Tree_FieldIndex)index)
+            {
+                case Tree_FieldIndex.Model:
+                case Tree_FieldIndex.Icon:
+                    return _hasBeenSetTracker[index];
+                case Tree_FieldIndex.SpeedTreeSeeds:
+                    return SpeedTreeSeeds.HasBeenSet;
+                case Tree_FieldIndex.LeafCurvature:
+                case Tree_FieldIndex.MinimumLeafAngle:
+                case Tree_FieldIndex.MaximumLeafAngle:
+                case Tree_FieldIndex.BranchDimmingValue:
+                case Tree_FieldIndex.LeafDimmingValue:
+                case Tree_FieldIndex.ShadowRadius:
+                case Tree_FieldIndex.RockingSpeed:
+                case Tree_FieldIndex.RustleSpeed:
+                case Tree_FieldIndex.BillboardWidth:
+                case Tree_FieldIndex.BillboardHeight:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -1411,7 +1436,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -1437,8 +1462,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Tree_FieldIndex)index)
             {
                 case Tree_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1548,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1574,8 +1600,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Tree_FieldIndex)index)
             {
                 case Tree_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1724,7 +1751,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1750,40 +1777,49 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Tree_FieldIndex)index)
             {
                 case Tree_FieldIndex.LeafCurvature:
-                    _hasBeenSetTracker[index] = false;
-                    LeafCurvature = default(Single);
+                    SetLeafCurvature(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Tree_FieldIndex.MinimumLeafAngle:
-                    _hasBeenSetTracker[index] = false;
-                    MinimumLeafAngle = default(Single);
+                    SetMinimumLeafAngle(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Tree_FieldIndex.MaximumLeafAngle:
-                    _hasBeenSetTracker[index] = false;
-                    MaximumLeafAngle = default(Single);
+                    SetMaximumLeafAngle(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Tree_FieldIndex.BranchDimmingValue:
-                    _hasBeenSetTracker[index] = false;
-                    BranchDimmingValue = default(Single);
+                    SetBranchDimmingValue(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Tree_FieldIndex.LeafDimmingValue:
-                    _hasBeenSetTracker[index] = false;
-                    LeafDimmingValue = default(Single);
+                    SetLeafDimmingValue(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Tree_FieldIndex.RockingSpeed:
-                    _hasBeenSetTracker[index] = false;
-                    RockingSpeed = default(Single);
+                    SetRockingSpeed(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Tree_FieldIndex.RustleSpeed:
-                    _hasBeenSetTracker[index] = false;
-                    RustleSpeed = default(Single);
+                    SetRustleSpeed(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Tree_FieldIndex.BillboardWidth:
-                    _hasBeenSetTracker[index] = false;
-                    BillboardWidth = default(Single);
+                    SetBillboardWidth(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Tree_FieldIndex.BillboardHeight:
-                    _hasBeenSetTracker[index] = false;
-                    BillboardHeight = default(Single);
+                    SetBillboardHeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -1897,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -1923,8 +1959,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Tree_FieldIndex)index)
             {
                 case Tree_FieldIndex.ShadowRadius:
-                    _hasBeenSetTracker[index] = false;
-                    ShadowRadius = default(Int32);
+                    SetShadowRadius(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");

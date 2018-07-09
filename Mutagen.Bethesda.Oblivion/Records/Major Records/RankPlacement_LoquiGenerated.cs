@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IRankPlacementGetter.Rank_Property => this.Rank_Property;
         #endregion
         #region Fluff
-        protected Byte[] _Fluff;
+        protected Byte[] _Fluff = new byte[3];
         protected PropertyForwarder<RankPlacement, Byte[]> _FluffForwarder;
         public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<RankPlacement, Byte[]>(this, (int)RankPlacement_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -117,6 +117,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[3];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)RankPlacement_FieldIndex.Fluff];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -142,8 +146,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff()
         {
-            _hasBeenSetTracker[(int)RankPlacement_FieldIndex.Fluff] = false;
-            Fluff = default(Byte[]);
+            SetFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IRankPlacement.Fluff_Property => this.Fluff_Property;
@@ -551,6 +556,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((RankPlacement_FieldIndex)index)
+            {
+                case RankPlacement_FieldIndex.Faction:
+                case RankPlacement_FieldIndex.Rank:
+                case RankPlacement_FieldIndex.Fluff:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Byte
         protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
         Byte IPropertySupporter<Byte>.Get(int index)
@@ -600,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -626,8 +644,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RankPlacement_FieldIndex)index)
             {
                 case RankPlacement_FieldIndex.Rank:
-                    _hasBeenSetTracker[index] = false;
-                    Rank = default(Byte);
+                    SetRank(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -733,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -759,8 +778,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RankPlacement_FieldIndex)index)
             {
                 case RankPlacement_FieldIndex.Fluff:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff = default(Byte[]);
+                    SetFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");

@@ -463,6 +463,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Script_FieldIndex)index)
+            {
+                case Script_FieldIndex.Fields:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter ScriptFields
         protected ObjectCentralizationSubscriptions<ScriptFields> _ScriptFields_subscriptions;
         ScriptFields IPropertySupporter<ScriptFields>.Get(int index)
@@ -512,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ScriptFields>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ScriptFields>.SetHasBeenSet(
@@ -538,8 +549,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Script_FieldIndex)index)
             {
                 case Script_FieldIndex.Fields:
-                    _hasBeenSetTracker[index] = false;
-                    Fields = default(ScriptFields);
+                    SetFields(
+                        item: default(ScriptFields),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");

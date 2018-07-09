@@ -1246,6 +1246,28 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Grass_FieldIndex)index)
+            {
+                case Grass_FieldIndex.Model:
+                    return _hasBeenSetTracker[index];
+                case Grass_FieldIndex.Density:
+                case Grass_FieldIndex.MinSlope:
+                case Grass_FieldIndex.MaxSlope:
+                case Grass_FieldIndex.UnitFromWaterAmount:
+                case Grass_FieldIndex.UnitFromWaterMode:
+                case Grass_FieldIndex.PositionRange:
+                case Grass_FieldIndex.HeightRange:
+                case Grass_FieldIndex.ColorRange:
+                case Grass_FieldIndex.WavePeriod:
+                case Grass_FieldIndex.Flags:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -1295,7 +1317,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -1321,8 +1343,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Grass_FieldIndex)index)
             {
                 case Grass_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1438,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -1464,16 +1487,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Grass_FieldIndex)index)
             {
                 case Grass_FieldIndex.Density:
-                    _hasBeenSetTracker[index] = false;
-                    Density = default(Byte);
+                    SetDensity(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Grass_FieldIndex.MinSlope:
-                    _hasBeenSetTracker[index] = false;
-                    MinSlope = default(Byte);
+                    SetMinSlope(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Grass_FieldIndex.MaxSlope:
-                    _hasBeenSetTracker[index] = false;
-                    MaxSlope = default(Byte);
+                    SetMaxSlope(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -1581,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt16>.SetHasBeenSet(
@@ -1607,8 +1633,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Grass_FieldIndex)index)
             {
                 case Grass_FieldIndex.UnitFromWaterAmount:
-                    _hasBeenSetTracker[index] = false;
-                    UnitFromWaterAmount = default(UInt16);
+                    SetUnitFromWaterAmount(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt16: {index}");
@@ -1714,7 +1741,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Grass.UnitFromWaterType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Grass.UnitFromWaterType>.SetHasBeenSet(
@@ -1740,8 +1767,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Grass_FieldIndex)index)
             {
                 case Grass_FieldIndex.UnitFromWaterMode:
-                    _hasBeenSetTracker[index] = false;
-                    UnitFromWaterMode = default(Grass.UnitFromWaterType);
+                    SetUnitFromWaterMode(
+                        item: default(Grass.UnitFromWaterType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Grass.UnitFromWaterType: {index}");
@@ -1862,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1888,20 +1916,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Grass_FieldIndex)index)
             {
                 case Grass_FieldIndex.PositionRange:
-                    _hasBeenSetTracker[index] = false;
-                    PositionRange = default(Single);
+                    SetPositionRange(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Grass_FieldIndex.HeightRange:
-                    _hasBeenSetTracker[index] = false;
-                    HeightRange = default(Single);
+                    SetHeightRange(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Grass_FieldIndex.ColorRange:
-                    _hasBeenSetTracker[index] = false;
-                    ColorRange = default(Single);
+                    SetColorRange(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Grass_FieldIndex.WavePeriod:
-                    _hasBeenSetTracker[index] = false;
-                    WavePeriod = default(Single);
+                    SetWavePeriod(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -2010,7 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Grass.GrassFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Grass.GrassFlag>.SetHasBeenSet(
@@ -2036,8 +2068,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Grass_FieldIndex)index)
             {
                 case Grass_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Grass.GrassFlag);
+                    SetFlags(
+                        item: default(Grass.GrassFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Grass.GrassFlag: {index}");

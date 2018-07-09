@@ -611,6 +611,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((MapData_FieldIndex)index)
+            {
+                case MapData_FieldIndex.UsableDimensions:
+                case MapData_FieldIndex.CellCoordinatesNWCell:
+                case MapData_FieldIndex.CellCoordinatesSECell:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter P2Int
         protected ObjectCentralizationSubscriptions<P2Int> _P2Int_subscriptions;
         P2Int IPropertySupporter<P2Int>.Get(int index)
@@ -660,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P2Int>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P2Int>.SetHasBeenSet(
@@ -686,8 +699,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MapData_FieldIndex)index)
             {
                 case MapData_FieldIndex.UsableDimensions:
-                    _hasBeenSetTracker[index] = false;
-                    UsableDimensions = default(P2Int);
+                    SetUsableDimensions(
+                        item: default(P2Int),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P2Int: {index}");
@@ -798,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P2Int16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P2Int16>.SetHasBeenSet(
@@ -824,12 +838,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MapData_FieldIndex)index)
             {
                 case MapData_FieldIndex.CellCoordinatesNWCell:
-                    _hasBeenSetTracker[index] = false;
-                    CellCoordinatesNWCell = default(P2Int16);
+                    SetCellCoordinatesNWCell(
+                        item: default(P2Int16),
+                        hasBeenSet: false);
                     break;
                 case MapData_FieldIndex.CellCoordinatesSECell:
-                    _hasBeenSetTracker[index] = false;
-                    CellCoordinatesSECell = default(P2Int16);
+                    SetCellCoordinatesSECell(
+                        item: default(P2Int16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P2Int16: {index}");

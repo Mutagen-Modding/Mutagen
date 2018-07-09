@@ -474,6 +474,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((WeatherSound_FieldIndex)index)
+            {
+                case WeatherSound_FieldIndex.Sound:
+                case WeatherSound_FieldIndex.Type:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter WeatherSound.SoundType
         protected ObjectCentralizationSubscriptions<WeatherSound.SoundType> _WeatherSoundSoundType_subscriptions;
         WeatherSound.SoundType IPropertySupporter<WeatherSound.SoundType>.Get(int index)
@@ -523,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<WeatherSound.SoundType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<WeatherSound.SoundType>.SetHasBeenSet(
@@ -549,8 +561,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((WeatherSound_FieldIndex)index)
             {
                 case WeatherSound_FieldIndex.Type:
-                    _hasBeenSetTracker[index] = false;
-                    Type = default(WeatherSound.SoundType);
+                    SetType(
+                        item: default(WeatherSound.SoundType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type WeatherSound.SoundType: {index}");

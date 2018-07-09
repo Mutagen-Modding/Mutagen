@@ -549,6 +549,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected virtual bool GetHasBeenSet(int index)
+        {
+            switch ((BaseLayer_FieldIndex)index)
+            {
+                case BaseLayer_FieldIndex.Texture:
+                case BaseLayer_FieldIndex.Quadrant:
+                case BaseLayer_FieldIndex.LayerNumber:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter AlphaLayer.QuadrantEnum
         protected ObjectCentralizationSubscriptions<AlphaLayer.QuadrantEnum> _AlphaLayerQuadrantEnum_subscriptions;
         AlphaLayer.QuadrantEnum IPropertySupporter<AlphaLayer.QuadrantEnum>.Get(int index)
@@ -598,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<AlphaLayer.QuadrantEnum>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<AlphaLayer.QuadrantEnum>.SetHasBeenSet(
@@ -624,8 +637,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((BaseLayer_FieldIndex)index)
             {
                 case BaseLayer_FieldIndex.Quadrant:
-                    _hasBeenSetTracker[index] = false;
-                    Quadrant = default(AlphaLayer.QuadrantEnum);
+                    SetQuadrant(
+                        item: default(AlphaLayer.QuadrantEnum),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type AlphaLayer.QuadrantEnum: {index}");
@@ -731,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt16>.SetHasBeenSet(
@@ -757,8 +771,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((BaseLayer_FieldIndex)index)
             {
                 case BaseLayer_FieldIndex.LayerNumber:
-                    _hasBeenSetTracker[index] = false;
-                    LayerNumber = default(UInt16);
+                    SetLayerNumber(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt16: {index}");

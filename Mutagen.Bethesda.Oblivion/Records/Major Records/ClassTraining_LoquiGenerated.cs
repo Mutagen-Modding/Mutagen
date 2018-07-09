@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
         #endregion
         #region Fluff
-        protected Byte[] _Fluff;
+        protected Byte[] _Fluff = new byte[2];
         protected PropertyForwarder<ClassTraining, Byte[]> _FluffForwarder;
         public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<ClassTraining, Byte[]>(this, (int)ClassTraining_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -161,6 +161,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[2];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)ClassTraining_FieldIndex.Fluff];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -186,8 +190,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff()
         {
-            _hasBeenSetTracker[(int)ClassTraining_FieldIndex.Fluff] = false;
-            Fluff = default(Byte[]);
+            SetFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IClassTraining.Fluff_Property => this.Fluff_Property;
@@ -614,6 +619,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((ClassTraining_FieldIndex)index)
+            {
+                case ClassTraining_FieldIndex.TrainedSkill:
+                case ClassTraining_FieldIndex.MaximumTrainingLevel:
+                case ClassTraining_FieldIndex.Fluff:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Skill
         protected ObjectCentralizationSubscriptions<Skill> _Skill_subscriptions;
         Skill IPropertySupporter<Skill>.Get(int index)
@@ -663,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Skill>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Skill>.SetHasBeenSet(
@@ -689,8 +707,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ClassTraining_FieldIndex)index)
             {
                 case ClassTraining_FieldIndex.TrainedSkill:
-                    _hasBeenSetTracker[index] = false;
-                    TrainedSkill = default(Skill);
+                    SetTrainedSkill(
+                        item: default(Skill),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Skill: {index}");
@@ -796,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -822,8 +841,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ClassTraining_FieldIndex)index)
             {
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                    _hasBeenSetTracker[index] = false;
-                    MaximumTrainingLevel = default(Byte);
+                    SetMaximumTrainingLevel(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -929,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -955,8 +975,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ClassTraining_FieldIndex)index)
             {
                 case ClassTraining_FieldIndex.Fluff:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff = default(Byte[]);
+                    SetFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");

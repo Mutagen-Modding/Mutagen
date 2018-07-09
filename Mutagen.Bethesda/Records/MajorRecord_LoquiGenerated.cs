@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda
         public FormID FormID { get => _FormID; protected set => _FormID = value; }
         #endregion
         #region Version
-        protected Byte[] _Version;
+        protected Byte[] _Version = new byte[4];
         protected PropertyForwarder<MajorRecord, Byte[]> _VersionForwarder;
         public INotifyingSetItem<Byte[]> Version_Property => _VersionForwarder ?? (_VersionForwarder = new PropertyForwarder<MajorRecord, Byte[]>(this, (int)MajorRecord_FieldIndex.Version));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -114,6 +114,10 @@ namespace Mutagen.Bethesda
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)MajorRecord_FieldIndex.Version];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Version, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -139,8 +143,9 @@ namespace Mutagen.Bethesda
         }
         protected void UnsetVersion()
         {
-            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.Version] = false;
-            Version = default(Byte[]);
+            SetVersion(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IMajorRecord.Version_Property => this.Version_Property;
@@ -553,6 +558,22 @@ namespace Mutagen.Bethesda
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected virtual bool GetHasBeenSet(int index)
+        {
+            switch ((MajorRecord_FieldIndex)index)
+            {
+                case MajorRecord_FieldIndex.EditorID:
+                    return _hasBeenSetTracker[index];
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.RecordType:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter MajorRecord.MajorRecordFlag
         protected ObjectCentralizationSubscriptions<MajorRecord.MajorRecordFlag> _MajorRecordMajorRecordFlag_subscriptions;
         MajorRecord.MajorRecordFlag IPropertySupporter<MajorRecord.MajorRecordFlag>.Get(int index)
@@ -602,7 +623,7 @@ namespace Mutagen.Bethesda
 
         bool IPropertySupporter<MajorRecord.MajorRecordFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MajorRecord.MajorRecordFlag>.SetHasBeenSet(
@@ -628,8 +649,9 @@ namespace Mutagen.Bethesda
             switch ((MajorRecord_FieldIndex)index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    _hasBeenSetTracker[index] = false;
-                    MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
+                    SetMajorRecordFlags(
+                        item: default(MajorRecord.MajorRecordFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MajorRecord.MajorRecordFlag: {index}");
@@ -735,7 +757,7 @@ namespace Mutagen.Bethesda
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -761,8 +783,9 @@ namespace Mutagen.Bethesda
             switch ((MajorRecord_FieldIndex)index)
             {
                 case MajorRecord_FieldIndex.Version:
-                    _hasBeenSetTracker[index] = false;
-                    Version = default(Byte[]);
+                    SetVersion(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -868,7 +891,7 @@ namespace Mutagen.Bethesda
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -894,8 +917,9 @@ namespace Mutagen.Bethesda
             switch ((MajorRecord_FieldIndex)index)
             {
                 case MajorRecord_FieldIndex.EditorID:
-                    _hasBeenSetTracker[index] = false;
-                    EditorID = default(String);
+                    SetEditorID(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

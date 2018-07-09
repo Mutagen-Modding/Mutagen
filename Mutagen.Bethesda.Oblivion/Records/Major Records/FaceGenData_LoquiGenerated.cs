@@ -86,8 +86,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetSymmetricGeometry()
         {
-            _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricGeometry] = false;
-            SymmetricGeometry = default(Byte[]);
+            SetSymmetricGeometry(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IFaceGenData.SymmetricGeometry_Property => this.SymmetricGeometry_Property;
@@ -134,8 +135,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetAsymmetricGeometry()
         {
-            _hasBeenSetTracker[(int)FaceGenData_FieldIndex.AsymmetricGeometry] = false;
-            AsymmetricGeometry = default(Byte[]);
+            SetAsymmetricGeometry(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IFaceGenData.AsymmetricGeometry_Property => this.AsymmetricGeometry_Property;
@@ -182,8 +184,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetSymmetricTexture()
         {
-            _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricTexture] = false;
-            SymmetricTexture = default(Byte[]);
+            SetSymmetricTexture(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IFaceGenData.SymmetricTexture_Property => this.SymmetricTexture_Property;
@@ -631,6 +634,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((FaceGenData_FieldIndex)index)
+            {
+                case FaceGenData_FieldIndex.SymmetricGeometry:
+                case FaceGenData_FieldIndex.AsymmetricGeometry:
+                case FaceGenData_FieldIndex.SymmetricTexture:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Byte[]
         protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
@@ -690,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -716,16 +732,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((FaceGenData_FieldIndex)index)
             {
                 case FaceGenData_FieldIndex.SymmetricGeometry:
-                    _hasBeenSetTracker[index] = false;
-                    SymmetricGeometry = default(Byte[]);
+                    SetSymmetricGeometry(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    _hasBeenSetTracker[index] = false;
-                    AsymmetricGeometry = default(Byte[]);
+                    SetAsymmetricGeometry(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case FaceGenData_FieldIndex.SymmetricTexture:
-                    _hasBeenSetTracker[index] = false;
-                    SymmetricTexture = default(Byte[]);
+                    SetSymmetricTexture(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");

@@ -611,6 +611,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((HavokData_FieldIndex)index)
+            {
+                case HavokData_FieldIndex.Material:
+                case HavokData_FieldIndex.Friction:
+                case HavokData_FieldIndex.Restitution:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter HavokData.MaterialType
         protected ObjectCentralizationSubscriptions<HavokData.MaterialType> _HavokDataMaterialType_subscriptions;
         HavokData.MaterialType IPropertySupporter<HavokData.MaterialType>.Get(int index)
@@ -660,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<HavokData.MaterialType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<HavokData.MaterialType>.SetHasBeenSet(
@@ -686,8 +699,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((HavokData_FieldIndex)index)
             {
                 case HavokData_FieldIndex.Material:
-                    _hasBeenSetTracker[index] = false;
-                    Material = default(HavokData.MaterialType);
+                    SetMaterial(
+                        item: default(HavokData.MaterialType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type HavokData.MaterialType: {index}");
@@ -798,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -824,12 +838,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((HavokData_FieldIndex)index)
             {
                 case HavokData_FieldIndex.Friction:
-                    _hasBeenSetTracker[index] = false;
-                    Friction = default(Byte);
+                    SetFriction(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case HavokData_FieldIndex.Restitution:
-                    _hasBeenSetTracker[index] = false;
-                    Restitution = default(Byte);
+                    SetRestitution(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");

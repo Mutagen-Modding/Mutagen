@@ -493,6 +493,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((GameSettingString_FieldIndex)index)
+            {
+                case GameSettingString_FieldIndex.Data:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -546,7 +557,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -572,8 +583,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((GameSettingString_FieldIndex)index)
             {
                 case GameSettingString_FieldIndex.Data:
-                    _hasBeenSetTracker[index] = false;
-                    Data = default(String);
+                    SetData(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(

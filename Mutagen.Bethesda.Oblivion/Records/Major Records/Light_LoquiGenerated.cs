@@ -1394,6 +1394,33 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Light_FieldIndex)index)
+            {
+                case Light_FieldIndex.Model:
+                case Light_FieldIndex.Name:
+                case Light_FieldIndex.Icon:
+                case Light_FieldIndex.Fade:
+                    return _hasBeenSetTracker[index];
+                case Light_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case Light_FieldIndex.Sound:
+                    return Sound_Property.HasBeenSet;
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -1443,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -1469,8 +1496,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Light_FieldIndex)index)
             {
                 case Light_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1585,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1611,12 +1639,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Light_FieldIndex)index)
             {
                 case Light_FieldIndex.Name:
-                    _hasBeenSetTracker[index] = false;
-                    Name = default(String);
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case Light_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1726,7 +1756,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -1752,8 +1782,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Light_FieldIndex)index)
             {
                 case Light_FieldIndex.Time:
-                    _hasBeenSetTracker[index] = false;
-                    Time = default(Int32);
+                    SetTime(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -1864,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -1890,12 +1921,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Light_FieldIndex)index)
             {
                 case Light_FieldIndex.Radius:
-                    _hasBeenSetTracker[index] = false;
-                    Radius = default(UInt32);
+                    SetRadius(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 case Light_FieldIndex.Value:
-                    _hasBeenSetTracker[index] = false;
-                    Value = default(UInt32);
+                    SetValue(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -2002,7 +2035,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Color>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Color>.SetHasBeenSet(
@@ -2028,8 +2061,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Light_FieldIndex)index)
             {
                 case Light_FieldIndex.Color:
-                    _hasBeenSetTracker[index] = false;
-                    Color = default(Color);
+                    SetColor(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Color: {index}");
@@ -2135,7 +2169,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Light.LightFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Light.LightFlag>.SetHasBeenSet(
@@ -2161,8 +2195,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Light_FieldIndex)index)
             {
                 case Light_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Light.LightFlag);
+                    SetFlags(
+                        item: default(Light.LightFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Light.LightFlag: {index}");
@@ -2283,7 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -2309,20 +2344,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Light_FieldIndex)index)
             {
                 case Light_FieldIndex.FalloffExponent:
-                    _hasBeenSetTracker[index] = false;
-                    FalloffExponent = default(Single);
+                    SetFalloffExponent(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Light_FieldIndex.FOV:
-                    _hasBeenSetTracker[index] = false;
-                    FOV = default(Single);
+                    SetFOV(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Light_FieldIndex.Weight:
-                    _hasBeenSetTracker[index] = false;
-                    Weight = default(Single);
+                    SetWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Light_FieldIndex.Fade:
-                    _hasBeenSetTracker[index] = false;
-                    Fade = default(Single);
+                    SetFade(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

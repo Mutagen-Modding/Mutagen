@@ -634,6 +634,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((FacePart_FieldIndex)index)
+            {
+                case FacePart_FieldIndex.Index:
+                case FacePart_FieldIndex.Model:
+                case FacePart_FieldIndex.Icon:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Race.FaceIndex
         protected ObjectCentralizationSubscriptions<Race.FaceIndex> _RaceFaceIndex_subscriptions;
         Race.FaceIndex IPropertySupporter<Race.FaceIndex>.Get(int index)
@@ -683,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Race.FaceIndex>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Race.FaceIndex>.SetHasBeenSet(
@@ -709,8 +722,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((FacePart_FieldIndex)index)
             {
                 case FacePart_FieldIndex.Index:
-                    _hasBeenSetTracker[index] = false;
-                    Index = default(Race.FaceIndex);
+                    SetIndex(
+                        item: default(Race.FaceIndex),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Race.FaceIndex: {index}");
@@ -816,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -842,8 +856,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((FacePart_FieldIndex)index)
             {
                 case FacePart_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -949,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -975,8 +990,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((FacePart_FieldIndex)index)
             {
                 case FacePart_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

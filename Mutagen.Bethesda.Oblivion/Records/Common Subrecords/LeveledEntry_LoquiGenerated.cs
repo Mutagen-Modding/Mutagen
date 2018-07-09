@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int16> ILeveledEntryGetter<T>.Level_Property => this.Level_Property;
         #endregion
         #region Fluff
-        protected Byte[] _Fluff;
+        protected Byte[] _Fluff = new byte[2];
         protected PropertyForwarder<LeveledEntry<T>, Byte[]> _FluffForwarder;
         public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<LeveledEntry<T>, Byte[]>(this, (int)LeveledEntry_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -111,6 +111,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[2];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -136,8 +140,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff()
         {
-            _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff] = false;
-            Fluff = default(Byte[]);
+            SetFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> ILeveledEntry<T>.Fluff_Property => this.Fluff_Property;
@@ -200,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Int16> ILeveledEntryGetter<T>.Count_Property => this.Count_Property;
         #endregion
         #region Fluff2
-        protected Byte[] _Fluff2;
+        protected Byte[] _Fluff2 = new byte[2];
         protected PropertyForwarder<LeveledEntry<T>, Byte[]> _Fluff2Forwarder;
         public INotifyingSetItem<Byte[]> Fluff2_Property => _Fluff2Forwarder ?? (_Fluff2Forwarder = new PropertyForwarder<LeveledEntry<T>, Byte[]>(this, (int)LeveledEntry_FieldIndex.Fluff2));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -214,6 +219,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[2];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff2, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -239,8 +248,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff2()
         {
-            _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2] = false;
-            Fluff2 = default(Byte[]);
+            SetFluff2(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ILeveledEntry<T>.Fluff2_Property => this.Fluff2_Property;
@@ -727,6 +737,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((LeveledEntry_FieldIndex)index)
+            {
+                case LeveledEntry_FieldIndex.Count:
+                case LeveledEntry_FieldIndex.Fluff2:
+                    return _hasBeenSetTracker[index];
+                case LeveledEntry_FieldIndex.Level:
+                case LeveledEntry_FieldIndex.Fluff:
+                case LeveledEntry_FieldIndex.Reference:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Int16
         protected ObjectCentralizationSubscriptions<Int16> _Int16_subscriptions;
         Int16 IPropertySupporter<Int16>.Get(int index)
@@ -781,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int16>.SetHasBeenSet(
@@ -807,12 +833,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LeveledEntry_FieldIndex)index)
             {
                 case LeveledEntry_FieldIndex.Level:
-                    _hasBeenSetTracker[index] = false;
-                    Level = default(Int16);
+                    SetLevel(
+                        item: default(Int16),
+                        hasBeenSet: false);
                     break;
                 case LeveledEntry_FieldIndex.Count:
-                    _hasBeenSetTracker[index] = false;
-                    Count = default(Int16);
+                    SetCount(
+                        item: default(Int16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int16: {index}");
@@ -924,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -950,12 +978,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LeveledEntry_FieldIndex)index)
             {
                 case LeveledEntry_FieldIndex.Fluff:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff = default(Byte[]);
+                    SetFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case LeveledEntry_FieldIndex.Fluff2:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff2 = default(Byte[]);
+                    SetFluff2(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region BlockNumber
-        protected Byte[] _BlockNumber;
+        protected Byte[] _BlockNumber = new byte[4];
         protected PropertyForwarder<WorldspaceSubBlock, Byte[]> _BlockNumberForwarder;
         public INotifyingSetItem<Byte[]> BlockNumber_Property => _BlockNumberForwarder ?? (_BlockNumberForwarder = new PropertyForwarder<WorldspaceSubBlock, Byte[]>(this, (int)WorldspaceSubBlock_FieldIndex.BlockNumber));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -63,6 +63,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)WorldspaceSubBlock_FieldIndex.BlockNumber];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(BlockNumber, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -88,8 +92,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetBlockNumber()
         {
-            _hasBeenSetTracker[(int)WorldspaceSubBlock_FieldIndex.BlockNumber] = false;
-            BlockNumber = default(Byte[]);
+            SetBlockNumber(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IWorldspaceSubBlock.BlockNumber_Property => this.BlockNumber_Property;
@@ -145,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<GroupTypeEnum> IWorldspaceSubBlockGetter.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        protected Byte[] _LastModified;
+        protected Byte[] _LastModified = new byte[4];
         protected PropertyForwarder<WorldspaceSubBlock, Byte[]> _LastModifiedForwarder;
         public INotifyingSetItem<Byte[]> LastModified_Property => _LastModifiedForwarder ?? (_LastModifiedForwarder = new PropertyForwarder<WorldspaceSubBlock, Byte[]>(this, (int)WorldspaceSubBlock_FieldIndex.LastModified));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -159,6 +164,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)WorldspaceSubBlock_FieldIndex.LastModified];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(LastModified, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -184,8 +193,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetLastModified()
         {
-            _hasBeenSetTracker[(int)WorldspaceSubBlock_FieldIndex.LastModified] = false;
-            LastModified = default(Byte[]);
+            SetLastModified(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IWorldspaceSubBlock.LastModified_Property => this.LastModified_Property;
@@ -647,6 +657,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((WorldspaceSubBlock_FieldIndex)index)
+            {
+                case WorldspaceSubBlock_FieldIndex.Items:
+                    return _hasBeenSetTracker[index];
+                case WorldspaceSubBlock_FieldIndex.BlockNumber:
+                case WorldspaceSubBlock_FieldIndex.GroupType:
+                case WorldspaceSubBlock_FieldIndex.LastModified:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Byte[]
         protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
@@ -701,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -727,12 +752,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((WorldspaceSubBlock_FieldIndex)index)
             {
                 case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    _hasBeenSetTracker[index] = false;
-                    BlockNumber = default(Byte[]);
+                    SetBlockNumber(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case WorldspaceSubBlock_FieldIndex.LastModified:
-                    _hasBeenSetTracker[index] = false;
-                    LastModified = default(Byte[]);
+                    SetLastModified(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -839,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<GroupTypeEnum>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<GroupTypeEnum>.SetHasBeenSet(
@@ -865,8 +892,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((WorldspaceSubBlock_FieldIndex)index)
             {
                 case WorldspaceSubBlock_FieldIndex.GroupType:
-                    _hasBeenSetTracker[index] = false;
-                    GroupType = default(GroupTypeEnum);
+                    SetGroupType(
+                        item: default(GroupTypeEnum),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");

@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Condition.Flag> IConditionGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Fluff
-        protected Byte[] _Fluff;
+        protected Byte[] _Fluff = new byte[4];
         protected PropertyForwarder<Condition, Byte[]> _FluffForwarder;
         public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<Condition, Byte[]>(this, (int)Condition_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -162,6 +162,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.Fluff];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -187,8 +191,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff()
         {
-            _hasBeenSetTracker[(int)Condition_FieldIndex.Fluff] = false;
-            Fluff = default(Byte[]);
+            SetFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> ICondition.Fluff_Property => this.Fluff_Property;
@@ -995,6 +1000,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((Condition_FieldIndex)index)
+            {
+                case Condition_FieldIndex.CompareOperator:
+                case Condition_FieldIndex.Flags:
+                case Condition_FieldIndex.Fluff:
+                case Condition_FieldIndex.ComparisonValue:
+                case Condition_FieldIndex.Function:
+                case Condition_FieldIndex.FirstParameter:
+                case Condition_FieldIndex.SecondParameter:
+                case Condition_FieldIndex.ThirdParameter:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter CompareOperator
         protected ObjectCentralizationSubscriptions<CompareOperator> _CompareOperator_subscriptions;
         CompareOperator IPropertySupporter<CompareOperator>.Get(int index)
@@ -1044,7 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<CompareOperator>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<CompareOperator>.SetHasBeenSet(
@@ -1070,8 +1093,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Condition_FieldIndex)index)
             {
                 case Condition_FieldIndex.CompareOperator:
-                    _hasBeenSetTracker[index] = false;
-                    CompareOperator = default(CompareOperator);
+                    SetCompareOperator(
+                        item: default(CompareOperator),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type CompareOperator: {index}");
@@ -1177,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Condition.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Condition.Flag>.SetHasBeenSet(
@@ -1203,8 +1227,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Condition_FieldIndex)index)
             {
                 case Condition_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Condition.Flag);
+                    SetFlags(
+                        item: default(Condition.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Condition.Flag: {index}");
@@ -1310,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -1336,8 +1361,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Condition_FieldIndex)index)
             {
                 case Condition_FieldIndex.Fluff:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff = default(Byte[]);
+                    SetFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -1443,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1469,8 +1495,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Condition_FieldIndex)index)
             {
                 case Condition_FieldIndex.ComparisonValue:
-                    _hasBeenSetTracker[index] = false;
-                    ComparisonValue = default(Single);
+                    SetComparisonValue(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -1576,7 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Function>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Function>.SetHasBeenSet(
@@ -1602,8 +1629,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Condition_FieldIndex)index)
             {
                 case Condition_FieldIndex.Function:
-                    _hasBeenSetTracker[index] = false;
-                    Function = default(Function);
+                    SetFunction(
+                        item: default(Function),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Function: {index}");
@@ -1719,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -1745,16 +1773,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Condition_FieldIndex)index)
             {
                 case Condition_FieldIndex.FirstParameter:
-                    _hasBeenSetTracker[index] = false;
-                    FirstParameter = default(Int32);
+                    SetFirstParameter(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 case Condition_FieldIndex.SecondParameter:
-                    _hasBeenSetTracker[index] = false;
-                    SecondParameter = default(Int32);
+                    SetSecondParameter(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 case Condition_FieldIndex.ThirdParameter:
-                    _hasBeenSetTracker[index] = false;
-                    ThirdParameter = default(Int32);
+                    SetThirdParameter(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");

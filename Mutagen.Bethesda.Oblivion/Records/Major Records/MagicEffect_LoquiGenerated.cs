@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IMagicEffectGetter.BaseCost_Property => this.BaseCost_Property;
         #endregion
         #region Unused
-        protected Byte[] _Unused;
+        protected Byte[] _Unused = new byte[4];
         protected PropertyForwarder<MagicEffect, Byte[]> _UnusedForwarder;
         public INotifyingSetItem<Byte[]> Unused_Property => _UnusedForwarder ?? (_UnusedForwarder = new PropertyForwarder<MagicEffect, Byte[]>(this, (int)MagicEffect_FieldIndex.Unused));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -311,6 +311,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Unused];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unused, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -336,8 +340,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetUnused()
         {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Unused] = false;
-            Unused = default(Byte[]);
+            SetUnused(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IMagicEffect.Unused_Property => this.Unused_Property;
@@ -1346,6 +1351,32 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((MagicEffect_FieldIndex)index)
+            {
+                case MagicEffect_FieldIndex.Description:
+                case MagicEffect_FieldIndex.Icon:
+                case MagicEffect_FieldIndex.Model:
+                    return _hasBeenSetTracker[index];
+                case MagicEffect_FieldIndex.CounterEffects:
+                    return CounterEffects.HasBeenSet;
+                case MagicEffect_FieldIndex.Flags:
+                case MagicEffect_FieldIndex.BaseCost:
+                case MagicEffect_FieldIndex.Unused:
+                case MagicEffect_FieldIndex.MagicSchool:
+                case MagicEffect_FieldIndex.Resistance:
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                case MagicEffect_FieldIndex.Light:
+                case MagicEffect_FieldIndex.ProjectileSpeed:
+                case MagicEffect_FieldIndex.EffectShader:
+                case MagicEffect_FieldIndex.SubData:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -1404,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1430,12 +1461,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.Description:
-                    _hasBeenSetTracker[index] = false;
-                    Description = default(String);
+                    SetDescription(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case MagicEffect_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1545,7 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -1571,8 +1604,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1678,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MagicEffect.MagicFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MagicEffect.MagicFlag>.SetHasBeenSet(
@@ -1704,8 +1738,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(MagicEffect.MagicFlag);
+                    SetFlags(
+                        item: default(MagicEffect.MagicFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MagicEffect.MagicFlag: {index}");
@@ -1816,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1842,12 +1877,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.BaseCost:
-                    _hasBeenSetTracker[index] = false;
-                    BaseCost = default(Single);
+                    SetBaseCost(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
-                    _hasBeenSetTracker[index] = false;
-                    ProjectileSpeed = default(Single);
+                    SetProjectileSpeed(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -1958,7 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -1984,8 +2021,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.Unused:
-                    _hasBeenSetTracker[index] = false;
-                    Unused = default(Byte[]);
+                    SetUnused(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(
@@ -2094,7 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MagicSchool>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MagicSchool>.SetHasBeenSet(
@@ -2120,8 +2158,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.MagicSchool:
-                    _hasBeenSetTracker[index] = false;
-                    MagicSchool = default(MagicSchool);
+                    SetMagicSchool(
+                        item: default(MagicSchool),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
@@ -2227,7 +2266,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Resistance>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Resistance>.SetHasBeenSet(
@@ -2253,8 +2292,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.Resistance:
-                    _hasBeenSetTracker[index] = false;
-                    Resistance = default(Resistance);
+                    SetResistance(
+                        item: default(Resistance),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Resistance: {index}");
@@ -2360,7 +2400,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -2386,8 +2426,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.CounterEffectCount:
-                    _hasBeenSetTracker[index] = false;
-                    CounterEffectCount = default(UInt32);
+                    SetCounterEffectCount(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -2493,7 +2534,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MagicEffectSubData>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MagicEffectSubData>.SetHasBeenSet(
@@ -2519,8 +2560,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.SubData:
-                    _hasBeenSetTracker[index] = false;
-                    SubData = default(MagicEffectSubData);
+                    SetSubData(
+                        item: default(MagicEffectSubData),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MagicEffectSubData: {index}");

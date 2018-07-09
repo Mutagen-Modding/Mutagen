@@ -488,6 +488,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((SoundItem_FieldIndex)index)
+            {
+                case SoundItem_FieldIndex.Chance:
+                    return _hasBeenSetTracker[index];
+                case SoundItem_FieldIndex.Sound:
+                    return Sound_Property.HasBeenSet;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Byte
         protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
         Byte IPropertySupporter<Byte>.Get(int index)
@@ -537,7 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -563,8 +576,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SoundItem_FieldIndex)index)
             {
                 case SoundItem_FieldIndex.Chance:
-                    _hasBeenSetTracker[index] = false;
-                    Chance = default(Byte);
+                    SetChance(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");

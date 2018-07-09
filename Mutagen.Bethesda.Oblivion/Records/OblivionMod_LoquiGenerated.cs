@@ -1953,6 +1953,65 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((OblivionMod_FieldIndex)index)
+            {
+                case OblivionMod_FieldIndex.TES4:
+                    return _hasBeenSetTracker[index];
+                case OblivionMod_FieldIndex.GameSettings:
+                case OblivionMod_FieldIndex.Globals:
+                case OblivionMod_FieldIndex.Classes:
+                case OblivionMod_FieldIndex.Factions:
+                case OblivionMod_FieldIndex.Hairs:
+                case OblivionMod_FieldIndex.Eyes:
+                case OblivionMod_FieldIndex.Races:
+                case OblivionMod_FieldIndex.Sounds:
+                case OblivionMod_FieldIndex.Skills:
+                case OblivionMod_FieldIndex.MagicEffects:
+                case OblivionMod_FieldIndex.Scripts:
+                case OblivionMod_FieldIndex.LandTextures:
+                case OblivionMod_FieldIndex.Enchantments:
+                case OblivionMod_FieldIndex.Spells:
+                case OblivionMod_FieldIndex.Birthsigns:
+                case OblivionMod_FieldIndex.Activators:
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                case OblivionMod_FieldIndex.Armors:
+                case OblivionMod_FieldIndex.Books:
+                case OblivionMod_FieldIndex.Clothes:
+                case OblivionMod_FieldIndex.Containers:
+                case OblivionMod_FieldIndex.Doors:
+                case OblivionMod_FieldIndex.Ingredients:
+                case OblivionMod_FieldIndex.Lights:
+                case OblivionMod_FieldIndex.Miscellaneous:
+                case OblivionMod_FieldIndex.Statics:
+                case OblivionMod_FieldIndex.Grasses:
+                case OblivionMod_FieldIndex.Trees:
+                case OblivionMod_FieldIndex.Flora:
+                case OblivionMod_FieldIndex.Furnature:
+                case OblivionMod_FieldIndex.Weapons:
+                case OblivionMod_FieldIndex.Ammo:
+                case OblivionMod_FieldIndex.NPCs:
+                case OblivionMod_FieldIndex.Creatures:
+                case OblivionMod_FieldIndex.LeveledCreatures:
+                case OblivionMod_FieldIndex.SoulGems:
+                case OblivionMod_FieldIndex.Keys:
+                case OblivionMod_FieldIndex.Potions:
+                case OblivionMod_FieldIndex.Subspaces:
+                case OblivionMod_FieldIndex.SigilStones:
+                case OblivionMod_FieldIndex.LeveledItems:
+                case OblivionMod_FieldIndex.Weathers:
+                case OblivionMod_FieldIndex.Climates:
+                case OblivionMod_FieldIndex.Regions:
+                case OblivionMod_FieldIndex.Cells:
+                case OblivionMod_FieldIndex.Worldspaces:
+                case OblivionMod_FieldIndex.DialogTopics:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter TES4
         protected ObjectCentralizationSubscriptions<TES4> _TES4_subscriptions;
         TES4 IPropertySupporter<TES4>.Get(int index)
@@ -2002,7 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<TES4>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<TES4>.SetHasBeenSet(
@@ -2028,8 +2087,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((OblivionMod_FieldIndex)index)
             {
                 case OblivionMod_FieldIndex.TES4:
-                    _hasBeenSetTracker[index] = false;
-                    TES4 = default(TES4);
+                    SetTES4(
+                        item: default(TES4),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type TES4: {index}");

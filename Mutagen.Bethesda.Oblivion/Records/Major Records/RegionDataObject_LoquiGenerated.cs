@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> IRegionDataObjectGetter.ParentIndex_Property => this.ParentIndex_Property;
         #endregion
         #region Unknown1
-        protected Byte[] _Unknown1;
+        protected Byte[] _Unknown1 = new byte[2];
         protected PropertyForwarder<RegionDataObject, Byte[]> _Unknown1Forwarder;
         public INotifyingSetItem<Byte[]> Unknown1_Property => _Unknown1Forwarder ?? (_Unknown1Forwarder = new PropertyForwarder<RegionDataObject, Byte[]>(this, (int)RegionDataObject_FieldIndex.Unknown1));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -121,6 +121,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[2];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Unknown1];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unknown1, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -146,8 +150,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetUnknown1()
         {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Unknown1] = false;
-            Unknown1 = default(Byte[]);
+            SetUnknown1(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IRegionDataObject.Unknown1_Property => this.Unknown1_Property;
@@ -779,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<P3UInt16> IRegionDataObjectGetter.AngleVariance_Property => this.AngleVariance_Property;
         #endregion
         #region Unknow2n
-        protected Byte[] _Unknow2n;
+        protected Byte[] _Unknow2n = new byte[6];
         protected PropertyForwarder<RegionDataObject, Byte[]> _Unknow2nForwarder;
         public INotifyingSetItem<Byte[]> Unknow2n_Property => _Unknow2nForwarder ?? (_Unknow2nForwarder = new PropertyForwarder<RegionDataObject, Byte[]>(this, (int)RegionDataObject_FieldIndex.Unknow2n));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -793,6 +798,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[6];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Unknow2n];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unknow2n, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -818,8 +827,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetUnknow2n()
         {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Unknow2n] = false;
-            Unknow2n = default(Byte[]);
+            SetUnknow2n(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IRegionDataObject.Unknow2n_Property => this.Unknow2n_Property;
@@ -1619,6 +1629,33 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((RegionDataObject_FieldIndex)index)
+            {
+                case RegionDataObject_FieldIndex.Object:
+                case RegionDataObject_FieldIndex.ParentIndex:
+                case RegionDataObject_FieldIndex.Unknown1:
+                case RegionDataObject_FieldIndex.Density:
+                case RegionDataObject_FieldIndex.Clustering:
+                case RegionDataObject_FieldIndex.MinSlope:
+                case RegionDataObject_FieldIndex.MaxSlope:
+                case RegionDataObject_FieldIndex.Flags:
+                case RegionDataObject_FieldIndex.RadiusWrtPercent:
+                case RegionDataObject_FieldIndex.Radius:
+                case RegionDataObject_FieldIndex.MinHeight:
+                case RegionDataObject_FieldIndex.MaxHeight:
+                case RegionDataObject_FieldIndex.Sink:
+                case RegionDataObject_FieldIndex.SinkVariance:
+                case RegionDataObject_FieldIndex.SizeVariance:
+                case RegionDataObject_FieldIndex.AngleVariance:
+                case RegionDataObject_FieldIndex.Unknow2n:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter UInt16
         protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
         UInt16 IPropertySupporter<UInt16>.Get(int index)
@@ -1678,7 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt16>.SetHasBeenSet(
@@ -1704,16 +1741,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionDataObject_FieldIndex)index)
             {
                 case RegionDataObject_FieldIndex.ParentIndex:
-                    _hasBeenSetTracker[index] = false;
-                    ParentIndex = default(UInt16);
+                    SetParentIndex(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    _hasBeenSetTracker[index] = false;
-                    RadiusWrtPercent = default(UInt16);
+                    SetRadiusWrtPercent(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.Radius:
-                    _hasBeenSetTracker[index] = false;
-                    Radius = default(UInt16);
+                    SetRadius(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt16: {index}");
@@ -1826,7 +1866,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -1852,12 +1892,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionDataObject_FieldIndex)index)
             {
                 case RegionDataObject_FieldIndex.Unknown1:
-                    _hasBeenSetTracker[index] = false;
-                    Unknown1 = default(Byte[]);
+                    SetUnknown1(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.Unknow2n:
-                    _hasBeenSetTracker[index] = false;
-                    Unknow2n = default(Byte[]);
+                    SetUnknow2n(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -1989,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -2015,28 +2057,34 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionDataObject_FieldIndex)index)
             {
                 case RegionDataObject_FieldIndex.Density:
-                    _hasBeenSetTracker[index] = false;
-                    Density = default(Single);
+                    SetDensity(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.MinHeight:
-                    _hasBeenSetTracker[index] = false;
-                    MinHeight = default(Single);
+                    SetMinHeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.MaxHeight:
-                    _hasBeenSetTracker[index] = false;
-                    MaxHeight = default(Single);
+                    SetMaxHeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.Sink:
-                    _hasBeenSetTracker[index] = false;
-                    Sink = default(Single);
+                    SetSink(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.SinkVariance:
-                    _hasBeenSetTracker[index] = false;
-                    SinkVariance = default(Single);
+                    SetSinkVariance(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.SizeVariance:
-                    _hasBeenSetTracker[index] = false;
-                    SizeVariance = default(Single);
+                    SetSizeVariance(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -2157,7 +2205,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -2183,16 +2231,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionDataObject_FieldIndex)index)
             {
                 case RegionDataObject_FieldIndex.Clustering:
-                    _hasBeenSetTracker[index] = false;
-                    Clustering = default(Byte);
+                    SetClustering(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.MinSlope:
-                    _hasBeenSetTracker[index] = false;
-                    MinSlope = default(Byte);
+                    SetMinSlope(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case RegionDataObject_FieldIndex.MaxSlope:
-                    _hasBeenSetTracker[index] = false;
-                    MaxSlope = default(Byte);
+                    SetMaxSlope(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -2300,7 +2351,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RegionDataObject.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RegionDataObject.Flag>.SetHasBeenSet(
@@ -2326,8 +2377,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionDataObject_FieldIndex)index)
             {
                 case RegionDataObject_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(RegionDataObject.Flag);
+                    SetFlags(
+                        item: default(RegionDataObject.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RegionDataObject.Flag: {index}");
@@ -2433,7 +2485,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P3UInt16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P3UInt16>.SetHasBeenSet(
@@ -2459,8 +2511,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionDataObject_FieldIndex)index)
             {
                 case RegionDataObject_FieldIndex.AngleVariance:
-                    _hasBeenSetTracker[index] = false;
-                    AngleVariance = default(P3UInt16);
+                    SetAngleVariance(
+                        item: default(P3UInt16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P3UInt16: {index}");

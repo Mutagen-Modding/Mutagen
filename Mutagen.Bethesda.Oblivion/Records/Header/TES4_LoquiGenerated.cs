@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
-        protected Byte[] _Fluff;
+        protected Byte[] _Fluff = new byte[12];
         protected PropertyForwarder<TES4, Byte[]> _FluffForwarder;
         public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<TES4, Byte[]>(this, (int)TES4_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -65,6 +65,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[12];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)TES4_FieldIndex.Fluff];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -90,8 +94,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff()
         {
-            _hasBeenSetTracker[(int)TES4_FieldIndex.Fluff] = false;
-            Fluff = default(Byte[]);
+            SetFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> ITES4.Fluff_Property => this.Fluff_Property;
@@ -190,8 +195,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetTypeOffsets()
         {
-            _hasBeenSetTracker[(int)TES4_FieldIndex.TypeOffsets] = false;
-            TypeOffsets = default(Byte[]);
+            SetTypeOffsets(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ITES4.TypeOffsets_Property => this.TypeOffsets_Property;
@@ -238,8 +244,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetDeleted()
         {
-            _hasBeenSetTracker[(int)TES4_FieldIndex.Deleted] = false;
-            Deleted = default(Byte[]);
+            SetDeleted(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ITES4.Deleted_Property => this.Deleted_Property;
@@ -916,6 +923,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((TES4_FieldIndex)index)
+            {
+                case TES4_FieldIndex.Header:
+                case TES4_FieldIndex.TypeOffsets:
+                case TES4_FieldIndex.Deleted:
+                case TES4_FieldIndex.Author:
+                case TES4_FieldIndex.Description:
+                case TES4_FieldIndex.MasterReferences:
+                    return _hasBeenSetTracker[index];
+                case TES4_FieldIndex.Fluff:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Byte[]
         protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
@@ -975,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -1001,16 +1026,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((TES4_FieldIndex)index)
             {
                 case TES4_FieldIndex.Fluff:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff = default(Byte[]);
+                    SetFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case TES4_FieldIndex.TypeOffsets:
-                    _hasBeenSetTracker[index] = false;
-                    TypeOffsets = default(Byte[]);
+                    SetTypeOffsets(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case TES4_FieldIndex.Deleted:
-                    _hasBeenSetTracker[index] = false;
-                    Deleted = default(Byte[]);
+                    SetDeleted(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -1118,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Header>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Header>.SetHasBeenSet(
@@ -1144,8 +1172,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((TES4_FieldIndex)index)
             {
                 case TES4_FieldIndex.Header:
-                    _hasBeenSetTracker[index] = false;
-                    Header = default(Header);
+                    SetHeader(
+                        item: default(Header),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Header: {index}");
@@ -1256,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1282,12 +1311,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((TES4_FieldIndex)index)
             {
                 case TES4_FieldIndex.Author:
-                    _hasBeenSetTracker[index] = false;
-                    Author = default(String);
+                    SetAuthor(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case TES4_FieldIndex.Description:
-                    _hasBeenSetTracker[index] = false;
-                    Description = default(String);
+                    SetDescription(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

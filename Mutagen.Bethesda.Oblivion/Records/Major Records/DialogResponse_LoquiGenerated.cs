@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> IDialogResponseGetter.EmotionValue_Property => this.EmotionValue_Property;
         #endregion
         #region Fluff1
-        protected Byte[] _Fluff1;
+        protected Byte[] _Fluff1 = new byte[4];
         protected PropertyForwarder<DialogResponse, Byte[]> _Fluff1Forwarder;
         public INotifyingSetItem<Byte[]> Fluff1_Property => _Fluff1Forwarder ?? (_Fluff1Forwarder = new PropertyForwarder<DialogResponse, Byte[]>(this, (int)DialogResponse_FieldIndex.Fluff1));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -161,6 +161,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Fluff1];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff1, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -186,8 +190,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff1()
         {
-            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Fluff1] = false;
-            Fluff1 = default(Byte[]);
+            SetFluff1(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IDialogResponse.Fluff1_Property => this.Fluff1_Property;
@@ -243,7 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IDialogResponseGetter.ResponseNumber_Property => this.ResponseNumber_Property;
         #endregion
         #region Fluff2
-        protected Byte[] _Fluff2;
+        protected Byte[] _Fluff2 = new byte[3];
         protected PropertyForwarder<DialogResponse, Byte[]> _Fluff2Forwarder;
         public INotifyingSetItem<Byte[]> Fluff2_Property => _Fluff2Forwarder ?? (_Fluff2Forwarder = new PropertyForwarder<DialogResponse, Byte[]>(this, (int)DialogResponse_FieldIndex.Fluff2));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -257,6 +262,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[3];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Fluff2];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff2, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -282,8 +291,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff2()
         {
-            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Fluff2] = false;
-            Fluff2 = default(Byte[]);
+            SetFluff2(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IDialogResponse.Fluff2_Property => this.Fluff2_Property;
@@ -932,6 +942,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((DialogResponse_FieldIndex)index)
+            {
+                case DialogResponse_FieldIndex.ResponseText:
+                case DialogResponse_FieldIndex.ActorNotes:
+                    return _hasBeenSetTracker[index];
+                case DialogResponse_FieldIndex.Emotion:
+                case DialogResponse_FieldIndex.EmotionValue:
+                case DialogResponse_FieldIndex.Fluff1:
+                case DialogResponse_FieldIndex.ResponseNumber:
+                case DialogResponse_FieldIndex.Fluff2:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter EmotionType
         protected ObjectCentralizationSubscriptions<EmotionType> _EmotionType_subscriptions;
         EmotionType IPropertySupporter<EmotionType>.Get(int index)
@@ -981,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<EmotionType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<EmotionType>.SetHasBeenSet(
@@ -1007,8 +1035,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogResponse_FieldIndex)index)
             {
                 case DialogResponse_FieldIndex.Emotion:
-                    _hasBeenSetTracker[index] = false;
-                    Emotion = default(EmotionType);
+                    SetEmotion(
+                        item: default(EmotionType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type EmotionType: {index}");
@@ -1114,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -1140,8 +1169,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogResponse_FieldIndex)index)
             {
                 case DialogResponse_FieldIndex.EmotionValue:
-                    _hasBeenSetTracker[index] = false;
-                    EmotionValue = default(Int32);
+                    SetEmotionValue(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -1252,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -1278,12 +1308,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogResponse_FieldIndex)index)
             {
                 case DialogResponse_FieldIndex.Fluff1:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff1 = default(Byte[]);
+                    SetFluff1(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case DialogResponse_FieldIndex.Fluff2:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff2 = default(Byte[]);
+                    SetFluff2(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -1390,7 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -1416,8 +1448,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogResponse_FieldIndex)index)
             {
                 case DialogResponse_FieldIndex.ResponseNumber:
-                    _hasBeenSetTracker[index] = false;
-                    ResponseNumber = default(Byte);
+                    SetResponseNumber(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -1528,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1554,12 +1587,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogResponse_FieldIndex)index)
             {
                 case DialogResponse_FieldIndex.ResponseText:
-                    _hasBeenSetTracker[index] = false;
-                    ResponseText = default(String);
+                    SetResponseText(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case DialogResponse_FieldIndex.ActorNotes:
-                    _hasBeenSetTracker[index] = false;
-                    ActorNotes = default(String);
+                    SetActorNotes(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

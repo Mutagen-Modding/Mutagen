@@ -535,6 +535,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((RaceStatsGendered_FieldIndex)index)
+            {
+                case RaceStatsGendered_FieldIndex.Male:
+                case RaceStatsGendered_FieldIndex.Female:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter RaceStats
         protected ObjectCentralizationSubscriptions<RaceStats> _RaceStats_subscriptions;
         RaceStats IPropertySupporter<RaceStats>.Get(int index)
@@ -589,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RaceStats>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RaceStats>.SetHasBeenSet(
@@ -615,12 +627,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RaceStatsGendered_FieldIndex)index)
             {
                 case RaceStatsGendered_FieldIndex.Male:
-                    _hasBeenSetTracker[index] = false;
-                    Male = default(RaceStats);
+                    SetMale(
+                        item: default(RaceStats),
+                        hasBeenSet: false);
                     break;
                 case RaceStatsGendered_FieldIndex.Female:
-                    _hasBeenSetTracker[index] = false;
-                    Female = default(RaceStats);
+                    SetFemale(
+                        item: default(RaceStats),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RaceStats: {index}");

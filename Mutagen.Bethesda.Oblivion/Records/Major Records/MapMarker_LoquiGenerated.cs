@@ -584,6 +584,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((MapMarker_FieldIndex)index)
+            {
+                case MapMarker_FieldIndex.Flags:
+                case MapMarker_FieldIndex.Name:
+                    return _hasBeenSetTracker[index];
+                case MapMarker_FieldIndex.Types:
+                    return Types.HasBeenSet;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter MapMarker.Flag
         protected ObjectCentralizationSubscriptions<MapMarker.Flag> _MapMarkerFlag_subscriptions;
         MapMarker.Flag IPropertySupporter<MapMarker.Flag>.Get(int index)
@@ -633,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MapMarker.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MapMarker.Flag>.SetHasBeenSet(
@@ -659,8 +673,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MapMarker_FieldIndex)index)
             {
                 case MapMarker_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(MapMarker.Flag);
+                    SetFlags(
+                        item: default(MapMarker.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MapMarker.Flag: {index}");
@@ -766,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -792,8 +807,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MapMarker_FieldIndex)index)
             {
                 case MapMarker_FieldIndex.Name:
-                    _hasBeenSetTracker[index] = false;
-                    Name = default(String);
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

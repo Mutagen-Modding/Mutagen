@@ -99,8 +99,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetXPCIFluff()
         {
-            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff] = false;
-            XPCIFluff = default(Byte[]);
+            SetXPCIFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IPlacedNPC.XPCIFluff_Property => this.XPCIFluff_Property;
@@ -147,8 +148,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFULLFluff()
         {
-            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff] = false;
-            FULLFluff = default(Byte[]);
+            SetFULLFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IPlacedNPC.FULLFluff_Property => this.FULLFluff_Property;
@@ -305,8 +307,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetRagdollData()
         {
-            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.RagdollData] = false;
-            RagdollData = default(Byte[]);
+            SetRagdollData(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IPlacedNPC.RagdollData_Property => this.RagdollData_Property;
@@ -1133,6 +1136,31 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((PlacedNPC_FieldIndex)index)
+            {
+                case PlacedNPC_FieldIndex.XPCIFluff:
+                case PlacedNPC_FieldIndex.FULLFluff:
+                case PlacedNPC_FieldIndex.DistantLODData:
+                case PlacedNPC_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.RagdollData:
+                case PlacedNPC_FieldIndex.Scale:
+                    return _hasBeenSetTracker[index];
+                case PlacedNPC_FieldIndex.Base:
+                    return Base_Property.HasBeenSet;
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                    return MerchantContainer_Property.HasBeenSet;
+                case PlacedNPC_FieldIndex.Horse:
+                    return Horse_Property.HasBeenSet;
+                case PlacedNPC_FieldIndex.Position:
+                case PlacedNPC_FieldIndex.Rotation:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Byte[]
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
         {
@@ -1196,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -1222,16 +1250,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedNPC_FieldIndex)index)
             {
                 case PlacedNPC_FieldIndex.XPCIFluff:
-                    _hasBeenSetTracker[index] = false;
-                    XPCIFluff = default(Byte[]);
+                    SetXPCIFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case PlacedNPC_FieldIndex.FULLFluff:
-                    _hasBeenSetTracker[index] = false;
-                    FULLFluff = default(Byte[]);
+                    SetFULLFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case PlacedNPC_FieldIndex.RagdollData:
-                    _hasBeenSetTracker[index] = false;
-                    RagdollData = default(Byte[]);
+                    SetRagdollData(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(
@@ -1342,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<DistantLODData>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<DistantLODData>.SetHasBeenSet(
@@ -1368,8 +1399,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedNPC_FieldIndex)index)
             {
                 case PlacedNPC_FieldIndex.DistantLODData:
-                    _hasBeenSetTracker[index] = false;
-                    DistantLODData = default(DistantLODData);
+                    SetDistantLODData(
+                        item: default(DistantLODData),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
@@ -1475,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<EnableParent>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<EnableParent>.SetHasBeenSet(
@@ -1501,8 +1533,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedNPC_FieldIndex)index)
             {
                 case PlacedNPC_FieldIndex.EnableParent:
-                    _hasBeenSetTracker[index] = false;
-                    EnableParent = default(EnableParent);
+                    SetEnableParent(
+                        item: default(EnableParent),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
@@ -1608,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1634,8 +1667,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedNPC_FieldIndex)index)
             {
                 case PlacedNPC_FieldIndex.Scale:
-                    _hasBeenSetTracker[index] = false;
-                    Scale = default(Single);
+                    SetScale(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -1746,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P3Float>.SetHasBeenSet(
@@ -1772,12 +1806,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedNPC_FieldIndex)index)
             {
                 case PlacedNPC_FieldIndex.Position:
-                    _hasBeenSetTracker[index] = false;
-                    Position = default(P3Float);
+                    SetPosition(
+                        item: default(P3Float),
+                        hasBeenSet: false);
                     break;
                 case PlacedNPC_FieldIndex.Rotation:
-                    _hasBeenSetTracker[index] = false;
-                    Rotation = default(P3Float);
+                    SetRotation(
+                        item: default(P3Float),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P3Float: {index}");

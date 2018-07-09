@@ -1087,6 +1087,29 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Climate_FieldIndex)index)
+            {
+                case Climate_FieldIndex.SunTexture:
+                case Climate_FieldIndex.SunGlareTexture:
+                case Climate_FieldIndex.Model:
+                    return _hasBeenSetTracker[index];
+                case Climate_FieldIndex.Weathers:
+                    return Weathers.HasBeenSet;
+                case Climate_FieldIndex.SunriseBegin:
+                case Climate_FieldIndex.SunriseEnd:
+                case Climate_FieldIndex.SunsetBegin:
+                case Climate_FieldIndex.SunsetEnd:
+                case Climate_FieldIndex.Volatility:
+                case Climate_FieldIndex.Phase:
+                case Climate_FieldIndex.PhaseLength:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -1145,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1171,12 +1194,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Climate_FieldIndex)index)
             {
                 case Climate_FieldIndex.SunTexture:
-                    _hasBeenSetTracker[index] = false;
-                    SunTexture = default(String);
+                    SetSunTexture(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case Climate_FieldIndex.SunGlareTexture:
-                    _hasBeenSetTracker[index] = false;
-                    SunGlareTexture = default(String);
+                    SetSunGlareTexture(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1286,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -1312,8 +1337,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Climate_FieldIndex)index)
             {
                 case Climate_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1424,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -1450,12 +1476,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Climate_FieldIndex)index)
             {
                 case Climate_FieldIndex.Volatility:
-                    _hasBeenSetTracker[index] = false;
-                    Volatility = default(Byte);
+                    SetVolatility(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Climate_FieldIndex.PhaseLength:
-                    _hasBeenSetTracker[index] = false;
-                    PhaseLength = default(Byte);
+                    SetPhaseLength(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -1562,7 +1590,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Climate.MoonPhase>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Climate.MoonPhase>.SetHasBeenSet(
@@ -1588,8 +1616,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Climate_FieldIndex)index)
             {
                 case Climate_FieldIndex.Phase:
-                    _hasBeenSetTracker[index] = false;
-                    Phase = default(Climate.MoonPhase);
+                    SetPhase(
+                        item: default(Climate.MoonPhase),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Climate.MoonPhase: {index}");

@@ -87,8 +87,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetAlphaLayerData()
         {
-            _hasBeenSetTracker[(int)AlphaLayer_FieldIndex.AlphaLayerData] = false;
-            AlphaLayerData = default(Byte[]);
+            SetAlphaLayerData(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IAlphaLayer.AlphaLayerData_Property => this.AlphaLayerData_Property;
@@ -493,6 +494,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((AlphaLayer_FieldIndex)index)
+            {
+                case AlphaLayer_FieldIndex.AlphaLayerData:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Byte[]
         protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
@@ -542,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -568,8 +580,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((AlphaLayer_FieldIndex)index)
             {
                 case AlphaLayer_FieldIndex.AlphaLayerData:
-                    _hasBeenSetTracker[index] = false;
-                    AlphaLayerData = default(Byte[]);
+                    SetAlphaLayerData(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");

@@ -1080,6 +1080,30 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((ClothingAbstract_FieldIndex)index)
+            {
+                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                case ClothingAbstract_FieldIndex.MaleIcon:
+                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                case ClothingAbstract_FieldIndex.FemaleIcon:
+                    return _hasBeenSetTracker[index];
+                case ClothingAbstract_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case ClothingAbstract_FieldIndex.Enchantment:
+                    return Enchantment_Property.HasBeenSet;
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                case ClothingAbstract_FieldIndex.Flags:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter UInt16
         protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
         UInt16 IPropertySupporter<UInt16>.Get(int index)
@@ -1129,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt16>.SetHasBeenSet(
@@ -1155,8 +1179,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ClothingAbstract_FieldIndex)index)
             {
                 case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    _hasBeenSetTracker[index] = false;
-                    EnchantmentPoints = default(UInt16);
+                    SetEnchantmentPoints(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt16: {index}");
@@ -1262,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<BipedFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<BipedFlag>.SetHasBeenSet(
@@ -1288,8 +1313,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ClothingAbstract_FieldIndex)index)
             {
                 case ClothingAbstract_FieldIndex.BipedFlags:
-                    _hasBeenSetTracker[index] = false;
-                    BipedFlags = default(BipedFlag);
+                    SetBipedFlags(
+                        item: default(BipedFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type BipedFlag: {index}");
@@ -1395,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<EquipmentFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<EquipmentFlag>.SetHasBeenSet(
@@ -1421,8 +1447,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ClothingAbstract_FieldIndex)index)
             {
                 case ClothingAbstract_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(EquipmentFlag);
+                    SetFlags(
+                        item: default(EquipmentFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type EquipmentFlag: {index}");
@@ -1543,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -1569,20 +1596,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ClothingAbstract_FieldIndex)index)
             {
                 case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    _hasBeenSetTracker[index] = false;
-                    MaleBipedModel = default(Model);
+                    SetMaleBipedModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    _hasBeenSetTracker[index] = false;
-                    MaleWorldModel = default(Model);
+                    SetMaleWorldModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    _hasBeenSetTracker[index] = false;
-                    FemaleBipedModel = default(Model);
+                    SetFemaleBipedModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    _hasBeenSetTracker[index] = false;
-                    FemaleWorldModel = default(Model);
+                    SetFemaleWorldModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1700,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1726,12 +1757,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ClothingAbstract_FieldIndex)index)
             {
                 case ClothingAbstract_FieldIndex.MaleIcon:
-                    _hasBeenSetTracker[index] = false;
-                    MaleIcon = default(String);
+                    SetMaleIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleIcon:
-                    _hasBeenSetTracker[index] = false;
-                    FemaleIcon = default(String);
+                    SetFemaleIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(

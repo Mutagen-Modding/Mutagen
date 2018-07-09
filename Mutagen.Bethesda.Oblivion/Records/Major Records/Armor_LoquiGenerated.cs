@@ -727,6 +727,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Armor_FieldIndex)index)
+            {
+                case Armor_FieldIndex.ArmorValue:
+                case Armor_FieldIndex.Value:
+                case Armor_FieldIndex.Health:
+                case Armor_FieldIndex.Weight:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Single
         protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
         Single IPropertySupporter<Single>.Get(int index)
@@ -781,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -807,12 +821,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Armor_FieldIndex)index)
             {
                 case Armor_FieldIndex.ArmorValue:
-                    _hasBeenSetTracker[index] = false;
-                    ArmorValue = default(Single);
+                    SetArmorValue(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Armor_FieldIndex.Weight:
-                    _hasBeenSetTracker[index] = false;
-                    Weight = default(Single);
+                    SetWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -924,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -950,12 +966,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Armor_FieldIndex)index)
             {
                 case Armor_FieldIndex.Value:
-                    _hasBeenSetTracker[index] = false;
-                    Value = default(UInt32);
+                    SetValue(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 case Armor_FieldIndex.Health:
-                    _hasBeenSetTracker[index] = false;
-                    Health = default(UInt32);
+                    SetHealth(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");

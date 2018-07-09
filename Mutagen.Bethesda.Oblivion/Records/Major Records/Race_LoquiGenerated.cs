@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        protected Byte[] _Fluff;
+        protected Byte[] _Fluff = new byte[4];
         protected PropertyForwarder<Race, Byte[]> _FluffForwarder;
         public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<Race, Byte[]>(this, (int)Race_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -175,6 +175,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.Fluff];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -200,8 +204,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.Fluff] = false;
-            Fluff = default(Byte[]);
+            SetFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IRace.Fluff_Property => this.Fluff_Property;
@@ -887,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<FaceGenData> IRaceGetter.FaceGenData_Property => this.FaceGenData_Property;
         #endregion
         #region Unknown
-        protected Byte[] _Unknown;
+        protected Byte[] _Unknown = new byte[2];
         protected PropertyForwarder<Race, Byte[]> _UnknownForwarder;
         public INotifyingSetItem<Byte[]> Unknown_Property => _UnknownForwarder ?? (_UnknownForwarder = new PropertyForwarder<Race, Byte[]>(this, (int)Race_FieldIndex.Unknown));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -901,6 +906,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[2];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.Unknown];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unknown, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -926,8 +935,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetUnknown()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.Unknown] = false;
-            Unknown = default(Byte[]);
+            SetUnknown(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IRace.Unknown_Property => this.Unknown_Property;
@@ -1909,6 +1919,42 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Race_FieldIndex)index)
+            {
+                case Race_FieldIndex.Description:
+                case Race_FieldIndex.Relations:
+                case Race_FieldIndex.Voices:
+                case Race_FieldIndex.DefaultHair:
+                case Race_FieldIndex.DefaultHairColor:
+                case Race_FieldIndex.FaceGenMainClamp:
+                case Race_FieldIndex.FaceGenFaceClamp:
+                case Race_FieldIndex.RaceStats:
+                case Race_FieldIndex.FaceData:
+                case Race_FieldIndex.BodyData:
+                case Race_FieldIndex.FaceGenData:
+                case Race_FieldIndex.Unknown:
+                    return _hasBeenSetTracker[index];
+                case Race_FieldIndex.Spells:
+                    return Spells.HasBeenSet;
+                case Race_FieldIndex.Hairs:
+                    return Hairs.HasBeenSet;
+                case Race_FieldIndex.Eyes:
+                    return Eyes.HasBeenSet;
+                case Race_FieldIndex.SkillBoosts:
+                case Race_FieldIndex.Fluff:
+                case Race_FieldIndex.MaleHeight:
+                case Race_FieldIndex.FemaleHeight:
+                case Race_FieldIndex.MaleWeight:
+                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Flags:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -1962,7 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1988,8 +2034,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.Description:
-                    _hasBeenSetTracker[index] = false;
-                    Description = default(String);
+                    SetDescription(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -2107,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -2133,12 +2180,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.Fluff:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff = default(Byte[]);
+                    SetFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case Race_FieldIndex.Unknown:
-                    _hasBeenSetTracker[index] = false;
-                    Unknown = default(Byte[]);
+                    SetUnknown(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(
@@ -2263,7 +2312,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -2289,20 +2338,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.MaleHeight:
-                    _hasBeenSetTracker[index] = false;
-                    MaleHeight = default(Single);
+                    SetMaleHeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Race_FieldIndex.FemaleHeight:
-                    _hasBeenSetTracker[index] = false;
-                    FemaleHeight = default(Single);
+                    SetFemaleHeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Race_FieldIndex.MaleWeight:
-                    _hasBeenSetTracker[index] = false;
-                    MaleWeight = default(Single);
+                    SetMaleWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Race_FieldIndex.FemaleWeight:
-                    _hasBeenSetTracker[index] = false;
-                    FemaleWeight = default(Single);
+                    SetFemaleWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -2411,7 +2464,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Race.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Race.Flag>.SetHasBeenSet(
@@ -2437,8 +2490,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Race.Flag);
+                    SetFlags(
+                        item: default(Race.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Race.Flag: {index}");
@@ -2544,7 +2598,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RaceVoices>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RaceVoices>.SetHasBeenSet(
@@ -2570,8 +2624,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.Voices:
-                    _hasBeenSetTracker[index] = false;
-                    Voices = default(RaceVoices);
+                    SetVoices(
+                        item: default(RaceVoices),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RaceVoices: {index}");
@@ -2677,7 +2732,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RaceHair>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RaceHair>.SetHasBeenSet(
@@ -2703,8 +2758,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.DefaultHair:
-                    _hasBeenSetTracker[index] = false;
-                    DefaultHair = default(RaceHair);
+                    SetDefaultHair(
+                        item: default(RaceHair),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RaceHair: {index}");
@@ -2810,7 +2866,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -2836,8 +2892,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.DefaultHairColor:
-                    _hasBeenSetTracker[index] = false;
-                    DefaultHairColor = default(Byte);
+                    SetDefaultHairColor(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -2948,7 +3005,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -2974,12 +3031,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.FaceGenMainClamp:
-                    _hasBeenSetTracker[index] = false;
-                    FaceGenMainClamp = default(Int32);
+                    SetFaceGenMainClamp(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 case Race_FieldIndex.FaceGenFaceClamp:
-                    _hasBeenSetTracker[index] = false;
-                    FaceGenFaceClamp = default(Int32);
+                    SetFaceGenFaceClamp(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -3086,7 +3145,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RaceStatsGendered>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RaceStatsGendered>.SetHasBeenSet(
@@ -3112,8 +3171,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.RaceStats:
-                    _hasBeenSetTracker[index] = false;
-                    RaceStats = default(RaceStatsGendered);
+                    SetRaceStats(
+                        item: default(RaceStatsGendered),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RaceStatsGendered: {index}");
@@ -3219,7 +3279,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<GenderedBodyData>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<GenderedBodyData>.SetHasBeenSet(
@@ -3245,8 +3305,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.BodyData:
-                    _hasBeenSetTracker[index] = false;
-                    BodyData = default(GenderedBodyData);
+                    SetBodyData(
+                        item: default(GenderedBodyData),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type GenderedBodyData: {index}");
@@ -3352,7 +3413,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<FaceGenData>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<FaceGenData>.SetHasBeenSet(
@@ -3378,8 +3439,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Race_FieldIndex)index)
             {
                 case Race_FieldIndex.FaceGenData:
-                    _hasBeenSetTracker[index] = false;
-                    FaceGenData = default(FaceGenData);
+                    SetFaceGenData(
+                        item: default(FaceGenData),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type FaceGenData: {index}");

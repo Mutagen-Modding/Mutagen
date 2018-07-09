@@ -324,8 +324,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetCompiledScript()
         {
-            _hasBeenSetTracker[(int)DialogItem_FieldIndex.CompiledScript] = false;
-            CompiledScript = default(Byte[]);
+            SetCompiledScript(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IDialogItem.CompiledScript_Property => this.CompiledScript_Property;
@@ -1041,6 +1042,35 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((DialogItem_FieldIndex)index)
+            {
+                case DialogItem_FieldIndex.Responses:
+                case DialogItem_FieldIndex.Conditions:
+                case DialogItem_FieldIndex.MetadataSummary:
+                case DialogItem_FieldIndex.CompiledScript:
+                case DialogItem_FieldIndex.SourceCode:
+                case DialogItem_FieldIndex.References:
+                    return _hasBeenSetTracker[index];
+                case DialogItem_FieldIndex.Quest:
+                    return Quest_Property.HasBeenSet;
+                case DialogItem_FieldIndex.PreviousTopic:
+                    return PreviousTopic_Property.HasBeenSet;
+                case DialogItem_FieldIndex.Topics:
+                    return Topics.HasBeenSet;
+                case DialogItem_FieldIndex.Choices:
+                    return Choices.HasBeenSet;
+                case DialogItem_FieldIndex.LinkFrom:
+                    return LinkFrom.HasBeenSet;
+                case DialogItem_FieldIndex.DialogType:
+                case DialogItem_FieldIndex.Flags:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter DialogType
         protected ObjectCentralizationSubscriptions<DialogType> _DialogType_subscriptions;
         DialogType IPropertySupporter<DialogType>.Get(int index)
@@ -1090,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<DialogType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<DialogType>.SetHasBeenSet(
@@ -1116,8 +1146,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogItem_FieldIndex)index)
             {
                 case DialogItem_FieldIndex.DialogType:
-                    _hasBeenSetTracker[index] = false;
-                    DialogType = default(DialogType);
+                    SetDialogType(
+                        item: default(DialogType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type DialogType: {index}");
@@ -1223,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<DialogItem.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<DialogItem.Flag>.SetHasBeenSet(
@@ -1249,8 +1280,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogItem_FieldIndex)index)
             {
                 case DialogItem_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(DialogItem.Flag);
+                    SetFlags(
+                        item: default(DialogItem.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type DialogItem.Flag: {index}");
@@ -1356,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ScriptMetaSummary>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ScriptMetaSummary>.SetHasBeenSet(
@@ -1382,8 +1414,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogItem_FieldIndex)index)
             {
                 case DialogItem_FieldIndex.MetadataSummary:
-                    _hasBeenSetTracker[index] = false;
-                    MetadataSummary = default(ScriptMetaSummary);
+                    SetMetadataSummary(
+                        item: default(ScriptMetaSummary),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
@@ -1493,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -1519,8 +1552,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogItem_FieldIndex)index)
             {
                 case DialogItem_FieldIndex.CompiledScript:
-                    _hasBeenSetTracker[index] = false;
-                    CompiledScript = default(Byte[]);
+                    SetCompiledScript(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(
@@ -1633,7 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1659,8 +1693,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogItem_FieldIndex)index)
             {
                 case DialogItem_FieldIndex.SourceCode:
-                    _hasBeenSetTracker[index] = false;
-                    SourceCode = default(String);
+                    SetSourceCode(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(

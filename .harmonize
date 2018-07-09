@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>14ca5aad259849c9d203bdb4702d8cd5af10d1c6</Sha>
+         <Sha>712f86b2a6767efe8e7dc98e4e5a41cbe8d078dd</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-09-2018 17:36:16</CommitDate>
-         <Description>Some object centralization fixes</Description>
+         <CommitDate>07-09-2018 19:25:06</CommitDate>
+         <Description>Some object centralization fixes.  GetHasBeenSet</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

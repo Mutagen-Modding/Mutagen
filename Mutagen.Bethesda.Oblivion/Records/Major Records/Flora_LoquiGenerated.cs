@@ -844,6 +844,26 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Flora_FieldIndex)index)
+            {
+                case Flora_FieldIndex.Model:
+                    return _hasBeenSetTracker[index];
+                case Flora_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case Flora_FieldIndex.Ingredient:
+                    return Ingredient_Property.HasBeenSet;
+                case Flora_FieldIndex.Spring:
+                case Flora_FieldIndex.Summer:
+                case Flora_FieldIndex.Fall:
+                case Flora_FieldIndex.Winter:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -893,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -919,8 +939,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Flora_FieldIndex)index)
             {
                 case Flora_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1041,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -1067,20 +1088,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Flora_FieldIndex)index)
             {
                 case Flora_FieldIndex.Spring:
-                    _hasBeenSetTracker[index] = false;
-                    Spring = default(Byte);
+                    SetSpring(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Flora_FieldIndex.Summer:
-                    _hasBeenSetTracker[index] = false;
-                    Summer = default(Byte);
+                    SetSummer(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Flora_FieldIndex.Fall:
-                    _hasBeenSetTracker[index] = false;
-                    Fall = default(Byte);
+                    SetFall(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Flora_FieldIndex.Winter:
-                    _hasBeenSetTracker[index] = false;
-                    Winter = default(Byte);
+                    SetWinter(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");

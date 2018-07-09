@@ -610,6 +610,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Birthsign_FieldIndex)index)
+            {
+                case Birthsign_FieldIndex.Icon:
+                case Birthsign_FieldIndex.Description:
+                    return _hasBeenSetTracker[index];
+                case Birthsign_FieldIndex.Spells:
+                    return Spells.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -668,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -694,12 +708,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Birthsign_FieldIndex)index)
             {
                 case Birthsign_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case Birthsign_FieldIndex.Description:
-                    _hasBeenSetTracker[index] = false;
-                    Description = default(String);
+                    SetDescription(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(

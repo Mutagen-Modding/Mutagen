@@ -651,6 +651,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((ScriptEffect_FieldIndex)index)
+            {
+                case ScriptEffect_FieldIndex.Name:
+                    return _hasBeenSetTracker[index];
+                case ScriptEffect_FieldIndex.Script:
+                case ScriptEffect_FieldIndex.MagicSchool:
+                case ScriptEffect_FieldIndex.VisualEffect:
+                case ScriptEffect_FieldIndex.Flags:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter MagicSchool
         protected ObjectCentralizationSubscriptions<MagicSchool> _MagicSchool_subscriptions;
         MagicSchool IPropertySupporter<MagicSchool>.Get(int index)
@@ -700,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MagicSchool>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MagicSchool>.SetHasBeenSet(
@@ -726,8 +742,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptEffect_FieldIndex)index)
             {
                 case ScriptEffect_FieldIndex.MagicSchool:
-                    _hasBeenSetTracker[index] = false;
-                    MagicSchool = default(MagicSchool);
+                    SetMagicSchool(
+                        item: default(MagicSchool),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
@@ -833,7 +850,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ScriptEffect.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ScriptEffect.Flag>.SetHasBeenSet(
@@ -859,8 +876,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptEffect_FieldIndex)index)
             {
                 case ScriptEffect_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(ScriptEffect.Flag);
+                    SetFlags(
+                        item: default(ScriptEffect.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ScriptEffect.Flag: {index}");
@@ -966,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -992,8 +1010,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptEffect_FieldIndex)index)
             {
                 case ScriptEffect_FieldIndex.Name:
-                    _hasBeenSetTracker[index] = false;
-                    Name = default(String);
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

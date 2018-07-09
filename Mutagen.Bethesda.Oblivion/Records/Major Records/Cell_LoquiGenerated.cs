@@ -1313,6 +1313,37 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Cell_FieldIndex)index)
+            {
+                case Cell_FieldIndex.Flags:
+                case Cell_FieldIndex.Grid:
+                case Cell_FieldIndex.Lighting:
+                case Cell_FieldIndex.MusicType:
+                case Cell_FieldIndex.WaterHeight:
+                case Cell_FieldIndex.FactionRank:
+                case Cell_FieldIndex.PathGrid:
+                case Cell_FieldIndex.Landscape:
+                case Cell_FieldIndex.Persistent:
+                case Cell_FieldIndex.Temporary:
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    return _hasBeenSetTracker[index];
+                case Cell_FieldIndex.Regions:
+                    return Regions.HasBeenSet;
+                case Cell_FieldIndex.Climate:
+                    return Climate_Property.HasBeenSet;
+                case Cell_FieldIndex.Water:
+                    return Water_Property.HasBeenSet;
+                case Cell_FieldIndex.Owner:
+                    return Owner_Property.HasBeenSet;
+                case Cell_FieldIndex.GlobalVariable:
+                    return GlobalVariable_Property.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Cell.Flag
         protected ObjectCentralizationSubscriptions<Cell.Flag> _CellFlag_subscriptions;
         Cell.Flag IPropertySupporter<Cell.Flag>.Get(int index)
@@ -1362,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Cell.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Cell.Flag>.SetHasBeenSet(
@@ -1388,8 +1419,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Cell_FieldIndex)index)
             {
                 case Cell_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Cell.Flag);
+                    SetFlags(
+                        item: default(Cell.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Cell.Flag: {index}");
@@ -1495,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P2Int>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P2Int>.SetHasBeenSet(
@@ -1521,8 +1553,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Cell_FieldIndex)index)
             {
                 case Cell_FieldIndex.Grid:
-                    _hasBeenSetTracker[index] = false;
-                    Grid = default(P2Int);
+                    SetGrid(
+                        item: default(P2Int),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P2Int: {index}");
@@ -1628,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<CellLighting>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<CellLighting>.SetHasBeenSet(
@@ -1654,8 +1687,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Cell_FieldIndex)index)
             {
                 case Cell_FieldIndex.Lighting:
-                    _hasBeenSetTracker[index] = false;
-                    Lighting = default(CellLighting);
+                    SetLighting(
+                        item: default(CellLighting),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type CellLighting: {index}");
@@ -1761,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MusicType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MusicType>.SetHasBeenSet(
@@ -1787,8 +1821,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Cell_FieldIndex)index)
             {
                 case Cell_FieldIndex.MusicType:
-                    _hasBeenSetTracker[index] = false;
-                    MusicType = default(MusicType);
+                    SetMusicType(
+                        item: default(MusicType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MusicType: {index}");
@@ -1894,7 +1929,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1920,8 +1955,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Cell_FieldIndex)index)
             {
                 case Cell_FieldIndex.WaterHeight:
-                    _hasBeenSetTracker[index] = false;
-                    WaterHeight = default(Single);
+                    SetWaterHeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -2027,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -2053,8 +2089,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Cell_FieldIndex)index)
             {
                 case Cell_FieldIndex.FactionRank:
-                    _hasBeenSetTracker[index] = false;
-                    FactionRank = default(Int32);
+                    SetFactionRank(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -2160,7 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<PathGrid>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<PathGrid>.SetHasBeenSet(
@@ -2186,8 +2223,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Cell_FieldIndex)index)
             {
                 case Cell_FieldIndex.PathGrid:
-                    _hasBeenSetTracker[index] = false;
-                    PathGrid = default(PathGrid);
+                    SetPathGrid(
+                        item: default(PathGrid),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type PathGrid: {index}");
@@ -2293,7 +2331,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Landscape>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Landscape>.SetHasBeenSet(
@@ -2319,8 +2357,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Cell_FieldIndex)index)
             {
                 case Cell_FieldIndex.Landscape:
-                    _hasBeenSetTracker[index] = false;
-                    Landscape = default(Landscape);
+                    SetLandscape(
+                        item: default(Landscape),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Landscape: {index}");

@@ -184,8 +184,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetHashes()
         {
-            _hasBeenSetTracker[(int)Model_FieldIndex.Hashes] = false;
-            Hashes = default(Byte[]);
+            SetHashes(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IModel.Hashes_Property => this.Hashes_Property;
@@ -619,6 +620,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((Model_FieldIndex)index)
+            {
+                case Model_FieldIndex.Hashes:
+                    return _hasBeenSetTracker[index];
+                case Model_FieldIndex.File:
+                case Model_FieldIndex.BoundRadius:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter String
         protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
         String IPropertySupporter<String>.Get(int index)
@@ -668,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -694,8 +709,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Model_FieldIndex)index)
             {
                 case Model_FieldIndex.File:
-                    _hasBeenSetTracker[index] = false;
-                    File = default(String);
+                    SetFile(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");
@@ -801,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -827,8 +843,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Model_FieldIndex)index)
             {
                 case Model_FieldIndex.BoundRadius:
-                    _hasBeenSetTracker[index] = false;
-                    BoundRadius = default(Single);
+                    SetBoundRadius(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -934,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -960,8 +977,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Model_FieldIndex)index)
             {
                 case Model_FieldIndex.Hashes:
-                    _hasBeenSetTracker[index] = false;
-                    Hashes = default(Byte[]);
+                    SetHashes(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");

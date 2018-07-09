@@ -106,8 +106,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetUnknown()
         {
-            _hasBeenSetTracker[(int)PathGrid_FieldIndex.Unknown] = false;
-            Unknown = default(Byte[]);
+            SetUnknown(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IPathGrid.Unknown_Property => this.Unknown_Property;
@@ -598,6 +599,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((PathGrid_FieldIndex)index)
+            {
+                case PathGrid_FieldIndex.PointToPointConnections:
+                case PathGrid_FieldIndex.Unknown:
+                case PathGrid_FieldIndex.InterCellConnections:
+                case PathGrid_FieldIndex.PointToReferenceMappings:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Byte[]
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
         {
@@ -651,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -677,8 +692,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PathGrid_FieldIndex)index)
             {
                 case PathGrid_FieldIndex.Unknown:
-                    _hasBeenSetTracker[index] = false;
-                    Unknown = default(Byte[]);
+                    SetUnknown(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(

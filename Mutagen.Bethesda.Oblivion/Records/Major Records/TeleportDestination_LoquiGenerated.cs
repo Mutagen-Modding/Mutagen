@@ -550,6 +550,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((TeleportDestination_FieldIndex)index)
+            {
+                case TeleportDestination_FieldIndex.Door:
+                case TeleportDestination_FieldIndex.Position:
+                case TeleportDestination_FieldIndex.Rotation:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter P3Float
         protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
         P3Float IPropertySupporter<P3Float>.Get(int index)
@@ -604,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P3Float>.SetHasBeenSet(
@@ -630,12 +643,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((TeleportDestination_FieldIndex)index)
             {
                 case TeleportDestination_FieldIndex.Position:
-                    _hasBeenSetTracker[index] = false;
-                    Position = default(P3Float);
+                    SetPosition(
+                        item: default(P3Float),
+                        hasBeenSet: false);
                     break;
                 case TeleportDestination_FieldIndex.Rotation:
-                    _hasBeenSetTracker[index] = false;
-                    Rotation = default(P3Float);
+                    SetRotation(
+                        item: default(P3Float),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P3Float: {index}");

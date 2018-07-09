@@ -480,6 +480,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((RegionDataMapName_FieldIndex)index)
+            {
+                case RegionDataMapName_FieldIndex.MapName:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
         String IPropertySupporter<String>.Get(int index)
@@ -529,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -555,8 +566,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionDataMapName_FieldIndex)index)
             {
                 case RegionDataMapName_FieldIndex.MapName:
-                    _hasBeenSetTracker[index] = false;
-                    MapName = default(String);
+                    SetMapName(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

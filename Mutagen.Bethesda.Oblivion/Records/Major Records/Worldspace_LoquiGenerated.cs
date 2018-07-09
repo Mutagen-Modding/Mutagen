@@ -404,8 +404,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetOffsetData()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.OffsetData] = false;
-            OffsetData = default(Byte[]);
+            SetOffsetData(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IWorldspace.OffsetData_Property => this.OffsetData_Property;
@@ -1268,6 +1269,32 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Worldspace_FieldIndex)index)
+            {
+                case Worldspace_FieldIndex.Icon:
+                case Worldspace_FieldIndex.MapData:
+                case Worldspace_FieldIndex.Flags:
+                case Worldspace_FieldIndex.ObjectBoundsMin:
+                case Worldspace_FieldIndex.ObjectBoundsMax:
+                case Worldspace_FieldIndex.Music:
+                case Worldspace_FieldIndex.OffsetData:
+                case Worldspace_FieldIndex.Road:
+                case Worldspace_FieldIndex.TopCell:
+                case Worldspace_FieldIndex.SubCells:
+                    return _hasBeenSetTracker[index];
+                case Worldspace_FieldIndex.Parent:
+                    return Parent_Property.HasBeenSet;
+                case Worldspace_FieldIndex.Climate:
+                    return Climate_Property.HasBeenSet;
+                case Worldspace_FieldIndex.Water:
+                    return Water_Property.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -1321,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1347,8 +1374,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Worldspace_FieldIndex)index)
             {
                 case Worldspace_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1457,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MapData>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MapData>.SetHasBeenSet(
@@ -1483,8 +1511,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Worldspace_FieldIndex)index)
             {
                 case Worldspace_FieldIndex.MapData:
-                    _hasBeenSetTracker[index] = false;
-                    MapData = default(MapData);
+                    SetMapData(
+                        item: default(MapData),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MapData: {index}");
@@ -1590,7 +1619,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Worldspace.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Worldspace.Flag>.SetHasBeenSet(
@@ -1616,8 +1645,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Worldspace_FieldIndex)index)
             {
                 case Worldspace_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Worldspace.Flag);
+                    SetFlags(
+                        item: default(Worldspace.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Worldspace.Flag: {index}");
@@ -1728,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P2Float>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P2Float>.SetHasBeenSet(
@@ -1754,12 +1784,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Worldspace_FieldIndex)index)
             {
                 case Worldspace_FieldIndex.ObjectBoundsMin:
-                    _hasBeenSetTracker[index] = false;
-                    ObjectBoundsMin = default(P2Float);
+                    SetObjectBoundsMin(
+                        item: default(P2Float),
+                        hasBeenSet: false);
                     break;
                 case Worldspace_FieldIndex.ObjectBoundsMax:
-                    _hasBeenSetTracker[index] = false;
-                    ObjectBoundsMax = default(P2Float);
+                    SetObjectBoundsMax(
+                        item: default(P2Float),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P2Float: {index}");
@@ -1866,7 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MusicType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MusicType>.SetHasBeenSet(
@@ -1892,8 +1924,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Worldspace_FieldIndex)index)
             {
                 case Worldspace_FieldIndex.Music:
-                    _hasBeenSetTracker[index] = false;
-                    Music = default(MusicType);
+                    SetMusic(
+                        item: default(MusicType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MusicType: {index}");
@@ -2003,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -2029,8 +2062,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Worldspace_FieldIndex)index)
             {
                 case Worldspace_FieldIndex.OffsetData:
-                    _hasBeenSetTracker[index] = false;
-                    OffsetData = default(Byte[]);
+                    SetOffsetData(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(
@@ -2139,7 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Road>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Road>.SetHasBeenSet(
@@ -2165,8 +2199,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Worldspace_FieldIndex)index)
             {
                 case Worldspace_FieldIndex.Road:
-                    _hasBeenSetTracker[index] = false;
-                    Road = default(Road);
+                    SetRoad(
+                        item: default(Road),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Road: {index}");
@@ -2272,7 +2307,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Cell>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Cell>.SetHasBeenSet(
@@ -2298,8 +2333,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Worldspace_FieldIndex)index)
             {
                 case Worldspace_FieldIndex.TopCell:
-                    _hasBeenSetTracker[index] = false;
-                    TopCell = default(Cell);
+                    SetTopCell(
+                        item: default(Cell),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Cell: {index}");

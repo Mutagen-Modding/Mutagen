@@ -575,6 +575,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Clothing_FieldIndex)index)
+            {
+                case Clothing_FieldIndex.Value:
+                case Clothing_FieldIndex.Weight:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter UInt32
         protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
         UInt32 IPropertySupporter<UInt32>.Get(int index)
@@ -624,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -650,8 +662,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Clothing_FieldIndex)index)
             {
                 case Clothing_FieldIndex.Value:
-                    _hasBeenSetTracker[index] = false;
-                    Value = default(UInt32);
+                    SetValue(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -757,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -783,8 +796,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Clothing_FieldIndex)index)
             {
                 case Clothing_FieldIndex.Weight:
-                    _hasBeenSetTracker[index] = false;
-                    Weight = default(Single);
+                    SetWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

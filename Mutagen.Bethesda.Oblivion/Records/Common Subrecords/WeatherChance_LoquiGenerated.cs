@@ -474,6 +474,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((WeatherChance_FieldIndex)index)
+            {
+                case WeatherChance_FieldIndex.Weather:
+                case WeatherChance_FieldIndex.Chance:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Int32
         protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
         Int32 IPropertySupporter<Int32>.Get(int index)
@@ -523,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -549,8 +561,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((WeatherChance_FieldIndex)index)
             {
                 case WeatherChance_FieldIndex.Chance:
-                    _hasBeenSetTracker[index] = false;
-                    Chance = default(Int32);
+                    SetChance(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");

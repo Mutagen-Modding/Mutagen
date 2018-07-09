@@ -501,6 +501,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((CreatureSound_FieldIndex)index)
+            {
+                case CreatureSound_FieldIndex.SoundType:
+                case CreatureSound_FieldIndex.Sounds:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter CreatureSound.CreatureSoundType
         protected ObjectCentralizationSubscriptions<CreatureSound.CreatureSoundType> _CreatureSoundCreatureSoundType_subscriptions;
         CreatureSound.CreatureSoundType IPropertySupporter<CreatureSound.CreatureSoundType>.Get(int index)
@@ -550,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<CreatureSound.CreatureSoundType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<CreatureSound.CreatureSoundType>.SetHasBeenSet(
@@ -576,8 +588,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((CreatureSound_FieldIndex)index)
             {
                 case CreatureSound_FieldIndex.SoundType:
-                    _hasBeenSetTracker[index] = false;
-                    SoundType = default(CreatureSound.CreatureSoundType);
+                    SetSoundType(
+                        item: default(CreatureSound.CreatureSoundType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type CreatureSound.CreatureSoundType: {index}");

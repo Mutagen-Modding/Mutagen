@@ -202,8 +202,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetNIFT()
         {
-            _hasBeenSetTracker[(int)Creature_FieldIndex.NIFT] = false;
-            NIFT = default(Byte[]);
+            SetNIFT(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ICreature.NIFT_Property => this.NIFT_Property;
@@ -3627,6 +3628,75 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Creature_FieldIndex)index)
+            {
+                case Creature_FieldIndex.Model:
+                case Creature_FieldIndex.NIFT:
+                case Creature_FieldIndex.AttackReach:
+                case Creature_FieldIndex.TurningSpeed:
+                case Creature_FieldIndex.BaseScale:
+                case Creature_FieldIndex.FootWeight:
+                case Creature_FieldIndex.BloodSpray:
+                case Creature_FieldIndex.BloodDecal:
+                case Creature_FieldIndex.Sounds:
+                    return _hasBeenSetTracker[index];
+                case Creature_FieldIndex.Items:
+                    return Items.HasBeenSet;
+                case Creature_FieldIndex.Spells:
+                    return Spells.HasBeenSet;
+                case Creature_FieldIndex.Models:
+                    return Models.HasBeenSet;
+                case Creature_FieldIndex.Factions:
+                    return Factions.HasBeenSet;
+                case Creature_FieldIndex.DeathItem:
+                    return DeathItem_Property.HasBeenSet;
+                case Creature_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case Creature_FieldIndex.AIPackages:
+                    return AIPackages.HasBeenSet;
+                case Creature_FieldIndex.Animations:
+                    return Animations.HasBeenSet;
+                case Creature_FieldIndex.CombatStyle:
+                    return CombatStyle_Property.HasBeenSet;
+                case Creature_FieldIndex.InheritsSoundFrom:
+                    return InheritsSoundFrom_Property.HasBeenSet;
+                case Creature_FieldIndex.Flags:
+                case Creature_FieldIndex.BaseSpellPoints:
+                case Creature_FieldIndex.Fatigue:
+                case Creature_FieldIndex.BarterGold:
+                case Creature_FieldIndex.LevelOffset:
+                case Creature_FieldIndex.CalcMin:
+                case Creature_FieldIndex.CalcMax:
+                case Creature_FieldIndex.Aggression:
+                case Creature_FieldIndex.Confidence:
+                case Creature_FieldIndex.EnergyLevel:
+                case Creature_FieldIndex.Responsibility:
+                case Creature_FieldIndex.BuySellServices:
+                case Creature_FieldIndex.Teaches:
+                case Creature_FieldIndex.MaximumTrainingLevel:
+                case Creature_FieldIndex.CreatureType:
+                case Creature_FieldIndex.CombatSKill:
+                case Creature_FieldIndex.MagicSKill:
+                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.SoulLevel:
+                case Creature_FieldIndex.Health:
+                case Creature_FieldIndex.AttackDamage:
+                case Creature_FieldIndex.Strength:
+                case Creature_FieldIndex.Intelligence:
+                case Creature_FieldIndex.Willpower:
+                case Creature_FieldIndex.Agility:
+                case Creature_FieldIndex.Speed:
+                case Creature_FieldIndex.Endurance:
+                case Creature_FieldIndex.Personality:
+                case Creature_FieldIndex.Luck:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -3676,7 +3746,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -3702,8 +3772,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -3813,7 +3884,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -3839,8 +3910,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.NIFT:
-                    _hasBeenSetTracker[index] = false;
-                    NIFT = default(Byte[]);
+                    SetNIFT(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(
@@ -3949,7 +4021,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Creature.CreatureFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Creature.CreatureFlag>.SetHasBeenSet(
@@ -3975,8 +4047,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Creature.CreatureFlag);
+                    SetFlags(
+                        item: default(Creature.CreatureFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Creature.CreatureFlag: {index}");
@@ -4107,7 +4180,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt16>.SetHasBeenSet(
@@ -4133,28 +4206,34 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.BaseSpellPoints:
-                    _hasBeenSetTracker[index] = false;
-                    BaseSpellPoints = default(UInt16);
+                    SetBaseSpellPoints(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Fatigue:
-                    _hasBeenSetTracker[index] = false;
-                    Fatigue = default(UInt16);
+                    SetFatigue(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.BarterGold:
-                    _hasBeenSetTracker[index] = false;
-                    BarterGold = default(UInt16);
+                    SetBarterGold(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.CalcMin:
-                    _hasBeenSetTracker[index] = false;
-                    CalcMin = default(UInt16);
+                    SetCalcMin(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.CalcMax:
-                    _hasBeenSetTracker[index] = false;
-                    CalcMax = default(UInt16);
+                    SetCalcMax(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.AttackDamage:
-                    _hasBeenSetTracker[index] = false;
-                    AttackDamage = default(UInt16);
+                    SetAttackDamage(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt16: {index}");
@@ -4265,7 +4344,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int16>.SetHasBeenSet(
@@ -4291,8 +4370,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.LevelOffset:
-                    _hasBeenSetTracker[index] = false;
-                    LevelOffset = default(Int16);
+                    SetLevelOffset(
+                        item: default(Int16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int16: {index}");
@@ -4478,7 +4558,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -4504,72 +4584,89 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.Aggression:
-                    _hasBeenSetTracker[index] = false;
-                    Aggression = default(Byte);
+                    SetAggression(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Confidence:
-                    _hasBeenSetTracker[index] = false;
-                    Confidence = default(Byte);
+                    SetConfidence(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.EnergyLevel:
-                    _hasBeenSetTracker[index] = false;
-                    EnergyLevel = default(Byte);
+                    SetEnergyLevel(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Responsibility:
-                    _hasBeenSetTracker[index] = false;
-                    Responsibility = default(Byte);
+                    SetResponsibility(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.MaximumTrainingLevel:
-                    _hasBeenSetTracker[index] = false;
-                    MaximumTrainingLevel = default(Byte);
+                    SetMaximumTrainingLevel(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.CombatSKill:
-                    _hasBeenSetTracker[index] = false;
-                    CombatSKill = default(Byte);
+                    SetCombatSKill(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.MagicSKill:
-                    _hasBeenSetTracker[index] = false;
-                    MagicSKill = default(Byte);
+                    SetMagicSKill(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.StealthSKill:
-                    _hasBeenSetTracker[index] = false;
-                    StealthSKill = default(Byte);
+                    SetStealthSKill(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Strength:
-                    _hasBeenSetTracker[index] = false;
-                    Strength = default(Byte);
+                    SetStrength(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Intelligence:
-                    _hasBeenSetTracker[index] = false;
-                    Intelligence = default(Byte);
+                    SetIntelligence(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Willpower:
-                    _hasBeenSetTracker[index] = false;
-                    Willpower = default(Byte);
+                    SetWillpower(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Agility:
-                    _hasBeenSetTracker[index] = false;
-                    Agility = default(Byte);
+                    SetAgility(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Speed:
-                    _hasBeenSetTracker[index] = false;
-                    Speed = default(Byte);
+                    SetSpeed(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Endurance:
-                    _hasBeenSetTracker[index] = false;
-                    Endurance = default(Byte);
+                    SetEndurance(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Personality:
-                    _hasBeenSetTracker[index] = false;
-                    Personality = default(Byte);
+                    SetPersonality(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.Luck:
-                    _hasBeenSetTracker[index] = false;
-                    Luck = default(Byte);
+                    SetLuck(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.AttackReach:
-                    _hasBeenSetTracker[index] = false;
-                    AttackReach = default(Byte);
+                    SetAttackReach(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -4691,7 +4788,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<NPC.BuySellServiceFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<NPC.BuySellServiceFlag>.SetHasBeenSet(
@@ -4717,8 +4814,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.BuySellServices:
-                    _hasBeenSetTracker[index] = false;
-                    BuySellServices = default(NPC.BuySellServiceFlag);
+                    SetBuySellServices(
+                        item: default(NPC.BuySellServiceFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
@@ -4824,7 +4922,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Skill>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Skill>.SetHasBeenSet(
@@ -4850,8 +4948,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.Teaches:
-                    _hasBeenSetTracker[index] = false;
-                    Teaches = default(Skill);
+                    SetTeaches(
+                        item: default(Skill),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Skill: {index}");
@@ -4957,7 +5056,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Creature.CreatureTypeEnum>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Creature.CreatureTypeEnum>.SetHasBeenSet(
@@ -4983,8 +5082,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.CreatureType:
-                    _hasBeenSetTracker[index] = false;
-                    CreatureType = default(Creature.CreatureTypeEnum);
+                    SetCreatureType(
+                        item: default(Creature.CreatureTypeEnum),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Creature.CreatureTypeEnum: {index}");
@@ -5090,7 +5190,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<SoulLevel>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<SoulLevel>.SetHasBeenSet(
@@ -5116,8 +5216,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.SoulLevel:
-                    _hasBeenSetTracker[index] = false;
-                    SoulLevel = default(SoulLevel);
+                    SetSoulLevel(
+                        item: default(SoulLevel),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type SoulLevel: {index}");
@@ -5223,7 +5324,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -5249,8 +5350,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.Health:
-                    _hasBeenSetTracker[index] = false;
-                    Health = default(UInt32);
+                    SetHealth(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -5366,7 +5468,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -5392,16 +5494,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.TurningSpeed:
-                    _hasBeenSetTracker[index] = false;
-                    TurningSpeed = default(Single);
+                    SetTurningSpeed(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.BaseScale:
-                    _hasBeenSetTracker[index] = false;
-                    BaseScale = default(Single);
+                    SetBaseScale(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.FootWeight:
-                    _hasBeenSetTracker[index] = false;
-                    FootWeight = default(Single);
+                    SetFootWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -5518,7 +5623,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -5544,12 +5649,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Creature_FieldIndex)index)
             {
                 case Creature_FieldIndex.BloodSpray:
-                    _hasBeenSetTracker[index] = false;
-                    BloodSpray = default(String);
+                    SetBloodSpray(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case Creature_FieldIndex.BloodDecal:
-                    _hasBeenSetTracker[index] = false;
-                    BloodDecal = default(String);
+                    SetBloodDecal(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(

@@ -493,6 +493,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((GameSettingFloat_FieldIndex)index)
+            {
+                case GameSettingFloat_FieldIndex.Data:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Single
         protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
         Single IPropertySupporter<Single>.Get(int index)
@@ -542,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -568,8 +579,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((GameSettingFloat_FieldIndex)index)
             {
                 case GameSettingFloat_FieldIndex.Data:
-                    _hasBeenSetTracker[index] = false;
-                    Data = default(Single);
+                    SetData(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

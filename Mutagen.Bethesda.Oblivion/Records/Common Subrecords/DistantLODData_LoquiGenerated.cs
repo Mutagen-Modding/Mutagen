@@ -610,6 +610,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((DistantLODData_FieldIndex)index)
+            {
+                case DistantLODData_FieldIndex.Unknown0:
+                case DistantLODData_FieldIndex.Unknown1:
+                case DistantLODData_FieldIndex.Unknown2:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Single
         protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
         Single IPropertySupporter<Single>.Get(int index)
@@ -669,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -695,16 +708,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DistantLODData_FieldIndex)index)
             {
                 case DistantLODData_FieldIndex.Unknown0:
-                    _hasBeenSetTracker[index] = false;
-                    Unknown0 = default(Single);
+                    SetUnknown0(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case DistantLODData_FieldIndex.Unknown1:
-                    _hasBeenSetTracker[index] = false;
-                    Unknown1 = default(Single);
+                    SetUnknown1(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case DistantLODData_FieldIndex.Unknown2:
-                    _hasBeenSetTracker[index] = false;
-                    Unknown2 = default(Single);
+                    SetUnknown2(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

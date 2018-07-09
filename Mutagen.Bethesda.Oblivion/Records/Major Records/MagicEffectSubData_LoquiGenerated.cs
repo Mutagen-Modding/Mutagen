@@ -614,6 +614,23 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((MagicEffectSubData_FieldIndex)index)
+            {
+                case MagicEffectSubData_FieldIndex.EnchantEffect:
+                case MagicEffectSubData_FieldIndex.CastingSound:
+                case MagicEffectSubData_FieldIndex.BoltSound:
+                case MagicEffectSubData_FieldIndex.HitSound:
+                case MagicEffectSubData_FieldIndex.AreaSound:
+                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
+                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Single
         protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
         Single IPropertySupporter<Single>.Get(int index)
@@ -668,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -694,12 +711,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((MagicEffectSubData_FieldIndex)index)
             {
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    _hasBeenSetTracker[index] = false;
-                    ConstantEffectEnchantmentFactor = default(Single);
+                    SetConstantEffectEnchantmentFactor(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    _hasBeenSetTracker[index] = false;
-                    ConstantEffectBarterFactor = default(Single);
+                    SetConstantEffectBarterFactor(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

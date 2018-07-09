@@ -635,6 +635,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((DialogTopic_FieldIndex)index)
+            {
+                case DialogTopic_FieldIndex.Name:
+                case DialogTopic_FieldIndex.DialogType:
+                case DialogTopic_FieldIndex.Items:
+                    return _hasBeenSetTracker[index];
+                case DialogTopic_FieldIndex.Quests:
+                    return Quests.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -688,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -714,8 +729,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogTopic_FieldIndex)index)
             {
                 case DialogTopic_FieldIndex.Name:
-                    _hasBeenSetTracker[index] = false;
-                    Name = default(String);
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -824,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<DialogType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<DialogType>.SetHasBeenSet(
@@ -850,8 +866,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((DialogTopic_FieldIndex)index)
             {
                 case DialogTopic_FieldIndex.DialogType:
-                    _hasBeenSetTracker[index] = false;
-                    DialogType = default(DialogType);
+                    SetDialogType(
+                        item: default(DialogType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type DialogType: {index}");

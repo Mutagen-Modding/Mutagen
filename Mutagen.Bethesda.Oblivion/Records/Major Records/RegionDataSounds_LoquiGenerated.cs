@@ -515,6 +515,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((RegionDataSounds_FieldIndex)index)
+            {
+                case RegionDataSounds_FieldIndex.MusicType:
+                case RegionDataSounds_FieldIndex.Sounds:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter MusicType
         protected ObjectCentralizationSubscriptions<MusicType> _MusicType_subscriptions;
         MusicType IPropertySupporter<MusicType>.Get(int index)
@@ -564,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MusicType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MusicType>.SetHasBeenSet(
@@ -590,8 +602,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionDataSounds_FieldIndex)index)
             {
                 case RegionDataSounds_FieldIndex.MusicType:
-                    _hasBeenSetTracker[index] = false;
-                    MusicType = default(MusicType);
+                    SetMusicType(
+                        item: default(MusicType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MusicType: {index}");

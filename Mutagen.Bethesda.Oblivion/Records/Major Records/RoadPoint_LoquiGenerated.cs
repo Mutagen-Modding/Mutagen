@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<P3Float> IRoadPointGetter.Point_Property => this.Point_Property;
         #endregion
         #region NumConnectionsFluffBytes
-        protected Byte[] _NumConnectionsFluffBytes;
+        protected Byte[] _NumConnectionsFluffBytes = new byte[3];
         protected PropertyForwarder<RoadPoint, Byte[]> _NumConnectionsFluffBytesForwarder;
         public INotifyingSetItem<Byte[]> NumConnectionsFluffBytes_Property => _NumConnectionsFluffBytesForwarder ?? (_NumConnectionsFluffBytesForwarder = new PropertyForwarder<RoadPoint, Byte[]>(this, (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -110,6 +110,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[3];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)RoadPoint_FieldIndex.NumConnectionsFluffBytes];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(NumConnectionsFluffBytes, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -135,8 +139,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetNumConnectionsFluffBytes()
         {
-            _hasBeenSetTracker[(int)RoadPoint_FieldIndex.NumConnectionsFluffBytes] = false;
-            NumConnectionsFluffBytes = default(Byte[]);
+            SetNumConnectionsFluffBytes(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IRoadPoint.NumConnectionsFluffBytes_Property => this.NumConnectionsFluffBytes_Property;
@@ -563,6 +568,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((RoadPoint_FieldIndex)index)
+            {
+                case RoadPoint_FieldIndex.Point:
+                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
+                case RoadPoint_FieldIndex.Connections:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter P3Float
         protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
         P3Float IPropertySupporter<P3Float>.Get(int index)
@@ -612,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P3Float>.SetHasBeenSet(
@@ -638,8 +656,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RoadPoint_FieldIndex)index)
             {
                 case RoadPoint_FieldIndex.Point:
-                    _hasBeenSetTracker[index] = false;
-                    Point = default(P3Float);
+                    SetPoint(
+                        item: default(P3Float),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P3Float: {index}");
@@ -745,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -771,8 +790,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RoadPoint_FieldIndex)index)
             {
                 case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    _hasBeenSetTracker[index] = false;
-                    NumConnectionsFluffBytes = default(Byte[]);
+                    SetNumConnectionsFluffBytes(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");

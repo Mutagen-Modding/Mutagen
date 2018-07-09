@@ -621,6 +621,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected virtual bool GetHasBeenSet(int index)
+        {
+            switch ((SoundData_FieldIndex)index)
+            {
+                case SoundData_FieldIndex.MinimumAttenuationDistance:
+                case SoundData_FieldIndex.MaximumAttenuationDistance:
+                case SoundData_FieldIndex.FrequencyAdjustment:
+                case SoundData_FieldIndex.Flags:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter SByte
         protected ObjectCentralizationSubscriptions<SByte> _SByte_subscriptions;
         SByte IPropertySupporter<SByte>.Get(int index)
@@ -670,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<SByte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<SByte>.SetHasBeenSet(
@@ -696,8 +710,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SoundData_FieldIndex)index)
             {
                 case SoundData_FieldIndex.FrequencyAdjustment:
-                    _hasBeenSetTracker[index] = false;
-                    FrequencyAdjustment = default(SByte);
+                    SetFrequencyAdjustment(
+                        item: default(SByte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type SByte: {index}");
@@ -803,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<SoundData.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<SoundData.Flag>.SetHasBeenSet(
@@ -829,8 +844,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SoundData_FieldIndex)index)
             {
                 case SoundData_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(SoundData.Flag);
+                    SetFlags(
+                        item: default(SoundData.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type SoundData.Flag: {index}");

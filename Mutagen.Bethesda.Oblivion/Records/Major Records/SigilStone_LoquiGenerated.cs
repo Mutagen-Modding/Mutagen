@@ -866,6 +866,25 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((SigilStone_FieldIndex)index)
+            {
+                case SigilStone_FieldIndex.Model:
+                case SigilStone_FieldIndex.Icon:
+                case SigilStone_FieldIndex.Effects:
+                    return _hasBeenSetTracker[index];
+                case SigilStone_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case SigilStone_FieldIndex.Uses:
+                case SigilStone_FieldIndex.Value:
+                case SigilStone_FieldIndex.Weight:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -915,7 +934,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -941,8 +960,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SigilStone_FieldIndex)index)
             {
                 case SigilStone_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1052,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1078,8 +1098,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SigilStone_FieldIndex)index)
             {
                 case SigilStone_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1188,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -1214,8 +1235,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SigilStone_FieldIndex)index)
             {
                 case SigilStone_FieldIndex.Uses:
-                    _hasBeenSetTracker[index] = false;
-                    Uses = default(Byte);
+                    SetUses(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -1321,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -1347,8 +1369,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SigilStone_FieldIndex)index)
             {
                 case SigilStone_FieldIndex.Value:
-                    _hasBeenSetTracker[index] = false;
-                    Value = default(UInt32);
+                    SetValue(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -1454,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1480,8 +1503,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SigilStone_FieldIndex)index)
             {
                 case SigilStone_FieldIndex.Weight:
-                    _hasBeenSetTracker[index] = false;
-                    Weight = default(Single);
+                    SetWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

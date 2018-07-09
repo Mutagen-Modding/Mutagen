@@ -764,6 +764,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((SpellUnleveled_FieldIndex)index)
+            {
+                case SpellUnleveled_FieldIndex.Effects:
+                    return _hasBeenSetTracker[index];
+                case SpellUnleveled_FieldIndex.Type:
+                case SpellUnleveled_FieldIndex.Cost:
+                case SpellUnleveled_FieldIndex.Level:
+                case SpellUnleveled_FieldIndex.Flag:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Spell.SpellType
         protected ObjectCentralizationSubscriptions<Spell.SpellType> _SpellSpellType_subscriptions;
         Spell.SpellType IPropertySupporter<Spell.SpellType>.Get(int index)
@@ -813,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Spell.SpellType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Spell.SpellType>.SetHasBeenSet(
@@ -839,8 +855,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SpellUnleveled_FieldIndex)index)
             {
                 case SpellUnleveled_FieldIndex.Type:
-                    _hasBeenSetTracker[index] = false;
-                    Type = default(Spell.SpellType);
+                    SetType(
+                        item: default(Spell.SpellType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Spell.SpellType: {index}");
@@ -946,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -972,8 +989,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SpellUnleveled_FieldIndex)index)
             {
                 case SpellUnleveled_FieldIndex.Cost:
-                    _hasBeenSetTracker[index] = false;
-                    Cost = default(UInt32);
+                    SetCost(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -1079,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Spell.SpellLevel>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Spell.SpellLevel>.SetHasBeenSet(
@@ -1105,8 +1123,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SpellUnleveled_FieldIndex)index)
             {
                 case SpellUnleveled_FieldIndex.Level:
-                    _hasBeenSetTracker[index] = false;
-                    Level = default(Spell.SpellLevel);
+                    SetLevel(
+                        item: default(Spell.SpellLevel),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Spell.SpellLevel: {index}");
@@ -1212,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Spell.SpellFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Spell.SpellFlag>.SetHasBeenSet(
@@ -1238,8 +1257,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SpellUnleveled_FieldIndex)index)
             {
                 case SpellUnleveled_FieldIndex.Flag:
-                    _hasBeenSetTracker[index] = false;
-                    Flag = default(Spell.SpellFlag);
+                    SetFlag(
+                        item: default(Spell.SpellFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Spell.SpellFlag: {index}");

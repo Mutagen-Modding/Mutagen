@@ -549,6 +549,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((GenderedBodyData_FieldIndex)index)
+            {
+                case GenderedBodyData_FieldIndex.Male:
+                case GenderedBodyData_FieldIndex.Female:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter BodyData
         protected ObjectCentralizationSubscriptions<BodyData> _BodyData_subscriptions;
         BodyData IPropertySupporter<BodyData>.Get(int index)
@@ -603,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<BodyData>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<BodyData>.SetHasBeenSet(
@@ -629,12 +641,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((GenderedBodyData_FieldIndex)index)
             {
                 case GenderedBodyData_FieldIndex.Male:
-                    _hasBeenSetTracker[index] = false;
-                    Male = default(BodyData);
+                    SetMale(
+                        item: default(BodyData),
+                        hasBeenSet: false);
                     break;
                 case GenderedBodyData_FieldIndex.Female:
-                    _hasBeenSetTracker[index] = false;
-                    Female = default(BodyData);
+                    SetFemale(
+                        item: default(BodyData),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type BodyData: {index}");

@@ -553,6 +553,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((RegionSound_FieldIndex)index)
+            {
+                case RegionSound_FieldIndex.Sound:
+                case RegionSound_FieldIndex.Flags:
+                case RegionSound_FieldIndex.Chance:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter RegionSound.Flag
         protected ObjectCentralizationSubscriptions<RegionSound.Flag> _RegionSoundFlag_subscriptions;
         RegionSound.Flag IPropertySupporter<RegionSound.Flag>.Get(int index)
@@ -602,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RegionSound.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RegionSound.Flag>.SetHasBeenSet(
@@ -628,8 +641,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionSound_FieldIndex)index)
             {
                 case RegionSound_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(RegionSound.Flag);
+                    SetFlags(
+                        item: default(RegionSound.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RegionSound.Flag: {index}");
@@ -735,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -761,8 +775,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionSound_FieldIndex)index)
             {
                 case RegionSound_FieldIndex.Chance:
-                    _hasBeenSetTracker[index] = false;
-                    Chance = default(Single);
+                    SetChance(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

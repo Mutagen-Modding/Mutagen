@@ -507,6 +507,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected virtual bool GetHasBeenSet(int index)
+        {
+            switch ((RegionData_FieldIndex)index)
+            {
+                case RegionData_FieldIndex.DataType:
+                case RegionData_FieldIndex.Flags:
+                case RegionData_FieldIndex.Priority:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter RegionData.RegionDataType
         protected ObjectCentralizationSubscriptions<RegionData.RegionDataType> _RegionDataRegionDataType_subscriptions;
         RegionData.RegionDataType IPropertySupporter<RegionData.RegionDataType>.Get(int index)
@@ -556,7 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RegionData.RegionDataType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RegionData.RegionDataType>.SetHasBeenSet(
@@ -582,8 +595,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionData_FieldIndex)index)
             {
                 case RegionData_FieldIndex.DataType:
-                    _hasBeenSetTracker[index] = false;
-                    DataType = default(RegionData.RegionDataType);
+                    SetDataType(
+                        item: default(RegionData.RegionDataType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RegionData.RegionDataType: {index}");
@@ -689,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RegionData.RegionDataFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RegionData.RegionDataFlag>.SetHasBeenSet(
@@ -715,8 +729,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionData_FieldIndex)index)
             {
                 case RegionData_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(RegionData.RegionDataFlag);
+                    SetFlags(
+                        item: default(RegionData.RegionDataFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RegionData.RegionDataFlag: {index}");
@@ -822,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -848,8 +863,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionData_FieldIndex)index)
             {
                 case RegionData_FieldIndex.Priority:
-                    _hasBeenSetTracker[index] = false;
-                    Priority = default(Byte);
+                    SetPriority(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");

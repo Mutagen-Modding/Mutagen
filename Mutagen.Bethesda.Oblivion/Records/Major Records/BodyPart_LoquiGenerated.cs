@@ -549,6 +549,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((BodyPart_FieldIndex)index)
+            {
+                case BodyPart_FieldIndex.Index:
+                case BodyPart_FieldIndex.Icon:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Race.BodyIndex
         protected ObjectCentralizationSubscriptions<Race.BodyIndex> _RaceBodyIndex_subscriptions;
         Race.BodyIndex IPropertySupporter<Race.BodyIndex>.Get(int index)
@@ -598,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Race.BodyIndex>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Race.BodyIndex>.SetHasBeenSet(
@@ -624,8 +636,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((BodyPart_FieldIndex)index)
             {
                 case BodyPart_FieldIndex.Index:
-                    _hasBeenSetTracker[index] = false;
-                    Index = default(Race.BodyIndex);
+                    SetIndex(
+                        item: default(Race.BodyIndex),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Race.BodyIndex: {index}");
@@ -731,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -757,8 +770,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((BodyPart_FieldIndex)index)
             {
                 case BodyPart_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

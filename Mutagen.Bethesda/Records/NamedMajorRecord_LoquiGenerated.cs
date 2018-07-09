@@ -366,6 +366,17 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((NamedMajorRecord_FieldIndex)index)
+            {
+                case NamedMajorRecord_FieldIndex.Name:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -419,7 +430,7 @@ namespace Mutagen.Bethesda
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -445,8 +456,9 @@ namespace Mutagen.Bethesda
             switch ((NamedMajorRecord_FieldIndex)index)
             {
                 case NamedMajorRecord_FieldIndex.Name:
-                    _hasBeenSetTracker[index] = false;
-                    Name = default(String);
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(

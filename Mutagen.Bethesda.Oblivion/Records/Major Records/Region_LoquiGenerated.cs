@@ -1044,6 +1044,26 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Region_FieldIndex)index)
+            {
+                case Region_FieldIndex.Icon:
+                case Region_FieldIndex.MapColor:
+                case Region_FieldIndex.Areas:
+                case Region_FieldIndex.Objects:
+                case Region_FieldIndex.Weather:
+                case Region_FieldIndex.MapName:
+                case Region_FieldIndex.Grasses:
+                case Region_FieldIndex.Sounds:
+                    return _hasBeenSetTracker[index];
+                case Region_FieldIndex.Worldspace:
+                    return Worldspace_Property.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -1097,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1123,8 +1143,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Region_FieldIndex)index)
             {
                 case Region_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1233,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Color>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Color>.SetHasBeenSet(
@@ -1259,8 +1280,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Region_FieldIndex)index)
             {
                 case Region_FieldIndex.MapColor:
-                    _hasBeenSetTracker[index] = false;
-                    MapColor = default(Color);
+                    SetMapColor(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Color: {index}");
@@ -1366,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RegionDataObjects>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RegionDataObjects>.SetHasBeenSet(
@@ -1392,8 +1414,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Region_FieldIndex)index)
             {
                 case Region_FieldIndex.Objects:
-                    _hasBeenSetTracker[index] = false;
-                    Objects = default(RegionDataObjects);
+                    SetObjects(
+                        item: default(RegionDataObjects),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RegionDataObjects: {index}");
@@ -1499,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RegionDataWeather>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RegionDataWeather>.SetHasBeenSet(
@@ -1525,8 +1548,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Region_FieldIndex)index)
             {
                 case Region_FieldIndex.Weather:
-                    _hasBeenSetTracker[index] = false;
-                    Weather = default(RegionDataWeather);
+                    SetWeather(
+                        item: default(RegionDataWeather),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RegionDataWeather: {index}");
@@ -1632,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RegionDataMapName>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RegionDataMapName>.SetHasBeenSet(
@@ -1658,8 +1682,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Region_FieldIndex)index)
             {
                 case Region_FieldIndex.MapName:
-                    _hasBeenSetTracker[index] = false;
-                    MapName = default(RegionDataMapName);
+                    SetMapName(
+                        item: default(RegionDataMapName),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RegionDataMapName: {index}");
@@ -1765,7 +1790,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RegionDataGrasses>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RegionDataGrasses>.SetHasBeenSet(
@@ -1791,8 +1816,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Region_FieldIndex)index)
             {
                 case Region_FieldIndex.Grasses:
-                    _hasBeenSetTracker[index] = false;
-                    Grasses = default(RegionDataGrasses);
+                    SetGrasses(
+                        item: default(RegionDataGrasses),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RegionDataGrasses: {index}");
@@ -1898,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<RegionDataSounds>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<RegionDataSounds>.SetHasBeenSet(
@@ -1924,8 +1950,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Region_FieldIndex)index)
             {
                 case Region_FieldIndex.Sounds:
-                    _hasBeenSetTracker[index] = false;
-                    Sounds = default(RegionDataSounds);
+                    SetSounds(
+                        item: default(RegionDataSounds),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type RegionDataSounds: {index}");

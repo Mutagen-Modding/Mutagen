@@ -909,6 +909,25 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Model:
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    return _hasBeenSetTracker[index];
+                case AlchemicalApparatus_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case AlchemicalApparatus_FieldIndex.Type:
+                case AlchemicalApparatus_FieldIndex.Value:
+                case AlchemicalApparatus_FieldIndex.Weight:
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -958,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -984,8 +1003,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((AlchemicalApparatus_FieldIndex)index)
             {
                 case AlchemicalApparatus_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1095,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1121,8 +1141,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((AlchemicalApparatus_FieldIndex)index)
             {
                 case AlchemicalApparatus_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1231,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<AlchemicalApparatus.ApparatusType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<AlchemicalApparatus.ApparatusType>.SetHasBeenSet(
@@ -1257,8 +1278,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((AlchemicalApparatus_FieldIndex)index)
             {
                 case AlchemicalApparatus_FieldIndex.Type:
-                    _hasBeenSetTracker[index] = false;
-                    Type = default(AlchemicalApparatus.ApparatusType);
+                    SetType(
+                        item: default(AlchemicalApparatus.ApparatusType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type AlchemicalApparatus.ApparatusType: {index}");
@@ -1364,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -1390,8 +1412,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((AlchemicalApparatus_FieldIndex)index)
             {
                 case AlchemicalApparatus_FieldIndex.Value:
-                    _hasBeenSetTracker[index] = false;
-                    Value = default(UInt32);
+                    SetValue(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -1502,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1528,12 +1551,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((AlchemicalApparatus_FieldIndex)index)
             {
                 case AlchemicalApparatus_FieldIndex.Weight:
-                    _hasBeenSetTracker[index] = false;
-                    Weight = default(Single);
+                    SetWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case AlchemicalApparatus_FieldIndex.Quality:
-                    _hasBeenSetTracker[index] = false;
-                    Quality = default(Single);
+                    SetQuality(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

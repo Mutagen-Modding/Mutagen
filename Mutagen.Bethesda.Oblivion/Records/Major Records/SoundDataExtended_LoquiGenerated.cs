@@ -644,6 +644,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((SoundDataExtended_FieldIndex)index)
+            {
+                case SoundDataExtended_FieldIndex.StaticAttenuation:
+                case SoundDataExtended_FieldIndex.StopTime:
+                case SoundDataExtended_FieldIndex.StartTime:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Single
         protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
         Single IPropertySupporter<Single>.Get(int index)
@@ -703,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -729,16 +742,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SoundDataExtended_FieldIndex)index)
             {
                 case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    _hasBeenSetTracker[index] = false;
-                    StaticAttenuation = default(Single);
+                    SetStaticAttenuation(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case SoundDataExtended_FieldIndex.StopTime:
-                    _hasBeenSetTracker[index] = false;
-                    StopTime = default(Single);
+                    SetStopTime(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case SoundDataExtended_FieldIndex.StartTime:
-                    _hasBeenSetTracker[index] = false;
-                    StartTime = default(Single);
+                    SetStartTime(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

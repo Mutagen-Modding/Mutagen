@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
-        protected Byte[] _Fluff;
+        protected Byte[] _Fluff = new byte[4];
         protected PropertyForwarder<ScriptMetaSummary, Byte[]> _FluffForwarder;
         public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<ScriptMetaSummary, Byte[]>(this, (int)ScriptMetaSummary_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -64,6 +64,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.Fluff];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -89,8 +93,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff()
         {
-            _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.Fluff] = false;
-            Fluff = default(Byte[]);
+            SetFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IScriptMetaSummary.Fluff_Property => this.Fluff_Property;
@@ -737,6 +742,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((ScriptMetaSummary_FieldIndex)index)
+            {
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                case ScriptMetaSummary_FieldIndex.RefCount:
+                case ScriptMetaSummary_FieldIndex.CompiledSize:
+                case ScriptMetaSummary_FieldIndex.VariableCount:
+                case ScriptMetaSummary_FieldIndex.Type:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Byte[]
         protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
@@ -786,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -812,8 +832,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptMetaSummary_FieldIndex)index)
             {
                 case ScriptMetaSummary_FieldIndex.Fluff:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff = default(Byte[]);
+                    SetFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -924,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -950,12 +971,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptMetaSummary_FieldIndex)index)
             {
                 case ScriptMetaSummary_FieldIndex.RefCount:
-                    _hasBeenSetTracker[index] = false;
-                    RefCount = default(UInt32);
+                    SetRefCount(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
-                    _hasBeenSetTracker[index] = false;
-                    VariableCount = default(UInt32);
+                    SetVariableCount(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -1062,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -1088,8 +1111,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptMetaSummary_FieldIndex)index)
             {
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    _hasBeenSetTracker[index] = false;
-                    CompiledSize = default(Int32);
+                    SetCompiledSize(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -1195,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ScriptFields.ScriptType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ScriptFields.ScriptType>.SetHasBeenSet(
@@ -1221,8 +1245,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptMetaSummary_FieldIndex)index)
             {
                 case ScriptMetaSummary_FieldIndex.Type:
-                    _hasBeenSetTracker[index] = false;
-                    Type = default(ScriptFields.ScriptType);
+                    SetType(
+                        item: default(ScriptFields.ScriptType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ScriptFields.ScriptType: {index}");

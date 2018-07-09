@@ -684,6 +684,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((LandTexture_FieldIndex)index)
+            {
+                case LandTexture_FieldIndex.Icon:
+                case LandTexture_FieldIndex.Havok:
+                case LandTexture_FieldIndex.TextureSpecularExponent:
+                    return _hasBeenSetTracker[index];
+                case LandTexture_FieldIndex.PotentialGrass:
+                    return PotentialGrass.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -737,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -763,8 +778,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LandTexture_FieldIndex)index)
             {
                 case LandTexture_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -873,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<HavokData>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<HavokData>.SetHasBeenSet(
@@ -899,8 +915,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LandTexture_FieldIndex)index)
             {
                 case LandTexture_FieldIndex.Havok:
-                    _hasBeenSetTracker[index] = false;
-                    Havok = default(HavokData);
+                    SetHavok(
+                        item: default(HavokData),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type HavokData: {index}");
@@ -1006,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -1032,8 +1049,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LandTexture_FieldIndex)index)
             {
                 case LandTexture_FieldIndex.TextureSpecularExponent:
-                    _hasBeenSetTracker[index] = false;
-                    TextureSpecularExponent = default(Byte);
+                    SetTextureSpecularExponent(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");

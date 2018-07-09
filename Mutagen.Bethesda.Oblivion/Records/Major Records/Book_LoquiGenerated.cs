@@ -1097,6 +1097,29 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Book_FieldIndex)index)
+            {
+                case Book_FieldIndex.Model:
+                case Book_FieldIndex.Icon:
+                case Book_FieldIndex.EnchantmentPoints:
+                case Book_FieldIndex.Description:
+                    return _hasBeenSetTracker[index];
+                case Book_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case Book_FieldIndex.Enchantment:
+                    return Enchantment_Property.HasBeenSet;
+                case Book_FieldIndex.Flags:
+                case Book_FieldIndex.Teaches:
+                case Book_FieldIndex.Value:
+                case Book_FieldIndex.Weight:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -1146,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -1172,8 +1195,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Book_FieldIndex)index)
             {
                 case Book_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1288,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1314,12 +1338,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Book_FieldIndex)index)
             {
                 case Book_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case Book_FieldIndex.Description:
-                    _hasBeenSetTracker[index] = false;
-                    Description = default(String);
+                    SetDescription(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1429,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt16>.SetHasBeenSet(
@@ -1455,8 +1481,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Book_FieldIndex)index)
             {
                 case Book_FieldIndex.EnchantmentPoints:
-                    _hasBeenSetTracker[index] = false;
-                    EnchantmentPoints = default(UInt16);
+                    SetEnchantmentPoints(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt16: {index}");
@@ -1562,7 +1589,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Book.BookFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Book.BookFlag>.SetHasBeenSet(
@@ -1588,8 +1615,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Book_FieldIndex)index)
             {
                 case Book_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Book.BookFlag);
+                    SetFlags(
+                        item: default(Book.BookFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Book.BookFlag: {index}");
@@ -1695,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Skill>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Skill>.SetHasBeenSet(
@@ -1721,8 +1749,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Book_FieldIndex)index)
             {
                 case Book_FieldIndex.Teaches:
-                    _hasBeenSetTracker[index] = false;
-                    Teaches = default(Skill);
+                    SetTeaches(
+                        item: default(Skill),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Skill: {index}");
@@ -1833,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1859,12 +1888,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Book_FieldIndex)index)
             {
                 case Book_FieldIndex.Value:
-                    _hasBeenSetTracker[index] = false;
-                    Value = default(Single);
+                    SetValue(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Book_FieldIndex.Weight:
-                    _hasBeenSetTracker[index] = false;
-                    Weight = default(Single);
+                    SetWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

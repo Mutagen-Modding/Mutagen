@@ -661,6 +661,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Hair_FieldIndex)index)
+            {
+                case Hair_FieldIndex.Model:
+                case Hair_FieldIndex.Icon:
+                case Hair_FieldIndex.Flags:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -710,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -736,8 +749,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Hair_FieldIndex)index)
             {
                 case Hair_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -847,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -873,8 +887,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Hair_FieldIndex)index)
             {
                 case Hair_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -983,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Hair.HairFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Hair.HairFlag>.SetHasBeenSet(
@@ -1009,8 +1024,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Hair_FieldIndex)index)
             {
                 case Hair_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Hair.HairFlag);
+                    SetFlags(
+                        item: default(Hair.HairFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Hair.HairFlag: {index}");

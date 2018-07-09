@@ -751,6 +751,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Enchantment_FieldIndex)index)
+            {
+                case Enchantment_FieldIndex.Effects:
+                    return _hasBeenSetTracker[index];
+                case Enchantment_FieldIndex.Type:
+                case Enchantment_FieldIndex.ChargeAmount:
+                case Enchantment_FieldIndex.EnchantCost:
+                case Enchantment_FieldIndex.Flags:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Enchantment.EnchantmentType
         protected ObjectCentralizationSubscriptions<Enchantment.EnchantmentType> _EnchantmentEnchantmentType_subscriptions;
         Enchantment.EnchantmentType IPropertySupporter<Enchantment.EnchantmentType>.Get(int index)
@@ -800,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Enchantment.EnchantmentType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Enchantment.EnchantmentType>.SetHasBeenSet(
@@ -826,8 +842,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Enchantment_FieldIndex)index)
             {
                 case Enchantment_FieldIndex.Type:
-                    _hasBeenSetTracker[index] = false;
-                    Type = default(Enchantment.EnchantmentType);
+                    SetType(
+                        item: default(Enchantment.EnchantmentType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Enchantment.EnchantmentType: {index}");
@@ -938,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -964,12 +981,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Enchantment_FieldIndex)index)
             {
                 case Enchantment_FieldIndex.ChargeAmount:
-                    _hasBeenSetTracker[index] = false;
-                    ChargeAmount = default(UInt32);
+                    SetChargeAmount(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 case Enchantment_FieldIndex.EnchantCost:
-                    _hasBeenSetTracker[index] = false;
-                    EnchantCost = default(UInt32);
+                    SetEnchantCost(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -1076,7 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Enchantment.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Enchantment.Flag>.SetHasBeenSet(
@@ -1102,8 +1121,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Enchantment_FieldIndex)index)
             {
                 case Enchantment_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Enchantment.Flag);
+                    SetFlags(
+                        item: default(Enchantment.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Enchantment.Flag: {index}");

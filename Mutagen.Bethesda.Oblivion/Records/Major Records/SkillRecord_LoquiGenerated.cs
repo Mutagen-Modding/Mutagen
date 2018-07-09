@@ -1361,6 +1361,29 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((SkillRecord_FieldIndex)index)
+            {
+                case SkillRecord_FieldIndex.Skill:
+                case SkillRecord_FieldIndex.Description:
+                case SkillRecord_FieldIndex.Icon:
+                case SkillRecord_FieldIndex.ApprenticeText:
+                case SkillRecord_FieldIndex.JourneymanText:
+                case SkillRecord_FieldIndex.ExpertText:
+                case SkillRecord_FieldIndex.MasterText:
+                    return _hasBeenSetTracker[index];
+                case SkillRecord_FieldIndex.Action:
+                case SkillRecord_FieldIndex.Attribute:
+                case SkillRecord_FieldIndex.Specialization:
+                case SkillRecord_FieldIndex.UseValueFirst:
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter ActorValue
         protected ObjectCentralizationSubscriptions<ActorValue> _ActorValue_subscriptions;
         ActorValue IPropertySupporter<ActorValue>.Get(int index)
@@ -1420,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ActorValue>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ActorValue>.SetHasBeenSet(
@@ -1446,16 +1469,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SkillRecord_FieldIndex)index)
             {
                 case SkillRecord_FieldIndex.Skill:
-                    _hasBeenSetTracker[index] = false;
-                    Skill = default(ActorValue);
+                    SetSkill(
+                        item: default(ActorValue),
+                        hasBeenSet: false);
                     break;
                 case SkillRecord_FieldIndex.Action:
-                    _hasBeenSetTracker[index] = false;
-                    Action = default(ActorValue);
+                    SetAction(
+                        item: default(ActorValue),
+                        hasBeenSet: false);
                     break;
                 case SkillRecord_FieldIndex.Attribute:
-                    _hasBeenSetTracker[index] = false;
-                    Attribute = default(ActorValue);
+                    SetAttribute(
+                        item: default(ActorValue),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
@@ -1592,7 +1618,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1618,28 +1644,34 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SkillRecord_FieldIndex)index)
             {
                 case SkillRecord_FieldIndex.Description:
-                    _hasBeenSetTracker[index] = false;
-                    Description = default(String);
+                    SetDescription(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case SkillRecord_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
-                    _hasBeenSetTracker[index] = false;
-                    ApprenticeText = default(String);
+                    SetApprenticeText(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case SkillRecord_FieldIndex.JourneymanText:
-                    _hasBeenSetTracker[index] = false;
-                    JourneymanText = default(String);
+                    SetJourneymanText(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case SkillRecord_FieldIndex.ExpertText:
-                    _hasBeenSetTracker[index] = false;
-                    ExpertText = default(String);
+                    SetExpertText(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case SkillRecord_FieldIndex.MasterText:
-                    _hasBeenSetTracker[index] = false;
-                    MasterText = default(String);
+                    SetMasterText(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1753,7 +1785,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Specialization>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Specialization>.SetHasBeenSet(
@@ -1779,8 +1811,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SkillRecord_FieldIndex)index)
             {
                 case SkillRecord_FieldIndex.Specialization:
-                    _hasBeenSetTracker[index] = false;
-                    Specialization = default(Specialization);
+                    SetSpecialization(
+                        item: default(Specialization),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Specialization: {index}");
@@ -1891,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1917,12 +1950,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SkillRecord_FieldIndex)index)
             {
                 case SkillRecord_FieldIndex.UseValueFirst:
-                    _hasBeenSetTracker[index] = false;
-                    UseValueFirst = default(Single);
+                    SetUseValueFirst(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case SkillRecord_FieldIndex.UseValueSecond:
-                    _hasBeenSetTracker[index] = false;
-                    UseValueSecond = default(Single);
+                    SetUseValueSecond(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

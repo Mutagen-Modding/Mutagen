@@ -658,6 +658,23 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((LeveledCreature_FieldIndex)index)
+            {
+                case LeveledCreature_FieldIndex.ChanceNone:
+                case LeveledCreature_FieldIndex.Flags:
+                case LeveledCreature_FieldIndex.Entries:
+                    return _hasBeenSetTracker[index];
+                case LeveledCreature_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case LeveledCreature_FieldIndex.Template:
+                    return Template_Property.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Byte
         protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
         Byte IPropertySupporter<Byte>.Get(int index)
@@ -707,7 +724,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -733,8 +750,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LeveledCreature_FieldIndex)index)
             {
                 case LeveledCreature_FieldIndex.ChanceNone:
-                    _hasBeenSetTracker[index] = false;
-                    ChanceNone = default(Byte);
+                    SetChanceNone(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -840,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<LeveledFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<LeveledFlag>.SetHasBeenSet(
@@ -866,8 +884,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LeveledCreature_FieldIndex)index)
             {
                 case LeveledCreature_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(LeveledFlag);
+                    SetFlags(
+                        item: default(LeveledFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type LeveledFlag: {index}");

@@ -990,6 +990,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((RaceStats_FieldIndex)index)
+            {
+                case RaceStats_FieldIndex.Strength:
+                case RaceStats_FieldIndex.Intelligence:
+                case RaceStats_FieldIndex.Willpower:
+                case RaceStats_FieldIndex.Agility:
+                case RaceStats_FieldIndex.Speed:
+                case RaceStats_FieldIndex.Endurance:
+                case RaceStats_FieldIndex.Personality:
+                case RaceStats_FieldIndex.Luck:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Byte
         protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
         Byte IPropertySupporter<Byte>.Get(int index)
@@ -1074,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -1100,36 +1118,44 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RaceStats_FieldIndex)index)
             {
                 case RaceStats_FieldIndex.Strength:
-                    _hasBeenSetTracker[index] = false;
-                    Strength = default(Byte);
+                    SetStrength(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case RaceStats_FieldIndex.Intelligence:
-                    _hasBeenSetTracker[index] = false;
-                    Intelligence = default(Byte);
+                    SetIntelligence(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case RaceStats_FieldIndex.Willpower:
-                    _hasBeenSetTracker[index] = false;
-                    Willpower = default(Byte);
+                    SetWillpower(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case RaceStats_FieldIndex.Agility:
-                    _hasBeenSetTracker[index] = false;
-                    Agility = default(Byte);
+                    SetAgility(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case RaceStats_FieldIndex.Speed:
-                    _hasBeenSetTracker[index] = false;
-                    Speed = default(Byte);
+                    SetSpeed(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case RaceStats_FieldIndex.Endurance:
-                    _hasBeenSetTracker[index] = false;
-                    Endurance = default(Byte);
+                    SetEndurance(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case RaceStats_FieldIndex.Personality:
-                    _hasBeenSetTracker[index] = false;
-                    Personality = default(Byte);
+                    SetPersonality(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case RaceStats_FieldIndex.Luck:
-                    _hasBeenSetTracker[index] = false;
-                    Luck = default(Byte);
+                    SetLuck(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");

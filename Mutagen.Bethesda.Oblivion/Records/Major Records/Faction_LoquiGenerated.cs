@@ -647,6 +647,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Faction_FieldIndex)index)
+            {
+                case Faction_FieldIndex.Relations:
+                case Faction_FieldIndex.Flags:
+                case Faction_FieldIndex.CrimeGoldMultiplier:
+                case Faction_FieldIndex.Ranks:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Faction.FactionFlag
         protected ObjectCentralizationSubscriptions<Faction.FactionFlag> _FactionFactionFlag_subscriptions;
         Faction.FactionFlag IPropertySupporter<Faction.FactionFlag>.Get(int index)
@@ -696,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Faction.FactionFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Faction.FactionFlag>.SetHasBeenSet(
@@ -722,8 +736,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Faction_FieldIndex)index)
             {
                 case Faction_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Faction.FactionFlag);
+                    SetFlags(
+                        item: default(Faction.FactionFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Faction.FactionFlag: {index}");
@@ -829,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -855,8 +870,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Faction_FieldIndex)index)
             {
                 case Faction_FieldIndex.CrimeGoldMultiplier:
-                    _hasBeenSetTracker[index] = false;
-                    CrimeGoldMultiplier = default(Single);
+                    SetCrimeGoldMultiplier(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");

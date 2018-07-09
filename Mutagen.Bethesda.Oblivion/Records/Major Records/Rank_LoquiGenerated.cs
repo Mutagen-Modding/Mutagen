@@ -715,6 +715,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((Rank_FieldIndex)index)
+            {
+                case Rank_FieldIndex.RankNumber:
+                case Rank_FieldIndex.MaleName:
+                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Insignia:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Int32
         protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
         Int32 IPropertySupporter<Int32>.Get(int index)
@@ -764,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -790,8 +804,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Rank_FieldIndex)index)
             {
                 case Rank_FieldIndex.RankNumber:
-                    _hasBeenSetTracker[index] = false;
-                    RankNumber = default(Int32);
+                    SetRankNumber(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -907,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -933,16 +948,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Rank_FieldIndex)index)
             {
                 case Rank_FieldIndex.MaleName:
-                    _hasBeenSetTracker[index] = false;
-                    MaleName = default(String);
+                    SetMaleName(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case Rank_FieldIndex.FemaleName:
-                    _hasBeenSetTracker[index] = false;
-                    FemaleName = default(String);
+                    SetFemaleName(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case Rank_FieldIndex.Insignia:
-                    _hasBeenSetTracker[index] = false;
-                    Insignia = default(String);
+                    SetInsignia(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

@@ -88,8 +88,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetUnknown()
         {
-            _hasBeenSetTracker[(int)Landscape_FieldIndex.Unknown] = false;
-            Unknown = default(Byte[]);
+            SetUnknown(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ILandscape.Unknown_Property => this.Unknown_Property;
@@ -136,8 +137,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetVertexNormals()
         {
-            _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexNormals] = false;
-            VertexNormals = default(Byte[]);
+            SetVertexNormals(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ILandscape.VertexNormals_Property => this.VertexNormals_Property;
@@ -184,8 +186,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetVertexHeightMap()
         {
-            _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexHeightMap] = false;
-            VertexHeightMap = default(Byte[]);
+            SetVertexHeightMap(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ILandscape.VertexHeightMap_Property => this.VertexHeightMap_Property;
@@ -232,8 +235,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetVertexColors()
         {
-            _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexColors] = false;
-            VertexColors = default(Byte[]);
+            SetVertexColors(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ILandscape.VertexColors_Property => this.VertexColors_Property;
@@ -812,6 +816,23 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Landscape_FieldIndex)index)
+            {
+                case Landscape_FieldIndex.Unknown:
+                case Landscape_FieldIndex.VertexNormals:
+                case Landscape_FieldIndex.VertexHeightMap:
+                case Landscape_FieldIndex.VertexColors:
+                case Landscape_FieldIndex.Layers:
+                    return _hasBeenSetTracker[index];
+                case Landscape_FieldIndex.Textures:
+                    return Textures.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Byte[]
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
         {
@@ -880,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -906,20 +927,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Landscape_FieldIndex)index)
             {
                 case Landscape_FieldIndex.Unknown:
-                    _hasBeenSetTracker[index] = false;
-                    Unknown = default(Byte[]);
+                    SetUnknown(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case Landscape_FieldIndex.VertexNormals:
-                    _hasBeenSetTracker[index] = false;
-                    VertexNormals = default(Byte[]);
+                    SetVertexNormals(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case Landscape_FieldIndex.VertexHeightMap:
-                    _hasBeenSetTracker[index] = false;
-                    VertexHeightMap = default(Byte[]);
+                    SetVertexHeightMap(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case Landscape_FieldIndex.VertexColors:
-                    _hasBeenSetTracker[index] = false;
-                    VertexColors = default(Byte[]);
+                    SetVertexColors(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(

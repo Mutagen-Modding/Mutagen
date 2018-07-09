@@ -576,6 +576,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Eye_FieldIndex)index)
+            {
+                case Eye_FieldIndex.Icon:
+                case Eye_FieldIndex.Flags:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -629,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -655,8 +667,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Eye_FieldIndex)index)
             {
                 case Eye_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -765,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Eye.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Eye.Flag>.SetHasBeenSet(
@@ -791,8 +804,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Eye_FieldIndex)index)
             {
                 case Eye_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Eye.Flag);
+                    SetFlags(
+                        item: default(Eye.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Eye.Flag: {index}");

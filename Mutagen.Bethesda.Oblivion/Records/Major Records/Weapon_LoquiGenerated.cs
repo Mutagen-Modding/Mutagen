@@ -1319,6 +1319,32 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Weapon_FieldIndex)index)
+            {
+                case Weapon_FieldIndex.Model:
+                case Weapon_FieldIndex.Icon:
+                case Weapon_FieldIndex.EnchantmentPoints:
+                    return _hasBeenSetTracker[index];
+                case Weapon_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case Weapon_FieldIndex.Enchantment:
+                    return Enchantment_Property.HasBeenSet;
+                case Weapon_FieldIndex.Type:
+                case Weapon_FieldIndex.Speed:
+                case Weapon_FieldIndex.Reach:
+                case Weapon_FieldIndex.Flags:
+                case Weapon_FieldIndex.Value:
+                case Weapon_FieldIndex.Health:
+                case Weapon_FieldIndex.Weight:
+                case Weapon_FieldIndex.Damage:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -1368,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -1394,8 +1420,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weapon_FieldIndex)index)
             {
                 case Weapon_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -1505,7 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1531,8 +1558,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weapon_FieldIndex)index)
             {
                 case Weapon_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1646,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt16>.SetHasBeenSet(
@@ -1672,12 +1700,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weapon_FieldIndex)index)
             {
                 case Weapon_FieldIndex.EnchantmentPoints:
-                    _hasBeenSetTracker[index] = false;
-                    EnchantmentPoints = default(UInt16);
+                    SetEnchantmentPoints(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case Weapon_FieldIndex.Damage:
-                    _hasBeenSetTracker[index] = false;
-                    Damage = default(UInt16);
+                    SetDamage(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt16: {index}");
@@ -1784,7 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Weapon.WeaponType>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Weapon.WeaponType>.SetHasBeenSet(
@@ -1810,8 +1840,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weapon_FieldIndex)index)
             {
                 case Weapon_FieldIndex.Type:
-                    _hasBeenSetTracker[index] = false;
-                    Type = default(Weapon.WeaponType);
+                    SetType(
+                        item: default(Weapon.WeaponType),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Weapon.WeaponType: {index}");
@@ -1927,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1953,16 +1984,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weapon_FieldIndex)index)
             {
                 case Weapon_FieldIndex.Speed:
-                    _hasBeenSetTracker[index] = false;
-                    Speed = default(Single);
+                    SetSpeed(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weapon_FieldIndex.Reach:
-                    _hasBeenSetTracker[index] = false;
-                    Reach = default(Single);
+                    SetReach(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weapon_FieldIndex.Weight:
-                    _hasBeenSetTracker[index] = false;
-                    Weight = default(Single);
+                    SetWeight(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -2070,7 +2104,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Weapon.WeaponFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Weapon.WeaponFlag>.SetHasBeenSet(
@@ -2096,8 +2130,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weapon_FieldIndex)index)
             {
                 case Weapon_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Weapon.WeaponFlag);
+                    SetFlags(
+                        item: default(Weapon.WeaponFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Weapon.WeaponFlag: {index}");
@@ -2208,7 +2243,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -2234,12 +2269,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weapon_FieldIndex)index)
             {
                 case Weapon_FieldIndex.Value:
-                    _hasBeenSetTracker[index] = false;
-                    Value = default(UInt32);
+                    SetValue(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 case Weapon_FieldIndex.Health:
-                    _hasBeenSetTracker[index] = false;
-                    Health = default(UInt32);
+                    SetHealth(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");

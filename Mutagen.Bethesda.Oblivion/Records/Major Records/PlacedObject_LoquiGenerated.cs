@@ -106,8 +106,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetXPCIFluff()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.XPCIFluff] = false;
-            XPCIFluff = default(Byte[]);
+            SetXPCIFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IPlacedObject.XPCIFluff_Property => this.XPCIFluff_Property;
@@ -154,8 +155,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFULLFluff()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FULLFluff] = false;
-            FULLFluff = default(Byte[]);
+            SetFULLFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IPlacedObject.FULLFluff_Property => this.FULLFluff_Property;
@@ -854,8 +856,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetRagdollData()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.RagdollData] = false;
-            RagdollData = default(Byte[]);
+            SetRagdollData(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IPlacedObject.RagdollData_Property => this.RagdollData_Property;
@@ -2115,6 +2118,48 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((PlacedObject_FieldIndex)index)
+            {
+                case PlacedObject_FieldIndex.XPCIFluff:
+                case PlacedObject_FieldIndex.FULLFluff:
+                case PlacedObject_FieldIndex.TeleportDestination:
+                case PlacedObject_FieldIndex.Lock:
+                case PlacedObject_FieldIndex.FactionRank:
+                case PlacedObject_FieldIndex.EnableParent:
+                case PlacedObject_FieldIndex.SpeedTreeSeed:
+                case PlacedObject_FieldIndex.DistantLODData:
+                case PlacedObject_FieldIndex.Charge:
+                case PlacedObject_FieldIndex.Health:
+                case PlacedObject_FieldIndex.LevelModifier:
+                case PlacedObject_FieldIndex.ActionFlags:
+                case PlacedObject_FieldIndex.Count:
+                case PlacedObject_FieldIndex.MapMarker:
+                case PlacedObject_FieldIndex.RagdollData:
+                case PlacedObject_FieldIndex.Scale:
+                    return _hasBeenSetTracker[index];
+                case PlacedObject_FieldIndex.Base:
+                    return Base_Property.HasBeenSet;
+                case PlacedObject_FieldIndex.Owner:
+                    return Owner_Property.HasBeenSet;
+                case PlacedObject_FieldIndex.GlobalVariable:
+                    return GlobalVariable_Property.HasBeenSet;
+                case PlacedObject_FieldIndex.Target:
+                    return Target_Property.HasBeenSet;
+                case PlacedObject_FieldIndex.Unknown:
+                    return Unknown_Property.HasBeenSet;
+                case PlacedObject_FieldIndex.ContainedSoul:
+                    return ContainedSoul_Property.HasBeenSet;
+                case PlacedObject_FieldIndex.OpenByDefault:
+                case PlacedObject_FieldIndex.Position:
+                case PlacedObject_FieldIndex.Rotation:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Byte[]
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
         {
@@ -2178,7 +2223,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -2204,16 +2249,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.XPCIFluff:
-                    _hasBeenSetTracker[index] = false;
-                    XPCIFluff = default(Byte[]);
+                    SetXPCIFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case PlacedObject_FieldIndex.FULLFluff:
-                    _hasBeenSetTracker[index] = false;
-                    FULLFluff = default(Byte[]);
+                    SetFULLFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case PlacedObject_FieldIndex.RagdollData:
-                    _hasBeenSetTracker[index] = false;
-                    RagdollData = default(Byte[]);
+                    SetRagdollData(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(
@@ -2324,7 +2372,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<TeleportDestination>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<TeleportDestination>.SetHasBeenSet(
@@ -2350,8 +2398,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.TeleportDestination:
-                    _hasBeenSetTracker[index] = false;
-                    TeleportDestination = default(TeleportDestination);
+                    SetTeleportDestination(
+                        item: default(TeleportDestination),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type TeleportDestination: {index}");
@@ -2457,7 +2506,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<LockInformation>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<LockInformation>.SetHasBeenSet(
@@ -2483,8 +2532,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.Lock:
-                    _hasBeenSetTracker[index] = false;
-                    Lock = default(LockInformation);
+                    SetLock(
+                        item: default(LockInformation),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type LockInformation: {index}");
@@ -2605,7 +2655,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -2631,20 +2681,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.FactionRank:
-                    _hasBeenSetTracker[index] = false;
-                    FactionRank = default(Int32);
+                    SetFactionRank(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 case PlacedObject_FieldIndex.Health:
-                    _hasBeenSetTracker[index] = false;
-                    Health = default(Int32);
+                    SetHealth(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 case PlacedObject_FieldIndex.LevelModifier:
-                    _hasBeenSetTracker[index] = false;
-                    LevelModifier = default(Int32);
+                    SetLevelModifier(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 case PlacedObject_FieldIndex.Count:
-                    _hasBeenSetTracker[index] = false;
-                    Count = default(Int32);
+                    SetCount(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -2753,7 +2807,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<EnableParent>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<EnableParent>.SetHasBeenSet(
@@ -2779,8 +2833,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.EnableParent:
-                    _hasBeenSetTracker[index] = false;
-                    EnableParent = default(EnableParent);
+                    SetEnableParent(
+                        item: default(EnableParent),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
@@ -2886,7 +2941,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -2912,8 +2967,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    _hasBeenSetTracker[index] = false;
-                    SpeedTreeSeed = default(Byte);
+                    SetSpeedTreeSeed(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -3019,7 +3075,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<DistantLODData>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<DistantLODData>.SetHasBeenSet(
@@ -3045,8 +3101,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.DistantLODData:
-                    _hasBeenSetTracker[index] = false;
-                    DistantLODData = default(DistantLODData);
+                    SetDistantLODData(
+                        item: default(DistantLODData),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
@@ -3157,7 +3214,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -3183,12 +3240,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.Charge:
-                    _hasBeenSetTracker[index] = false;
-                    Charge = default(Single);
+                    SetCharge(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case PlacedObject_FieldIndex.Scale:
-                    _hasBeenSetTracker[index] = false;
-                    Scale = default(Single);
+                    SetScale(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -3295,7 +3354,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<PlacedObject.ActionFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<PlacedObject.ActionFlag>.SetHasBeenSet(
@@ -3321,8 +3380,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.ActionFlags:
-                    _hasBeenSetTracker[index] = false;
-                    ActionFlags = default(PlacedObject.ActionFlag);
+                    SetActionFlags(
+                        item: default(PlacedObject.ActionFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type PlacedObject.ActionFlag: {index}");
@@ -3428,7 +3488,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<MapMarker>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<MapMarker>.SetHasBeenSet(
@@ -3454,8 +3514,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.MapMarker:
-                    _hasBeenSetTracker[index] = false;
-                    MapMarker = default(MapMarker);
+                    SetMapMarker(
+                        item: default(MapMarker),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type MapMarker: {index}");
@@ -3561,7 +3622,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Boolean>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Boolean>.SetHasBeenSet(
@@ -3587,8 +3648,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.OpenByDefault:
-                    _hasBeenSetTracker[index] = false;
-                    OpenByDefault = default(Boolean);
+                    SetOpenByDefault(
+                        item: default(Boolean),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Boolean: {index}");
@@ -3699,7 +3761,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P3Float>.SetHasBeenSet(
@@ -3725,12 +3787,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((PlacedObject_FieldIndex)index)
             {
                 case PlacedObject_FieldIndex.Position:
-                    _hasBeenSetTracker[index] = false;
-                    Position = default(P3Float);
+                    SetPosition(
+                        item: default(P3Float),
+                        hasBeenSet: false);
                     break;
                 case PlacedObject_FieldIndex.Rotation:
-                    _hasBeenSetTracker[index] = false;
-                    Rotation = default(P3Float);
+                    SetRotation(
+                        item: default(P3Float),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P3Float: {index}");

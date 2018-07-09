@@ -944,6 +944,25 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Class_FieldIndex)index)
+            {
+                case Class_FieldIndex.Description:
+                case Class_FieldIndex.Icon:
+                    return _hasBeenSetTracker[index];
+                case Class_FieldIndex.PrimaryAttributes:
+                case Class_FieldIndex.Specialization:
+                case Class_FieldIndex.SecondaryAttributes:
+                case Class_FieldIndex.Flags:
+                case Class_FieldIndex.ClassServices:
+                case Class_FieldIndex.Training:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -1002,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1028,12 +1047,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Class_FieldIndex)index)
             {
                 case Class_FieldIndex.Description:
-                    _hasBeenSetTracker[index] = false;
-                    Description = default(String);
+                    SetDescription(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case Class_FieldIndex.Icon:
-                    _hasBeenSetTracker[index] = false;
-                    Icon = default(String);
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -1143,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Class.SpecializationFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Class.SpecializationFlag>.SetHasBeenSet(
@@ -1169,8 +1190,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Class_FieldIndex)index)
             {
                 case Class_FieldIndex.Specialization:
-                    _hasBeenSetTracker[index] = false;
-                    Specialization = default(Class.SpecializationFlag);
+                    SetSpecialization(
+                        item: default(Class.SpecializationFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Class.SpecializationFlag: {index}");
@@ -1276,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ClassFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ClassFlag>.SetHasBeenSet(
@@ -1302,8 +1324,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Class_FieldIndex)index)
             {
                 case Class_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(ClassFlag);
+                    SetFlags(
+                        item: default(ClassFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ClassFlag: {index}");
@@ -1409,7 +1432,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ClassService>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ClassService>.SetHasBeenSet(
@@ -1435,8 +1458,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Class_FieldIndex)index)
             {
                 case Class_FieldIndex.ClassServices:
-                    _hasBeenSetTracker[index] = false;
-                    ClassServices = default(ClassService);
+                    SetClassServices(
+                        item: default(ClassService),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ClassService: {index}");
@@ -1542,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ClassTraining>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ClassTraining>.SetHasBeenSet(
@@ -1568,8 +1592,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Class_FieldIndex)index)
             {
                 case Class_FieldIndex.Training:
-                    _hasBeenSetTracker[index] = false;
-                    Training = default(ClassTraining);
+                    SetTraining(
+                        item: default(ClassTraining),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ClassTraining: {index}");

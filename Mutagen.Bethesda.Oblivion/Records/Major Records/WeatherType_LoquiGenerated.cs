@@ -687,6 +687,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((WeatherType_FieldIndex)index)
+            {
+                case WeatherType_FieldIndex.Sunrise:
+                case WeatherType_FieldIndex.Day:
+                case WeatherType_FieldIndex.Sunset:
+                case WeatherType_FieldIndex.Night:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Color
         protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
         Color IPropertySupporter<Color>.Get(int index)
@@ -751,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Color>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Color>.SetHasBeenSet(
@@ -777,20 +791,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((WeatherType_FieldIndex)index)
             {
                 case WeatherType_FieldIndex.Sunrise:
-                    _hasBeenSetTracker[index] = false;
-                    Sunrise = default(Color);
+                    SetSunrise(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 case WeatherType_FieldIndex.Day:
-                    _hasBeenSetTracker[index] = false;
-                    Day = default(Color);
+                    SetDay(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 case WeatherType_FieldIndex.Sunset:
-                    _hasBeenSetTracker[index] = false;
-                    Sunset = default(Color);
+                    SetSunset(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 case WeatherType_FieldIndex.Night:
-                    _hasBeenSetTracker[index] = false;
-                    Night = default(Color);
+                    SetNight(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Color: {index}");

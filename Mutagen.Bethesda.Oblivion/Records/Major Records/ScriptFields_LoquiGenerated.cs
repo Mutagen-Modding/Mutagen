@@ -121,8 +121,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetCompiledScript()
         {
-            _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript] = false;
-            CompiledScript = default(Byte[]);
+            SetCompiledScript(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IScriptFields.CompiledScript_Property => this.CompiledScript_Property;
@@ -686,6 +687,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((ScriptFields_FieldIndex)index)
+            {
+                case ScriptFields_FieldIndex.MetadataSummary:
+                case ScriptFields_FieldIndex.CompiledScript:
+                case ScriptFields_FieldIndex.SourceCode:
+                case ScriptFields_FieldIndex.LocalVariables:
+                case ScriptFields_FieldIndex.References:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter ScriptMetaSummary
         protected ObjectCentralizationSubscriptions<ScriptMetaSummary> _ScriptMetaSummary_subscriptions;
         ScriptMetaSummary IPropertySupporter<ScriptMetaSummary>.Get(int index)
@@ -735,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<ScriptMetaSummary>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<ScriptMetaSummary>.SetHasBeenSet(
@@ -761,8 +777,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptFields_FieldIndex)index)
             {
                 case ScriptFields_FieldIndex.MetadataSummary:
-                    _hasBeenSetTracker[index] = false;
-                    MetadataSummary = default(ScriptMetaSummary);
+                    SetMetadataSummary(
+                        item: default(ScriptMetaSummary),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
@@ -868,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -894,8 +911,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptFields_FieldIndex)index)
             {
                 case ScriptFields_FieldIndex.CompiledScript:
-                    _hasBeenSetTracker[index] = false;
-                    CompiledScript = default(Byte[]);
+                    SetCompiledScript(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -1001,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -1027,8 +1045,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptFields_FieldIndex)index)
             {
                 case ScriptFields_FieldIndex.SourceCode:
-                    _hasBeenSetTracker[index] = false;
-                    SourceCode = default(String);
+                    SetSourceCode(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

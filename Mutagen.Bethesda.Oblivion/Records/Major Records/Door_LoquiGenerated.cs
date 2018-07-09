@@ -704,6 +704,28 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Door_FieldIndex)index)
+            {
+                case Door_FieldIndex.Model:
+                case Door_FieldIndex.Flags:
+                    return _hasBeenSetTracker[index];
+                case Door_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case Door_FieldIndex.OpenSound:
+                    return OpenSound_Property.HasBeenSet;
+                case Door_FieldIndex.CloseSound:
+                    return CloseSound_Property.HasBeenSet;
+                case Door_FieldIndex.LoopSound:
+                    return LoopSound_Property.HasBeenSet;
+                case Door_FieldIndex.RandomTeleportDestinations:
+                    return RandomTeleportDestinations.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -753,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -779,8 +801,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Door_FieldIndex)index)
             {
                 case Door_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -886,7 +909,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Door.DoorFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Door.DoorFlag>.SetHasBeenSet(
@@ -912,8 +935,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Door_FieldIndex)index)
             {
                 case Door_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(Door.DoorFlag);
+                    SetFlags(
+                        item: default(Door.DoorFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Door.DoorFlag: {index}");

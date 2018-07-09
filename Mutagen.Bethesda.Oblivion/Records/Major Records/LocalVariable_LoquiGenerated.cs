@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        protected Byte[] _Data;
+        protected Byte[] _Data = new byte[24];
         protected PropertyForwarder<LocalVariable, Byte[]> _DataForwarder;
         public INotifyingSetItem<Byte[]> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<LocalVariable, Byte[]>(this, (int)LocalVariable_FieldIndex.Data));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -62,6 +62,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[24];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Data];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Data, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -87,8 +91,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetData()
         {
-            _hasBeenSetTracker[(int)LocalVariable_FieldIndex.Data] = false;
-            Data = default(Byte[]);
+            SetData(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ILocalVariable.Data_Property => this.Data_Property;
@@ -549,6 +554,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((LocalVariable_FieldIndex)index)
+            {
+                case LocalVariable_FieldIndex.Data:
+                case LocalVariable_FieldIndex.Name:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Byte[]
         protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
@@ -598,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -624,8 +641,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LocalVariable_FieldIndex)index)
             {
                 case LocalVariable_FieldIndex.Data:
-                    _hasBeenSetTracker[index] = false;
-                    Data = default(Byte[]);
+                    SetData(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
@@ -731,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -757,8 +775,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LocalVariable_FieldIndex)index)
             {
                 case LocalVariable_FieldIndex.Name:
-                    _hasBeenSetTracker[index] = false;
-                    Name = default(String);
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");

@@ -474,6 +474,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((ContainerItem_FieldIndex)index)
+            {
+                case ContainerItem_FieldIndex.Item:
+                case ContainerItem_FieldIndex.Count:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter UInt32
         protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
         UInt32 IPropertySupporter<UInt32>.Get(int index)
@@ -523,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -549,8 +561,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ContainerItem_FieldIndex)index)
             {
                 case ContainerItem_FieldIndex.Count:
-                    _hasBeenSetTracker[index] = false;
-                    Count = default(UInt32);
+                    SetCount(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");

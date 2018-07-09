@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> IFurnatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region MarkerFlags
-        protected Byte[] _MarkerFlags;
+        protected Byte[] _MarkerFlags = new byte[4];
         protected PropertyForwarder<Furnature, Byte[]> _MarkerFlagsForwarder;
         public INotifyingSetItem<Byte[]> MarkerFlags_Property => _MarkerFlagsForwarder ?? (_MarkerFlagsForwarder = new PropertyForwarder<Furnature, Byte[]>(this, (int)Furnature_FieldIndex.MarkerFlags));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,6 +119,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[4];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)Furnature_FieldIndex.MarkerFlags];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(MarkerFlags, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -144,8 +148,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetMarkerFlags()
         {
-            _hasBeenSetTracker[(int)Furnature_FieldIndex.MarkerFlags] = false;
-            MarkerFlags = default(Byte[]);
+            SetMarkerFlags(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IFurnature.MarkerFlags_Property => this.MarkerFlags_Property;
@@ -600,6 +605,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Furnature_FieldIndex)index)
+            {
+                case Furnature_FieldIndex.Model:
+                case Furnature_FieldIndex.MarkerFlags:
+                    return _hasBeenSetTracker[index];
+                case Furnature_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -649,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -675,8 +694,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Furnature_FieldIndex)index)
             {
                 case Furnature_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -786,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -812,8 +832,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Furnature_FieldIndex)index)
             {
                 case Furnature_FieldIndex.MarkerFlags:
-                    _hasBeenSetTracker[index] = false;
-                    MarkerFlags = default(Byte[]);
+                    SetMarkerFlags(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(

@@ -535,6 +535,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((InterCellPoint_FieldIndex)index)
+            {
+                case InterCellPoint_FieldIndex.PointID:
+                case InterCellPoint_FieldIndex.Point:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Int32
         protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
         Int32 IPropertySupporter<Int32>.Get(int index)
@@ -584,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -610,8 +622,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((InterCellPoint_FieldIndex)index)
             {
                 case InterCellPoint_FieldIndex.PointID:
-                    _hasBeenSetTracker[index] = false;
-                    PointID = default(Int32);
+                    SetPointID(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");
@@ -717,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<P3Float>.SetHasBeenSet(
@@ -743,8 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((InterCellPoint_FieldIndex)index)
             {
                 case InterCellPoint_FieldIndex.Point:
-                    _hasBeenSetTracker[index] = false;
-                    Point = default(P3Float);
+                    SetPoint(
+                        item: default(P3Float),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type P3Float: {index}");

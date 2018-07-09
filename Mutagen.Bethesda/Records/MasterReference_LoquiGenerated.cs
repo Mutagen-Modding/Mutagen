@@ -548,6 +548,18 @@ namespace Mutagen.Bethesda
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((MasterReference_FieldIndex)index)
+            {
+                case MasterReference_FieldIndex.Master:
+                case MasterReference_FieldIndex.FileSize:
+                    return _hasBeenSetTracker[index];
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter String
         protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
         String IPropertySupporter<String>.Get(int index)
@@ -597,7 +609,7 @@ namespace Mutagen.Bethesda
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -623,8 +635,9 @@ namespace Mutagen.Bethesda
             switch ((MasterReference_FieldIndex)index)
             {
                 case MasterReference_FieldIndex.Master:
-                    _hasBeenSetTracker[index] = false;
-                    Master = default(String);
+                    SetMaster(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type String: {index}");
@@ -730,7 +743,7 @@ namespace Mutagen.Bethesda
 
         bool IPropertySupporter<UInt64>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt64>.SetHasBeenSet(
@@ -756,8 +769,9 @@ namespace Mutagen.Bethesda
             switch ((MasterReference_FieldIndex)index)
             {
                 case MasterReference_FieldIndex.FileSize:
-                    _hasBeenSetTracker[index] = false;
-                    FileSize = default(UInt64);
+                    SetFileSize(
+                        item: default(UInt64),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt64: {index}");

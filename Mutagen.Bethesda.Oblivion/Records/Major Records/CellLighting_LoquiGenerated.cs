@@ -1069,6 +1069,25 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((CellLighting_FieldIndex)index)
+            {
+                case CellLighting_FieldIndex.AmbientColor:
+                case CellLighting_FieldIndex.DirectionalColor:
+                case CellLighting_FieldIndex.FogColor:
+                case CellLighting_FieldIndex.FogNear:
+                case CellLighting_FieldIndex.FogFar:
+                case CellLighting_FieldIndex.DirectionalRotationXY:
+                case CellLighting_FieldIndex.DirectionalRotationZ:
+                case CellLighting_FieldIndex.DirectionalFade:
+                case CellLighting_FieldIndex.FogClipDistance:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Color
         protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
         Color IPropertySupporter<Color>.Get(int index)
@@ -1128,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Color>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Color>.SetHasBeenSet(
@@ -1154,16 +1173,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((CellLighting_FieldIndex)index)
             {
                 case CellLighting_FieldIndex.AmbientColor:
-                    _hasBeenSetTracker[index] = false;
-                    AmbientColor = default(Color);
+                    SetAmbientColor(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 case CellLighting_FieldIndex.DirectionalColor:
-                    _hasBeenSetTracker[index] = false;
-                    DirectionalColor = default(Color);
+                    SetDirectionalColor(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 case CellLighting_FieldIndex.FogColor:
-                    _hasBeenSetTracker[index] = false;
-                    FogColor = default(Color);
+                    SetFogColor(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Color: {index}");
@@ -1286,7 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -1312,20 +1334,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((CellLighting_FieldIndex)index)
             {
                 case CellLighting_FieldIndex.FogNear:
-                    _hasBeenSetTracker[index] = false;
-                    FogNear = default(Single);
+                    SetFogNear(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case CellLighting_FieldIndex.FogFar:
-                    _hasBeenSetTracker[index] = false;
-                    FogFar = default(Single);
+                    SetFogFar(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case CellLighting_FieldIndex.DirectionalFade:
-                    _hasBeenSetTracker[index] = false;
-                    DirectionalFade = default(Single);
+                    SetDirectionalFade(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case CellLighting_FieldIndex.FogClipDistance:
-                    _hasBeenSetTracker[index] = false;
-                    FogClipDistance = default(Single);
+                    SetFogClipDistance(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -1439,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -1465,12 +1491,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((CellLighting_FieldIndex)index)
             {
                 case CellLighting_FieldIndex.DirectionalRotationXY:
-                    _hasBeenSetTracker[index] = false;
-                    DirectionalRotationXY = default(Int32);
+                    SetDirectionalRotationXY(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 case CellLighting_FieldIndex.DirectionalRotationZ:
-                    _hasBeenSetTracker[index] = false;
-                    DirectionalRotationZ = default(Int32);
+                    SetDirectionalRotationZ(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");

@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> INPCGetter.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
         #endregion
         #region Fluff
-        protected Byte[] _Fluff;
+        protected Byte[] _Fluff = new byte[2];
         protected PropertyForwarder<NPC, Byte[]> _FluffForwarder;
         public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<NPC, Byte[]>(this, (int)NPC_FieldIndex.Fluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -869,6 +869,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
+            if (item == null)
+            {
+                item = new byte[2];
+            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Fluff];
             if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
             if (oldHasBeenSet != hasBeenSet)
@@ -894,8 +898,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFluff()
         {
-            _hasBeenSetTracker[(int)NPC_FieldIndex.Fluff] = false;
-            Fluff = default(Byte[]);
+            SetFluff(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> INPC.Fluff_Property => this.Fluff_Property;
@@ -2553,8 +2558,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFaceGenGeometrySymmetric()
         {
-            _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenGeometrySymmetric] = false;
-            FaceGenGeometrySymmetric = default(Byte[]);
+            SetFaceGenGeometrySymmetric(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.FaceGenGeometrySymmetric_Property => this.FaceGenGeometrySymmetric_Property;
@@ -2601,8 +2607,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFaceGenGeometryAsymmetric()
         {
-            _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenGeometryAsymmetric] = false;
-            FaceGenGeometryAsymmetric = default(Byte[]);
+            SetFaceGenGeometryAsymmetric(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.FaceGenGeometryAsymmetric_Property => this.FaceGenGeometryAsymmetric_Property;
@@ -2649,8 +2656,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetFaceGenTextureSymmetric()
         {
-            _hasBeenSetTracker[(int)NPC_FieldIndex.FaceGenTextureSymmetric] = false;
-            FaceGenTextureSymmetric = default(Byte[]);
+            SetFaceGenTextureSymmetric(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.FaceGenTextureSymmetric_Property => this.FaceGenTextureSymmetric_Property;
@@ -2697,8 +2705,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         protected void UnsetUnknown()
         {
-            _hasBeenSetTracker[(int)NPC_FieldIndex.Unknown] = false;
-            Unknown = default(Byte[]);
+            SetUnknown(
+                item: default(Byte[]),
+                hasBeenSet: false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.Unknown_Property => this.Unknown_Property;
@@ -4770,6 +4779,93 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Model:
+                case NPC_FieldIndex.HairLength:
+                case NPC_FieldIndex.HairColor:
+                case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                case NPC_FieldIndex.FaceGenTextureSymmetric:
+                case NPC_FieldIndex.Unknown:
+                    return _hasBeenSetTracker[index];
+                case NPC_FieldIndex.Factions:
+                    return Factions.HasBeenSet;
+                case NPC_FieldIndex.DeathItem:
+                    return DeathItem_Property.HasBeenSet;
+                case NPC_FieldIndex.Race:
+                    return Race_Property.HasBeenSet;
+                case NPC_FieldIndex.Spells:
+                    return Spells.HasBeenSet;
+                case NPC_FieldIndex.Script:
+                    return Script_Property.HasBeenSet;
+                case NPC_FieldIndex.Items:
+                    return Items.HasBeenSet;
+                case NPC_FieldIndex.AIPackages:
+                    return AIPackages.HasBeenSet;
+                case NPC_FieldIndex.Animations:
+                    return Animations.HasBeenSet;
+                case NPC_FieldIndex.Class:
+                    return Class_Property.HasBeenSet;
+                case NPC_FieldIndex.Hair:
+                    return Hair_Property.HasBeenSet;
+                case NPC_FieldIndex.Eyes:
+                    return Eyes.HasBeenSet;
+                case NPC_FieldIndex.CombatStyle:
+                    return CombatStyle_Property.HasBeenSet;
+                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.BaseSpellPoints:
+                case NPC_FieldIndex.Fatigue:
+                case NPC_FieldIndex.BarterGold:
+                case NPC_FieldIndex.LevelOffset:
+                case NPC_FieldIndex.CalcMin:
+                case NPC_FieldIndex.CalcMax:
+                case NPC_FieldIndex.Aggression:
+                case NPC_FieldIndex.Confidence:
+                case NPC_FieldIndex.EnergyLevel:
+                case NPC_FieldIndex.Responsibility:
+                case NPC_FieldIndex.BuySellServices:
+                case NPC_FieldIndex.Teaches:
+                case NPC_FieldIndex.MaximumTrainingLevel:
+                case NPC_FieldIndex.Fluff:
+                case NPC_FieldIndex.Armorer:
+                case NPC_FieldIndex.Athletics:
+                case NPC_FieldIndex.Blade:
+                case NPC_FieldIndex.Block:
+                case NPC_FieldIndex.Blunt:
+                case NPC_FieldIndex.HandToHand:
+                case NPC_FieldIndex.HeavyArmor:
+                case NPC_FieldIndex.Alchemy:
+                case NPC_FieldIndex.Alteration:
+                case NPC_FieldIndex.Conjuration:
+                case NPC_FieldIndex.Destruction:
+                case NPC_FieldIndex.Illusion:
+                case NPC_FieldIndex.Mysticism:
+                case NPC_FieldIndex.Restoration:
+                case NPC_FieldIndex.Acrobatics:
+                case NPC_FieldIndex.LightArmor:
+                case NPC_FieldIndex.Marksman:
+                case NPC_FieldIndex.Mercantile:
+                case NPC_FieldIndex.Security:
+                case NPC_FieldIndex.Sneak:
+                case NPC_FieldIndex.Speechcraft:
+                case NPC_FieldIndex.Health:
+                case NPC_FieldIndex.Strength:
+                case NPC_FieldIndex.Intelligence:
+                case NPC_FieldIndex.Willpower:
+                case NPC_FieldIndex.Agility:
+                case NPC_FieldIndex.Speed:
+                case NPC_FieldIndex.Endurance:
+                case NPC_FieldIndex.Personality:
+                case NPC_FieldIndex.Luck:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
         Model IPropertySupporter<Model>.Get(int index)
@@ -4819,7 +4915,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -4845,8 +4941,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -4952,7 +5049,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<NPC.NPCFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<NPC.NPCFlag>.SetHasBeenSet(
@@ -4978,8 +5075,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.NPCFlags:
-                    _hasBeenSetTracker[index] = false;
-                    NPCFlags = default(NPC.NPCFlag);
+                    SetNPCFlags(
+                        item: default(NPC.NPCFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type NPC.NPCFlag: {index}");
@@ -5105,7 +5203,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt16>.SetHasBeenSet(
@@ -5131,24 +5229,29 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.BaseSpellPoints:
-                    _hasBeenSetTracker[index] = false;
-                    BaseSpellPoints = default(UInt16);
+                    SetBaseSpellPoints(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Fatigue:
-                    _hasBeenSetTracker[index] = false;
-                    Fatigue = default(UInt16);
+                    SetFatigue(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.BarterGold:
-                    _hasBeenSetTracker[index] = false;
-                    BarterGold = default(UInt16);
+                    SetBarterGold(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.CalcMin:
-                    _hasBeenSetTracker[index] = false;
-                    CalcMin = default(UInt16);
+                    SetCalcMin(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.CalcMax:
-                    _hasBeenSetTracker[index] = false;
-                    CalcMax = default(UInt16);
+                    SetCalcMax(
+                        item: default(UInt16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt16: {index}");
@@ -5258,7 +5361,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int16>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int16>.SetHasBeenSet(
@@ -5284,8 +5387,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.LevelOffset:
-                    _hasBeenSetTracker[index] = false;
-                    LevelOffset = default(Int16);
+                    SetLevelOffset(
+                        item: default(Int16),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int16: {index}");
@@ -5556,7 +5660,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -5582,140 +5686,174 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.Aggression:
-                    _hasBeenSetTracker[index] = false;
-                    Aggression = default(Byte);
+                    SetAggression(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Confidence:
-                    _hasBeenSetTracker[index] = false;
-                    Confidence = default(Byte);
+                    SetConfidence(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.EnergyLevel:
-                    _hasBeenSetTracker[index] = false;
-                    EnergyLevel = default(Byte);
+                    SetEnergyLevel(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Responsibility:
-                    _hasBeenSetTracker[index] = false;
-                    Responsibility = default(Byte);
+                    SetResponsibility(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.MaximumTrainingLevel:
-                    _hasBeenSetTracker[index] = false;
-                    MaximumTrainingLevel = default(Byte);
+                    SetMaximumTrainingLevel(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Armorer:
-                    _hasBeenSetTracker[index] = false;
-                    Armorer = default(Byte);
+                    SetArmorer(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Athletics:
-                    _hasBeenSetTracker[index] = false;
-                    Athletics = default(Byte);
+                    SetAthletics(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Blade:
-                    _hasBeenSetTracker[index] = false;
-                    Blade = default(Byte);
+                    SetBlade(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Block:
-                    _hasBeenSetTracker[index] = false;
-                    Block = default(Byte);
+                    SetBlock(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Blunt:
-                    _hasBeenSetTracker[index] = false;
-                    Blunt = default(Byte);
+                    SetBlunt(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.HandToHand:
-                    _hasBeenSetTracker[index] = false;
-                    HandToHand = default(Byte);
+                    SetHandToHand(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.HeavyArmor:
-                    _hasBeenSetTracker[index] = false;
-                    HeavyArmor = default(Byte);
+                    SetHeavyArmor(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Alchemy:
-                    _hasBeenSetTracker[index] = false;
-                    Alchemy = default(Byte);
+                    SetAlchemy(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Alteration:
-                    _hasBeenSetTracker[index] = false;
-                    Alteration = default(Byte);
+                    SetAlteration(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Conjuration:
-                    _hasBeenSetTracker[index] = false;
-                    Conjuration = default(Byte);
+                    SetConjuration(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Destruction:
-                    _hasBeenSetTracker[index] = false;
-                    Destruction = default(Byte);
+                    SetDestruction(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Illusion:
-                    _hasBeenSetTracker[index] = false;
-                    Illusion = default(Byte);
+                    SetIllusion(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Mysticism:
-                    _hasBeenSetTracker[index] = false;
-                    Mysticism = default(Byte);
+                    SetMysticism(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Restoration:
-                    _hasBeenSetTracker[index] = false;
-                    Restoration = default(Byte);
+                    SetRestoration(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Acrobatics:
-                    _hasBeenSetTracker[index] = false;
-                    Acrobatics = default(Byte);
+                    SetAcrobatics(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.LightArmor:
-                    _hasBeenSetTracker[index] = false;
-                    LightArmor = default(Byte);
+                    SetLightArmor(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Marksman:
-                    _hasBeenSetTracker[index] = false;
-                    Marksman = default(Byte);
+                    SetMarksman(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Mercantile:
-                    _hasBeenSetTracker[index] = false;
-                    Mercantile = default(Byte);
+                    SetMercantile(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Security:
-                    _hasBeenSetTracker[index] = false;
-                    Security = default(Byte);
+                    SetSecurity(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Sneak:
-                    _hasBeenSetTracker[index] = false;
-                    Sneak = default(Byte);
+                    SetSneak(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Speechcraft:
-                    _hasBeenSetTracker[index] = false;
-                    Speechcraft = default(Byte);
+                    SetSpeechcraft(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Strength:
-                    _hasBeenSetTracker[index] = false;
-                    Strength = default(Byte);
+                    SetStrength(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Intelligence:
-                    _hasBeenSetTracker[index] = false;
-                    Intelligence = default(Byte);
+                    SetIntelligence(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Willpower:
-                    _hasBeenSetTracker[index] = false;
-                    Willpower = default(Byte);
+                    SetWillpower(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Agility:
-                    _hasBeenSetTracker[index] = false;
-                    Agility = default(Byte);
+                    SetAgility(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Speed:
-                    _hasBeenSetTracker[index] = false;
-                    Speed = default(Byte);
+                    SetSpeed(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Endurance:
-                    _hasBeenSetTracker[index] = false;
-                    Endurance = default(Byte);
+                    SetEndurance(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Personality:
-                    _hasBeenSetTracker[index] = false;
-                    Personality = default(Byte);
+                    SetPersonality(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Luck:
-                    _hasBeenSetTracker[index] = false;
-                    Luck = default(Byte);
+                    SetLuck(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -5854,7 +5992,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<NPC.BuySellServiceFlag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<NPC.BuySellServiceFlag>.SetHasBeenSet(
@@ -5880,8 +6018,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.BuySellServices:
-                    _hasBeenSetTracker[index] = false;
-                    BuySellServices = default(NPC.BuySellServiceFlag);
+                    SetBuySellServices(
+                        item: default(NPC.BuySellServiceFlag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type NPC.BuySellServiceFlag: {index}");
@@ -5987,7 +6126,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Skill>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Skill>.SetHasBeenSet(
@@ -6013,8 +6152,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.Teaches:
-                    _hasBeenSetTracker[index] = false;
-                    Teaches = default(Skill);
+                    SetTeaches(
+                        item: default(Skill),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Skill: {index}");
@@ -6144,7 +6284,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte[]>.SetHasBeenSet(
@@ -6170,24 +6310,29 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.Fluff:
-                    _hasBeenSetTracker[index] = false;
-                    Fluff = default(Byte[]);
+                    SetFluff(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    _hasBeenSetTracker[index] = false;
-                    FaceGenGeometrySymmetric = default(Byte[]);
+                    SetFaceGenGeometrySymmetric(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    _hasBeenSetTracker[index] = false;
-                    FaceGenGeometryAsymmetric = default(Byte[]);
+                    SetFaceGenGeometryAsymmetric(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    _hasBeenSetTracker[index] = false;
-                    FaceGenTextureSymmetric = default(Byte[]);
+                    SetFaceGenTextureSymmetric(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 case NPC_FieldIndex.Unknown:
-                    _hasBeenSetTracker[index] = false;
-                    Unknown = default(Byte[]);
+                    SetUnknown(
+                        item: default(Byte[]),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetByteArr(
@@ -6300,7 +6445,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<UInt32>.SetHasBeenSet(
@@ -6326,8 +6471,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.Health:
-                    _hasBeenSetTracker[index] = false;
-                    Health = default(UInt32);
+                    SetHealth(
+                        item: default(UInt32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type UInt32: {index}");
@@ -6433,7 +6579,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -6459,8 +6605,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.HairLength:
-                    _hasBeenSetTracker[index] = false;
-                    HairLength = default(Single);
+                    SetHairLength(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -6566,7 +6713,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Color>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Color>.SetHasBeenSet(
@@ -6592,8 +6739,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((NPC_FieldIndex)index)
             {
                 case NPC_FieldIndex.HairColor:
-                    _hasBeenSetTracker[index] = false;
-                    HairColor = default(Color);
+                    SetHairColor(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Color: {index}");

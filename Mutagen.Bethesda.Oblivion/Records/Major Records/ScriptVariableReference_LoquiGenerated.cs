@@ -475,6 +475,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((ScriptVariableReference_FieldIndex)index)
+            {
+                case ScriptVariableReference_FieldIndex.VariableIndex:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter Int32
         protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
         Int32 IPropertySupporter<Int32>.Get(int index)
@@ -524,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Int32>.SetHasBeenSet(
@@ -550,8 +561,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((ScriptVariableReference_FieldIndex)index)
             {
                 case ScriptVariableReference_FieldIndex.VariableIndex:
-                    _hasBeenSetTracker[index] = false;
-                    VariableIndex = default(Int32);
+                    SetVariableIndex(
+                        item: default(Int32),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Int32: {index}");

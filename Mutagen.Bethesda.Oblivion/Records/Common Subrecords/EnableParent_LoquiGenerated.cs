@@ -474,6 +474,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((EnableParent_FieldIndex)index)
+            {
+                case EnableParent_FieldIndex.Reference:
+                case EnableParent_FieldIndex.Flags:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region IPropertySupporter EnableParent.Flag
         protected ObjectCentralizationSubscriptions<EnableParent.Flag> _EnableParentFlag_subscriptions;
         EnableParent.Flag IPropertySupporter<EnableParent.Flag>.Get(int index)
@@ -523,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<EnableParent.Flag>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<EnableParent.Flag>.SetHasBeenSet(
@@ -549,8 +561,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((EnableParent_FieldIndex)index)
             {
                 case EnableParent_FieldIndex.Flags:
-                    _hasBeenSetTracker[index] = false;
-                    Flags = default(EnableParent.Flag);
+                    SetFlags(
+                        item: default(EnableParent.Flag),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type EnableParent.Flag: {index}");

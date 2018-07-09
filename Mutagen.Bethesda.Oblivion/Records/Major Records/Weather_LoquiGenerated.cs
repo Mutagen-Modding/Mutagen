@@ -3079,6 +3079,55 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Weather_FieldIndex)index)
+            {
+                case Weather_FieldIndex.TextureLowerLayer:
+                case Weather_FieldIndex.TextureUpperLayer:
+                case Weather_FieldIndex.Model:
+                    return _hasBeenSetTracker[index];
+                case Weather_FieldIndex.WeatherTypes:
+                    return WeatherTypes.HasBeenSet;
+                case Weather_FieldIndex.Sounds:
+                    return Sounds.HasBeenSet;
+                case Weather_FieldIndex.FogDayNear:
+                case Weather_FieldIndex.FogDayFar:
+                case Weather_FieldIndex.FogNightNear:
+                case Weather_FieldIndex.FogNightFar:
+                case Weather_FieldIndex.HdrEyeAdaptSpeed:
+                case Weather_FieldIndex.HdrBlurRadius:
+                case Weather_FieldIndex.HdrBlurPasses:
+                case Weather_FieldIndex.HdrEmissiveMult:
+                case Weather_FieldIndex.HdrTargetLum:
+                case Weather_FieldIndex.HdrUpperLumClamp:
+                case Weather_FieldIndex.HdrBrightScale:
+                case Weather_FieldIndex.HdrBrightClamp:
+                case Weather_FieldIndex.HdrLumRampNoTex:
+                case Weather_FieldIndex.HdrLumRampMin:
+                case Weather_FieldIndex.HdrLumRampMax:
+                case Weather_FieldIndex.HdrSunlightDimmer:
+                case Weather_FieldIndex.HdrGrassDimmer:
+                case Weather_FieldIndex.HdrTreeDimmer:
+                case Weather_FieldIndex.WindSpeed:
+                case Weather_FieldIndex.CloudSpeedLower:
+                case Weather_FieldIndex.CloudSpeedUpper:
+                case Weather_FieldIndex.TransDelta:
+                case Weather_FieldIndex.SunGlare:
+                case Weather_FieldIndex.SunDamage:
+                case Weather_FieldIndex.PrecipitationBeginFadeIn:
+                case Weather_FieldIndex.PrecipitationEndFadeOut:
+                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
+                case Weather_FieldIndex.ThunderLightningEndFadeOut:
+                case Weather_FieldIndex.ThunderLightningFrequency:
+                case Weather_FieldIndex.Classification:
+                case Weather_FieldIndex.LightningColor:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -3137,7 +3186,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -3163,12 +3212,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weather_FieldIndex)index)
             {
                 case Weather_FieldIndex.TextureLowerLayer:
-                    _hasBeenSetTracker[index] = false;
-                    TextureLowerLayer = default(String);
+                    SetTextureLowerLayer(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.TextureUpperLayer:
-                    _hasBeenSetTracker[index] = false;
-                    TextureUpperLayer = default(String);
+                    SetTextureUpperLayer(
+                        item: default(String),
+                        hasBeenSet: false);
                     break;
                 default:
                     base.UnsetString(
@@ -3278,7 +3329,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Model>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Model>.SetHasBeenSet(
@@ -3304,8 +3355,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weather_FieldIndex)index)
             {
                 case Weather_FieldIndex.Model:
-                    _hasBeenSetTracker[index] = false;
-                    Model = default(Model);
+                    SetModel(
+                        item: default(Model),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
@@ -3496,7 +3548,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Single>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Single>.SetHasBeenSet(
@@ -3522,76 +3574,94 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weather_FieldIndex)index)
             {
                 case Weather_FieldIndex.FogDayNear:
-                    _hasBeenSetTracker[index] = false;
-                    FogDayNear = default(Single);
+                    SetFogDayNear(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.FogDayFar:
-                    _hasBeenSetTracker[index] = false;
-                    FogDayFar = default(Single);
+                    SetFogDayFar(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.FogNightNear:
-                    _hasBeenSetTracker[index] = false;
-                    FogNightNear = default(Single);
+                    SetFogNightNear(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.FogNightFar:
-                    _hasBeenSetTracker[index] = false;
-                    FogNightFar = default(Single);
+                    SetFogNightFar(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                    _hasBeenSetTracker[index] = false;
-                    HdrEyeAdaptSpeed = default(Single);
+                    SetHdrEyeAdaptSpeed(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrBlurRadius:
-                    _hasBeenSetTracker[index] = false;
-                    HdrBlurRadius = default(Single);
+                    SetHdrBlurRadius(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrBlurPasses:
-                    _hasBeenSetTracker[index] = false;
-                    HdrBlurPasses = default(Single);
+                    SetHdrBlurPasses(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrEmissiveMult:
-                    _hasBeenSetTracker[index] = false;
-                    HdrEmissiveMult = default(Single);
+                    SetHdrEmissiveMult(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrTargetLum:
-                    _hasBeenSetTracker[index] = false;
-                    HdrTargetLum = default(Single);
+                    SetHdrTargetLum(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrUpperLumClamp:
-                    _hasBeenSetTracker[index] = false;
-                    HdrUpperLumClamp = default(Single);
+                    SetHdrUpperLumClamp(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrBrightScale:
-                    _hasBeenSetTracker[index] = false;
-                    HdrBrightScale = default(Single);
+                    SetHdrBrightScale(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrBrightClamp:
-                    _hasBeenSetTracker[index] = false;
-                    HdrBrightClamp = default(Single);
+                    SetHdrBrightClamp(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrLumRampNoTex:
-                    _hasBeenSetTracker[index] = false;
-                    HdrLumRampNoTex = default(Single);
+                    SetHdrLumRampNoTex(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrLumRampMin:
-                    _hasBeenSetTracker[index] = false;
-                    HdrLumRampMin = default(Single);
+                    SetHdrLumRampMin(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrLumRampMax:
-                    _hasBeenSetTracker[index] = false;
-                    HdrLumRampMax = default(Single);
+                    SetHdrLumRampMax(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrSunlightDimmer:
-                    _hasBeenSetTracker[index] = false;
-                    HdrSunlightDimmer = default(Single);
+                    SetHdrSunlightDimmer(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrGrassDimmer:
-                    _hasBeenSetTracker[index] = false;
-                    HdrGrassDimmer = default(Single);
+                    SetHdrGrassDimmer(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.HdrTreeDimmer:
-                    _hasBeenSetTracker[index] = false;
-                    HdrTreeDimmer = default(Single);
+                    SetHdrTreeDimmer(
+                        item: default(Single),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Single: {index}");
@@ -3764,7 +3834,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Byte>.SetHasBeenSet(
@@ -3790,48 +3860,59 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weather_FieldIndex)index)
             {
                 case Weather_FieldIndex.WindSpeed:
-                    _hasBeenSetTracker[index] = false;
-                    WindSpeed = default(Byte);
+                    SetWindSpeed(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.CloudSpeedLower:
-                    _hasBeenSetTracker[index] = false;
-                    CloudSpeedLower = default(Byte);
+                    SetCloudSpeedLower(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.CloudSpeedUpper:
-                    _hasBeenSetTracker[index] = false;
-                    CloudSpeedUpper = default(Byte);
+                    SetCloudSpeedUpper(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.TransDelta:
-                    _hasBeenSetTracker[index] = false;
-                    TransDelta = default(Byte);
+                    SetTransDelta(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.SunGlare:
-                    _hasBeenSetTracker[index] = false;
-                    SunGlare = default(Byte);
+                    SetSunGlare(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.SunDamage:
-                    _hasBeenSetTracker[index] = false;
-                    SunDamage = default(Byte);
+                    SetSunDamage(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    _hasBeenSetTracker[index] = false;
-                    PrecipitationBeginFadeIn = default(Byte);
+                    SetPrecipitationBeginFadeIn(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    _hasBeenSetTracker[index] = false;
-                    PrecipitationEndFadeOut = default(Byte);
+                    SetPrecipitationEndFadeOut(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    _hasBeenSetTracker[index] = false;
-                    ThunderLightningBeginFadeIn = default(Byte);
+                    SetThunderLightningBeginFadeIn(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    _hasBeenSetTracker[index] = false;
-                    ThunderLightningEndFadeOut = default(Byte);
+                    SetThunderLightningEndFadeOut(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 case Weather_FieldIndex.ThunderLightningFrequency:
-                    _hasBeenSetTracker[index] = false;
-                    ThunderLightningFrequency = default(Byte);
+                    SetThunderLightningFrequency(
+                        item: default(Byte),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Byte: {index}");
@@ -3947,7 +4028,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Weather.WeatherClassification>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Weather.WeatherClassification>.SetHasBeenSet(
@@ -3973,8 +4054,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weather_FieldIndex)index)
             {
                 case Weather_FieldIndex.Classification:
-                    _hasBeenSetTracker[index] = false;
-                    Classification = default(Weather.WeatherClassification);
+                    SetClassification(
+                        item: default(Weather.WeatherClassification),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Weather.WeatherClassification: {index}");
@@ -4080,7 +4162,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<Color>.GetHasBeenSet(int index)
         {
-            return _hasBeenSetTracker[index];
+            return this.GetHasBeenSet(index: index);
         }
 
         void IPropertySupporter<Color>.SetHasBeenSet(
@@ -4106,8 +4188,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Weather_FieldIndex)index)
             {
                 case Weather_FieldIndex.LightningColor:
-                    _hasBeenSetTracker[index] = false;
-                    LightningColor = default(Color);
+                    SetLightningColor(
+                        item: default(Color),
+                        hasBeenSet: false);
                     break;
                 default:
                     throw new ArgumentException($"Unknown index for field type Color: {index}");
