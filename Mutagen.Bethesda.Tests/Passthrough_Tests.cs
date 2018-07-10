@@ -28,12 +28,16 @@ namespace Mutagen.Bethesda.Tests
             List<RangeInt32> errorRanges = new List<RangeInt32>();
             using (var reader2 = new BinaryReadStream(path2))
             {
+                if (!sourceSkips.Empty
+                    || !targetSkips.Empty)
+                {
+                    throw new NotImplementedException("Need to implement skip section stream");
+                }
+
                 var errs = GetDifferences(
                     stream,
                     reader2,
-                    ignoreList,
-                    sourceSkips.Empty ? null : sourceSkips,
-                    targetSkips.Empty ? null : targetSkips).First(amountToReport).ToArray();
+                    ignoreList).First(amountToReport).ToArray();
                 if (errs.Length > 0)
                 {
                     var posStr = string.Join(" ", errs.Select((r) =>
@@ -84,9 +88,7 @@ namespace Mutagen.Bethesda.Tests
         public static IEnumerable<(RangeInt64 Source, RangeInt64? Output)> GetDifferences(
             IBinaryReadStream reader1,
             IBinaryReadStream reader2,
-            RangeCollection ignoreList,
-            RangeCollection reader1Skips,
-            RangeCollection reader2Skips)
+            RangeCollection ignoreList)
         {
             bool inRange = false;
             long startRange = 0;
@@ -97,20 +99,6 @@ namespace Mutagen.Bethesda.Tests
             while (pos1 < reader1Len
                 && pos2 < reader2Len)
             {
-                if (reader1Skips != null
-                    && reader1Skips.TryGetCurrentRange(pos1, out var range1))
-                {
-                    pos1 = range1.Max + 1;
-                    reader1.Position = pos1;
-                    continue;
-                }
-                if (reader2Skips != null
-                    && reader2Skips.TryGetCurrentRange(pos2, out var range2))
-                {
-                    pos2 = range2.Max + 1;
-                    reader2.Position = pos2;
-                    continue;
-                }
                 var b1 = reader1.ReadUInt8();
                 var b2 = reader2.ReadUInt8();
                 pos1++;
