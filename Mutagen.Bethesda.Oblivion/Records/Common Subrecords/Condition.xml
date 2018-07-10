@@ -11,5 +11,6 @@
       <Int32 name="SecondParameter" />
       <Int32 name="ThirdParameter" />
     </Fields>
+    <CustomRecordTypeTrigger>CTDT</CustomRecordTypeTrigger>
   </Object>
 </Loqui>

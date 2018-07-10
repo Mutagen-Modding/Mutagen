@@ -24,38 +24,5 @@ namespace Mutagen.Bethesda.Oblivion
             RandomEnd = 0x020,
             RunForRumors = 0x040
         }
-
-        private readonly static RecordTypeConverter conditionConverter = new RecordTypeConverter(
-            new KeyValuePair<RecordType, RecordType>(
-                DialogItem_Registration.CTDA_HEADER,
-                new RecordType("CTDT")));
-        
-        static partial void FillBinary_ConditionsOld_Custom(MutagenFrame frame, DialogItem item, ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
-               frame: frame,
-               triggeringRecord: new RecordType("CTDT"),
-               item: item.Conditions,
-               fieldIndex: (int)DialogItem_FieldIndex.Conditions,
-               lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-               errorMask: errorMask,
-               transl: (MutagenFrame r, out Condition listItem, ErrorMaskBuilder listSubMask) =>
-               {
-                   byte[] bytes = r.ReadBytes(0x1A);
-                   bytes[4] = 0x18;
-                   byte[] newBytes = new byte[bytes.Length + 4];
-                   Array.Copy(bytes, newBytes, bytes.Length);
-                   return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                       frame: new MutagenFrame(new BinaryMemoryReadStream(newBytes)),
-                       item: out listItem,
-                       errorMask: listSubMask,
-                       recordTypeConverter: conditionConverter);
-               },
-               parseIndefinitely: true);
-        }
-
-        static partial void WriteBinary_ConditionsOld_Custom(MutagenWriter writer, DialogItem item, ErrorMaskBuilder errorMask)
-        {
-        }
     }
 }

@@ -62,6 +62,11 @@ namespace Mutagen.Bethesda.Generation
                 data.RecordType = new RecordType("GRUP");
             }
 
+            foreach (var elem in obj.Node.Elements(XName.Get("CustomRecordTypeTrigger", LoquiGenerator.Namespace)))
+            {
+                obj.GetObjectData().CustomRecordTypeTriggers.Add(new RecordType(elem.Value));
+            }
+
             if (obj.Node.TryGetAttribute("markerType", out var markerType))
             {
                 var markerTypeRec = new RecordType(markerType.Value);
@@ -412,6 +417,11 @@ namespace Mutagen.Bethesda.Generation
                 data.TriggeringRecordTypes.Add(markerType);
             }
 
+            if (obj.TryGetCustomRecordTypeTriggers(out var customTypeTriggers))
+            {
+                data.TriggeringRecordTypes.Add(customTypeTriggers);
+            }
+
             if (data.TriggeringRecordTypes.Count > 0)
             {
                 if (data.TriggeringRecordTypes.CountGreaterThan(1))
@@ -448,7 +458,8 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
-            if (data.RecordType.HasValue)
+            if (data.RecordType.HasValue
+                && data.TriggeringRecordTypes.Count < 1)
             {
                 data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.RecordType.Value);
                 data.TriggeringRecordTypes.Add(data.RecordType.Value);

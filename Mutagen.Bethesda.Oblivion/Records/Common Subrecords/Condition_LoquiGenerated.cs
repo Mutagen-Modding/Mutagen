@@ -1844,10 +1844,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = Condition_Registration.TRIGGERING_RECORD_TYPE;
-        #endregion
-
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
@@ -1879,6 +1875,25 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
+            var nextRecord = HeaderTranslation.GetNextSubRecordType(
+                reader: frame.Reader,
+                contentLength: out var customLen);
+            nextRecord = recordTypeConverter.ConvertToCustom(nextRecord);
+            switch (nextRecord.TypeInt)
+            {
+                case 1413764163: // CTDT
+                    frame = frame.SpawnWithLength(customLen + Constants.SUBRECORD_LENGTH);
+                    using (frame)
+                    {
+                        return CustomRecordTypeTrigger(
+                            frame: frame,
+                            recordType: nextRecord,
+                            recordTypeConverter: recordTypeConverter,
+                            errorMask: errorMask);
+                    }
+                default:
+                    break;
+            }
             var ret = new Condition();
             try
             {
@@ -2803,7 +2818,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = CTDA_HEADER;
+        public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        CTDA_HEADER,
+                        CTDT_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 8;
         public const int NumTypedFields = 0;
         #region Interface

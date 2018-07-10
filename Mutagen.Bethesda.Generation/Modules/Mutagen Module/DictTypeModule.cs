@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class DictTypeModule : GenerationModule
     {
-        public override async  Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
+        public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
             if (!(field is DictType list)) return;
             if (node.TryGetAttribute("lengthLength", out int len))

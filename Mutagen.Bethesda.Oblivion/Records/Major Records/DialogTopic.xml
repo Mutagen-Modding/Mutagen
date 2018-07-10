@@ -26,7 +26,6 @@
       </List>
       <RefList name="Responses" refName="DialogResponse" />
       <RefList name="Conditions" refName="Condition" />
-      <CustomLogic name="ConditionsOld" recordType="CTDT"/>
       <List name="Choices">
         <FormIDLink recordType="TCLT" refName="DialogTopic" />
       </List>

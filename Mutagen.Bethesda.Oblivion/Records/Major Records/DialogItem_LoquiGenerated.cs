@@ -1469,27 +1469,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        static partial void FillBinary_ConditionsOld_Custom(
-            MutagenFrame frame,
-            DialogItem item,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_ConditionsOld_Custom(
-            MutagenWriter writer,
-            DialogItem item,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_ConditionsOld(
-            MutagenWriter writer,
-            DialogItem item,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_ConditionsOld_Custom(
-                writer: writer,
-                item: item,
-                errorMask: errorMask);
-        }
-
         protected static void Fill_Binary_Structs(
             DialogItem item,
             MutagenFrame frame,
@@ -1609,24 +1588,16 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<DialogResponse>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
                 case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        triggeringRecord: DialogItem_Registration.CTDA_HEADER,
+                        triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                         item: item.Conditions,
                         fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: LoquiBinaryTranslation<Condition>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
-                case 0x54445443: // CTDT
-                    using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
-                    {
-                        FillBinary_ConditionsOld_Custom(
-                            frame: subFrame,
-                            item: item,
-                            errorMask: errorMask);
-                    }
-                    return TryGet<int?>.Succeed(null);
                 case 0x544C4354: // TCLT
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -3301,10 +3272,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                 errorMask: errorMask,
                 transl: LoquiBinaryTranslation<Condition>.Instance.Write);
-            DialogItem.WriteBinary_ConditionsOld(
-                writer: writer,
-                item: item,
-                errorMask: errorMask);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.WriteListOfRecords(
                 writer: writer,
                 items: item.Choices,

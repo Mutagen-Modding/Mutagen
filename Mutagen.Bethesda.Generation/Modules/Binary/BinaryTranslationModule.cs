@@ -804,6 +804,45 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
+                if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"var nextRecord = HeaderTranslation.GetNext{(objType == ObjectType.Subrecord ? "Sub" : null)}RecordType"))
+                    {
+                        args.Add("reader: frame.Reader");
+                        args.Add("contentLength: out var customLen");
+                    }
+                    fg.AppendLine("nextRecord = recordTypeConverter.ConvertToCustom(nextRecord);");
+                    fg.AppendLine("switch (nextRecord.TypeInt)");
+                    using (new BraceWrapper(fg))
+                    {
+                        foreach (var item in customLogicTriggers)
+                        {
+                            fg.AppendLine($"case {item.TypeInt}: // {item.Type}");
+                        }
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine("frame = frame.SpawnWithLength(customLen + Constants.SUBRECORD_LENGTH);");
+                            fg.AppendLine("using (frame)");
+                            using (new BraceWrapper(fg))
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                    "return CustomRecordTypeTrigger"))
+                                {
+                                    args.Add("frame: frame");
+                                    args.Add("recordType: nextRecord");
+                                    args.Add("recordTypeConverter: recordTypeConverter");
+                                    args.Add("errorMask: errorMask");
+                                }
+                            }
+                        }
+                        fg.AppendLine("default:");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine("break;");
+                        }
+                    }
+                }
                 fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
                 fg.AppendLine("try");
                 using (new BraceWrapper(fg))
@@ -823,7 +862,7 @@ namespace Mutagen.Bethesda.Generation
                                         suffixLine: ")"))
                                     {
                                         args.Add("frame.Reader");
-                                        args.Add($"recordTypeConverter.ConvertToCustom({obj.GetTriggeringSource()})");
+                                        args.Add($"recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})");
                                     }
                                 }
                                 break;
@@ -833,7 +872,7 @@ namespace Mutagen.Bethesda.Generation
                                     suffixLine: ")"))
                                 {
                                     args.Add("frame.Reader");
-                                    args.Add($"recordTypeConverter.ConvertToCustom({obj.GetTriggeringSource()})");
+                                    args.Add($"recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})");
                                 }
                                 break;
                             case ObjectType.Group:

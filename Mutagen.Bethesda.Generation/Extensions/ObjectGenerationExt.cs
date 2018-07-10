@@ -63,6 +63,19 @@ namespace Mutagen.Bethesda.Generation
             return true;
         }
 
+        public static bool TryGetCustomRecordTypeTriggers(this ObjectGeneration objGen, out IEnumerable<RecordType> recTypes)
+        {
+            var data = objGen.GetObjectData();
+            if (data.CustomRecordTypeTriggers == null
+                || data.CustomRecordTypeTriggers.Count == 0)
+            {
+                recTypes = default;
+                return false;
+            }
+            recTypes = data.CustomRecordTypeTriggers;
+            return true;
+        }
+
         public static async Task<TryGet<IEnumerable<RecordType>>> TryGetTriggeringRecordTypes(this ObjectGeneration objGen)
         {
             await objGen.LoadingCompleteTask.Task;
