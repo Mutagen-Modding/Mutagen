@@ -238,6 +238,9 @@
     <Compile Include="Records\Major Records\LockInformation.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LogEntry.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\MagicEffect.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
@@ -258,6 +261,15 @@
     </Compile>
     <Compile Include="Records\Major Records\PlacedObject.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Quest.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestCondition_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestTarget.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -648,6 +660,15 @@
     </Compile>
     <Compile Include="Records\Major Records\ScriptFields_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestStage_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LogEntry_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestTarget_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

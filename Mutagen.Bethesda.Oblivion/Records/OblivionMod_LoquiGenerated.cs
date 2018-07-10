@@ -90,6 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Regions_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _Worldspaces_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _DialogTopics_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
+            _Quests_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _hasBeenSetTracker[(int)OblivionMod_FieldIndex.TES4] = true;
             CustomCtor();
         }
@@ -362,6 +363,11 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<DialogTopic> _DialogTopics_Object = new Group<DialogTopic>();
         public Group<DialogTopic> DialogTopics => _DialogTopics_Object;
         #endregion
+        #region Quests
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Quest> _Quests_Object = new Group<Quest>();
+        public Group<Quest> Quests => _Quests_Object;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -476,6 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(this.Cells, rhs.Cells)) return false;
             if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
             if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
+            if (!object.Equals(this.Quests, rhs.Quests)) return false;
             return true;
         }
 
@@ -533,6 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Cells).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Worldspaces).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(DialogTopics).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Quests).CombineHashCode(ret);
             return ret;
         }
 
@@ -1945,6 +1953,30 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Quests":
+                    try
+                    {
+                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
+                        item.Quests.CopyFieldsFrom<Quest_CopyMask>(
+                            rhs: Group<Quest>.Create_XML(
+                                root: root,
+                                errorMask: errorMask)
+                            ,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -2006,6 +2038,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Cells:
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
+                case OblivionMod_FieldIndex.Quests:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -2298,6 +2331,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case DialogTopic dialogtopics:
                     _DialogTopics_Object.Items.Set(dialogtopics);
                     break;
+                case Quest quests:
+                    _Quests_Object.Items.Set(quests);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
@@ -2495,6 +2531,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 return (INotifyingKeyedCollection<FormID, T>)DialogTopics.Items;
             }
+            if (t.Equals(typeof(Quest)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Quests.Items;
+            }
             throw new ArgumentException($"Unkown group type: {t}");
         }
 
@@ -2622,6 +2662,10 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             foreach (var item in DialogTopics.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Quests.Links)
             {
                 yield return item;
             }
@@ -2874,6 +2918,11 @@ namespace Mutagen.Bethesda.Oblivion
                     dir: new DirectoryPath(Path.Combine(dir.Path, "DialogTopics")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.DialogTopics,
+                    doMasks: doMasks));
+                tasks.Add(Quests.Write_XmlFolder<Quest, Quest_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "Quests")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.Quests,
                     doMasks: doMasks));
                 await Task.WhenAll(tasks);
             }
@@ -4197,6 +4246,28 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.DialogTopics);
+                case 0x54535551: // QUST
+                    if (importMask?.Quests ?? true)
+                    {
+                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Quests))
+                        {
+                            var tmpQuests = Group<Quest>.Create_Binary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null);
+                            item.Quests.CopyFieldsFrom<Quest_CopyMask>(
+                                rhs: tmpQuests,
+                                def: null,
+                                cmds: null,
+                                copyMask: null,
+                                errorMask: errorMask);
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Quests);
                 default:
                     errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -4472,6 +4543,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.DialogTopics:
                     this._DialogTopics_Object.CopyFieldsFrom<DialogTopic_CopyMask>(rhs: (Group<DialogTopic>)obj);
                     break;
+                case OblivionMod_FieldIndex.Quests:
+                    this._Quests_Object.CopyFieldsFrom<Quest_CopyMask>(rhs: (Group<Quest>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4653,6 +4727,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.DialogTopics:
                     obj._DialogTopics_Object.CopyFieldsFrom<DialogTopic_CopyMask>(rhs: (Group<DialogTopic>)pair.Value);
                     break;
+                case OblivionMod_FieldIndex.Quests:
+                    obj._Quests_Object.CopyFieldsFrom<Quest_CopyMask>(rhs: (Group<Quest>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -4818,6 +4895,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region DialogTopics
         Group<DialogTopic> DialogTopics { get; }
         #endregion
+        #region Quests
+        Group<Quest> Quests { get; }
+        #endregion
 
     }
 
@@ -4878,6 +4958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Cells = 45,
         Worldspaces = 46,
         DialogTopics = 47,
+        Quests = 48,
     }
     #endregion
 
@@ -4895,9 +4976,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort AdditionalFieldCount = 48;
+        public const ushort AdditionalFieldCount = 49;
 
-        public const ushort FieldCount = 48;
+        public const ushort FieldCount = 49;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -5021,6 +5102,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Worldspaces;
                 case "DIALOGTOPICS":
                     return (ushort)OblivionMod_FieldIndex.DialogTopics;
+                case "QUESTS":
+                    return (ushort)OblivionMod_FieldIndex.Quests;
                 default:
                     return null;
             }
@@ -5079,6 +5162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Cells:
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
+                case OblivionMod_FieldIndex.Quests:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5138,6 +5222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Cells:
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
+                case OblivionMod_FieldIndex.Quests:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5197,6 +5282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Cells:
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
+                case OblivionMod_FieldIndex.Quests:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5304,6 +5390,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Worldspaces";
                 case OblivionMod_FieldIndex.DialogTopics:
                     return "DialogTopics";
+                case OblivionMod_FieldIndex.Quests:
+                    return "Quests";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5362,6 +5450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Cells:
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
+                case OblivionMod_FieldIndex.Quests:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5422,6 +5511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Regions:
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
+                case OblivionMod_FieldIndex.Quests:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5529,6 +5619,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Worldspace>);
                 case OblivionMod_FieldIndex.DialogTopics:
                     return typeof(Group<DialogTopic>);
+                case OblivionMod_FieldIndex.Quests:
+                    return typeof(Group<Quest>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5582,6 +5674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
+        public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -5595,7 +5688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 48;
+        public const int NumTypedFields = 49;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -6742,6 +6835,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask.PopIndex();
                 }
             }
+            if (copyMask?.Quests.Overall ?? true)
+            {
+                errorMask.PushIndex((int)OblivionMod_FieldIndex.Quests);
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.Quests,
+                        rhs: rhs.Quests,
+                        def: def?.Quests,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.Quests.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -6802,6 +6918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Cells:
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
+                case OblivionMod_FieldIndex.Quests:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -6961,6 +7078,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.DialogTopics:
                     GroupCommon.Clear(obj.DialogTopics, cmds.ToUnsetParams());
                     break;
+                case OblivionMod_FieldIndex.Quests:
+                    GroupCommon.Clear(obj.Quests, cmds.ToUnsetParams());
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7020,6 +7140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Cells:
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
+                case OblivionMod_FieldIndex.Quests:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -7131,6 +7252,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Worldspaces;
                 case OblivionMod_FieldIndex.DialogTopics:
                     return obj.DialogTopics;
+                case OblivionMod_FieldIndex.Quests:
+                    return obj.Quests;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7299,6 +7422,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DialogTopics = new MaskItem<bool, Group_Mask<bool>>();
             ret.DialogTopics.Specific = GroupCommon.GetEqualsMask(item.DialogTopics, rhs.DialogTopics);
             ret.DialogTopics.Overall = ret.DialogTopics.Specific.AllEqual((b) => b);
+            ret.Quests = new MaskItem<bool, Group_Mask<bool>>();
+            ret.Quests.Specific = GroupCommon.GetEqualsMask(item.Quests, rhs.Quests);
+            ret.Quests.Overall = ret.Quests.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -7520,6 +7646,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.DialogTopics?.ToString(fg, "DialogTopics");
                 }
+                if (printMask?.Quests?.Overall ?? true)
+                {
+                    item.Quests?.ToString(fg, "Quests");
+                }
             }
             fg.AppendLine("]");
         }
@@ -7584,6 +7714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Cells = new MaskItem<bool, ListGroup_Mask<bool>>(true, ListGroupCommon.GetHasBeenSetMask(item.Cells));
             ret.Worldspaces = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Worldspaces));
             ret.DialogTopics = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.DialogTopics));
+            ret.Quests = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Quests));
             return ret;
         }
 
@@ -7907,6 +8038,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.DialogTopics,
                 name: nameof(item.DialogTopics),
                 fieldIndex: (int)OblivionMod_FieldIndex.DialogTopics,
+                errorMask: errorMask);
+            LoquiXmlTranslation<Group<Quest>>.Instance.Write(
+                node: elem,
+                item: item.Quests,
+                name: nameof(item.Quests),
+                fieldIndex: (int)OblivionMod_FieldIndex.Quests,
                 errorMask: errorMask);
         }
         #endregion
@@ -8478,6 +8615,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
+            if (importMask?.Quests ?? true)
+            {
+                if (item.Quests.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Quest>>.Instance.Write(
+                        writer: writer,
+                        item: item.Quests,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Quests,
+                        errorMask: errorMask);
+                }
+            }
         }
 
         #endregion
@@ -8545,6 +8693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Cells = new MaskItem<T, ListGroup_Mask<T>>(initialValue, new ListGroup_Mask<T>(initialValue));
             this.Worldspaces = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.DialogTopics = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Quests = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -8597,6 +8746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, ListGroup_Mask<T>> Cells { get; set; }
         public MaskItem<T, Group_Mask<T>> Worldspaces { get; set; }
         public MaskItem<T, Group_Mask<T>> DialogTopics { get; set; }
+        public MaskItem<T, Group_Mask<T>> Quests { get; set; }
         #endregion
 
         #region Equals
@@ -8657,6 +8807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Cells, rhs.Cells)) return false;
             if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
             if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
+            if (!object.Equals(this.Quests, rhs.Quests)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -8710,6 +8861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Cells?.GetHashCode());
             ret = ret.CombineHashCode(this.Worldspaces?.GetHashCode());
             ret = ret.CombineHashCode(this.DialogTopics?.GetHashCode());
+            ret = ret.CombineHashCode(this.Quests?.GetHashCode());
             return ret;
         }
 
@@ -8957,6 +9109,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.DialogTopics.Overall)) return false;
                 if (this.DialogTopics.Specific != null && !this.DialogTopics.Specific.AllEqual(eval)) return false;
+            }
+            if (Quests != null)
+            {
+                if (!eval(this.Quests.Overall)) return false;
+                if (this.Quests.Specific != null && !this.Quests.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -9404,6 +9561,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.DialogTopics.Specific = this.DialogTopics.Specific.Translate(eval);
                 }
             }
+            if (this.Quests != null)
+            {
+                obj.Quests = new MaskItem<R, Group_Mask<R>>();
+                obj.Quests.Overall = eval(this.Quests.Overall);
+                if (this.Quests.Specific != null)
+                {
+                    obj.Quests.Specific = this.Quests.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -9624,6 +9790,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     DialogTopics?.ToString(fg);
                 }
+                if (printMask?.Quests?.Overall ?? true)
+                {
+                    Quests?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -9695,6 +9865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, ListGroup_ErrorMask<CellBlock_ErrorMask>> Cells;
         public MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>> Worldspaces;
         public MaskItem<Exception, Group_ErrorMask<DialogTopic_ErrorMask>> DialogTopics;
+        public MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>> Quests;
         #endregion
 
         #region IErrorMask
@@ -9799,6 +9970,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Worldspaces;
                 case OblivionMod_FieldIndex.DialogTopics:
                     return DialogTopics;
+                case OblivionMod_FieldIndex.Quests:
+                    return Quests;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -9952,6 +10125,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.DialogTopics:
                     this.DialogTopics = new MaskItem<Exception, Group_ErrorMask<DialogTopic_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Quests:
+                    this.Quests = new MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -10107,6 +10283,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.DialogTopics:
                     this.DialogTopics = (MaskItem<Exception, Group_ErrorMask<DialogTopic_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.Quests:
+                    this.Quests = (MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -10163,6 +10342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Cells != null) return true;
             if (Worldspaces != null) return true;
             if (DialogTopics != null) return true;
+            if (Quests != null) return true;
             return false;
         }
         #endregion
@@ -10245,6 +10425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Cells?.ToString(fg);
             Worldspaces?.ToString(fg);
             DialogTopics?.ToString(fg);
+            Quests?.ToString(fg);
         }
         #endregion
 
@@ -10300,6 +10481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Cells = new MaskItem<Exception, ListGroup_ErrorMask<CellBlock_ErrorMask>>(this.Cells.Overall.Combine(rhs.Cells.Overall), ((IErrorMask<ListGroup_ErrorMask<CellBlock_ErrorMask>>)this.Cells.Specific).Combine(rhs.Cells.Specific));
             ret.Worldspaces = new MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>>(this.Worldspaces.Overall.Combine(rhs.Worldspaces.Overall), ((IErrorMask<Group_ErrorMask<Worldspace_ErrorMask>>)this.Worldspaces.Specific).Combine(rhs.Worldspaces.Specific));
             ret.DialogTopics = new MaskItem<Exception, Group_ErrorMask<DialogTopic_ErrorMask>>(this.DialogTopics.Overall.Combine(rhs.DialogTopics.Overall), ((IErrorMask<Group_ErrorMask<DialogTopic_ErrorMask>>)this.DialogTopics.Specific).Combine(rhs.DialogTopics.Specific));
+            ret.Quests = new MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>>(this.Quests.Overall.Combine(rhs.Quests.Overall), ((IErrorMask<Group_ErrorMask<Quest_ErrorMask>>)this.Quests.Specific).Combine(rhs.Quests.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -10369,6 +10551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, ListGroup_CopyMask<CellBlock_CopyMask>> Cells;
         public MaskItem<bool, Group_CopyMask<Worldspace_CopyMask>> Worldspaces;
         public MaskItem<bool, Group_CopyMask<DialogTopic_CopyMask>> DialogTopics;
+        public MaskItem<bool, Group_CopyMask<Quest_CopyMask>> Quests;
         #endregion
 
     }
@@ -10426,6 +10609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Cells;
         public bool Worldspaces;
         public bool DialogTopics;
+        public bool Quests;
         public GroupMask()
         {
         }
@@ -10478,6 +10662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Cells = defaultValue;
             Worldspaces = defaultValue;
             DialogTopics = defaultValue;
+            Quests = defaultValue;
         }
     }
     #endregion

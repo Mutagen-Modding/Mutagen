@@ -54,6 +54,7 @@
       </Ref>
       <Group name="Worldspaces" refName="Worldspace" />
       <Group name="DialogTopics" refName="DialogTopic" />
+      <Group name="Quests" refName="Quest" />
     </Fields>
   </Object>
 </Loqui>
