@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>ff2765b0b108037481f40f93facf13ef3176a514</Sha>
+         <Sha>3953e64a1bf791d6da27c861a46c6a63c0e88c6a</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-03-2018 16:46:13</CommitDate>
-         <Description>WeakReferenceEquatable equals revamp</Description>
+         <CommitDate>07-10-2018 18:37:20</CommitDate>
+         <Description>BasicSubstitutionRangeStream</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

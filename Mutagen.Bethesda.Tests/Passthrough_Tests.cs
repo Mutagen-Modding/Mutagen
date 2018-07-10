@@ -12,13 +12,14 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Noggog.Streams.Binary;
 
 namespace Mutagen.Bethesda.Tests
 {
     public class Passthrough_Tests
     {
-        public static (Exception Exception, IEnumerable<(RangeInt64 Source, RangeInt64? Output)> Sections) AssertFilesEqual(
-            IBinaryReadStream stream,
+        public static (Exception Exception, IEnumerable<RangeInt64> Sections) AssertFilesEqual(
+            Stream stream,
             string path2,
             RangeCollection ignoreList = null,
             RangeCollection sourceSkips = null,
@@ -34,22 +35,26 @@ namespace Mutagen.Bethesda.Tests
                     throw new NotImplementedException("Need to implement skip section stream");
                 }
 
-                var errs = GetDifferences(
+                Stream compareStream = new ComparisonStream(
                     stream,
-                    reader2,
-                    ignoreList).First(amountToReport).ToArray();
+                    reader2);
+
+                if (ignoreList != null)
+                {
+                    compareStream = new BasicSubstitutionRangeStream(
+                        compareStream,
+                        ignoreList,
+                        toSubstitute: 0);
+                }
+
+                var errs = GetDifferences(compareStream)
+                    .First(amountToReport)
+                    .ToArray();
                 if (errs.Length > 0)
                 {
                     var posStr = string.Join(" ", errs.Select((r) =>
                     {
-                        if (r.Output == null)
-                        {
-                            return r.Source.ToString("X");
-                        }
-                        else
-                        {
-                            return $"[{r.Source.ToString("X")} --- {r.Output.Value.ToString("X")}]";
-                        }
+                        return r.ToString("X");
                     }));
                     return (new ArgumentException($"{path2} Bytes did not match at positions: {posStr}"), errs);
                 }
@@ -85,51 +90,38 @@ namespace Mutagen.Bethesda.Tests
             return false;
         }
 
-        public static IEnumerable<(RangeInt64 Source, RangeInt64? Output)> GetDifferences(
-            IBinaryReadStream reader1,
-            IBinaryReadStream reader2,
-            RangeCollection ignoreList)
+        public static IEnumerable<RangeInt64> GetDifferences(
+            Stream reader)
         {
+            byte[] buf = new byte[4096];
             bool inRange = false;
             long startRange = 0;
-            long outputStartRange = 0;
-            var reader1Len = reader1.Length;
-            var reader2Len = reader2.Length;
-            long pos1 = 0, pos2 = 0;
-            while (pos1 < reader1Len
-                && pos2 < reader2Len)
+            var len = reader.Length;
+            long pos = 0;
+            while (pos < len)
             {
-                var b1 = reader1.ReadUInt8();
-                var b2 = reader2.ReadUInt8();
-                pos1++;
-                pos2++;
-                var pos = pos1 - 1;
-                var pos22 = pos2 - 1;
-                var same = b1 == b2 || (ignoreList?.IsEncapsulated(pos) ?? false);
-                if (!same)
+                var read = reader.Read(buf, 0, buf.Length);
+                for (int i = 0; i < read; i++)
                 {
-                    if (!inRange)
+                    if (buf[i] != 0)
                     {
-                        startRange = pos1;
-                        outputStartRange = pos2;
-                        inRange = true;
-                    }
-                }
-                else
-                {
-                    if (inRange)
-                    {
-                        var sourceRange = new RangeInt64(startRange, pos);
-                        RangeInt64? outputRange = null;
-                        if (startRange != outputStartRange
-                            || pos1 != pos2)
+                        if (!inRange)
                         {
-                            outputRange = new RangeInt64(outputStartRange, pos22);
+                            startRange = pos + i;
+                            inRange = true;
                         }
-                        yield return (sourceRange, outputRange);
-                        inRange = false;
+                    }
+                    else
+                    {
+                        if (inRange)
+                        {
+                            var sourceRange = new RangeInt64(startRange, pos + i);
+                            yield return sourceRange;
+                            inRange = false;
+                        }
                     }
                 }
+                pos += read;
             }
         }
     }
