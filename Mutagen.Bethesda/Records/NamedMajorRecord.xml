@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NamedMajorRecord" baseClass="Bethesda.MajorRecord" objType="Record" abstract="true" GUID="492d4810-c631-49fc-8358-a68f4d1af93d" ID="2">
-    <Fields>
-      <String name="Name" recordType="FULL" />
-    </Fields>
-  </Object>
-</Loqui>

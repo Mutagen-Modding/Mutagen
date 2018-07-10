@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Container" baseClass="Bethesda.NamedMajorRecord" objType="Record" recordType="CONT" GUID="066f0f2c-d0c7-4290-84f3-72ed6e07b160" ID="71">
+  <Object name="Container" baseClass="Bethesda.MajorRecord" objType="Record" recordType="CONT" GUID="066f0f2c-d0c7-4290-84f3-72ed6e07b160" ID="71">
+    <Interface>INamed</Interface>
     <Fields>
+      <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <RefList name="Items" refName="ContainerItem" />

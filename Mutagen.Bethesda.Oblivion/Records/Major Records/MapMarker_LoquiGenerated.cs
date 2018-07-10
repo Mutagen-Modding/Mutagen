@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapMarker,
         ILoquiObject<MapMarker>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<MapMarker.Flag>,
         IPropertySupporter<String>,
         IEquatable<MapMarker>

@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILight,
         ILoquiObject<Light>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<Model>,
         IPropertySupporter<String>,
         IPropertySupporter<Int32>,

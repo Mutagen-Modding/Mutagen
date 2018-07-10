@@ -28,10 +28,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Birthsign : 
-        NamedMajorRecord,
+        MajorRecord,
         IBirthsign,
         ILoquiObject<Birthsign>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<String>,
         IEquatable<Birthsign>
     {
@@ -47,6 +48,54 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        protected String _Name;
+        protected PropertyForwarder<Birthsign, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Birthsign, String>(this, (int)Birthsign_FieldIndex.Name));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public String Name
+        {
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Birthsign_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Birthsign_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Birthsign_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)Birthsign_FieldIndex.Name] = false;
+            Name = default(String);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<String> IBirthsign.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<String> IBirthsignGetter.Name_Property => this.Name_Property;
+        #endregion
         #region Icon
         protected String _Icon;
         protected PropertyForwarder<Birthsign, String> _IconForwarder;
@@ -220,6 +269,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+            }
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
@@ -241,6 +295,10 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
             if (Icon_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
@@ -416,18 +474,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Birthsign_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -538,6 +584,32 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Birthsign_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Icon":
                     try
                     {
@@ -599,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: FormIDXmlTranslation.Instance.Parse);
                     break;
                 default:
-                    NamedMajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -614,6 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Birthsign_FieldIndex)index)
             {
+                case Birthsign_FieldIndex.Name:
                 case Birthsign_FieldIndex.Icon:
                 case Birthsign_FieldIndex.Description:
                     return _hasBeenSetTracker[index];
@@ -634,6 +707,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Birthsign_FieldIndex)index)
             {
+                case Birthsign_FieldIndex.Name:
+                    return Name;
                 case Birthsign_FieldIndex.Icon:
                     return Icon;
                 case Birthsign_FieldIndex.Description:
@@ -664,6 +739,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Birthsign_FieldIndex)index)
             {
+                case Birthsign_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
                 case Birthsign_FieldIndex.Icon:
                     SetIcon(item, hasBeenSet, cmds);
                     break;
@@ -707,6 +785,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Birthsign_FieldIndex)index)
             {
+                case Birthsign_FieldIndex.Name:
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
+                    break;
                 case Birthsign_FieldIndex.Icon:
                     SetIcon(
                         item: default(String),
@@ -766,6 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Birthsign_FieldIndex)index)
             {
+                case Birthsign_FieldIndex.Name:
                 case Birthsign_FieldIndex.Icon:
                 case Birthsign_FieldIndex.Description:
                     return default(String);
@@ -967,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecord.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -985,6 +1069,34 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.TypeInt)
             {
+                case 0x4C4C5546: // FULL
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    try
+                    {
+                        errorMask?.PushIndex((int)Birthsign_FieldIndex.Name);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Name);
                 case 0x4E4F4349: // ICON
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
@@ -1052,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Spells);
                 default:
-                    return NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -1170,6 +1282,11 @@ namespace Mutagen.Bethesda.Oblivion
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    this.SetName(
+                        (String)obj,
+                        cmds: cmds);
+                    break;
                 case Birthsign_FieldIndex.Icon:
                     this.SetIcon(
                         (String)obj,
@@ -1210,10 +1327,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Birthsign_FieldIndex enu))
             {
-                CopyInInternal_NamedMajorRecord(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    obj.SetName(
+                        (String)pair.Value,
+                        cmds: null);
+                    break;
                 case Birthsign_FieldIndex.Icon:
                     obj.SetIcon(
                         (String)pair.Value,
@@ -1240,8 +1362,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IBirthsign : IBirthsignGetter, INamedMajorRecord, ILoquiClass<IBirthsign, IBirthsignGetter>, ILoquiClass<Birthsign, IBirthsignGetter>
+    public partial interface IBirthsign : IBirthsignGetter, IMajorRecord, ILoquiClass<IBirthsign, IBirthsignGetter>, ILoquiClass<Birthsign, IBirthsignGetter>
     {
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
+
         new String Icon { get; set; }
         new INotifyingSetItem<String> Icon_Property { get; }
 
@@ -1251,8 +1376,13 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
     }
 
-    public partial interface IBirthsignGetter : INamedMajorRecordGetter
+    public partial interface IBirthsignGetter : IMajorRecordGetter
     {
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
+
+        #endregion
         #region Icon
         String Icon { get; }
         INotifyingSetItemGetter<String> Icon_Property { get; }
@@ -1304,7 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "5c709517-acb6-4254-9ad8-59b502466e63";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 9;
 
@@ -1334,6 +1464,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Birthsign_FieldIndex.Name;
                 case "ICON":
                     return (ushort)Birthsign_FieldIndex.Icon;
                 case "DESCRIPTION":
@@ -1352,11 +1484,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Birthsign_FieldIndex.Spells:
                     return true;
+                case Birthsign_FieldIndex.Name:
                 case Birthsign_FieldIndex.Icon:
                 case Birthsign_FieldIndex.Description:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1365,12 +1498,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
                 case Birthsign_FieldIndex.Icon:
                 case Birthsign_FieldIndex.Description:
                 case Birthsign_FieldIndex.Spells:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1379,12 +1513,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
                 case Birthsign_FieldIndex.Icon:
                 case Birthsign_FieldIndex.Description:
                 case Birthsign_FieldIndex.Spells:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1393,6 +1528,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    return "Name";
                 case Birthsign_FieldIndex.Icon:
                     return "Icon";
                 case Birthsign_FieldIndex.Description:
@@ -1400,7 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Spells:
                     return "Spells";
                 default:
-                    return NamedMajorRecord_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1409,12 +1546,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
                 case Birthsign_FieldIndex.Icon:
                 case Birthsign_FieldIndex.Description:
                 case Birthsign_FieldIndex.Spells:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1423,12 +1561,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
                 case Birthsign_FieldIndex.Icon:
                 case Birthsign_FieldIndex.Description:
                 case Birthsign_FieldIndex.Spells:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1437,6 +1576,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    return typeof(String);
                 case Birthsign_FieldIndex.Icon:
                     return typeof(String);
                 case Birthsign_FieldIndex.Description:
@@ -1444,17 +1585,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Spells:
                     return typeof(NotifyingList<FormIDSetLink<Spell>>);
                 default:
-                    return NamedMajorRecord_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType SPLO_HEADER = new RecordType("SPLO");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = BSGN_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 4;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1497,13 +1639,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Name ?? true)
+            {
+                errorMask.PushIndex((int)Birthsign_FieldIndex.Name);
+                try
+                {
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
             if (copyMask?.Icon ?? true)
             {
                 errorMask.PushIndex((int)Birthsign_FieldIndex.Icon);
@@ -1575,6 +1736,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
                 case Birthsign_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
                     break;
@@ -1585,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Spells.HasBeenSet = on;
                     break;
                 default:
-                    NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -1598,6 +1762,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
+                    break;
                 case Birthsign_FieldIndex.Icon:
                     obj.Icon_Property.Unset(cmds);
                     break;
@@ -1608,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Spells.Unset(cmds);
                     break;
                 default:
-                    NamedMajorRecordCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -1620,6 +1787,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 case Birthsign_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
                 case Birthsign_FieldIndex.Description:
@@ -1627,7 +1796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Spells:
                     return obj.Spells.HasBeenSet;
                 default:
-                    return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -1638,6 +1807,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    return obj.Name;
                 case Birthsign_FieldIndex.Icon:
                     return obj.Icon;
                 case Birthsign_FieldIndex.Description:
@@ -1645,7 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Spells:
                     return obj.Spells;
                 default:
-                    return NamedMajorRecordCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -1653,6 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBirthsign item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Name_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Description_Property.Unset(cmds.ToUnsetParams());
             item.Spells.Unset(cmds.ToUnsetParams());
@@ -1673,6 +1845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             if (item.Spells.HasBeenSet == rhs.Spells.HasBeenSet)
@@ -1694,7 +1867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
                 ret.Spells.Overall = false;
             }
-            NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -1724,6 +1897,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {item.Name}");
+                }
                 if (printMask?.Icon ?? true)
                 {
                     fg.AppendLine($"Icon => {item.Icon}");
@@ -1758,6 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IBirthsignGetter item,
             Birthsign_Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
@@ -1767,37 +1945,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Birthsign_Mask<bool> GetHasBeenSetMask(IBirthsignGetter item)
         {
             var ret = new Birthsign_Mask<bool>();
+            ret.Name = item.Name_Property.HasBeenSet;
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Description = item.Description_Property.HasBeenSet;
             ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
             return ret;
-        }
-
-        public static Birthsign_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static Birthsign_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Birthsign_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.FormID:
-                    return (Birthsign_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Version:
-                    return (Birthsign_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.EditorID:
-                    return (Birthsign_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.RecordType:
-                    return (Birthsign_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Name:
-                    return (Birthsign_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static Birthsign_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -1854,6 +2006,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (name != null)
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Birthsign");
+            }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)Birthsign_FieldIndex.Name,
+                    errorMask: errorMask);
             }
             if (item.Icon_Property.HasBeenSet)
             {
@@ -1944,11 +2105,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name_Property,
+                fieldIndex: (int)Birthsign_FieldIndex.Name,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.FULL_HEADER),
+                nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
@@ -1980,7 +2148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Birthsign_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Birthsign_Mask<T>>
+    public class Birthsign_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Birthsign_Mask<T>>
     {
         #region Ctors
         public Birthsign_Mask()
@@ -1989,6 +2157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Birthsign_Mask(T initialValue)
         {
+            this.Name = initialValue;
             this.Icon = initialValue;
             this.Description = initialValue;
             this.Spells = new MaskItem<T, IEnumerable<T>>(initialValue, null);
@@ -1996,6 +2165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
+        public T Name;
         public T Icon;
         public T Description;
         public MaskItem<T, IEnumerable<T>> Spells;
@@ -2012,6 +2182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
             if (!object.Equals(this.Icon, rhs.Icon)) return false;
             if (!object.Equals(this.Description, rhs.Description)) return false;
             if (!object.Equals(this.Spells, rhs.Spells)) return false;
@@ -2020,6 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(this.Icon?.GetHashCode());
             ret = ret.CombineHashCode(this.Description?.GetHashCode());
             ret = ret.CombineHashCode(this.Spells?.GetHashCode());
@@ -2033,6 +2205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
             if (!eval(this.Icon)) return false;
             if (!eval(this.Description)) return false;
             if (this.Spells != null)
@@ -2061,6 +2234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Birthsign_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
             obj.Icon = eval(this.Icon);
             obj.Description = eval(this.Description);
             if (Spells != null)
@@ -2109,6 +2283,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
                 if (printMask?.Icon ?? true)
                 {
                     fg.AppendLine($"Icon => {Icon}");
@@ -2149,9 +2327,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Birthsign_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Birthsign_ErrorMask>
+    public class Birthsign_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Birthsign_ErrorMask>
     {
         #region Members
+        public Exception Name;
         public Exception Icon;
         public Exception Description;
         public MaskItem<Exception, IEnumerable<Exception>> Spells;
@@ -2163,6 +2342,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    return Name;
                 case Birthsign_FieldIndex.Icon:
                     return Icon;
                 case Birthsign_FieldIndex.Description:
@@ -2179,6 +2360,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
                 case Birthsign_FieldIndex.Icon:
                     this.Icon = ex;
                     break;
@@ -2199,6 +2383,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
             {
+                case Birthsign_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
                 case Birthsign_FieldIndex.Icon:
                     this.Icon = (Exception)obj;
                     break;
@@ -2217,6 +2404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Name != null) return true;
             if (Icon != null) return true;
             if (Description != null) return true;
             if (Spells != null) return true;
@@ -2255,6 +2443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
             fg.AppendLine($"Icon => {Icon}");
             fg.AppendLine($"Description => {Description}");
             fg.AppendLine("Spells =>");
@@ -2286,6 +2475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Birthsign_ErrorMask Combine(Birthsign_ErrorMask rhs)
         {
             var ret = new Birthsign_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
             ret.Icon = this.Icon.Combine(rhs.Icon);
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Spells = new MaskItem<Exception, IEnumerable<Exception>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<Exception>(this.Spells.Specific.And(rhs.Spells.Specific)));
@@ -2307,9 +2497,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Birthsign_CopyMask : NamedMajorRecord_CopyMask
+    public class Birthsign_CopyMask : MajorRecord_CopyMask
     {
         #region Members
+        public bool Name;
         public bool Icon;
         public bool Description;
         public CopyOption Spells;

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Faction" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="FACT" GUID="153fd2c1-b407-450e-af54-30f99328faff" ID="22">
+  <Object name="Faction" objType="Record" baseClass="Bethesda.MajorRecord" recordType="FACT" GUID="153fd2c1-b407-450e-af54-30f99328faff" ID="22">
+    <Interface>INamed</Interface>
     <Fields>
+      <String name="Name" recordType="FULL" />
       <RefList name="Relations" refName="Relation" />
       <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="1" />
       <Float name="CrimeGoldMultiplier" recordType="CNAM" hasBeenSet="True" />

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Light" objType="Record" recordType="LIGH" baseClass="Bethesda.MajorRecord" GUID="c427a7d6-4fbf-45c8-80c7-f3c8f8646bc1" ID="59">
+    <Interface>INamed</Interface>
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />

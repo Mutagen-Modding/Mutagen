@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IQuest,
         ILoquiObject<Quest>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<String>,
         IPropertySupporter<Quest.Flag>,
         IPropertySupporter<Byte>,

@@ -29,10 +29,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Class : 
-        NamedMajorRecord,
+        MajorRecord,
         IClass,
         ILoquiObject<Class>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<String>,
         IPropertySupporter<Class.SpecializationFlag>,
         IPropertySupporter<ClassFlag>,
@@ -52,6 +53,54 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        protected String _Name;
+        protected PropertyForwarder<Class, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Class, String>(this, (int)Class_FieldIndex.Name));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public String Name
+        {
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Class_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Class_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Class_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)Class_FieldIndex.Name] = false;
+            Name = default(String);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<String> IClass.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<String> IClassGetter.Name_Property => this.Name_Property;
+        #endregion
         #region Description
         protected String _Description;
         protected PropertyForwarder<Class, String> _DescriptionForwarder;
@@ -439,6 +488,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+            }
             if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
             if (Description_Property.HasBeenSet)
             {
@@ -461,6 +515,10 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
             if (Description_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
@@ -638,18 +696,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Class_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -760,6 +806,32 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Description":
                     try
                     {
@@ -933,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    NamedMajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -948,6 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Class_FieldIndex)index)
             {
+                case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
                     return _hasBeenSetTracker[index];
@@ -973,6 +1046,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Class_FieldIndex)index)
             {
+                case Class_FieldIndex.Name:
+                    return Name;
                 case Class_FieldIndex.Description:
                     return Description;
                 case Class_FieldIndex.Icon:
@@ -1003,6 +1078,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Class_FieldIndex)index)
             {
+                case Class_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
                 case Class_FieldIndex.Description:
                     SetDescription(item, hasBeenSet, cmds);
                     break;
@@ -1046,6 +1124,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Class_FieldIndex)index)
             {
+                case Class_FieldIndex.Name:
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
+                    break;
                 case Class_FieldIndex.Description:
                     SetDescription(
                         item: default(String),
@@ -1105,6 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Class_FieldIndex)index)
             {
+                case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
                     return default(String);
@@ -1848,7 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecord.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -1866,6 +1950,34 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.TypeInt)
             {
+                case 0x4C4C5546: // FULL
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Name);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
                 case 0x43534544: // DESC
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
@@ -2058,7 +2170,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Training);
                 default:
-                    return NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -2176,6 +2288,11 @@ namespace Mutagen.Bethesda.Oblivion
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
+                    this.SetName(
+                        (String)obj,
+                        cmds: cmds);
+                    break;
                 case Class_FieldIndex.Description:
                     this.SetDescription(
                         (String)obj,
@@ -2239,10 +2356,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Class_FieldIndex enu))
             {
-                CopyInInternal_NamedMajorRecord(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
+                case Class_FieldIndex.Name:
+                    obj.SetName(
+                        (String)pair.Value,
+                        cmds: null);
+                    break;
                 case Class_FieldIndex.Description:
                     obj.SetDescription(
                         (String)pair.Value,
@@ -2292,8 +2414,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IClass : IClassGetter, INamedMajorRecord, ILoquiClass<IClass, IClassGetter>, ILoquiClass<Class, IClassGetter>
+    public partial interface IClass : IClassGetter, IMajorRecord, ILoquiClass<IClass, IClassGetter>, ILoquiClass<Class, IClassGetter>
     {
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
+
         new String Description { get; set; }
         new INotifyingSetItem<String> Description_Property { get; }
 
@@ -2316,8 +2441,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IClassGetter : INamedMajorRecordGetter
+    public partial interface IClassGetter : IMajorRecordGetter
     {
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
+
+        #endregion
         #region Description
         String Description { get; }
         INotifyingSetItemGetter<String> Description_Property { get; }
@@ -2397,7 +2527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "3f2e301a-e8f4-42db-875c-3e760e4eff31";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 14;
 
@@ -2427,6 +2557,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Class_FieldIndex.Name;
                 case "DESCRIPTION":
                     return (ushort)Class_FieldIndex.Description;
                 case "ICON":
@@ -2456,6 +2588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.PrimaryAttributes:
                 case Class_FieldIndex.SecondaryAttributes:
                     return true;
+                case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
                 case Class_FieldIndex.Specialization:
@@ -2464,7 +2597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Training:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -2475,6 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Class_FieldIndex.Training:
                     return true;
+                case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
                 case Class_FieldIndex.PrimaryAttributes:
@@ -2484,7 +2618,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.ClassServices:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -2493,6 +2627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
                 case Class_FieldIndex.PrimaryAttributes:
@@ -2503,7 +2638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Training:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -2512,6 +2647,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
+                    return "Name";
                 case Class_FieldIndex.Description:
                     return "Description";
                 case Class_FieldIndex.Icon:
@@ -2529,7 +2666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Training:
                     return "Training";
                 default:
-                    return NamedMajorRecord_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -2538,6 +2675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
                 case Class_FieldIndex.PrimaryAttributes:
@@ -2548,7 +2686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Training:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -2557,6 +2695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
                 case Class_FieldIndex.PrimaryAttributes:
@@ -2567,7 +2706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Training:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -2576,6 +2715,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
+                    return typeof(String);
                 case Class_FieldIndex.Description:
                     return typeof(String);
                 case Class_FieldIndex.Icon:
@@ -2593,17 +2734,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Training:
                     return typeof(ClassTraining);
                 default:
-                    return NamedMajorRecord_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CLAS_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
+        public const int NumTypedFields = 3;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2646,13 +2788,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Name ?? true)
+            {
+                errorMask.PushIndex((int)Class_FieldIndex.Name);
+                try
+                {
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
             if (copyMask?.Description ?? true)
             {
                 errorMask.PushIndex((int)Class_FieldIndex.Description);
@@ -2855,6 +3016,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Training:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case Class_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
                 case Class_FieldIndex.Description:
                     obj.Description_Property.HasBeenSet = on;
                     break;
@@ -2862,7 +3026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Property.HasBeenSet = on;
                     break;
                 default:
-                    NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -2875,6 +3039,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
+                    break;
                 case Class_FieldIndex.Description:
                     obj.Description_Property.Unset(cmds);
                     break;
@@ -2900,7 +3067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Training = default(ClassTraining);
                     break;
                 default:
-                    NamedMajorRecordCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -2919,12 +3086,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.ClassServices:
                 case Class_FieldIndex.Training:
                     return true;
+                case Class_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 case Class_FieldIndex.Description:
                     return obj.Description_Property.HasBeenSet;
                 case Class_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
                 default:
-                    return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -2935,6 +3104,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
+                    return obj.Name;
                 case Class_FieldIndex.Description:
                     return obj.Description;
                 case Class_FieldIndex.Icon:
@@ -2952,7 +3123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Training:
                     return obj.Training;
                 default:
-                    return NamedMajorRecordCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -2960,6 +3131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClass item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Name_Property.Unset(cmds.ToUnsetParams());
             item.Description_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.PrimaryAttributes.Unset(cmds.ToUnsetParams());
@@ -2985,6 +3157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
@@ -2999,7 +3172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>();
             ret.Training.Specific = ClassTrainingCommon.GetEqualsMask(item.Training, rhs.Training);
             ret.Training.Overall = ret.Training.Specific.AllEqual((b) => b);
-            NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -3029,6 +3202,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {item.Name}");
+                }
                 if (printMask?.Description ?? true)
                 {
                     fg.AppendLine($"Description => {item.Description}");
@@ -3097,6 +3274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IClassGetter item,
             Class_Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.PrimaryAttributes.Overall.HasValue && checkMask.PrimaryAttributes.Overall.Value != item.PrimaryAttributes.HasBeenSet) return false;
@@ -3107,6 +3285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Class_Mask<bool> GetHasBeenSetMask(IClassGetter item)
         {
             var ret = new Class_Mask<bool>();
+            ret.Name = item.Name_Property.HasBeenSet;
             ret.Description = item.Description_Property.HasBeenSet;
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>(item.PrimaryAttributes.HasBeenSet, null);
@@ -3116,33 +3295,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ClassServices = true;
             ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(true, ClassTrainingCommon.GetHasBeenSetMask(item.Training));
             return ret;
-        }
-
-        public static Class_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static Class_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Class_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.FormID:
-                    return (Class_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Version:
-                    return (Class_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.EditorID:
-                    return (Class_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.RecordType:
-                    return (Class_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Name:
-                    return (Class_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static Class_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -3199,6 +3351,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (name != null)
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Class");
+            }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)Class_FieldIndex.Name,
+                    errorMask: errorMask);
             }
             if (item.Description_Property.HasBeenSet)
             {
@@ -3325,11 +3486,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name_Property,
+                fieldIndex: (int)Class_FieldIndex.Name,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Class_Registration.FULL_HEADER),
+                nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
@@ -3411,7 +3579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Class_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Class_Mask<T>>
+    public class Class_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Class_Mask<T>>
     {
         #region Ctors
         public Class_Mask()
@@ -3420,6 +3588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Class_Mask(T initialValue)
         {
+            this.Name = initialValue;
             this.Description = initialValue;
             this.Icon = initialValue;
             this.PrimaryAttributes = new MaskItem<T, IEnumerable<T>>(initialValue, null);
@@ -3432,6 +3601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
+        public T Name;
         public T Description;
         public T Icon;
         public MaskItem<T, IEnumerable<T>> PrimaryAttributes;
@@ -3453,6 +3623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
             if (!object.Equals(this.Description, rhs.Description)) return false;
             if (!object.Equals(this.Icon, rhs.Icon)) return false;
             if (!object.Equals(this.PrimaryAttributes, rhs.PrimaryAttributes)) return false;
@@ -3466,6 +3637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(this.Description?.GetHashCode());
             ret = ret.CombineHashCode(this.Icon?.GetHashCode());
             ret = ret.CombineHashCode(this.PrimaryAttributes?.GetHashCode());
@@ -3484,6 +3656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
             if (!eval(this.Description)) return false;
             if (!eval(this.Icon)) return false;
             if (this.PrimaryAttributes != null)
@@ -3531,6 +3704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Class_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
             obj.Description = eval(this.Description);
             obj.Icon = eval(this.Icon);
             if (PrimaryAttributes != null)
@@ -3608,6 +3782,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
                 if (printMask?.Description ?? true)
                 {
                     fg.AppendLine($"Description => {Description}");
@@ -3689,9 +3867,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Class_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Class_ErrorMask>
+    public class Class_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Class_ErrorMask>
     {
         #region Members
+        public Exception Name;
         public Exception Description;
         public Exception Icon;
         public MaskItem<Exception, IEnumerable<Exception>> PrimaryAttributes;
@@ -3708,6 +3887,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
+                    return Name;
                 case Class_FieldIndex.Description:
                     return Description;
                 case Class_FieldIndex.Icon:
@@ -3734,6 +3915,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
                 case Class_FieldIndex.Description:
                     this.Description = ex;
                     break;
@@ -3769,6 +3953,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
                 case Class_FieldIndex.Description:
                     this.Description = (Exception)obj;
                     break;
@@ -3802,6 +3989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Name != null) return true;
             if (Description != null) return true;
             if (Icon != null) return true;
             if (PrimaryAttributes != null) return true;
@@ -3845,6 +4033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
             fg.AppendLine($"Description => {Description}");
             fg.AppendLine($"Icon => {Icon}");
             fg.AppendLine("PrimaryAttributes =>");
@@ -3902,6 +4091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Class_ErrorMask Combine(Class_ErrorMask rhs)
         {
             var ret = new Class_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Icon = this.Icon.Combine(rhs.Icon);
             ret.PrimaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(this.PrimaryAttributes.Overall.Combine(rhs.PrimaryAttributes.Overall), new List<Exception>(this.PrimaryAttributes.Specific.And(rhs.PrimaryAttributes.Specific)));
@@ -3928,9 +4118,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Class_CopyMask : NamedMajorRecord_CopyMask
+    public class Class_CopyMask : MajorRecord_CopyMask
     {
         #region Members
+        public bool Name;
         public bool Description;
         public bool Icon;
         public CopyOption PrimaryAttributes;

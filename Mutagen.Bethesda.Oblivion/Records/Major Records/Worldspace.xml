@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Worldspace" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="WRLD" customBinaryEnd="true" GUID="d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62" ID="75">
+  <Object name="Worldspace" objType="Record" baseClass="Bethesda.MajorRecord" recordType="WRLD" customBinaryEnd="true" GUID="d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62" ID="75">
+    <Interface>INamed</Interface>
     <Fields>
+      <String name="Name" recordType="FULL" />
       <FormIDLink name="Parent" recordType="WNAM" refName="Worldspace" />
       <FormIDLink name="Climate" recordType="CNAM" refName="Climate" />
       <FormIDLink name="Water" recordType="NAM2" refName="Water" />

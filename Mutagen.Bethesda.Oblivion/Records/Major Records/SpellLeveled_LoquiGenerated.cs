@@ -287,18 +287,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out SpellLeveled_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1123,33 +1111,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static SpellLeveled_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static SpellLeveled_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.FormID:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Version:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.EditorID:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.RecordType:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Name:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
         public static SpellLeveled_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -1243,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item,
                     writer: writer,
                     errorMask: errorMask);
-                NamedMajorRecordCommon.Write_Binary_RecordTypes(
+                SpellCommon.Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,

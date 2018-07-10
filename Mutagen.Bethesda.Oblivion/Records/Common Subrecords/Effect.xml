@@ -17,6 +17,7 @@
     </Fields>
   </Object>
   <Object name="ScriptEffect" objType="Subrecord" GUID="52a9e0c6-6771-4b3d-a4e7-a082ff8384a9" ID="54">
+    <Interface>INamed</Interface>
     <Fields>
       <Data recordType="SCIT">
         <Fields>

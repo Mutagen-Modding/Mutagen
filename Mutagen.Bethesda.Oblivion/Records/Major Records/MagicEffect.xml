@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MagicEffect" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="MGEF" GUID="57a9087c-140b-4152-8b1e-0508d36a2df4" ID="44">
+  <Object name="MagicEffect" objType="Record" baseClass="Bethesda.MajorRecord" recordType="MGEF" GUID="57a9087c-140b-4152-8b1e-0508d36a2df4" ID="44">
+    <Interface>INamed</Interface>
     <Fields>
+      <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" hasBeenSet="True" />
       <String name="Icon" recordType="ICON" hasBeenSet="True" />
       <RefDirect name="Model" refName="Model" />

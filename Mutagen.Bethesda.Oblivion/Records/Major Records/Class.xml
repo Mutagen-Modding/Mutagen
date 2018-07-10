@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Class" recordType="CLAS" baseClass="Bethesda.NamedMajorRecord" objType="Record" GUID="3f2e301a-e8f4-42db-875c-3e760e4eff31" ID="16">
+  <Object name="Class" recordType="CLAS" baseClass="Bethesda.MajorRecord" objType="Record" GUID="3f2e301a-e8f4-42db-875c-3e760e4eff31" ID="16">
+    <Interface>INamed</Interface>
     <Fields>
+      <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" />
       <String name="Icon" recordType="ICON" />
       <Data>

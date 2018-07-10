@@ -29,12 +29,13 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class AlchemicalApparatus : 
-        NamedMajorRecord,
+        MajorRecord,
         IAlchemicalApparatus,
         ILoquiObject<AlchemicalApparatus>,
         ILoquiObjectSetter,
-        IPropertySupporter<Model>,
+        INamed,
         IPropertySupporter<String>,
+        IPropertySupporter<Model>,
         IPropertySupporter<AlchemicalApparatus.ApparatusType>,
         IPropertySupporter<UInt32>,
         IPropertySupporter<Single>,
@@ -52,6 +53,54 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        protected String _Name;
+        protected PropertyForwarder<AlchemicalApparatus, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<AlchemicalApparatus, String>(this, (int)AlchemicalApparatus_FieldIndex.Name));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public String Name
+        {
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)AlchemicalApparatus_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Name] = false;
+            Name = default(String);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<String> IAlchemicalApparatus.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<String> IAlchemicalApparatusGetter.Name_Property => this.Name_Property;
+        #endregion
         #region Model
         protected Model _Model;
         protected PropertyForwarder<AlchemicalApparatus, Model> _ModelForwarder;
@@ -408,6 +457,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+            }
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
@@ -433,6 +487,10 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
             if (Model_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
@@ -612,18 +670,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out AlchemicalApparatus_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -734,6 +780,32 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Model":
                     try
                     {
@@ -898,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    NamedMajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -913,6 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((AlchemicalApparatus_FieldIndex)index)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
                 case AlchemicalApparatus_FieldIndex.Model:
                 case AlchemicalApparatus_FieldIndex.Icon:
                     return _hasBeenSetTracker[index];
@@ -927,6 +1000,158 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    return Name;
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    return Icon;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    SetIcon(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return this.GetHasBeenSet(index: index);
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
+                    break;
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    SetIcon(
+                        item: default(String),
+                        hasBeenSet: false);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((AlchemicalApparatus_FieldIndex)index)
+            {
+                case AlchemicalApparatus_FieldIndex.Name:
+                case AlchemicalApparatus_FieldIndex.Icon:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
 
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
@@ -1057,147 +1282,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return default(Model);
                 default:
                     throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((AlchemicalApparatus_FieldIndex)index)
-            {
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    return Icon;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AlchemicalApparatus_FieldIndex)index)
-            {
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    SetIcon(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AlchemicalApparatus_FieldIndex)index)
-            {
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    SetIcon(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((AlchemicalApparatus_FieldIndex)index)
-            {
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
             }
         }
 
@@ -1817,7 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecord.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -1835,6 +1919,34 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.TypeInt)
             {
+                case 0x4C4C5546: // FULL
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    try
+                    {
+                        errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Name);
                 case 0x4C444F4D: // MODL
                     try
                     {
@@ -2000,7 +2112,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Quality);
                 default:
-                    return NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -2118,6 +2230,11 @@ namespace Mutagen.Bethesda.Oblivion
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    this.SetName(
+                        (String)obj,
+                        cmds: cmds);
+                    break;
                 case AlchemicalApparatus_FieldIndex.Model:
                     this.SetModel(
                         (Model)obj,
@@ -2180,10 +2297,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out AlchemicalApparatus_FieldIndex enu))
             {
-                CopyInInternal_NamedMajorRecord(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    obj.SetName(
+                        (String)pair.Value,
+                        cmds: null);
+                    break;
                 case AlchemicalApparatus_FieldIndex.Model:
                     obj.SetModel(
                         (Model)pair.Value,
@@ -2232,8 +2354,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IAlchemicalApparatus : IAlchemicalApparatusGetter, INamedMajorRecord, ILoquiClass<IAlchemicalApparatus, IAlchemicalApparatusGetter>, ILoquiClass<AlchemicalApparatus, IAlchemicalApparatusGetter>
+    public partial interface IAlchemicalApparatus : IAlchemicalApparatusGetter, IMajorRecord, ILoquiClass<IAlchemicalApparatus, IAlchemicalApparatusGetter>, ILoquiClass<AlchemicalApparatus, IAlchemicalApparatusGetter>
     {
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
+
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
 
@@ -2255,8 +2380,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IAlchemicalApparatusGetter : INamedMajorRecordGetter
+    public partial interface IAlchemicalApparatusGetter : IMajorRecordGetter
     {
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
+
+        #endregion
         #region Model
         Model Model { get; }
         INotifyingSetItemGetter<Model> Model_Property { get; }
@@ -2334,7 +2464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "731a9b97-8051-4d72-8008-3e53a96659cd";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 13;
 
@@ -2364,6 +2494,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)AlchemicalApparatus_FieldIndex.Name;
                 case "MODEL":
                     return (ushort)AlchemicalApparatus_FieldIndex.Model;
                 case "ICON":
@@ -2388,6 +2520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
                 case AlchemicalApparatus_FieldIndex.Model:
                 case AlchemicalApparatus_FieldIndex.Icon:
                 case AlchemicalApparatus_FieldIndex.Script:
@@ -2397,7 +2530,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -2408,6 +2541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case AlchemicalApparatus_FieldIndex.Model:
                     return true;
+                case AlchemicalApparatus_FieldIndex.Name:
                 case AlchemicalApparatus_FieldIndex.Icon:
                 case AlchemicalApparatus_FieldIndex.Script:
                 case AlchemicalApparatus_FieldIndex.Type:
@@ -2416,7 +2550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -2425,6 +2559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
                 case AlchemicalApparatus_FieldIndex.Model:
                 case AlchemicalApparatus_FieldIndex.Icon:
                 case AlchemicalApparatus_FieldIndex.Script:
@@ -2434,7 +2569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -2443,6 +2578,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    return "Name";
                 case AlchemicalApparatus_FieldIndex.Model:
                     return "Model";
                 case AlchemicalApparatus_FieldIndex.Icon:
@@ -2458,7 +2595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return "Quality";
                 default:
-                    return NamedMajorRecord_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -2467,6 +2604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
                 case AlchemicalApparatus_FieldIndex.Model:
                 case AlchemicalApparatus_FieldIndex.Icon:
                 case AlchemicalApparatus_FieldIndex.Script:
@@ -2476,7 +2614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -2485,6 +2623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
                 case AlchemicalApparatus_FieldIndex.Model:
                 case AlchemicalApparatus_FieldIndex.Icon:
                 case AlchemicalApparatus_FieldIndex.Script:
@@ -2494,7 +2633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -2503,6 +2642,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    return typeof(String);
                 case AlchemicalApparatus_FieldIndex.Model:
                     return typeof(Model);
                 case AlchemicalApparatus_FieldIndex.Icon:
@@ -2518,18 +2659,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return typeof(Single);
                 default:
-                    return NamedMajorRecord_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = APPA_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 4;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2572,13 +2714,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Name ?? true)
+            {
+                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
+                try
+                {
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
                 errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
@@ -2759,6 +2920,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case AlchemicalApparatus_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
                 case AlchemicalApparatus_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
@@ -2769,7 +2933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Script_Property.HasBeenSet = on;
                     break;
                 default:
-                    NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -2782,6 +2946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
+                    break;
                 case AlchemicalApparatus_FieldIndex.Model:
                     obj.Model_Property.Unset(cmds);
                     break;
@@ -2804,7 +2971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Quality = default(Single);
                     break;
                 default:
-                    NamedMajorRecordCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -2821,6 +2988,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Weight:
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return true;
+                case AlchemicalApparatus_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 case AlchemicalApparatus_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
                 case AlchemicalApparatus_FieldIndex.Icon:
@@ -2828,7 +2997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
                 default:
-                    return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -2839,6 +3008,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    return obj.Name;
                 case AlchemicalApparatus_FieldIndex.Model:
                     return obj.Model;
                 case AlchemicalApparatus_FieldIndex.Icon:
@@ -2854,7 +3025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return obj.Quality;
                 default:
-                    return NamedMajorRecordCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -2862,6 +3033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatus item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Name_Property.Unset(cmds.ToUnsetParams());
             item.Model_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Script_Property.Unset(cmds.ToUnsetParams());
@@ -2886,6 +3058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
@@ -2893,7 +3066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight == rhs.Weight;
             ret.Quality = item.Quality == rhs.Quality;
-            NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2923,6 +3096,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {item.Name}");
+                }
                 if (printMask?.Model?.Overall ?? true)
                 {
                     item.Model?.ToString(fg, "Model");
@@ -2959,6 +3136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IAlchemicalApparatusGetter item,
             AlchemicalApparatus_Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
@@ -2969,6 +3147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static AlchemicalApparatus_Mask<bool> GetHasBeenSetMask(IAlchemicalApparatusGetter item)
         {
             var ret = new AlchemicalApparatus_Mask<bool>();
+            ret.Name = item.Name_Property.HasBeenSet;
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Script = item.Script_Property.HasBeenSet;
@@ -2977,33 +3156,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Weight = true;
             ret.Quality = true;
             return ret;
-        }
-
-        public static AlchemicalApparatus_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static AlchemicalApparatus_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.FormID:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Version:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.EditorID:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.RecordType:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Name:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static AlchemicalApparatus_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -3060,6 +3212,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (name != null)
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AlchemicalApparatus");
+            }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Name,
+                    errorMask: errorMask);
             }
             if (item.Model_Property.HasBeenSet)
             {
@@ -3165,11 +3326,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name_Property,
+                fieldIndex: (int)AlchemicalApparatus_FieldIndex.Name,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.FULL_HEADER),
+                nullable: false);
             LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
@@ -3223,7 +3391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class AlchemicalApparatus_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<AlchemicalApparatus_Mask<T>>
+    public class AlchemicalApparatus_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<AlchemicalApparatus_Mask<T>>
     {
         #region Ctors
         public AlchemicalApparatus_Mask()
@@ -3232,6 +3400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public AlchemicalApparatus_Mask(T initialValue)
         {
+            this.Name = initialValue;
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
             this.Icon = initialValue;
             this.Script = initialValue;
@@ -3243,6 +3412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
+        public T Name;
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
         public T Icon;
         public T Script;
@@ -3263,6 +3433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
             if (!object.Equals(this.Model, rhs.Model)) return false;
             if (!object.Equals(this.Icon, rhs.Icon)) return false;
             if (!object.Equals(this.Script, rhs.Script)) return false;
@@ -3275,6 +3446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(this.Model?.GetHashCode());
             ret = ret.CombineHashCode(this.Icon?.GetHashCode());
             ret = ret.CombineHashCode(this.Script?.GetHashCode());
@@ -3292,6 +3464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
             if (Model != null)
             {
                 if (!eval(this.Model.Overall)) return false;
@@ -3318,6 +3491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(AlchemicalApparatus_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
             if (this.Model != null)
             {
                 obj.Model = new MaskItem<R, Model_Mask<R>>();
@@ -3362,6 +3536,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
                 if (printMask?.Model?.Overall ?? true)
                 {
                     Model?.ToString(fg);
@@ -3397,9 +3575,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class AlchemicalApparatus_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<AlchemicalApparatus_ErrorMask>
+    public class AlchemicalApparatus_ErrorMask : MajorRecord_ErrorMask, IErrorMask<AlchemicalApparatus_ErrorMask>
     {
         #region Members
+        public Exception Name;
         public MaskItem<Exception, Model_ErrorMask> Model;
         public Exception Icon;
         public Exception Script;
@@ -3415,6 +3594,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    return Name;
                 case AlchemicalApparatus_FieldIndex.Model:
                     return Model;
                 case AlchemicalApparatus_FieldIndex.Icon:
@@ -3439,6 +3620,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
                 case AlchemicalApparatus_FieldIndex.Model:
                     this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
                     break;
@@ -3471,6 +3655,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
                 case AlchemicalApparatus_FieldIndex.Model:
                     this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
                     break;
@@ -3501,6 +3688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Name != null) return true;
             if (Model != null) return true;
             if (Icon != null) return true;
             if (Script != null) return true;
@@ -3543,6 +3731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
             Model?.ToString(fg);
             fg.AppendLine($"Icon => {Icon}");
             fg.AppendLine($"Script => {Script}");
@@ -3557,6 +3746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public AlchemicalApparatus_ErrorMask Combine(AlchemicalApparatus_ErrorMask rhs)
         {
             var ret = new AlchemicalApparatus_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
             ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
             ret.Icon = this.Icon.Combine(rhs.Icon);
             ret.Script = this.Script.Combine(rhs.Script);
@@ -3582,9 +3772,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class AlchemicalApparatus_CopyMask : NamedMajorRecord_CopyMask
+    public class AlchemicalApparatus_CopyMask : MajorRecord_CopyMask
     {
         #region Members
+        public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public bool Icon;
         public bool Script;

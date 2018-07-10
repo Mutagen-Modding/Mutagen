@@ -30,10 +30,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class NPC : 
-        NamedMajorRecord,
+        MajorRecord,
         INPC,
         ILoquiObject<NPC>,
         ILoquiObjectSetter,
+        INamed,
+        IPropertySupporter<String>,
         IPropertySupporter<Model>,
         IPropertySupporter<NPC.NPCFlag>,
         IPropertySupporter<UInt16>,
@@ -59,6 +61,54 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        protected String _Name;
+        protected PropertyForwarder<NPC, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<NPC, String>(this, (int)NPC_FieldIndex.Name));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public String Name
+        {
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NPC_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)NPC_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)NPC_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)NPC_FieldIndex.Name] = false;
+            Name = default(String);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<String> INPC.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<String> INPCGetter.Name_Property => this.Name_Property;
+        #endregion
         #region Model
         protected Model _Model;
         protected PropertyForwarder<NPC, Model> _ModelForwarder;
@@ -2773,6 +2823,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+            }
             if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
             if (Model_Property.HasBeenSet)
             {
@@ -2919,6 +2974,10 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
             if (Model_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
@@ -3203,18 +3262,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out NPC_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -3325,6 +3372,32 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)NPC_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Model":
                     try
                     {
@@ -4768,7 +4841,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    NamedMajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -4783,6 +4856,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((NPC_FieldIndex)index)
             {
+                case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.Model:
                 case NPC_FieldIndex.HairLength:
                 case NPC_FieldIndex.HairColor:
@@ -4865,6 +4939,147 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Name:
+                    return Name;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return this.GetHasBeenSet(index: index);
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Name:
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((NPC_FieldIndex)index)
+            {
+                case NPC_FieldIndex.Name:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
 
         #region IPropertySupporter Model
         protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
@@ -7012,7 +7227,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecord.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -7030,6 +7245,34 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.TypeInt)
             {
+                case 0x4C4C5546: // FULL
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    try
+                    {
+                        errorMask?.PushIndex((int)NPC_FieldIndex.Name);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)NPC_FieldIndex.Name);
                 case 0x4C444F4D: // MODL
                     try
                     {
@@ -8434,7 +8677,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Unknown);
                 default:
-                    return NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -8552,6 +8795,11 @@ namespace Mutagen.Bethesda.Oblivion
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
+                    this.SetName(
+                        (String)obj,
+                        cmds: cmds);
+                    break;
                 case NPC_FieldIndex.Model:
                     this.SetModel(
                         (Model)obj,
@@ -8887,10 +9135,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out NPC_FieldIndex enu))
             {
-                CopyInInternal_NamedMajorRecord(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
+                    obj.SetName(
+                        (String)pair.Value,
+                        cmds: null);
+                    break;
                 case NPC_FieldIndex.Model:
                     obj.SetModel(
                         (Model)pair.Value,
@@ -9212,8 +9465,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface INPC : INPCGetter, INamedMajorRecord, ILoquiClass<INPC, INPCGetter>, ILoquiClass<NPC, INPCGetter>
+    public partial interface INPC : INPCGetter, IMajorRecord, ILoquiClass<INPC, INPCGetter>, ILoquiClass<NPC, INPCGetter>
     {
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
+
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
 
@@ -9384,8 +9640,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface INPCGetter : INamedMajorRecordGetter
+    public partial interface INPCGetter : IMajorRecordGetter
     {
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
+
+        #endregion
         #region Model
         Model Model { get; }
         INotifyingSetItemGetter<Model> Model_Property { get; }
@@ -9793,7 +10054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "96396343-a32a-4165-b745-e038c5e06eeb";
 
-        public const ushort AdditionalFieldCount = 64;
+        public const ushort AdditionalFieldCount = 65;
 
         public const ushort FieldCount = 70;
 
@@ -9823,6 +10084,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)NPC_FieldIndex.Name;
                 case "MODEL":
                     return (ushort)NPC_FieldIndex.Model;
                 case "NPCFLAGS":
@@ -9968,6 +10231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Animations:
                 case NPC_FieldIndex.Eyes:
                     return true;
+                case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.Model:
                 case NPC_FieldIndex.NPCFlags:
                 case NPC_FieldIndex.BaseSpellPoints:
@@ -10028,7 +10292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -10041,6 +10305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Factions:
                 case NPC_FieldIndex.Items:
                     return true;
+                case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.NPCFlags:
                 case NPC_FieldIndex.BaseSpellPoints:
                 case NPC_FieldIndex.Fatigue:
@@ -10104,7 +10369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -10113,6 +10378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.Model:
                 case NPC_FieldIndex.NPCFlags:
                 case NPC_FieldIndex.BaseSpellPoints:
@@ -10179,7 +10445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -10188,6 +10454,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
+                    return "Name";
                 case NPC_FieldIndex.Model:
                     return "Model";
                 case NPC_FieldIndex.NPCFlags:
@@ -10317,7 +10585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Unknown:
                     return "Unknown";
                 default:
-                    return NamedMajorRecord_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -10326,6 +10594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.Model:
                 case NPC_FieldIndex.NPCFlags:
                 case NPC_FieldIndex.BaseSpellPoints:
@@ -10392,7 +10661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -10401,6 +10670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.Model:
                 case NPC_FieldIndex.NPCFlags:
                 case NPC_FieldIndex.BaseSpellPoints:
@@ -10467,7 +10737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -10476,6 +10746,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
+                    return typeof(String);
                 case NPC_FieldIndex.Model:
                     return typeof(Model);
                 case NPC_FieldIndex.NPCFlags:
@@ -10605,11 +10877,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Unknown:
                     return typeof(Byte[]);
                 default:
-                    return NamedMajorRecord_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ACBS_HEADER = new RecordType("ACBS");
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
@@ -10634,7 +10907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = NPC__HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 19;
+        public const int NumTypedFields = 20;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -10677,13 +10950,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Name ?? true)
+            {
+                errorMask.PushIndex((int)NPC_FieldIndex.Name);
+                try
+                {
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
                 errorMask.PushIndex((int)NPC_FieldIndex.Model);
@@ -12033,6 +12325,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Luck:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case NPC_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
                 case NPC_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
@@ -12091,7 +12386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Unknown_Property.HasBeenSet = on;
                     break;
                 default:
-                    NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -12104,6 +12399,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
+                    break;
                 case NPC_FieldIndex.Model:
                     obj.Model_Property.Unset(cmds);
                     break;
@@ -12297,7 +12595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Unknown_Property.Unset(cmds);
                     break;
                 default:
-                    NamedMajorRecordCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -12355,6 +12653,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Personality:
                 case NPC_FieldIndex.Luck:
                     return true;
+                case NPC_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 case NPC_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
                 case NPC_FieldIndex.Factions:
@@ -12394,7 +12694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Unknown:
                     return obj.Unknown_Property.HasBeenSet;
                 default:
-                    return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -12405,6 +12705,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
+                    return obj.Name;
                 case NPC_FieldIndex.Model:
                     return obj.Model;
                 case NPC_FieldIndex.NPCFlags:
@@ -12534,7 +12836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Unknown:
                     return obj.Unknown;
                 default:
-                    return NamedMajorRecordCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -12542,6 +12844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INPC item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Name_Property.Unset(cmds.ToUnsetParams());
             item.Model_Property.Unset(cmds.ToUnsetParams());
             item.NPCFlags = default(NPC.NPCFlag);
             item.BaseSpellPoints = default(UInt16);
@@ -12623,6 +12926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.NPCFlags = item.NPCFlags == rhs.NPCFlags;
             ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
@@ -12807,7 +13111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_Property.Equals(rhs.FaceGenGeometryAsymmetric_Property, (l, r) => l.EqualsFast(r));
             ret.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_Property.Equals(rhs.FaceGenTextureSymmetric_Property, (l, r) => l.EqualsFast(r));
             ret.Unknown = item.Unknown_Property.Equals(rhs.Unknown_Property, (l, r) => l.EqualsFast(r));
-            NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -12837,6 +13141,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {item.Name}");
+                }
                 if (printMask?.Model?.Overall ?? true)
                 {
                     item.Model?.ToString(fg, "Model");
@@ -13185,6 +13493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this INPCGetter item,
             NPC_Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Factions.Overall.HasValue && checkMask.Factions.Overall.Value != item.Factions.HasBeenSet) return false;
@@ -13211,6 +13520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static NPC_Mask<bool> GetHasBeenSetMask(INPCGetter item)
         {
             var ret = new NPC_Mask<bool>();
+            ret.Name = item.Name_Property.HasBeenSet;
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.NPCFlags = true;
             ret.BaseSpellPoints = true;
@@ -13278,33 +13588,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static NPC_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static NPC_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (NPC_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.FormID:
-                    return (NPC_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Version:
-                    return (NPC_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.EditorID:
-                    return (NPC_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.RecordType:
-                    return (NPC_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Name:
-                    return (NPC_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
         public static NPC_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -13359,6 +13642,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (name != null)
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.NPC");
+            }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)NPC_FieldIndex.Name,
+                    errorMask: errorMask);
             }
             if (item.Model_Property.HasBeenSet)
             {
@@ -13908,11 +14200,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name_Property,
+                fieldIndex: (int)NPC_FieldIndex.Name,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(NPC_Registration.FULL_HEADER),
+                nullable: false);
             LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
@@ -14290,7 +14589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class NPC_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<NPC_Mask<T>>
+    public class NPC_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<NPC_Mask<T>>
     {
         #region Ctors
         public NPC_Mask()
@@ -14299,6 +14598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public NPC_Mask(T initialValue)
         {
+            this.Name = initialValue;
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
             this.NPCFlags = initialValue;
             this.BaseSpellPoints = initialValue;
@@ -14367,6 +14667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
+        public T Name;
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
         public T NPCFlags;
         public T BaseSpellPoints;
@@ -14444,6 +14745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
             if (!object.Equals(this.Model, rhs.Model)) return false;
             if (!object.Equals(this.NPCFlags, rhs.NPCFlags)) return false;
             if (!object.Equals(this.BaseSpellPoints, rhs.BaseSpellPoints)) return false;
@@ -14513,6 +14815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(this.Model?.GetHashCode());
             ret = ret.CombineHashCode(this.NPCFlags?.GetHashCode());
             ret = ret.CombineHashCode(this.BaseSpellPoints?.GetHashCode());
@@ -14587,6 +14890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
             if (Model != null)
             {
                 if (!eval(this.Model.Overall)) return false;
@@ -14732,6 +15036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(NPC_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
             if (this.Model != null)
             {
                 obj.Model = new MaskItem<R, Model_Mask<R>>();
@@ -14945,6 +15250,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
                 if (printMask?.Model?.Overall ?? true)
                 {
                     Model?.ToString(fg);
@@ -15334,9 +15643,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class NPC_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<NPC_ErrorMask>
+    public class NPC_ErrorMask : MajorRecord_ErrorMask, IErrorMask<NPC_ErrorMask>
     {
         #region Members
+        public Exception Name;
         public MaskItem<Exception, Model_ErrorMask> Model;
         public Exception NPCFlags;
         public Exception BaseSpellPoints;
@@ -15409,6 +15719,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
+                    return Name;
                 case NPC_FieldIndex.Model:
                     return Model;
                 case NPC_FieldIndex.NPCFlags:
@@ -15547,6 +15859,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
                 case NPC_FieldIndex.Model:
                     this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
                     break;
@@ -15750,6 +16065,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
+                case NPC_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
                 case NPC_FieldIndex.Model:
                     this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
                     break;
@@ -15951,6 +16269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Name != null) return true;
             if (Model != null) return true;
             if (NPCFlags != null) return true;
             if (BaseSpellPoints != null) return true;
@@ -16050,6 +16369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
             Model?.ToString(fg);
             fg.AppendLine($"NPCFlags => {NPCFlags}");
             fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
@@ -16247,6 +16567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public NPC_ErrorMask Combine(NPC_ErrorMask rhs)
         {
             var ret = new NPC_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
             ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
             ret.NPCFlags = this.NPCFlags.Combine(rhs.NPCFlags);
             ret.BaseSpellPoints = this.BaseSpellPoints.Combine(rhs.BaseSpellPoints);
@@ -16329,9 +16650,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class NPC_CopyMask : NamedMajorRecord_CopyMask
+    public class NPC_CopyMask : MajorRecord_CopyMask
     {
         #region Members
+        public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public bool NPCFlags;
         public bool BaseSpellPoints;

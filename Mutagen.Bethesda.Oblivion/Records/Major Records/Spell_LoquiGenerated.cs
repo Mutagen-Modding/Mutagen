@@ -28,10 +28,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public abstract partial class Spell : 
-        NamedMajorRecord,
+        MajorRecord,
         ISpell,
         ILoquiObject<Spell>,
         ILoquiObjectSetter,
+        INamed,
+        IPropertySupporter<String>,
         IEquatable<Spell>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -46,6 +48,54 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        protected String _Name;
+        protected PropertyForwarder<Spell, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Spell, String>(this, (int)Spell_FieldIndex.Name));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public String Name
+        {
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Spell_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Spell_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Spell_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)Spell_FieldIndex.Name] = false;
+            Name = default(String);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<String> ISpell.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<String> ISpellGetter.Name_Property => this.Name_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -105,12 +155,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -193,18 +252,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Spell_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -283,13 +330,191 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Spell_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
-                    NamedMajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
                         errorMask: errorMask);
                     break;
+            }
+        }
+
+        #endregion
+
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((Spell_FieldIndex)index)
+            {
+                case Spell_FieldIndex.Name:
+                    return _hasBeenSetTracker[index];
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Spell_FieldIndex)index)
+            {
+                case Spell_FieldIndex.Name:
+                    return Name;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Spell_FieldIndex)index)
+            {
+                case Spell_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return this.GetHasBeenSet(index: index);
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Spell_FieldIndex)index)
+            {
+                case Spell_FieldIndex.Name:
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Spell_FieldIndex)index)
+            {
+                case Spell_FieldIndex.Name:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
             }
         }
 
@@ -358,6 +583,55 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
         #endregion
+
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
+            Spell item,
+            MutagenFrame frame,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                reader: frame.Reader,
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    try
+                    {
+                        errorMask?.PushIndex((int)Spell_FieldIndex.Name);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
+                default:
+                    return MajorRecord.Fill_Binary_RecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter,
+                        errorMask: errorMask);
+            }
+        }
 
         #endregion
 
@@ -453,6 +727,11 @@ namespace Mutagen.Bethesda.Oblivion
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    this.SetName(
+                        (String)obj,
+                        cmds: cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -470,10 +749,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Spell_FieldIndex enu))
             {
-                CopyInInternal_NamedMajorRecord(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    obj.SetName(
+                        (String)pair.Value,
+                        cmds: null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -487,12 +771,20 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ISpell : ISpellGetter, INamedMajorRecord, ILoquiClass<ISpell, ISpellGetter>, ILoquiClass<Spell, ISpellGetter>
+    public partial interface ISpell : ISpellGetter, IMajorRecord, ILoquiClass<ISpell, ISpellGetter>, ILoquiClass<Spell, ISpellGetter>
     {
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
+
     }
 
-    public partial interface ISpellGetter : INamedMajorRecordGetter
+    public partial interface ISpellGetter : IMajorRecordGetter
     {
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
+
+        #endregion
 
     }
 
@@ -528,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "44825ec2-b86b-4bd0-9d30-06761a7db25c";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 6;
 
@@ -558,6 +850,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Spell_FieldIndex.Name;
                 default:
                     return null;
             }
@@ -568,8 +862,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -578,8 +874,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -588,8 +886,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -598,8 +898,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return "Name";
                 default:
-                    return NamedMajorRecord_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -608,8 +910,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return false;
                 default:
-                    return NamedMajorRecord_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -618,8 +922,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return false;
                 default:
-                    return NamedMajorRecord_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -628,8 +934,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return typeof(String);
                 default:
-                    return NamedMajorRecord_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -650,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -693,13 +1001,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Name ?? true)
+            {
+                errorMask.PushIndex((int)Spell_FieldIndex.Name);
+                try
+                {
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -713,8 +1040,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
                 default:
-                    NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -727,8 +1057,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
+                    break;
                 default:
-                    NamedMajorRecordCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -740,8 +1073,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 default:
-                    return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -752,8 +1087,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return obj.Name;
                 default:
-                    return NamedMajorRecordCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -761,6 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpell item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Name_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Spell_Mask<bool> GetEqualsMask(
@@ -778,7 +1116,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_Mask<bool> ret)
         {
             if (rhs == null) return;
-            NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -808,6 +1147,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {item.Name}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -816,40 +1159,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ISpellGetter item,
             Spell_Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Spell_Mask<bool> GetHasBeenSetMask(ISpellGetter item)
         {
             var ret = new Spell_Mask<bool>();
+            ret.Name = item.Name_Property.HasBeenSet;
             return ret;
-        }
-
-        public static Spell_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static Spell_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Spell_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.FormID:
-                    return (Spell_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Version:
-                    return (Spell_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.RecordType:
-                    return (Spell_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Name:
-                    return (Spell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static Spell_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -907,6 +1225,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Spell");
             }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)Spell_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
         }
         #endregion
 
@@ -940,13 +1267,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
-            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+            Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
         #endregion
+
+        public static void Write_Binary_RecordTypes(
+            Spell item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            MajorRecordCommon.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name_Property,
+                fieldIndex: (int)Spell_FieldIndex.Name,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Spell_Registration.FULL_HEADER),
+                nullable: false);
+        }
 
         #endregion
 
@@ -956,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Spell_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Spell_Mask<T>>
+    public class Spell_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Spell_Mask<T>>
     {
         #region Ctors
         public Spell_Mask()
@@ -965,7 +1312,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Spell_Mask(T initialValue)
         {
+            this.Name = initialValue;
         }
+        #endregion
+
+        #region Members
+        public T Name;
         #endregion
 
         #region Equals
@@ -979,11 +1331,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -994,6 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
             return true;
         }
         #endregion
@@ -1009,6 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Spell_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
         }
         #endregion
 
@@ -1038,6 +1394,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1045,14 +1405,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Spell_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Spell_ErrorMask>
+    public class Spell_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Spell_ErrorMask>
     {
+        #region Members
+        public Exception Name;
+        #endregion
+
         #region IErrorMask
         public override object GetNthMask(int index)
         {
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    return Name;
                 default:
                     return base.GetNthMask(index);
             }
@@ -1063,6 +1429,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1074,6 +1443,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spell_FieldIndex enu = (Spell_FieldIndex)index;
             switch (enu)
             {
+                case Spell_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1083,6 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Name != null) return true;
             return false;
         }
         #endregion
@@ -1118,6 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
         }
         #endregion
 
@@ -1125,6 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Spell_ErrorMask Combine(Spell_ErrorMask rhs)
         {
             var ret = new Spell_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
             return ret;
         }
         public static Spell_ErrorMask Combine(Spell_ErrorMask lhs, Spell_ErrorMask rhs)
@@ -1143,8 +1518,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Spell_CopyMask : NamedMajorRecord_CopyMask
+    public class Spell_CopyMask : MajorRecord_CopyMask
     {
+        #region Members
+        public bool Name;
+        #endregion
+
     }
     #endregion
 

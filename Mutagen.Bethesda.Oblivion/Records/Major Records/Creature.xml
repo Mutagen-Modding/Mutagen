@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Creature" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="CREA" GUID="9859ec12-21c5-4de8-9caa-404330da8b79" ID="89">
+  <Object name="Creature" objType="Record" baseClass="Bethesda.MajorRecord" recordType="CREA" GUID="9859ec12-21c5-4de8-9caa-404330da8b79" ID="89">
+    <Interface>INamed</Interface>
     <Fields>
+      <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
       <List name="Items">
         <RefDirect refName="ItemEntry" />

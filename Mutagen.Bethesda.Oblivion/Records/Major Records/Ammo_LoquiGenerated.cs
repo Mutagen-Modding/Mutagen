@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAmmo,
         ILoquiObject<Ammo>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<String>,
         IPropertySupporter<Model>,
         IPropertySupporter<UInt16>,

@@ -29,10 +29,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Worldspace : 
-        NamedMajorRecord,
+        MajorRecord,
         IWorldspace,
         ILoquiObject<Worldspace>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<String>,
         IPropertySupporter<MapData>,
         IPropertySupporter<Worldspace.Flag>,
@@ -55,6 +56,54 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        protected String _Name;
+        protected PropertyForwarder<Worldspace, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Worldspace, String>(this, (int)Worldspace_FieldIndex.Name));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public String Name
+        {
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Worldspace_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name] = false;
+            Name = default(String);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<String> IWorldspace.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<String> IWorldspaceGetter.Name_Property => this.Name_Property;
+        #endregion
         #region Parent
         public FormIDSetLink<Worldspace> Parent_Property { get; } = new FormIDSetLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -586,6 +635,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+            }
             if (Parent_Property.HasBeenSet != rhs.Parent_Property.HasBeenSet) return false;
             if (Parent_Property.HasBeenSet)
             {
@@ -657,6 +711,10 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
             if (Parent_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Parent).CombineHashCode(ret);
@@ -872,18 +930,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Worldspace_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -994,6 +1040,32 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Parent":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root,
@@ -1258,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiXmlTranslation<WorldspaceBlock>.Instance.Parse);
                     break;
                 default:
-                    NamedMajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -1273,6 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Worldspace_FieldIndex)index)
             {
+                case Worldspace_FieldIndex.Name:
                 case Worldspace_FieldIndex.Icon:
                 case Worldspace_FieldIndex.MapData:
                 case Worldspace_FieldIndex.Flags:
@@ -1305,6 +1378,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Worldspace_FieldIndex)index)
             {
+                case Worldspace_FieldIndex.Name:
+                    return Name;
                 case Worldspace_FieldIndex.Icon:
                     return Icon;
                 default:
@@ -1333,6 +1408,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Worldspace_FieldIndex)index)
             {
+                case Worldspace_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
                 case Worldspace_FieldIndex.Icon:
                     SetIcon(item, hasBeenSet, cmds);
                     break;
@@ -1373,6 +1451,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Worldspace_FieldIndex)index)
             {
+                case Worldspace_FieldIndex.Name:
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
+                    break;
                 case Worldspace_FieldIndex.Icon:
                     SetIcon(
                         item: default(String),
@@ -1427,6 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Worldspace_FieldIndex)index)
             {
+                case Worldspace_FieldIndex.Name:
                 case Worldspace_FieldIndex.Icon:
                     return default(String);
                 default:
@@ -2661,7 +2745,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecord.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -2679,6 +2763,34 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.TypeInt)
             {
+                case 0x4C4C5546: // FULL
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    try
+                    {
+                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Name);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
                 case 0x4D414E57: // WNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
@@ -2884,7 +2996,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.OffsetData);
                 default:
-                    return NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -3020,6 +3132,11 @@ namespace Mutagen.Bethesda.Oblivion
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    this.SetName(
+                        (String)obj,
+                        cmds: cmds);
+                    break;
                 case Worldspace_FieldIndex.Parent:
                     this.Parent_Property.Set(
                         (FormIDSetLink<Worldspace>)obj,
@@ -3110,10 +3227,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Worldspace_FieldIndex enu))
             {
-                CopyInInternal_NamedMajorRecord(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    obj.SetName(
+                        (String)pair.Value,
+                        cmds: null);
+                    break;
                 case Worldspace_FieldIndex.Parent:
                     obj.Parent_Property.Set(
                         (FormIDSetLink<Worldspace>)pair.Value,
@@ -3190,8 +3312,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IWorldspace : IWorldspaceGetter, INamedMajorRecord, ILoquiClass<IWorldspace, IWorldspaceGetter>, ILoquiClass<Worldspace, IWorldspaceGetter>
+    public partial interface IWorldspace : IWorldspaceGetter, IMajorRecord, ILoquiClass<IWorldspace, IWorldspaceGetter>, ILoquiClass<Worldspace, IWorldspaceGetter>
     {
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
+
         new Worldspace Parent { get; set; }
         new Climate Climate { get; set; }
         new Water Water { get; set; }
@@ -3225,8 +3350,13 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<WorldspaceBlock> SubCells { get; }
     }
 
-    public partial interface IWorldspaceGetter : INamedMajorRecordGetter
+    public partial interface IWorldspaceGetter : IMajorRecordGetter
     {
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
+
+        #endregion
         #region Parent
         Worldspace Parent { get; }
         FormIDSetLink<Worldspace> Parent_Property { get; }
@@ -3338,7 +3468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 14;
 
         public const ushort FieldCount = 19;
 
@@ -3368,6 +3498,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Worldspace_FieldIndex.Name;
                 case "PARENT":
                     return (ushort)Worldspace_FieldIndex.Parent;
                 case "CLIMATE":
@@ -3406,6 +3538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Worldspace_FieldIndex.SubCells:
                     return true;
+                case Worldspace_FieldIndex.Name:
                 case Worldspace_FieldIndex.Parent:
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
@@ -3420,7 +3553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -3434,6 +3567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                 case Worldspace_FieldIndex.SubCells:
                     return true;
+                case Worldspace_FieldIndex.Name:
                 case Worldspace_FieldIndex.Parent:
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
@@ -3445,7 +3579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.OffsetData:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -3454,6 +3588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
                 case Worldspace_FieldIndex.Parent:
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
@@ -3469,7 +3604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -3478,6 +3613,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    return "Name";
                 case Worldspace_FieldIndex.Parent:
                     return "Parent";
                 case Worldspace_FieldIndex.Climate:
@@ -3505,7 +3642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return "SubCells";
                 default:
-                    return NamedMajorRecord_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -3514,6 +3651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
                 case Worldspace_FieldIndex.Parent:
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
@@ -3529,7 +3667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -3538,6 +3676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
                 case Worldspace_FieldIndex.Parent:
                 case Worldspace_FieldIndex.Climate:
                 case Worldspace_FieldIndex.Water:
@@ -3553,7 +3692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -3562,6 +3701,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    return typeof(String);
                 case Worldspace_FieldIndex.Parent:
                     return typeof(FormIDSetLink<Worldspace>);
                 case Worldspace_FieldIndex.Climate:
@@ -3589,11 +3730,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return typeof(NotifyingList<WorldspaceBlock>);
                 default:
-                    return NamedMajorRecord_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
@@ -3610,7 +3752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WRLD_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 13;
+        public const int NumTypedFields = 14;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -3653,13 +3795,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Name ?? true)
+            {
+                errorMask.PushIndex((int)Worldspace_FieldIndex.Name);
+                try
+                {
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
             if (copyMask?.Parent ?? true)
             {
                 errorMask.PushIndex((int)Worldspace_FieldIndex.Parent);
@@ -4022,6 +4183,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
                 case Worldspace_FieldIndex.Parent:
                     obj.Parent_Property.HasBeenSet = on;
                     break;
@@ -4062,7 +4226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SubCells.HasBeenSet = on;
                     break;
                 default:
-                    NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -4075,6 +4239,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
+                    break;
                 case Worldspace_FieldIndex.Parent:
                     obj.Parent_Property.Unset(cmds);
                     break;
@@ -4115,7 +4282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SubCells.Unset(cmds);
                     break;
                 default:
-                    NamedMajorRecordCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -4127,6 +4294,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 case Worldspace_FieldIndex.Parent:
                     return obj.Parent_Property.HasBeenSet;
                 case Worldspace_FieldIndex.Climate:
@@ -4154,7 +4323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return obj.SubCells.HasBeenSet;
                 default:
-                    return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -4165,6 +4334,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    return obj.Name;
                 case Worldspace_FieldIndex.Parent:
                     return obj.Parent;
                 case Worldspace_FieldIndex.Climate:
@@ -4192,7 +4363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return obj.SubCells;
                 default:
-                    return NamedMajorRecordCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -4200,6 +4371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspace item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Name_Property.Unset(cmds.ToUnsetParams());
             item.Parent_Property.Unset(cmds.ToUnsetParams());
             item.Climate_Property.Unset(cmds.ToUnsetParams());
             item.Water_Property.Unset(cmds.ToUnsetParams());
@@ -4230,6 +4402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             ret.Parent = item.Parent_Property.Equals(rhs.Parent_Property, (l, r) => l == r);
             ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
             ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
@@ -4267,7 +4440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.SubCells = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceBlock_Mask<bool>>>>();
                 ret.SubCells.Overall = false;
             }
-            NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -4297,6 +4470,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {item.Name}");
+                }
                 if (printMask?.Parent ?? true)
                 {
                     fg.AppendLine($"Parent => {item.Parent_Property}");
@@ -4371,6 +4548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IWorldspaceGetter item,
             Worldspace_Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             if (checkMask.Parent.HasValue && checkMask.Parent.Value != item.Parent_Property.HasBeenSet) return false;
             if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
             if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
@@ -4393,6 +4571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Worldspace_Mask<bool> GetHasBeenSetMask(IWorldspaceGetter item)
         {
             var ret = new Worldspace_Mask<bool>();
+            ret.Name = item.Name_Property.HasBeenSet;
             ret.Parent = item.Parent_Property.HasBeenSet;
             ret.Climate = item.Climate_Property.HasBeenSet;
             ret.Water = item.Water_Property.HasBeenSet;
@@ -4407,33 +4586,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TopCell = new MaskItem<bool, Cell_Mask<bool>>(item.TopCell_Property.HasBeenSet, CellCommon.GetHasBeenSetMask(item.TopCell));
             ret.SubCells = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceBlock_Mask<bool>>>>(item.SubCells.HasBeenSet, item.SubCells.Select((i) => new MaskItem<bool, WorldspaceBlock_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
-        }
-
-        public static Worldspace_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static Worldspace_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Worldspace_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.FormID:
-                    return (Worldspace_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Version:
-                    return (Worldspace_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.EditorID:
-                    return (Worldspace_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.RecordType:
-                    return (Worldspace_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Name:
-                    return (Worldspace_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static Worldspace_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -4490,6 +4642,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (name != null)
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Worldspace");
+            }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)Worldspace_FieldIndex.Name,
+                    errorMask: errorMask);
             }
             if (item.Parent_Property.HasBeenSet)
             {
@@ -4674,11 +4835,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name_Property,
+                fieldIndex: (int)Worldspace_FieldIndex.Name,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.FULL_HEADER),
+                nullable: false);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Parent_Property,
@@ -4760,7 +4928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Worldspace_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Worldspace_Mask<T>>
+    public class Worldspace_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Worldspace_Mask<T>>
     {
         #region Ctors
         public Worldspace_Mask()
@@ -4769,6 +4937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Worldspace_Mask(T initialValue)
         {
+            this.Name = initialValue;
             this.Parent = initialValue;
             this.Climate = initialValue;
             this.Water = initialValue;
@@ -4786,6 +4955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
+        public T Name;
         public T Parent;
         public T Climate;
         public T Water;
@@ -4812,6 +4982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
             if (!object.Equals(this.Parent, rhs.Parent)) return false;
             if (!object.Equals(this.Climate, rhs.Climate)) return false;
             if (!object.Equals(this.Water, rhs.Water)) return false;
@@ -4830,6 +5001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(this.Parent?.GetHashCode());
             ret = ret.CombineHashCode(this.Climate?.GetHashCode());
             ret = ret.CombineHashCode(this.Water?.GetHashCode());
@@ -4853,6 +5025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
             if (!eval(this.Parent)) return false;
             if (!eval(this.Climate)) return false;
             if (!eval(this.Water)) return false;
@@ -4904,6 +5077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Worldspace_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
             obj.Parent = eval(this.Parent);
             obj.Climate = eval(this.Climate);
             obj.Water = eval(this.Water);
@@ -4994,6 +5168,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
                 if (printMask?.Parent ?? true)
                 {
                     fg.AppendLine($"Parent => {Parent}");
@@ -5074,9 +5252,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Worldspace_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Worldspace_ErrorMask>
+    public class Worldspace_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Worldspace_ErrorMask>
     {
         #region Members
+        public Exception Name;
         public Exception Parent;
         public Exception Climate;
         public Exception Water;
@@ -5098,6 +5277,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    return Name;
                 case Worldspace_FieldIndex.Parent:
                     return Parent;
                 case Worldspace_FieldIndex.Climate:
@@ -5134,6 +5315,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
                 case Worldspace_FieldIndex.Parent:
                     this.Parent = ex;
                     break;
@@ -5184,6 +5368,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
                 case Worldspace_FieldIndex.Parent:
                     this.Parent = (Exception)obj;
                     break;
@@ -5232,6 +5419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Name != null) return true;
             if (Parent != null) return true;
             if (Climate != null) return true;
             if (Water != null) return true;
@@ -5280,6 +5468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
             fg.AppendLine($"Parent => {Parent}");
             fg.AppendLine($"Climate => {Climate}");
             fg.AppendLine($"Water => {Water}");
@@ -5321,6 +5510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Worldspace_ErrorMask Combine(Worldspace_ErrorMask rhs)
         {
             var ret = new Worldspace_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
             ret.Parent = this.Parent.Combine(rhs.Parent);
             ret.Climate = this.Climate.Combine(rhs.Climate);
             ret.Water = this.Water.Combine(rhs.Water);
@@ -5352,9 +5542,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Worldspace_CopyMask : NamedMajorRecord_CopyMask
+    public class Worldspace_CopyMask : MajorRecord_CopyMask
     {
         #region Members
+        public bool Name;
         public bool Parent;
         public bool Climate;
         public bool Water;

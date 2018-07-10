@@ -44,6 +44,7 @@
     <Compile Include="BinaryFileProcessor.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
+    <Compile Include="INamed.cs" />
     <Compile Include="Links\EDIDSetLink.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormIDSetLink.cs" />
@@ -125,9 +126,6 @@
     <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\NamedMajorRecord_LoquiGenerated.cs">
-      <DependentUpon>NamedMajorRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="ProtocolDefinition_Bethesda.cs" />
     <Compile Include="Records\ListGroup_LoquiGenerated.cs">
       <DependentUpon>Group.xml</DependentUpon>
@@ -169,9 +167,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\MasterReference.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\NamedMajorRecord.xml">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

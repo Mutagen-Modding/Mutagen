@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogTopic,
         ILoquiObject<DialogTopic>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<String>,
         IPropertySupporter<DialogType>,
         IEquatable<DialogTopic>

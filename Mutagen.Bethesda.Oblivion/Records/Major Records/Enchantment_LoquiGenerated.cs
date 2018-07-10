@@ -29,10 +29,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Enchantment : 
-        NamedMajorRecord,
+        MajorRecord,
         IEnchantment,
         ILoquiObject<Enchantment>,
         ILoquiObjectSetter,
+        INamed,
+        IPropertySupporter<String>,
         IPropertySupporter<Enchantment.EnchantmentType>,
         IPropertySupporter<UInt32>,
         IPropertySupporter<Enchantment.Flag>,
@@ -50,6 +52,54 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        protected String _Name;
+        protected PropertyForwarder<Enchantment, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Enchantment, String>(this, (int)Enchantment_FieldIndex.Name));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public String Name
+        {
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Enchantment_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name] = false;
+            Name = default(String);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<String> IEnchantment.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<String> IEnchantmentGetter.Name_Property => this.Name_Property;
+        #endregion
         #region Type
         protected Enchantment.EnchantmentType _Type;
         protected PropertyForwarder<Enchantment, Enchantment.EnchantmentType> _TypeForwarder;
@@ -319,6 +369,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+            }
             if (this.Type != rhs.Type) return false;
             if (this.ChargeAmount != rhs.ChargeAmount) return false;
             if (this.EnchantCost != rhs.EnchantCost) return false;
@@ -334,6 +389,10 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
             ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(ChargeAmount).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(EnchantCost).CombineHashCode(ret);
@@ -505,18 +564,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Enchantment_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -627,6 +674,32 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Type":
                     try
                     {
@@ -740,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiXmlTranslation<Effect>.Instance.Parse);
                     break;
                 default:
-                    NamedMajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -755,6 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Enchantment_FieldIndex)index)
             {
+                case Enchantment_FieldIndex.Name:
                 case Enchantment_FieldIndex.Effects:
                     return _hasBeenSetTracker[index];
                 case Enchantment_FieldIndex.Type:
@@ -766,6 +840,147 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
+
+        #region IPropertySupporter String
+        String IPropertySupporter<String>.Get(int index)
+        {
+            return GetString(index: index);
+        }
+
+        protected override String GetString(int index)
+        {
+            switch ((Enchantment_FieldIndex)index)
+            {
+                case Enchantment_FieldIndex.Name:
+                    return Name;
+                default:
+                    return base.GetString(index: index);
+            }
+        }
+
+        void IPropertySupporter<String>.Set(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            SetString(
+                index: index,
+                item: item,
+                hasBeenSet: hasBeenSet,
+                cmds: cmds);
+        }
+
+        protected override void SetString(
+            int index,
+            String item,
+            bool hasBeenSet,
+            NotifyingFireParameters cmds)
+        {
+            switch ((Enchantment_FieldIndex)index)
+            {
+                case Enchantment_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
+                default:
+                    base.SetString(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        {
+            return this.GetHasBeenSet(index: index);
+        }
+
+        void IPropertySupporter<String>.SetHasBeenSet(
+            int index,
+            bool on)
+        {
+            _hasBeenSetTracker[index] = on;
+        }
+
+        void IPropertySupporter<String>.Unset(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            UnsetString(
+                index: index,
+                cmds: cmds);
+        }
+
+        protected override void UnsetString(
+            int index,
+            NotifyingUnsetParameters cmds)
+        {
+            switch ((Enchantment_FieldIndex)index)
+            {
+                case Enchantment_FieldIndex.Name:
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
+                    break;
+                default:
+                    base.UnsetString(
+                        index: index,
+                        cmds: cmds);
+                    break;
+            }
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Subscribe(
+            int index,
+            object owner,
+            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSubscribeParameters cmds)
+        {
+            if (_String_subscriptions == null)
+            {
+                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+            }
+            _String_subscriptions.Subscribe(
+                index: index,
+                owner: owner,
+                prop: this,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        void IPropertySupporter<String>.Unsubscribe(
+            int index,
+            object owner)
+        {
+            _String_subscriptions?.Unsubscribe(index, owner);
+        }
+
+        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        String IPropertySupporter<String>.DefaultValue(int index)
+        {
+            return DefaultValueString(index: index);
+        }
+
+        protected override String DefaultValueString(int index)
+        {
+            switch ((Enchantment_FieldIndex)index)
+            {
+                case Enchantment_FieldIndex.Name:
+                    return default(String);
+                default:
+                    return base.DefaultValueString(index: index);
+            }
+        }
+
+        #endregion
 
         #region IPropertySupporter Enchantment.EnchantmentType
         protected ObjectCentralizationSubscriptions<Enchantment.EnchantmentType> _EnchantmentEnchantmentType_subscriptions;
@@ -1384,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecord.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -1402,6 +1617,34 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.TypeInt)
             {
+                case 0x4C4C5546: // FULL
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    try
+                    {
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
                 case 0x54494E45: // ENIT
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
@@ -1515,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<Effect>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);
                 default:
-                    return NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -1633,6 +1876,11 @@ namespace Mutagen.Bethesda.Oblivion
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
+                    this.SetName(
+                        (String)obj,
+                        cmds: cmds);
+                    break;
                 case Enchantment_FieldIndex.Type:
                     this.SetType(
                         (Enchantment.EnchantmentType)obj,
@@ -1683,10 +1931,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Enchantment_FieldIndex enu))
             {
-                CopyInInternal_NamedMajorRecord(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
+                    obj.SetName(
+                        (String)pair.Value,
+                        cmds: null);
+                    break;
                 case Enchantment_FieldIndex.Type:
                     obj.SetType(
                         (Enchantment.EnchantmentType)pair.Value,
@@ -1723,8 +1976,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IEnchantment : IEnchantmentGetter, INamedMajorRecord, ILoquiClass<IEnchantment, IEnchantmentGetter>, ILoquiClass<Enchantment, IEnchantmentGetter>
+    public partial interface IEnchantment : IEnchantmentGetter, IMajorRecord, ILoquiClass<IEnchantment, IEnchantmentGetter>, ILoquiClass<Enchantment, IEnchantmentGetter>
     {
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
+
         new Enchantment.EnchantmentType Type { get; set; }
         new INotifyingItem<Enchantment.EnchantmentType> Type_Property { get; }
 
@@ -1740,8 +1996,13 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<Effect> Effects { get; }
     }
 
-    public partial interface IEnchantmentGetter : INamedMajorRecordGetter
+    public partial interface IEnchantmentGetter : IMajorRecordGetter
     {
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
+
+        #endregion
         #region Type
         Enchantment.EnchantmentType Type { get; }
         INotifyingItemGetter<Enchantment.EnchantmentType> Type_Property { get; }
@@ -1805,7 +2066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "70c1ef12-4d5f-4f6a-8899-5518fcba82ed";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 11;
 
@@ -1835,6 +2096,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Enchantment_FieldIndex.Name;
                 case "TYPE":
                     return (ushort)Enchantment_FieldIndex.Type;
                 case "CHARGEAMOUNT":
@@ -1857,13 +2120,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Enchantment_FieldIndex.Effects:
                     return true;
+                case Enchantment_FieldIndex.Name:
                 case Enchantment_FieldIndex.Type:
                 case Enchantment_FieldIndex.ChargeAmount:
                 case Enchantment_FieldIndex.EnchantCost:
                 case Enchantment_FieldIndex.Flags:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1874,13 +2138,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Enchantment_FieldIndex.Effects:
                     return true;
+                case Enchantment_FieldIndex.Name:
                 case Enchantment_FieldIndex.Type:
                 case Enchantment_FieldIndex.ChargeAmount:
                 case Enchantment_FieldIndex.EnchantCost:
                 case Enchantment_FieldIndex.Flags:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1889,6 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
                 case Enchantment_FieldIndex.Type:
                 case Enchantment_FieldIndex.ChargeAmount:
                 case Enchantment_FieldIndex.EnchantCost:
@@ -1896,7 +2162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Effects:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1905,6 +2171,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
+                    return "Name";
                 case Enchantment_FieldIndex.Type:
                     return "Type";
                 case Enchantment_FieldIndex.ChargeAmount:
@@ -1916,7 +2184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Effects:
                     return "Effects";
                 default:
-                    return NamedMajorRecord_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1925,6 +2193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
                 case Enchantment_FieldIndex.Type:
                 case Enchantment_FieldIndex.ChargeAmount:
                 case Enchantment_FieldIndex.EnchantCost:
@@ -1932,7 +2201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Effects:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1941,6 +2210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
                 case Enchantment_FieldIndex.Type:
                 case Enchantment_FieldIndex.ChargeAmount:
                 case Enchantment_FieldIndex.EnchantCost:
@@ -1948,7 +2218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Effects:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1957,6 +2227,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
+                    return typeof(String);
                 case Enchantment_FieldIndex.Type:
                     return typeof(Enchantment.EnchantmentType);
                 case Enchantment_FieldIndex.ChargeAmount:
@@ -1968,16 +2240,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Effects:
                     return typeof(NotifyingList<Effect>);
                 default:
-                    return NamedMajorRecord_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = ENCH_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
+        public const int NumTypedFields = 2;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2020,13 +2293,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Name ?? true)
+            {
+                errorMask.PushIndex((int)Enchantment_FieldIndex.Name);
+                try
+                {
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
             if (copyMask?.Type ?? true)
             {
                 errorMask.PushIndex((int)Enchantment_FieldIndex.Type);
@@ -2159,11 +2451,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Flags:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case Enchantment_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
                 case Enchantment_FieldIndex.Effects:
                     obj.Effects.HasBeenSet = on;
                     break;
                 default:
-                    NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -2176,6 +2471,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
+                    break;
                 case Enchantment_FieldIndex.Type:
                     obj.Type = default(Enchantment.EnchantmentType);
                     break;
@@ -2192,7 +2490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Effects.Unset(cmds);
                     break;
                 default:
-                    NamedMajorRecordCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -2209,10 +2507,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.EnchantCost:
                 case Enchantment_FieldIndex.Flags:
                     return true;
+                case Enchantment_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 case Enchantment_FieldIndex.Effects:
                     return obj.Effects.HasBeenSet;
                 default:
-                    return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -2223,6 +2523,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
+                    return obj.Name;
                 case Enchantment_FieldIndex.Type:
                     return obj.Type;
                 case Enchantment_FieldIndex.ChargeAmount:
@@ -2234,7 +2536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Effects:
                     return obj.Effects;
                 default:
-                    return NamedMajorRecordCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -2242,6 +2544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantment item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Name_Property.Unset(cmds.ToUnsetParams());
             item.Type = default(Enchantment.EnchantmentType);
             item.ChargeAmount = default(UInt32);
             item.EnchantCost = default(UInt32);
@@ -2264,6 +2567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             ret.Type = item.Type == rhs.Type;
             ret.ChargeAmount = item.ChargeAmount == rhs.ChargeAmount;
             ret.EnchantCost = item.EnchantCost == rhs.EnchantCost;
@@ -2293,7 +2597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
                 ret.Effects.Overall = false;
             }
-            NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2323,6 +2627,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {item.Name}");
+                }
                 if (printMask?.Type ?? true)
                 {
                     fg.AppendLine($"Type => {item.Type}");
@@ -2365,6 +2673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IEnchantmentGetter item,
             Enchantment_Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
             return true;
         }
@@ -2372,39 +2681,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Enchantment_Mask<bool> GetHasBeenSetMask(IEnchantmentGetter item)
         {
             var ret = new Enchantment_Mask<bool>();
+            ret.Name = item.Name_Property.HasBeenSet;
             ret.Type = true;
             ret.ChargeAmount = true;
             ret.EnchantCost = true;
             ret.Flags = true;
             ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, Effect_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
-        }
-
-        public static Enchantment_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static Enchantment_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Enchantment_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.FormID:
-                    return (Enchantment_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Version:
-                    return (Enchantment_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.EditorID:
-                    return (Enchantment_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.RecordType:
-                    return (Enchantment_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Name:
-                    return (Enchantment_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static Enchantment_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -2461,6 +2744,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (name != null)
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Enchantment");
+            }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)Enchantment_FieldIndex.Name,
+                    errorMask: errorMask);
             }
             EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
                 node: elem,
@@ -2557,11 +2849,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name_Property,
+                fieldIndex: (int)Enchantment_FieldIndex.Name,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Enchantment_Registration.FULL_HEADER),
+                nullable: false);
             using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
@@ -2603,7 +2902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Enchantment_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Enchantment_Mask<T>>
+    public class Enchantment_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Enchantment_Mask<T>>
     {
         #region Ctors
         public Enchantment_Mask()
@@ -2612,6 +2911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Enchantment_Mask(T initialValue)
         {
+            this.Name = initialValue;
             this.Type = initialValue;
             this.ChargeAmount = initialValue;
             this.EnchantCost = initialValue;
@@ -2621,6 +2921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
+        public T Name;
         public T Type;
         public T ChargeAmount;
         public T EnchantCost;
@@ -2639,6 +2940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
             if (!object.Equals(this.Type, rhs.Type)) return false;
             if (!object.Equals(this.ChargeAmount, rhs.ChargeAmount)) return false;
             if (!object.Equals(this.EnchantCost, rhs.EnchantCost)) return false;
@@ -2649,6 +2951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(this.Type?.GetHashCode());
             ret = ret.CombineHashCode(this.ChargeAmount?.GetHashCode());
             ret = ret.CombineHashCode(this.EnchantCost?.GetHashCode());
@@ -2664,6 +2967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
             if (!eval(this.Type)) return false;
             if (!eval(this.ChargeAmount)) return false;
             if (!eval(this.EnchantCost)) return false;
@@ -2695,6 +2999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Enchantment_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
             obj.Type = eval(this.Type);
             obj.ChargeAmount = eval(this.ChargeAmount);
             obj.EnchantCost = eval(this.EnchantCost);
@@ -2753,6 +3058,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
                 if (printMask?.Type ?? true)
                 {
                     fg.AppendLine($"Type => {Type}");
@@ -2801,9 +3110,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Enchantment_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Enchantment_ErrorMask>
+    public class Enchantment_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Enchantment_ErrorMask>
     {
         #region Members
+        public Exception Name;
         public Exception Type;
         public Exception ChargeAmount;
         public Exception EnchantCost;
@@ -2817,6 +3127,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
+                    return Name;
                 case Enchantment_FieldIndex.Type:
                     return Type;
                 case Enchantment_FieldIndex.ChargeAmount:
@@ -2837,6 +3149,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
                 case Enchantment_FieldIndex.Type:
                     this.Type = ex;
                     break;
@@ -2863,6 +3178,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
             {
+                case Enchantment_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
                 case Enchantment_FieldIndex.Type:
                     this.Type = (Exception)obj;
                     break;
@@ -2887,6 +3205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Name != null) return true;
             if (Type != null) return true;
             if (ChargeAmount != null) return true;
             if (EnchantCost != null) return true;
@@ -2927,6 +3246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
             fg.AppendLine($"Type => {Type}");
             fg.AppendLine($"ChargeAmount => {ChargeAmount}");
             fg.AppendLine($"EnchantCost => {EnchantCost}");
@@ -2960,6 +3280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Enchantment_ErrorMask Combine(Enchantment_ErrorMask rhs)
         {
             var ret = new Enchantment_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
             ret.Type = this.Type.Combine(rhs.Type);
             ret.ChargeAmount = this.ChargeAmount.Combine(rhs.ChargeAmount);
             ret.EnchantCost = this.EnchantCost.Combine(rhs.EnchantCost);
@@ -2983,9 +3304,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Enchantment_CopyMask : NamedMajorRecord_CopyMask
+    public class Enchantment_CopyMask : MajorRecord_CopyMask
     {
         #region Members
+        public bool Name;
         public bool Type;
         public bool ChargeAmount;
         public bool EnchantCost;

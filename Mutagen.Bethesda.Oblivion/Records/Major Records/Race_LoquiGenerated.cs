@@ -29,10 +29,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Race : 
-        NamedMajorRecord,
+        MajorRecord,
         IRace,
         ILoquiObject<Race>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<String>,
         IPropertySupporter<Byte[]>,
         IPropertySupporter<Single>,
@@ -58,6 +59,54 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        protected String _Name;
+        protected PropertyForwarder<Race, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Race, String>(this, (int)Race_FieldIndex.Name));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public String Name
+        {
+            get => this._Name;
+            set => this.SetName(value);
+        }
+        protected void SetName(
+            String item,
+            bool hasBeenSet = true,
+            NotifyingFireParameters cmds = null)
+        {
+            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
+            if (oldHasBeenSet != hasBeenSet)
+            {
+                _hasBeenSetTracker[(int)Race_FieldIndex.Name] = hasBeenSet;
+            }
+            if (_String_subscriptions != null)
+            {
+                var tmp = Name;
+                _Name = item;
+                _String_subscriptions.FireSubscriptions(
+                    index: (int)Race_FieldIndex.Name,
+                    oldHasBeenSet: oldHasBeenSet,
+                    newHasBeenSet: hasBeenSet,
+                    oldVal: tmp,
+                    newVal: item,
+                    cmds: cmds);
+            }
+            else
+            {
+                _Name = item;
+            }
+        }
+        protected void UnsetName()
+        {
+            _hasBeenSetTracker[(int)Race_FieldIndex.Name] = false;
+            Name = default(String);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<String> IRace.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<String> IRaceGetter.Name_Property => this.Name_Property;
+        #endregion
         #region Description
         protected String _Description;
         protected PropertyForwarder<Race, String> _DescriptionForwarder;
@@ -1003,6 +1052,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+            }
             if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
             if (Description_Property.HasBeenSet)
             {
@@ -1091,6 +1145,10 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
             if (Description_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
@@ -1321,18 +1379,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Race_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1443,6 +1489,32 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Description":
                     try
                     {
@@ -1908,7 +1980,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    NamedMajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -1923,6 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Race_FieldIndex)index)
             {
+                case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Relations:
                 case Race_FieldIndex.Voices:
@@ -1965,6 +2038,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Race_FieldIndex)index)
             {
+                case Race_FieldIndex.Name:
+                    return Name;
                 case Race_FieldIndex.Description:
                     return Description;
                 default:
@@ -1993,6 +2068,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Race_FieldIndex)index)
             {
+                case Race_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
+                    break;
                 case Race_FieldIndex.Description:
                     SetDescription(item, hasBeenSet, cmds);
                     break;
@@ -2033,6 +2111,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Race_FieldIndex)index)
             {
+                case Race_FieldIndex.Name:
+                    SetName(
+                        item: default(String),
+                        hasBeenSet: false);
+                    break;
                 case Race_FieldIndex.Description:
                     SetDescription(
                         item: default(String),
@@ -2087,6 +2170,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((Race_FieldIndex)index)
             {
+                case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
                     return default(String);
                 default:
@@ -3716,7 +3800,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecord.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -3734,6 +3818,34 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.TypeInt)
             {
+                case 0x4C4C5546: // FULL
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Name);
+                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            parseWhole: true,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.UnsetName();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
                 case 0x43534544: // DESC
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
@@ -4212,7 +4324,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Unknown);
                 default:
-                    return NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -4330,6 +4442,11 @@ namespace Mutagen.Bethesda.Oblivion
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
+                    this.SetName(
+                        (String)obj,
+                        cmds: cmds);
+                    break;
                 case Race_FieldIndex.Description:
                     this.SetDescription(
                         (String)obj,
@@ -4455,10 +4572,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Race_FieldIndex enu))
             {
-                CopyInInternal_NamedMajorRecord(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
+                case Race_FieldIndex.Name:
+                    obj.SetName(
+                        (String)pair.Value,
+                        cmds: null);
+                    break;
                 case Race_FieldIndex.Description:
                     obj.SetDescription(
                         (String)pair.Value,
@@ -4570,8 +4692,11 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IRace : IRaceGetter, INamedMajorRecord, ILoquiClass<IRace, IRaceGetter>, ILoquiClass<Race, IRaceGetter>
+    public partial interface IRace : IRaceGetter, IMajorRecord, ILoquiClass<IRace, IRaceGetter>, ILoquiClass<Race, IRaceGetter>
     {
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
+
         new String Description { get; set; }
         new INotifyingSetItem<String> Description_Property { get; }
 
@@ -4628,8 +4753,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IRaceGetter : INamedMajorRecordGetter
+    public partial interface IRaceGetter : IMajorRecordGetter
     {
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
+
+        #endregion
         #region Description
         String Description { get; }
         INotifyingSetItemGetter<String> Description_Property { get; }
@@ -4785,7 +4915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "265136e6-60a6-4ade-a7c4-b31197fb95e5";
 
-        public const ushort AdditionalFieldCount = 22;
+        public const ushort AdditionalFieldCount = 23;
 
         public const ushort FieldCount = 28;
 
@@ -4815,6 +4945,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Race_FieldIndex.Name;
                 case "DESCRIPTION":
                     return (ushort)Race_FieldIndex.Description;
                 case "SPELLS":
@@ -4876,6 +5008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Hairs:
                 case Race_FieldIndex.Eyes:
                     return true;
+                case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Fluff:
                 case Race_FieldIndex.MaleHeight:
@@ -4894,7 +5027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -4912,6 +5045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.BodyData:
                 case Race_FieldIndex.FaceGenData:
                     return true;
+                case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Fluff:
@@ -4928,7 +5062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -4937,6 +5071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
@@ -4961,7 +5096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -4970,6 +5105,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
+                    return "Name";
                 case Race_FieldIndex.Description:
                     return "Description";
                 case Race_FieldIndex.Spells:
@@ -5015,7 +5152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return "Unknown";
                 default:
-                    return NamedMajorRecord_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -5024,6 +5161,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
@@ -5048,7 +5186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -5057,6 +5195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
@@ -5081,7 +5220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -5090,6 +5229,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
+                    return typeof(String);
                 case Race_FieldIndex.Description:
                     return typeof(String);
                 case Race_FieldIndex.Spells:
@@ -5135,11 +5276,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return typeof(Byte[]);
                 default:
-                    return NamedMajorRecord_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType SPLO_HEADER = new RecordType("SPLO");
         public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
@@ -5163,7 +5305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = RACE_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 15;
+        public const int NumTypedFields = 16;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -5206,13 +5348,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Name ?? true)
+            {
+                errorMask.PushIndex((int)Race_FieldIndex.Name);
+                try
+                {
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
             if (copyMask?.Description ?? true)
             {
                 errorMask.PushIndex((int)Race_FieldIndex.Description);
@@ -5845,6 +6006,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Flags:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case Race_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
                 case Race_FieldIndex.Description:
                     obj.Description_Property.HasBeenSet = on;
                     break;
@@ -5891,7 +6055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Unknown_Property.HasBeenSet = on;
                     break;
                 default:
-                    NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -5904,6 +6068,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
+                    break;
                 case Race_FieldIndex.Description:
                     obj.Description_Property.Unset(cmds);
                     break;
@@ -5971,7 +6138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Unknown_Property.Unset(cmds);
                     break;
                 default:
-                    NamedMajorRecordCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -5991,6 +6158,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.FemaleWeight:
                 case Race_FieldIndex.Flags:
                     return true;
+                case Race_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 case Race_FieldIndex.Description:
                     return obj.Description_Property.HasBeenSet;
                 case Race_FieldIndex.Spells:
@@ -6022,7 +6191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return obj.Unknown_Property.HasBeenSet;
                 default:
-                    return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -6033,6 +6202,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
+                    return obj.Name;
                 case Race_FieldIndex.Description:
                     return obj.Description;
                 case Race_FieldIndex.Spells:
@@ -6078,7 +6249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return obj.Unknown;
                 default:
-                    return NamedMajorRecordCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -6086,6 +6257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRace item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Name_Property.Unset(cmds.ToUnsetParams());
             item.Description_Property.Unset(cmds.ToUnsetParams());
             item.Spells.Unset(cmds.ToUnsetParams());
             item.Relations.Unset(cmds.ToUnsetParams());
@@ -6125,6 +6297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             if (item.Spells.HasBeenSet == rhs.Spells.HasBeenSet)
             {
@@ -6259,7 +6432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             ret.FaceGenData = item.FaceGenData_Property.LoquiEqualsHelper(rhs.FaceGenData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Unknown = item.Unknown_Property.Equals(rhs.Unknown_Property, (l, r) => l.EqualsFast(r));
-            NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -6289,6 +6462,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {item.Name}");
+                }
                 if (printMask?.Description ?? true)
                 {
                     fg.AppendLine($"Description => {item.Description}");
@@ -6469,6 +6646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRaceGetter item,
             Race_Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
             if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
@@ -6496,6 +6674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Race_Mask<bool> GetHasBeenSetMask(IRaceGetter item)
         {
             var ret = new Race_Mask<bool>();
+            ret.Name = item.Name_Property.HasBeenSet;
             ret.Description = item.Description_Property.HasBeenSet;
             ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
             ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, Relation_Mask<bool>>(true, i.GetHasBeenSetMask())));
@@ -6519,33 +6698,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_Property.HasBeenSet, FaceGenDataCommon.GetHasBeenSetMask(item.FaceGenData));
             ret.Unknown = item.Unknown_Property.HasBeenSet;
             return ret;
-        }
-
-        public static Race_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static Race_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Race_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.FormID:
-                    return (Race_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Version:
-                    return (Race_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.RecordType:
-                    return (Race_FieldIndex)((int)index);
-                case NamedMajorRecord_FieldIndex.Name:
-                    return (Race_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static Race_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -6602,6 +6754,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (name != null)
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Race");
+            }
+            if (item.Name_Property.HasBeenSet)
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)Race_FieldIndex.Name,
+                    errorMask: errorMask);
             }
             if (item.Description_Property.HasBeenSet)
             {
@@ -6887,11 +7048,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name_Property,
+                fieldIndex: (int)Race_FieldIndex.Name,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Race_Registration.FULL_HEADER),
+                nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
@@ -7040,7 +7208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Race_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Race_Mask<T>>
+    public class Race_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Race_Mask<T>>
     {
         #region Ctors
         public Race_Mask()
@@ -7049,6 +7217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Race_Mask(T initialValue)
         {
+            this.Name = initialValue;
             this.Description = initialValue;
             this.Spells = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.Relations = new MaskItem<T, IEnumerable<MaskItem<T, Relation_Mask<T>>>>(initialValue, null);
@@ -7075,6 +7244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
+        public T Name;
         public T Description;
         public MaskItem<T, IEnumerable<T>> Spells;
         public MaskItem<T, IEnumerable<MaskItem<T, Relation_Mask<T>>>> Relations;
@@ -7110,6 +7280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
             if (!object.Equals(this.Description, rhs.Description)) return false;
             if (!object.Equals(this.Spells, rhs.Spells)) return false;
             if (!object.Equals(this.Relations, rhs.Relations)) return false;
@@ -7137,6 +7308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(this.Description?.GetHashCode());
             ret = ret.CombineHashCode(this.Spells?.GetHashCode());
             ret = ret.CombineHashCode(this.Relations?.GetHashCode());
@@ -7169,6 +7341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
             if (!eval(this.Description)) return false;
             if (this.Spells != null)
             {
@@ -7289,6 +7462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Race_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
             obj.Description = eval(this.Description);
             if (Spells != null)
             {
@@ -7500,6 +7674,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
                 if (printMask?.Description ?? true)
                 {
                     fg.AppendLine($"Description => {Description}");
@@ -7721,9 +7899,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Race_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Race_ErrorMask>
+    public class Race_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Race_ErrorMask>
     {
         #region Members
+        public Exception Name;
         public Exception Description;
         public MaskItem<Exception, IEnumerable<Exception>> Spells;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> Relations;
@@ -7754,6 +7933,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
+                    return Name;
                 case Race_FieldIndex.Description:
                     return Description;
                 case Race_FieldIndex.Spells:
@@ -7808,6 +7989,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
                 case Race_FieldIndex.Description:
                     this.Description = ex;
                     break;
@@ -7885,6 +8069,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
                 case Race_FieldIndex.Description:
                     this.Description = (Exception)obj;
                     break;
@@ -7960,6 +8147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Name != null) return true;
             if (Description != null) return true;
             if (Spells != null) return true;
             if (Relations != null) return true;
@@ -8017,6 +8205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
             fg.AppendLine($"Description => {Description}");
             fg.AppendLine("Spells =>");
             fg.AppendLine("[");
@@ -8172,6 +8361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Race_ErrorMask Combine(Race_ErrorMask rhs)
         {
             var ret = new Race_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Spells = new MaskItem<Exception, IEnumerable<Exception>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<Exception>(this.Spells.Specific.And(rhs.Spells.Specific)));
             ret.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(this.Relations.Overall.Combine(rhs.Relations.Overall), new List<MaskItem<Exception, Relation_ErrorMask>>(this.Relations.Specific.And(rhs.Relations.Specific)));
@@ -8212,9 +8402,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Race_CopyMask : NamedMajorRecord_CopyMask
+    public class Race_CopyMask : MajorRecord_CopyMask
     {
         #region Members
+        public bool Name;
         public bool Description;
         public CopyOption Spells;
         public MaskItem<CopyOption, Relation_CopyMask> Relations;

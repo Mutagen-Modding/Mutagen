@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Hair" objType="Record" recordType="HAIR" baseClass="Bethesda.NamedMajorRecord" GUID="c1955ace-52b8-40df-8356-8c42d9dc37eb" ID="21">
+  <Object name="Hair" objType="Record" recordType="HAIR" baseClass="Bethesda.MajorRecord" GUID="c1955ace-52b8-40df-8356-8c42d9dc37eb" ID="21">
+    <Interface>INamed</Interface>
     <Fields>
+      <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
       <String name="Icon" recordType="ICON" hasBeenSet="True" />
       <Enum name="Flags" recordType="DATA" enumName="Hair.HairFlag" byteLength="1" />

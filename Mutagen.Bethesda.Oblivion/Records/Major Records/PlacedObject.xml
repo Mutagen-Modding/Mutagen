@@ -49,6 +49,7 @@
     </Fields>
   </Object>
   <Object name="MapMarker" objType="Subrecord" GUID="96e2692c-898d-48c5-acd1-fbbee402a4f9" ID="126">
+    <Interface>INamed</Interface>
     <Fields>
       <Enum name="Flags" recordType="FNAM" enumName="MapMarker.Flag" byteLength="1" />
       <String name="Name" recordType="FULL" />

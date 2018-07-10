@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptEffect,
         ILoquiObject<ScriptEffect>,
         ILoquiObjectSetter,
+        INamed,
         IPropertySupporter<MagicSchool>,
         IPropertySupporter<ScriptEffect.Flag>,
         IPropertySupporter<String>,
