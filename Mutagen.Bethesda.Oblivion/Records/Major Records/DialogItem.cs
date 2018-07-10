@@ -25,25 +25,10 @@ namespace Mutagen.Bethesda.Oblivion
             RunForRumors = 0x040
         }
 
-        partial void CustomCtor()
-        {
-            this.CompiledScript_Property.Subscribe(
-                (change) =>
-                {
-                    this.MetadataSummary.CompiledSizeInternal = change.New.Length;
-                },
-                cmds: NotifyingSubscribeParameters.NoFire);
-        }
-
         private readonly static RecordTypeConverter conditionConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 DialogItem_Registration.CTDA_HEADER,
                 new RecordType("CTDT")));
-
-        private readonly static RecordTypeConverter metaConverter = new RecordTypeConverter(
-            new KeyValuePair<RecordType, RecordType>(
-                new RecordType("SCHR"),
-                new RecordType("SCHD")));
         
         static partial void FillBinary_ConditionsOld_Custom(MutagenFrame frame, DialogItem item, ErrorMaskBuilder errorMask)
         {
@@ -70,24 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         static partial void WriteBinary_ConditionsOld_Custom(MutagenWriter writer, DialogItem item, ErrorMaskBuilder errorMask)
-        {
-        }
-
-        static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, DialogItem item, ErrorMaskBuilder errorMask)
-        {
-            var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
-                frame: frame,
-                errorMask: errorMask,
-                recordTypeConverter: metaConverter);
-            item.MetadataSummary.CopyFieldsFrom(
-                rhs: tmpMetadataSummary,
-                def: null,
-                cmds: null,
-                copyMask: null,
-                errorMask: errorMask);
-        }
-
-        static partial void WriteBinary_MetadataSummaryOld_Custom(MutagenWriter writer, DialogItem item, ErrorMaskBuilder errorMask)
         {
         }
     }

@@ -33,11 +33,7 @@
       <List name="LinkFrom">
         <FormIDLink recordType="TCLF" refName="DialogTopic" />
       </List>
-      <RefDirect name="MetadataSummary" refName="ScriptMetaSummary" nullable="Singleton" />
-      <CustomLogic name="MetadataSummaryOld" recordType="SCHD"/>
-      <ByteArray name="CompiledScript" recordType="SCDA" />
-      <String name="SourceCode" recordType="SCTX" nullTerminate="false" />
-      <RefList name="References" refName="ScriptObjectReference" />
+      <RefDirect name="Script" refName="ScriptFields" nullable="Singleton" />
     </Fields>
   </Object>
   <Object name="DialogResponse" objType="Subrecord" GUID="d8438f70-ccc0-4bc8-876d-11134cdabd97" ID="150">

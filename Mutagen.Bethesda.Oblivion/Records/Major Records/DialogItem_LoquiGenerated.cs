@@ -35,9 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter,
         IPropertySupporter<DialogType>,
         IPropertySupporter<DialogItem.Flag>,
-        IPropertySupporter<ScriptMetaSummary>,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<String>,
+        IPropertySupporter<ScriptFields>,
         IEquatable<DialogItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -47,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public DialogItem()
         {
-            _hasBeenSetTracker[(int)DialogItem_FieldIndex.MetadataSummary] = true;
+            _hasBeenSetTracker[(int)DialogItem_FieldIndex.Script] = true;
             CustomCtor();
         }
         partial void CustomCtor();
@@ -253,22 +251,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-        #region MetadataSummary
-        protected readonly ScriptMetaSummary _MetadataSummary = new ScriptMetaSummary();
-        protected PropertyForwarder<DialogItem, ScriptMetaSummary> _MetadataSummaryForwarder;
-        public INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property => _MetadataSummaryForwarder ?? (_MetadataSummaryForwarder = new PropertyForwarder<DialogItem, ScriptMetaSummary>(this, (int)DialogItem_FieldIndex.MetadataSummary));
+        #region Script
+        protected readonly ScriptFields _Script = new ScriptFields();
+        protected PropertyForwarder<DialogItem, ScriptFields> _ScriptForwarder;
+        public INotifyingSetItemGetter<ScriptFields> Script_Property => _ScriptForwarder ?? (_ScriptForwarder = new PropertyForwarder<DialogItem, ScriptFields>(this, (int)DialogItem_FieldIndex.Script));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ScriptMetaSummary MetadataSummary
+        public ScriptFields Script
         {
-            get => this._MetadataSummary;
-            protected set => this.SetMetadataSummary(value);
+            get => this._Script;
+            protected set => this.SetScript(value);
         }
-        protected void SetMetadataSummary(
-            ScriptMetaSummary item,
+        protected void SetScript(
+            ScriptFields item,
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            this._MetadataSummary.CopyFieldsFrom(
+            this._Script.CopyFieldsFrom(
                 rhs: item,
                 def: null,
                 cmds: null,
@@ -276,128 +274,13 @@ namespace Mutagen.Bethesda.Oblivion
                 doMasks: false,
                 errorMask: out var errMask);
         }
-        protected void UnsetMetadataSummary()
+        protected void UnsetScript()
         {
-            _hasBeenSetTracker[(int)DialogItem_FieldIndex.MetadataSummary] = false;
-            MetadataSummary = default(ScriptMetaSummary);
+            _hasBeenSetTracker[(int)DialogItem_FieldIndex.Script] = false;
+            Script = default(ScriptFields);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<ScriptMetaSummary> IDialogItemGetter.MetadataSummary_Property => this.MetadataSummary_Property;
-        #endregion
-        #region CompiledScript
-        protected Byte[] _CompiledScript;
-        protected PropertyForwarder<DialogItem, Byte[]> _CompiledScriptForwarder;
-        public INotifyingSetItem<Byte[]> CompiledScript_Property => _CompiledScriptForwarder ?? (_CompiledScriptForwarder = new PropertyForwarder<DialogItem, Byte[]>(this, (int)DialogItem_FieldIndex.CompiledScript));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Byte[] CompiledScript
-        {
-            get => this._CompiledScript;
-            set => this.SetCompiledScript(value);
-        }
-        protected void SetCompiledScript(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogItem_FieldIndex.CompiledScript];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(CompiledScript, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogItem_FieldIndex.CompiledScript] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = CompiledScript;
-                _CompiledScript = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)DialogItem_FieldIndex.CompiledScript,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _CompiledScript = item;
-            }
-        }
-        protected void UnsetCompiledScript()
-        {
-            SetCompiledScript(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IDialogItem.CompiledScript_Property => this.CompiledScript_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IDialogItemGetter.CompiledScript_Property => this.CompiledScript_Property;
-        #endregion
-        #region SourceCode
-        protected String _SourceCode;
-        protected PropertyForwarder<DialogItem, String> _SourceCodeForwarder;
-        public INotifyingSetItem<String> SourceCode_Property => _SourceCodeForwarder ?? (_SourceCodeForwarder = new PropertyForwarder<DialogItem, String>(this, (int)DialogItem_FieldIndex.SourceCode));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public String SourceCode
-        {
-            get => this._SourceCode;
-            set => this.SetSourceCode(value);
-        }
-        protected void SetSourceCode(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogItem_FieldIndex.SourceCode];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SourceCode == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogItem_FieldIndex.SourceCode] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = SourceCode;
-                _SourceCode = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)DialogItem_FieldIndex.SourceCode,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SourceCode = item;
-            }
-        }
-        protected void UnsetSourceCode()
-        {
-            _hasBeenSetTracker[(int)DialogItem_FieldIndex.SourceCode] = false;
-            SourceCode = default(String);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IDialogItem.SourceCode_Property => this.SourceCode_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IDialogItemGetter.SourceCode_Property => this.SourceCode_Property;
-        #endregion
-        #region References
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<ScriptObjectReference> _References = new NotifyingList<ScriptObjectReference>();
-        public INotifyingList<ScriptObjectReference> References => _References;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ScriptObjectReference> ReferencesEnumerable
-        {
-            get => _References;
-            set => _References.SetTo(value);
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<ScriptObjectReference> IDialogItem.References => _References;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<ScriptObjectReference> IDialogItemGetter.References => _References;
-        #endregion
-
+        INotifyingSetItemGetter<ScriptFields> IDialogItemGetter.Script_Property => this.Script_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -495,25 +378,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.LinkFrom.SequenceEqual(rhs.LinkFrom)) return false;
             }
-            if (MetadataSummary_Property.HasBeenSet != rhs.MetadataSummary_Property.HasBeenSet) return false;
-            if (MetadataSummary_Property.HasBeenSet)
+            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (Script_Property.HasBeenSet)
             {
-                if (!object.Equals(this.MetadataSummary, rhs.MetadataSummary)) return false;
-            }
-            if (CompiledScript_Property.HasBeenSet != rhs.CompiledScript_Property.HasBeenSet) return false;
-            if (CompiledScript_Property.HasBeenSet)
-            {
-                if (!this.CompiledScript.EqualsFast(rhs.CompiledScript)) return false;
-            }
-            if (SourceCode_Property.HasBeenSet != rhs.SourceCode_Property.HasBeenSet) return false;
-            if (SourceCode_Property.HasBeenSet)
-            {
-                if (!object.Equals(this.SourceCode, rhs.SourceCode)) return false;
-            }
-            if (References.HasBeenSet != rhs.References.HasBeenSet) return false;
-            if (References.HasBeenSet)
-            {
-                if (!this.References.SequenceEqual(rhs.References)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
             }
             return true;
         }
@@ -551,21 +419,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(LinkFrom).CombineHashCode(ret);
             }
-            if (MetadataSummary_Property.HasBeenSet)
+            if (Script_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(MetadataSummary).CombineHashCode(ret);
-            }
-            if (CompiledScript_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(CompiledScript).CombineHashCode(ret);
-            }
-            if (SourceCode_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(SourceCode).CombineHashCode(ret);
-            }
-            if (References.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(References).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -946,12 +802,12 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: FormIDXmlTranslation.Instance.Parse);
                     break;
-                case "MetadataSummary":
+                case "Script":
                     try
                     {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.MetadataSummary);
-                        item.MetadataSummary.CopyFieldsFrom(
-                            rhs: ScriptMetaSummary.Create_XML(
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Script);
+                        item.Script.CopyFieldsFrom(
+                            rhs: ScriptFields.Create_XML(
                                 root: root,
                                 errorMask: errorMask)
                             ,
@@ -969,66 +825,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PopIndex();
                     }
-                    break;
-                case "CompiledScript":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.CompiledScript);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            root: root,
-                            item: out Byte[] CompiledScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.CompiledScript = CompiledScriptParse;
-                        }
-                        else
-                        {
-                            item.UnsetCompiledScript();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SourceCode":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.SourceCode);
-                        if (StringXmlTranslation.Instance.Parse(
-                            root: root,
-                            item: out String SourceCodeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SourceCode = SourceCodeParse;
-                        }
-                        else
-                        {
-                            item.UnsetSourceCode();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "References":
-                    ListXmlTranslation<ScriptObjectReference>.Instance.ParseInto(
-                        root: root,
-                        item: item.References,
-                        fieldIndex: (int)DialogItem_FieldIndex.References,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<ScriptObjectReference>.Instance.Parse);
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -1048,10 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case DialogItem_FieldIndex.Responses:
                 case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.MetadataSummary:
-                case DialogItem_FieldIndex.CompiledScript:
-                case DialogItem_FieldIndex.SourceCode:
-                case DialogItem_FieldIndex.References:
+                case DialogItem_FieldIndex.Script:
                     return _hasBeenSetTracker[index];
                 case DialogItem_FieldIndex.Quest:
                     return Quest_Property.HasBeenSet;
@@ -1339,102 +1132,102 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region IPropertySupporter ScriptMetaSummary
-        protected ObjectCentralizationSubscriptions<ScriptMetaSummary> _ScriptMetaSummary_subscriptions;
-        ScriptMetaSummary IPropertySupporter<ScriptMetaSummary>.Get(int index)
+        #region IPropertySupporter ScriptFields
+        protected ObjectCentralizationSubscriptions<ScriptFields> _ScriptFields_subscriptions;
+        ScriptFields IPropertySupporter<ScriptFields>.Get(int index)
         {
-            return GetScriptMetaSummary(index: index);
+            return GetScriptFields(index: index);
         }
 
-        protected ScriptMetaSummary GetScriptMetaSummary(int index)
+        protected ScriptFields GetScriptFields(int index)
         {
             switch ((DialogItem_FieldIndex)index)
             {
-                case DialogItem_FieldIndex.MetadataSummary:
-                    return MetadataSummary;
+                case DialogItem_FieldIndex.Script:
+                    return Script;
                 default:
-                    throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
+                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
             }
         }
 
-        void IPropertySupporter<ScriptMetaSummary>.Set(
+        void IPropertySupporter<ScriptFields>.Set(
             int index,
-            ScriptMetaSummary item,
+            ScriptFields item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            SetScriptMetaSummary(
+            SetScriptFields(
                 index: index,
                 item: item,
                 hasBeenSet: hasBeenSet,
                 cmds: cmds);
         }
 
-        protected void SetScriptMetaSummary(
+        protected void SetScriptFields(
             int index,
-            ScriptMetaSummary item,
+            ScriptFields item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
             switch ((DialogItem_FieldIndex)index)
             {
-                case DialogItem_FieldIndex.MetadataSummary:
-                    SetMetadataSummary(item, hasBeenSet, cmds);
+                case DialogItem_FieldIndex.Script:
+                    SetScript(item, hasBeenSet, cmds);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
+                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
             }
         }
 
-        bool IPropertySupporter<ScriptMetaSummary>.GetHasBeenSet(int index)
+        bool IPropertySupporter<ScriptFields>.GetHasBeenSet(int index)
         {
             return this.GetHasBeenSet(index: index);
         }
 
-        void IPropertySupporter<ScriptMetaSummary>.SetHasBeenSet(
+        void IPropertySupporter<ScriptFields>.SetHasBeenSet(
             int index,
             bool on)
         {
             _hasBeenSetTracker[index] = on;
         }
 
-        void IPropertySupporter<ScriptMetaSummary>.Unset(
+        void IPropertySupporter<ScriptFields>.Unset(
             int index,
             NotifyingUnsetParameters cmds)
         {
-            UnsetScriptMetaSummary(
+            UnsetScriptFields(
                 index: index,
                 cmds: cmds);
         }
 
-        protected void UnsetScriptMetaSummary(
+        protected void UnsetScriptFields(
             int index,
             NotifyingUnsetParameters cmds)
         {
             switch ((DialogItem_FieldIndex)index)
             {
-                case DialogItem_FieldIndex.MetadataSummary:
-                    SetMetadataSummary(
-                        item: default(ScriptMetaSummary),
+                case DialogItem_FieldIndex.Script:
+                    SetScript(
+                        item: default(ScriptFields),
                         hasBeenSet: false);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
+                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
             }
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<ScriptMetaSummary>.Subscribe(
+        void IPropertySupporter<ScriptFields>.Subscribe(
             int index,
             object owner,
-            NotifyingSetItemInternalCallback<ScriptMetaSummary> callback,
+            NotifyingSetItemInternalCallback<ScriptFields> callback,
             NotifyingSubscribeParameters cmds)
         {
-            if (_ScriptMetaSummary_subscriptions == null)
+            if (_ScriptFields_subscriptions == null)
             {
-                _ScriptMetaSummary_subscriptions = new ObjectCentralizationSubscriptions<ScriptMetaSummary>();
+                _ScriptFields_subscriptions = new ObjectCentralizationSubscriptions<ScriptFields>();
             }
-            _ScriptMetaSummary_subscriptions.Subscribe(
+            _ScriptFields_subscriptions.Subscribe(
                 index: index,
                 owner: owner,
                 prop: this,
@@ -1443,313 +1236,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<ScriptMetaSummary>.Unsubscribe(
+        void IPropertySupporter<ScriptFields>.Unsubscribe(
             int index,
             object owner)
         {
-            _ScriptMetaSummary_subscriptions?.Unsubscribe(index, owner);
+            _ScriptFields_subscriptions?.Unsubscribe(index, owner);
         }
 
-        void IPropertySupporter<ScriptMetaSummary>.SetCurrentAsDefault(int index)
+        void IPropertySupporter<ScriptFields>.SetCurrentAsDefault(int index)
         {
             throw new NotImplementedException();
         }
 
-        ScriptMetaSummary IPropertySupporter<ScriptMetaSummary>.DefaultValue(int index)
+        ScriptFields IPropertySupporter<ScriptFields>.DefaultValue(int index)
         {
-            return DefaultValueScriptMetaSummary(index: index);
+            return DefaultValueScriptFields(index: index);
         }
 
-        protected ScriptMetaSummary DefaultValueScriptMetaSummary(int index)
+        protected ScriptFields DefaultValueScriptFields(int index)
         {
             switch ((DialogItem_FieldIndex)index)
             {
-                case DialogItem_FieldIndex.MetadataSummary:
-                    return default(ScriptMetaSummary);
+                case DialogItem_FieldIndex.Script:
+                    return default(ScriptFields);
                 default:
-                    throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected override Byte[] GetByteArr(int index)
-        {
-            switch ((DialogItem_FieldIndex)index)
-            {
-                case DialogItem_FieldIndex.CompiledScript:
-                    return CompiledScript;
-                default:
-                    return base.GetByteArr(index: index);
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((DialogItem_FieldIndex)index)
-            {
-                case DialogItem_FieldIndex.CompiledScript:
-                    SetCompiledScript(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetByteArr(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((DialogItem_FieldIndex)index)
-            {
-                case DialogItem_FieldIndex.CompiledScript:
-                    SetCompiledScript(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetByteArr(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected override Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((DialogItem_FieldIndex)index)
-            {
-                case DialogItem_FieldIndex.CompiledScript:
-                    return default(Byte[]);
-                default:
-                    return base.DefaultValueByteArr(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((DialogItem_FieldIndex)index)
-            {
-                case DialogItem_FieldIndex.SourceCode:
-                    return SourceCode;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((DialogItem_FieldIndex)index)
-            {
-                case DialogItem_FieldIndex.SourceCode:
-                    SetSourceCode(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((DialogItem_FieldIndex)index)
-            {
-                case DialogItem_FieldIndex.SourceCode:
-                    SetSourceCode(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((DialogItem_FieldIndex)index)
-            {
-                case DialogItem_FieldIndex.SourceCode:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
+                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
             }
         }
 
@@ -1772,10 +1283,6 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return Quest_Property;
             yield return PreviousTopic_Property;
-            foreach (var item in References.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
             yield break;
         }
         #endregion
@@ -1983,27 +1490,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_MetadataSummaryOld_Custom(
-            MutagenFrame frame,
-            DialogItem item,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_MetadataSummaryOld_Custom(
-            MutagenWriter writer,
-            DialogItem item,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_MetadataSummaryOld(
-            MutagenWriter writer,
-            DialogItem item,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_MetadataSummaryOld_Custom(
-                writer: writer,
-                item: item,
-                errorMask: errorMask);
-        }
-
         protected static void Fill_Binary_Structs(
             DialogItem item,
             MutagenFrame frame,
@@ -2162,94 +1648,26 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 case 0x52484353: // SCHR
-                    using (errorMask.PushIndex((int)DialogItem_FieldIndex.MetadataSummary))
+                case 0x41444353: // SCDA
+                case 0x58544353: // SCTX
+                case 0x44534C53: // SLSD
+                case 0x52564353: // SCVR
+                case 0x56524353: // SCRV
+                case 0x4F524353: // SCRO
+                    using (errorMask.PushIndex((int)DialogItem_FieldIndex.Script))
                     {
-                        var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
+                        var tmpScript = ScriptFields.Create_Binary(
                             frame: frame,
                             errorMask: errorMask,
                             recordTypeConverter: null);
-                        item.MetadataSummary.CopyFieldsFrom(
-                            rhs: tmpMetadataSummary,
+                        item.Script.CopyFieldsFrom(
+                            rhs: tmpScript,
                             def: null,
                             cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.MetadataSummary);
-                case 0x44484353: // SCHD
-                    using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
-                    {
-                        FillBinary_MetadataSummaryOld_Custom(
-                            frame: subFrame,
-                            item: item,
-                            errorMask: errorMask);
-                    }
-                    return TryGet<int?>.Succeed(null);
-                case 0x41444353: // SCDA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.CompiledScript);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] CompiledScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.CompiledScript = CompiledScriptParse;
-                        }
-                        else
-                        {
-                            item.UnsetCompiledScript();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.CompiledScript);
-                case 0x58544353: // SCTX
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.SourceCode);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String SourceCodeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SourceCode = SourceCodeParse;
-                        }
-                        else
-                        {
-                            item.UnsetSourceCode();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.SourceCode);
-                case 0x4F524353: // SCRO
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectReference>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: DialogItem_Registration.SCRO_HEADER,
-                        item: item.References,
-                        fieldIndex: (int)DialogItem_FieldIndex.References,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.References);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
@@ -2404,21 +1822,8 @@ namespace Mutagen.Bethesda.Oblivion
                 case DialogItem_FieldIndex.LinkFrom:
                     this._LinkFrom.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)obj, cmds);
                     break;
-                case DialogItem_FieldIndex.MetadataSummary:
-                    this.MetadataSummary.CopyFieldsFrom(rhs: (ScriptMetaSummary)obj);
-                    break;
-                case DialogItem_FieldIndex.CompiledScript:
-                    this.SetCompiledScript(
-                        (Byte[])obj,
-                        cmds: cmds);
-                    break;
-                case DialogItem_FieldIndex.SourceCode:
-                    this.SetSourceCode(
-                        (String)obj,
-                        cmds: cmds);
-                    break;
-                case DialogItem_FieldIndex.References:
-                    this._References.SetTo((IEnumerable<ScriptObjectReference>)obj, cmds);
+                case DialogItem_FieldIndex.Script:
+                    this.Script.CopyFieldsFrom(rhs: (ScriptFields)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -2486,21 +1891,8 @@ namespace Mutagen.Bethesda.Oblivion
                 case DialogItem_FieldIndex.LinkFrom:
                     obj._LinkFrom.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)pair.Value, null);
                     break;
-                case DialogItem_FieldIndex.MetadataSummary:
-                    obj.MetadataSummary.CopyFieldsFrom(rhs: (ScriptMetaSummary)pair.Value);
-                    break;
-                case DialogItem_FieldIndex.CompiledScript:
-                    obj.SetCompiledScript(
-                        (Byte[])pair.Value,
-                        cmds: null);
-                    break;
-                case DialogItem_FieldIndex.SourceCode:
-                    obj.SetSourceCode(
-                        (String)pair.Value,
-                        cmds: null);
-                    break;
-                case DialogItem_FieldIndex.References:
-                    obj._References.SetTo((IEnumerable<ScriptObjectReference>)pair.Value, null);
+                case DialogItem_FieldIndex.Script:
+                    obj.Script.CopyFieldsFrom(rhs: (ScriptFields)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2530,13 +1922,6 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<Condition> Conditions { get; }
         new INotifyingList<FormIDSetLink<DialogTopic>> Choices { get; }
         new INotifyingList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
-        new Byte[] CompiledScript { get; set; }
-        new INotifyingSetItem<Byte[]> CompiledScript_Property { get; }
-
-        new String SourceCode { get; set; }
-        new INotifyingSetItem<String> SourceCode_Property { get; }
-
-        new INotifyingList<ScriptObjectReference> References { get; }
     }
 
     public partial interface IDialogItemGetter : IMajorRecordGetter
@@ -2576,23 +1961,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region LinkFrom
         INotifyingListGetter<FormIDSetLink<DialogTopic>> LinkFrom { get; }
         #endregion
-        #region MetadataSummary
-        ScriptMetaSummary MetadataSummary { get; }
-        INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property { get; }
+        #region Script
+        ScriptFields Script { get; }
+        INotifyingSetItemGetter<ScriptFields> Script_Property { get; }
 
-        #endregion
-        #region CompiledScript
-        Byte[] CompiledScript { get; }
-        INotifyingSetItemGetter<Byte[]> CompiledScript_Property { get; }
-
-        #endregion
-        #region SourceCode
-        String SourceCode { get; }
-        INotifyingSetItemGetter<String> SourceCode_Property { get; }
-
-        #endregion
-        #region References
-        INotifyingListGetter<ScriptObjectReference> References { get; }
         #endregion
 
     }
@@ -2620,10 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Conditions = 11,
         Choices = 12,
         LinkFrom = 13,
-        MetadataSummary = 14,
-        CompiledScript = 15,
-        SourceCode = 16,
-        References = 17,
+        Script = 14,
     }
     #endregion
 
@@ -2641,9 +2010,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "2d9149e0-aa5e-4b4e-8bef-93b32f602f3b";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(DialogItem_Mask<>);
 
@@ -2689,14 +2058,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)DialogItem_FieldIndex.Choices;
                 case "LINKFROM":
                     return (ushort)DialogItem_FieldIndex.LinkFrom;
-                case "METADATASUMMARY":
-                    return (ushort)DialogItem_FieldIndex.MetadataSummary;
-                case "COMPILEDSCRIPT":
-                    return (ushort)DialogItem_FieldIndex.CompiledScript;
-                case "SOURCECODE":
-                    return (ushort)DialogItem_FieldIndex.SourceCode;
-                case "REFERENCES":
-                    return (ushort)DialogItem_FieldIndex.References;
+                case "SCRIPT":
+                    return (ushort)DialogItem_FieldIndex.Script;
                 default:
                     return null;
             }
@@ -2712,15 +2075,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Conditions:
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.References:
                     return true;
                 case DialogItem_FieldIndex.DialogType:
                 case DialogItem_FieldIndex.Flags:
                 case DialogItem_FieldIndex.Quest:
                 case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.MetadataSummary:
-                case DialogItem_FieldIndex.CompiledScript:
-                case DialogItem_FieldIndex.SourceCode:
+                case DialogItem_FieldIndex.Script:
                     return false;
                 default:
                     return MajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2734,8 +2094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case DialogItem_FieldIndex.Responses:
                 case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.MetadataSummary:
-                case DialogItem_FieldIndex.References:
+                case DialogItem_FieldIndex.Script:
                     return true;
                 case DialogItem_FieldIndex.DialogType:
                 case DialogItem_FieldIndex.Flags:
@@ -2744,8 +2103,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Topics:
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.CompiledScript:
-                case DialogItem_FieldIndex.SourceCode:
                     return false;
                 default:
                     return MajorRecord_Registration.GetNthIsLoqui(index);
@@ -2757,7 +2114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
             switch (enu)
             {
-                case DialogItem_FieldIndex.MetadataSummary:
+                case DialogItem_FieldIndex.Script:
                     return true;
                 case DialogItem_FieldIndex.DialogType:
                 case DialogItem_FieldIndex.Flags:
@@ -2768,9 +2125,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Conditions:
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.CompiledScript:
-                case DialogItem_FieldIndex.SourceCode:
-                case DialogItem_FieldIndex.References:
                     return false;
                 default:
                     return MajorRecord_Registration.GetNthIsSingleton(index);
@@ -2800,14 +2154,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Choices";
                 case DialogItem_FieldIndex.LinkFrom:
                     return "LinkFrom";
-                case DialogItem_FieldIndex.MetadataSummary:
-                    return "MetadataSummary";
-                case DialogItem_FieldIndex.CompiledScript:
-                    return "CompiledScript";
-                case DialogItem_FieldIndex.SourceCode:
-                    return "SourceCode";
-                case DialogItem_FieldIndex.References:
-                    return "References";
+                case DialogItem_FieldIndex.Script:
+                    return "Script";
                 default:
                     return MajorRecord_Registration.GetNthName(index);
             }
@@ -2827,10 +2175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Conditions:
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.MetadataSummary:
-                case DialogItem_FieldIndex.CompiledScript:
-                case DialogItem_FieldIndex.SourceCode:
-                case DialogItem_FieldIndex.References:
+                case DialogItem_FieldIndex.Script:
                     return false;
                 default:
                     return MajorRecord_Registration.IsNthDerivative(index);
@@ -2842,7 +2187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
             switch (enu)
             {
-                case DialogItem_FieldIndex.MetadataSummary:
+                case DialogItem_FieldIndex.Script:
                     return true;
                 case DialogItem_FieldIndex.DialogType:
                 case DialogItem_FieldIndex.Flags:
@@ -2853,9 +2198,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Conditions:
                 case DialogItem_FieldIndex.Choices:
                 case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.CompiledScript:
-                case DialogItem_FieldIndex.SourceCode:
-                case DialogItem_FieldIndex.References:
                     return false;
                 default:
                     return MajorRecord_Registration.IsProtected(index);
@@ -2885,14 +2227,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(NotifyingList<FormIDSetLink<DialogTopic>>);
                 case DialogItem_FieldIndex.LinkFrom:
                     return typeof(NotifyingList<FormIDSetLink<DialogTopic>>);
-                case DialogItem_FieldIndex.MetadataSummary:
-                    return typeof(ScriptMetaSummary);
-                case DialogItem_FieldIndex.CompiledScript:
-                    return typeof(Byte[]);
-                case DialogItem_FieldIndex.SourceCode:
-                    return typeof(String);
-                case DialogItem_FieldIndex.References:
-                    return typeof(NotifyingList<ScriptObjectReference>);
+                case DialogItem_FieldIndex.Script:
+                    return typeof(ScriptFields);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
@@ -2909,13 +2245,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TCLT_HEADER = new RecordType("TCLT");
         public static readonly RecordType TCLF_HEADER = new RecordType("TCLF");
         public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
         public static readonly RecordType SCDA_HEADER = new RecordType("SCDA");
         public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
+        public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
+        public static readonly RecordType SCVR_HEADER = new RecordType("SCVR");
+        public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
         public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = INFO_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 11;
+        public const int NumTypedFields = 8;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -3177,93 +2515,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask.PopIndex();
                 }
             }
-            if (copyMask?.MetadataSummary.Overall ?? true)
+            if (copyMask?.Script.Overall ?? true)
             {
-                errorMask.PushIndex((int)DialogItem_FieldIndex.MetadataSummary);
+                errorMask.PushIndex((int)DialogItem_FieldIndex.Script);
                 try
                 {
-                    ScriptMetaSummaryCommon.CopyFieldsFrom(
-                        item: item.MetadataSummary,
-                        rhs: rhs.MetadataSummary,
-                        def: def?.MetadataSummary,
+                    ScriptFieldsCommon.CopyFieldsFrom(
+                        item: item.Script,
+                        rhs: rhs.Script,
+                        def: def?.Script,
                         errorMask: errorMask,
-                        copyMask: copyMask?.MetadataSummary.Specific,
+                        copyMask: copyMask?.Script.Specific,
                         cmds: cmds);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask.PopIndex();
-                }
-            }
-            if (copyMask?.CompiledScript ?? true)
-            {
-                errorMask.PushIndex((int)DialogItem_FieldIndex.CompiledScript);
-                try
-                {
-                    item.CompiledScript_Property.SetToWithDefault(
-                        rhs: rhs.CompiledScript_Property,
-                        def: def?.CompiledScript_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask.PopIndex();
-                }
-            }
-            if (copyMask?.SourceCode ?? true)
-            {
-                errorMask.PushIndex((int)DialogItem_FieldIndex.SourceCode);
-                try
-                {
-                    item.SourceCode_Property.SetToWithDefault(
-                        rhs: rhs.SourceCode_Property,
-                        def: def?.SourceCode_Property);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask.PopIndex();
-                }
-            }
-            if (copyMask?.References.Overall != CopyOption.Skip)
-            {
-                errorMask.PushIndex((int)DialogItem_FieldIndex.References);
-                try
-                {
-                    item.References.SetToWithDefault(
-                        rhs: rhs.References,
-                        def: def?.References,
-                        cmds: cmds,
-                        converter: (r, d) =>
-                        {
-                            switch (copyMask?.References.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(ScriptObjectReference);
-                                    return ScriptObjectReference.Copy(
-                                        r,
-                                        copyMask?.References?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.References.Overall}. Cannot execute copy.");
-                            }
-                        }
-                        );
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3292,7 +2555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Flags:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case DialogItem_FieldIndex.MetadataSummary:
+                case DialogItem_FieldIndex.Script:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
                 case DialogItem_FieldIndex.Quest:
                     obj.Quest_Property.HasBeenSet = on;
@@ -3314,15 +2577,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
                     obj.LinkFrom.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.CompiledScript:
-                    obj.CompiledScript_Property.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.SourceCode:
-                    obj.SourceCode_Property.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.References:
-                    obj.References.HasBeenSet = on;
                     break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -3365,17 +2619,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.LinkFrom:
                     obj.LinkFrom.Unset(cmds);
                     break;
-                case DialogItem_FieldIndex.MetadataSummary:
+                case DialogItem_FieldIndex.Script:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
-                case DialogItem_FieldIndex.CompiledScript:
-                    obj.CompiledScript_Property.Unset(cmds);
-                    break;
-                case DialogItem_FieldIndex.SourceCode:
-                    obj.SourceCode_Property.Unset(cmds);
-                    break;
-                case DialogItem_FieldIndex.References:
-                    obj.References.Unset(cmds);
-                    break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -3406,14 +2651,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Choices.HasBeenSet;
                 case DialogItem_FieldIndex.LinkFrom:
                     return obj.LinkFrom.HasBeenSet;
-                case DialogItem_FieldIndex.MetadataSummary:
-                    return obj.MetadataSummary_Property.HasBeenSet;
-                case DialogItem_FieldIndex.CompiledScript:
-                    return obj.CompiledScript_Property.HasBeenSet;
-                case DialogItem_FieldIndex.SourceCode:
-                    return obj.SourceCode_Property.HasBeenSet;
-                case DialogItem_FieldIndex.References:
-                    return obj.References.HasBeenSet;
+                case DialogItem_FieldIndex.Script:
+                    return obj.Script_Property.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -3444,14 +2683,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Choices;
                 case DialogItem_FieldIndex.LinkFrom:
                     return obj.LinkFrom;
-                case DialogItem_FieldIndex.MetadataSummary:
-                    return obj.MetadataSummary;
-                case DialogItem_FieldIndex.CompiledScript:
-                    return obj.CompiledScript;
-                case DialogItem_FieldIndex.SourceCode:
-                    return obj.SourceCode;
-                case DialogItem_FieldIndex.References:
-                    return obj.References;
+                case DialogItem_FieldIndex.Script:
+                    return obj.Script;
                 default:
                     return MajorRecordCommon.GetNthObject(index, obj);
             }
@@ -3470,9 +2703,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Conditions.Unset(cmds.ToUnsetParams());
             item.Choices.Unset(cmds.ToUnsetParams());
             item.LinkFrom.Unset(cmds.ToUnsetParams());
-            item.CompiledScript_Property.Unset(cmds.ToUnsetParams());
-            item.SourceCode_Property.Unset(cmds.ToUnsetParams());
-            item.References.Unset(cmds.ToUnsetParams());
         }
 
         public static DialogItem_Mask<bool> GetEqualsMask(
@@ -3601,34 +2831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.LinkFrom = new MaskItem<bool, IEnumerable<bool>>();
                 ret.LinkFrom.Overall = false;
             }
-            ret.MetadataSummary = item.MetadataSummary_Property.LoquiEqualsHelper(rhs.MetadataSummary_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.CompiledScript = item.CompiledScript_Property.Equals(rhs.CompiledScript_Property, (l, r) => l.EqualsFast(r));
-            ret.SourceCode = item.SourceCode_Property.Equals(rhs.SourceCode_Property, (l, r) => object.Equals(l, r));
-            if (item.References.HasBeenSet == rhs.References.HasBeenSet)
-            {
-                if (item.References.HasBeenSet)
-                {
-                    ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptObjectReference_Mask<bool>>>>();
-                    ret.References.Specific = item.References.SelectAgainst<ScriptObjectReference, MaskItem<bool, ScriptObjectReference_Mask<bool>>>(rhs.References, ((l, r) =>
-                    {
-                        MaskItem<bool, ScriptObjectReference_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.References.Overall);
-                    ret.References.Overall = ret.References.Overall && ret.References.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptObjectReference_Mask<bool>>>>();
-                    ret.References.Overall = true;
-                }
-            }
-            else
-            {
-                ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptObjectReference_Mask<bool>>>>();
-                ret.References.Overall = false;
-            }
+            ret.Script = item.Script_Property.LoquiEqualsHelper(rhs.Script_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -3765,35 +2968,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
-                if (printMask?.MetadataSummary?.Overall ?? true)
+                if (printMask?.Script?.Overall ?? true)
                 {
-                    item.MetadataSummary?.ToString(fg, "MetadataSummary");
-                }
-                if (printMask?.CompiledScript ?? true)
-                {
-                    fg.AppendLine($"CompiledScript => {item.CompiledScript}");
-                }
-                if (printMask?.SourceCode ?? true)
-                {
-                    fg.AppendLine($"SourceCode => {item.SourceCode}");
-                }
-                if (printMask?.References?.Overall ?? true)
-                {
-                    fg.AppendLine("References =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.References)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
+                    item.Script?.ToString(fg, "Script");
                 }
             }
             fg.AppendLine("]");
@@ -3810,11 +2987,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
             if (checkMask.Choices.Overall.HasValue && checkMask.Choices.Overall.Value != item.Choices.HasBeenSet) return false;
             if (checkMask.LinkFrom.Overall.HasValue && checkMask.LinkFrom.Overall.Value != item.LinkFrom.HasBeenSet) return false;
-            if (checkMask.MetadataSummary.Overall.HasValue && checkMask.MetadataSummary.Overall.Value != item.MetadataSummary_Property.HasBeenSet) return false;
-            if (checkMask.MetadataSummary.Specific != null && (item.MetadataSummary == null || !item.MetadataSummary.HasBeenSet(checkMask.MetadataSummary.Specific))) return false;
-            if (checkMask.CompiledScript.HasValue && checkMask.CompiledScript.Value != item.CompiledScript_Property.HasBeenSet) return false;
-            if (checkMask.SourceCode.HasValue && checkMask.SourceCode.Value != item.SourceCode_Property.HasBeenSet) return false;
-            if (checkMask.References.Overall.HasValue && checkMask.References.Overall.Value != item.References.HasBeenSet) return false;
+            if (checkMask.Script.Overall.HasValue && checkMask.Script.Overall.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.Script.Specific != null && (item.Script == null || !item.Script.HasBeenSet(checkMask.Script.Specific))) return false;
             return true;
         }
 
@@ -3830,10 +3004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Choices = new MaskItem<bool, IEnumerable<bool>>(item.Choices.HasBeenSet, null);
             ret.LinkFrom = new MaskItem<bool, IEnumerable<bool>>(item.LinkFrom.HasBeenSet, null);
-            ret.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(item.MetadataSummary_Property.HasBeenSet, ScriptMetaSummaryCommon.GetHasBeenSetMask(item.MetadataSummary));
-            ret.CompiledScript = item.CompiledScript_Property.HasBeenSet;
-            ret.SourceCode = item.SourceCode_Property.HasBeenSet;
-            ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptObjectReference_Mask<bool>>>>(item.References.HasBeenSet, item.References.Select((i) => new MaskItem<bool, ScriptObjectReference_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Script = new MaskItem<bool, ScriptFields_Mask<bool>>(item.Script_Property.HasBeenSet, ScriptFieldsCommon.GetHasBeenSetMask(item.Script));
             return ret;
         }
 
@@ -4012,50 +3183,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if (item.MetadataSummary_Property.HasBeenSet)
+            if (item.Script_Property.HasBeenSet)
             {
-                LoquiXmlTranslation<ScriptMetaSummary>.Instance.Write(
+                LoquiXmlTranslation<ScriptFields>.Instance.Write(
                     node: elem,
-                    item: item.MetadataSummary_Property,
-                    name: nameof(item.MetadataSummary),
-                    fieldIndex: (int)DialogItem_FieldIndex.MetadataSummary,
+                    item: item.Script_Property,
+                    name: nameof(item.Script),
+                    fieldIndex: (int)DialogItem_FieldIndex.Script,
                     errorMask: errorMask);
-            }
-            if (item.CompiledScript_Property.HasBeenSet)
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.CompiledScript),
-                    item: item.CompiledScript_Property,
-                    fieldIndex: (int)DialogItem_FieldIndex.CompiledScript,
-                    errorMask: errorMask);
-            }
-            if (item.SourceCode_Property.HasBeenSet)
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.SourceCode),
-                    item: item.SourceCode_Property,
-                    fieldIndex: (int)DialogItem_FieldIndex.SourceCode,
-                    errorMask: errorMask);
-            }
-            if (item.References.HasBeenSet)
-            {
-                ListXmlTranslation<ScriptObjectReference>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.References),
-                    item: item.References,
-                    fieldIndex: (int)DialogItem_FieldIndex.References,
-                    errorMask: errorMask,
-                    transl: (XElement subNode, ScriptObjectReference subItem, ErrorMaskBuilder listSubMask) =>
-                    {
-                        LoquiXmlTranslation<ScriptObjectReference>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: "Item",
-                            errorMask: listSubMask);
-                    }
-                    );
             }
         }
         #endregion
@@ -4184,36 +3319,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: DialogItem_Registration.TCLF_HEADER,
                 errorMask: errorMask,
                 transl: FormIDBinaryTranslation.Instance.Write);
-            LoquiBinaryTranslation<ScriptMetaSummary>.Instance.Write(
+            LoquiBinaryTranslation<ScriptFields>.Instance.Write(
                 writer: writer,
-                item: item.MetadataSummary_Property,
-                fieldIndex: (int)DialogItem_FieldIndex.MetadataSummary,
+                item: item.Script_Property,
+                fieldIndex: (int)DialogItem_FieldIndex.Script,
                 errorMask: errorMask);
-            DialogItem.WriteBinary_MetadataSummaryOld(
-                writer: writer,
-                item: item,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.CompiledScript_Property,
-                fieldIndex: (int)DialogItem_FieldIndex.CompiledScript,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.SCDA_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SourceCode_Property,
-                fieldIndex: (int)DialogItem_FieldIndex.SourceCode,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.SCTX_HEADER),
-                nullable: false,
-                nullTerminate: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectReference>.Instance.Write(
-                writer: writer,
-                items: item.References,
-                fieldIndex: (int)DialogItem_FieldIndex.References,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<ScriptObjectReference>.Instance.Write);
         }
 
         #endregion
@@ -4242,10 +3352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Conditions = new MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>>(initialValue, null);
             this.Choices = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.LinkFrom = new MaskItem<T, IEnumerable<T>>(initialValue, null);
-            this.MetadataSummary = new MaskItem<T, ScriptMetaSummary_Mask<T>>(initialValue, new ScriptMetaSummary_Mask<T>(initialValue));
-            this.CompiledScript = initialValue;
-            this.SourceCode = initialValue;
-            this.References = new MaskItem<T, IEnumerable<MaskItem<T, ScriptObjectReference_Mask<T>>>>(initialValue, null);
+            this.Script = new MaskItem<T, ScriptFields_Mask<T>>(initialValue, new ScriptFields_Mask<T>(initialValue));
         }
         #endregion
 
@@ -4259,10 +3366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>> Conditions;
         public MaskItem<T, IEnumerable<T>> Choices;
         public MaskItem<T, IEnumerable<T>> LinkFrom;
-        public MaskItem<T, ScriptMetaSummary_Mask<T>> MetadataSummary { get; set; }
-        public T CompiledScript;
-        public T SourceCode;
-        public MaskItem<T, IEnumerable<MaskItem<T, ScriptObjectReference_Mask<T>>>> References;
+        public MaskItem<T, ScriptFields_Mask<T>> Script { get; set; }
         #endregion
 
         #region Equals
@@ -4285,10 +3389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
             if (!object.Equals(this.Choices, rhs.Choices)) return false;
             if (!object.Equals(this.LinkFrom, rhs.LinkFrom)) return false;
-            if (!object.Equals(this.MetadataSummary, rhs.MetadataSummary)) return false;
-            if (!object.Equals(this.CompiledScript, rhs.CompiledScript)) return false;
-            if (!object.Equals(this.SourceCode, rhs.SourceCode)) return false;
-            if (!object.Equals(this.References, rhs.References)) return false;
+            if (!object.Equals(this.Script, rhs.Script)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -4303,10 +3404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
             ret = ret.CombineHashCode(this.Choices?.GetHashCode());
             ret = ret.CombineHashCode(this.LinkFrom?.GetHashCode());
-            ret = ret.CombineHashCode(this.MetadataSummary?.GetHashCode());
-            ret = ret.CombineHashCode(this.CompiledScript?.GetHashCode());
-            ret = ret.CombineHashCode(this.SourceCode?.GetHashCode());
-            ret = ret.CombineHashCode(this.References?.GetHashCode());
+            ret = ret.CombineHashCode(this.Script?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -4378,24 +3476,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-            if (MetadataSummary != null)
+            if (Script != null)
             {
-                if (!eval(this.MetadataSummary.Overall)) return false;
-                if (this.MetadataSummary.Specific != null && !this.MetadataSummary.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.CompiledScript)) return false;
-            if (!eval(this.SourceCode)) return false;
-            if (this.References != null)
-            {
-                if (!eval(this.References.Overall)) return false;
-                if (this.References.Specific != null)
-                {
-                    foreach (var item in this.References.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
+                if (!eval(this.Script.Overall)) return false;
+                if (this.Script.Specific != null && !this.Script.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -4512,39 +3596,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-            if (this.MetadataSummary != null)
+            if (this.Script != null)
             {
-                obj.MetadataSummary = new MaskItem<R, ScriptMetaSummary_Mask<R>>();
-                obj.MetadataSummary.Overall = eval(this.MetadataSummary.Overall);
-                if (this.MetadataSummary.Specific != null)
+                obj.Script = new MaskItem<R, ScriptFields_Mask<R>>();
+                obj.Script.Overall = eval(this.Script.Overall);
+                if (this.Script.Specific != null)
                 {
-                    obj.MetadataSummary.Specific = this.MetadataSummary.Specific.Translate(eval);
-                }
-            }
-            obj.CompiledScript = eval(this.CompiledScript);
-            obj.SourceCode = eval(this.SourceCode);
-            if (References != null)
-            {
-                obj.References = new MaskItem<R, IEnumerable<MaskItem<R, ScriptObjectReference_Mask<R>>>>();
-                obj.References.Overall = eval(this.References.Overall);
-                if (References.Specific != null)
-                {
-                    List<MaskItem<R, ScriptObjectReference_Mask<R>>> l = new List<MaskItem<R, ScriptObjectReference_Mask<R>>>();
-                    obj.References.Specific = l;
-                    foreach (var item in References.Specific)
-                    {
-                        MaskItem<R, ScriptObjectReference_Mask<R>> mask = default(MaskItem<R, ScriptObjectReference_Mask<R>>);
-                        if (item != null)
-                        {
-                            mask = new MaskItem<R, ScriptObjectReference_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
-                            {
-                                mask.Specific = item.Specific.Translate(eval);
-                            }
-                        }
-                        l.Add(mask);
-                    }
+                    obj.Script.Specific = this.Script.Specific.Translate(eval);
                 }
             }
         }
@@ -4559,7 +3617,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Conditions.Specific = null;
             this.Choices.Specific = null;
             this.LinkFrom.Specific = null;
-            this.References.Specific = null;
         }
         #endregion
 
@@ -4723,42 +3780,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
-                if (printMask?.MetadataSummary?.Overall ?? true)
+                if (printMask?.Script?.Overall ?? true)
                 {
-                    MetadataSummary?.ToString(fg);
-                }
-                if (printMask?.CompiledScript ?? true)
-                {
-                    fg.AppendLine($"CompiledScript => {CompiledScript}");
-                }
-                if (printMask?.SourceCode ?? true)
-                {
-                    fg.AppendLine($"SourceCode => {SourceCode}");
-                }
-                if (printMask?.References?.Overall ?? true)
-                {
-                    fg.AppendLine("References =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (References.Overall != null)
-                        {
-                            fg.AppendLine(References.Overall.ToString());
-                        }
-                        if (References.Specific != null)
-                        {
-                            foreach (var subItem in References.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    subItem?.ToString(fg);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
+                    Script?.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -4779,10 +3803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>> Conditions;
         public MaskItem<Exception, IEnumerable<Exception>> Choices;
         public MaskItem<Exception, IEnumerable<Exception>> LinkFrom;
-        public MaskItem<Exception, ScriptMetaSummary_ErrorMask> MetadataSummary;
-        public Exception CompiledScript;
-        public Exception SourceCode;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptObjectReference_ErrorMask>>> References;
+        public MaskItem<Exception, ScriptFields_ErrorMask> Script;
         #endregion
 
         #region IErrorMask
@@ -4809,14 +3830,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Choices;
                 case DialogItem_FieldIndex.LinkFrom:
                     return LinkFrom;
-                case DialogItem_FieldIndex.MetadataSummary:
-                    return MetadataSummary;
-                case DialogItem_FieldIndex.CompiledScript:
-                    return CompiledScript;
-                case DialogItem_FieldIndex.SourceCode:
-                    return SourceCode;
-                case DialogItem_FieldIndex.References:
-                    return References;
+                case DialogItem_FieldIndex.Script:
+                    return Script;
                 default:
                     return base.GetNthMask(index);
             }
@@ -4854,17 +3869,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.LinkFrom:
                     this.LinkFrom = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
                     break;
-                case DialogItem_FieldIndex.MetadataSummary:
-                    this.MetadataSummary = new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(ex, null);
-                    break;
-                case DialogItem_FieldIndex.CompiledScript:
-                    this.CompiledScript = ex;
-                    break;
-                case DialogItem_FieldIndex.SourceCode:
-                    this.SourceCode = ex;
-                    break;
-                case DialogItem_FieldIndex.References:
-                    this.References = new MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptObjectReference_ErrorMask>>>(ex, null);
+                case DialogItem_FieldIndex.Script:
+                    this.Script = new MaskItem<Exception, ScriptFields_ErrorMask>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -4904,17 +3910,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.LinkFrom:
                     this.LinkFrom = (MaskItem<Exception, IEnumerable<Exception>>)obj;
                     break;
-                case DialogItem_FieldIndex.MetadataSummary:
-                    this.MetadataSummary = (MaskItem<Exception, ScriptMetaSummary_ErrorMask>)obj;
-                    break;
-                case DialogItem_FieldIndex.CompiledScript:
-                    this.CompiledScript = (Exception)obj;
-                    break;
-                case DialogItem_FieldIndex.SourceCode:
-                    this.SourceCode = (Exception)obj;
-                    break;
-                case DialogItem_FieldIndex.References:
-                    this.References = (MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptObjectReference_ErrorMask>>>)obj;
+                case DialogItem_FieldIndex.Script:
+                    this.Script = (MaskItem<Exception, ScriptFields_ErrorMask>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -4934,10 +3931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Conditions != null) return true;
             if (Choices != null) return true;
             if (LinkFrom != null) return true;
-            if (MetadataSummary != null) return true;
-            if (CompiledScript != null) return true;
-            if (SourceCode != null) return true;
-            if (References != null) return true;
+            if (Script != null) return true;
             return false;
         }
         #endregion
@@ -5087,31 +4081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             fg.AppendLine("]");
-            MetadataSummary?.ToString(fg);
-            fg.AppendLine($"CompiledScript => {CompiledScript}");
-            fg.AppendLine($"SourceCode => {SourceCode}");
-            fg.AppendLine("References =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (References.Overall != null)
-                {
-                    fg.AppendLine(References.Overall.ToString());
-                }
-                if (References.Specific != null)
-                {
-                    foreach (var subItem in References.Specific)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg);
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-            }
-            fg.AppendLine("]");
+            Script?.ToString(fg);
         }
         #endregion
 
@@ -5128,10 +4098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(this.Conditions.Overall.Combine(rhs.Conditions.Overall), new List<MaskItem<Exception, Condition_ErrorMask>>(this.Conditions.Specific.And(rhs.Conditions.Specific)));
             ret.Choices = new MaskItem<Exception, IEnumerable<Exception>>(this.Choices.Overall.Combine(rhs.Choices.Overall), new List<Exception>(this.Choices.Specific.And(rhs.Choices.Specific)));
             ret.LinkFrom = new MaskItem<Exception, IEnumerable<Exception>>(this.LinkFrom.Overall.Combine(rhs.LinkFrom.Overall), new List<Exception>(this.LinkFrom.Specific.And(rhs.LinkFrom.Specific)));
-            ret.MetadataSummary = new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(this.MetadataSummary.Overall.Combine(rhs.MetadataSummary.Overall), ((IErrorMask<ScriptMetaSummary_ErrorMask>)this.MetadataSummary.Specific).Combine(rhs.MetadataSummary.Specific));
-            ret.CompiledScript = this.CompiledScript.Combine(rhs.CompiledScript);
-            ret.SourceCode = this.SourceCode.Combine(rhs.SourceCode);
-            ret.References = new MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptObjectReference_ErrorMask>>>(this.References.Overall.Combine(rhs.References.Overall), new List<MaskItem<Exception, ScriptObjectReference_ErrorMask>>(this.References.Specific.And(rhs.References.Specific)));
+            ret.Script = new MaskItem<Exception, ScriptFields_ErrorMask>(this.Script.Overall.Combine(rhs.Script.Overall), ((IErrorMask<ScriptFields_ErrorMask>)this.Script.Specific).Combine(rhs.Script.Specific));
             return ret;
         }
         public static DialogItem_ErrorMask Combine(DialogItem_ErrorMask lhs, DialogItem_ErrorMask rhs)
@@ -5162,10 +4129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Condition_CopyMask> Conditions;
         public CopyOption Choices;
         public CopyOption LinkFrom;
-        public MaskItem<bool, ScriptMetaSummary_CopyMask> MetadataSummary;
-        public bool CompiledScript;
-        public bool SourceCode;
-        public MaskItem<CopyOption, ScriptObjectReference_CopyMask> References;
+        public MaskItem<bool, ScriptFields_CopyMask> Script;
         #endregion
 
     }
