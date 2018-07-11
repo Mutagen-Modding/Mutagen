@@ -63,6 +63,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessDialogTopics(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
             ProcessDialogItems(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
             ProcessIdleAnimations(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessAIPackages(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
         }
 
         private void ProcessNPC_Mismatch(
@@ -659,6 +660,95 @@ namespace Mutagen.Bethesda.Tests
                         Location = loc.Min + Constants.HEADER_LENGTH,
                         Data = lenData
                     });
+            }
+        }
+
+        private void ProcessAIPackages(
+            BinaryReadStream stream,
+            FormID formID,
+            Type recType,
+            Instruction instr,
+            RangeInt64 loc,
+            MajorRecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker,
+            bool processing)
+        {
+            if (!typeof(AIPackage).Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var dataIndex = -1;
+            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
+            int amount = 0;
+            while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
+            {
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = dataIndex + loc.Min + 3,
+                        Data = new byte[] { (byte)'A', 0x18 }
+                    });
+                instr.Additions.Add(
+                    new DataTarget()
+                    {
+                        Data = new byte[4],
+                        Location = dataIndex + loc.Min + 0x1A
+                    });
+                amount += 4;
+            }
+
+            if ((dataIndex = str.IndexOf("PKDT", dataIndex + 1)) != -1)
+            {
+                stream.Position = loc.Min + dataIndex + 4;
+                var len = stream.ReadUInt16();
+                if (len == 4)
+                {
+                    instr.Substitutions.Add(
+                        new DataTarget()
+                        {
+                            Location = loc.Min + dataIndex + 4,
+                            Data = new byte[] { 0x8 }
+                        });
+                    var first1 = stream.ReadUInt8();
+                    var first2 = stream.ReadUInt8();
+                    var second1 = stream.ReadUInt8();
+                    var second2 = stream.ReadUInt8();
+                    instr.Substitutions.Add(
+                        new DataTarget()
+                        {
+                            Location = loc.Min + dataIndex + 6,
+                            Data = new byte[] { first1, first2, 0, 0 }
+                        });
+                    instr.Additions.Add(
+                        new DataTarget()
+                        {
+                            Location = loc.Min + dataIndex + 10,
+                            Data = new byte[] { second1, 0, 0, 0 }
+                        });
+                    amount += 4;
+                }
+            }
+
+            if (amount != 0)
+            {
+                // Modify Length
+                stream.Position = loc.Min + Constants.HEADER_LENGTH;
+                var existingLen = stream.ReadUInt16();
+                byte[] lenData = new byte[2];
+                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
+                {
+                    writer.Write((ushort)(existingLen + amount));
+                }
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = loc.Min + Constants.HEADER_LENGTH,
+                        Data = lenData
+                    });
+                foreach (var parentGroup in parentGrups)
+                {
+                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + amount);
+                }
             }
         }
 

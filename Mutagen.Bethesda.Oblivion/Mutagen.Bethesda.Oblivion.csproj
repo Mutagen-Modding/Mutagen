@@ -53,11 +53,13 @@
     <Compile Include="Records\Common Enums\IngredientFlag.cs" />
     <Compile Include="Records\Common Enums\LeveledFlag.cs" />
     <Compile Include="Records\Common Enums\MagicSchool.cs" />
+    <Compile Include="Records\Common Enums\Month.cs" />
     <Compile Include="Records\Common Enums\MusicType.cs" />
     <Compile Include="Records\Common Enums\Resistance.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
     <Compile Include="Records\Common Enums\SoulLevel.cs" />
     <Compile Include="Records\Common Enums\Specialization.cs" />
+    <Compile Include="Records\Common Enums\Weekday.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -81,6 +83,15 @@
     </Compile>
     <Compile Include="Records\Header\TES4_LoquiGenerated.cs">
       <DependentUpon>TES4.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackage.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackageLocation.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackageTarget.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AlchemicalApparatus.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
@@ -676,6 +687,15 @@
     <Compile Include="Records\Major Records\IdleAnimation_LoquiGenerated.cs">
       <DependentUpon>IdleAnimation.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AIPackageLocation_LoquiGenerated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackageSchedule_LoquiGenerated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackageTarget_LoquiGenerated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Condition.xml">
@@ -711,7 +731,9 @@
     <Content Include="Records\Major Records\Activator.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Records\Major Records\AIPackage.xml" />
+    <Content Include="Records\Major Records\AIPackage.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\AlchemicalApparatus.xml">
       <SubType>Designer</SubType>
     </Content>

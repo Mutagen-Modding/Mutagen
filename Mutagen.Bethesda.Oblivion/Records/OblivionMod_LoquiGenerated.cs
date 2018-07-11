@@ -92,6 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
             _DialogTopics_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _Quests_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _IdleAnimations_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
+            _AIPackages_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _hasBeenSetTracker[(int)OblivionMod_FieldIndex.TES4] = true;
             CustomCtor();
         }
@@ -374,6 +375,11 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<IdleAnimation> _IdleAnimations_Object = new Group<IdleAnimation>();
         public Group<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
         #endregion
+        #region AIPackages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<AIPackage> _AIPackages_Object = new Group<AIPackage>();
+        public Group<AIPackage> AIPackages => _AIPackages_Object;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -490,6 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
             if (!object.Equals(this.Quests, rhs.Quests)) return false;
             if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
+            if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
             return true;
         }
 
@@ -549,6 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(DialogTopics).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Quests).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(IdleAnimations).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(AIPackages).CombineHashCode(ret);
             return ret;
         }
 
@@ -2009,6 +2017,30 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
+                case "AIPackages":
+                    try
+                    {
+                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
+                        item.AIPackages.CopyFieldsFrom<AIPackage_CopyMask>(
+                            rhs: Group<AIPackage>.Create_XML(
+                                root: root,
+                                errorMask: errorMask)
+                            ,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -2072,6 +2104,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
                 case OblivionMod_FieldIndex.IdleAnimations:
+                case OblivionMod_FieldIndex.AIPackages:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -2370,6 +2403,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case IdleAnimation idleanimations:
                     _IdleAnimations_Object.Items.Set(idleanimations);
                     break;
+                case AIPackage aipackages:
+                    _AIPackages_Object.Items.Set(aipackages);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
@@ -2575,6 +2611,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 return (INotifyingKeyedCollection<FormID, T>)IdleAnimations.Items;
             }
+            if (t.Equals(typeof(AIPackage)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)AIPackages.Items;
+            }
             throw new ArgumentException($"Unkown group type: {t}");
         }
 
@@ -2706,6 +2746,10 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             foreach (var item in Quests.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in AIPackages.Links)
             {
                 yield return item;
             }
@@ -2968,6 +3012,11 @@ namespace Mutagen.Bethesda.Oblivion
                     dir: new DirectoryPath(Path.Combine(dir.Path, "IdleAnimations")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.IdleAnimations,
+                    doMasks: doMasks));
+                tasks.Add(AIPackages.Write_XmlFolder<AIPackage, AIPackage_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "AIPackages")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.AIPackages,
                     doMasks: doMasks));
                 await Task.WhenAll(tasks);
             }
@@ -4335,6 +4384,28 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.IdleAnimations);
+                case 0x4B434150: // PACK
+                    if (importMask?.AIPackages ?? true)
+                    {
+                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.AIPackages))
+                        {
+                            var tmpAIPackages = Group<AIPackage>.Create_Binary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null);
+                            item.AIPackages.CopyFieldsFrom<AIPackage_CopyMask>(
+                                rhs: tmpAIPackages,
+                                def: null,
+                                cmds: null,
+                                copyMask: null,
+                                errorMask: errorMask);
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AIPackages);
                 default:
                     errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -4616,6 +4687,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.IdleAnimations:
                     this._IdleAnimations_Object.CopyFieldsFrom<IdleAnimation_CopyMask>(rhs: (Group<IdleAnimation>)obj);
                     break;
+                case OblivionMod_FieldIndex.AIPackages:
+                    this._AIPackages_Object.CopyFieldsFrom<AIPackage_CopyMask>(rhs: (Group<AIPackage>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4803,6 +4877,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.IdleAnimations:
                     obj._IdleAnimations_Object.CopyFieldsFrom<IdleAnimation_CopyMask>(rhs: (Group<IdleAnimation>)pair.Value);
                     break;
+                case OblivionMod_FieldIndex.AIPackages:
+                    obj._AIPackages_Object.CopyFieldsFrom<AIPackage_CopyMask>(rhs: (Group<AIPackage>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -4974,6 +5051,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region IdleAnimations
         Group<IdleAnimation> IdleAnimations { get; }
         #endregion
+        #region AIPackages
+        Group<AIPackage> AIPackages { get; }
+        #endregion
 
     }
 
@@ -5036,6 +5116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         DialogTopics = 47,
         Quests = 48,
         IdleAnimations = 49,
+        AIPackages = 50,
     }
     #endregion
 
@@ -5053,9 +5134,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort AdditionalFieldCount = 50;
+        public const ushort AdditionalFieldCount = 51;
 
-        public const ushort FieldCount = 50;
+        public const ushort FieldCount = 51;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -5183,6 +5264,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Quests;
                 case "IDLEANIMATIONS":
                     return (ushort)OblivionMod_FieldIndex.IdleAnimations;
+                case "AIPACKAGES":
+                    return (ushort)OblivionMod_FieldIndex.AIPackages;
                 default:
                     return null;
             }
@@ -5243,6 +5326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
                 case OblivionMod_FieldIndex.IdleAnimations:
+                case OblivionMod_FieldIndex.AIPackages:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5304,6 +5388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
                 case OblivionMod_FieldIndex.IdleAnimations:
+                case OblivionMod_FieldIndex.AIPackages:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5365,6 +5450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
                 case OblivionMod_FieldIndex.IdleAnimations:
+                case OblivionMod_FieldIndex.AIPackages:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5476,6 +5562,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Quests";
                 case OblivionMod_FieldIndex.IdleAnimations:
                     return "IdleAnimations";
+                case OblivionMod_FieldIndex.AIPackages:
+                    return "AIPackages";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5536,6 +5624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
                 case OblivionMod_FieldIndex.IdleAnimations:
+                case OblivionMod_FieldIndex.AIPackages:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5598,6 +5687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
                 case OblivionMod_FieldIndex.IdleAnimations:
+                case OblivionMod_FieldIndex.AIPackages:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5709,6 +5799,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Quest>);
                 case OblivionMod_FieldIndex.IdleAnimations:
                     return typeof(Group<IdleAnimation>);
+                case OblivionMod_FieldIndex.AIPackages:
+                    return typeof(Group<AIPackage>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5764,6 +5856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
+        public static readonly RecordType PACK_HEADER = new RecordType("PACK");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -5777,7 +5870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 50;
+        public const int NumTypedFields = 51;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -6970,6 +7063,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask.PopIndex();
                 }
             }
+            if (copyMask?.AIPackages.Overall ?? true)
+            {
+                errorMask.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.AIPackages,
+                        rhs: rhs.AIPackages,
+                        def: def?.AIPackages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.AIPackages.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -7032,6 +7148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
                 case OblivionMod_FieldIndex.IdleAnimations:
+                case OblivionMod_FieldIndex.AIPackages:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -7197,6 +7314,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.IdleAnimations:
                     GroupCommon.Clear(obj.IdleAnimations, cmds.ToUnsetParams());
                     break;
+                case OblivionMod_FieldIndex.AIPackages:
+                    GroupCommon.Clear(obj.AIPackages, cmds.ToUnsetParams());
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7258,6 +7378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
                 case OblivionMod_FieldIndex.IdleAnimations:
+                case OblivionMod_FieldIndex.AIPackages:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -7373,6 +7494,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Quests;
                 case OblivionMod_FieldIndex.IdleAnimations:
                     return obj.IdleAnimations;
+                case OblivionMod_FieldIndex.AIPackages:
+                    return obj.AIPackages;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7547,6 +7670,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.IdleAnimations = new MaskItem<bool, Group_Mask<bool>>();
             ret.IdleAnimations.Specific = GroupCommon.GetEqualsMask(item.IdleAnimations, rhs.IdleAnimations);
             ret.IdleAnimations.Overall = ret.IdleAnimations.Specific.AllEqual((b) => b);
+            ret.AIPackages = new MaskItem<bool, Group_Mask<bool>>();
+            ret.AIPackages.Specific = GroupCommon.GetEqualsMask(item.AIPackages, rhs.AIPackages);
+            ret.AIPackages.Overall = ret.AIPackages.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -7776,6 +7902,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.IdleAnimations?.ToString(fg, "IdleAnimations");
                 }
+                if (printMask?.AIPackages?.Overall ?? true)
+                {
+                    item.AIPackages?.ToString(fg, "AIPackages");
+                }
             }
             fg.AppendLine("]");
         }
@@ -7842,6 +7972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DialogTopics = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.DialogTopics));
             ret.Quests = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Quests));
             ret.IdleAnimations = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.IdleAnimations));
+            ret.AIPackages = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.AIPackages));
             return ret;
         }
 
@@ -8177,6 +8308,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.IdleAnimations,
                 name: nameof(item.IdleAnimations),
                 fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
+                errorMask: errorMask);
+            LoquiXmlTranslation<Group<AIPackage>>.Instance.Write(
+                node: elem,
+                item: item.AIPackages,
+                name: nameof(item.AIPackages),
+                fieldIndex: (int)OblivionMod_FieldIndex.AIPackages,
                 errorMask: errorMask);
         }
         #endregion
@@ -8770,6 +8907,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
+            if (importMask?.AIPackages ?? true)
+            {
+                if (item.AIPackages.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<AIPackage>>.Instance.Write(
+                        writer: writer,
+                        item: item.AIPackages,
+                        fieldIndex: (int)OblivionMod_FieldIndex.AIPackages,
+                        errorMask: errorMask);
+                }
+            }
         }
 
         #endregion
@@ -8839,6 +8987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.DialogTopics = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Quests = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.IdleAnimations = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.AIPackages = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -8893,6 +9042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> DialogTopics { get; set; }
         public MaskItem<T, Group_Mask<T>> Quests { get; set; }
         public MaskItem<T, Group_Mask<T>> IdleAnimations { get; set; }
+        public MaskItem<T, Group_Mask<T>> AIPackages { get; set; }
         #endregion
 
         #region Equals
@@ -8955,6 +9105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
             if (!object.Equals(this.Quests, rhs.Quests)) return false;
             if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
+            if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -9010,6 +9161,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.DialogTopics?.GetHashCode());
             ret = ret.CombineHashCode(this.Quests?.GetHashCode());
             ret = ret.CombineHashCode(this.IdleAnimations?.GetHashCode());
+            ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
             return ret;
         }
 
@@ -9267,6 +9419,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.IdleAnimations.Overall)) return false;
                 if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.AllEqual(eval)) return false;
+            }
+            if (AIPackages != null)
+            {
+                if (!eval(this.AIPackages.Overall)) return false;
+                if (this.AIPackages.Specific != null && !this.AIPackages.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -9732,6 +9889,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.IdleAnimations.Specific = this.IdleAnimations.Specific.Translate(eval);
                 }
             }
+            if (this.AIPackages != null)
+            {
+                obj.AIPackages = new MaskItem<R, Group_Mask<R>>();
+                obj.AIPackages.Overall = eval(this.AIPackages.Overall);
+                if (this.AIPackages.Specific != null)
+                {
+                    obj.AIPackages.Specific = this.AIPackages.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -9960,6 +10126,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     IdleAnimations?.ToString(fg);
                 }
+                if (printMask?.AIPackages?.Overall ?? true)
+                {
+                    AIPackages?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -10033,6 +10203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<DialogTopic_ErrorMask>> DialogTopics;
         public MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>> Quests;
         public MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>> IdleAnimations;
+        public MaskItem<Exception, Group_ErrorMask<AIPackage_ErrorMask>> AIPackages;
         #endregion
 
         #region IErrorMask
@@ -10141,6 +10312,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Quests;
                 case OblivionMod_FieldIndex.IdleAnimations:
                     return IdleAnimations;
+                case OblivionMod_FieldIndex.AIPackages:
+                    return AIPackages;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -10300,6 +10473,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.IdleAnimations:
                     this.IdleAnimations = new MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.AIPackages:
+                    this.AIPackages = new MaskItem<Exception, Group_ErrorMask<AIPackage_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -10461,6 +10637,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.IdleAnimations:
                     this.IdleAnimations = (MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.AIPackages:
+                    this.AIPackages = (MaskItem<Exception, Group_ErrorMask<AIPackage_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -10519,6 +10698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (DialogTopics != null) return true;
             if (Quests != null) return true;
             if (IdleAnimations != null) return true;
+            if (AIPackages != null) return true;
             return false;
         }
         #endregion
@@ -10603,6 +10783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogTopics?.ToString(fg);
             Quests?.ToString(fg);
             IdleAnimations?.ToString(fg);
+            AIPackages?.ToString(fg);
         }
         #endregion
 
@@ -10660,6 +10841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DialogTopics = new MaskItem<Exception, Group_ErrorMask<DialogTopic_ErrorMask>>(this.DialogTopics.Overall.Combine(rhs.DialogTopics.Overall), ((IErrorMask<Group_ErrorMask<DialogTopic_ErrorMask>>)this.DialogTopics.Specific).Combine(rhs.DialogTopics.Specific));
             ret.Quests = new MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>>(this.Quests.Overall.Combine(rhs.Quests.Overall), ((IErrorMask<Group_ErrorMask<Quest_ErrorMask>>)this.Quests.Specific).Combine(rhs.Quests.Specific));
             ret.IdleAnimations = new MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>>(this.IdleAnimations.Overall.Combine(rhs.IdleAnimations.Overall), ((IErrorMask<Group_ErrorMask<IdleAnimation_ErrorMask>>)this.IdleAnimations.Specific).Combine(rhs.IdleAnimations.Specific));
+            ret.AIPackages = new MaskItem<Exception, Group_ErrorMask<AIPackage_ErrorMask>>(this.AIPackages.Overall.Combine(rhs.AIPackages.Overall), ((IErrorMask<Group_ErrorMask<AIPackage_ErrorMask>>)this.AIPackages.Specific).Combine(rhs.AIPackages.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -10731,6 +10913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<DialogTopic_CopyMask>> DialogTopics;
         public MaskItem<bool, Group_CopyMask<Quest_CopyMask>> Quests;
         public MaskItem<bool, Group_CopyMask<IdleAnimation_CopyMask>> IdleAnimations;
+        public MaskItem<bool, Group_CopyMask<AIPackage_CopyMask>> AIPackages;
         #endregion
 
     }
@@ -10790,6 +10973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool DialogTopics;
         public bool Quests;
         public bool IdleAnimations;
+        public bool AIPackages;
         public GroupMask()
         {
         }
@@ -10844,6 +11028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogTopics = defaultValue;
             Quests = defaultValue;
             IdleAnimations = defaultValue;
+            AIPackages = defaultValue;
         }
     }
     #endregion
