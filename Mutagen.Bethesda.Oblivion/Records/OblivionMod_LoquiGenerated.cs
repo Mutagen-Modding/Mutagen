@@ -91,6 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Worldspaces_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _DialogTopics_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _Quests_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
+            _IdleAnimations_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _hasBeenSetTracker[(int)OblivionMod_FieldIndex.TES4] = true;
             CustomCtor();
         }
@@ -368,6 +369,11 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<Quest> _Quests_Object = new Group<Quest>();
         public Group<Quest> Quests => _Quests_Object;
         #endregion
+        #region IdleAnimations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<IdleAnimation> _IdleAnimations_Object = new Group<IdleAnimation>();
+        public Group<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -483,6 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
             if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
             if (!object.Equals(this.Quests, rhs.Quests)) return false;
+            if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
             return true;
         }
 
@@ -541,6 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Worldspaces).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(DialogTopics).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Quests).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(IdleAnimations).CombineHashCode(ret);
             return ret;
         }
 
@@ -1977,6 +1985,30 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
+                case "IdleAnimations":
+                    try
+                    {
+                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
+                        item.IdleAnimations.CopyFieldsFrom<IdleAnimation_CopyMask>(
+                            rhs: Group<IdleAnimation>.Create_XML(
+                                root: root,
+                                errorMask: errorMask)
+                            ,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -2039,6 +2071,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
+                case OblivionMod_FieldIndex.IdleAnimations:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -2334,6 +2367,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Quest quests:
                     _Quests_Object.Items.Set(quests);
                     break;
+                case IdleAnimation idleanimations:
+                    _IdleAnimations_Object.Items.Set(idleanimations);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
@@ -2534,6 +2570,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (t.Equals(typeof(Quest)))
             {
                 return (INotifyingKeyedCollection<FormID, T>)Quests.Items;
+            }
+            if (t.Equals(typeof(IdleAnimation)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)IdleAnimations.Items;
             }
             throw new ArgumentException($"Unkown group type: {t}");
         }
@@ -2923,6 +2963,11 @@ namespace Mutagen.Bethesda.Oblivion
                     dir: new DirectoryPath(Path.Combine(dir.Path, "Quests")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.Quests,
+                    doMasks: doMasks));
+                tasks.Add(IdleAnimations.Write_XmlFolder<IdleAnimation, IdleAnimation_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "IdleAnimations")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.IdleAnimations,
                     doMasks: doMasks));
                 await Task.WhenAll(tasks);
             }
@@ -4268,6 +4313,28 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Quests);
+                case 0x454C4449: // IDLE
+                    if (importMask?.IdleAnimations ?? true)
+                    {
+                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations))
+                        {
+                            var tmpIdleAnimations = Group<IdleAnimation>.Create_Binary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null);
+                            item.IdleAnimations.CopyFieldsFrom<IdleAnimation_CopyMask>(
+                                rhs: tmpIdleAnimations,
+                                def: null,
+                                cmds: null,
+                                copyMask: null,
+                                errorMask: errorMask);
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.IdleAnimations);
                 default:
                     errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -4546,6 +4613,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Quests:
                     this._Quests_Object.CopyFieldsFrom<Quest_CopyMask>(rhs: (Group<Quest>)obj);
                     break;
+                case OblivionMod_FieldIndex.IdleAnimations:
+                    this._IdleAnimations_Object.CopyFieldsFrom<IdleAnimation_CopyMask>(rhs: (Group<IdleAnimation>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4730,6 +4800,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Quests:
                     obj._Quests_Object.CopyFieldsFrom<Quest_CopyMask>(rhs: (Group<Quest>)pair.Value);
                     break;
+                case OblivionMod_FieldIndex.IdleAnimations:
+                    obj._IdleAnimations_Object.CopyFieldsFrom<IdleAnimation_CopyMask>(rhs: (Group<IdleAnimation>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -4898,6 +4971,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Quests
         Group<Quest> Quests { get; }
         #endregion
+        #region IdleAnimations
+        Group<IdleAnimation> IdleAnimations { get; }
+        #endregion
 
     }
 
@@ -4959,6 +5035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Worldspaces = 46,
         DialogTopics = 47,
         Quests = 48,
+        IdleAnimations = 49,
     }
     #endregion
 
@@ -4976,9 +5053,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort AdditionalFieldCount = 49;
+        public const ushort AdditionalFieldCount = 50;
 
-        public const ushort FieldCount = 49;
+        public const ushort FieldCount = 50;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -5104,6 +5181,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.DialogTopics;
                 case "QUESTS":
                     return (ushort)OblivionMod_FieldIndex.Quests;
+                case "IDLEANIMATIONS":
+                    return (ushort)OblivionMod_FieldIndex.IdleAnimations;
                 default:
                     return null;
             }
@@ -5163,6 +5242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
+                case OblivionMod_FieldIndex.IdleAnimations:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5223,6 +5303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
+                case OblivionMod_FieldIndex.IdleAnimations:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5283,6 +5364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
+                case OblivionMod_FieldIndex.IdleAnimations:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5392,6 +5474,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "DialogTopics";
                 case OblivionMod_FieldIndex.Quests:
                     return "Quests";
+                case OblivionMod_FieldIndex.IdleAnimations:
+                    return "IdleAnimations";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5451,6 +5535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
+                case OblivionMod_FieldIndex.IdleAnimations:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5512,6 +5597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
+                case OblivionMod_FieldIndex.IdleAnimations:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5621,6 +5707,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<DialogTopic>);
                 case OblivionMod_FieldIndex.Quests:
                     return typeof(Group<Quest>);
+                case OblivionMod_FieldIndex.IdleAnimations:
+                    return typeof(Group<IdleAnimation>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5675,6 +5763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
+        public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -5688,7 +5777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 49;
+        public const int NumTypedFields = 50;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -6858,6 +6947,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask.PopIndex();
                 }
             }
+            if (copyMask?.IdleAnimations.Overall ?? true)
+            {
+                errorMask.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.IdleAnimations,
+                        rhs: rhs.IdleAnimations,
+                        def: def?.IdleAnimations,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.IdleAnimations.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -6919,6 +7031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
+                case OblivionMod_FieldIndex.IdleAnimations:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -7081,6 +7194,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Quests:
                     GroupCommon.Clear(obj.Quests, cmds.ToUnsetParams());
                     break;
+                case OblivionMod_FieldIndex.IdleAnimations:
+                    GroupCommon.Clear(obj.IdleAnimations, cmds.ToUnsetParams());
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7141,6 +7257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Worldspaces:
                 case OblivionMod_FieldIndex.DialogTopics:
                 case OblivionMod_FieldIndex.Quests:
+                case OblivionMod_FieldIndex.IdleAnimations:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -7254,6 +7371,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.DialogTopics;
                 case OblivionMod_FieldIndex.Quests:
                     return obj.Quests;
+                case OblivionMod_FieldIndex.IdleAnimations:
+                    return obj.IdleAnimations;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7425,6 +7544,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Quests = new MaskItem<bool, Group_Mask<bool>>();
             ret.Quests.Specific = GroupCommon.GetEqualsMask(item.Quests, rhs.Quests);
             ret.Quests.Overall = ret.Quests.Specific.AllEqual((b) => b);
+            ret.IdleAnimations = new MaskItem<bool, Group_Mask<bool>>();
+            ret.IdleAnimations.Specific = GroupCommon.GetEqualsMask(item.IdleAnimations, rhs.IdleAnimations);
+            ret.IdleAnimations.Overall = ret.IdleAnimations.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -7650,6 +7772,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Quests?.ToString(fg, "Quests");
                 }
+                if (printMask?.IdleAnimations?.Overall ?? true)
+                {
+                    item.IdleAnimations?.ToString(fg, "IdleAnimations");
+                }
             }
             fg.AppendLine("]");
         }
@@ -7715,6 +7841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Worldspaces = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Worldspaces));
             ret.DialogTopics = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.DialogTopics));
             ret.Quests = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Quests));
+            ret.IdleAnimations = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.IdleAnimations));
             return ret;
         }
 
@@ -8044,6 +8171,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Quests,
                 name: nameof(item.Quests),
                 fieldIndex: (int)OblivionMod_FieldIndex.Quests,
+                errorMask: errorMask);
+            LoquiXmlTranslation<Group<IdleAnimation>>.Instance.Write(
+                node: elem,
+                item: item.IdleAnimations,
+                name: nameof(item.IdleAnimations),
+                fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
                 errorMask: errorMask);
         }
         #endregion
@@ -8626,6 +8759,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
+            if (importMask?.IdleAnimations ?? true)
+            {
+                if (item.IdleAnimations.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<IdleAnimation>>.Instance.Write(
+                        writer: writer,
+                        item: item.IdleAnimations,
+                        fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
+                        errorMask: errorMask);
+                }
+            }
         }
 
         #endregion
@@ -8694,6 +8838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Worldspaces = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.DialogTopics = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Quests = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.IdleAnimations = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -8747,6 +8892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Worldspaces { get; set; }
         public MaskItem<T, Group_Mask<T>> DialogTopics { get; set; }
         public MaskItem<T, Group_Mask<T>> Quests { get; set; }
+        public MaskItem<T, Group_Mask<T>> IdleAnimations { get; set; }
         #endregion
 
         #region Equals
@@ -8808,6 +8954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
             if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
             if (!object.Equals(this.Quests, rhs.Quests)) return false;
+            if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -8862,6 +9009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Worldspaces?.GetHashCode());
             ret = ret.CombineHashCode(this.DialogTopics?.GetHashCode());
             ret = ret.CombineHashCode(this.Quests?.GetHashCode());
+            ret = ret.CombineHashCode(this.IdleAnimations?.GetHashCode());
             return ret;
         }
 
@@ -9114,6 +9262,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Quests.Overall)) return false;
                 if (this.Quests.Specific != null && !this.Quests.Specific.AllEqual(eval)) return false;
+            }
+            if (IdleAnimations != null)
+            {
+                if (!eval(this.IdleAnimations.Overall)) return false;
+                if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -9570,6 +9723,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Quests.Specific = this.Quests.Specific.Translate(eval);
                 }
             }
+            if (this.IdleAnimations != null)
+            {
+                obj.IdleAnimations = new MaskItem<R, Group_Mask<R>>();
+                obj.IdleAnimations.Overall = eval(this.IdleAnimations.Overall);
+                if (this.IdleAnimations.Specific != null)
+                {
+                    obj.IdleAnimations.Specific = this.IdleAnimations.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -9794,6 +9956,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Quests?.ToString(fg);
                 }
+                if (printMask?.IdleAnimations?.Overall ?? true)
+                {
+                    IdleAnimations?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -9866,6 +10032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>> Worldspaces;
         public MaskItem<Exception, Group_ErrorMask<DialogTopic_ErrorMask>> DialogTopics;
         public MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>> Quests;
+        public MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>> IdleAnimations;
         #endregion
 
         #region IErrorMask
@@ -9972,6 +10139,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return DialogTopics;
                 case OblivionMod_FieldIndex.Quests:
                     return Quests;
+                case OblivionMod_FieldIndex.IdleAnimations:
+                    return IdleAnimations;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -10128,6 +10297,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Quests:
                     this.Quests = new MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.IdleAnimations:
+                    this.IdleAnimations = new MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -10286,6 +10458,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Quests:
                     this.Quests = (MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.IdleAnimations:
+                    this.IdleAnimations = (MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -10343,6 +10518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Worldspaces != null) return true;
             if (DialogTopics != null) return true;
             if (Quests != null) return true;
+            if (IdleAnimations != null) return true;
             return false;
         }
         #endregion
@@ -10426,6 +10602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspaces?.ToString(fg);
             DialogTopics?.ToString(fg);
             Quests?.ToString(fg);
+            IdleAnimations?.ToString(fg);
         }
         #endregion
 
@@ -10482,6 +10659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Worldspaces = new MaskItem<Exception, Group_ErrorMask<Worldspace_ErrorMask>>(this.Worldspaces.Overall.Combine(rhs.Worldspaces.Overall), ((IErrorMask<Group_ErrorMask<Worldspace_ErrorMask>>)this.Worldspaces.Specific).Combine(rhs.Worldspaces.Specific));
             ret.DialogTopics = new MaskItem<Exception, Group_ErrorMask<DialogTopic_ErrorMask>>(this.DialogTopics.Overall.Combine(rhs.DialogTopics.Overall), ((IErrorMask<Group_ErrorMask<DialogTopic_ErrorMask>>)this.DialogTopics.Specific).Combine(rhs.DialogTopics.Specific));
             ret.Quests = new MaskItem<Exception, Group_ErrorMask<Quest_ErrorMask>>(this.Quests.Overall.Combine(rhs.Quests.Overall), ((IErrorMask<Group_ErrorMask<Quest_ErrorMask>>)this.Quests.Specific).Combine(rhs.Quests.Specific));
+            ret.IdleAnimations = new MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>>(this.IdleAnimations.Overall.Combine(rhs.IdleAnimations.Overall), ((IErrorMask<Group_ErrorMask<IdleAnimation_ErrorMask>>)this.IdleAnimations.Specific).Combine(rhs.IdleAnimations.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -10552,6 +10730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<Worldspace_CopyMask>> Worldspaces;
         public MaskItem<bool, Group_CopyMask<DialogTopic_CopyMask>> DialogTopics;
         public MaskItem<bool, Group_CopyMask<Quest_CopyMask>> Quests;
+        public MaskItem<bool, Group_CopyMask<IdleAnimation_CopyMask>> IdleAnimations;
         #endregion
 
     }
@@ -10610,6 +10789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Worldspaces;
         public bool DialogTopics;
         public bool Quests;
+        public bool IdleAnimations;
         public GroupMask()
         {
         }
@@ -10663,6 +10843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspaces = defaultValue;
             DialogTopics = defaultValue;
             Quests = defaultValue;
+            IdleAnimations = defaultValue;
         }
     }
     #endregion

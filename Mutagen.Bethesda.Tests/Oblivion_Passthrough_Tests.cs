@@ -62,6 +62,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessCells(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
             ProcessDialogTopics(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
             ProcessDialogItems(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessIdleAnimations(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
         }
 
         private void ProcessNPC_Mismatch(
@@ -603,7 +604,64 @@ namespace Mutagen.Bethesda.Tests
                     });
             }
         }
-        
+
+        private void ProcessIdleAnimations(
+            BinaryReadStream stream,
+            FormID formID,
+            Type recType,
+            Instruction instr,
+            RangeInt64 loc,
+            MajorRecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker,
+            bool processing)
+        {
+            if (!typeof(IdleAnimation).Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var dataIndex = -1;
+            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
+            int amount = 0;
+            while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
+            {
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = dataIndex + loc.Min + 3,
+                        Data = new byte[] { (byte)'A', 0x18 }
+                    });
+                instr.Additions.Add(
+                    new DataTarget()
+                    {
+                        Data = new byte[4],
+                        Location = dataIndex + loc.Min + 0x1A
+                    });
+                foreach (var parentGroup in parentGrups)
+                {
+                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + 4);
+                }
+                amount += 4;
+            }
+
+            if (amount != 0)
+            {
+                // Modify Length
+                stream.Position = loc.Min + Constants.HEADER_LENGTH;
+                var existingLen = stream.ReadUInt16();
+                byte[] lenData = new byte[2];
+                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
+                {
+                    writer.Write((ushort)(existingLen + amount));
+                }
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = loc.Min + Constants.HEADER_LENGTH,
+                        Data = lenData
+                    });
+            }
+        }
+
         private bool DynamicMove(
             string str,
             Instruction instr,
