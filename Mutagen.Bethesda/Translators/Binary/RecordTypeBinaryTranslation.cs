@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Binary
         public readonly static RecordTypeBinaryTranslation Instance = new RecordTypeBinaryTranslation();
         public override int? ExpectedLength => 4;
 
-        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, EDIDSetLink<T> property, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             try
@@ -19,11 +19,11 @@ namespace Mutagen.Bethesda.Binary
                 errorMask?.PushIndex(fieldIndex);
                 if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
                 {
-                    item.Set(val);
+                    property.Set(val);
                 }
                 else
                 {
-                    item.Unset();
+                    property.Unset();
                 }
             }
             catch (Exception ex)
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, EDIDLink<T> property, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             try
@@ -45,11 +45,11 @@ namespace Mutagen.Bethesda.Binary
                 errorMask?.PushIndex(fieldIndex);
                 if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
                 {
-                    item.Set(val);
+                    property.Set(val);
                 }
                 else
                 {
-                    item.Unset();
+                    property.Unset();
                 }
             }
             catch (Exception ex)

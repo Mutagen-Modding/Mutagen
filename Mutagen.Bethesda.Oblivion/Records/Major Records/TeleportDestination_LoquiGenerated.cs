@@ -486,9 +486,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Door":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Door_Property,
                         fieldIndex: (int)TeleportDestination_FieldIndex.Door,
-                        item: item.Door_Property,
                         errorMask: errorMask);
                     break;
                 case "Position":
@@ -906,8 +906,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                property: item.Door_Property,
                 fieldIndex: (int)TeleportDestination_FieldIndex.Door,
-                item: item.Door_Property,
                 errorMask: errorMask);
             try
             {

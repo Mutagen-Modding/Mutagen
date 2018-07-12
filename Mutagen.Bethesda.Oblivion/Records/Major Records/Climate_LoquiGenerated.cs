@@ -809,12 +809,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Weathers":
-                    ListXmlTranslation<WeatherChance>.Instance.ParseInto(
-                        root: root,
-                        item: item.Weathers,
-                        fieldIndex: (int)Climate_FieldIndex.Weathers,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
+                        if (ListXmlTranslation<WeatherChance>.Instance.Parse(
+                            root: root,
+                            enumer: out var WeathersItem,
+                            transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Weathers.SetTo(WeathersItem);
+                        }
+                        else
+                        {
+                            item.Weathers.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "SunTexture":
                     try
@@ -895,108 +914,32 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "SunriseBegin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
-                        if (DateTimeXmlTranslation.Instance.Parse(
-                            root: root,
-                            item: out DateTime SunriseBeginParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunriseBegin = SunriseBeginParse;
-                        }
-                        else
-                        {
-                            item.SunriseBegin_Property.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    DateTimeXmlTranslation.Instance.ParseInto(
+                        root: root,
+                        property: item.SunriseBegin_Property,
+                        fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
+                        errorMask: errorMask);
                     break;
                 case "SunriseEnd":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
-                        if (DateTimeXmlTranslation.Instance.Parse(
-                            root: root,
-                            item: out DateTime SunriseEndParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunriseEnd = SunriseEndParse;
-                        }
-                        else
-                        {
-                            item.SunriseEnd_Property.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    DateTimeXmlTranslation.Instance.ParseInto(
+                        root: root,
+                        property: item.SunriseEnd_Property,
+                        fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
+                        errorMask: errorMask);
                     break;
                 case "SunsetBegin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
-                        if (DateTimeXmlTranslation.Instance.Parse(
-                            root: root,
-                            item: out DateTime SunsetBeginParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunsetBegin = SunsetBeginParse;
-                        }
-                        else
-                        {
-                            item.SunsetBegin_Property.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    DateTimeXmlTranslation.Instance.ParseInto(
+                        root: root,
+                        property: item.SunsetBegin_Property,
+                        fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
+                        errorMask: errorMask);
                     break;
                 case "SunsetEnd":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
-                        if (DateTimeXmlTranslation.Instance.Parse(
-                            root: root,
-                            item: out DateTime SunsetEndParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunsetEnd = SunsetEndParse;
-                        }
-                        else
-                        {
-                            item.SunsetEnd_Property.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    DateTimeXmlTranslation.Instance.ParseInto(
+                        root: root,
+                        property: item.SunsetEnd_Property,
+                        fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
+                        errorMask: errorMask);
                     break;
                 case "Volatility":
                     try

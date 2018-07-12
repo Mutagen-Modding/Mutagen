@@ -549,12 +549,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Connections":
-                    ListXmlTranslation<P3Float>.Instance.ParseInto(
-                        root: root,
-                        item: item.Connections,
-                        fieldIndex: (int)RoadPoint_FieldIndex.Connections,
-                        errorMask: errorMask,
-                        transl: P3FloatXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.Connections);
+                        if (ListXmlTranslation<P3Float>.Instance.Parse(
+                            root: root,
+                            enumer: out var ConnectionsItem,
+                            transl: P3FloatXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Connections.SetTo(ConnectionsItem);
+                        }
+                        else
+                        {
+                            item.Connections.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;

@@ -486,12 +486,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "RegionPoints":
-                    ListXmlTranslation<P2Float>.Instance.ParseInto(
-                        root: root,
-                        item: item.RegionPoints,
-                        fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
-                        errorMask: errorMask,
-                        transl: P2FloatXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionArea_FieldIndex.RegionPoints);
+                        if (ListXmlTranslation<P2Float>.Instance.Parse(
+                            root: root,
+                            enumer: out var RegionPointsItem,
+                            transl: P2FloatXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.RegionPoints.SetTo(RegionPointsItem);
+                        }
+                        else
+                        {
+                            item.RegionPoints.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;

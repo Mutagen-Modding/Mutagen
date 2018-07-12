@@ -569,12 +569,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Relations":
-                    ListXmlTranslation<Relation>.Instance.ParseInto(
-                        root: root,
-                        item: item.Relations,
-                        fieldIndex: (int)Faction_FieldIndex.Relations,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<Relation>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
+                        if (ListXmlTranslation<Relation>.Instance.Parse(
+                            root: root,
+                            enumer: out var RelationsItem,
+                            transl: LoquiXmlTranslation<Relation>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Relations.SetTo(RelationsItem);
+                        }
+                        else
+                        {
+                            item.Relations.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Flags":
                     try
@@ -629,12 +648,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Ranks":
-                    ListXmlTranslation<Rank>.Instance.ParseInto(
-                        root: root,
-                        item: item.Ranks,
-                        fieldIndex: (int)Faction_FieldIndex.Ranks,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<Rank>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
+                        if (ListXmlTranslation<Rank>.Instance.Parse(
+                            root: root,
+                            enumer: out var RanksItem,
+                            transl: LoquiXmlTranslation<Rank>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Ranks.SetTo(RanksItem);
+                        }
+                        else
+                        {
+                            item.Ranks.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(

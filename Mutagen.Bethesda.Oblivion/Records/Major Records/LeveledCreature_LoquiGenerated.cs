@@ -626,25 +626,44 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Entries":
-                    ListXmlTranslation<LeveledEntry<NPCSpawn>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Entries,
-                        fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<LeveledEntry<NPCSpawn>>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Entries);
+                        if (ListXmlTranslation<LeveledEntry<NPCSpawn>>.Instance.Parse(
+                            root: root,
+                            enumer: out var EntriesItem,
+                            transl: LoquiXmlTranslation<LeveledEntry<NPCSpawn>>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Entries.SetTo(EntriesItem);
+                        }
+                        else
+                        {
+                            item.Entries.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Script_Property,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     break;
                 case "Template":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Template_Property,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Template,
-                        item: item.Template_Property,
                         errorMask: errorMask);
                     break;
                 default:
@@ -1217,17 +1236,17 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Script_Property,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
                 case 0x4D414E54: // TNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Template_Property,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Template,
-                        item: item.Template_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
                 default:

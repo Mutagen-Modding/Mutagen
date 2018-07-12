@@ -570,12 +570,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Types":
-                    ListXmlTranslation<MapMarker.Type>.Instance.ParseInto(
-                        root: root,
-                        item: item.Types,
-                        fieldIndex: (int)MapMarker_FieldIndex.Types,
-                        errorMask: errorMask,
-                        transl: EnumXmlTranslation<MapMarker.Type>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Types);
+                        if (ListXmlTranslation<MapMarker.Type>.Instance.Parse(
+                            root: root,
+                            enumer: out var TypesItem,
+                            transl: EnumXmlTranslation<MapMarker.Type>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Types.SetTo(TypesItem);
+                        }
+                        else
+                        {
+                            item.Types.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;

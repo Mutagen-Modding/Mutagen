@@ -697,9 +697,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "MagicEffect":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.MagicEffect_Property,
                         fieldIndex: (int)Effect_FieldIndex.MagicEffect,
-                        item: item.MagicEffect_Property,
                         errorMask: errorMask);
                     break;
                 case "Magnitude":
@@ -1690,8 +1690,8 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
+                            property: item.MagicEffect_Property,
                             fieldIndex: (int)Effect_FieldIndex.MagicEffect,
-                            item: item.MagicEffect_Property,
                             errorMask: errorMask);
                         try
                         {

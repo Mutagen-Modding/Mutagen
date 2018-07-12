@@ -786,20 +786,58 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Layers":
-                    ListXmlTranslation<BaseLayer>.Instance.ParseInto(
-                        root: root,
-                        item: item.Layers,
-                        fieldIndex: (int)Landscape_FieldIndex.Layers,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<BaseLayer>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
+                        if (ListXmlTranslation<BaseLayer>.Instance.Parse(
+                            root: root,
+                            enumer: out var LayersItem,
+                            transl: LoquiXmlTranslation<BaseLayer>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Layers.SetTo(LayersItem);
+                        }
+                        else
+                        {
+                            item.Layers.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Textures":
-                    ListXmlTranslation<FormIDLink<LandTexture>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Textures,
-                        fieldIndex: (int)Landscape_FieldIndex.Textures,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
+                        if (ListXmlTranslation<FormIDLink<LandTexture>>.Instance.Parse(
+                            root: root,
+                            enumer: out var TexturesItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Textures.SetTo(TexturesItem);
+                        }
+                        else
+                        {
+                            item.Textures.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     Placed.Fill_XML_Internal(

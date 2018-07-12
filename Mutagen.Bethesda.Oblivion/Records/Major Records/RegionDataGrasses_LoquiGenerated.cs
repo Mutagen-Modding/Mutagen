@@ -413,12 +413,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Grasses":
-                    ListXmlTranslation<FormIDLink<Grass>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Grasses,
-                        fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
+                        if (ListXmlTranslation<FormIDLink<Grass>>.Instance.Parse(
+                            root: root,
+                            enumer: out var GrassesItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Grasses.SetTo(GrassesItem);
+                        }
+                        else
+                        {
+                            item.Grasses.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     RegionData.Fill_XML_Internal(

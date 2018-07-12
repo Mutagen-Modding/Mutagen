@@ -1570,9 +1570,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Base":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Base_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
-                        item: item.Base_Property,
                         errorMask: errorMask);
                     break;
                 case "XPCIFluff":
@@ -1681,9 +1681,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Owner":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Owner_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Owner,
-                        item: item.Owner_Property,
                         errorMask: errorMask);
                     break;
                 case "FactionRank":
@@ -1714,9 +1714,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "GlobalVariable":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
-                        item: item.GlobalVariable_Property,
                         errorMask: errorMask);
                     break;
                 case "EnableParent":
@@ -1747,9 +1747,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Target":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Target_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Target,
-                        item: item.Target_Property,
                         errorMask: errorMask);
                     break;
                 case "SpeedTreeSeed":
@@ -1884,9 +1884,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Unknown":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Unknown_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
-                        item: item.Unknown_Property,
                         errorMask: errorMask);
                     break;
                 case "ActionFlags":
@@ -2047,9 +2047,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "ContainedSoul":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.ContainedSoul_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
-                        item: item.ContainedSoul_Property,
                         errorMask: errorMask);
                     break;
                 case "Position":
@@ -4059,9 +4059,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x454D414E: // NAME
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Base_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
-                        item: item.Base_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
                 case 0x49435058: // XPCI
@@ -4173,9 +4173,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4E574F58: // XOWN
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Owner_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Owner,
-                        item: item.Owner_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Owner);
                 case 0x4B4E5258: // XRNK
@@ -4208,9 +4208,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x424C4758: // XGLB
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
-                        item: item.GlobalVariable_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.GlobalVariable);
                 case 0x50534558: // XESP
@@ -4242,9 +4242,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x47525458: // XTRG
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Target_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Target,
-                        item: item.Target_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Target);
                 case 0x44455358: // XSED
@@ -4384,9 +4384,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D545258: // XRTM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Unknown_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
-                        item: item.Unknown_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
                 case 0x54434158: // XACT
@@ -4536,9 +4536,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4F5358: // XSOL
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.ContainedSoul_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
-                        item: item.ContainedSoul_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ContainedSoul);
                 case 0x41544144: // DATA

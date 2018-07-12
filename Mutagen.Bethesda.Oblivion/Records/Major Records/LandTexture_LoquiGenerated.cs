@@ -666,12 +666,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "PotentialGrass":
-                    ListXmlTranslation<FormIDSetLink<Grass>>.Instance.ParseInto(
-                        root: root,
-                        item: item.PotentialGrass,
-                        fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)LandTexture_FieldIndex.PotentialGrass);
+                        if (ListXmlTranslation<FormIDSetLink<Grass>>.Instance.Parse(
+                            root: root,
+                            enumer: out var PotentialGrassItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.PotentialGrass.SetTo(PotentialGrassItem);
+                        }
+                        else
+                        {
+                            item.PotentialGrass.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(

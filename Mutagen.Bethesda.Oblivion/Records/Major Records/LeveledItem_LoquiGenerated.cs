@@ -582,12 +582,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Entries":
-                    ListXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Entries,
-                        fieldIndex: (int)LeveledItem_FieldIndex.Entries,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
+                        if (ListXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse(
+                            root: root,
+                            enumer: out var EntriesItem,
+                            transl: LoquiXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Entries.SetTo(EntriesItem);
+                        }
+                        else
+                        {
+                            item.Entries.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(

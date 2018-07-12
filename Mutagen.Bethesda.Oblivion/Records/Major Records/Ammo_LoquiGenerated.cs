@@ -978,9 +978,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Enchantment":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Enchantment_Property,
                         fieldIndex: (int)Ammo_FieldIndex.Enchantment,
-                        item: item.Enchantment_Property,
                         errorMask: errorMask);
                     break;
                 case "EnchantmentPoints":
@@ -2291,9 +2291,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E45: // ENAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Enchantment_Property,
                         fieldIndex: (int)Ammo_FieldIndex.Enchantment,
-                        item: item.Enchantment_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Enchantment);
                 case 0x4D414E41: // ANAM

@@ -487,12 +487,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "BodyParts":
-                    ListXmlTranslation<BodyPart>.Instance.ParseInto(
-                        root: root,
-                        item: item.BodyParts,
-                        fieldIndex: (int)BodyData_FieldIndex.BodyParts,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<BodyPart>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)BodyData_FieldIndex.BodyParts);
+                        if (ListXmlTranslation<BodyPart>.Instance.Parse(
+                            root: root,
+                            enumer: out var BodyPartsItem,
+                            transl: LoquiXmlTranslation<BodyPart>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.BodyParts.SetTo(BodyPartsItem);
+                        }
+                        else
+                        {
+                            item.BodyParts.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;

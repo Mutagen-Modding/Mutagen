@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Generation
             TranslationGeneration.WrapParseCall(
                 fg: fg,
                 typeGen: typeGen,
-                callLine: $"{this.Namespace}StringBinaryTranslation.Instance.Parse",
+                translatorLine: $"{this.Namespace}StringBinaryTranslation.Instance",
                 maskAccessor: maskAccessor,
                 itemAccessor: itemAccessor,
                 indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,

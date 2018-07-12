@@ -895,9 +895,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Base":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Base_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
-                        item: item.Base_Property,
                         errorMask: errorMask);
                     break;
                 case "XPCIFluff":
@@ -1006,16 +1006,16 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "MerchantContainer":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.MerchantContainer_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
-                        item: item.MerchantContainer_Property,
                         errorMask: errorMask);
                     break;
                 case "Horse":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Horse_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
-                        item: item.Horse_Property,
                         errorMask: errorMask);
                     break;
                 case "RagdollData":
@@ -2068,9 +2068,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x454D414E: // NAME
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Base_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
-                        item: item.Base_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Base);
                 case 0x49435058: // XPCI
@@ -2182,17 +2182,17 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x43524D58: // XMRC
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.MerchantContainer_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
-                        item: item.MerchantContainer_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.MerchantContainer);
                 case 0x53524858: // XHRS
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Horse_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
-                        item: item.Horse_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Horse);
                 case 0x44475258: // XRGD

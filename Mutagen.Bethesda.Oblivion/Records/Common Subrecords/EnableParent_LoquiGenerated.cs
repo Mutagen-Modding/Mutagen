@@ -436,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Reference":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Reference_Property,
                         fieldIndex: (int)EnableParent_FieldIndex.Reference,
-                        item: item.Reference_Property,
                         errorMask: errorMask);
                     break;
                 case "Flags":
@@ -820,8 +820,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                property: item.Reference_Property,
                 fieldIndex: (int)EnableParent_FieldIndex.Reference,
-                item: item.Reference_Property,
                 errorMask: errorMask);
             try
             {

@@ -493,52 +493,166 @@ namespace Mutagen.Bethesda.Tests
             switch (name)
             {
                 case "Moves":
-                    ListXmlTranslation<Move>.Instance.ParseInto(
-                        root: root,
-                        item: item.Moves,
-                        fieldIndex: (int)Instruction_FieldIndex.Moves,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<Move>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Instruction_FieldIndex.Moves);
+                        if (ListXmlTranslation<Move>.Instance.Parse(
+                            root: root,
+                            enumer: out var MovesItem,
+                            transl: LoquiXmlTranslation<Move>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Moves.SetTo(MovesItem);
+                        }
+                        else
+                        {
+                            item.Moves.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Substitutions":
-                    ListXmlTranslation<DataTarget>.Instance.ParseInto(
-                        root: root,
-                        item: item.Substitutions,
-                        fieldIndex: (int)Instruction_FieldIndex.Substitutions,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<DataTarget>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Instruction_FieldIndex.Substitutions);
+                        if (ListXmlTranslation<DataTarget>.Instance.Parse(
+                            root: root,
+                            enumer: out var SubstitutionsItem,
+                            transl: LoquiXmlTranslation<DataTarget>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Substitutions.SetTo(SubstitutionsItem);
+                        }
+                        else
+                        {
+                            item.Substitutions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Additions":
-                    ListXmlTranslation<DataTarget>.Instance.ParseInto(
-                        root: root,
-                        item: item.Additions,
-                        fieldIndex: (int)Instruction_FieldIndex.Additions,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<DataTarget>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Instruction_FieldIndex.Additions);
+                        if (ListXmlTranslation<DataTarget>.Instance.Parse(
+                            root: root,
+                            enumer: out var AdditionsItem,
+                            transl: LoquiXmlTranslation<DataTarget>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Additions.SetTo(AdditionsItem);
+                        }
+                        else
+                        {
+                            item.Additions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "SkipSourceSections":
-                    ListXmlTranslation<RangeInt64>.Instance.ParseInto(
-                        root: root,
-                        item: item.SkipSourceSections,
-                        fieldIndex: (int)Instruction_FieldIndex.SkipSourceSections,
-                        errorMask: errorMask,
-                        transl: RangeInt64XmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Instruction_FieldIndex.SkipSourceSections);
+                        if (ListXmlTranslation<RangeInt64>.Instance.Parse(
+                            root: root,
+                            enumer: out var SkipSourceSectionsItem,
+                            transl: RangeInt64XmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.SkipSourceSections.SetTo(SkipSourceSectionsItem);
+                        }
+                        else
+                        {
+                            item.SkipSourceSections.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "SkipOutputSections":
-                    ListXmlTranslation<RangeInt64>.Instance.ParseInto(
-                        root: root,
-                        item: item.SkipOutputSections,
-                        fieldIndex: (int)Instruction_FieldIndex.SkipOutputSections,
-                        errorMask: errorMask,
-                        transl: RangeInt64XmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Instruction_FieldIndex.SkipOutputSections);
+                        if (ListXmlTranslation<RangeInt64>.Instance.Parse(
+                            root: root,
+                            enumer: out var SkipOutputSectionsItem,
+                            transl: RangeInt64XmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.SkipOutputSections.SetTo(SkipOutputSectionsItem);
+                        }
+                        else
+                        {
+                            item.SkipOutputSections.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "IgnoreDifferenceSections":
-                    ListXmlTranslation<RangeInt64>.Instance.ParseInto(
-                        root: root,
-                        item: item.IgnoreDifferenceSections,
-                        fieldIndex: (int)Instruction_FieldIndex.IgnoreDifferenceSections,
-                        errorMask: errorMask,
-                        transl: RangeInt64XmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Instruction_FieldIndex.IgnoreDifferenceSections);
+                        if (ListXmlTranslation<RangeInt64>.Instance.Parse(
+                            root: root,
+                            enumer: out var IgnoreDifferenceSectionsItem,
+                            transl: RangeInt64XmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.IgnoreDifferenceSections.SetTo(IgnoreDifferenceSectionsItem);
+                        }
+                        else
+                        {
+                            item.IgnoreDifferenceSections.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;

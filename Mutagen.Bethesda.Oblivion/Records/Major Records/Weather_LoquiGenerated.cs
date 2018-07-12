@@ -2247,12 +2247,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "WeatherTypes":
-                    ListXmlTranslation<WeatherType>.Instance.ParseInto(
-                        root: root,
-                        item: item.WeatherTypes,
-                        fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<WeatherType>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
+                        if (ListXmlTranslation<WeatherType>.Instance.Parse(
+                            root: root,
+                            enumer: out var WeatherTypesItem,
+                            transl: LoquiXmlTranslation<WeatherType>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.WeatherTypes.SetTo(WeatherTypesItem);
+                        }
+                        else
+                        {
+                            item.WeatherTypes.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "FogDayNear":
                     try
@@ -3061,12 +3080,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Sounds":
-                    ListXmlTranslation<WeatherSound>.Instance.ParseInto(
-                        root: root,
-                        item: item.Sounds,
-                        fieldIndex: (int)Weather_FieldIndex.Sounds,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<WeatherSound>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
+                        if (ListXmlTranslation<WeatherSound>.Instance.Parse(
+                            root: root,
+                            enumer: out var SoundsItem,
+                            transl: LoquiXmlTranslation<WeatherSound>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Sounds.SetTo(SoundsItem);
+                        }
+                        else
+                        {
+                            item.Sounds.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(

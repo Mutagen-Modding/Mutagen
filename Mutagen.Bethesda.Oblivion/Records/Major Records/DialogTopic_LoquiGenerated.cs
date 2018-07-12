@@ -557,12 +557,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Quests":
-                    ListXmlTranslation<FormIDSetLink<Quest>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Quests,
-                        fieldIndex: (int)DialogTopic_FieldIndex.Quests,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
+                        if (ListXmlTranslation<FormIDSetLink<Quest>>.Instance.Parse(
+                            root: root,
+                            enumer: out var QuestsItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Quests.SetTo(QuestsItem);
+                        }
+                        else
+                        {
+                            item.Quests.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Name":
                     try
@@ -617,12 +636,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Items":
-                    ListXmlTranslation<DialogItem>.Instance.ParseInto(
-                        root: root,
-                        item: item.Items,
-                        fieldIndex: (int)DialogTopic_FieldIndex.Items,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<DialogItem>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Items);
+                        if (ListXmlTranslation<DialogItem>.Instance.Parse(
+                            root: root,
+                            enumer: out var ItemsItem,
+                            transl: LoquiXmlTranslation<DialogItem>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Items.SetTo(ItemsItem);
+                        }
+                        else
+                        {
+                            item.Items.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(

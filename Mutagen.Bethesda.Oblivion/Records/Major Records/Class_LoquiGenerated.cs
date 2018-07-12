@@ -814,12 +814,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "PrimaryAttributes":
-                    ListXmlTranslation<ActorValue>.Instance.ParseInto(
-                        root: root,
-                        item: item.PrimaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
-                        errorMask: errorMask,
-                        transl: EnumXmlTranslation<ActorValue>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.PrimaryAttributes);
+                        if (ListXmlTranslation<ActorValue>.Instance.Parse(
+                            root: root,
+                            enumer: out var PrimaryAttributesItem,
+                            transl: EnumXmlTranslation<ActorValue>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.PrimaryAttributes.SetTo(PrimaryAttributesItem);
+                        }
+                        else
+                        {
+                            item.PrimaryAttributes.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Specialization":
                     try
@@ -848,12 +867,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "SecondaryAttributes":
-                    ListXmlTranslation<ActorValue>.Instance.ParseInto(
-                        root: root,
-                        item: item.SecondaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
-                        errorMask: errorMask,
-                        transl: EnumXmlTranslation<ActorValue>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.SecondaryAttributes);
+                        if (ListXmlTranslation<ActorValue>.Instance.Parse(
+                            root: root,
+                            enumer: out var SecondaryAttributesItem,
+                            transl: EnumXmlTranslation<ActorValue>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.SecondaryAttributes.SetTo(SecondaryAttributesItem);
+                        }
+                        else
+                        {
+                            item.SecondaryAttributes.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Flags":
                     try

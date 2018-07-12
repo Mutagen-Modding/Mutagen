@@ -436,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Faction":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Faction_Property,
                         fieldIndex: (int)Relation_FieldIndex.Faction,
-                        item: item.Faction_Property,
                         errorMask: errorMask);
                     break;
                 case "Modifier":
@@ -820,8 +820,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                property: item.Faction_Property,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
-                item: item.Faction_Property,
                 errorMask: errorMask);
             try
             {

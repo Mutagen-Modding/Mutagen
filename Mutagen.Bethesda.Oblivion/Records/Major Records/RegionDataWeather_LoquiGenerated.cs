@@ -413,12 +413,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Weathers":
-                    ListXmlTranslation<WeatherChance>.Instance.ParseInto(
-                        root: root,
-                        item: item.Weathers,
-                        fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
+                        if (ListXmlTranslation<WeatherChance>.Instance.Parse(
+                            root: root,
+                            enumer: out var WeathersItem,
+                            transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Weathers.SetTo(WeathersItem);
+                        }
+                        else
+                        {
+                            item.Weathers.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     RegionData.Fill_XML_Internal(

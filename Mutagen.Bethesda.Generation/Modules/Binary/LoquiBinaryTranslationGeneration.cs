@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Generation
                     TranslationGeneration.WrapParseCall(
                         fg: fg,
                         typeGen: typeGen,
-                        callLine: $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse",
+                        translatorLine: $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance",
                         maskAccessor: maskAccessor,
                         itemAccessor: itemAccessor,
                         indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,

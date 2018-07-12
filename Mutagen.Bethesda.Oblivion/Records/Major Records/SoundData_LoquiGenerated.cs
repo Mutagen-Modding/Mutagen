@@ -511,56 +511,18 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MinimumAttenuationDistance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
-                            item: out UInt16 MinimumAttenuationDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinimumAttenuationDistance = MinimumAttenuationDistanceParse;
-                        }
-                        else
-                        {
-                            item.MinimumAttenuationDistance_Property.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    UInt16XmlTranslation.Instance.ParseInto(
+                        root: root,
+                        property: item.MinimumAttenuationDistance_Property,
+                        fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
+                        errorMask: errorMask);
                     break;
                 case "MaximumAttenuationDistance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
-                            item: out UInt16 MaximumAttenuationDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaximumAttenuationDistance = MaximumAttenuationDistanceParse;
-                        }
-                        else
-                        {
-                            item.MaximumAttenuationDistance_Property.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    UInt16XmlTranslation.Instance.ParseInto(
+                        root: root,
+                        property: item.MaximumAttenuationDistance_Property,
+                        fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
+                        errorMask: errorMask);
                     break;
                 case "FrequencyAdjustment":
                     try

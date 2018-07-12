@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
             TranslationGeneration.WrapParseCall(
                 fg: fg,
                 typeGen: typeGen,
-                callLine: $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse",
+                translatorLine: $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
                 maskAccessor: maskAccessor,
                 itemAccessor: itemAccessor,
                 indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,

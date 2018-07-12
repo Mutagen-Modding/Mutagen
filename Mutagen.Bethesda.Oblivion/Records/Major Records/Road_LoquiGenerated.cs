@@ -414,12 +414,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Points":
-                    ListXmlTranslation<RoadPoint>.Instance.ParseInto(
-                        root: root,
-                        item: item.Points,
-                        fieldIndex: (int)Road_FieldIndex.Points,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<RoadPoint>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Road_FieldIndex.Points);
+                        if (ListXmlTranslation<RoadPoint>.Instance.Parse(
+                            root: root,
+                            enumer: out var PointsItem,
+                            transl: LoquiXmlTranslation<RoadPoint>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Points.SetTo(PointsItem);
+                        }
+                        else
+                        {
+                            item.Points.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(

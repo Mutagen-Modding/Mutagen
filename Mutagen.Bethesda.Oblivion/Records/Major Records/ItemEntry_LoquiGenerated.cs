@@ -443,9 +443,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Item":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Item_Property,
                         fieldIndex: (int)ItemEntry_FieldIndex.Item,
-                        item: item.Item_Property,
                         errorMask: errorMask);
                     break;
                 case "Count":
@@ -841,8 +841,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                property: item.Item_Property,
                 fieldIndex: (int)ItemEntry_FieldIndex.Item,
-                item: item.Item_Property,
                 errorMask: errorMask);
             if (frame.Complete) return;
             try

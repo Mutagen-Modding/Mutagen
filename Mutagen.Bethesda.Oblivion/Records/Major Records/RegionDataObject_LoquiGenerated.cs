@@ -1191,9 +1191,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Object":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Object_Property,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                        item: item.Object_Property,
                         errorMask: errorMask);
                     break;
                 case "ParentIndex":
@@ -2726,8 +2726,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                property: item.Object_Property,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                item: item.Object_Property,
                 errorMask: errorMask);
             try
             {

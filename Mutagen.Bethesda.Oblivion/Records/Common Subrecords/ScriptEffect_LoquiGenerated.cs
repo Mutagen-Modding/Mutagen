@@ -554,9 +554,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Script_Property,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     break;
                 case "MagicSchool":
@@ -587,9 +587,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "VisualEffect":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.VisualEffect_Property,
                         fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                        item: item.VisualEffect_Property,
                         errorMask: errorMask);
                     break;
                 case "Flags":
@@ -1323,8 +1323,8 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
+                            property: item.Script_Property,
                             fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                            item: item.Script_Property,
                             errorMask: errorMask);
                         if (dataFrame.Complete)
                         {
@@ -1357,8 +1357,8 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
+                            property: item.VisualEffect_Property,
                             fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                            item: item.VisualEffect_Property,
                             errorMask: errorMask);
                         if (dataFrame.Complete)
                         {

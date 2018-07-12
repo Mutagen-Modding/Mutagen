@@ -413,12 +413,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Objects":
-                    ListXmlTranslation<RegionDataObject>.Instance.ParseInto(
-                        root: root,
-                        item: item.Objects,
-                        fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<RegionDataObject>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObjects_FieldIndex.Objects);
+                        if (ListXmlTranslation<RegionDataObject>.Instance.Parse(
+                            root: root,
+                            enumer: out var ObjectsItem,
+                            transl: LoquiXmlTranslation<RegionDataObject>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Objects.SetTo(ObjectsItem);
+                        }
+                        else
+                        {
+                            item.Objects.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     RegionData.Fill_XML_Internal(

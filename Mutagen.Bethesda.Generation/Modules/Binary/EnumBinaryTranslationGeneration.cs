@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Generation
             TranslationGeneration.WrapParseCall(
                 fg: fg,
                 typeGen: typeGen,
-                callLine: $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse",
+                translatorLine: $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance",
                 maskAccessor: maskAccessor,
                 itemAccessor: itemAccessor,
                 indexAccessor: typeGen.IndexEnumInt,

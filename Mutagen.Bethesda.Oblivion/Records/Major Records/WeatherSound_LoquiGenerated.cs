@@ -436,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Sound":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Sound_Property,
                         fieldIndex: (int)WeatherSound_FieldIndex.Sound,
-                        item: item.Sound_Property,
                         errorMask: errorMask);
                     break;
                 case "Type":
@@ -820,8 +820,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                property: item.Sound_Property,
                 fieldIndex: (int)WeatherSound_FieldIndex.Sound,
-                item: item.Sound_Property,
                 errorMask: errorMask);
             try
             {

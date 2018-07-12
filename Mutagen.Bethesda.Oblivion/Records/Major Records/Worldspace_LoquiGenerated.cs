@@ -996,23 +996,23 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Parent":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Parent_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Parent,
-                        item: item.Parent_Property,
                         errorMask: errorMask);
                     break;
                 case "Climate":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Climate_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Climate,
-                        item: item.Climate_Property,
                         errorMask: errorMask);
                     break;
                 case "Water":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Water_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Water,
-                        item: item.Water_Property,
                         errorMask: errorMask);
                     break;
                 case "Icon":
@@ -1250,12 +1250,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "SubCells":
-                    ListXmlTranslation<WorldspaceBlock>.Instance.ParseInto(
-                        root: root,
-                        item: item.SubCells,
-                        fieldIndex: (int)Worldspace_FieldIndex.SubCells,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<WorldspaceBlock>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
+                        if (ListXmlTranslation<WorldspaceBlock>.Instance.Parse(
+                            root: root,
+                            enumer: out var SubCellsItem,
+                            transl: LoquiXmlTranslation<WorldspaceBlock>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.SubCells.SetTo(SubCellsItem);
+                        }
+                        else
+                        {
+                            item.SubCells.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -2648,25 +2667,25 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E57: // WNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Parent_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Parent,
-                        item: item.Parent_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
                 case 0x4D414E43: // CNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Climate_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Climate,
-                        item: item.Climate_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 case 0x324D414E: // NAM2
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Water_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Water,
-                        item: item.Water_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 case 0x4E4F4349: // ICON

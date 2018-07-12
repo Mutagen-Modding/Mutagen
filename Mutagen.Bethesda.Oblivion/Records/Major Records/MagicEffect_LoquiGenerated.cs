@@ -1263,9 +1263,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Light":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Light_Property,
                         fieldIndex: (int)MagicEffect_FieldIndex.Light,
-                        item: item.Light_Property,
                         errorMask: errorMask);
                     break;
                 case "ProjectileSpeed":
@@ -1296,9 +1296,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "EffectShader":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.EffectShader_Property,
                         fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
-                        item: item.EffectShader_Property,
                         errorMask: errorMask);
                     break;
                 case "SubData":
@@ -1328,12 +1328,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "CounterEffects":
-                    ListXmlTranslation<EDIDLink<MagicEffect>>.Instance.ParseInto(
-                        root: root,
-                        item: item.CounterEffects,
-                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
+                        if (ListXmlTranslation<EDIDLink<MagicEffect>>.Instance.Parse(
+                            root: root,
+                            enumer: out var CounterEffectsItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.CounterEffects.SetTo(CounterEffectsItem);
+                        }
+                        else
+                        {
+                            item.CounterEffects.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -3041,8 +3060,8 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
+                            property: item.Light_Property,
                             fieldIndex: (int)MagicEffect_FieldIndex.Light,
-                            item: item.Light_Property,
                             errorMask: errorMask);
                         try
                         {
@@ -3070,8 +3089,8 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
+                            property: item.EffectShader_Property,
                             fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
-                            item: item.EffectShader_Property,
                             errorMask: errorMask);
                         if (dataFrame.Complete)
                         {

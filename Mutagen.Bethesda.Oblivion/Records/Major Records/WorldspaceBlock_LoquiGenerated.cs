@@ -633,12 +633,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Items":
-                    ListXmlTranslation<WorldspaceSubBlock>.Instance.ParseInto(
-                        root: root,
-                        item: item.Items,
-                        fieldIndex: (int)WorldspaceBlock_FieldIndex.Items,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<WorldspaceSubBlock>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.Items);
+                        if (ListXmlTranslation<WorldspaceSubBlock>.Instance.Parse(
+                            root: root,
+                            enumer: out var ItemsItem,
+                            transl: LoquiXmlTranslation<WorldspaceSubBlock>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Items.SetTo(ItemsItem);
+                        }
+                        else
+                        {
+                            item.Items.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;

@@ -661,18 +661,37 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Script_Property,
                         fieldIndex: (int)Container_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     break;
                 case "Items":
-                    ListXmlTranslation<ContainerItem>.Instance.ParseInto(
-                        root: root,
-                        item: item.Items,
-                        fieldIndex: (int)Container_FieldIndex.Items,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<ContainerItem>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Container_FieldIndex.Items);
+                        if (ListXmlTranslation<ContainerItem>.Instance.Parse(
+                            root: root,
+                            enumer: out var ItemsItem,
+                            transl: LoquiXmlTranslation<ContainerItem>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Items.SetTo(ItemsItem);
+                        }
+                        else
+                        {
+                            item.Items.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Flags":
                     try
@@ -728,16 +747,16 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "OpenSound":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.OpenSound_Property,
                         fieldIndex: (int)Container_FieldIndex.OpenSound,
-                        item: item.OpenSound_Property,
                         errorMask: errorMask);
                     break;
                 case "CloseSound":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.CloseSound_Property,
                         fieldIndex: (int)Container_FieldIndex.CloseSound,
-                        item: item.CloseSound_Property,
                         errorMask: errorMask);
                     break;
                 default:
@@ -1406,9 +1425,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Script_Property,
                         fieldIndex: (int)Container_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Script);
                 case 0x4F544E43: // CNTO
@@ -1478,17 +1497,17 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E53: // SNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.OpenSound_Property,
                         fieldIndex: (int)Container_FieldIndex.OpenSound,
-                        item: item.OpenSound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.OpenSound);
                 case 0x4D414E51: // QNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.CloseSound_Property,
                         fieldIndex: (int)Container_FieldIndex.CloseSound,
-                        item: item.CloseSound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.CloseSound);
                 default:

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>68c703df680db0ea11802bb555c2e8c9da74a8fb</Sha>
+         <Sha>2cb919951c1868bd743c377225fb4e71b5458e60</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-04-2018 02:22:26</CommitDate>
-         <Description>LoquiRegistration upgrade for TryGet by type to handle on demand additions</Description>
+         <CommitDate>07-12-2018 17:16:46</CommitDate>
+         <Description>ParseInto work to avoid using it for ObjectCentralization</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

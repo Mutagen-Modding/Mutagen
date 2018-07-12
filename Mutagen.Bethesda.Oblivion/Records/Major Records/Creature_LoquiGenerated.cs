@@ -2597,28 +2597,85 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Items":
-                    ListXmlTranslation<ItemEntry>.Instance.ParseInto(
-                        root: root,
-                        item: item.Items,
-                        fieldIndex: (int)Creature_FieldIndex.Items,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<ItemEntry>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Items);
+                        if (ListXmlTranslation<ItemEntry>.Instance.Parse(
+                            root: root,
+                            enumer: out var ItemsItem,
+                            transl: LoquiXmlTranslation<ItemEntry>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Items.SetTo(ItemsItem);
+                        }
+                        else
+                        {
+                            item.Items.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Spells":
-                    ListXmlTranslation<FormIDSetLink<Spell>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Spells,
-                        fieldIndex: (int)Creature_FieldIndex.Spells,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
+                        if (ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Parse(
+                            root: root,
+                            enumer: out var SpellsItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Spells.SetTo(SpellsItem);
+                        }
+                        else
+                        {
+                            item.Spells.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Models":
-                    ListXmlTranslation<String>.Instance.ParseInto(
-                        root: root,
-                        item: item.Models,
-                        fieldIndex: (int)Creature_FieldIndex.Models,
-                        errorMask: errorMask,
-                        transl: StringXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Models);
+                        if (ListXmlTranslation<String>.Instance.Parse(
+                            root: root,
+                            enumer: out var ModelsItem,
+                            transl: StringXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Models.SetTo(ModelsItem);
+                        }
+                        else
+                        {
+                            item.Models.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "NIFT":
                     try
@@ -2829,25 +2886,44 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Factions":
-                    ListXmlTranslation<RankPlacement>.Instance.ParseInto(
-                        root: root,
-                        item: item.Factions,
-                        fieldIndex: (int)Creature_FieldIndex.Factions,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<RankPlacement>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Factions);
+                        if (ListXmlTranslation<RankPlacement>.Instance.Parse(
+                            root: root,
+                            enumer: out var FactionsItem,
+                            transl: LoquiXmlTranslation<RankPlacement>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Factions.SetTo(FactionsItem);
+                        }
+                        else
+                        {
+                            item.Factions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "DeathItem":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.DeathItem_Property,
                         fieldIndex: (int)Creature_FieldIndex.DeathItem,
-                        item: item.DeathItem_Property,
                         errorMask: errorMask);
                     break;
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Script_Property,
                         fieldIndex: (int)Creature_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     break;
                 case "Aggression":
@@ -3033,20 +3109,58 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "AIPackages":
-                    ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.ParseInto(
-                        root: root,
-                        item: item.AIPackages,
-                        fieldIndex: (int)Creature_FieldIndex.AIPackages,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.AIPackages);
+                        if (ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.Parse(
+                            root: root,
+                            enumer: out var AIPackagesItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.AIPackages.SetTo(AIPackagesItem);
+                        }
+                        else
+                        {
+                            item.AIPackages.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Animations":
-                    ListXmlTranslation<String>.Instance.ParseInto(
-                        root: root,
-                        item: item.Animations,
-                        fieldIndex: (int)Creature_FieldIndex.Animations,
-                        errorMask: errorMask,
-                        transl: StringXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Animations);
+                        if (ListXmlTranslation<String>.Instance.Parse(
+                            root: root,
+                            enumer: out var AnimationsItem,
+                            transl: StringXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Animations.SetTo(AnimationsItem);
+                        }
+                        else
+                        {
+                            item.Animations.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "CreatureType":
                     try
@@ -3466,9 +3580,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "CombatStyle":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.CombatStyle_Property,
                         fieldIndex: (int)Creature_FieldIndex.CombatStyle,
-                        item: item.CombatStyle_Property,
                         errorMask: errorMask);
                     break;
                 case "TurningSpeed":
@@ -3603,18 +3717,37 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "InheritsSoundFrom":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.InheritsSoundFrom_Property,
                         fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
-                        item: item.InheritsSoundFrom_Property,
                         errorMask: errorMask);
                     break;
                 case "Sounds":
-                    ListXmlTranslation<CreatureSound>.Instance.ParseInto(
-                        root: root,
-                        item: item.Sounds,
-                        fieldIndex: (int)Creature_FieldIndex.Sounds,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<CreatureSound>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Sounds);
+                        if (ListXmlTranslation<CreatureSound>.Instance.Parse(
+                            root: root,
+                            enumer: out var SoundsItem,
+                            transl: LoquiXmlTranslation<CreatureSound>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Sounds.SetTo(SoundsItem);
+                        }
+                        else
+                        {
+                            item.Sounds.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -6124,17 +6257,17 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E49: // INAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.DeathItem_Property,
                         fieldIndex: (int)Creature_FieldIndex.DeathItem,
-                        item: item.DeathItem_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.DeathItem);
                 case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Script_Property,
                         fieldIndex: (int)Creature_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Script);
                 case 0x54444941: // AIDT
@@ -6736,9 +6869,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E5A: // ZNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.CombatStyle_Property,
                         fieldIndex: (int)Creature_FieldIndex.CombatStyle,
-                        item: item.CombatStyle_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.CombatStyle);
                 case 0x4D414E54: // TNAM
@@ -6881,9 +7014,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x52435343: // CSCR
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.InheritsSoundFrom_Property,
                         fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
-                        item: item.InheritsSoundFrom_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.InheritsSoundFrom);
                 case 0x54445343: // CSDT

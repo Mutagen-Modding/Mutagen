@@ -822,16 +822,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Script_Property,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     break;
                 case "Enchantment":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Enchantment_Property,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
-                        item: item.Enchantment_Property,
                         errorMask: errorMask);
                     break;
                 case "EnchantmentPoints":
@@ -1885,17 +1885,17 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Script_Property,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Script);
                 case 0x4D414E45: // ENAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Enchantment_Property,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
-                        item: item.Enchantment_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Enchantment);
                 case 0x4D414E41: // ANAM

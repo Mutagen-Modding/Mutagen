@@ -894,57 +894,152 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Quest":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Quest_Property,
                         fieldIndex: (int)DialogItem_FieldIndex.Quest,
-                        item: item.Quest_Property,
                         errorMask: errorMask);
                     break;
                 case "PreviousTopic":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.PreviousTopic_Property,
                         fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
-                        item: item.PreviousTopic_Property,
                         errorMask: errorMask);
                     break;
                 case "Topics":
-                    ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Topics,
-                        fieldIndex: (int)DialogItem_FieldIndex.Topics,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Topics);
+                        if (ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Parse(
+                            root: root,
+                            enumer: out var TopicsItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Topics.SetTo(TopicsItem);
+                        }
+                        else
+                        {
+                            item.Topics.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Responses":
-                    ListXmlTranslation<DialogResponse>.Instance.ParseInto(
-                        root: root,
-                        item: item.Responses,
-                        fieldIndex: (int)DialogItem_FieldIndex.Responses,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<DialogResponse>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Responses);
+                        if (ListXmlTranslation<DialogResponse>.Instance.Parse(
+                            root: root,
+                            enumer: out var ResponsesItem,
+                            transl: LoquiXmlTranslation<DialogResponse>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Responses.SetTo(ResponsesItem);
+                        }
+                        else
+                        {
+                            item.Responses.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Conditions":
-                    ListXmlTranslation<DialogCondition>.Instance.ParseInto(
-                        root: root,
-                        item: item.Conditions,
-                        fieldIndex: (int)DialogItem_FieldIndex.Conditions,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<DialogCondition>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Conditions);
+                        if (ListXmlTranslation<DialogCondition>.Instance.Parse(
+                            root: root,
+                            enumer: out var ConditionsItem,
+                            transl: LoquiXmlTranslation<DialogCondition>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Conditions.SetTo(ConditionsItem);
+                        }
+                        else
+                        {
+                            item.Conditions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Choices":
-                    ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Choices,
-                        fieldIndex: (int)DialogItem_FieldIndex.Choices,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Choices);
+                        if (ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Parse(
+                            root: root,
+                            enumer: out var ChoicesItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Choices.SetTo(ChoicesItem);
+                        }
+                        else
+                        {
+                            item.Choices.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "LinkFrom":
-                    ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseInto(
-                        root: root,
-                        item: item.LinkFrom,
-                        fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.LinkFrom);
+                        if (ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Parse(
+                            root: root,
+                            enumer: out var LinkFromItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.LinkFrom.SetTo(LinkFromItem);
+                        }
+                        else
+                        {
+                            item.LinkFrom.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "MetadataSummary":
                     try
@@ -1023,12 +1118,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "References":
-                    ListXmlTranslation<ScriptObjectReference>.Instance.ParseInto(
-                        root: root,
-                        item: item.References,
-                        fieldIndex: (int)DialogItem_FieldIndex.References,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<ScriptObjectReference>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.References);
+                        if (ListXmlTranslation<ScriptObjectReference>.Instance.Parse(
+                            root: root,
+                            enumer: out var ReferencesItem,
+                            transl: LoquiXmlTranslation<ScriptObjectReference>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.References.SetTo(ReferencesItem);
+                        }
+                        else
+                        {
+                            item.References.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -2066,17 +2180,17 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49545351: // QSTI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Quest_Property,
                         fieldIndex: (int)DialogItem_FieldIndex.Quest,
-                        item: item.Quest_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
                 case 0x4D414E50: // PNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.PreviousTopic_Property,
                         fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
-                        item: item.PreviousTopic_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
                 case 0x454D414E: // NAME

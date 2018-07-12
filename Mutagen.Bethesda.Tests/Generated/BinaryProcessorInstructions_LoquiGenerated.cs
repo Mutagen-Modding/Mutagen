@@ -1136,21 +1136,33 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.BinaryProcessorInstructions");
             }
-            KeyedDictXmlTranslation<FormID, RecordInstruction>.Instance.Write(
-                node: elem,
-                name: nameof(item.CompressionInstructions),
-                items: item.CompressionInstructions.Values,
-                fieldIndex: (int)BinaryProcessorInstructions_FieldIndex.CompressionInstructions,
-                errorMask: errorMask,
-                valTransl: (XElement subNode, RecordInstruction subItem, ErrorMaskBuilder dictSubMask) =>
-                {
-                    LoquiXmlTranslation<RecordInstruction>.Instance.Write(
-                        node: subNode,
-                        item: subItem,
-                        name: "Item",
-                        errorMask: dictSubMask);
-                }
-                );
+            try
+            {
+                errorMask?.PushIndex((int)BinaryProcessorInstructions_FieldIndex.CompressionInstructions);
+                KeyedDictXmlTranslation<FormID, RecordInstruction>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CompressionInstructions),
+                    items: item.CompressionInstructions.Values,
+                    errorMask: errorMask,
+                    valTransl: (XElement subNode, RecordInstruction subItem, ErrorMaskBuilder dictSubMask) =>
+                    {
+                        LoquiXmlTranslation<RecordInstruction>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: dictSubMask);
+                    }
+                    );
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
             LoquiXmlTranslation<Instruction>.Instance.Write(
                 node: elem,
                 item: item.Instruction,

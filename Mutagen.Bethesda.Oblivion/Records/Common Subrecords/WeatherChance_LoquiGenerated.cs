@@ -436,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Weather":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Weather_Property,
                         fieldIndex: (int)WeatherChance_FieldIndex.Weather,
-                        item: item.Weather_Property,
                         errorMask: errorMask);
                     break;
                 case "Chance":
@@ -816,8 +816,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                property: item.Weather_Property,
                 fieldIndex: (int)WeatherChance_FieldIndex.Weather,
-                item: item.Weather_Property,
                 errorMask: errorMask);
             try
             {

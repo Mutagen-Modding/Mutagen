@@ -404,18 +404,37 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Reference":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Reference_Property,
                         fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                        item: item.Reference_Property,
                         errorMask: errorMask);
                     break;
                 case "Points":
-                    ListXmlTranslation<Int16>.Instance.ParseInto(
-                        root: root,
-                        item: item.Points,
-                        fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
-                        errorMask: errorMask,
-                        transl: Int16XmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Points);
+                        if (ListXmlTranslation<Int16>.Instance.Parse(
+                            root: root,
+                            enumer: out var PointsItem,
+                            transl: Int16XmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Points.SetTo(PointsItem);
+                        }
+                        else
+                        {
+                            item.Points.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;
@@ -636,8 +655,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                property: item.Reference_Property,
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                item: item.Reference_Property,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
                 frame: frame,

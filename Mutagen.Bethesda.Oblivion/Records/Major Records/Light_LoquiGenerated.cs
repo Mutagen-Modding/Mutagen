@@ -1085,9 +1085,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Script_Property,
                         fieldIndex: (int)Light_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     break;
                 case "Name":
@@ -1378,9 +1378,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Sound":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Sound_Property,
                         fieldIndex: (int)Light_FieldIndex.Sound,
-                        item: item.Sound_Property,
                         errorMask: errorMask);
                     break;
                 default:
@@ -2641,9 +2641,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Script_Property,
                         fieldIndex: (int)Light_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Light_FieldIndex.Script);
                 case 0x4C4C5546: // FULL
@@ -2935,9 +2935,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E53: // SNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Sound_Property,
                         fieldIndex: (int)Light_FieldIndex.Sound,
-                        item: item.Sound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Light_FieldIndex.Sound);
                 default:

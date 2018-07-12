@@ -663,9 +663,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Reference":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Reference_Property,
                         fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
-                        item: item.Reference_Property,
                         errorMask: errorMask);
                     break;
                 case "Count":
@@ -1299,8 +1299,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                property: item.Reference_Property,
                 fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
-                item: item.Reference_Property,
                 errorMask: errorMask);
             if (frame.Complete) return;
             try

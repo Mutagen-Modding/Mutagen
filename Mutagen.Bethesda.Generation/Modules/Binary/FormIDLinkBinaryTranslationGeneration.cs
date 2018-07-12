@@ -80,14 +80,15 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
-            using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.ParseInto"))
-            {
-                args.Add($"frame: {frameAccessor}.Spawn(snapToFinalPosition: false)");
-                args.Add($"fieldIndex: {typeGen.IndexEnumInt}");
-                args.Add($"item: {itemAccessor.PropertyAccess}");
-                args.Add($"errorMask: {maskAccessor}");
-            }
+
+            TranslationGeneration.WrapParseCall(
+                fg: fg,
+                typeGen: typeGen,
+                translatorLine: $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
+                maskAccessor: maskAccessor,
+                itemAccessor: itemAccessor,
+                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                extraargs: $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : ".Spawn(snapToFinalPosition: false)")}");
         }
 
         public override void GenerateWrite(

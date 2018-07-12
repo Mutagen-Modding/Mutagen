@@ -592,12 +592,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Spells":
-                    ListXmlTranslation<FormIDSetLink<Spell>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Spells,
-                        fieldIndex: (int)Birthsign_FieldIndex.Spells,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Birthsign_FieldIndex.Spells);
+                        if (ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Parse(
+                            root: root,
+                            enumer: out var SpellsItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Spells.SetTo(SpellsItem);
+                        }
+                        else
+                        {
+                            item.Spells.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(

@@ -1084,12 +1084,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "SpeedTreeSeeds":
-                    ListXmlTranslation<UInt32>.Instance.ParseInto(
-                        root: root,
-                        item: item.SpeedTreeSeeds,
-                        fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
-                        errorMask: errorMask,
-                        transl: UInt32XmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
+                        if (ListXmlTranslation<UInt32>.Instance.Parse(
+                            root: root,
+                            enumer: out var SpeedTreeSeedsItem,
+                            transl: UInt32XmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.SpeedTreeSeeds.SetTo(SpeedTreeSeedsItem);
+                        }
+                        else
+                        {
+                            item.SpeedTreeSeeds.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "LeafCurvature":
                     try

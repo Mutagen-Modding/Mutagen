@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseInto(
             MutagenFrame frame,
             int fieldIndex,
-            IHasItem<T> item,
+            IHasItem<T> property,
             ErrorMaskBuilder errorMask)
         {
             try
@@ -28,11 +28,11 @@ namespace Mutagen.Bethesda.Binary
                     out T subItem,
                     errorMask))
                 {
-                    item.Item = subItem;
+                    property.Item = subItem;
                 }
                 else
                 {
-                    item.Unset();
+                    property.Unset();
                 }
             }
             catch (Exception ex)

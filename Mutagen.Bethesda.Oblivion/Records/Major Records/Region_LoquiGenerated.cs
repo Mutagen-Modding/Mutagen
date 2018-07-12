@@ -890,18 +890,37 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Worldspace":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Worldspace_Property,
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
-                        item: item.Worldspace_Property,
                         errorMask: errorMask);
                     break;
                 case "Areas":
-                    ListXmlTranslation<RegionArea>.Instance.ParseInto(
-                        root: root,
-                        item: item.Areas,
-                        fieldIndex: (int)Region_FieldIndex.Areas,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<RegionArea>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Areas);
+                        if (ListXmlTranslation<RegionArea>.Instance.Parse(
+                            root: root,
+                            enumer: out var AreasItem,
+                            transl: LoquiXmlTranslation<RegionArea>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Areas.SetTo(AreasItem);
+                        }
+                        else
+                        {
+                            item.Areas.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Objects":
                     try
@@ -2304,9 +2323,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E57: // WNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Worldspace_Property,
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
-                        item: item.Worldspace_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
                 case 0x494C5052: // RPLI

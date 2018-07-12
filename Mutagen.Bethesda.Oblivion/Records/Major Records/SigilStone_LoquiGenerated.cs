@@ -764,18 +764,37 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Script_Property,
                         fieldIndex: (int)SigilStone_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     break;
                 case "Effects":
-                    ListXmlTranslation<Effect>.Instance.ParseInto(
-                        root: root,
-                        item: item.Effects,
-                        fieldIndex: (int)SigilStone_FieldIndex.Effects,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<Effect>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)SigilStone_FieldIndex.Effects);
+                        if (ListXmlTranslation<Effect>.Instance.Parse(
+                            root: root,
+                            enumer: out var EffectsItem,
+                            transl: LoquiXmlTranslation<Effect>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Effects.SetTo(EffectsItem);
+                        }
+                        else
+                        {
+                            item.Effects.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Uses":
                     try
@@ -1820,9 +1839,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Script_Property,
                         fieldIndex: (int)SigilStone_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Script);
                 case 0x44494645: // EFID

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Binary
         public readonly static FormIDBinaryTranslation Instance = new FormIDBinaryTranslation();
         public override int? ExpectedLength => 4;
 
-        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, FormIDSetLink<T> property, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             try
@@ -23,11 +23,11 @@ namespace Mutagen.Bethesda.Binary
                     item: out FormID val,
                     errorMask: errorMask))
                 {
-                    item.Set(val);
+                    property.Set(val);
                 }
                 else
                 {
-                    item.Unset();
+                    property.Unset();
                 }
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(MutagenFrame frame, int fieldIndex, FormIDLink<T> property, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             try
@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Binary
                     item: out FormID val,
                     errorMask: errorMask))
                 {
-                    item.Set(val);
+                    property.Set(val);
                 }
                 else
                 {
-                    item.Unset();
+                    property.Unset();
                 }
             }
             catch (Exception ex)

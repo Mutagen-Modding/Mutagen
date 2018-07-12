@@ -538,12 +538,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "PointToPointConnections":
-                    ListXmlTranslation<PathGridPoint>.Instance.ParseInto(
-                        root: root,
-                        item: item.PointToPointConnections,
-                        fieldIndex: (int)PathGrid_FieldIndex.PointToPointConnections,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<PathGridPoint>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToPointConnections);
+                        if (ListXmlTranslation<PathGridPoint>.Instance.Parse(
+                            root: root,
+                            enumer: out var PointToPointConnectionsItem,
+                            transl: LoquiXmlTranslation<PathGridPoint>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.PointToPointConnections.SetTo(PointToPointConnectionsItem);
+                        }
+                        else
+                        {
+                            item.PointToPointConnections.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Unknown":
                     try
@@ -572,20 +591,58 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "InterCellConnections":
-                    ListXmlTranslation<InterCellPoint>.Instance.ParseInto(
-                        root: root,
-                        item: item.InterCellConnections,
-                        fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<InterCellPoint>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PathGrid_FieldIndex.InterCellConnections);
+                        if (ListXmlTranslation<InterCellPoint>.Instance.Parse(
+                            root: root,
+                            enumer: out var InterCellConnectionsItem,
+                            transl: LoquiXmlTranslation<InterCellPoint>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.InterCellConnections.SetTo(InterCellConnectionsItem);
+                        }
+                        else
+                        {
+                            item.InterCellConnections.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "PointToReferenceMappings":
-                    ListXmlTranslation<PointToReferenceMapping>.Instance.ParseInto(
-                        root: root,
-                        item: item.PointToReferenceMappings,
-                        fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<PointToReferenceMapping>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToReferenceMappings);
+                        if (ListXmlTranslation<PointToReferenceMapping>.Instance.Parse(
+                            root: root,
+                            enumer: out var PointToReferenceMappingsItem,
+                            transl: LoquiXmlTranslation<PointToReferenceMapping>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.PointToReferenceMappings.SetTo(PointToReferenceMappingsItem);
+                        }
+                        else
+                        {
+                            item.PointToReferenceMappings.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     Placed.Fill_XML_Internal(

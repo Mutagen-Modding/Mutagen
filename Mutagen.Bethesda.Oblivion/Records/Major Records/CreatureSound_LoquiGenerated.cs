@@ -487,12 +487,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Sounds":
-                    ListXmlTranslation<SoundItem>.Instance.ParseInto(
-                        root: root,
-                        item: item.Sounds,
-                        fieldIndex: (int)CreatureSound_FieldIndex.Sounds,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<SoundItem>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)CreatureSound_FieldIndex.Sounds);
+                        if (ListXmlTranslation<SoundItem>.Instance.Parse(
+                            root: root,
+                            enumer: out var SoundsItem,
+                            transl: LoquiXmlTranslation<SoundItem>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Sounds.SetTo(SoundsItem);
+                        }
+                        else
+                        {
+                            item.Sounds.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;

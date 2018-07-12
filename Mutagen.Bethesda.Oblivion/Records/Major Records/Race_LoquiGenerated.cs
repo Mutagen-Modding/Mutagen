@@ -1461,28 +1461,85 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Spells":
-                    ListXmlTranslation<FormIDSetLink<Spell>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Spells,
-                        fieldIndex: (int)Race_FieldIndex.Spells,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Spells);
+                        if (ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Parse(
+                            root: root,
+                            enumer: out var SpellsItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Spells.SetTo(SpellsItem);
+                        }
+                        else
+                        {
+                            item.Spells.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Relations":
-                    ListXmlTranslation<Relation>.Instance.ParseInto(
-                        root: root,
-                        item: item.Relations,
-                        fieldIndex: (int)Race_FieldIndex.Relations,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<Relation>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Relations);
+                        if (ListXmlTranslation<Relation>.Instance.Parse(
+                            root: root,
+                            enumer: out var RelationsItem,
+                            transl: LoquiXmlTranslation<Relation>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Relations.SetTo(RelationsItem);
+                        }
+                        else
+                        {
+                            item.Relations.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "SkillBoosts":
-                    ListXmlTranslation<SkillBoost>.Instance.ParseInto(
-                        root: root,
-                        item: item.SkillBoosts,
-                        fieldIndex: (int)Race_FieldIndex.SkillBoosts,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<SkillBoost>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.SkillBoosts);
+                        if (ListXmlTranslation<SkillBoost>.Instance.Parse(
+                            root: root,
+                            enumer: out var SkillBoostsItem,
+                            transl: LoquiXmlTranslation<SkillBoost>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.SkillBoosts.SetTo(SkillBoostsItem);
+                        }
+                        else
+                        {
+                            item.SkillBoosts.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Fluff":
                     try
@@ -1797,12 +1854,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "FaceData":
-                    ListXmlTranslation<FacePart>.Instance.ParseInto(
-                        root: root,
-                        item: item.FaceData,
-                        fieldIndex: (int)Race_FieldIndex.FaceData,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<FacePart>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.FaceData);
+                        if (ListXmlTranslation<FacePart>.Instance.Parse(
+                            root: root,
+                            enumer: out var FaceDataItem,
+                            transl: LoquiXmlTranslation<FacePart>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.FaceData.SetTo(FaceDataItem);
+                        }
+                        else
+                        {
+                            item.FaceData.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "BodyData":
                     try
@@ -1831,20 +1907,58 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Hairs":
-                    ListXmlTranslation<FormIDLink<Hair>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Hairs,
-                        fieldIndex: (int)Race_FieldIndex.Hairs,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
+                        if (ListXmlTranslation<FormIDLink<Hair>>.Instance.Parse(
+                            root: root,
+                            enumer: out var HairsItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Hairs.SetTo(HairsItem);
+                        }
+                        else
+                        {
+                            item.Hairs.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Eyes":
-                    ListXmlTranslation<FormIDLink<Eye>>.Instance.ParseInto(
-                        root: root,
-                        item: item.Eyes,
-                        fieldIndex: (int)Race_FieldIndex.Eyes,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
+                        if (ListXmlTranslation<FormIDLink<Eye>>.Instance.Parse(
+                            root: root,
+                            enumer: out var EyesItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Eyes.SetTo(EyesItem);
+                        }
+                        else
+                        {
+                            item.Eyes.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "FaceGenData":
                     try

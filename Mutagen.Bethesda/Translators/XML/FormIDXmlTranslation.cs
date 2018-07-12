@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda
     {
         public readonly static FormIDXmlTranslation Instance = new FormIDXmlTranslation();
 
-        public void ParseInto<T>(XElement root, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement root, int fieldIndex, FormIDSetLink<T> property, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             try
@@ -23,11 +23,11 @@ namespace Mutagen.Bethesda
 
                 if (Parse(root, out FormID val, errorMask))
                 {
-                    item.Set(val);
+                    property.Set(val);
                 }
                 else
                 {
-                    item.Unset();
+                    property.Unset();
                 }
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement root, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement root, int fieldIndex, FormIDLink<T> property, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             try
@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda
 
                 if (Parse(root, out FormID val, errorMask))
                 {
-                    item.Set(val);
+                    property.Set(val);
                 }
                 else
                 {
-                    item.Unset();
+                    property.Unset();
                 }
             }
             catch (Exception ex)
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement root, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement root, int fieldIndex, EDIDLink<T> property, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             try
@@ -77,11 +77,11 @@ namespace Mutagen.Bethesda
 
                 if (Parse(root, out FormID val, errorMask))
                 {
-                    item.Set(val);
+                    property.Set(val);
                 }
                 else
                 {
-                    item.Unset();
+                    property.Unset();
                 }
             }
             catch (Exception ex)
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement root, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement root, int fieldIndex, EDIDSetLink<T> property, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             try
@@ -104,11 +104,11 @@ namespace Mutagen.Bethesda
 
                 if (Parse(root, out FormID val, errorMask))
                 {
-                    item.Set(val);
+                    property.Set(val);
                 }
                 else
                 {
-                    item.Unset();
+                    property.Unset();
                 }
             }
             catch (Exception ex)

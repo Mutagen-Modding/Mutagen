@@ -675,20 +675,58 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "LocalVariables":
-                    ListXmlTranslation<LocalVariable>.Instance.ParseInto(
-                        root: root,
-                        item: item.LocalVariables,
-                        fieldIndex: (int)Script_FieldIndex.LocalVariables,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<LocalVariable>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Script_FieldIndex.LocalVariables);
+                        if (ListXmlTranslation<LocalVariable>.Instance.Parse(
+                            root: root,
+                            enumer: out var LocalVariablesItem,
+                            transl: LoquiXmlTranslation<LocalVariable>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.LocalVariables.SetTo(LocalVariablesItem);
+                        }
+                        else
+                        {
+                            item.LocalVariables.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "References":
-                    ListXmlTranslation<ScriptReference>.Instance.ParseInto(
-                        root: root,
-                        item: item.References,
-                        fieldIndex: (int)Script_FieldIndex.References,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<ScriptReference>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Script_FieldIndex.References);
+                        if (ListXmlTranslation<ScriptReference>.Instance.Parse(
+                            root: root,
+                            enumer: out var ReferencesItem,
+                            transl: LoquiXmlTranslation<ScriptReference>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.References.SetTo(ReferencesItem);
+                        }
+                        else
+                        {
+                            item.References.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(

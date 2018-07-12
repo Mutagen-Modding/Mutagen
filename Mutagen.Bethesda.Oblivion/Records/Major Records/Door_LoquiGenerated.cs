@@ -633,30 +633,30 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Script_Property,
                         fieldIndex: (int)Door_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     break;
                 case "OpenSound":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.OpenSound_Property,
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
-                        item: item.OpenSound_Property,
                         errorMask: errorMask);
                     break;
                 case "CloseSound":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.CloseSound_Property,
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
-                        item: item.CloseSound_Property,
                         errorMask: errorMask);
                     break;
                 case "LoopSound":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.LoopSound_Property,
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
-                        item: item.LoopSound_Property,
                         errorMask: errorMask);
                     break;
                 case "Flags":
@@ -686,12 +686,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "RandomTeleportDestinations":
-                    ListXmlTranslation<FormIDSetLink<Worldspace>>.Instance.ParseInto(
-                        root: root,
-                        item: item.RandomTeleportDestinations,
-                        fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
-                        errorMask: errorMask,
-                        transl: FormIDXmlTranslation.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
+                        if (ListXmlTranslation<FormIDSetLink<Worldspace>>.Instance.Parse(
+                            root: root,
+                            enumer: out var RandomTeleportDestinationsItem,
+                            transl: FormIDXmlTranslation.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.RandomTeleportDestinations.SetTo(RandomTeleportDestinationsItem);
+                        }
+                        else
+                        {
+                            item.RandomTeleportDestinations.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -1223,33 +1242,33 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49524353: // SCRI
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Script_Property,
                         fieldIndex: (int)Door_FieldIndex.Script,
-                        item: item.Script_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
                 case 0x4D414E53: // SNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.OpenSound_Property,
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
-                        item: item.OpenSound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
                 case 0x4D414E41: // ANAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.CloseSound_Property,
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
-                        item: item.CloseSound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
                 case 0x4D414E42: // BNAM
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.LoopSound_Property,
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
-                        item: item.LoopSound_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
                 case 0x4D414E46: // FNAM

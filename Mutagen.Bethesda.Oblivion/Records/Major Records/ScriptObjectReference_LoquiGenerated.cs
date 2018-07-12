@@ -396,9 +396,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Reference":
                     FormIDXmlTranslation.Instance.ParseInto(
-                        root,
+                        root: root,
+                        property: item.Reference_Property,
                         fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
-                        item: item.Reference_Property,
                         errorMask: errorMask);
                     break;
                 default:
@@ -651,9 +651,9 @@ namespace Mutagen.Bethesda.Oblivion
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame.SpawnWithLength(contentLength),
+                        property: item.Reference_Property,
                         fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
-                        item: item.Reference_Property,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)ScriptObjectReference_FieldIndex.Reference);
                 default:

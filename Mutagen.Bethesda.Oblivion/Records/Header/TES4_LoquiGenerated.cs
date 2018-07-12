@@ -902,12 +902,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "MasterReferences":
-                    ListXmlTranslation<MasterReference>.Instance.ParseInto(
-                        root: root,
-                        item: item.MasterReferences,
-                        fieldIndex: (int)TES4_FieldIndex.MasterReferences,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<MasterReference>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)TES4_FieldIndex.MasterReferences);
+                        if (ListXmlTranslation<MasterReference>.Instance.Parse(
+                            root: root,
+                            enumer: out var MasterReferencesItem,
+                            transl: LoquiXmlTranslation<MasterReference>.Instance.Parse,
+                            errorMask: errorMask))
+                        {
+                            item.MasterReferences.SetTo(MasterReferencesItem);
+                        }
+                        else
+                        {
+                            item.MasterReferences.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;

@@ -2110,21 +2110,33 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
             if (item.Items.HasBeenSet)
             {
-                KeyedDictXmlTranslation<FormID, T>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Items),
-                    items: item.Items.Values,
-                    fieldIndex: (int)Group_FieldIndex.Items,
-                    errorMask: errorMask,
-                    valTransl: (XElement subNode, T subItem, ErrorMaskBuilder dictSubMask) =>
-                    {
-                        LoquiXmlTranslation<T>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: "Item",
-                            errorMask: dictSubMask);
-                    }
-                    );
+                try
+                {
+                    errorMask?.PushIndex((int)Group_FieldIndex.Items);
+                    KeyedDictXmlTranslation<FormID, T>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Items),
+                        items: item.Items.Values,
+                        errorMask: errorMask,
+                        valTransl: (XElement subNode, T subItem, ErrorMaskBuilder dictSubMask) =>
+                        {
+                            LoquiXmlTranslation<T>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: "Item",
+                                errorMask: dictSubMask);
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         #endregion
