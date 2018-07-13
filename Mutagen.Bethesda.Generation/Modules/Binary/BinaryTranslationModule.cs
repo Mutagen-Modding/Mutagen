@@ -637,7 +637,14 @@ namespace Mutagen.Bethesda.Generation
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"item.{set.StateName} |= {set.EnumName}.Break{subField.BreakIndex};");
-                                var enumName = set.SubFields.TryGet(subField.FieldIndex - 1)?.IndexEnumName;
+                                string enumName = null;
+                                for (int i = subField.FieldIndex - 1; i >= 0; i--)
+                                {
+                                    var prevField = set.SubFields.TryGet(i);
+                                    if (!prevField?.IntegrateField ?? true) continue;
+                                    enumName = prevField.IndexEnumName;
+                                    break;
+                                }
                                 if (enumName != null)
                                 {
                                     enumName = $"(int){enumName}";

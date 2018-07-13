@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackage
     {
+        [Flags]
         public enum Flag
         {
             OffersServices = 0x0000001,

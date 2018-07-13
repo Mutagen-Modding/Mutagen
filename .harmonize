@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>3953e64a1bf791d6da27c861a46c6a63c0e88c6a</Sha>
+         <Sha>301d6d153e0add65922c6c2a4fc4f4472c2dfb53</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-10-2018 18:37:20</CommitDate>
-         <Description>BasicSubstitutionRangeStream</Description>
+         <CommitDate>07-12-2018 22:15:33</CommitDate>
+         <Description>NotifyingDictionary ContainsKey</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

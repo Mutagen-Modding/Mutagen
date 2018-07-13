@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Condition
     {
+        [Flags]
         public enum Flag
         {
             OR = 0x01,

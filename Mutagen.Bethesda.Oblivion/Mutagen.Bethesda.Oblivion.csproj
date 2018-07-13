@@ -135,6 +135,9 @@
     <Compile Include="Records\Major Records\Climate.cs">
       <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\CombatStyle.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Container.cs">
       <DependentUpon>Container.xml</DependentUpon>
     </Compile>
@@ -695,6 +698,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AIPackageTarget_LoquiGenerated.cs">
       <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStyleAdvanced_LoquiGenerated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

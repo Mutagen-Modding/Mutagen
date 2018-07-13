@@ -344,16 +344,17 @@ namespace Mutagen.Bethesda.Binary
 
         protected void WriteValue(MutagenWriter writer, E item, long length)
         {
+            var i = item.ToInt32(null);
             switch (length)
             {
                 case 1:
-                    writer.Write(item.ToByte(null));
+                    writer.Write((byte)i);
                     break;
                 case 2:
-                    writer.Write(item.ToInt16(null));
+                    writer.Write((ushort)i);
                     break;
                 case 4:
-                    writer.Write(item.ToInt32(null));
+                    writer.Write(i);
                     break;
                 default:
                     throw new NotImplementedException();

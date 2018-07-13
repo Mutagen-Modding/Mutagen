@@ -64,6 +64,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessDialogItems(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
             ProcessIdleAnimations(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
             ProcessAIPackages(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessCombatStyle(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
         }
 
         private void ProcessNPC_Mismatch(
@@ -752,6 +753,76 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        private void ProcessCombatStyle(
+            BinaryReadStream stream,
+            FormID formID,
+            Type recType,
+            Instruction instr,
+            RangeInt64 loc,
+            MajorRecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker,
+            bool processing)
+        {
+            if (!typeof(CombatStyle).Equals(recType)) return;
+
+            if (!processing) return;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var dataIndex = str.IndexOf("CSTD");
+            stream.Position = loc.Min + dataIndex + 4;
+            var len = stream.ReadUInt16();
+            if (dataIndex != -1)
+            {
+                var move = 2;
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Data = new byte[] { 0, 0 },
+                        Location = loc.Min + dataIndex + 6 + move
+                    });
+                move = 38;
+                if (len < 2 + move) return;
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Data = new byte[] { 0, 0 },
+                        Location = loc.Min + dataIndex + 6 + move
+                    });
+                move = 53;
+                if (len < 3 + move) return;
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Data = new byte[] { 0, 0, 0 },
+                        Location = loc.Min + dataIndex + 6 + 53
+                    });
+                move = 69;
+                if (len < 3 + move) return;
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Data = new byte[] { 0, 0, 0 },
+                        Location = loc.Min + dataIndex + 6 + 69
+                    });
+                move = 82;
+                if (len < 2 + move) return;
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Data = new byte[] { 0, 0 },
+                        Location = loc.Min + dataIndex + 6 + 82
+                    });
+                move = 113;
+                if (len < 3 + move) return;
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Data = new byte[] { 0, 0, 0 },
+                        Location = loc.Min + dataIndex + 6 + 113
+                    });
+            }
+        }
+
         private bool DynamicMove(
             string str,
             Instruction instr,
@@ -989,7 +1060,6 @@ namespace Mutagen.Bethesda.Tests
                 inputPath,
                 out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
-
             foreach (var record in mod.MajorRecords.Values)
             {
                 if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
@@ -1018,81 +1088,92 @@ namespace Mutagen.Bethesda.Tests
                 var alignedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Aligned");
                 var processedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Processed");
 
-                ModDecompressor.Decompress(
-                    inputPath: Properties.Settings.Default.OblivionESM,
-                    outputPath: uncompressedPath);
+                if (!File.Exists(uncompressedPath))
+                {
+                    ModDecompressor.Decompress(
+                        inputPath: Properties.Settings.Default.OblivionESM,
+                        outputPath: uncompressedPath);
+                }
 
                 var importRecs = ImportExport(uncompressedPath, oblivionOutputPath);
 
-                ModAligner.Align(
-                    inputPath: uncompressedPath,
-                    outputPath: alignedPath,
-                    alignmentRules: GetAlignmentRules(),
-                    temp: tmp);
-
-                var alignedFileLocs = MajorRecordLocator.GetFileLocations(
-                    alignedPath);
-
-                Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
-
-                using (var reader = new BinaryReadStream(alignedPath))
+                //if (!File.Exists(alignedPath))
                 {
-                    foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
-                    {
-                        reader.Position = grup + 4;
-                        lengthTracker[grup] = reader.ReadUInt32();
-                    }
+                    ModAligner.Align(
+                        inputPath: uncompressedPath,
+                        outputPath: alignedPath,
+                        alignmentRules: GetAlignmentRules(),
+                        temp: tmp);
                 }
 
-                var instructions = GetOblivionInstructions(
-                    lengthTracker,
-                    alignedFileLocs);
-
-                using (var stream = new BinaryReadStream(alignedPath))
+                BinaryProcessorInstructions instructions;
+                //if (!File.Exists(processedPath))
                 {
-                    foreach (var recType in importRecs)
+                    var alignedFileLocs = MajorRecordLocator.GetFileLocations(
+                    alignedPath);
+
+                    Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
+
+                    using (var reader = new BinaryReadStream(alignedPath))
                     {
-                        foreach (var id in recType.Value)
+                        foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
                         {
-                            AddDynamicProcessorInstructions(
-                                stream: stream,
-                                formID: id,
-                                recType: recType.Key,
-                                instr: instructions.Instruction,
-                                loc: alignedFileLocs[id],
-                                fileLocs: alignedFileLocs,
-                                lengthTracker: lengthTracker,
-                                processing: true);
+                            reader.Position = grup + 4;
+                            lengthTracker[grup] = reader.ReadUInt32();
+                        }
+                    }
+
+                    instructions = GetOblivionInstructions(
+                        lengthTracker,
+                        alignedFileLocs);
+
+                    using (var stream = new BinaryReadStream(alignedPath))
+                    {
+                        foreach (var recType in importRecs)
+                        {
+                            foreach (var id in recType.Value)
+                            {
+                                AddDynamicProcessorInstructions(
+                                    stream: stream,
+                                    formID: id,
+                                    recType: recType.Key,
+                                    instr: instructions.Instruction,
+                                    loc: alignedFileLocs[id],
+                                    fileLocs: alignedFileLocs,
+                                    lengthTracker: lengthTracker,
+                                    processing: true);
+                            }
+                        }
+                    }
+
+                    using (var reader = new BinaryReadStream(alignedPath))
+                    {
+                        foreach (var grup in lengthTracker)
+                        {
+                            reader.Position = grup.Key + 4;
+                            if (grup.Value == reader.ReadUInt32()) continue;
+                            instructions.Instruction.Substitutions.Add(
+                                new DataTarget()
+                                {
+                                    Location = grup.Key + 4,
+                                    Data = BitConverter.GetBytes(grup.Value)
+                                });
+                        }
+                    }
+
+                    var binConfig = instructions.Instruction.ToProcessorConfig();
+                    using (var processor = new BinaryFileProcessor(
+                        new FileStream(alignedPath, FileMode.Open, FileAccess.Read),
+                        binConfig))
+                    {
+                        using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
+                        {
+                            processor.CopyTo(outStream);
                         }
                     }
                 }
 
-                using (var reader = new BinaryReadStream(alignedPath))
-                {
-                    foreach (var grup in lengthTracker)
-                    {
-                        reader.Position = grup.Key + 4;
-                        if (grup.Value == reader.ReadUInt32()) continue;
-                        instructions.Instruction.Substitutions.Add(
-                            new DataTarget()
-                            {
-                                Location = grup.Key + 4,
-                                Data = BitConverter.GetBytes(grup.Value)
-                            });
-                    }
-                }
-
-                var binConfig = instructions.Instruction.ToProcessorConfig();
-                using (var processor = new BinaryFileProcessor(
-                    new FileStream(alignedPath, FileMode.Open, FileAccess.Read),
-                    binConfig))
-                {
-                    using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
-                    {
-                        processor.CopyTo(outStream);
-                    }
-                }
-
+                instructions = new BinaryProcessorInstructions();
                 var processedFileLocs = MajorRecordLocator.GetFileLocations(
                     processedPath);
                 using (var stream = new BinaryReadStream(processedPath))
