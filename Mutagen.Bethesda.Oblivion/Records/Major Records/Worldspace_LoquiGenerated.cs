@@ -29,11 +29,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Worldspace : 
-        MajorRecord,
+        Place,
         IWorldspace,
         ILoquiObject<Worldspace>,
         ILoquiObjectSetter,
-        INamed,
+        INamed, IPlace,
         IPropertySupporter<String>,
         IPropertySupporter<MapData>,
         IPropertySupporter<Worldspace.Flag>,
@@ -930,6 +930,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
+            out Place_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Worldspace_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1330,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiXmlTranslation<WorldspaceBlock>.Instance.Parse);
                     break;
                 default:
-                    MajorRecord.Fill_XML_Internal(
+                    Place.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -2745,7 +2757,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            Place.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -2996,7 +3008,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.OffsetData);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return Place.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -3227,7 +3239,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Worldspace_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_Place(obj, pair);
             }
             switch (enu)
             {
@@ -3312,7 +3324,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IWorldspace : IWorldspaceGetter, IMajorRecord, ILoquiClass<IWorldspace, IWorldspaceGetter>, ILoquiClass<Worldspace, IWorldspaceGetter>
+    public partial interface IWorldspace : IWorldspaceGetter, IPlace, ILoquiClass<IWorldspace, IWorldspaceGetter>, ILoquiClass<Worldspace, IWorldspaceGetter>
     {
         new String Name { get; set; }
         new INotifyingSetItem<String> Name_Property { get; }
@@ -3350,7 +3362,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<WorldspaceBlock> SubCells { get; }
     }
 
-    public partial interface IWorldspaceGetter : IMajorRecordGetter
+    public partial interface IWorldspaceGetter : IPlaceGetter
     {
         #region Name
         String Name { get; }
@@ -3553,7 +3565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return Place_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -3579,7 +3591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.OffsetData:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return Place_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -3604,7 +3616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return Place_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -3642,7 +3654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return "SubCells";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return Place_Registration.GetNthName(index);
             }
         }
 
@@ -3667,7 +3679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return Place_Registration.IsNthDerivative(index);
             }
         }
 
@@ -3692,7 +3704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return Place_Registration.IsProtected(index);
             }
         }
 
@@ -3730,7 +3742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return typeof(NotifyingList<WorldspaceBlock>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return Place_Registration.GetNthType(index);
             }
         }
 
@@ -3795,7 +3807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            PlaceCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -4226,7 +4238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SubCells.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    PlaceCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -4282,7 +4294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SubCells.Unset(cmds);
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    PlaceCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -4323,7 +4335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return obj.SubCells.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return PlaceCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -4363,7 +4375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     return obj.SubCells;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return PlaceCommon.GetNthObject(index, obj);
             }
         }
 
@@ -4440,7 +4452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.SubCells = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceBlock_Mask<bool>>>>();
                 ret.SubCells.Overall = false;
             }
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            PlaceCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -4586,6 +4598,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TopCell = new MaskItem<bool, Cell_Mask<bool>>(item.TopCell_Property.HasBeenSet, CellCommon.GetHasBeenSetMask(item.TopCell));
             ret.SubCells = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceBlock_Mask<bool>>>>(item.SubCells.HasBeenSet, item.SubCells.Select((i) => new MaskItem<bool, WorldspaceBlock_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
+        }
+
+        public static Worldspace_FieldIndex? ConvertFieldIndex(Place_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Worldspace_FieldIndex ConvertFieldIndex(Place_FieldIndex index)
+        {
+            switch (index)
+            {
+                case Place_FieldIndex.MajorRecordFlags:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Place_FieldIndex.FormID:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Place_FieldIndex.Version:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Place_FieldIndex.EditorID:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Place_FieldIndex.RecordType:
+                    return (Worldspace_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         public static Worldspace_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -4928,7 +4965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Worldspace_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Worldspace_Mask<T>>
+    public class Worldspace_Mask<T> : Place_Mask<T>, IMask<T>, IEquatable<Worldspace_Mask<T>>
     {
         #region Ctors
         public Worldspace_Mask()
@@ -5252,7 +5289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Worldspace_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Worldspace_ErrorMask>
+    public class Worldspace_ErrorMask : Place_ErrorMask, IErrorMask<Worldspace_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -5542,7 +5579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Worldspace_CopyMask : MajorRecord_CopyMask
+    public class Worldspace_CopyMask : Place_CopyMask
     {
         #region Members
         public bool Name;

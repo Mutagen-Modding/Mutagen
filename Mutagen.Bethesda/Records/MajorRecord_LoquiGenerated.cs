@@ -1618,7 +1618,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
-        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
@@ -1648,6 +1647,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
@@ -1667,11 +1667,12 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType WATR_HEADER = new RecordType("WATR");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
-        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
+        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
+        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType LAND_HEADER = new RecordType("LAND");
         public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
         public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
@@ -1692,7 +1693,6 @@ namespace Mutagen.Bethesda.Internals
                         APPA_HEADER,
                         BSGN_HEADER,
                         BOOK_HEADER,
-                        CELL_HEADER,
                         CLAS_HEADER,
                         CLMT_HEADER,
                         FULL_HEADER,
@@ -1722,6 +1722,7 @@ namespace Mutagen.Bethesda.Internals
                         LTEX_HEADER,
                         LVLI_HEADER,
                         LIGH_HEADER,
+                        LSCR_HEADER,
                         MGEF_HEADER,
                         MISC_HEADER,
                         NPC__HEADER,
@@ -1741,11 +1742,12 @@ namespace Mutagen.Bethesda.Internals
                         WATR_HEADER,
                         WEAP_HEADER,
                         WTHR_HEADER,
-                        WRLD_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER,
                         AMMO_HEADER,
                         LVLC_HEADER,
+                        CELL_HEADER,
+                        WRLD_HEADER,
                         LAND_HEADER,
                         PGRD_HEADER,
                         ACRE_HEADER,

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LoadScreen" objType="Record" baseClass="Bethesda.MajorRecord" recordType="LSCR" GUID="12f93621-ba01-4a56-89b2-13d84e7a6972" ID="161">
+    <Fields>
+      <String name="Icon" recordType="ICON" />
+      <String name="Description" recordType="DESC" />
+      <RefList name="Locations" refName="LoadScreenLocation" />
+    </Fields>
+  </Object>
+  <Object name="LoadScreenLocation" objType="Subrecord" recordType="LNAM" GUID="20b31ea8-66df-4668-9f33-8a69f340c592" ID="162">
+    <Fields>
+      <FormIDLink name="Direct" refName="Place" />
+      <FormIDLink name="Indirect" refName="Worldspace" />
+      <P2Int16 name="GridPoint" />
+    </Fields>
+  </Object>
+</Loqui>

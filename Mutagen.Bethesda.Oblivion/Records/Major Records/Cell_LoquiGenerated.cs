@@ -29,11 +29,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Cell : 
-        MajorRecord,
+        Place,
         ICell,
         ILoquiObject<Cell>,
         ILoquiObjectSetter,
-        INamed,
+        INamed, IPlace,
         IPropertySupporter<String>,
         IPropertySupporter<Cell.Flag>,
         IPropertySupporter<P2Int>,
@@ -970,6 +970,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
+            out Place_ErrorMask errorMask,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Cell_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
+        public override void CopyIn_XML(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
@@ -1375,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiXmlTranslation<Placed>.Instance.Parse);
                     break;
                 default:
-                    MajorRecord.Fill_XML_Internal(
+                    Place.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -2862,7 +2874,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            Place.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -3112,7 +3124,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.GlobalVariable);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return Place.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -3352,7 +3364,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Cell_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_Place(obj, pair);
             }
             switch (enu)
             {
@@ -3446,7 +3458,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ICell : ICellGetter, IMajorRecord, ILoquiClass<ICell, ICellGetter>, ILoquiClass<Cell, ICellGetter>
+    public partial interface ICell : ICellGetter, IPlace, ILoquiClass<ICell, ICellGetter>, ILoquiClass<Cell, ICellGetter>
     {
         new String Name { get; set; }
         new INotifyingSetItem<String> Name_Property { get; }
@@ -3485,7 +3497,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<Placed> VisibleWhenDistant { get; }
     }
 
-    public partial interface ICellGetter : IMajorRecordGetter
+    public partial interface ICellGetter : IPlaceGetter
     {
         #region Name
         String Name { get; }
@@ -3709,7 +3721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Landscape:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return Place_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -3738,7 +3750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.GlobalVariable:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return Place_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -3766,7 +3778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.VisibleWhenDistant:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return Place_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -3810,7 +3822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.VisibleWhenDistant:
                     return "VisibleWhenDistant";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return Place_Registration.GetNthName(index);
             }
         }
 
@@ -3838,7 +3850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.VisibleWhenDistant:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return Place_Registration.IsNthDerivative(index);
             }
         }
 
@@ -3866,7 +3878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.VisibleWhenDistant:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return Place_Registration.IsProtected(index);
             }
         }
 
@@ -3910,7 +3922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.VisibleWhenDistant:
                     return typeof(NotifyingList<Placed>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return Place_Registration.GetNthType(index);
             }
         }
 
@@ -3977,7 +3989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Cell_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            PlaceCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -4512,7 +4524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.VisibleWhenDistant.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    PlaceCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -4577,7 +4589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.VisibleWhenDistant.Unset(cmds);
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    PlaceCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -4624,7 +4636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.VisibleWhenDistant:
                     return obj.VisibleWhenDistant.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return PlaceCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -4670,7 +4682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.VisibleWhenDistant:
                     return obj.VisibleWhenDistant;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return PlaceCommon.GetNthObject(index, obj);
             }
         }
 
@@ -4819,7 +4831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>();
                 ret.VisibleWhenDistant.Overall = false;
             }
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            PlaceCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -5025,6 +5037,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.VisibleWhenDistant.HasBeenSet, item.VisibleWhenDistant.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
+        }
+
+        public static Cell_FieldIndex? ConvertFieldIndex(Place_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Cell_FieldIndex ConvertFieldIndex(Place_FieldIndex index)
+        {
+            switch (index)
+            {
+                case Place_FieldIndex.MajorRecordFlags:
+                    return (Cell_FieldIndex)((int)index);
+                case Place_FieldIndex.FormID:
+                    return (Cell_FieldIndex)((int)index);
+                case Place_FieldIndex.Version:
+                    return (Cell_FieldIndex)((int)index);
+                case Place_FieldIndex.EditorID:
+                    return (Cell_FieldIndex)((int)index);
+                case Place_FieldIndex.RecordType:
+                    return (Cell_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         public static Cell_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -5427,7 +5464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Cell_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Cell_Mask<T>>
+    public class Cell_Mask<T> : Place_Mask<T>, IMask<T>, IEquatable<Cell_Mask<T>>
     {
         #region Ctors
         public Cell_Mask()
@@ -5940,7 +5977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Cell_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Cell_ErrorMask>
+    public class Cell_ErrorMask : Place_ErrorMask, IErrorMask<Cell_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -6329,7 +6366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Cell_CopyMask : MajorRecord_CopyMask
+    public class Cell_CopyMask : Place_CopyMask
     {
         #region Members
         public bool Name;

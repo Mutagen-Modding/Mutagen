@@ -702,6 +702,15 @@
     <Compile Include="Records\Major Records\CombatStyleAdvanced_LoquiGenerated.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LoadScreen_LoquiGenerated.cs">
+      <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LoadScreenLocation_LoquiGenerated.cs">
+      <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Place_LoquiGenerated.cs">
+      <DependentUpon>Place.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Condition.xml">
@@ -842,6 +851,9 @@
     <Content Include="Records\Major Records\Light.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\LoadScreen.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\MagicEffect.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -858,6 +870,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\PathGrid.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Place.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Placed.xml">

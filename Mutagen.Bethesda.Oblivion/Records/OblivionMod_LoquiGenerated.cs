@@ -94,6 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
             _IdleAnimations_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _AIPackages_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _CombatStyles_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
+            _LoadScreens_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _hasBeenSetTracker[(int)OblivionMod_FieldIndex.TES4] = true;
             CustomCtor();
         }
@@ -386,6 +387,11 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<CombatStyle> _CombatStyles_Object = new Group<CombatStyle>();
         public Group<CombatStyle> CombatStyles => _CombatStyles_Object;
         #endregion
+        #region LoadScreens
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<LoadScreen> _LoadScreens_Object = new Group<LoadScreen>();
+        public Group<LoadScreen> LoadScreens => _LoadScreens_Object;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -504,6 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
             if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
             if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
+            if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
             return true;
         }
 
@@ -565,6 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(IdleAnimations).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(AIPackages).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(CombatStyles).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(LoadScreens).CombineHashCode(ret);
             return ret;
         }
 
@@ -2073,6 +2081,30 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
+                case "LoadScreens":
+                    try
+                    {
+                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
+                        item.LoadScreens.CopyFieldsFrom<LoadScreen_CopyMask>(
+                            rhs: Group<LoadScreen>.Create_XML(
+                                root: root,
+                                errorMask: errorMask)
+                            ,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -2138,6 +2170,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.IdleAnimations:
                 case OblivionMod_FieldIndex.AIPackages:
                 case OblivionMod_FieldIndex.CombatStyles:
+                case OblivionMod_FieldIndex.LoadScreens:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -2442,6 +2475,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case CombatStyle combatstyles:
                     _CombatStyles_Object.Items.Set(combatstyles);
                     break;
+                case LoadScreen loadscreens:
+                    _LoadScreens_Object.Items.Set(loadscreens);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
@@ -2655,6 +2691,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 return (INotifyingKeyedCollection<FormID, T>)CombatStyles.Items;
             }
+            if (t.Equals(typeof(LoadScreen)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)LoadScreens.Items;
+            }
             throw new ArgumentException($"Unkown group type: {t}");
         }
 
@@ -2790,6 +2830,10 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             foreach (var item in AIPackages.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in LoadScreens.Links)
             {
                 yield return item;
             }
@@ -3063,6 +3107,11 @@ namespace Mutagen.Bethesda.Oblivion
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.CombatStyles,
                     doMasks: doMasks));
+                tasks.Add(LoadScreens.Write_XmlFolder<LoadScreen, LoadScreen_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "LoadScreens")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.LoadScreens,
+                    doMasks: doMasks));
                 await Task.WhenAll(tasks);
             }
             catch (Exception ex)
@@ -3087,7 +3136,8 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: null,
                 errorMask: null);
         }
-        
+
+        [DebuggerStepThrough]
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
             out OblivionMod_ErrorMask errorMask,
@@ -4472,6 +4522,28 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.CombatStyles);
+                case 0x5243534C: // LSCR
+                    if (importMask?.LoadScreens ?? true)
+                    {
+                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LoadScreens))
+                        {
+                            var tmpLoadScreens = Group<LoadScreen>.Create_Binary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null);
+                            item.LoadScreens.CopyFieldsFrom<LoadScreen_CopyMask>(
+                                rhs: tmpLoadScreens,
+                                def: null,
+                                cmds: null,
+                                copyMask: null,
+                                errorMask: errorMask);
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LoadScreens);
                 default:
                     errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -4759,6 +4831,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.CombatStyles:
                     this._CombatStyles_Object.CopyFieldsFrom<CombatStyle_CopyMask>(rhs: (Group<CombatStyle>)obj);
                     break;
+                case OblivionMod_FieldIndex.LoadScreens:
+                    this._LoadScreens_Object.CopyFieldsFrom<LoadScreen_CopyMask>(rhs: (Group<LoadScreen>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4952,6 +5027,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.CombatStyles:
                     obj._CombatStyles_Object.CopyFieldsFrom<CombatStyle_CopyMask>(rhs: (Group<CombatStyle>)pair.Value);
                     break;
+                case OblivionMod_FieldIndex.LoadScreens:
+                    obj._LoadScreens_Object.CopyFieldsFrom<LoadScreen_CopyMask>(rhs: (Group<LoadScreen>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -5129,6 +5207,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region CombatStyles
         Group<CombatStyle> CombatStyles { get; }
         #endregion
+        #region LoadScreens
+        Group<LoadScreen> LoadScreens { get; }
+        #endregion
 
     }
 
@@ -5193,6 +5274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IdleAnimations = 49,
         AIPackages = 50,
         CombatStyles = 51,
+        LoadScreens = 52,
     }
     #endregion
 
@@ -5210,9 +5292,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort AdditionalFieldCount = 52;
+        public const ushort AdditionalFieldCount = 53;
 
-        public const ushort FieldCount = 52;
+        public const ushort FieldCount = 53;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -5344,6 +5426,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.AIPackages;
                 case "COMBATSTYLES":
                     return (ushort)OblivionMod_FieldIndex.CombatStyles;
+                case "LOADSCREENS":
+                    return (ushort)OblivionMod_FieldIndex.LoadScreens;
                 default:
                     return null;
             }
@@ -5406,6 +5490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.IdleAnimations:
                 case OblivionMod_FieldIndex.AIPackages:
                 case OblivionMod_FieldIndex.CombatStyles:
+                case OblivionMod_FieldIndex.LoadScreens:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5469,6 +5554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.IdleAnimations:
                 case OblivionMod_FieldIndex.AIPackages:
                 case OblivionMod_FieldIndex.CombatStyles:
+                case OblivionMod_FieldIndex.LoadScreens:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5532,6 +5618,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.IdleAnimations:
                 case OblivionMod_FieldIndex.AIPackages:
                 case OblivionMod_FieldIndex.CombatStyles:
+                case OblivionMod_FieldIndex.LoadScreens:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5647,6 +5734,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "AIPackages";
                 case OblivionMod_FieldIndex.CombatStyles:
                     return "CombatStyles";
+                case OblivionMod_FieldIndex.LoadScreens:
+                    return "LoadScreens";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5709,6 +5798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.IdleAnimations:
                 case OblivionMod_FieldIndex.AIPackages:
                 case OblivionMod_FieldIndex.CombatStyles:
+                case OblivionMod_FieldIndex.LoadScreens:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5773,6 +5863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.IdleAnimations:
                 case OblivionMod_FieldIndex.AIPackages:
                 case OblivionMod_FieldIndex.CombatStyles:
+                case OblivionMod_FieldIndex.LoadScreens:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5888,6 +5979,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<AIPackage>);
                 case OblivionMod_FieldIndex.CombatStyles:
                     return typeof(Group<CombatStyle>);
+                case OblivionMod_FieldIndex.LoadScreens:
+                    return typeof(Group<LoadScreen>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5945,6 +6038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
+        public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -5958,7 +6052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 52;
+        public const int NumTypedFields = 53;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -7197,6 +7291,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask.PopIndex();
                 }
             }
+            if (copyMask?.LoadScreens.Overall ?? true)
+            {
+                errorMask.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.LoadScreens,
+                        rhs: rhs.LoadScreens,
+                        def: def?.LoadScreens,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.LoadScreens.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -7261,6 +7378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.IdleAnimations:
                 case OblivionMod_FieldIndex.AIPackages:
                 case OblivionMod_FieldIndex.CombatStyles:
+                case OblivionMod_FieldIndex.LoadScreens:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -7432,6 +7550,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.CombatStyles:
                     GroupCommon.Clear(obj.CombatStyles, cmds.ToUnsetParams());
                     break;
+                case OblivionMod_FieldIndex.LoadScreens:
+                    GroupCommon.Clear(obj.LoadScreens, cmds.ToUnsetParams());
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7495,6 +7616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.IdleAnimations:
                 case OblivionMod_FieldIndex.AIPackages:
                 case OblivionMod_FieldIndex.CombatStyles:
+                case OblivionMod_FieldIndex.LoadScreens:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -7614,6 +7736,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.AIPackages;
                 case OblivionMod_FieldIndex.CombatStyles:
                     return obj.CombatStyles;
+                case OblivionMod_FieldIndex.LoadScreens:
+                    return obj.LoadScreens;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7794,6 +7918,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CombatStyles = new MaskItem<bool, Group_Mask<bool>>();
             ret.CombatStyles.Specific = GroupCommon.GetEqualsMask(item.CombatStyles, rhs.CombatStyles);
             ret.CombatStyles.Overall = ret.CombatStyles.Specific.AllEqual((b) => b);
+            ret.LoadScreens = new MaskItem<bool, Group_Mask<bool>>();
+            ret.LoadScreens.Specific = GroupCommon.GetEqualsMask(item.LoadScreens, rhs.LoadScreens);
+            ret.LoadScreens.Overall = ret.LoadScreens.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -8031,6 +8158,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.CombatStyles?.ToString(fg, "CombatStyles");
                 }
+                if (printMask?.LoadScreens?.Overall ?? true)
+                {
+                    item.LoadScreens?.ToString(fg, "LoadScreens");
+                }
             }
             fg.AppendLine("]");
         }
@@ -8099,6 +8230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.IdleAnimations = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.IdleAnimations));
             ret.AIPackages = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.AIPackages));
             ret.CombatStyles = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.CombatStyles));
+            ret.LoadScreens = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LoadScreens));
             return ret;
         }
 
@@ -8446,6 +8578,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.CombatStyles,
                 name: nameof(item.CombatStyles),
                 fieldIndex: (int)OblivionMod_FieldIndex.CombatStyles,
+                errorMask: errorMask);
+            LoquiXmlTranslation<Group<LoadScreen>>.Instance.Write(
+                node: elem,
+                item: item.LoadScreens,
+                name: nameof(item.LoadScreens),
+                fieldIndex: (int)OblivionMod_FieldIndex.LoadScreens,
                 errorMask: errorMask);
         }
         #endregion
@@ -9061,6 +9199,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
+            if (importMask?.LoadScreens ?? true)
+            {
+                if (item.LoadScreens.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<LoadScreen>>.Instance.Write(
+                        writer: writer,
+                        item: item.LoadScreens,
+                        fieldIndex: (int)OblivionMod_FieldIndex.LoadScreens,
+                        errorMask: errorMask);
+                }
+            }
         }
 
         #endregion
@@ -9132,6 +9281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.IdleAnimations = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.AIPackages = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.CombatStyles = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.LoadScreens = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -9188,6 +9338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> IdleAnimations { get; set; }
         public MaskItem<T, Group_Mask<T>> AIPackages { get; set; }
         public MaskItem<T, Group_Mask<T>> CombatStyles { get; set; }
+        public MaskItem<T, Group_Mask<T>> LoadScreens { get; set; }
         #endregion
 
         #region Equals
@@ -9252,6 +9403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
             if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
             if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
+            if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -9309,6 +9461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.IdleAnimations?.GetHashCode());
             ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
             ret = ret.CombineHashCode(this.CombatStyles?.GetHashCode());
+            ret = ret.CombineHashCode(this.LoadScreens?.GetHashCode());
             return ret;
         }
 
@@ -9576,6 +9729,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.CombatStyles.Overall)) return false;
                 if (this.CombatStyles.Specific != null && !this.CombatStyles.Specific.AllEqual(eval)) return false;
+            }
+            if (LoadScreens != null)
+            {
+                if (!eval(this.LoadScreens.Overall)) return false;
+                if (this.LoadScreens.Specific != null && !this.LoadScreens.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -10059,6 +10217,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.CombatStyles.Specific = this.CombatStyles.Specific.Translate(eval);
                 }
             }
+            if (this.LoadScreens != null)
+            {
+                obj.LoadScreens = new MaskItem<R, Group_Mask<R>>();
+                obj.LoadScreens.Overall = eval(this.LoadScreens.Overall);
+                if (this.LoadScreens.Specific != null)
+                {
+                    obj.LoadScreens.Specific = this.LoadScreens.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -10295,6 +10462,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     CombatStyles?.ToString(fg);
                 }
+                if (printMask?.LoadScreens?.Overall ?? true)
+                {
+                    LoadScreens?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -10370,6 +10541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>> IdleAnimations;
         public MaskItem<Exception, Group_ErrorMask<AIPackage_ErrorMask>> AIPackages;
         public MaskItem<Exception, Group_ErrorMask<CombatStyle_ErrorMask>> CombatStyles;
+        public MaskItem<Exception, Group_ErrorMask<LoadScreen_ErrorMask>> LoadScreens;
         #endregion
 
         #region IErrorMask
@@ -10482,6 +10654,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return AIPackages;
                 case OblivionMod_FieldIndex.CombatStyles:
                     return CombatStyles;
+                case OblivionMod_FieldIndex.LoadScreens:
+                    return LoadScreens;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -10647,6 +10821,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.CombatStyles:
                     this.CombatStyles = new MaskItem<Exception, Group_ErrorMask<CombatStyle_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.LoadScreens:
+                    this.LoadScreens = new MaskItem<Exception, Group_ErrorMask<LoadScreen_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -10814,6 +10991,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.CombatStyles:
                     this.CombatStyles = (MaskItem<Exception, Group_ErrorMask<CombatStyle_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.LoadScreens:
+                    this.LoadScreens = (MaskItem<Exception, Group_ErrorMask<LoadScreen_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -10874,6 +11054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (IdleAnimations != null) return true;
             if (AIPackages != null) return true;
             if (CombatStyles != null) return true;
+            if (LoadScreens != null) return true;
             return false;
         }
         #endregion
@@ -10960,6 +11141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IdleAnimations?.ToString(fg);
             AIPackages?.ToString(fg);
             CombatStyles?.ToString(fg);
+            LoadScreens?.ToString(fg);
         }
         #endregion
 
@@ -11019,6 +11201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.IdleAnimations = new MaskItem<Exception, Group_ErrorMask<IdleAnimation_ErrorMask>>(this.IdleAnimations.Overall.Combine(rhs.IdleAnimations.Overall), ((IErrorMask<Group_ErrorMask<IdleAnimation_ErrorMask>>)this.IdleAnimations.Specific).Combine(rhs.IdleAnimations.Specific));
             ret.AIPackages = new MaskItem<Exception, Group_ErrorMask<AIPackage_ErrorMask>>(this.AIPackages.Overall.Combine(rhs.AIPackages.Overall), ((IErrorMask<Group_ErrorMask<AIPackage_ErrorMask>>)this.AIPackages.Specific).Combine(rhs.AIPackages.Specific));
             ret.CombatStyles = new MaskItem<Exception, Group_ErrorMask<CombatStyle_ErrorMask>>(this.CombatStyles.Overall.Combine(rhs.CombatStyles.Overall), ((IErrorMask<Group_ErrorMask<CombatStyle_ErrorMask>>)this.CombatStyles.Specific).Combine(rhs.CombatStyles.Specific));
+            ret.LoadScreens = new MaskItem<Exception, Group_ErrorMask<LoadScreen_ErrorMask>>(this.LoadScreens.Overall.Combine(rhs.LoadScreens.Overall), ((IErrorMask<Group_ErrorMask<LoadScreen_ErrorMask>>)this.LoadScreens.Specific).Combine(rhs.LoadScreens.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -11092,6 +11275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<IdleAnimation_CopyMask>> IdleAnimations;
         public MaskItem<bool, Group_CopyMask<AIPackage_CopyMask>> AIPackages;
         public MaskItem<bool, Group_CopyMask<CombatStyle_CopyMask>> CombatStyles;
+        public MaskItem<bool, Group_CopyMask<LoadScreen_CopyMask>> LoadScreens;
         #endregion
 
     }
@@ -11153,6 +11337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool IdleAnimations;
         public bool AIPackages;
         public bool CombatStyles;
+        public bool LoadScreens;
         public GroupMask()
         {
         }
@@ -11209,6 +11394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IdleAnimations = defaultValue;
             AIPackages = defaultValue;
             CombatStyles = defaultValue;
+            LoadScreens = defaultValue;
         }
     }
     #endregion
