@@ -59,6 +59,7 @@
       <Group name="AIPackages" refName="AIPackage" />
       <Group name="CombatStyles" refName="CombatStyle" />
       <Group name="LoadScreens" refName="LoadScreen" />
+      <Group name="LeveledSpells" refName="LeveledSpell" />
     </Fields>
   </Object>
 </Loqui>

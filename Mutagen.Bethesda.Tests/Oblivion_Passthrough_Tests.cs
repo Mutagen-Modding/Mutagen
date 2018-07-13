@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Tests
                             (byte)'F',
                             0x1,
                             0x0,
-                            0x1
+                            0x2
                     }
                 };
                 instr.Additions.Add(addition);
@@ -944,14 +944,9 @@ namespace Mutagen.Bethesda.Tests
             return true;
         }
 
-        public Task OblivionESM_Binary()
+        public async Task OblivionESM_Binary_Internal(bool reuseOld = true, bool deleteAfter = false)
         {
-            return OblivionESM_Binary_Internal(deleteAfter: true);
-        }
-
-        public async Task OblivionESM_Binary_Internal(bool deleteAfter)
-        {
-            await OblivionESM_Typical(deleteAfter: deleteAfter);
+            await OblivionESM_Typical(reuseOld: reuseOld, deleteAfter: deleteAfter);
         }
 
         public ModAligner.AlignmentRules GetAlignmentRules()
@@ -1079,7 +1074,7 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        private async Task OblivionESM_Typical(bool deleteAfter)
+        private async Task OblivionESM_Typical(bool reuseOld, bool deleteAfter)
         {
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary")), deleteAfter: deleteAfter))
             {
@@ -1088,7 +1083,7 @@ namespace Mutagen.Bethesda.Tests
                 var alignedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Aligned");
                 var processedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Processed");
 
-                if (!File.Exists(uncompressedPath))
+                if (!reuseOld || !File.Exists(uncompressedPath))
                 {
                     ModDecompressor.Decompress(
                         inputPath: Properties.Settings.Default.OblivionESM,
@@ -1097,7 +1092,7 @@ namespace Mutagen.Bethesda.Tests
 
                 var importRecs = ImportExport(uncompressedPath, oblivionOutputPath);
 
-                //if (!File.Exists(alignedPath))
+                if (!reuseOld || !File.Exists(alignedPath))
                 {
                     ModAligner.Align(
                         inputPath: uncompressedPath,
@@ -1107,7 +1102,7 @@ namespace Mutagen.Bethesda.Tests
                 }
 
                 BinaryProcessorInstructions instructions;
-                //if (!File.Exists(processedPath))
+                if (!reuseOld || !File.Exists(processedPath))
                 {
                     var alignedFileLocs = MajorRecordLocator.GetFileLocations(
                     alignedPath);

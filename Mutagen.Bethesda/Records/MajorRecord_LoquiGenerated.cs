@@ -1646,6 +1646,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
+        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
@@ -1678,7 +1679,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
         public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1721,6 +1721,7 @@ namespace Mutagen.Bethesda.Internals
                         KEYM_HEADER,
                         LTEX_HEADER,
                         LVLI_HEADER,
+                        LVSP_HEADER,
                         LIGH_HEADER,
                         LSCR_HEADER,
                         MGEF_HEADER,
@@ -1753,7 +1754,6 @@ namespace Mutagen.Bethesda.Internals
                         ACRE_HEADER,
                         ACHR_HEADER,
                         REFR_HEADER,
-                        LVSP_HEADER,
                         SPEL_HEADER
                     })
             );

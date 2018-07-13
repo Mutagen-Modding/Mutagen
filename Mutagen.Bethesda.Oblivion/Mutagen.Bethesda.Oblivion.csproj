@@ -711,6 +711,9 @@
     <Compile Include="Records\Major Records\Place_LoquiGenerated.cs">
       <DependentUpon>Place.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledSpell_LoquiGenerated.cs">
+      <DependentUpon>LeveledSpell.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Condition.xml">
@@ -846,6 +849,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\LeveledItem.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\LeveledSpell.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Light.xml">

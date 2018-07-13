@@ -20,7 +20,9 @@ namespace Mutagen.Bethesda.Tester
             LoquiRegistrationSettings.AutomaticRegistration = false;
 
             var tests = new Oblivion_Passthrough_Tests();
-            tests.OblivionESM_Binary_Internal(deleteAfter: false).Wait();
+            tests.OblivionESM_Binary_Internal(
+                reuseOld: false,
+                deleteAfter: false).Wait();
 
             //var mod = OblivionMod.Create_Binary(
             //    //@"C:\Games\Oblivion\Data\Oblivion.esm",
