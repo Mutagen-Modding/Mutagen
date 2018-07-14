@@ -96,6 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
             _CombatStyles_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _LoadScreens_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _LeveledSpells_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
+            _AnimatedObjects_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _hasBeenSetTracker[(int)OblivionMod_FieldIndex.TES4] = true;
             CustomCtor();
         }
@@ -398,6 +399,11 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<LeveledSpell> _LeveledSpells_Object = new Group<LeveledSpell>();
         public Group<LeveledSpell> LeveledSpells => _LeveledSpells_Object;
         #endregion
+        #region AnimatedObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<AnimatedObject> _AnimatedObjects_Object = new Group<AnimatedObject>();
+        public Group<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -518,6 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
             if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
             if (!object.Equals(this.LeveledSpells, rhs.LeveledSpells)) return false;
+            if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
             return true;
         }
 
@@ -581,6 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(CombatStyles).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LoadScreens).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LeveledSpells).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(AnimatedObjects).CombineHashCode(ret);
             return ret;
         }
 
@@ -2137,6 +2145,30 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
+                case "AnimatedObjects":
+                    try
+                    {
+                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
+                        item.AnimatedObjects.CopyFieldsFrom<AnimatedObject_CopyMask>(
+                            rhs: Group<AnimatedObject>.Create_XML(
+                                root: root,
+                                errorMask: errorMask)
+                            ,
+                            def: null,
+                            cmds: null,
+                            copyMask: null,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -2204,6 +2236,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.CombatStyles:
                 case OblivionMod_FieldIndex.LoadScreens:
                 case OblivionMod_FieldIndex.LeveledSpells:
+                case OblivionMod_FieldIndex.AnimatedObjects:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -2514,6 +2547,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case LeveledSpell leveledspells:
                     _LeveledSpells_Object.Items.Set(leveledspells);
                     break;
+                case AnimatedObject animatedobjects:
+                    _AnimatedObjects_Object.Items.Set(animatedobjects);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
@@ -2735,6 +2771,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 return (INotifyingKeyedCollection<FormID, T>)LeveledSpells.Items;
             }
+            if (t.Equals(typeof(AnimatedObject)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)AnimatedObjects.Items;
+            }
             throw new ArgumentException($"Unkown group type: {t}");
         }
 
@@ -2878,6 +2918,10 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             foreach (var item in LeveledSpells.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in AnimatedObjects.Links)
             {
                 yield return item;
             }
@@ -3160,6 +3204,11 @@ namespace Mutagen.Bethesda.Oblivion
                     dir: new DirectoryPath(Path.Combine(dir.Path, "LeveledSpells")),
                     errMaskFunc: errMaskFunc,
                     index: (int)OblivionMod_FieldIndex.LeveledSpells,
+                    doMasks: doMasks));
+                tasks.Add(AnimatedObjects.Write_XmlFolder<AnimatedObject, AnimatedObject_ErrorMask>(
+                    dir: new DirectoryPath(Path.Combine(dir.Path, "AnimatedObjects")),
+                    errMaskFunc: errMaskFunc,
+                    index: (int)OblivionMod_FieldIndex.AnimatedObjects,
                     doMasks: doMasks));
                 await Task.WhenAll(tasks);
             }
@@ -4615,6 +4664,28 @@ namespace Mutagen.Bethesda.Oblivion
                         frame.Position += contentLength;
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledSpells);
+                case 0x4F494E41: // ANIO
+                    if (importMask?.AnimatedObjects ?? true)
+                    {
+                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects))
+                        {
+                            var tmpAnimatedObjects = Group<AnimatedObject>.Create_Binary(
+                                frame: frame,
+                                errorMask: errorMask,
+                                recordTypeConverter: null);
+                            item.AnimatedObjects.CopyFieldsFrom<AnimatedObject_CopyMask>(
+                                rhs: tmpAnimatedObjects,
+                                def: null,
+                                cmds: null,
+                                copyMask: null,
+                                errorMask: errorMask);
+                        }
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AnimatedObjects);
                 default:
                     errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -4908,6 +4979,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.LeveledSpells:
                     this._LeveledSpells_Object.CopyFieldsFrom<LeveledSpell_CopyMask>(rhs: (Group<LeveledSpell>)obj);
                     break;
+                case OblivionMod_FieldIndex.AnimatedObjects:
+                    this._AnimatedObjects_Object.CopyFieldsFrom<AnimatedObject_CopyMask>(rhs: (Group<AnimatedObject>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5107,6 +5181,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.LeveledSpells:
                     obj._LeveledSpells_Object.CopyFieldsFrom<LeveledSpell_CopyMask>(rhs: (Group<LeveledSpell>)pair.Value);
                     break;
+                case OblivionMod_FieldIndex.AnimatedObjects:
+                    obj._AnimatedObjects_Object.CopyFieldsFrom<AnimatedObject_CopyMask>(rhs: (Group<AnimatedObject>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -5290,6 +5367,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region LeveledSpells
         Group<LeveledSpell> LeveledSpells { get; }
         #endregion
+        #region AnimatedObjects
+        Group<AnimatedObject> AnimatedObjects { get; }
+        #endregion
 
     }
 
@@ -5356,6 +5436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         CombatStyles = 51,
         LoadScreens = 52,
         LeveledSpells = 53,
+        AnimatedObjects = 54,
     }
     #endregion
 
@@ -5373,9 +5454,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort AdditionalFieldCount = 54;
+        public const ushort AdditionalFieldCount = 55;
 
-        public const ushort FieldCount = 54;
+        public const ushort FieldCount = 55;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -5511,6 +5592,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.LoadScreens;
                 case "LEVELEDSPELLS":
                     return (ushort)OblivionMod_FieldIndex.LeveledSpells;
+                case "ANIMATEDOBJECTS":
+                    return (ushort)OblivionMod_FieldIndex.AnimatedObjects;
                 default:
                     return null;
             }
@@ -5575,6 +5658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.CombatStyles:
                 case OblivionMod_FieldIndex.LoadScreens:
                 case OblivionMod_FieldIndex.LeveledSpells:
+                case OblivionMod_FieldIndex.AnimatedObjects:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5640,6 +5724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.CombatStyles:
                 case OblivionMod_FieldIndex.LoadScreens:
                 case OblivionMod_FieldIndex.LeveledSpells:
+                case OblivionMod_FieldIndex.AnimatedObjects:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5705,6 +5790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.CombatStyles:
                 case OblivionMod_FieldIndex.LoadScreens:
                 case OblivionMod_FieldIndex.LeveledSpells:
+                case OblivionMod_FieldIndex.AnimatedObjects:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5824,6 +5910,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "LoadScreens";
                 case OblivionMod_FieldIndex.LeveledSpells:
                     return "LeveledSpells";
+                case OblivionMod_FieldIndex.AnimatedObjects:
+                    return "AnimatedObjects";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5888,6 +5976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.CombatStyles:
                 case OblivionMod_FieldIndex.LoadScreens:
                 case OblivionMod_FieldIndex.LeveledSpells:
+                case OblivionMod_FieldIndex.AnimatedObjects:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5954,6 +6043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.CombatStyles:
                 case OblivionMod_FieldIndex.LoadScreens:
                 case OblivionMod_FieldIndex.LeveledSpells:
+                case OblivionMod_FieldIndex.AnimatedObjects:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6073,6 +6163,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<LoadScreen>);
                 case OblivionMod_FieldIndex.LeveledSpells:
                     return typeof(Group<LeveledSpell>);
+                case OblivionMod_FieldIndex.AnimatedObjects:
+                    return typeof(Group<AnimatedObject>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6132,6 +6224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
         public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
+        public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -6145,7 +6238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 54;
+        public const int NumTypedFields = 55;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -7430,6 +7523,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask.PopIndex();
                 }
             }
+            if (copyMask?.AnimatedObjects.Overall ?? true)
+            {
+                errorMask.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.AnimatedObjects,
+                        rhs: rhs.AnimatedObjects,
+                        def: def?.AnimatedObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.AnimatedObjects.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -7496,6 +7612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.CombatStyles:
                 case OblivionMod_FieldIndex.LoadScreens:
                 case OblivionMod_FieldIndex.LeveledSpells:
+                case OblivionMod_FieldIndex.AnimatedObjects:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -7673,6 +7790,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.LeveledSpells:
                     GroupCommon.Clear(obj.LeveledSpells, cmds.ToUnsetParams());
                     break;
+                case OblivionMod_FieldIndex.AnimatedObjects:
+                    GroupCommon.Clear(obj.AnimatedObjects, cmds.ToUnsetParams());
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7738,6 +7858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.CombatStyles:
                 case OblivionMod_FieldIndex.LoadScreens:
                 case OblivionMod_FieldIndex.LeveledSpells:
+                case OblivionMod_FieldIndex.AnimatedObjects:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -7861,6 +7982,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.LoadScreens;
                 case OblivionMod_FieldIndex.LeveledSpells:
                     return obj.LeveledSpells;
+                case OblivionMod_FieldIndex.AnimatedObjects:
+                    return obj.AnimatedObjects;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -8047,6 +8170,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LeveledSpells = new MaskItem<bool, Group_Mask<bool>>();
             ret.LeveledSpells.Specific = GroupCommon.GetEqualsMask(item.LeveledSpells, rhs.LeveledSpells);
             ret.LeveledSpells.Overall = ret.LeveledSpells.Specific.AllEqual((b) => b);
+            ret.AnimatedObjects = new MaskItem<bool, Group_Mask<bool>>();
+            ret.AnimatedObjects.Specific = GroupCommon.GetEqualsMask(item.AnimatedObjects, rhs.AnimatedObjects);
+            ret.AnimatedObjects.Overall = ret.AnimatedObjects.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -8292,6 +8418,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LeveledSpells?.ToString(fg, "LeveledSpells");
                 }
+                if (printMask?.AnimatedObjects?.Overall ?? true)
+                {
+                    item.AnimatedObjects?.ToString(fg, "AnimatedObjects");
+                }
             }
             fg.AppendLine("]");
         }
@@ -8362,6 +8492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CombatStyles = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.CombatStyles));
             ret.LoadScreens = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LoadScreens));
             ret.LeveledSpells = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LeveledSpells));
+            ret.AnimatedObjects = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.AnimatedObjects));
             return ret;
         }
 
@@ -8721,6 +8852,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.LeveledSpells,
                 name: nameof(item.LeveledSpells),
                 fieldIndex: (int)OblivionMod_FieldIndex.LeveledSpells,
+                errorMask: errorMask);
+            LoquiXmlTranslation<Group<AnimatedObject>>.Instance.Write(
+                node: elem,
+                item: item.AnimatedObjects,
+                name: nameof(item.AnimatedObjects),
+                fieldIndex: (int)OblivionMod_FieldIndex.AnimatedObjects,
                 errorMask: errorMask);
         }
         #endregion
@@ -9358,6 +9495,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
+            if (importMask?.AnimatedObjects ?? true)
+            {
+                if (item.AnimatedObjects.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<AnimatedObject>>.Instance.Write(
+                        writer: writer,
+                        item: item.AnimatedObjects,
+                        fieldIndex: (int)OblivionMod_FieldIndex.AnimatedObjects,
+                        errorMask: errorMask);
+                }
+            }
         }
 
         #endregion
@@ -9431,6 +9579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.CombatStyles = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.LoadScreens = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.LeveledSpells = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.AnimatedObjects = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -9489,6 +9638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> CombatStyles { get; set; }
         public MaskItem<T, Group_Mask<T>> LoadScreens { get; set; }
         public MaskItem<T, Group_Mask<T>> LeveledSpells { get; set; }
+        public MaskItem<T, Group_Mask<T>> AnimatedObjects { get; set; }
         #endregion
 
         #region Equals
@@ -9555,6 +9705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
             if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
             if (!object.Equals(this.LeveledSpells, rhs.LeveledSpells)) return false;
+            if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -9614,6 +9765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.CombatStyles?.GetHashCode());
             ret = ret.CombineHashCode(this.LoadScreens?.GetHashCode());
             ret = ret.CombineHashCode(this.LeveledSpells?.GetHashCode());
+            ret = ret.CombineHashCode(this.AnimatedObjects?.GetHashCode());
             return ret;
         }
 
@@ -9891,6 +10043,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.LeveledSpells.Overall)) return false;
                 if (this.LeveledSpells.Specific != null && !this.LeveledSpells.Specific.AllEqual(eval)) return false;
+            }
+            if (AnimatedObjects != null)
+            {
+                if (!eval(this.AnimatedObjects.Overall)) return false;
+                if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -10392,6 +10549,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.LeveledSpells.Specific = this.LeveledSpells.Specific.Translate(eval);
                 }
             }
+            if (this.AnimatedObjects != null)
+            {
+                obj.AnimatedObjects = new MaskItem<R, Group_Mask<R>>();
+                obj.AnimatedObjects.Overall = eval(this.AnimatedObjects.Overall);
+                if (this.AnimatedObjects.Specific != null)
+                {
+                    obj.AnimatedObjects.Specific = this.AnimatedObjects.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -10636,6 +10802,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     LeveledSpells?.ToString(fg);
                 }
+                if (printMask?.AnimatedObjects?.Overall ?? true)
+                {
+                    AnimatedObjects?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -10713,6 +10883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<CombatStyle_ErrorMask>> CombatStyles;
         public MaskItem<Exception, Group_ErrorMask<LoadScreen_ErrorMask>> LoadScreens;
         public MaskItem<Exception, Group_ErrorMask<LeveledSpell_ErrorMask>> LeveledSpells;
+        public MaskItem<Exception, Group_ErrorMask<AnimatedObject_ErrorMask>> AnimatedObjects;
         #endregion
 
         #region IErrorMask
@@ -10829,6 +11000,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return LoadScreens;
                 case OblivionMod_FieldIndex.LeveledSpells:
                     return LeveledSpells;
+                case OblivionMod_FieldIndex.AnimatedObjects:
+                    return AnimatedObjects;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -11000,6 +11173,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.LeveledSpells:
                     this.LeveledSpells = new MaskItem<Exception, Group_ErrorMask<LeveledSpell_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.AnimatedObjects:
+                    this.AnimatedObjects = new MaskItem<Exception, Group_ErrorMask<AnimatedObject_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -11173,6 +11349,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.LeveledSpells:
                     this.LeveledSpells = (MaskItem<Exception, Group_ErrorMask<LeveledSpell_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.AnimatedObjects:
+                    this.AnimatedObjects = (MaskItem<Exception, Group_ErrorMask<AnimatedObject_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -11235,6 +11414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (CombatStyles != null) return true;
             if (LoadScreens != null) return true;
             if (LeveledSpells != null) return true;
+            if (AnimatedObjects != null) return true;
             return false;
         }
         #endregion
@@ -11323,6 +11503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyles?.ToString(fg);
             LoadScreens?.ToString(fg);
             LeveledSpells?.ToString(fg);
+            AnimatedObjects?.ToString(fg);
         }
         #endregion
 
@@ -11384,6 +11565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CombatStyles = new MaskItem<Exception, Group_ErrorMask<CombatStyle_ErrorMask>>(this.CombatStyles.Overall.Combine(rhs.CombatStyles.Overall), ((IErrorMask<Group_ErrorMask<CombatStyle_ErrorMask>>)this.CombatStyles.Specific).Combine(rhs.CombatStyles.Specific));
             ret.LoadScreens = new MaskItem<Exception, Group_ErrorMask<LoadScreen_ErrorMask>>(this.LoadScreens.Overall.Combine(rhs.LoadScreens.Overall), ((IErrorMask<Group_ErrorMask<LoadScreen_ErrorMask>>)this.LoadScreens.Specific).Combine(rhs.LoadScreens.Specific));
             ret.LeveledSpells = new MaskItem<Exception, Group_ErrorMask<LeveledSpell_ErrorMask>>(this.LeveledSpells.Overall.Combine(rhs.LeveledSpells.Overall), ((IErrorMask<Group_ErrorMask<LeveledSpell_ErrorMask>>)this.LeveledSpells.Specific).Combine(rhs.LeveledSpells.Specific));
+            ret.AnimatedObjects = new MaskItem<Exception, Group_ErrorMask<AnimatedObject_ErrorMask>>(this.AnimatedObjects.Overall.Combine(rhs.AnimatedObjects.Overall), ((IErrorMask<Group_ErrorMask<AnimatedObject_ErrorMask>>)this.AnimatedObjects.Specific).Combine(rhs.AnimatedObjects.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -11459,6 +11641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<CombatStyle_CopyMask>> CombatStyles;
         public MaskItem<bool, Group_CopyMask<LoadScreen_CopyMask>> LoadScreens;
         public MaskItem<bool, Group_CopyMask<LeveledSpell_CopyMask>> LeveledSpells;
+        public MaskItem<bool, Group_CopyMask<AnimatedObject_CopyMask>> AnimatedObjects;
         #endregion
 
     }
@@ -11522,6 +11705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool CombatStyles;
         public bool LoadScreens;
         public bool LeveledSpells;
+        public bool AnimatedObjects;
         public GroupMask()
         {
         }
@@ -11580,6 +11764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyles = defaultValue;
             LoadScreens = defaultValue;
             LeveledSpells = defaultValue;
+            AnimatedObjects = defaultValue;
         }
     }
     #endregion
