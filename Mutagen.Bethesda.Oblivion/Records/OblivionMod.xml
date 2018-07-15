@@ -61,6 +61,7 @@
       <Group name="LoadScreens" refName="LoadScreen" />
       <Group name="LeveledSpells" refName="LeveledSpell" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />
+      <Group name="Waters" refName="Water" />
     </Fields>
   </Object>
 </Loqui>

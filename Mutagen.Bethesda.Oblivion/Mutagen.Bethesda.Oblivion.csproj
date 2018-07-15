@@ -361,6 +361,9 @@
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Water.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Weapon.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
@@ -716,6 +719,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AnimatedObject_LoquiGenerated.cs">
       <DependentUpon>AnimatedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RelatedWaters_LoquiGenerated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

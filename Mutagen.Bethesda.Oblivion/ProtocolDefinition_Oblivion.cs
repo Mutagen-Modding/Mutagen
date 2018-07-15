@@ -159,6 +159,7 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.Place_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.LeveledSpell_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.AnimatedObject_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RelatedWaters_Registration.Instance);
         }
     }
 }

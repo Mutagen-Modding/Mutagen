@@ -65,6 +65,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessIdleAnimations(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
             ProcessAIPackages(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
             ProcessCombatStyle(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessWater(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
         }
 
         private void ProcessNPC_Mismatch(
@@ -820,6 +821,139 @@ namespace Mutagen.Bethesda.Tests
                         Data = new byte[] { 0, 0, 0 },
                         Location = loc.Min + dataIndex + 6 + 113
                     });
+            }
+        }
+
+        private void ProcessWater(
+            BinaryReadStream stream,
+            FormID formID,
+            Type recType,
+            Instruction instr,
+            RangeInt64 loc,
+            MajorRecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker,
+            bool processing)
+        {
+            if (!typeof(Water).Equals(recType)) return;
+
+            if (!processing) return;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var dataIndex = str.IndexOf("DATA");
+            stream.Position = loc.Min + dataIndex + 4;
+            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
+            var amount = 0;
+            var len = stream.ReadUInt16();
+            if (dataIndex != -1)
+            {
+                if (len == 0x02)
+                {
+                    instr.Substitutions.Add(
+                        new DataTarget()
+                        {
+                            Location = loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                            Data = new byte[] { 0, 0 }
+                        });
+                    instr.Moves.Add(
+                        new Move()
+                        {
+                            SectionToMove = RangeInt64.FactoryFromLength(
+                                loc: loc.Min + dataIndex + 6,
+                                length: 2),
+                            LocationToMove = long.MaxValue
+                        });
+                    amount -= 2;
+                }
+
+                if (len == 0x56)
+                {
+                    instr.Substitutions.Add(
+                        new DataTarget()
+                        {
+                            Location = loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                            Data = new byte[] { 0x54, 0 }
+                        });
+                    instr.Moves.Add(
+                        new Move()
+                        {
+                            SectionToMove = RangeInt64.FactoryFromLength(
+                                loc: loc.Min + dataIndex + 6 + 0x54,
+                                length: 2),
+                            LocationToMove = long.MaxValue
+                        });
+                    amount -= 2;
+                }
+
+                if (len == 0x2A)
+                {
+                    instr.Substitutions.Add(
+                        new DataTarget()
+                        {
+                            Location = loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                            Data = new byte[] { 0x28, 0 }
+                        });
+                    instr.Moves.Add(
+                        new Move()
+                        {
+                            SectionToMove = RangeInt64.FactoryFromLength(
+                                loc: loc.Min + dataIndex + 6 + 0x28,
+                                length: 2),
+                            LocationToMove = long.MaxValue
+                        });
+                    amount -= 2;
+                }
+
+                if (len == 0x3E)
+                {
+                    instr.Substitutions.Add(
+                        new DataTarget()
+                        {
+                            Location = loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                            Data = new byte[] { 0x3C, 0 }
+                        });
+                    instr.Moves.Add(
+                        new Move()
+                        {
+                            SectionToMove = RangeInt64.FactoryFromLength(
+                                loc: loc.Min + dataIndex + 6 + 0x3C,
+                                length: 2),
+                            LocationToMove = long.MaxValue
+                        });
+                    amount -= 2;
+                }
+
+                var move = 0x39;
+                if (len >= 3 + move)
+                {
+                    instr.Substitutions.Add(
+                        new DataTarget()
+                        {
+                            Data = new byte[] { 0, 0, 0 },
+                            Location = loc.Min + dataIndex + 6 + move
+                        });
+                }
+            }
+
+            if (amount != 0)
+            {
+                // Modify Length
+                stream.Position = loc.Min + Constants.HEADER_LENGTH;
+                var existingLen = stream.ReadUInt16();
+                byte[] lenData = new byte[2];
+                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
+                {
+                    writer.Write((ushort)(existingLen + amount));
+                }
+                instr.Substitutions.Add(
+                    new DataTarget()
+                    {
+                        Location = loc.Min + Constants.HEADER_LENGTH,
+                        Data = lenData
+                    });
+                foreach (var parentGroup in parentGrups)
+                {
+                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + amount);
+                }
             }
         }
 

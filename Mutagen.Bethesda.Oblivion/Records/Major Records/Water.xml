@@ -2,6 +2,58 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Water" objType="Record" baseClass="Bethesda.MajorRecord" recordType="WATR" GUID="31d50641-f6df-4533-89c3-e764dc35a702" ID="127">
     <Fields>
+      <String name="Texture" recordType="TNAM" />
+      <UInt8 name="Opacity" recordType="ANAM" />
+      <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" />
+      <String name="MaterialID" recordType="MNAM" />
+      <FormIDLink name="Sound" refName="Sound" recordType="SNAM" />
+      <Data>
+        <Fields>
+          <CustomLogic name="NothingCustomLogic" />
+          <Break />
+          <Float name="WindVelocity" />
+          <Float name="WindDirection" />
+          <Float name="WaveAmplitude" />
+          <Float name="WaveFrequency" />
+          <Float name="SunPower" />
+          <Float name="ReflectivityAmount" />
+          <Float name="FresnelAmount" />
+          <Float name="ScrollXSpeed" />
+          <Float name="ScrollYSpeed" />
+          <Float name="FogDistanceNearPlane" />
+          <CustomLogic name="BloodCustomLogic" />
+          <Break />
+          <Float name="FogDistanceFarPlane" />
+          <Color name="ShallowColor" />
+          <Color name="DeepColor" />
+          <Color name="ReflectionColor" />
+          <UInt8 name="TextureBlend" />
+          <Zero byteLength="3" />
+          <CustomLogic name="OilCustomLogic" />
+          <Break />
+          <Float name="RainSimulatorForce" />
+          <Float name="RainSimulatorVelocity" />
+          <Float name="RainSimulatorFalloff" />
+          <Float name="RainSimulatorDampner" />
+          <Float name="RainSimulatorStartingSize" />
+          <Float name="DisplacementSimulatorForce" />
+          <CustomLogic name="OddExtraBytes" />
+          <Break />
+          <Float name="DisplacementSimulatorVelocity" />
+          <Float name="DisplacementSimulatorFalloff" />
+          <Float name="DisplacementSimulatorDampner" />
+          <Float name="DisplacementSimulatorStartingSize" />
+          <UInt16 name="Damage" />
+        </Fields>
+      </Data>
+      <RefDirect name="RelatedWaters" refName="RelatedWaters" />
+    </Fields>
+  </Object>
+  <Object name="RelatedWaters" objType="Subrecord" recordType="GNAM" GUID="3ec1f551-bac0-408e-a3ee-2efd4c2f159a" ID="166">
+    <Fields>
+      <FormIDLink name="RelatedWaterDaytime" refName="Water" />
+      <FormIDLink name="RelatedWaterNighttime" refName="Water" />
+      <FormIDLink name="RelatedWaterUnderwater" refName="Water" />
     </Fields>
   </Object>
 </Loqui>
