@@ -19,20 +19,10 @@ namespace Mutagen.Bethesda.Tester
         {
             LoquiRegistrationSettings.AutomaticRegistration = false;
 
-            var tests = new Oblivion_Passthrough_Tests();
-            tests.OblivionESM_Binary_Internal(
+            var tests = new Knights_Passthrough_Tests();
+            tests.BinaryPassthroughTest(
                 reuseOld: false,
                 deleteAfter: false).Wait();
-
-            //var mod = OblivionMod.Create_Binary(
-            //    //@"C:\Games\Oblivion\Data\Oblivion.esm",
-            //    @"C:\Users\Levia\AppData\Local\Temp\Mutagen_Oblivion_Binary\Oblivion.esm_Uncompressed",
-            //    out var inputErrMask);
-            //System.Console.WriteLine("DONE");
-            //GC.Collect();
-            //System.Console.ReadLine();
-            //System.Console.WriteLine(mod.NPCs.Items.Count);
-            //System.Console.ReadLine();
         }
     }
 }
