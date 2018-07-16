@@ -83,21 +83,21 @@ namespace Mutagen.Bethesda.Oblivion
             switch (dataType)
             {
                 case RegionData.RegionDataType.Objects:
-                    using (var subFrame = frame.SpawnWithLength(len))
+                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
                     {
                         var obj = RegionDataObjects.Create_Binary(subFrame);
                         item.Objects = obj;
                     }
                     break;
                 case RegionData.RegionDataType.MapName:
-                    using (var subFrame = frame.SpawnWithLength(len))
+                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
                     {
                         var map = RegionDataMapName.Create_Binary(subFrame);
                         item.MapName = map;
                     }
                     break;
                 case RegionData.RegionDataType.Grasses:
-                    using (var subFrame = frame.SpawnWithLength(len))
+                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
                     {
                         var grass = RegionDataGrasses.Create_Binary(subFrame);
                         item.Grasses = grass;
@@ -111,14 +111,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         len += nextLen + 6;
                     }
-                    using (var subFrame = frame.SpawnWithLength(len))
+                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
                     {
                         var sounds = RegionDataSounds.Create_Binary(subFrame);
                         item.Sounds = sounds;
                     }
                     break;
                 case RegionData.RegionDataType.Weather:
-                    using (var subFrame = frame.SpawnWithLength(len))
+                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
                     {
                         var weather = RegionDataWeather.Create_Binary(subFrame);
                         item.Weather = weather;
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += 6 + RDAT_LEN;
                     len = len - 6 - RDAT_LEN;
                     if (StringBinaryTranslation.Instance.Parse(
-                        frame.SpawnWithLength(len),
+                        frame.SpawnWithLength(len, checkFraming: false),
                         out var iconVal,
                         errorMask))
                     {

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
                     case 0x47414750: //"PGAG":
                         using (errorMask.PushIndex((int)PathGrid_FieldIndex.Unknown))
                         {
-                            using (var subFrame = frame.SpawnWithLength(len))
+                            using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
                             {
                                 if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                                    subFrame,

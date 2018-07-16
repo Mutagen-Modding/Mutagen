@@ -156,6 +156,9 @@
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\EffectShader.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Enchantment.cs">
       <DependentUpon>Enchantment.xml</DependentUpon>
     </Compile>

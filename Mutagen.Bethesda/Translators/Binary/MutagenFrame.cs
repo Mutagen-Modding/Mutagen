@@ -153,10 +153,14 @@ namespace Mutagen.Bethesda.Binary
                 this.Reader,
                 finalPosition);
         }
-
-        [DebuggerStepThrough]
-        public MutagenFrame SpawnWithLength(long length, bool snapToFinalPosition = true)
+        
+        public MutagenFrame SpawnWithLength(long length, bool snapToFinalPosition = true, bool checkFraming = true)
         {
+            if (checkFraming 
+                && this.Remaining < length)
+            {
+                throw new ArgumentException($"Frame did not have enough remaining to allocate for desired length at {this.Position}. Desired {length} more bytes, but only had {this.Remaining}.");
+            }
             return new MutagenFrame(
                 this.Reader,
                 this.Reader.Position + length,
