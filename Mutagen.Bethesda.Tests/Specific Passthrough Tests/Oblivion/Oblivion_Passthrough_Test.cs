@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
@@ -9,42 +8,158 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using static Mutagen.Bethesda.ModAligner;
 
 namespace Mutagen.Bethesda.Tests
 {
-    public class Oblivion_Passthrough_Tests
+    public abstract class Oblivion_Passthrough_Test
     {
-        private BinaryProcessorInstructions GetOblivionInstructions(
+        public abstract string Nickname { get; }
+        public string FilePath { get; set; }
+
+        public Oblivion_Passthrough_Test(string path = null)
+        {
+            this.FilePath = path;
+        }
+
+        public Dictionary<Type, List<FormID>> ImportExport(
+            string inputPath,
+            string outputPath)
+        {
+            var mod = OblivionMod.Create_Binary(
+                inputPath,
+                out var inputErrMask);
+            Assert.False(inputErrMask?.IsInError() ?? false);
+            foreach (var record in mod.MajorRecords.Values)
+            {
+                if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                {
+                    record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                }
+            }
+
+            mod.Write_Binary(outputPath, out var outputErrMask);
+            Assert.False(outputErrMask?.IsInError() ?? false);
+
+            Dictionary<Type, List<FormID>> ret = new Dictionary<Type, List<FormID>>();
+            foreach (var rec in mod.MajorRecords.Values)
+            {
+                ret.TryCreateValue(rec.GetType()).Add(rec.FormID);
+            }
+            return ret;
+        }
+
+        public ModAligner.AlignmentRules GetAlignmentRules()
+        {
+            var ret = new ModAligner.AlignmentRules();
+            ret.AddAlignments(
+                Cell_Registration.CELL_HEADER,
+                new RecordType("EDID"),
+                new RecordType("FULL"),
+                new RecordType("DATA"),
+                new RecordType("XCLC"),
+                new RecordType("XCLL"),
+                new RecordType("XCLR"),
+                new RecordType("XCMT"),
+                new RecordType("XCLW"),
+                new RecordType("XCCM"),
+                new RecordType("XCWT"),
+                new RecordType("XOWN"),
+                new RecordType("XRNK"),
+                new RecordType("XGLB"));
+            ret.AddAlignments(
+                Worldspace_Registration.WRLD_HEADER,
+                new RecordType("EDID"),
+                new RecordType("FULL"),
+                new RecordType("WNAM"),
+                new RecordType("CNAM"),
+                new RecordType("NAM2"),
+                new RecordType("ICON"),
+                new RecordType("MNAM"),
+                new RecordType("DATA"),
+                new RecordType("NAM0"),
+                new RecordType("NAM9"),
+                new RecordType("SNAM"),
+                new RecordType("XXXX"));
+            ret.StopMarkers[Worldspace_Registration.WRLD_HEADER] = new List<RecordType>()
+            {
+                new RecordType("OFST"),
+            };
+            ret.AddAlignments(
+                PlacedObject_Registration.REFR_HEADER,
+                new ModAligner.AlignmentStraightRecord("EDID"),
+                new ModAligner.AlignmentStraightRecord("NAME"),
+                new ModAligner.AlignmentStraightRecord("XPCI"),
+                new ModAligner.AlignmentStraightRecord("FULL"),
+                new ModAligner.AlignmentStraightRecord("XTEL"),
+                new ModAligner.AlignmentStraightRecord("XLOC"),
+                new ModAligner.AlignmentStraightRecord("XOWN"),
+                new ModAligner.AlignmentStraightRecord("XRNK"),
+                new ModAligner.AlignmentStraightRecord("XGLB"),
+                new ModAligner.AlignmentStraightRecord("XESP"),
+                new ModAligner.AlignmentStraightRecord("XTRG"),
+                new ModAligner.AlignmentStraightRecord("XSED"),
+                new ModAligner.AlignmentStraightRecord("XLOD"),
+                new ModAligner.AlignmentStraightRecord("XCHG"),
+                new ModAligner.AlignmentStraightRecord("XHLT"),
+                new ModAligner.AlignmentStraightRecord("XLCM"),
+                new ModAligner.AlignmentStraightRecord("XRTM"),
+                new ModAligner.AlignmentStraightRecord("XACT"),
+                new ModAligner.AlignmentStraightRecord("XCNT"),
+                new ModAligner.AlignmentSubRule(
+                    new RecordType("XMRK"),
+                    new RecordType("FNAM"),
+                    new RecordType("FULL"),
+                    new RecordType("TNAM")),
+                new ModAligner.AlignmentStraightRecord("ONAM"),
+                new ModAligner.AlignmentStraightRecord("XRGD"),
+                new ModAligner.AlignmentStraightRecord("XSCL"),
+                new ModAligner.AlignmentStraightRecord("XSOL"),
+                new ModAligner.AlignmentStraightRecord("DATA"));
+            ret.AddAlignments(
+                PlacedCreature_Registration.ACRE_HEADER,
+                new RecordType("EDID"),
+                new RecordType("NAME"),
+                new RecordType("XOWN"),
+                new RecordType("XRNK"),
+                new RecordType("XGLB"),
+                new RecordType("XESP"),
+                new RecordType("XRGD"),
+                new RecordType("XSCL"),
+                new RecordType("DATA"));
+            ret.AddAlignments(
+                PlacedNPC_Registration.ACHR_HEADER,
+                new RecordType("EDID"),
+                new RecordType("NAME"),
+                new RecordType("XPCI"),
+                new RecordType("FULL"),
+                new RecordType("XLOD"),
+                new RecordType("XESP"),
+                new RecordType("XMRC"),
+                new RecordType("XHRS"),
+                new RecordType("XRGD"),
+                new RecordType("XSCL"),
+                new RecordType("DATA"));
+            ret.SetGroupAlignment(
+                GroupTypeEnum.CellTemporaryChildren,
+                new RecordType("LAND"),
+                new RecordType("PGRD"));
+            return ret;
+        }
+
+        protected virtual BinaryProcessorInstructions GetInstructions(
             Dictionary<long, uint> lengthTracker,
             MajorRecordLocator.FileLocations fileLocs)
         {
-            var instructions = new BinaryProcessorInstructions();
-            instructions.Instruction.Substitutions.Add(new DataTarget()
-            {
-                Location = 0xC46695,
-                Data = new byte[] { 0x66, 0xDC, 0x05, 0x00 }
-            });
-            instructions.Instruction.Substitutions.Add(new DataTarget()
-            {
-                Location = 0xCA88D9,
-                Data = new byte[] { 0xDB, 0xBC, 0x04, 0x00 }
-            });
-            instructions.Instruction.Substitutions.Add(new DataTarget()
-            {
-                Location = 0xCEAEB5,
-                Data = new byte[] { 0x76, 0x0A, 0x00, 0x00 }
-            });
-            return instructions;
+            return new BinaryProcessorInstructions();
         }
 
+        #region Dynamic Processing
         /*
          * Some records that seem older have an odd record order.  Rather than accommodating, dynamically mark as exceptions
          */
-        private void AddDynamicProcessorInstructions(
+        protected virtual void AddDynamicProcessorInstructions(
             BinaryReadStream stream,
             FormID formID,
             Type recType,
@@ -286,6 +401,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private static byte[] ZeroFloat = new byte[] { 0, 0, 0, 0x80 };
+
         private void ProcessPlacedObject_Mismatch(
             BinaryReadStream stream,
             FormID formID,
@@ -1077,149 +1193,27 @@ namespace Mutagen.Bethesda.Tests
             loc = MathExt.Min(indices) + offset;
             return true;
         }
+        #endregion
 
-        public ModAligner.AlignmentRules GetAlignmentRules()
+        public async Task BinaryPassthroughTest(
+            bool reuseOld = true,
+            bool deleteAfter = false)
         {
-            var ret = new ModAligner.AlignmentRules();
-            ret.AddAlignments(
-                Cell_Registration.CELL_HEADER,
-                new RecordType("EDID"),
-                new RecordType("FULL"),
-                new RecordType("DATA"),
-                new RecordType("XCLC"),
-                new RecordType("XCLL"),
-                new RecordType("XCLR"),
-                new RecordType("XCMT"),
-                new RecordType("XCLW"),
-                new RecordType("XCCM"),
-                new RecordType("XCWT"),
-                new RecordType("XOWN"),
-                new RecordType("XRNK"),
-                new RecordType("XGLB"));
-            ret.AddAlignments(
-                Worldspace_Registration.WRLD_HEADER,
-                new RecordType("EDID"),
-                new RecordType("FULL"),
-                new RecordType("WNAM"),
-                new RecordType("CNAM"),
-                new RecordType("NAM2"),
-                new RecordType("ICON"),
-                new RecordType("MNAM"),
-                new RecordType("DATA"),
-                new RecordType("NAM0"),
-                new RecordType("NAM9"),
-                new RecordType("SNAM"),
-                new RecordType("XXXX"));
-            ret.StopMarkers[Worldspace_Registration.WRLD_HEADER] = new List<RecordType>()
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}")), deleteAfter: deleteAfter))
             {
-                new RecordType("OFST"),
-            };
-            ret.AddAlignments(
-                PlacedObject_Registration.REFR_HEADER,
-                new ModAligner.AlignmentStraightRecord("EDID"),
-                new ModAligner.AlignmentStraightRecord("NAME"),
-                new ModAligner.AlignmentStraightRecord("XPCI"),
-                new ModAligner.AlignmentStraightRecord("FULL"),
-                new ModAligner.AlignmentStraightRecord("XTEL"),
-                new ModAligner.AlignmentStraightRecord("XLOC"),
-                new ModAligner.AlignmentStraightRecord("XOWN"),
-                new ModAligner.AlignmentStraightRecord("XRNK"),
-                new ModAligner.AlignmentStraightRecord("XGLB"),
-                new ModAligner.AlignmentStraightRecord("XESP"),
-                new ModAligner.AlignmentStraightRecord("XTRG"),
-                new ModAligner.AlignmentStraightRecord("XSED"),
-                new ModAligner.AlignmentStraightRecord("XLOD"),
-                new ModAligner.AlignmentStraightRecord("XCHG"),
-                new ModAligner.AlignmentStraightRecord("XHLT"),
-                new ModAligner.AlignmentStraightRecord("XLCM"),
-                new ModAligner.AlignmentStraightRecord("XRTM"),
-                new ModAligner.AlignmentStraightRecord("XACT"),
-                new ModAligner.AlignmentStraightRecord("XCNT"),
-                new ModAligner.AlignmentSubRule(
-                    new RecordType("XMRK"),
-                    new RecordType("FNAM"),
-                    new RecordType("FULL"),
-                    new RecordType("TNAM")),
-                new ModAligner.AlignmentStraightRecord("ONAM"),
-                new ModAligner.AlignmentStraightRecord("XRGD"),
-                new ModAligner.AlignmentStraightRecord("XSCL"),
-                new ModAligner.AlignmentStraightRecord("XSOL"),
-                new ModAligner.AlignmentStraightRecord("DATA"));
-            ret.AddAlignments(
-                PlacedCreature_Registration.ACRE_HEADER,
-                new RecordType("EDID"),
-                new RecordType("NAME"),
-                new RecordType("XOWN"),
-                new RecordType("XRNK"),
-                new RecordType("XGLB"),
-                new RecordType("XESP"),
-                new RecordType("XRGD"),
-                new RecordType("XSCL"),
-                new RecordType("DATA"));
-            ret.AddAlignments(
-                PlacedNPC_Registration.ACHR_HEADER,
-                new RecordType("EDID"),
-                new RecordType("NAME"),
-                new RecordType("XPCI"),
-                new RecordType("FULL"),
-                new RecordType("XLOD"),
-                new RecordType("XESP"),
-                new RecordType("XMRC"),
-                new RecordType("XHRS"),
-                new RecordType("XRGD"),
-                new RecordType("XSCL"),
-                new RecordType("DATA"));
-            ret.SetGroupAlignment(
-                GroupTypeEnum.CellTemporaryChildren,
-                new RecordType("LAND"),
-                new RecordType("PGRD"));
-            return ret;
-        }
-
-        public Dictionary<Type, List<FormID>> ImportExport(
-            string inputPath,
-            string outputPath)
-        {
-            var mod = OblivionMod.Create_Binary(
-                inputPath,
-                out var inputErrMask);
-            Assert.False(inputErrMask?.IsInError() ?? false);
-            foreach (var record in mod.MajorRecords.Values)
-            {
-                if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
-                {
-                    record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
-                }
-            }
-
-            mod.Write_Binary(outputPath, out var outputErrMask);
-            Assert.False(outputErrMask?.IsInError() ?? false);
-
-            Dictionary<Type, List<FormID>> ret = new Dictionary<Type, List<FormID>>();
-            foreach (var rec in mod.MajorRecords.Values)
-            {
-                ret.TryCreateValue(rec.GetType()).Add(rec.FormID);
-            }
-            return ret;
-        }
-
-        public async Task BinaryPassthroughTest(bool reuseOld = true, bool deleteAfter = false)
-        {
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary")), deleteAfter: deleteAfter))
-            {
-                var oblivionOutputPath = Path.Combine(tmp.Dir.Path, Constants.OBLIVION_ESM);
-                var uncompressedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Uncompressed");
-                var alignedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Aligned");
-                var processedPath = Path.Combine(tmp.Dir.Path, $"{Constants.OBLIVION_ESM}_Processed");
+                var outputPath = Path.Combine(tmp.Dir.Path, this.Nickname);
+                var uncompressedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed");
+                var alignedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
+                var processedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
 
                 if (!reuseOld || !File.Exists(uncompressedPath))
                 {
                     ModDecompressor.Decompress(
-                        inputPath: Properties.Settings.Default.OblivionESM,
+                        inputPath: this.FilePath,
                         outputPath: uncompressedPath);
                 }
 
-                var importRecs = ImportExport(uncompressedPath, oblivionOutputPath);
+                var importRecs = ImportExport(uncompressedPath, outputPath);
 
                 if (!reuseOld || !File.Exists(alignedPath))
                 {
@@ -1247,7 +1241,7 @@ namespace Mutagen.Bethesda.Tests
                         }
                     }
 
-                    instructions = GetOblivionInstructions(
+                    instructions = GetInstructions(
                         lengthTracker,
                         alignedFileLocs);
 
@@ -1323,7 +1317,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     var ret = Passthrough_Tests.AssertFilesEqual(
                         stream,
-                        oblivionOutputPath,
+                        outputPath,
                         ignoreList: new RangeCollection(instructions.Instruction.IgnoreDifferenceSections),
                         sourceSkips: new RangeCollection(instructions.Instruction.SkipSourceSections),
                         targetSkips: new RangeCollection(instructions.Instruction.SkipOutputSections),
@@ -1334,157 +1328,6 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
             }
-        }
-
-        public async Task OblivionESM_GroupMask_Import()
-        {
-            var mod = OblivionMod.Create_Binary(
-                Properties.Settings.Default.OblivionESM,
-                out var inputErrMask,
-                importMask: new GroupMask()
-                {
-                    NPCs = true
-                });
-            Assert.False(inputErrMask?.IsInError() ?? false);
-
-            using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Import"))
-            {
-                var oblivionOutputPath = Path.Combine(tmp.Dir.Path, Constants.OBLIVION_ESM);
-                mod.Write_Binary(
-                    oblivionOutputPath,
-                    out var outputErrMask);
-                Assert.False(outputErrMask?.IsInError() ?? false);
-                var fileLocs = MajorRecordLocator.GetFileLocations(oblivionOutputPath);
-                using (var reader = new BinaryReadStream(oblivionOutputPath))
-                {
-                    foreach (var rec in fileLocs.ListedRecords.Keys)
-                    {
-                        reader.Position = rec;
-                        var t = HeaderTranslation.ReadNextRecordType(reader);
-                        if (!t.Equals(NPC_Registration.NPC__HEADER))
-                        {
-                            throw new ArgumentException("Exported a non-NPC record.");
-                        }
-                    }
-                }
-            }
-        }
-
-        public async Task OblivionESM_GroupMask_Export()
-        {
-            var mod = OblivionMod.Create_Binary(
-                Properties.Settings.Default.OblivionESM,
-                out var inputErrMask);
-            Assert.False(inputErrMask?.IsInError() ?? false);
-
-            using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Export"))
-            {
-                var oblivionOutputPath = Path.Combine(tmp.Dir.Path, Constants.OBLIVION_ESM);
-                mod.Write_Binary(
-                    oblivionOutputPath,
-                    out var outputErrMask,
-                    importMask: new GroupMask()
-                    {
-                        NPCs = true
-                    });
-                Assert.False(outputErrMask?.IsInError() ?? false);
-                var fileLocs = MajorRecordLocator.GetFileLocations(oblivionOutputPath);
-                using (var reader = new BinaryReadStream(oblivionOutputPath))
-                {
-                    foreach (var rec in fileLocs.ListedRecords.Keys)
-                    {
-                        reader.Position = rec;
-                        var t = HeaderTranslation.ReadNextRecordType(reader);
-                        if (!t.Equals(NPC_Registration.NPC__HEADER))
-                        {
-                            throw new ArgumentException("Exported a non-NPC record.");
-                        }
-                    }
-                }
-            }
-        }
-
-        private void CopyOverOffendingRecords(
-            OblivionMod mod,
-            IEnumerable<(RangeInt64 Source, RangeInt64? Output)> sections,
-            string tmpFolder,
-            string origPath,
-            string processedPath,
-            string outputPath,
-            MajorRecordLocator.FileLocations originalFileLocs)
-        {
-            if (!sections.Any()) return;
-
-            var outputFileLocs = MajorRecordLocator.GetFileLocations(outputPath);
-
-            HashSet<FormID> ids = new HashSet<FormID>();
-            foreach (var (Source, Output) in sections)
-            {
-                if (!originalFileLocs.TryGetRecords(Source, out var foundIDs)) continue;
-                foreach (var id in foundIDs)
-                {
-                    if (!ids.Add(id)) continue;
-                    var majorRec = mod[id];
-                    var origRecOutputPath = Path.Combine(tmpFolder, majorRec.TitleString);
-                    if (!originalFileLocs.TryGetSection(id, out var sourceLoc))
-                    {
-                        throw new NotImplementedException();
-                    }
-                    var output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Original");
-                    using (var inStream = new BinaryReadStream(File.OpenRead(origPath)))
-                    {
-                        inStream.Position = sourceLoc.Min;
-                        using (var outStream = new MutagenWriter(origRecOutputPath))
-                        {
-                            outStream.Write(inStream.ReadBytes((int)sourceLoc.Width));
-                        }
-                    }
-                    output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Processed");
-                    using (var inStream = new BinaryReadStream(File.OpenRead(processedPath)))
-                    {
-                        inStream.Position = sourceLoc.Min;
-                        using (var outStream = new MutagenWriter(output))
-                        {
-                            outStream.Write(inStream.ReadBytes((int)sourceLoc.Width));
-                        }
-                    }
-                    if (!Output.HasValue) continue;
-
-                    if (!outputFileLocs.TryGetSection(id, out var outputLoc))
-                    {
-                        throw new NotImplementedException();
-                    }
-                    output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Output");
-                    using (var inStream = new BinaryReadStream(File.OpenRead(outputPath)))
-                    {
-                        inStream.Position = outputLoc.Min;
-                        using (var outStream = new MutagenWriter(output))
-                        {
-                            outStream.Write(inStream.ReadBytes((int)outputLoc.Width));
-                        }
-                    }
-                }
-            }
-        }
-
-        public async Task OblivionESM_Folder_Reimport()
-        {
-            var mod = OblivionMod.Create_Binary(
-                Properties.Settings.Default.OblivionESM,
-                out var inputErrMask);
-            Assert.False(inputErrMask?.IsInError() ?? false);
-            using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
-            {
-                mod[FormID.Factory("0006371E")].Write_XML(Path.Combine(tmp.Dir.Path, "Test"));
-                var exportMask = await mod.Write_XmlFolder(
-                    tmp.Dir);
-                Assert.False(exportMask?.IsInError() ?? false);
-            }
-        }
-
-        public void OblivionESM_Equals()
-        {
-            throw new NotImplementedException();
         }
     }
 }

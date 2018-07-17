@@ -51,9 +51,9 @@
     <Compile Include="Generated\Instruction.cs">
       <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
     </Compile>
-    <Compile Include="Specific Passthrough Tests\Knights_Passthrough_Tests.cs" />
+    <Compile Include="Specific Passthrough Tests\Oblivion\Knights_Passthrough_Tests.cs" />
     <Compile Include="Misc_Tests.cs" />
-    <Compile Include="Specific Passthrough Tests\Oblivion_Passthrough_Tests.cs" />
+    <Compile Include="Specific Passthrough Tests\Oblivion\OblivionESM_Passthrough_Tests.cs" />
     <Compile Include="FormID_Tests.cs" />
     <Compile Include="Passthrough_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,7 +79,8 @@
       <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
     </Compile>
     <Compile Include="RecordType_Tests.cs" />
-    <Compile Include="Specific Passthrough Tests\Passthrough_Test.cs" />
+    <Compile Include="Specific Passthrough Tests\Oblivion\Oblivion_Passthrough_Test.cs" />
+    <Compile Include="TestingConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ValueTuple">
