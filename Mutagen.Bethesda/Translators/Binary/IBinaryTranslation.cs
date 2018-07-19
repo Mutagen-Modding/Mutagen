@@ -4,13 +4,30 @@ using System;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public delegate bool BinarySubParseDelegate<T>(MutagenFrame reader, out T item, ErrorMaskBuilder errorMask);
-    public delegate bool BinarySubParseRecordDelegate<T>(MutagenFrame reader, RecordType header, out T item, ErrorMaskBuilder errorMask);
-    public delegate void BinarySubWriteDelegate<in T>(MutagenWriter writer, T item, ErrorMaskBuilder errorMask);
+    public delegate bool BinarySubParseDelegate<T>(
+        MutagenFrame reader,
+        out T item,
+        ErrorMaskBuilder errorMask);
+    public delegate bool BinarySubParseRecordDelegate<T>(
+        MutagenFrame reader,
+        RecordType header, 
+        out T item, 
+        ErrorMaskBuilder errorMask);
+    public delegate void BinarySubWriteDelegate<in T>(
+        MutagenWriter writer,
+        T item, 
+        ErrorMaskBuilder errorMask);
 
     public interface IBinaryTranslation<T>
     {
-        void Write(MutagenWriter writer, T item, long length, ErrorMaskBuilder errorMask);
-        bool Parse(MutagenFrame reader, out T item, ErrorMaskBuilder errorMask);
+        void Write(
+            MutagenWriter writer, 
+            T item, 
+            long length, 
+            ErrorMaskBuilder errorMask);
+        bool Parse(
+            MutagenFrame reader,
+            out T item,
+            ErrorMaskBuilder errorMask);
     }
 }

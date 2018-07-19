@@ -33,7 +33,8 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             if (typeGen.TryGetFieldData(out var data)
@@ -72,7 +73,14 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string frameAccessor, Accessor itemAccessor, string maskAccessor)
+        public override void GenerateCopyIn(
+            FileGeneration fg, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen, 
+            string frameAccessor, 
+            Accessor itemAccessor,
+            string maskAccessor,
+            string translationAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             if (typeGen.TryGetFieldData(out var data)
@@ -80,14 +88,16 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
-            using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.ParseInto"))
-            {
-                args.Add($"frame: {frameAccessor}.Spawn(snapToFinalPosition: false)");
-                args.Add($"fieldIndex: {typeGen.IndexEnumInt}");
-                args.Add($"item: {itemAccessor.PropertyAccess}");
-                args.Add($"errorMask: {maskAccessor}");
-            }
+
+            TranslationGeneration.WrapParseCall(
+                fg: fg,
+                typeGen: typeGen,
+                translatorLine: $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
+                maskAccessor: maskAccessor,
+                itemAccessor: itemAccessor,
+                translationMaskAccessor: null,
+                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                extraargs: $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : ".Spawn(snapToFinalPosition: false)")}");
         }
 
         public override void GenerateWrite(
@@ -96,13 +106,15 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen, 
             string writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             switch (linkType.FormIDType)
             {
                 case FormIDLinkType.FormIDTypeEnum.Normal:
-                    base.GenerateWrite(fg, objGen, typeGen, writerAccessor, itemAccessor, maskAccessor);
+                    base.GenerateWrite(fg, objGen, typeGen, writerAccessor, itemAccessor, maskAccessor,
+                        translationMaskAccessor: translationMaskAccessor);
                     break;
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
                     var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;

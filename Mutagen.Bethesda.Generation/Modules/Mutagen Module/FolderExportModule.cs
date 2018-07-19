@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             case ObjectType.Record:
                                 using (var args = new ArgsWrapper(fg,
-                                    $"this.{field.Name}.Write_XML_Folder"))
+                                    $"this.{field.Name}.Write_Xml_Folder"))
                                 {
                                     args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
                                     args.Add($"errorMask: out var {field.Name}ErrorMask");
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (!obj.IsTopClass) return;
             using (var args = new FunctionWrapper(fg,
-                $"public{await obj.FunctionOverride()}void Write_XML_Folder"))
+                $"public{await obj.FunctionOverride()}void Write_Xml_Folder"))
             {
                 args.Add("string path");
                 args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    "Write_XML"))
+                    "Write_Xml"))
                 {
                     args.Add("path: path");
                     args.Add("errorMask: out errorMask");

@@ -21,7 +21,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
@@ -47,52 +48,26 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            string frameAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
-            ArgsWrapper args;
-            if (itemAccessor.PropertyAccess != null)
-            {
-                args = new ArgsWrapper(fg, $"{this.Namespace}FilePathBinaryTranslation.Instance.ParseInto");
-            }
-            else
-            {
-                args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = {this.Namespace}FilePathBinaryTranslation.Instance.Parse");
-            }
-            using (args)
-            {
-                if (data.HasTrigger)
-                {
-                    args.Add($"frame: {nodeAccessor}.SpawnWithLength(contentLength)");
-                }
-                else
-                {
-                    args.Add($"frame: {nodeAccessor}");
-                }
-                if (itemAccessor.PropertyAccess != null)
-                {
-                    args.Add($"item: {itemAccessor.PropertyAccess}");
-                }
-                if (typeGen.HasIndex)
-                {
-                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                }
-                args.Add($"errorMask: {maskAccessor}");
-            }
-            if (itemAccessor.PropertyAccess == null)
-            {
-                fg.AppendLine("if (tryGet.Succeeded)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"{itemAccessor.DirectAccess} = tryGet.Value;");
-                }
-            }
+
+            TranslationGeneration.WrapParseCall(
+                fg: fg,
+                typeGen: typeGen,
+                translatorLine: $"{this.Namespace}FilePathBinaryTranslation.Instance",
+                maskAccessor: maskAccessor,
+                itemAccessor: itemAccessor,
+                translationMaskAccessor: translationMaskAccessor,
+                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                extraargs: $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : ".Spawn(snapToFinalPosition: false)")}");
         }
 
         public override void GenerateCopyInRet(
@@ -104,7 +79,8 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,

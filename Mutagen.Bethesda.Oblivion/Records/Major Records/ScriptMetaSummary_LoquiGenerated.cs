@@ -376,44 +376,51 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region XML Translation
-        #region XML Create
+        #region Xml Translation
+        #region Xml Create
         [DebuggerStepThrough]
-        public static ScriptMetaSummary Create_XML(XElement root)
+        public static ScriptMetaSummary Create_Xml(
+            XElement root,
+            ScriptMetaSummary_TranslationMask translationMask = null)
         {
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
-        public static ScriptMetaSummary Create_XML(
+        public static ScriptMetaSummary Create_Xml(
             XElement root,
             out ScriptMetaSummary_ErrorMask errorMask,
-            bool doMasks = true)
+            bool doMasks = true,
+            ScriptMetaSummary_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_XML(
+            var ret = Create_Xml(
                 root: root,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
             errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static ScriptMetaSummary Create_XML(
+        public static ScriptMetaSummary Create_Xml(
             XElement root,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             var ret = new ScriptMetaSummary();
             try
             {
                 foreach (var elem in root.Elements())
                 {
-                    Fill_XML_Internal(
+                    Fill_Xml_Internal(
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                 }
             }
             catch (Exception ex)
@@ -424,209 +431,259 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ScriptMetaSummary Create_XML(string path)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(root: root);
-        }
-
-        public static ScriptMetaSummary Create_XML(
+        public static ScriptMetaSummary Create_Xml(
             string path,
-            out ScriptMetaSummary_ErrorMask errorMask)
+            ScriptMetaSummary_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(path).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
         }
 
-        public static ScriptMetaSummary Create_XML(Stream stream)
+        public static ScriptMetaSummary Create_Xml(
+            string path,
+            out ScriptMetaSummary_ErrorMask errorMask,
+            ScriptMetaSummary_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(root: root);
+            var root = XDocument.Load(path).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
-        public static ScriptMetaSummary Create_XML(
+        public static ScriptMetaSummary Create_Xml(
             Stream stream,
-            out ScriptMetaSummary_ErrorMask errorMask)
+            ScriptMetaSummary_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(stream).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
+        }
+
+        public static ScriptMetaSummary Create_Xml(
+            Stream stream,
+            out ScriptMetaSummary_ErrorMask errorMask,
+            ScriptMetaSummary_TranslationMask translationMask = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
         #endregion
 
-        #region XML Copy In
-        public void CopyIn_XML(
+        #region Xml Copy In
+        public void CopyIn_Xml(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<ScriptMetaSummary>.Instance.CopyIn(
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: null,
+                translationMask: null,
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(
+        public virtual void CopyIn_Xml(
             XElement root,
             out ScriptMetaSummary_ErrorMask errorMask,
+            ScriptMetaSummary_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<ScriptMetaSummary>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
             errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public void CopyIn_XML(
+        protected void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<ScriptMetaSummary>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                errorMask: errorMask,
+                translationMask: translationMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml(
             string path,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             string path,
             out ScriptMetaSummary_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            ScriptMetaSummary_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             out ScriptMetaSummary_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            ScriptMetaSummary_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
         #endregion
 
-        #region XML Write
-        public virtual void Write_XML(
+        #region Xml Write
+        public virtual void Write_Xml(
             XElement node,
             out ScriptMetaSummary_ErrorMask errorMask,
             bool doMasks = true,
+            ScriptMetaSummary_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             string path,
             out ScriptMetaSummary_ErrorMask errorMask,
+            ScriptMetaSummary_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             Stream stream,
             out ScriptMetaSummary_ErrorMask errorMask,
+            ScriptMetaSummary_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(stream);
         }
 
-        public void Write_XML(
+        public void Write_Xml(
             XElement node,
-            string name = null)
+            string name = null,
+            ScriptMetaSummary_TranslationMask translationMask = null)
         {
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
         }
 
-        public void Write_XML(
+        public void Write_Xml(
             string path,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(path);
         }
 
-        public void Write_XML(
+        public void Write_Xml(
             Stream stream,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(stream);
         }
 
-        protected void Write_XML_Internal(
+        protected void Write_Xml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
-            ScriptMetaSummaryCommon.Write_XML(
+            ScriptMetaSummaryCommon.Write_Xml(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             ScriptMetaSummary item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
@@ -1471,7 +1528,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(writer: writer);
+                    Write_Binary_Internal(
+                        writer: writer,
+                        recordTypeConverter: null,
+                        errorMask: null);
                 }
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
@@ -1485,7 +1545,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(writer: writer);
+                Write_Binary_Internal(
+                    writer: writer,
+                    recordTypeConverter: null,
+                    errorMask: null);
             }
         }
 
@@ -2406,28 +2469,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml(
             XElement node,
             IScriptMetaSummaryGetter item,
             bool doMasks,
             out ScriptMetaSummary_ErrorMask errorMask,
+            ScriptMetaSummary_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML(
+            Write_Xml(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML(
+        public static void Write_Xml(
             XElement node,
             IScriptMetaSummaryGetter item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ScriptMetaSummary");
@@ -2436,30 +2502,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptMetaSummary");
             }
-            ByteArrayXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.Fluff),
-                item: item.Fluff_Property,
-                fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
-                errorMask: errorMask);
-            UInt32XmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.RefCount),
-                item: item.RefCount_Property,
-                fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
-                errorMask: errorMask);
-            UInt32XmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.VariableCount),
-                item: item.VariableCount_Property,
-                fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
-                errorMask: errorMask);
-            EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Write(
-                node: elem,
-                name: nameof(item.Type),
-                item: item.Type_Property,
-                fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
-                errorMask: errorMask);
+            if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Fluff) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Fluff),
+                    item: item.Fluff_Property,
+                    fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.RefCount) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RefCount),
+                    item: item.RefCount_Property,
+                    fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.VariableCount) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.VariableCount),
+                    item: item.VariableCount_Property,
+                    fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Type) ?? true))
+            {
+                EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Type),
+                    item: item.Type_Property,
+                    fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
+                    errorMask: errorMask);
+            }
         }
         #endregion
 
@@ -2860,6 +2938,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Type;
         #endregion
 
+    }
+    public class ScriptMetaSummary_TranslationMask : ITranslationMask
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public bool Fluff;
+        public bool RefCount;
+        public bool CompiledSize;
+        public bool VariableCount;
+        public bool Type;
+        #endregion
+
+        public TranslationCrystal GetCrystal()
+        {
+            if (_crystal != null) return _crystal;
+            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            GetCrystal(ret);
+            _crystal = new TranslationCrystal()
+            {
+                Crystal = ret.ToArray()
+            };
+            return _crystal;
+        }
+
+        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            ret.Add((Fluff, null));
+            ret.Add((RefCount, null));
+            ret.Add((CompiledSize, null));
+            ret.Add((VariableCount, null));
+            ret.Add((Type, null));
+        }
     }
     #endregion
 

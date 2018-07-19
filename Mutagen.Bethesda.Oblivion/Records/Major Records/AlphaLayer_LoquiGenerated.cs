@@ -177,44 +177,51 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region XML Translation
-        #region XML Create
+        #region Xml Translation
+        #region Xml Create
         [DebuggerStepThrough]
-        public new static AlphaLayer Create_XML(XElement root)
+        public new static AlphaLayer Create_Xml(
+            XElement root,
+            AlphaLayer_TranslationMask translationMask = null)
         {
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
-        public static AlphaLayer Create_XML(
+        public static AlphaLayer Create_Xml(
             XElement root,
             out AlphaLayer_ErrorMask errorMask,
-            bool doMasks = true)
+            bool doMasks = true,
+            AlphaLayer_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_XML(
+            var ret = Create_Xml(
                 root: root,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static AlphaLayer Create_XML(
+        public static AlphaLayer Create_Xml(
             XElement root,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             var ret = new AlphaLayer();
             try
             {
                 foreach (var elem in root.Elements())
                 {
-                    Fill_XML_Internal(
+                    Fill_Xml_Internal(
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                 }
             }
             catch (Exception ex)
@@ -225,234 +232,256 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AlphaLayer Create_XML(string path)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(root: root);
-        }
-
-        public static AlphaLayer Create_XML(
+        public static AlphaLayer Create_Xml(
             string path,
-            out AlphaLayer_ErrorMask errorMask)
+            AlphaLayer_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(path).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
         }
 
-        public static AlphaLayer Create_XML(Stream stream)
+        public static AlphaLayer Create_Xml(
+            string path,
+            out AlphaLayer_ErrorMask errorMask,
+            AlphaLayer_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(root: root);
+            var root = XDocument.Load(path).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
-        public static AlphaLayer Create_XML(
+        public static AlphaLayer Create_Xml(
             Stream stream,
-            out AlphaLayer_ErrorMask errorMask)
+            AlphaLayer_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(stream).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
+        }
+
+        public static AlphaLayer Create_Xml(
+            Stream stream,
+            out AlphaLayer_ErrorMask errorMask,
+            AlphaLayer_TranslationMask translationMask = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
         #endregion
 
-        #region XML Copy In
-        public override void CopyIn_XML(
+        #region Xml Copy In
+        public override void CopyIn_Xml(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<AlphaLayer>.Instance.CopyIn(
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: null,
+                translationMask: null,
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(
+        public virtual void CopyIn_Xml(
             XElement root,
             out AlphaLayer_ErrorMask errorMask,
+            AlphaLayer_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<AlphaLayer>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public void CopyIn_XML(
+        protected override void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<AlphaLayer>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                errorMask: errorMask,
+                translationMask: translationMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml(
             string path,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             string path,
             out AlphaLayer_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            AlphaLayer_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             out AlphaLayer_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            AlphaLayer_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public override void CopyIn_XML(
+        public override void CopyIn_Xml(
             XElement root,
             out BaseLayer_ErrorMask errorMask,
+            BaseLayer_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            this.CopyIn_XML(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                errorMask: out AlphaLayer_ErrorMask errMask,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
-            errorMask = errMask;
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
         #endregion
 
-        #region XML Write
-        public virtual void Write_XML(
+        #region Xml Write
+        public virtual void Write_Xml(
             XElement node,
             out AlphaLayer_ErrorMask errorMask,
             bool doMasks = true,
+            AlphaLayer_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             string path,
             out AlphaLayer_ErrorMask errorMask,
+            AlphaLayer_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             Stream stream,
             out AlphaLayer_ErrorMask errorMask,
+            AlphaLayer_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(stream);
         }
 
         #region Base Class Trickdown Overrides
-        public override void Write_XML(
+        public override void Write_Xml(
             XElement node,
             out BaseLayer_ErrorMask errorMask,
             bool doMasks = true,
+            BaseLayer_TranslationMask translationMask = null,
             string name = null)
         {
-            Write_XML(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: out AlphaLayer_ErrorMask errMask,
-                doMasks: doMasks);
-            errorMask = errMask;
-        }
-
-        public override void Write_XML(
-            string path,
-            out BaseLayer_ErrorMask errorMask,
-            bool doMasks = true,
-            string name = null)
-        {
-            Write_XML(
-                path: path,
-                name: name,
-                errorMask: out AlphaLayer_ErrorMask errMask,
-                doMasks: doMasks);
-            errorMask = errMask;
-        }
-
-        public override void Write_XML(
-            Stream stream,
-            out BaseLayer_ErrorMask errorMask,
-            bool doMasks = true,
-            string name = null)
-        {
-            Write_XML(
-                stream: stream,
-                name: name,
-                errorMask: out AlphaLayer_ErrorMask errMask,
-                doMasks: doMasks);
-            errorMask = errMask;
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
         #endregion
 
-        protected override void Write_XML_Internal(
+        protected override void Write_Xml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
-            AlphaLayerCommon.Write_XML(
+            AlphaLayerCommon.Write_Xml(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             AlphaLayer item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
@@ -483,11 +512,12 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    BaseLayer.Fill_XML_Internal(
+                    BaseLayer.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                     break;
             }
         }
@@ -807,35 +837,12 @@ namespace Mutagen.Bethesda.Oblivion
             out BaseLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
-            Write_Binary(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
                 writer: writer,
-                errorMask: out AlphaLayer_ErrorMask errMask,
-                doMasks: doMasks);
-            errorMask = errMask;
-        }
-
-        public override void Write_Binary(
-            string path,
-            out BaseLayer_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            Write_Binary(
-                path: path,
-                errorMask: out AlphaLayer_ErrorMask errMask,
-                doMasks: doMasks);
-            errorMask = errMask;
-        }
-
-        public override void Write_Binary(
-            Stream stream,
-            out BaseLayer_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            Write_Binary(
-                stream: stream,
-                errorMask: out AlphaLayer_ErrorMask errMask,
-                doMasks: doMasks);
-            errorMask = errMask;
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
         #endregion
@@ -1477,28 +1484,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml(
             XElement node,
             IAlphaLayerGetter item,
             bool doMasks,
             out AlphaLayer_ErrorMask errorMask,
+            AlphaLayer_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML(
+            Write_Xml(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML(
+        public static void Write_Xml(
             XElement node,
             IAlphaLayerGetter item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AlphaLayer");
@@ -1507,7 +1517,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AlphaLayer");
             }
-            if (item.AlphaLayerData_Property.HasBeenSet)
+            if (item.AlphaLayerData_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
@@ -1802,6 +1813,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool AlphaLayerData;
         #endregion
 
+    }
+    public class AlphaLayer_TranslationMask : BaseLayer_TranslationMask
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public bool AlphaLayerData;
+        #endregion
+
+        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            base.GetCrystal(ret);
+            ret.Add((AlphaLayerData, null));
+        }
     }
     #endregion
 

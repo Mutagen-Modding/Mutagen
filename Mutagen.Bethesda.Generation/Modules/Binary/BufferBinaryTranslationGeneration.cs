@@ -21,7 +21,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string readerAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             BufferType zero = typeGen as BufferType;
             fg.AppendLine($"{readerAccessor}.Position += {zero.Length};");
@@ -36,7 +37,8 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             if (squashedRepeatedList)
             {
@@ -52,7 +54,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             BufferType zero = typeGen as BufferType;
             using (var args = new ArgsWrapper(fg,

@@ -11,10 +11,8 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Noggog.Notifying;
-using Mutagen.Bethesda.Oblivion.Internals;
-using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -25,56 +23,56 @@ using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda
 {
     #region Class
-    public partial class GameSettingString : 
-        GameSetting,
-        IGameSettingString,
-        ILoquiObject<GameSettingString>,
+    public abstract partial class NamedMajorRecord : 
+        MajorRecord,
+        INamedMajorRecord,
+        ILoquiObject<NamedMajorRecord>,
         ILoquiObjectSetter,
         IPropertySupporter<String>,
-        IEquatable<GameSettingString>
+        IEquatable<NamedMajorRecord>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
-        public new static GameSettingString_Registration Registration => GameSettingString_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NamedMajorRecord_Registration.Instance;
+        public new static NamedMajorRecord_Registration Registration => NamedMajorRecord_Registration.Instance;
 
         #region Ctor
-        public GameSettingString()
+        public NamedMajorRecord()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        protected String _Data;
-        protected PropertyForwarder<GameSettingString, String> _DataForwarder;
-        public INotifyingSetItem<String> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<GameSettingString, String>(this, (int)GameSettingString_FieldIndex.Data));
+        #region Name
+        protected String _Name;
+        protected PropertyForwarder<NamedMajorRecord, String> _NameForwarder;
+        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<NamedMajorRecord, String>(this, (int)NamedMajorRecord_FieldIndex.Name));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public String Data
+        public String Name
         {
-            get => this._Data;
-            set => this.SetData(value);
+            get => this._Name;
+            set => this.SetName(value);
         }
-        protected void SetData(
+        protected void SetName(
             String item,
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)GameSettingString_FieldIndex.Data];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Data == item) return;
+            var oldHasBeenSet = _hasBeenSetTracker[(int)NamedMajorRecord_FieldIndex.Name];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)GameSettingString_FieldIndex.Data] = hasBeenSet;
+                _hasBeenSetTracker[(int)NamedMajorRecord_FieldIndex.Name] = hasBeenSet;
             }
             if (_String_subscriptions != null)
             {
-                var tmp = Data;
-                _Data = item;
+                var tmp = Name;
+                _Name = item;
                 _String_subscriptions.FireSubscriptions(
-                    index: (int)GameSettingString_FieldIndex.Data,
+                    index: (int)NamedMajorRecord_FieldIndex.Name,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -83,82 +81,82 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                _Data = item;
+                _Name = item;
             }
         }
-        protected void UnsetData()
+        protected void UnsetName()
         {
-            _hasBeenSetTracker[(int)GameSettingString_FieldIndex.Data] = false;
-            Data = default(String);
+            _hasBeenSetTracker[(int)NamedMajorRecord_FieldIndex.Name] = false;
+            Name = default(String);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IGameSettingString.Data_Property => this.Data_Property;
+        INotifyingSetItem<String> INamedMajorRecord.Name_Property => this.Name_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IGameSettingStringGetter.Data_Property => this.Data_Property;
+        INotifyingSetItemGetter<String> INamedMajorRecordGetter.Name_Property => this.Name_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => GameSettingStringCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => NamedMajorRecordCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => GameSettingStringCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GameSettingStringCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => NamedMajorRecordCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            GameSettingStringCommon.SetNthObjectHasBeenSet(index, on, this);
+            NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
 
-        IMask<bool> IEqualsMask<GameSettingString>.GetEqualsMask(GameSettingString rhs) => GameSettingStringCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IGameSettingStringGetter>.GetEqualsMask(IGameSettingStringGetter rhs) => GameSettingStringCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<NamedMajorRecord>.GetEqualsMask(NamedMajorRecord rhs) => NamedMajorRecordCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<INamedMajorRecordGetter>.GetEqualsMask(INamedMajorRecordGetter rhs) => NamedMajorRecordCommon.GetEqualsMask(this, rhs);
         #region To String
         public override string ToString()
         {
-            return GameSettingStringCommon.ToString(this, printMask: null);
+            return NamedMajorRecordCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            GameSettingString_Mask<bool> printMask = null)
+            NamedMajorRecord_Mask<bool> printMask = null)
         {
-            return GameSettingStringCommon.ToString(this, name: name, printMask: printMask);
+            return NamedMajorRecordCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            GameSettingStringCommon.ToString(this, fg, name: name, printMask: null);
+            NamedMajorRecordCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetMask() => this.GetHasBeenSetMask();
-        public new GameSettingString_Mask<bool> GetHasBeenSetMask()
+        public new NamedMajorRecord_Mask<bool> GetHasBeenSetMask()
         {
-            return GameSettingStringCommon.GetHasBeenSetMask(this);
+            return NamedMajorRecordCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is GameSettingString rhs)) return false;
+            if (!(obj is NamedMajorRecord rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(GameSettingString rhs)
+        public bool Equals(NamedMajorRecord rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
-            if (Data_Property.HasBeenSet)
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
             {
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
             }
             return true;
         }
@@ -166,9 +164,9 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Data_Property.HasBeenSet)
+            if (Name_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -178,106 +176,6 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
-        #region Xml Create
-        [DebuggerStepThrough]
-        public new static GameSettingString Create_Xml(
-            XElement root,
-            GameSettingString_TranslationMask translationMask = null)
-        {
-            return Create_Xml(
-                root: root,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static GameSettingString Create_Xml(
-            XElement root,
-            out GameSettingString_ErrorMask errorMask,
-            bool doMasks = true,
-            GameSettingString_TranslationMask translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Xml(
-                root: root,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static GameSettingString Create_Xml(
-            XElement root,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            var ret = new GameSettingString();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_Xml_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            return ret;
-        }
-
-        public static GameSettingString Create_Xml(
-            string path,
-            GameSettingString_TranslationMask translationMask = null)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_Xml(
-                root: root,
-                translationMask: translationMask);
-        }
-
-        public static GameSettingString Create_Xml(
-            string path,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask translationMask = null)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_Xml(
-                root: root,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static GameSettingString Create_Xml(
-            Stream stream,
-            GameSettingString_TranslationMask translationMask = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            return Create_Xml(
-                root: root,
-                translationMask: translationMask);
-        }
-
-        public static GameSettingString Create_Xml(
-            Stream stream,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask translationMask = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            return Create_Xml(
-                root: root,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        #endregion
-
         #region Xml Copy In
         public override void CopyIn_Xml(
             XElement root,
@@ -292,8 +190,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_Xml(
             XElement root,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask translationMask = null,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NamedMajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
@@ -303,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         protected override void CopyIn_Xml_Internal(
@@ -312,7 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<GameSettingString>.Instance.CopyIn(
+            LoquiXmlTranslation<NamedMajorRecord>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -333,8 +231,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Xml(
             string path,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask translationMask,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NamedMajorRecord_TranslationMask translationMask,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
@@ -359,8 +257,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Xml(
             Stream stream,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask translationMask,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NamedMajorRecord_TranslationMask translationMask,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
@@ -371,22 +269,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask,
                 cmds: cmds,
                 doMasks: doMasks);
-        }
-
-        public override void CopyIn_Xml(
-            XElement root,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask translationMask = null,
-            bool doMasks = true,
-            NotifyingFireParameters cmds = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyIn_Xml_Internal(
-                root: root,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal(),
-                cmds: cmds);
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public override void CopyIn_Xml(
@@ -402,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         #endregion
@@ -410,9 +292,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Write
         public virtual void Write_Xml(
             XElement node,
-            out GameSettingString_ErrorMask errorMask,
+            out NamedMajorRecord_ErrorMask errorMask,
             bool doMasks = true,
-            GameSettingString_TranslationMask translationMask = null,
+            NamedMajorRecord_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -421,13 +303,13 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Xml(
             string path,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask translationMask = null,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NamedMajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -443,8 +325,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Xml(
             Stream stream,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask translationMask = null,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NamedMajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
@@ -461,22 +343,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
-            out GameSetting_ErrorMask errorMask,
-            bool doMasks = true,
-            GameSetting_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
-                node: node,
-                name: name,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -488,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         #endregion
@@ -499,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            GameSettingStringCommon.Write_Xml(
+            NamedMajorRecordCommon.Write_Xml(
                 item: this,
                 node: node,
                 name: name,
@@ -509,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         protected static void Fill_Xml_Internal(
-            GameSettingString item,
+            NamedMajorRecord item,
             XElement root,
             string name,
             ErrorMaskBuilder errorMask,
@@ -517,20 +383,20 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Data":
+                case "Name":
                     try
                     {
-                        errorMask?.PushIndex((int)GameSettingString_FieldIndex.Data);
+                        errorMask?.PushIndex((int)NamedMajorRecord_FieldIndex.Name);
                         if (StringXmlTranslation.Instance.Parse(
                             root: root,
-                            item: out String DataParse,
+                            item: out String NameParse,
                             errorMask: errorMask))
                         {
-                            item.Data = DataParse;
+                            item.Name = NameParse;
                         }
                         else
                         {
-                            item.UnsetData();
+                            item.UnsetName();
                         }
                     }
                     catch (Exception ex)
@@ -544,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    GameSetting.Fill_Xml_Internal(
+                    MajorRecord.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -556,17 +422,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((GameSettingString_FieldIndex)index)
-            {
-                case GameSettingString_FieldIndex.Data:
-                    return _hasBeenSetTracker[index];
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
-
         #region IPropertySupporter String
         String IPropertySupporter<String>.Get(int index)
         {
@@ -575,10 +430,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override String GetString(int index)
         {
-            switch ((GameSettingString_FieldIndex)index)
+            switch ((NamedMajorRecord_FieldIndex)index)
             {
-                case GameSettingString_FieldIndex.Data:
-                    return Data;
+                case NamedMajorRecord_FieldIndex.Name:
+                    return Name;
                 default:
                     return base.GetString(index: index);
             }
@@ -603,10 +458,10 @@ namespace Mutagen.Bethesda.Oblivion
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            switch ((GameSettingString_FieldIndex)index)
+            switch ((NamedMajorRecord_FieldIndex)index)
             {
-                case GameSettingString_FieldIndex.Data:
-                    SetData(item, hasBeenSet, cmds);
+                case NamedMajorRecord_FieldIndex.Name:
+                    SetName(item, hasBeenSet, cmds);
                     break;
                 default:
                     base.SetString(
@@ -620,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         bool IPropertySupporter<String>.GetHasBeenSet(int index)
         {
-            return this.GetHasBeenSet(index: index);
+            return _hasBeenSetTracker[index];
         }
 
         void IPropertySupporter<String>.SetHasBeenSet(
@@ -643,12 +498,11 @@ namespace Mutagen.Bethesda.Oblivion
             int index,
             NotifyingUnsetParameters cmds)
         {
-            switch ((GameSettingString_FieldIndex)index)
+            switch ((NamedMajorRecord_FieldIndex)index)
             {
-                case GameSettingString_FieldIndex.Data:
-                    SetData(
-                        item: default(String),
-                        hasBeenSet: false);
+                case NamedMajorRecord_FieldIndex.Name:
+                    _hasBeenSetTracker[index] = false;
+                    Name = default(String);
                     break;
                 default:
                     base.UnsetString(
@@ -697,9 +551,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override String DefaultValueString(int index)
         {
-            switch ((GameSettingString_FieldIndex)index)
+            switch ((NamedMajorRecord_FieldIndex)index)
             {
-                case GameSettingString_FieldIndex.Data:
+                case NamedMajorRecord_FieldIndex.Name:
                     return default(String);
                 default:
                     return base.DefaultValueString(index: index);
@@ -708,101 +562,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = GameSettingString_Registration.TRIGGERING_RECORD_TYPE;
-        #endregion
-
         #region Binary Translation
-        #region Binary Create
-        [DebuggerStepThrough]
-        public new static GameSettingString Create_Binary(MutagenFrame frame)
-        {
-            return Create_Binary(
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static GameSettingString Create_Binary(
-            MutagenFrame frame,
-            out GameSettingString_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static GameSettingString Create_Binary(
-            MutagenFrame frame,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            return UtilityTranslation.MajorRecordParse<GameSettingString>(
-                record: new GameSettingString(),
-                frame: frame,
-                errorMask: errorMask,
-                recType: GameSettingString_Registration.GMST_HEADER,
-                recordTypeConverter: recordTypeConverter,
-                fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
-        }
-
-        public static GameSettingString Create_Binary(string path)
-        {
-            using (var reader = new BinaryReadStream(path))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
-            }
-        }
-
-        public static GameSettingString Create_Binary(
-            string path,
-            out GameSettingString_ErrorMask errorMask)
-        {
-            using (var reader = new BinaryReadStream(path))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(
-                    frame: frame,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static GameSettingString Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
-            }
-        }
-
-        public static GameSettingString Create_Binary(
-            Stream stream,
-            out GameSettingString_ErrorMask errorMask)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(
-                    frame: frame,
-                    errorMask: out errorMask);
-            }
-        }
-
-        #endregion
-
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out GameSettingString_ErrorMask errorMask,
+            out NamedMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -810,12 +574,12 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public virtual void Write_Binary(
             string path,
-            out GameSettingString_ErrorMask errorMask,
+            out NamedMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             using (var memStream = new MemoryTributary())
@@ -837,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out GameSettingString_ErrorMask errorMask,
+            out NamedMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             using (var writer = new MutagenWriter(stream))
@@ -852,19 +616,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
-            out GameSetting_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -873,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         #endregion
@@ -883,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            GameSettingStringCommon.Write_Binary(
+            NamedMajorRecordCommon.Write_Binary(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -891,19 +642,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Binary_Structs(
-            GameSettingString item,
-            MutagenFrame frame,
-            ErrorMaskBuilder errorMask)
-        {
-            GameSetting.Fill_Binary_Structs(
-                item: item,
-                frame: frame,
-                errorMask: errorMask);
-        }
-
         protected static TryGet<int?> Fill_Binary_RecordTypes(
-            GameSettingString item,
+            NamedMajorRecord item,
             MutagenFrame frame,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
@@ -914,22 +654,22 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case 0x4C4C5546: // FULL
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     try
                     {
-                        errorMask?.PushIndex((int)GameSettingString_FieldIndex.Data);
+                        errorMask?.PushIndex((int)NamedMajorRecord_FieldIndex.Name);
                         if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             parseWhole: true,
-                            item: out String DataParse,
+                            item: out String NameParse,
                             errorMask: errorMask))
                         {
-                            item.Data = DataParse;
+                            item.Name = NameParse;
                         }
                         else
                         {
-                            item.UnsetData();
+                            item.UnsetName();
                         }
                     }
                     catch (Exception ex)
@@ -941,9 +681,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PopIndex();
                     }
-                    return TryGet<int?>.Succeed((int)GameSettingString_FieldIndex.Data);
+                    return TryGet<int?>.Succeed((int)NamedMajorRecord_FieldIndex.Name);
                 default:
-                    return GameSetting.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -953,30 +693,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public GameSettingString Copy(
-            GameSettingString_CopyMask copyMask = null,
-            IGameSettingStringGetter def = null)
+        public NamedMajorRecord Copy(
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null)
         {
-            return GameSettingString.Copy(
+            return NamedMajorRecord.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static GameSettingString Copy(
-            IGameSettingString item,
-            GameSettingString_CopyMask copyMask = null,
-            IGameSettingStringGetter def = null)
+        public static NamedMajorRecord Copy(
+            INamedMajorRecord item,
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null)
         {
-            GameSettingString ret;
-            if (item.GetType().Equals(typeof(GameSettingString)))
-            {
-                ret = new GameSettingString();
-            }
-            else
-            {
-                ret = (GameSettingString)System.Activator.CreateInstance(item.GetType());
-            }
+            NamedMajorRecord ret = (NamedMajorRecord)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -984,20 +716,12 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GameSettingString Copy_ToLoqui(
-            IGameSettingStringGetter item,
-            GameSettingString_CopyMask copyMask = null,
-            IGameSettingStringGetter def = null)
+        public static NamedMajorRecord Copy_ToLoqui(
+            INamedMajorRecordGetter item,
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null)
         {
-            GameSettingString ret;
-            if (item.GetType().Equals(typeof(GameSettingString)))
-            {
-                ret = new GameSettingString() as GameSettingString;
-            }
-            else
-            {
-                ret = (GameSettingString)System.Activator.CreateInstance(item.GetType());
-            }
+            NamedMajorRecord ret = (NamedMajorRecord)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -1006,9 +730,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IGameSettingStringGetter rhs,
-            GameSettingString_CopyMask copyMask,
-            IGameSettingStringGetter def = null,
+            INamedMajorRecordGetter rhs,
+            NamedMajorRecord_CopyMask copyMask,
+            INamedMajorRecordGetter def = null,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
@@ -1021,33 +745,33 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void CopyFieldsFrom(
-            IGameSettingStringGetter rhs,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_CopyMask copyMask = null,
-            IGameSettingStringGetter def = null,
+            INamedMajorRecordGetter rhs,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            GameSettingStringCommon.CopyFieldsFrom(
+            NamedMajorRecordCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask,
                 cmds: cmds);
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public void CopyFieldsFrom(
-            IGameSettingStringGetter rhs,
+            INamedMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSettingString_CopyMask copyMask = null,
-            IGameSettingStringGetter def = null,
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            GameSettingStringCommon.CopyFieldsFrom(
+            NamedMajorRecordCommon.CopyFieldsFrom(
                 item: this,
                 rhs: rhs,
                 def: def,
@@ -1058,11 +782,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    this.SetData(
+                case NamedMajorRecord_FieldIndex.Name:
+                    this.SetName(
                         (String)obj,
                         cmds: cmds);
                     break;
@@ -1075,30 +799,20 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            GameSettingStringCommon.Clear(this, cmds);
+            NamedMajorRecordCommon.Clear(this, cmds);
         }
 
 
-        public new static GameSettingString Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        protected new static void CopyInInternal_NamedMajorRecord(NamedMajorRecord obj, KeyValuePair<ushort, object> pair)
         {
-            var ret = new GameSettingString();
-            foreach (var pair in fields)
+            if (!EnumExt.TryParse(pair.Key, out NamedMajorRecord_FieldIndex enu))
             {
-                CopyInInternal_GameSettingString(ret, pair);
-            }
-            return ret;
-        }
-
-        protected new static void CopyInInternal_GameSettingString(GameSettingString obj, KeyValuePair<ushort, object> pair)
-        {
-            if (!EnumExt.TryParse(pair.Key, out GameSettingString_FieldIndex enu))
-            {
-                CopyInInternal_GameSetting(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    obj.SetData(
+                case NamedMajorRecord_FieldIndex.Name:
+                    obj.SetName(
                         (String)pair.Value,
                         cmds: null);
                     break;
@@ -1106,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, GameSettingString obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, NamedMajorRecord obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -1115,18 +829,18 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IGameSettingString : IGameSettingStringGetter, IGameSetting, ILoquiClass<IGameSettingString, IGameSettingStringGetter>, ILoquiClass<GameSettingString, IGameSettingStringGetter>
+    public partial interface INamedMajorRecord : INamedMajorRecordGetter, IMajorRecord, ILoquiClass<INamedMajorRecord, INamedMajorRecordGetter>, ILoquiClass<NamedMajorRecord, INamedMajorRecordGetter>
     {
-        new String Data { get; set; }
-        new INotifyingSetItem<String> Data_Property { get; }
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
 
     }
 
-    public partial interface IGameSettingStringGetter : IGameSettingGetter
+    public partial interface INamedMajorRecordGetter : IMajorRecordGetter
     {
-        #region Data
-        String Data { get; }
-        INotifyingSetItemGetter<String> Data_Property { get; }
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
 
         #endregion
 
@@ -1136,55 +850,55 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Internals
 {
     #region Field Index
-    public enum GameSettingString_FieldIndex
+    public enum NamedMajorRecord_FieldIndex
     {
         MajorRecordFlags = 0,
         FormID = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
-        Data = 5,
+        Name = 5,
     }
     #endregion
 
     #region Registration
-    public class GameSettingString_Registration : ILoquiRegistration
+    public class NamedMajorRecord_Registration : ILoquiRegistration
     {
-        public static readonly GameSettingString_Registration Instance = new GameSettingString_Registration();
+        public static readonly NamedMajorRecord_Registration Instance = new NamedMajorRecord_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 10,
+            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
+            msgID: 2,
             version: 0);
 
-        public const string GUID = "aa9c63ce-a122-4644-8610-646ebc7d4f13";
+        public const string GUID = "492d4810-c631-49fc-8358-a68f4d1af93d";
 
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(GameSettingString_Mask<>);
+        public static readonly Type MaskType = typeof(NamedMajorRecord_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(GameSettingString_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NamedMajorRecord_ErrorMask);
 
-        public static readonly Type ClassType = typeof(GameSettingString);
+        public static readonly Type ClassType = typeof(NamedMajorRecord);
 
-        public static readonly Type GetterType = typeof(IGameSettingStringGetter);
+        public static readonly Type GetterType = typeof(INamedMajorRecordGetter);
 
-        public static readonly Type SetterType = typeof(IGameSettingString);
+        public static readonly Type SetterType = typeof(INamedMajorRecord);
 
-        public static readonly Type CommonType = typeof(GameSettingStringCommon);
+        public static readonly Type CommonType = typeof(NamedMajorRecordCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.GameSettingString";
+        public const string FullName = "Mutagen.Bethesda.NamedMajorRecord";
 
-        public const string Name = "GameSettingString";
+        public const string Name = "NamedMajorRecord";
 
-        public const string Namespace = "Mutagen.Bethesda.Oblivion";
+        public const string Namespace = "Mutagen.Bethesda";
 
         public const byte GenericCount = 0;
 
@@ -1194,8 +908,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "DATA":
-                    return (ushort)GameSettingString_FieldIndex.Data;
+                case "NAME":
+                    return (ushort)NamedMajorRecord_FieldIndex.Name;
                 default:
                     return null;
             }
@@ -1203,91 +917,160 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
+                case NamedMajorRecord_FieldIndex.Name:
                     return false;
                 default:
-                    return GameSetting_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
+                case NamedMajorRecord_FieldIndex.Name:
                     return false;
                 default:
-                    return GameSetting_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
+                case NamedMajorRecord_FieldIndex.Name:
                     return false;
                 default:
-                    return GameSetting_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    return "Data";
+                case NamedMajorRecord_FieldIndex.Name:
+                    return "Name";
                 default:
-                    return GameSetting_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
+                case NamedMajorRecord_FieldIndex.Name:
                     return false;
                 default:
-                    return GameSetting_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
+                case NamedMajorRecord_FieldIndex.Name:
                     return false;
                 default:
-                    return GameSetting_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
+                case NamedMajorRecord_FieldIndex.Name:
                     return typeof(String);
                 default:
-                    return GameSetting_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
+        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
+        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
+        public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType CONT_HEADER = new RecordType("CONT");
+        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
+        public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
+        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
+        public static readonly RecordType EYES_HEADER = new RecordType("EYES");
+        public static readonly RecordType FACT_HEADER = new RecordType("FACT");
+        public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
+        public static readonly RecordType FURN_HEADER = new RecordType("FURN");
+        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
+        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
+        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
+        public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
+        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
+        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
+        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
+        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
+        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
+        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
+        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
+        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
+        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
+        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
+        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        FULL_HEADER,
+                        ACTI_HEADER,
+                        APPA_HEADER,
+                        BSGN_HEADER,
+                        BOOK_HEADER,
+                        CELL_HEADER,
+                        CLAS_HEADER,
+                        CONT_HEADER,
+                        CREA_HEADER,
+                        DOOR_HEADER,
+                        ENCH_HEADER,
+                        EYES_HEADER,
+                        FACT_HEADER,
+                        FLOR_HEADER,
+                        FURN_HEADER,
+                        HAIR_HEADER,
+                        INGR_HEADER,
+                        KEYM_HEADER,
+                        MGEF_HEADER,
+                        MISC_HEADER,
+                        NPC__HEADER,
+                        ALCH_HEADER,
+                        RACE_HEADER,
+                        SGST_HEADER,
+                        SLGM_HEADER,
+                        WEAP_HEADER,
+                        WRLD_HEADER,
+                        ARMO_HEADER,
+                        CLOT_HEADER,
+                        LVSP_HEADER,
+                        SPEL_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         #region Interface
@@ -1321,32 +1104,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class GameSettingStringCommon
+    public static partial class NamedMajorRecordCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            IGameSettingString item,
-            IGameSettingStringGetter rhs,
-            IGameSettingStringGetter def,
+            INamedMajorRecord item,
+            INamedMajorRecordGetter rhs,
+            INamedMajorRecordGetter def,
             ErrorMaskBuilder errorMask,
-            GameSettingString_CopyMask copyMask,
+            NamedMajorRecord_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            GameSettingCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask,
                 cmds);
-            if (copyMask?.Data ?? true)
+            if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)GameSettingString_FieldIndex.Data);
+                errorMask.PushIndex((int)NamedMajorRecord_FieldIndex.Name);
                 try
                 {
-                    item.Data_Property.SetToWithDefault(
-                        rhs: rhs.Data_Property,
-                        def: def?.Data_Property);
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1365,96 +1148,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IGameSettingString obj,
+            INamedMajorRecord obj,
             NotifyingFireParameters cmds = null)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    obj.Data_Property.HasBeenSet = on;
+                case NamedMajorRecord_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
                     break;
                 default:
-                    GameSettingCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
 
         public static void UnsetNthObject(
             ushort index,
-            IGameSettingString obj,
+            INamedMajorRecord obj,
             NotifyingUnsetParameters cmds = null)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    obj.Data_Property.Unset(cmds);
+                case NamedMajorRecord_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
                     break;
                 default:
-                    GameSettingCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IGameSettingString obj)
+            INamedMajorRecord obj)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    return obj.Data_Property.HasBeenSet;
+                case NamedMajorRecord_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 default:
-                    return GameSettingCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
         public static object GetNthObject(
             ushort index,
-            IGameSettingStringGetter obj)
+            INamedMajorRecordGetter obj)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    return obj.Data;
+                case NamedMajorRecord_FieldIndex.Name:
+                    return obj.Name;
                 default:
-                    return GameSettingCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            IGameSettingString item,
+            INamedMajorRecord item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Data_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static GameSettingString_Mask<bool> GetEqualsMask(
-            this IGameSettingStringGetter item,
-            IGameSettingStringGetter rhs)
+        public static NamedMajorRecord_Mask<bool> GetEqualsMask(
+            this INamedMajorRecordGetter item,
+            INamedMajorRecordGetter rhs)
         {
-            var ret = new GameSettingString_Mask<bool>();
+            var ret = new NamedMajorRecord_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IGameSettingStringGetter item,
-            IGameSettingStringGetter rhs,
-            GameSettingString_Mask<bool> ret)
+            INamedMajorRecordGetter item,
+            INamedMajorRecordGetter rhs,
+            NamedMajorRecord_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Data = item.Data_Property.Equals(rhs.Data_Property, (l, r) => object.Equals(l, r));
-            GameSettingCommon.FillEqualsMask(item, rhs, ret);
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this IGameSettingStringGetter item,
+            this INamedMajorRecordGetter item,
             string name = null,
-            GameSettingString_Mask<bool> printMask = null)
+            NamedMajorRecord_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1462,90 +1245,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IGameSettingStringGetter item,
+            this INamedMajorRecordGetter item,
             FileGeneration fg,
             string name = null,
-            GameSettingString_Mask<bool> printMask = null)
+            NamedMajorRecord_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(GameSettingString)} =>");
+                fg.AppendLine($"{nameof(NamedMajorRecord)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(GameSettingString)}) =>");
+                fg.AppendLine($"{name} ({nameof(NamedMajorRecord)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Data ?? true)
+                if (printMask?.Name ?? true)
                 {
-                    fg.AppendLine($"Data => {item.Data}");
+                    fg.AppendLine($"Name => {item.Name}");
                 }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IGameSettingStringGetter item,
-            GameSettingString_Mask<bool?> checkMask)
+            this INamedMajorRecordGetter item,
+            NamedMajorRecord_Mask<bool?> checkMask)
         {
-            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static GameSettingString_Mask<bool> GetHasBeenSetMask(IGameSettingStringGetter item)
+        public static NamedMajorRecord_Mask<bool> GetHasBeenSetMask(INamedMajorRecordGetter item)
         {
-            var ret = new GameSettingString_Mask<bool>();
-            ret.Data = item.Data_Property.HasBeenSet;
+            var ret = new NamedMajorRecord_Mask<bool>();
+            ret.Name = item.Name_Property.HasBeenSet;
             return ret;
         }
 
-        public static GameSettingString_FieldIndex? ConvertFieldIndex(GameSetting_FieldIndex? index)
+        public static NamedMajorRecord_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static GameSettingString_FieldIndex ConvertFieldIndex(GameSetting_FieldIndex index)
-        {
-            switch (index)
-            {
-                case GameSetting_FieldIndex.MajorRecordFlags:
-                    return (GameSettingString_FieldIndex)((int)index);
-                case GameSetting_FieldIndex.FormID:
-                    return (GameSettingString_FieldIndex)((int)index);
-                case GameSetting_FieldIndex.Version:
-                    return (GameSettingString_FieldIndex)((int)index);
-                case GameSetting_FieldIndex.EditorID:
-                    return (GameSettingString_FieldIndex)((int)index);
-                case GameSetting_FieldIndex.RecordType:
-                    return (GameSettingString_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
-        public static GameSettingString_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static GameSettingString_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static NamedMajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (GameSettingString_FieldIndex)((int)index);
+                    return (NamedMajorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormID:
-                    return (GameSettingString_FieldIndex)((int)index);
+                    return (NamedMajorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (GameSettingString_FieldIndex)((int)index);
+                    return (NamedMajorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (GameSettingString_FieldIndex)((int)index);
+                    return (NamedMajorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.RecordType:
-                    return (GameSettingString_FieldIndex)((int)index);
+                    return (NamedMajorRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1555,10 +1313,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IGameSettingStringGetter item,
+            INamedMajorRecordGetter item,
             bool doMasks,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask translationMask,
+            out NamedMajorRecord_ErrorMask errorMask,
+            NamedMajorRecord_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1568,30 +1326,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void Write_Xml(
             XElement node,
-            IGameSettingStringGetter item,
+            INamedMajorRecordGetter item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.GameSettingString");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.NamedMajorRecord");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GameSettingString");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.NamedMajorRecord");
             }
-            if (item.Data_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)GameSettingString_FieldIndex.Data) ?? true))
+            if (item.Name_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)NamedMajorRecord_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.Data),
-                    item: item.Data_Property,
-                    fieldIndex: (int)GameSettingString_FieldIndex.Data,
+                    name: nameof(item.Name),
+                    item: item.Name_Property,
+                    fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
                     errorMask: errorMask);
             }
         }
@@ -1603,10 +1361,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            GameSettingString item,
+            NamedMajorRecord item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out GameSettingString_ErrorMask errorMask)
+            out NamedMajorRecord_ErrorMask errorMask)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
@@ -1614,35 +1372,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NamedMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void Write_Binary(
             MutagenWriter writer,
-            GameSettingString item,
+            NamedMajorRecord item,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            using (HeaderExport.ExportHeader(
+            MajorRecordCommon.Write_Binary_Embedded(
+                item: item,
                 writer: writer,
-                record: GameSettingString_Registration.GMST_HEADER,
-                type: ObjectType.Record))
-            {
-                MajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
+                errorMask: errorMask);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
         }
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            GameSettingString item,
+            NamedMajorRecord item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
@@ -1654,10 +1406,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Data_Property,
-                fieldIndex: (int)GameSettingString_FieldIndex.Data,
+                item: item.Name_Property,
+                fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
                 errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(GameSettingString_Registration.DATA_HEADER),
+                header: recordTypeConverter.ConvertToCustom(NamedMajorRecord_Registration.FULL_HEADER),
                 nullable: false);
         }
 
@@ -1669,41 +1421,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class GameSettingString_Mask<T> : GameSetting_Mask<T>, IMask<T>, IEquatable<GameSettingString_Mask<T>>
+    public class NamedMajorRecord_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<NamedMajorRecord_Mask<T>>
     {
         #region Ctors
-        public GameSettingString_Mask()
+        public NamedMajorRecord_Mask()
         {
         }
 
-        public GameSettingString_Mask(T initialValue)
+        public NamedMajorRecord_Mask(T initialValue)
         {
-            this.Data = initialValue;
+            this.Name = initialValue;
         }
         #endregion
 
         #region Members
-        public T Data;
+        public T Name;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is GameSettingString_Mask<T> rhs)) return false;
+            if (!(obj is NamedMajorRecord_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(GameSettingString_Mask<T> rhs)
+        public bool Equals(NamedMajorRecord_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Data, rhs.Data)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Data?.GetHashCode());
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1714,23 +1466,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Data)) return false;
+            if (!eval(this.Name)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public new GameSettingString_Mask<R> Translate<R>(Func<T, R> eval)
+        public new NamedMajorRecord_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new GameSettingString_Mask<R>();
+            var ret = new NamedMajorRecord_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(GameSettingString_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(NamedMajorRecord_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-            obj.Data = eval(this.Data);
+            obj.Name = eval(this.Name);
         }
         #endregion
 
@@ -1747,22 +1499,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(GameSettingString_Mask<bool> printMask = null)
+        public string ToString(NamedMajorRecord_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, GameSettingString_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, NamedMajorRecord_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(GameSettingString_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(NamedMajorRecord_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Data ?? true)
+                if (printMask?.Name ?? true)
                 {
-                    fg.AppendLine($"Data => {Data}");
+                    fg.AppendLine($"Name => {Name}");
                 }
             }
             fg.AppendLine("]");
@@ -1771,20 +1523,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class GameSettingString_ErrorMask : GameSetting_ErrorMask, IErrorMask<GameSettingString_ErrorMask>
+    public class NamedMajorRecord_ErrorMask : MajorRecord_ErrorMask, IErrorMask<NamedMajorRecord_ErrorMask>
     {
         #region Members
-        public Exception Data;
+        public Exception Name;
         #endregion
 
         #region IErrorMask
         public override object GetNthMask(int index)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    return Data;
+                case NamedMajorRecord_FieldIndex.Name:
+                    return Name;
                 default:
                     return base.GetNthMask(index);
             }
@@ -1792,11 +1544,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void SetNthException(int index, Exception ex)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    this.Data = ex;
+                case NamedMajorRecord_FieldIndex.Name:
+                    this.Name = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -1806,11 +1558,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case GameSettingString_FieldIndex.Data:
-                    this.Data = (Exception)obj;
+                case NamedMajorRecord_FieldIndex.Name:
+                    this.Name = (Exception)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -1821,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
-            if (Data != null) return true;
+            if (Name != null) return true;
             return false;
         }
         #endregion
@@ -1836,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("GameSettingString_ErrorMask =>");
+            fg.AppendLine("NamedMajorRecord_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1857,18 +1609,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            fg.AppendLine($"Data => {Data}");
+            fg.AppendLine($"Name => {Name}");
         }
         #endregion
 
         #region Combine
-        public GameSettingString_ErrorMask Combine(GameSettingString_ErrorMask rhs)
+        public NamedMajorRecord_ErrorMask Combine(NamedMajorRecord_ErrorMask rhs)
         {
-            var ret = new GameSettingString_ErrorMask();
-            ret.Data = this.Data.Combine(rhs.Data);
+            var ret = new NamedMajorRecord_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
             return ret;
         }
-        public static GameSettingString_ErrorMask Combine(GameSettingString_ErrorMask lhs, GameSettingString_ErrorMask rhs)
+        public static NamedMajorRecord_ErrorMask Combine(NamedMajorRecord_ErrorMask lhs, NamedMajorRecord_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1876,32 +1628,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static GameSettingString_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static NamedMajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
-            return new GameSettingString_ErrorMask();
+            return new NamedMajorRecord_ErrorMask();
         }
         #endregion
 
     }
-    public class GameSettingString_CopyMask : GameSetting_CopyMask
+    public class NamedMajorRecord_CopyMask : MajorRecord_CopyMask
     {
         #region Members
-        public bool Data;
+        public bool Name;
         #endregion
 
     }
-    public class GameSettingString_TranslationMask : GameSetting_TranslationMask
+    public class NamedMajorRecord_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool Data;
+        public bool Name;
         #endregion
 
         protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
             base.GetCrystal(ret);
-            ret.Add((Data, null));
+            ret.Add((Name, null));
         }
     }
     #endregion

@@ -30,7 +30,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var eType = typeGen as EnumType;
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
@@ -59,7 +60,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string frameAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             var eType = typeGen as EnumType;
@@ -71,9 +73,10 @@ namespace Mutagen.Bethesda.Generation
             TranslationGeneration.WrapParseCall(
                 fg: fg,
                 typeGen: typeGen,
-                callLine: $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse",
+                translatorLine: $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance",
                 maskAccessor: maskAccessor,
                 itemAccessor: itemAccessor,
+                translationMaskAccessor: null,
                 indexAccessor: typeGen.IndexEnumInt,
                 extraargs: $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({eType.ByteLength})")}");
         }
@@ -87,7 +90,8 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var eType = typeGen as EnumType;
             using (var args = new ArgsWrapper(fg,

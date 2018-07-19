@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Binary
                     out var enumer,
                     triggeringRecord,
                     lengthLength,
-                    errorMask,
-                    transl,
+                    errorMask: errorMask,
+                    transl: transl,
                     parseIndefinitely: parseIndefinitely))
                 {
                     item.SetTo(enumer);
@@ -172,7 +172,8 @@ namespace Mutagen.Bethesda.Binary
                 item: item,
                 lengthLength: lengthLength,
                 errorMask: errorMask,
-                transl: (MutagenFrame reader, RecordType header, out T subItem, ErrorMaskBuilder subErrMask) => transl(reader, out subItem, subErrMask));
+                transl: (MutagenFrame reader, RecordType header, out T subItem, ErrorMaskBuilder subErrMask)
+                    => transl(reader, out subItem, subErrMask));
         }
 
         public void ParseRepeatedItem(
@@ -191,9 +192,9 @@ namespace Mutagen.Bethesda.Binary
                     frame,
                     out var enumer,
                     lengthLength,
-                    errorMask,
-                    transl,
-                    triggeringRecord))
+                    errorMask: errorMask,
+                    transl: transl,
+                    triggeringRecord: triggeringRecord))
                 {
                     item.SetTo(enumer);
                 }
@@ -265,8 +266,8 @@ namespace Mutagen.Bethesda.Binary
                     frame,
                     out var enumer,
                     lengthLength,
-                    errorMask,
-                    transl))
+                    errorMask: errorMask,
+                    transl: transl))
                 {
                     item.SetTo(enumer);
                 }
@@ -333,9 +334,9 @@ namespace Mutagen.Bethesda.Binary
                 if (ParseRepeatedItem(
                     frame,
                     out var enumer,
-                    amount,
-                    errorMask,
-                    transl))
+                    amount: amount,
+                    errorMask: errorMask,
+                    transl: transl))
                 {
                     item.SetTo(enumer);
                 }
@@ -373,8 +374,8 @@ namespace Mutagen.Bethesda.Binary
                     out var enumer,
                     triggeringRecord,
                     lengthLength,
-                    errorMask,
-                    transl))
+                    errorMask: errorMask,
+                    transl: transl))
                 {
                     item.SetTo(enumer);
                 }
@@ -410,9 +411,9 @@ namespace Mutagen.Bethesda.Binary
                     frame,
                     out var enumer,
                     lengthLength,
-                    errorMask,
-                    transl,
-                    triggeringRecord))
+                    errorMask: errorMask,
+                    transl: transl,
+                    triggeringRecord: triggeringRecord))
                 {
                     item.SetTo(enumer);
                 }
@@ -433,7 +434,11 @@ namespace Mutagen.Bethesda.Binary
         }
         #endregion
 
-        void IBinaryTranslation<IEnumerable<T>>.Write(MutagenWriter writer, IEnumerable<T> item, long length, ErrorMaskBuilder errorMask)
+        void IBinaryTranslation<IEnumerable<T>>.Write(
+            MutagenWriter writer, 
+            IEnumerable<T> item,
+            long length, 
+            ErrorMaskBuilder errorMask)
         {
             Write(writer, item, errorMask);
         }
@@ -453,7 +458,12 @@ namespace Mutagen.Bethesda.Binary
                 writer: writer,
                 items: items,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, T item1, ErrorMaskBuilder errMask2) => transl.Item.Value.Write(writer: subWriter, item: item1, length: -1, errorMask: errMask2));
+                transl: (MutagenWriter subWriter, T item1, ErrorMaskBuilder errMask2) 
+                    => transl.Item.Value.Write(
+                        writer: subWriter, 
+                        item: item1, 
+                        length: -1, 
+                        errorMask: errMask2));
         }
 
         public void Write(
@@ -678,9 +688,16 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public abstract void WriteSingleItem(MutagenWriter writer, BinarySubWriteDelegate<T> transl, T item, ErrorMaskBuilder errorMask);
+        public abstract void WriteSingleItem(
+            MutagenWriter writer, 
+            BinarySubWriteDelegate<T> transl,
+            T item,
+            ErrorMaskBuilder errorMask);
 
-        bool IBinaryTranslation<IEnumerable<T>>.Parse(MutagenFrame reader, out IEnumerable<T> item, ErrorMaskBuilder errorMask)
+        bool IBinaryTranslation<IEnumerable<T>>.Parse(
+            MutagenFrame reader, 
+            out IEnumerable<T> item, 
+            ErrorMaskBuilder errorMask)
         {
             throw new NotImplementedException();
         }

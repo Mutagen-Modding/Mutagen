@@ -26,7 +26,14 @@ namespace Mutagen.Bethesda.Generation
             return true;
         }
 
-        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string readerAccessor, Accessor itemAccessor, string maskAccessor)
+        public override void GenerateCopyIn(
+            FileGeneration fg, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen, 
+            string readerAccessor, 
+            Accessor itemAccessor, 
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             CustomLogicTranslationGeneration.GenerateFill(
                 fg: fg,
@@ -43,12 +50,20 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor, 
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             throw new NotImplementedException();
         }
 
-        public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor)
+        public override void GenerateWrite(
+            FileGeneration fg, 
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen, 
+            string writerAccessor, 
+            Accessor itemAccessor, 
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             CustomLogicTranslationGeneration.GenerateWrite(
                 fg: fg,

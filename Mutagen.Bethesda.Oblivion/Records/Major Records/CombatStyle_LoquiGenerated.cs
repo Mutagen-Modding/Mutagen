@@ -2004,44 +2004,51 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region XML Translation
-        #region XML Create
+        #region Xml Translation
+        #region Xml Create
         [DebuggerStepThrough]
-        public new static CombatStyle Create_XML(XElement root)
+        public new static CombatStyle Create_Xml(
+            XElement root,
+            CombatStyle_TranslationMask translationMask = null)
         {
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
-        public static CombatStyle Create_XML(
+        public static CombatStyle Create_Xml(
             XElement root,
             out CombatStyle_ErrorMask errorMask,
-            bool doMasks = true)
+            bool doMasks = true,
+            CombatStyle_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_XML(
+            var ret = Create_Xml(
                 root: root,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static CombatStyle Create_XML(
+        public static CombatStyle Create_Xml(
             XElement root,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             var ret = new CombatStyle();
             try
             {
                 foreach (var elem in root.Elements())
                 {
-                    Fill_XML_Internal(
+                    Fill_Xml_Internal(
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                 }
             }
             catch (Exception ex)
@@ -2052,221 +2059,256 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CombatStyle Create_XML(string path)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(root: root);
-        }
-
-        public static CombatStyle Create_XML(
+        public static CombatStyle Create_Xml(
             string path,
-            out CombatStyle_ErrorMask errorMask)
+            CombatStyle_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(path).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
         }
 
-        public static CombatStyle Create_XML(Stream stream)
+        public static CombatStyle Create_Xml(
+            string path,
+            out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(root: root);
+            var root = XDocument.Load(path).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
-        public static CombatStyle Create_XML(
+        public static CombatStyle Create_Xml(
             Stream stream,
-            out CombatStyle_ErrorMask errorMask)
+            CombatStyle_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(stream).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
+        }
+
+        public static CombatStyle Create_Xml(
+            Stream stream,
+            out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask translationMask = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
         #endregion
 
-        #region XML Copy In
-        public override void CopyIn_XML(
+        #region Xml Copy In
+        public override void CopyIn_Xml(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<CombatStyle>.Instance.CopyIn(
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: null,
+                translationMask: null,
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(
+        public virtual void CopyIn_Xml(
             XElement root,
             out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<CombatStyle>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public void CopyIn_XML(
+        protected override void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<CombatStyle>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                errorMask: errorMask,
+                translationMask: translationMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml(
             string path,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             string path,
             out CombatStyle_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            CombatStyle_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             out CombatStyle_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            CombatStyle_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public override void CopyIn_XML(
+        public override void CopyIn_Xml(
             XElement root,
             out MajorRecord_ErrorMask errorMask,
+            MajorRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            this.CopyIn_XML(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                errorMask: out CombatStyle_ErrorMask errMask,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
-            errorMask = errMask;
+            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
         #endregion
 
-        #region XML Write
-        public virtual void Write_XML(
+        #region Xml Write
+        public virtual void Write_Xml(
             XElement node,
             out CombatStyle_ErrorMask errorMask,
             bool doMasks = true,
+            CombatStyle_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             string path,
             out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             Stream stream,
             out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(stream);
         }
 
-        public override void Write_XML(
+        #region Base Class Trickdown Overrides
+        public override void Write_Xml(
             XElement node,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            MajorRecord_TranslationMask translationMask = null,
             string name = null)
         {
-            this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: null);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public override void Write_XML(
-            string path,
-            string name = null)
-        {
-            XElement topNode = new XElement("topnode");
-            Write_XML(
-                node: topNode,
-                name: name);
-            topNode.Elements().First().Save(path);
-        }
+        #endregion
 
-        public override void Write_XML(
-            Stream stream,
-            string name = null)
-        {
-            XElement topNode = new XElement("topnode");
-            Write_XML(
-                node: topNode,
-                name: name);
-            topNode.Elements().First().Save(stream);
-        }
-
-        protected override void Write_XML_Internal(
+        protected override void Write_Xml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
-            CombatStyleCommon.Write_XML(
+            CombatStyleCommon.Write_Xml(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             CombatStyle item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
@@ -3213,7 +3255,8 @@ namespace Mutagen.Bethesda.Oblivion
                         if (LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Parse(
                             root: root,
                             item: out CombatStyleAdvanced AdvancedParse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced)))
                         {
                             item.Advanced = AdvancedParse;
                         }
@@ -3233,11 +3276,12 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                     break;
             }
         }
@@ -4342,37 +4386,21 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public override void Write_Binary(MutagenWriter writer)
+        #region Base Class Trickdown Overrides
+        public override void Write_Binary(
+            MutagenWriter writer,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public override void Write_Binary(string path)
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
-                {
-                    Write_Binary(writer: writer);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-
-        public override void Write_Binary(Stream stream)
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(writer: writer);
-            }
-        }
+        #endregion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
@@ -8247,28 +8275,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml(
             XElement node,
             ICombatStyleGetter item,
             bool doMasks,
             out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML(
+            Write_Xml(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML(
+        public static void Write_Xml(
             XElement node,
             ICombatStyleGetter item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CombatStyle");
@@ -8277,230 +8308,340 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CombatStyle");
             }
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.DodgePercentChance),
-                item: item.DodgePercentChance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.DodgePercentChance,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.LeftRightPercentChance),
-                item: item.LeftRightPercentChance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.LeftRightPercentChance,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.DodgeLeftRightTimerMin),
-                item: item.DodgeLeftRightTimerMin_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.DodgeLeftRightTimerMax),
-                item: item.DodgeLeftRightTimerMax_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.DodgeForwardTimerMin),
-                item: item.DodgeForwardTimerMin_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMin,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.DodgeForwardTimerMax),
-                item: item.DodgeForwardTimerMax_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMax,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.DodgeBackTimerMin),
-                item: item.DodgeBackTimerMin_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMin,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.DodgeBackTimerMax),
-                item: item.DodgeBackTimerMax_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMax,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.IdleTimerMin),
-                item: item.IdleTimerMin_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMin,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.IdleTimerMax),
-                item: item.IdleTimerMax_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMax,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.BlockPercentChance),
-                item: item.BlockPercentChance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.BlockPercentChance,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.AttackPercentChance),
-                item: item.AttackPercentChance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.AttackPercentChance,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.RecoilStaggerBonusToAttack),
-                item: item.RecoilStaggerBonusToAttack_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.UnconsciousBonusToAttack),
-                item: item.UnconsciousBonusToAttack_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToAttack,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HandToHandBonusToAttack),
-                item: item.HandToHandBonusToAttack_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.HandToHandBonusToAttack,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.PowerAttackPercentChance),
-                item: item.PowerAttackPercentChance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackPercentChance,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.RecoilStaggerBonusToPowerAttack),
-                item: item.RecoilStaggerBonusToPowerAttack_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.UnconsciousBonusToPowerAttack),
-                item: item.UnconsciousBonusToPowerAttack_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.PowerAttackNormal),
-                item: item.PowerAttackNormal_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackNormal,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.PowerAttackForward),
-                item: item.PowerAttackForward_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackForward,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.PowerAttackBack),
-                item: item.PowerAttackBack_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackBack,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.PowerAttackLeft),
-                item: item.PowerAttackLeft_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackLeft,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.PowerAttackRight),
-                item: item.PowerAttackRight_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackRight,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HoldTimerMin),
-                item: item.HoldTimerMin_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMin,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HoldTimerMax),
-                item: item.HoldTimerMax_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMax,
-                errorMask: errorMask);
-            EnumXmlTranslation<CombatStyle.Flag>.Instance.Write(
-                node: elem,
-                name: nameof(item.Flags),
-                item: item.Flags_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.Flags,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.AcrobaticDodgePercentChance),
-                item: item.AcrobaticDodgePercentChance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.RangeMultOptimal),
-                item: item.RangeMultOptimal_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.RangeMultOptimal,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.RangeMultMax),
-                item: item.RangeMultMax_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.RangeMultMax,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.SwitchDistanceMelee),
-                item: item.SwitchDistanceMelee_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.SwitchDistanceRanged),
-                item: item.SwitchDistanceRanged_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.BuffStandoffDistance),
-                item: item.BuffStandoffDistance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.RangedStandoffDistance),
-                item: item.RangedStandoffDistance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.GroupStandoffDistance),
-                item: item.GroupStandoffDistance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.RushingAttackPercentChance),
-                item: item.RushingAttackPercentChance_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.RushingAttackDistanceMult),
-                item: item.RushingAttackDistanceMult_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
-                errorMask: errorMask);
-            if (item.Advanced_Property.HasBeenSet)
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgePercentChance) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DodgePercentChance),
+                    item: item.DodgePercentChance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.DodgePercentChance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LeftRightPercentChance) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.LeftRightPercentChance),
+                    item: item.LeftRightPercentChance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.LeftRightPercentChance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DodgeLeftRightTimerMin),
+                    item: item.DodgeLeftRightTimerMin_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DodgeLeftRightTimerMax),
+                    item: item.DodgeLeftRightTimerMax_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMin) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DodgeForwardTimerMin),
+                    item: item.DodgeForwardTimerMin_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMin,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMax) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DodgeForwardTimerMax),
+                    item: item.DodgeForwardTimerMax_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMax,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMin) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DodgeBackTimerMin),
+                    item: item.DodgeBackTimerMin_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMin,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMax) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DodgeBackTimerMax),
+                    item: item.DodgeBackTimerMax_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMax,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMin) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.IdleTimerMin),
+                    item: item.IdleTimerMin_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMin,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMax) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.IdleTimerMax),
+                    item: item.IdleTimerMax_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMax,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockPercentChance) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BlockPercentChance),
+                    item: item.BlockPercentChance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.BlockPercentChance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackPercentChance) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.AttackPercentChance),
+                    item: item.AttackPercentChance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.AttackPercentChance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RecoilStaggerBonusToAttack),
+                    item: item.RecoilStaggerBonusToAttack_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.UnconsciousBonusToAttack),
+                    item: item.UnconsciousBonusToAttack_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToAttack,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HandToHandBonusToAttack) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HandToHandBonusToAttack),
+                    item: item.HandToHandBonusToAttack_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.HandToHandBonusToAttack,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackPercentChance) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PowerAttackPercentChance),
+                    item: item.PowerAttackPercentChance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackPercentChance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RecoilStaggerBonusToPowerAttack),
+                    item: item.RecoilStaggerBonusToPowerAttack_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.UnconsciousBonusToPowerAttack),
+                    item: item.UnconsciousBonusToPowerAttack_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackNormal) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PowerAttackNormal),
+                    item: item.PowerAttackNormal_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackNormal,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackForward) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PowerAttackForward),
+                    item: item.PowerAttackForward_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackForward,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackBack) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PowerAttackBack),
+                    item: item.PowerAttackBack_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackBack,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackLeft) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PowerAttackLeft),
+                    item: item.PowerAttackLeft_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackLeft,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackRight) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PowerAttackRight),
+                    item: item.PowerAttackRight_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackRight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMin) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HoldTimerMin),
+                    item: item.HoldTimerMin_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMin,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMax) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HoldTimerMax),
+                    item: item.HoldTimerMax_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMax,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<CombatStyle.Flag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.AcrobaticDodgePercentChance),
+                    item: item.AcrobaticDodgePercentChance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultOptimal) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RangeMultOptimal),
+                    item: item.RangeMultOptimal_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.RangeMultOptimal,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultMax) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RangeMultMax),
+                    item: item.RangeMultMax_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.RangeMultMax,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceMelee) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SwitchDistanceMelee),
+                    item: item.SwitchDistanceMelee_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceRanged) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SwitchDistanceRanged),
+                    item: item.SwitchDistanceRanged_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BuffStandoffDistance) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BuffStandoffDistance),
+                    item: item.BuffStandoffDistance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedStandoffDistance) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RangedStandoffDistance),
+                    item: item.RangedStandoffDistance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupStandoffDistance) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.GroupStandoffDistance),
+                    item: item.GroupStandoffDistance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackPercentChance) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RushingAttackPercentChance),
+                    item: item.RushingAttackPercentChance_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackDistanceMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.RushingAttackDistanceMult),
+                    item: item.RushingAttackDistanceMult_Property,
+                    fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
+                    errorMask: errorMask);
+            }
+            if (item.Advanced_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
                 LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Write(
                     node: elem,
                     item: item.Advanced_Property,
                     name: nameof(item.Advanced),
                     fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    translationMask: translationMask);
             }
         }
         #endregion
@@ -9845,6 +9986,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, CombatStyleAdvanced_CopyMask> Advanced;
         #endregion
 
+    }
+    public class CombatStyle_TranslationMask : MajorRecord_TranslationMask
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public bool DodgePercentChance;
+        public bool LeftRightPercentChance;
+        public bool DodgeLeftRightTimerMin;
+        public bool DodgeLeftRightTimerMax;
+        public bool DodgeForwardTimerMin;
+        public bool DodgeForwardTimerMax;
+        public bool DodgeBackTimerMin;
+        public bool DodgeBackTimerMax;
+        public bool IdleTimerMin;
+        public bool IdleTimerMax;
+        public bool BlockPercentChance;
+        public bool AttackPercentChance;
+        public bool RecoilStaggerBonusToAttack;
+        public bool UnconsciousBonusToAttack;
+        public bool HandToHandBonusToAttack;
+        public bool PowerAttackPercentChance;
+        public bool RecoilStaggerBonusToPowerAttack;
+        public bool UnconsciousBonusToPowerAttack;
+        public bool PowerAttackNormal;
+        public bool PowerAttackForward;
+        public bool PowerAttackBack;
+        public bool PowerAttackLeft;
+        public bool PowerAttackRight;
+        public bool HoldTimerMin;
+        public bool HoldTimerMax;
+        public bool Flags;
+        public bool AcrobaticDodgePercentChance;
+        public bool RangeMultOptimal;
+        public bool RangeMultMax;
+        public bool SwitchDistanceMelee;
+        public bool SwitchDistanceRanged;
+        public bool BuffStandoffDistance;
+        public bool RangedStandoffDistance;
+        public bool GroupStandoffDistance;
+        public bool RushingAttackPercentChance;
+        public bool RushingAttackDistanceMult;
+        public MaskItem<bool, CombatStyleAdvanced_TranslationMask> Advanced;
+        #endregion
+
+        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            base.GetCrystal(ret);
+            ret.Add((DodgePercentChance, null));
+            ret.Add((LeftRightPercentChance, null));
+            ret.Add((DodgeLeftRightTimerMin, null));
+            ret.Add((DodgeLeftRightTimerMax, null));
+            ret.Add((DodgeForwardTimerMin, null));
+            ret.Add((DodgeForwardTimerMax, null));
+            ret.Add((DodgeBackTimerMin, null));
+            ret.Add((DodgeBackTimerMax, null));
+            ret.Add((IdleTimerMin, null));
+            ret.Add((IdleTimerMax, null));
+            ret.Add((BlockPercentChance, null));
+            ret.Add((AttackPercentChance, null));
+            ret.Add((RecoilStaggerBonusToAttack, null));
+            ret.Add((UnconsciousBonusToAttack, null));
+            ret.Add((HandToHandBonusToAttack, null));
+            ret.Add((PowerAttackPercentChance, null));
+            ret.Add((RecoilStaggerBonusToPowerAttack, null));
+            ret.Add((UnconsciousBonusToPowerAttack, null));
+            ret.Add((PowerAttackNormal, null));
+            ret.Add((PowerAttackForward, null));
+            ret.Add((PowerAttackBack, null));
+            ret.Add((PowerAttackLeft, null));
+            ret.Add((PowerAttackRight, null));
+            ret.Add((HoldTimerMin, null));
+            ret.Add((HoldTimerMax, null));
+            ret.Add((Flags, null));
+            ret.Add((AcrobaticDodgePercentChance, null));
+            ret.Add((RangeMultOptimal, null));
+            ret.Add((RangeMultMax, null));
+            ret.Add((SwitchDistanceMelee, null));
+            ret.Add((SwitchDistanceRanged, null));
+            ret.Add((BuffStandoffDistance, null));
+            ret.Add((RangedStandoffDistance, null));
+            ret.Add((GroupStandoffDistance, null));
+            ret.Add((RushingAttackPercentChance, null));
+            ret.Add((RushingAttackDistanceMult, null));
+            ret.Add((Advanced?.Overall ?? true, Advanced?.Specific?.GetCrystal()));
+        }
     }
     #endregion
 

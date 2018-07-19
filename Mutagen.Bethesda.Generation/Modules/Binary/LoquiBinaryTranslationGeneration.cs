@@ -29,7 +29,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.TryGetFieldData(out var data)
@@ -80,7 +81,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string frameAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.TargetObjectGeneration != null)
@@ -101,7 +103,7 @@ namespace Mutagen.Bethesda.Generation
                             $"var tmp{typeGen.Name} = {loquiGen.TypeName}.Create_{ModNickname}"))
                         {
                             args.Add($"frame: {frameAccessor}");
-                            args.Add($"errorMask: errorMask");
+                            args.Add($"errorMask: {maskAccessor}");
                             args.Add($"recordTypeConverter: null");
                         }
                         using (var args = new ArgsWrapper(fg,
@@ -111,7 +113,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("def: null");
                             args.Add("cmds: null");
                             args.Add("copyMask: null");
-                            args.Add($"errorMask: errorMask");
+                            args.Add($"errorMask: {maskAccessor}");
                         }
                     }
                 }
@@ -127,9 +129,10 @@ namespace Mutagen.Bethesda.Generation
                     TranslationGeneration.WrapParseCall(
                         fg: fg,
                         typeGen: typeGen,
-                        callLine: $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse",
+                        translatorLine: $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance",
                         maskAccessor: maskAccessor,
                         itemAccessor: itemAccessor,
+                        translationMaskAccessor: null,
                         indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                         extraargs: extraArgs.ToArray());
                 }
@@ -149,7 +152,8 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var targetLoquiGen = targetGen as LoquiType;
             var loquiGen = typeGen as LoquiType;

@@ -15,7 +15,11 @@ namespace Mutagen.Bethesda.Binary
     {
         public static readonly ListBinaryTranslation<T> Instance = new ListBinaryTranslation<T>();
 
-        public override void WriteSingleItem(MutagenWriter writer, BinarySubWriteDelegate<T> transl, T item, ErrorMaskBuilder errorMask)
+        public override void WriteSingleItem(
+            MutagenWriter writer,
+            BinarySubWriteDelegate<T> transl, 
+            T item,
+            ErrorMaskBuilder errorMask)
         {
             transl(writer, item, errorMask);
         }

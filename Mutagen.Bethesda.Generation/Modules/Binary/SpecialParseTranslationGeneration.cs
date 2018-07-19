@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool ShouldGenerateCopyIn(TypeGeneration typeGen) => true;
         public override bool ShouldGenerateWrite(TypeGeneration typeGen) => true;
 
-        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string readerAccessor, Accessor itemAccessor, string maskAccessor)
+        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string readerAccessor, Accessor itemAccessor, string maskAccessor, string translationMaskAccessor)
         {
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
@@ -34,12 +34,14 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             throw new NotImplementedException();
         }
 
-        public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor)
+        public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor,
+            string translationMaskAccessor)
         {
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,

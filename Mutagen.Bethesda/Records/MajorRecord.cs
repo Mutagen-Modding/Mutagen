@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda
                 Fill_Binary_RecordTypes(
                     record,
                     frame,
-                    errorMask);
+                    errorMask: errorMask);
             }
         }
     }

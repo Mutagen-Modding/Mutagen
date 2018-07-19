@@ -45,7 +45,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMask)
         {
             var dict = typeGen as DictType;
             if (dict.Mode != DictMode.KeyedValue)
@@ -88,7 +89,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var dict = typeGen as DictType;
             var data = dict.GetFieldData();
@@ -186,6 +188,7 @@ namespace Mutagen.Bethesda.Generation
                                             readerAccessor: "r",
                                             squashedRepeatedList: false,
                                             retAccessor: "return ",
+                                            translationAccessor: "dictTranslMask",
                                             outItemAccessor: new Accessor("dictSubItem"),
                                             maskAccessor: "dictSubMask");
                                     }
@@ -211,7 +214,8 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             throw new NotImplementedException();
         }

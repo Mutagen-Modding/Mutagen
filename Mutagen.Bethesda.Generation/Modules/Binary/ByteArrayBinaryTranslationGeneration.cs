@@ -22,7 +22,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
@@ -46,7 +47,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string frameAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
@@ -57,9 +59,10 @@ namespace Mutagen.Bethesda.Generation
             TranslationGeneration.WrapParseCall(
                 fg: fg,
                 typeGen: typeGen,
-                callLine: $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
+                translatorLine: $"{this.Namespace}ByteArrayBinaryTranslation.Instance",
                 maskAccessor: maskAccessor,
                 itemAccessor: itemAccessor,
+                translationMaskAccessor: null,
                 indexAccessor: typeGen.IndexEnumInt,
                 extraargs: $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({data.Length.Value})")}");
         }
@@ -73,7 +76,8 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,

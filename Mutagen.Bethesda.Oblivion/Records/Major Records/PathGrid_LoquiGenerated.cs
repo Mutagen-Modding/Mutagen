@@ -259,44 +259,51 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region XML Translation
-        #region XML Create
+        #region Xml Translation
+        #region Xml Create
         [DebuggerStepThrough]
-        public new static PathGrid Create_XML(XElement root)
+        public new static PathGrid Create_Xml(
+            XElement root,
+            PathGrid_TranslationMask translationMask = null)
         {
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
-        public static PathGrid Create_XML(
+        public static PathGrid Create_Xml(
             XElement root,
             out PathGrid_ErrorMask errorMask,
-            bool doMasks = true)
+            bool doMasks = true,
+            PathGrid_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_XML(
+            var ret = Create_Xml(
                 root: root,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
             errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static PathGrid Create_XML(
+        public static PathGrid Create_Xml(
             XElement root,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             var ret = new PathGrid();
             try
             {
                 foreach (var elem in root.Elements())
                 {
-                    Fill_XML_Internal(
+                    Fill_Xml_Internal(
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                 }
             }
             catch (Exception ex)
@@ -307,243 +314,318 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PathGrid Create_XML(string path)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(root: root);
-        }
-
-        public static PathGrid Create_XML(
+        public static PathGrid Create_Xml(
             string path,
-            out PathGrid_ErrorMask errorMask)
+            PathGrid_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(path).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
         }
 
-        public static PathGrid Create_XML(Stream stream)
+        public static PathGrid Create_Xml(
+            string path,
+            out PathGrid_ErrorMask errorMask,
+            PathGrid_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(root: root);
+            var root = XDocument.Load(path).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
-        public static PathGrid Create_XML(
+        public static PathGrid Create_Xml(
             Stream stream,
-            out PathGrid_ErrorMask errorMask)
+            PathGrid_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(stream).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
+        }
+
+        public static PathGrid Create_Xml(
+            Stream stream,
+            out PathGrid_ErrorMask errorMask,
+            PathGrid_TranslationMask translationMask = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
         #endregion
 
-        #region XML Copy In
-        public override void CopyIn_XML(
+        #region Xml Copy In
+        public override void CopyIn_Xml(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<PathGrid>.Instance.CopyIn(
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: null,
+                translationMask: null,
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(
+        public virtual void CopyIn_Xml(
             XElement root,
             out PathGrid_ErrorMask errorMask,
+            PathGrid_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<PathGrid>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
             errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public void CopyIn_XML(
+        protected override void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<PathGrid>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                errorMask: errorMask,
+                translationMask: translationMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml(
             string path,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             string path,
             out PathGrid_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            PathGrid_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             out PathGrid_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            PathGrid_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public override void CopyIn_XML(
+        public override void CopyIn_Xml(
             XElement root,
             out Placed_ErrorMask errorMask,
+            Placed_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            this.CopyIn_XML(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                errorMask: out PathGrid_ErrorMask errMask,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
-            errorMask = errMask;
+            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public override void CopyIn_XML(
+        public override void CopyIn_Xml(
             XElement root,
             out MajorRecord_ErrorMask errorMask,
+            MajorRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            this.CopyIn_XML(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                errorMask: out PathGrid_ErrorMask errMask,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
-            errorMask = errMask;
+            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
         #endregion
 
-        #region XML Write
-        public virtual void Write_XML(
+        #region Xml Write
+        public virtual void Write_Xml(
             XElement node,
             out PathGrid_ErrorMask errorMask,
             bool doMasks = true,
+            PathGrid_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             string path,
             out PathGrid_ErrorMask errorMask,
+            PathGrid_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             Stream stream,
             out PathGrid_ErrorMask errorMask,
+            PathGrid_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(stream);
         }
 
-        public override void Write_XML(
+        #region Base Class Trickdown Overrides
+        public override void Write_Xml(
             XElement node,
+            out Placed_ErrorMask errorMask,
+            bool doMasks = true,
+            Placed_TranslationMask translationMask = null,
             string name = null)
         {
-            this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: null);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public override void Write_XML(
-            string path,
+        public override void Write_Xml(
+            XElement node,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            MajorRecord_TranslationMask translationMask = null,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
-            Write_XML(
-                node: topNode,
-                name: name);
-            topNode.Elements().First().Save(path);
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public override void Write_XML(
-            Stream stream,
-            string name = null)
-        {
-            XElement topNode = new XElement("topnode");
-            Write_XML(
-                node: topNode,
-                name: name);
-            topNode.Elements().First().Save(stream);
-        }
+        #endregion
 
-        protected override void Write_XML_Internal(
+        protected override void Write_Xml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
-            PathGridCommon.Write_XML(
+            PathGridCommon.Write_Xml(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             PathGrid item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
                 case "PointToPointConnections":
-                    ListXmlTranslation<PathGridPoint>.Instance.ParseInto(
-                        root: root,
-                        item: item.PointToPointConnections,
-                        fieldIndex: (int)PathGrid_FieldIndex.PointToPointConnections,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<PathGridPoint>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToPointConnections);
+                        if (ListXmlTranslation<PathGridPoint>.Instance.Parse(
+                            root: root,
+                            enumer: out var PointToPointConnectionsItem,
+                            transl: LoquiXmlTranslation<PathGridPoint>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.PointToPointConnections.SetTo(PointToPointConnectionsItem);
+                        }
+                        else
+                        {
+                            item.PointToPointConnections.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Unknown":
                     try
@@ -572,27 +654,68 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "InterCellConnections":
-                    ListXmlTranslation<InterCellPoint>.Instance.ParseInto(
-                        root: root,
-                        item: item.InterCellConnections,
-                        fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<InterCellPoint>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PathGrid_FieldIndex.InterCellConnections);
+                        if (ListXmlTranslation<InterCellPoint>.Instance.Parse(
+                            root: root,
+                            enumer: out var InterCellConnectionsItem,
+                            transl: LoquiXmlTranslation<InterCellPoint>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.InterCellConnections.SetTo(InterCellConnectionsItem);
+                        }
+                        else
+                        {
+                            item.InterCellConnections.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "PointToReferenceMappings":
-                    ListXmlTranslation<PointToReferenceMapping>.Instance.ParseInto(
-                        root: root,
-                        item: item.PointToReferenceMappings,
-                        fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
-                        errorMask: errorMask,
-                        transl: LoquiXmlTranslation<PointToReferenceMapping>.Instance.Parse);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToReferenceMappings);
+                        if (ListXmlTranslation<PointToReferenceMapping>.Instance.Parse(
+                            root: root,
+                            enumer: out var PointToReferenceMappingsItem,
+                            transl: LoquiXmlTranslation<PointToReferenceMapping>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.PointToReferenceMappings.SetTo(PointToReferenceMappingsItem);
+                        }
+                        else
+                        {
+                            item.PointToReferenceMappings.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
-                    Placed.Fill_XML_Internal(
+                    Placed.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                     break;
             }
         }
@@ -908,37 +1031,34 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public override void Write_Binary(MutagenWriter writer)
+        #region Base Class Trickdown Overrides
+        public override void Write_Binary(
+            MutagenWriter writer,
+            out Placed_ErrorMask errorMask,
+            bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public override void Write_Binary(string path)
+        public override void Write_Binary(
+            MutagenWriter writer,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
         {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
-                {
-                    Write_Binary(writer: writer);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public override void Write_Binary(Stream stream)
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(writer: writer);
-            }
-        }
+        #endregion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
@@ -2019,28 +2139,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml(
             XElement node,
             IPathGridGetter item,
             bool doMasks,
             out PathGrid_ErrorMask errorMask,
+            PathGrid_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML(
+            Write_Xml(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML(
+        public static void Write_Xml(
             XElement node,
             IPathGridGetter item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PathGrid");
@@ -2049,7 +2172,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PathGrid");
             }
-            if (item.PointToPointConnections.HasBeenSet)
+            if (item.PointToPointConnections.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToPointConnections) ?? true))
             {
                 ListXmlTranslation<PathGridPoint>.Instance.Write(
                     node: elem,
@@ -2057,17 +2181,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PointToPointConnections,
                     fieldIndex: (int)PathGrid_FieldIndex.PointToPointConnections,
                     errorMask: errorMask,
-                    transl: (XElement subNode, PathGridPoint subItem, ErrorMaskBuilder listSubMask) =>
+                    translationMask: translationMask.GetSubCrystal((int)PathGrid_FieldIndex.PointToPointConnections),
+                    transl: (XElement subNode, PathGridPoint subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<PathGridPoint>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: "Item",
-                            errorMask: listSubMask);
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     }
                     );
             }
-            if (item.Unknown_Property.HasBeenSet)
+            if (item.Unknown_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.Unknown) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
@@ -2076,7 +2203,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PathGrid_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if (item.InterCellConnections.HasBeenSet)
+            if (item.InterCellConnections.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
             {
                 ListXmlTranslation<InterCellPoint>.Instance.Write(
                     node: elem,
@@ -2084,17 +2212,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.InterCellConnections,
                     fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
                     errorMask: errorMask,
-                    transl: (XElement subNode, InterCellPoint subItem, ErrorMaskBuilder listSubMask) =>
+                    translationMask: translationMask.GetSubCrystal((int)PathGrid_FieldIndex.InterCellConnections),
+                    transl: (XElement subNode, InterCellPoint subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<InterCellPoint>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: "Item",
-                            errorMask: listSubMask);
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     }
                     );
             }
-            if (item.PointToReferenceMappings.HasBeenSet)
+            if (item.PointToReferenceMappings.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToReferenceMappings) ?? true))
             {
                 ListXmlTranslation<PointToReferenceMapping>.Instance.Write(
                     node: elem,
@@ -2102,13 +2233,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PointToReferenceMappings,
                     fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
                     errorMask: errorMask,
-                    transl: (XElement subNode, PointToReferenceMapping subItem, ErrorMaskBuilder listSubMask) =>
+                    translationMask: translationMask.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings),
+                    transl: (XElement subNode, PointToReferenceMapping subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<PointToReferenceMapping>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: "Item",
-                            errorMask: listSubMask);
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     }
                     );
             }
@@ -2722,6 +2855,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, PointToReferenceMapping_CopyMask> PointToReferenceMappings;
         #endregion
 
+    }
+    public class PathGrid_TranslationMask : Placed_TranslationMask
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public MaskItem<bool, PathGridPoint_TranslationMask> PointToPointConnections;
+        public bool Unknown;
+        public MaskItem<bool, InterCellPoint_TranslationMask> InterCellConnections;
+        public MaskItem<bool, PointToReferenceMapping_TranslationMask> PointToReferenceMappings;
+        #endregion
+
+        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            base.GetCrystal(ret);
+            ret.Add((PointToPointConnections?.Overall ?? true, PointToPointConnections?.Specific?.GetCrystal()));
+            ret.Add((Unknown, null));
+            ret.Add((InterCellConnections?.Overall ?? true, InterCellConnections?.Specific?.GetCrystal()));
+            ret.Add((PointToReferenceMappings?.Overall ?? true, PointToReferenceMappings?.Specific?.GetCrystal()));
+        }
     }
     #endregion
 
