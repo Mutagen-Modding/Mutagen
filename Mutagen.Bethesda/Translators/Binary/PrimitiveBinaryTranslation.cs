@@ -377,5 +377,13 @@ namespace Mutagen.Bethesda.Binary
                 fieldIndex,
                 errorMask);
         }
+
+        bool IBinaryTranslation<T>.Parse(MutagenFrame reader, out T item, ErrorMaskBuilder errorMask)
+        {
+            return this.Parse(
+                frame: reader,
+                item: out item,
+                errorMask: errorMask);
+        }
     }
 }

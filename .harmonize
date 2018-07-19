@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>ff2765b0b108037481f40f93facf13ef3176a514</Sha>
+         <Sha>6020a463d06207f30eff06c55c9b9198b849cc23</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-03-2018 16:46:13</CommitDate>
-         <Description>WeakReferenceEquatable equals revamp</Description>
+         <CommitDate>07-18-2018 23:35:05</CommitDate>
+         <Description>EnumerableExt.AndWhen</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2cb919951c1868bd743c377225fb4e71b5458e60</Sha>
+         <Sha>5410960c5cb8120f40e3adf22aae5d584ad711d0</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-12-2018 17:16:46</CommitDate>
-         <Description>ParseInto work to avoid using it for ObjectCentralization</Description>
+         <CommitDate>07-18-2018 23:35:43</CommitDate>
+         <Description>TranslationMask systems</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

@@ -26,7 +26,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor);
+            string maskAccessor,
+            string translationAccessor);
 
         public abstract string GetTranslatorInstance(TypeGeneration typeGen);
 
@@ -36,7 +37,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string readerAccessor,
             Accessor itemAccessor,
-            string maskAccessor);
+            string maskAccessor,
+            string translationAccessor);
 
         public abstract void GenerateCopyInRet(
             FileGeneration fg,
@@ -47,6 +49,7 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor);
+            string maskAccessor,
+            string translationAccessor);
     }
 }

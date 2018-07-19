@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Tests.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Oblivion\\Data\\Oblivion.esm")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm")]
         public string OblivionESM {
             get {
                 return ((string)(this["OblivionESM"]));
@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Tests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Oblivion\\Data\\Knights.esp")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Steam\\steamapps\\common\\Oblivion\\Data\\Knights.esp")]
         public string KnightsESP {
             get {
                 return ((string)(this["KnightsESP"]));

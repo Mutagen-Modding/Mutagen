@@ -38,7 +38,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
@@ -86,7 +87,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             string frameAccessor,
             Accessor itemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             var prim = typeGen as PrimitiveType;
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
@@ -115,6 +117,7 @@ namespace Mutagen.Bethesda.Generation
                 translatorLine: $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
                 maskAccessor: maskAccessor,
                 itemAccessor: itemAccessor,
+                translationMaskAccessor: null,
                 indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                 extraargs: extraArgs.ToArray());
         }
@@ -139,7 +142,8 @@ namespace Mutagen.Bethesda.Generation
             bool squashedRepeatedList,
             string retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             if (typeGen.TryGetFieldData(out var data)
                 && data.RecordType.HasValue)
@@ -151,6 +155,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add(nodeAccessor);
                 args.Add($"errorMask: {maskAccessor}");
+                args.Add($"translationMask: {translationMaskAccessor}");
                 foreach (var arg in AdditionCopyInRetParameters(
                     fg: fg,
                     objGen: objGen,

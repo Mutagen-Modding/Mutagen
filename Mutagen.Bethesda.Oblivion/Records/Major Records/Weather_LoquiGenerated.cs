@@ -1901,45 +1901,52 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region XML Translation
-        #region XML Create
+        #region Xml Translation
+        #region Xml Create
         [DebuggerStepThrough]
-        public new static Weather Create_XML(XElement root)
+        public new static Weather Create_Xml(
+            XElement root,
+            Weather_TranslationMask translationMask = null)
         {
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
-        public static Weather Create_XML(
+        public static Weather Create_Xml(
             XElement root,
             out Weather_ErrorMask errorMask,
-            bool doMasks = true)
+            bool doMasks = true,
+            Weather_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_XML(
+            var ret = Create_Xml(
                 root: root,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
             errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         [DebuggerStepThrough]
-        public static Weather Create_XML(
+        public static Weather Create_Xml(
             XElement root,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             var ret = new Weather();
             try
             {
                 foreach (var elem in root.Elements())
                 {
-                    Fill_XML_Internal(
+                    Fill_Xml_Internal(
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                 }
             }
             catch (Exception ex)
@@ -1950,221 +1957,256 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Weather Create_XML(string path)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(root: root);
-        }
-
-        public static Weather Create_XML(
+        public static Weather Create_Xml(
             string path,
-            out Weather_ErrorMask errorMask)
+            Weather_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(path).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
         }
 
-        public static Weather Create_XML(Stream stream)
+        public static Weather Create_Xml(
+            string path,
+            out Weather_ErrorMask errorMask,
+            Weather_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(root: root);
+            var root = XDocument.Load(path).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
-        public static Weather Create_XML(
+        public static Weather Create_Xml(
             Stream stream,
-            out Weather_ErrorMask errorMask)
+            Weather_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(stream).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
+        }
+
+        public static Weather Create_Xml(
+            Stream stream,
+            out Weather_ErrorMask errorMask,
+            Weather_TranslationMask translationMask = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
         #endregion
 
-        #region XML Copy In
-        public override void CopyIn_XML(
+        #region Xml Copy In
+        public override void CopyIn_Xml(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Weather>.Instance.CopyIn(
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: null,
+                translationMask: null,
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(
+        public virtual void CopyIn_Xml(
             XElement root,
             out Weather_ErrorMask errorMask,
+            Weather_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<Weather>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
             errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public void CopyIn_XML(
+        protected override void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Weather>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                errorMask: errorMask,
+                translationMask: translationMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml(
             string path,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             string path,
             out Weather_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            Weather_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             out Weather_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            Weather_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public override void CopyIn_XML(
+        public override void CopyIn_Xml(
             XElement root,
             out MajorRecord_ErrorMask errorMask,
+            MajorRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            this.CopyIn_XML(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                errorMask: out Weather_ErrorMask errMask,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
-            errorMask = errMask;
+            errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
         }
 
         #endregion
 
-        #region XML Write
-        public virtual void Write_XML(
+        #region Xml Write
+        public virtual void Write_Xml(
             XElement node,
             out Weather_ErrorMask errorMask,
             bool doMasks = true,
+            Weather_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             string path,
             out Weather_ErrorMask errorMask,
+            Weather_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             Stream stream,
             out Weather_ErrorMask errorMask,
+            Weather_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(stream);
         }
 
-        public override void Write_XML(
+        #region Base Class Trickdown Overrides
+        public override void Write_Xml(
             XElement node,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            MajorRecord_TranslationMask translationMask = null,
             string name = null)
         {
-            this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: null);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public override void Write_XML(
-            string path,
-            string name = null)
-        {
-            XElement topNode = new XElement("topnode");
-            Write_XML(
-                node: topNode,
-                name: name);
-            topNode.Elements().First().Save(path);
-        }
+        #endregion
 
-        public override void Write_XML(
-            Stream stream,
-            string name = null)
-        {
-            XElement topNode = new XElement("topnode");
-            Write_XML(
-                node: topNode,
-                name: name);
-            topNode.Elements().First().Save(stream);
-        }
-
-        protected override void Write_XML_Internal(
+        protected override void Write_Xml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
-            WeatherCommon.Write_XML(
+            WeatherCommon.Write_Xml(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             Weather item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
@@ -2227,7 +2269,8 @@ namespace Mutagen.Bethesda.Oblivion
                         if (LoquiXmlTranslation<Model>.Instance.Parse(
                             root: root,
                             item: out Model ModelParse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Model)))
                         {
                             item.Model = ModelParse;
                         }
@@ -2254,7 +2297,8 @@ namespace Mutagen.Bethesda.Oblivion
                             root: root,
                             enumer: out var WeatherTypesItem,
                             transl: LoquiXmlTranslation<WeatherType>.Instance.Parse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
                             item.WeatherTypes.SetTo(WeatherTypesItem);
                         }
@@ -3087,7 +3131,8 @@ namespace Mutagen.Bethesda.Oblivion
                             root: root,
                             enumer: out var SoundsItem,
                             transl: LoquiXmlTranslation<WeatherSound>.Instance.Parse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
                             item.Sounds.SetTo(SoundsItem);
                         }
@@ -3107,11 +3152,12 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                     break;
             }
         }
@@ -4358,37 +4404,21 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public override void Write_Binary(MutagenWriter writer)
+        #region Base Class Trickdown Overrides
+        public override void Write_Binary(
+            MutagenWriter writer,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public override void Write_Binary(string path)
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
-                {
-                    Write_Binary(writer: writer);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-
-        public override void Write_Binary(Stream stream)
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(writer: writer);
-            }
-        }
+        #endregion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
@@ -8233,28 +8263,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml(
             XElement node,
             IWeatherGetter item,
             bool doMasks,
             out Weather_ErrorMask errorMask,
+            Weather_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML(
+            Write_Xml(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML(
+        public static void Write_Xml(
             XElement node,
             IWeatherGetter item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Weather");
@@ -8263,7 +8296,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Weather");
             }
-            if (item.TextureLowerLayer_Property.HasBeenSet)
+            if (item.TextureLowerLayer_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TextureLowerLayer) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
@@ -8272,7 +8306,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
                     errorMask: errorMask);
             }
-            if (item.TextureUpperLayer_Property.HasBeenSet)
+            if (item.TextureUpperLayer_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TextureUpperLayer) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
@@ -8281,16 +8316,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
                     errorMask: errorMask);
             }
-            if (item.Model_Property.HasBeenSet)
+            if (item.Model_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
                     node: elem,
                     item: item.Model_Property,
                     name: nameof(item.Model),
                     fieldIndex: (int)Weather_FieldIndex.Model,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    translationMask: translationMask);
             }
-            if (item.WeatherTypes.HasBeenSet)
+            if (item.WeatherTypes.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WeatherTypes) ?? true))
             {
                 ListXmlTranslation<WeatherType>.Instance.Write(
                     node: elem,
@@ -8298,203 +8336,299 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.WeatherTypes,
                     fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
                     errorMask: errorMask,
-                    transl: (XElement subNode, WeatherType subItem, ErrorMaskBuilder listSubMask) =>
+                    translationMask: translationMask.GetSubCrystal((int)Weather_FieldIndex.WeatherTypes),
+                    transl: (XElement subNode, WeatherType subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<WeatherType>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: "Item",
-                            errorMask: listSubMask);
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     }
                     );
             }
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.FogDayNear),
-                item: item.FogDayNear_Property,
-                fieldIndex: (int)Weather_FieldIndex.FogDayNear,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.FogDayFar),
-                item: item.FogDayFar_Property,
-                fieldIndex: (int)Weather_FieldIndex.FogDayFar,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.FogNightNear),
-                item: item.FogNightNear_Property,
-                fieldIndex: (int)Weather_FieldIndex.FogNightNear,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.FogNightFar),
-                item: item.FogNightFar_Property,
-                fieldIndex: (int)Weather_FieldIndex.FogNightFar,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrEyeAdaptSpeed),
-                item: item.HdrEyeAdaptSpeed_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrBlurRadius),
-                item: item.HdrBlurRadius_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrBlurPasses),
-                item: item.HdrBlurPasses_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrEmissiveMult),
-                item: item.HdrEmissiveMult_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrTargetLum),
-                item: item.HdrTargetLum_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrUpperLumClamp),
-                item: item.HdrUpperLumClamp_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrBrightScale),
-                item: item.HdrBrightScale_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrBrightClamp),
-                item: item.HdrBrightClamp_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrLumRampNoTex),
-                item: item.HdrLumRampNoTex_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrLumRampMin),
-                item: item.HdrLumRampMin_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrLumRampMax),
-                item: item.HdrLumRampMax_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrSunlightDimmer),
-                item: item.HdrSunlightDimmer_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrGrassDimmer),
-                item: item.HdrGrassDimmer_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.HdrTreeDimmer),
-                item: item.HdrTreeDimmer_Property,
-                fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.WindSpeed),
-                item: item.WindSpeed_Property,
-                fieldIndex: (int)Weather_FieldIndex.WindSpeed,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.CloudSpeedLower),
-                item: item.CloudSpeedLower_Property,
-                fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.CloudSpeedUpper),
-                item: item.CloudSpeedUpper_Property,
-                fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.TransDelta),
-                item: item.TransDelta_Property,
-                fieldIndex: (int)Weather_FieldIndex.TransDelta,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.SunGlare),
-                item: item.SunGlare_Property,
-                fieldIndex: (int)Weather_FieldIndex.SunGlare,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.SunDamage),
-                item: item.SunDamage_Property,
-                fieldIndex: (int)Weather_FieldIndex.SunDamage,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.PrecipitationBeginFadeIn),
-                item: item.PrecipitationBeginFadeIn_Property,
-                fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.PrecipitationEndFadeOut),
-                item: item.PrecipitationEndFadeOut_Property,
-                fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.ThunderLightningBeginFadeIn),
-                item: item.ThunderLightningBeginFadeIn_Property,
-                fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.ThunderLightningEndFadeOut),
-                item: item.ThunderLightningEndFadeOut_Property,
-                fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.ThunderLightningFrequency),
-                item: item.ThunderLightningFrequency_Property,
-                fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
-                errorMask: errorMask);
-            EnumXmlTranslation<Weather.WeatherClassification>.Instance.Write(
-                node: elem,
-                name: nameof(item.Classification),
-                item: item.Classification_Property,
-                fieldIndex: (int)Weather_FieldIndex.Classification,
-                errorMask: errorMask);
-            ColorXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.LightningColor),
-                item: item.LightningColor_Property,
-                fieldIndex: (int)Weather_FieldIndex.LightningColor,
-                errorMask: errorMask);
-            if (item.Sounds.HasBeenSet)
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayNear) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FogDayNear),
+                    item: item.FogDayNear_Property,
+                    fieldIndex: (int)Weather_FieldIndex.FogDayNear,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayFar) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FogDayFar),
+                    item: item.FogDayFar_Property,
+                    fieldIndex: (int)Weather_FieldIndex.FogDayFar,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightNear) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FogNightNear),
+                    item: item.FogNightNear_Property,
+                    fieldIndex: (int)Weather_FieldIndex.FogNightNear,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightFar) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FogNightFar),
+                    item: item.FogNightFar_Property,
+                    fieldIndex: (int)Weather_FieldIndex.FogNightFar,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEyeAdaptSpeed) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrEyeAdaptSpeed),
+                    item: item.HdrEyeAdaptSpeed_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurRadius) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrBlurRadius),
+                    item: item.HdrBlurRadius_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurPasses) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrBlurPasses),
+                    item: item.HdrBlurPasses_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEmissiveMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrEmissiveMult),
+                    item: item.HdrEmissiveMult_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTargetLum) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrTargetLum),
+                    item: item.HdrTargetLum_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrUpperLumClamp) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrUpperLumClamp),
+                    item: item.HdrUpperLumClamp_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightScale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrBrightScale),
+                    item: item.HdrBrightScale_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightClamp) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrBrightClamp),
+                    item: item.HdrBrightClamp_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampNoTex) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrLumRampNoTex),
+                    item: item.HdrLumRampNoTex_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMin) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrLumRampMin),
+                    item: item.HdrLumRampMin_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMax) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrLumRampMax),
+                    item: item.HdrLumRampMax_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrSunlightDimmer) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrSunlightDimmer),
+                    item: item.HdrSunlightDimmer_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrGrassDimmer) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrGrassDimmer),
+                    item: item.HdrGrassDimmer_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTreeDimmer) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.HdrTreeDimmer),
+                    item: item.HdrTreeDimmer_Property,
+                    fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.WindSpeed),
+                    item: item.WindSpeed_Property,
+                    fieldIndex: (int)Weather_FieldIndex.WindSpeed,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedLower) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CloudSpeedLower),
+                    item: item.CloudSpeedLower_Property,
+                    fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedUpper) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CloudSpeedUpper),
+                    item: item.CloudSpeedUpper_Property,
+                    fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.TransDelta),
+                    item: item.TransDelta_Property,
+                    fieldIndex: (int)Weather_FieldIndex.TransDelta,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SunGlare),
+                    item: item.SunGlare_Property,
+                    fieldIndex: (int)Weather_FieldIndex.SunGlare,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SunDamage),
+                    item: item.SunDamage_Property,
+                    fieldIndex: (int)Weather_FieldIndex.SunDamage,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PrecipitationBeginFadeIn),
+                    item: item.PrecipitationBeginFadeIn_Property,
+                    fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.PrecipitationEndFadeOut),
+                    item: item.PrecipitationEndFadeOut_Property,
+                    fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ThunderLightningBeginFadeIn),
+                    item: item.ThunderLightningBeginFadeIn_Property,
+                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ThunderLightningEndFadeOut),
+                    item: item.ThunderLightningEndFadeOut_Property,
+                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ThunderLightningFrequency),
+                    item: item.ThunderLightningFrequency_Property,
+                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Classification) ?? true))
+            {
+                EnumXmlTranslation<Weather.WeatherClassification>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Classification),
+                    item: item.Classification_Property,
+                    fieldIndex: (int)Weather_FieldIndex.Classification,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.LightningColor),
+                    item: item.LightningColor_Property,
+                    fieldIndex: (int)Weather_FieldIndex.LightningColor,
+                    errorMask: errorMask);
+            }
+            if (item.Sounds.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
                 ListXmlTranslation<WeatherSound>.Instance.Write(
                     node: elem,
@@ -8502,13 +8636,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Sounds,
                     fieldIndex: (int)Weather_FieldIndex.Sounds,
                     errorMask: errorMask,
-                    transl: (XElement subNode, WeatherSound subItem, ErrorMaskBuilder listSubMask) =>
+                    translationMask: translationMask.GetSubCrystal((int)Weather_FieldIndex.Sounds),
+                    transl: (XElement subNode, WeatherSound subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<WeatherSound>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: "Item",
-                            errorMask: listSubMask);
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     }
                     );
             }
@@ -9969,6 +10105,89 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, WeatherSound_CopyMask> Sounds;
         #endregion
 
+    }
+    public class Weather_TranslationMask : MajorRecord_TranslationMask
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public bool TextureLowerLayer;
+        public bool TextureUpperLayer;
+        public MaskItem<bool, Model_TranslationMask> Model;
+        public MaskItem<bool, WeatherType_TranslationMask> WeatherTypes;
+        public bool FogDayNear;
+        public bool FogDayFar;
+        public bool FogNightNear;
+        public bool FogNightFar;
+        public bool HdrEyeAdaptSpeed;
+        public bool HdrBlurRadius;
+        public bool HdrBlurPasses;
+        public bool HdrEmissiveMult;
+        public bool HdrTargetLum;
+        public bool HdrUpperLumClamp;
+        public bool HdrBrightScale;
+        public bool HdrBrightClamp;
+        public bool HdrLumRampNoTex;
+        public bool HdrLumRampMin;
+        public bool HdrLumRampMax;
+        public bool HdrSunlightDimmer;
+        public bool HdrGrassDimmer;
+        public bool HdrTreeDimmer;
+        public bool WindSpeed;
+        public bool CloudSpeedLower;
+        public bool CloudSpeedUpper;
+        public bool TransDelta;
+        public bool SunGlare;
+        public bool SunDamage;
+        public bool PrecipitationBeginFadeIn;
+        public bool PrecipitationEndFadeOut;
+        public bool ThunderLightningBeginFadeIn;
+        public bool ThunderLightningEndFadeOut;
+        public bool ThunderLightningFrequency;
+        public bool Classification;
+        public bool LightningColor;
+        public MaskItem<bool, WeatherSound_TranslationMask> Sounds;
+        #endregion
+
+        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            base.GetCrystal(ret);
+            ret.Add((TextureLowerLayer, null));
+            ret.Add((TextureUpperLayer, null));
+            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+            ret.Add((WeatherTypes?.Overall ?? true, WeatherTypes?.Specific?.GetCrystal()));
+            ret.Add((FogDayNear, null));
+            ret.Add((FogDayFar, null));
+            ret.Add((FogNightNear, null));
+            ret.Add((FogNightFar, null));
+            ret.Add((HdrEyeAdaptSpeed, null));
+            ret.Add((HdrBlurRadius, null));
+            ret.Add((HdrBlurPasses, null));
+            ret.Add((HdrEmissiveMult, null));
+            ret.Add((HdrTargetLum, null));
+            ret.Add((HdrUpperLumClamp, null));
+            ret.Add((HdrBrightScale, null));
+            ret.Add((HdrBrightClamp, null));
+            ret.Add((HdrLumRampNoTex, null));
+            ret.Add((HdrLumRampMin, null));
+            ret.Add((HdrLumRampMax, null));
+            ret.Add((HdrSunlightDimmer, null));
+            ret.Add((HdrGrassDimmer, null));
+            ret.Add((HdrTreeDimmer, null));
+            ret.Add((WindSpeed, null));
+            ret.Add((CloudSpeedLower, null));
+            ret.Add((CloudSpeedUpper, null));
+            ret.Add((TransDelta, null));
+            ret.Add((SunGlare, null));
+            ret.Add((SunDamage, null));
+            ret.Add((PrecipitationBeginFadeIn, null));
+            ret.Add((PrecipitationEndFadeOut, null));
+            ret.Add((ThunderLightningBeginFadeIn, null));
+            ret.Add((ThunderLightningEndFadeOut, null));
+            ret.Add((ThunderLightningFrequency, null));
+            ret.Add((Classification, null));
+            ret.Add((LightningColor, null));
+            ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+        }
     }
     #endregion
 

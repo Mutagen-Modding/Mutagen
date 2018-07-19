@@ -270,154 +270,214 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region XML Translation
-        #region XML Copy In
-        public virtual void CopyIn_XML(
+        #region Xml Translation
+        #region Xml Copy In
+        public virtual void CopyIn_Xml(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RegionData>.Instance.CopyIn(
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: null,
+                translationMask: null,
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(
+        public virtual void CopyIn_Xml(
             XElement root,
             out RegionData_ErrorMask errorMask,
+            RegionData_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<RegionData>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
             errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public void CopyIn_XML(
+        protected virtual void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<RegionData>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                errorMask: errorMask,
+                translationMask: translationMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml(
             string path,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             string path,
             out RegionData_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            RegionData_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             out RegionData_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            RegionData_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
         #endregion
 
-        #region XML Write
-        public virtual void Write_XML(
+        #region Xml Write
+        public virtual void Write_Xml(
             XElement node,
             out RegionData_ErrorMask errorMask,
             bool doMasks = true,
+            RegionData_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             string path,
             out RegionData_ErrorMask errorMask,
+            RegionData_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             Stream stream,
             out RegionData_ErrorMask errorMask,
+            RegionData_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(stream);
         }
 
-        public abstract void Write_XML(
+        public virtual void Write_Xml(
             XElement node,
-            string name = null);
-        public abstract void Write_XML(
-            string path,
-            string name = null);
-        public abstract void Write_XML(
-            Stream stream,
-            string name = null);
+            string name = null,
+            RegionData_TranslationMask translationMask = null)
+        {
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
 
-        protected virtual void Write_XML_Internal(
-            XElement node,
-            ErrorMaskBuilder errorMask,
+        public virtual void Write_Xml(
+            string path,
             string name = null)
         {
-            RegionDataCommon.Write_XML(
+            XElement topNode = new XElement("topnode");
+            Write_Xml_Internal(
+                node: topNode,
+                name: name,
+                errorMask: null,
+                translationMask: null);
+            topNode.Elements().First().Save(path);
+        }
+
+        public virtual void Write_Xml(
+            Stream stream,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml_Internal(
+                node: topNode,
+                name: name,
+                errorMask: null,
+                translationMask: null);
+            topNode.Elements().First().Save(stream);
+        }
+
+        protected virtual void Write_Xml_Internal(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            RegionDataCommon.Write_Xml(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             RegionData item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
@@ -961,9 +1021,43 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public abstract void Write_Binary(MutagenWriter writer);
-        public abstract void Write_Binary(string path);
-        public abstract void Write_Binary(Stream stream);
+        public virtual void Write_Binary(MutagenWriter writer)
+        {
+            this.Write_Binary_Internal(
+                writer: writer,
+                recordTypeConverter: null,
+                errorMask: null);
+        }
+
+        public virtual void Write_Binary(string path)
+        {
+            using (var memStream = new MemoryTributary())
+            {
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary_Internal(
+                        writer: writer,
+                        recordTypeConverter: null,
+                        errorMask: null);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
+            }
+        }
+
+        public virtual void Write_Binary(Stream stream)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary_Internal(
+                    writer: writer,
+                    recordTypeConverter: null,
+                    errorMask: null);
+            }
+        }
 
         protected virtual void Write_Binary_Internal(
             MutagenWriter writer,
@@ -1704,28 +1798,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml(
             XElement node,
             IRegionDataGetter item,
             bool doMasks,
             out RegionData_ErrorMask errorMask,
+            RegionData_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML(
+            Write_Xml(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML(
+        public static void Write_Xml(
             XElement node,
             IRegionDataGetter item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionData");
@@ -1734,24 +1831,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionData");
             }
-            EnumXmlTranslation<RegionData.RegionDataType>.Instance.Write(
-                node: elem,
-                name: nameof(item.DataType),
-                item: item.DataType_Property,
-                fieldIndex: (int)RegionData_FieldIndex.DataType,
-                errorMask: errorMask);
-            EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Write(
-                node: elem,
-                name: nameof(item.Flags),
-                item: item.Flags_Property,
-                fieldIndex: (int)RegionData_FieldIndex.Flags,
-                errorMask: errorMask);
-            ByteXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.Priority),
-                item: item.Priority_Property,
-                fieldIndex: (int)RegionData_FieldIndex.Priority,
-                errorMask: errorMask);
+            if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.DataType) ?? true))
+            {
+                EnumXmlTranslation<RegionData.RegionDataType>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DataType),
+                    item: item.DataType_Property,
+                    fieldIndex: (int)RegionData_FieldIndex.DataType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)RegionData_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Priority),
+                    item: item.Priority_Property,
+                    fieldIndex: (int)RegionData_FieldIndex.Priority,
+                    errorMask: errorMask);
+            }
         }
         #endregion
 
@@ -2104,6 +2210,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Priority;
         #endregion
 
+    }
+    public class RegionData_TranslationMask : ITranslationMask
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public bool DataType;
+        public bool Flags;
+        public bool Priority;
+        #endregion
+
+        public TranslationCrystal GetCrystal()
+        {
+            if (_crystal != null) return _crystal;
+            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            GetCrystal(ret);
+            _crystal = new TranslationCrystal()
+            {
+                Crystal = ret.ToArray()
+            };
+            return _crystal;
+        }
+
+        protected virtual void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            ret.Add((DataType, null));
+            ret.Add((Flags, null));
+            ret.Add((Priority, null));
+        }
     }
     #endregion
 

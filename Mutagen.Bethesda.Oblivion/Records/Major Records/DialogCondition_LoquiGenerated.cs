@@ -525,45 +525,52 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region XML Translation
-        #region XML Create
+        #region Xml Translation
+        #region Xml Create
         [DebuggerStepThrough]
-        public static DialogCondition Create_XML(XElement root)
+        public static DialogCondition Create_Xml(
+            XElement root,
+            DialogCondition_TranslationMask translationMask = null)
         {
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
-        public static DialogCondition Create_XML(
+        public static DialogCondition Create_Xml(
             XElement root,
             out DialogCondition_ErrorMask errorMask,
-            bool doMasks = true)
+            bool doMasks = true,
+            DialogCondition_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_XML(
+            var ret = Create_Xml(
                 root: root,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
             errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         [DebuggerStepThrough]
-        public static DialogCondition Create_XML(
+        public static DialogCondition Create_Xml(
             XElement root,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             var ret = new DialogCondition();
             try
             {
                 foreach (var elem in root.Elements())
                 {
-                    Fill_XML_Internal(
+                    Fill_Xml_Internal(
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                 }
             }
             catch (Exception ex)
@@ -574,209 +581,259 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DialogCondition Create_XML(string path)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(root: root);
-        }
-
-        public static DialogCondition Create_XML(
+        public static DialogCondition Create_Xml(
             string path,
-            out DialogCondition_ErrorMask errorMask)
+            DialogCondition_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(path).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
         }
 
-        public static DialogCondition Create_XML(Stream stream)
+        public static DialogCondition Create_Xml(
+            string path,
+            out DialogCondition_ErrorMask errorMask,
+            DialogCondition_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(root: root);
+            var root = XDocument.Load(path).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
-        public static DialogCondition Create_XML(
+        public static DialogCondition Create_Xml(
             Stream stream,
-            out DialogCondition_ErrorMask errorMask)
+            DialogCondition_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(stream).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
+        }
+
+        public static DialogCondition Create_Xml(
+            Stream stream,
+            out DialogCondition_ErrorMask errorMask,
+            DialogCondition_TranslationMask translationMask = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
         #endregion
 
-        #region XML Copy In
-        public void CopyIn_XML(
+        #region Xml Copy In
+        public void CopyIn_Xml(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<DialogCondition>.Instance.CopyIn(
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: null,
+                translationMask: null,
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(
+        public virtual void CopyIn_Xml(
             XElement root,
             out DialogCondition_ErrorMask errorMask,
+            DialogCondition_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<DialogCondition>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
             errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public void CopyIn_XML(
+        protected void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<DialogCondition>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                errorMask: errorMask,
+                translationMask: translationMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml(
             string path,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             string path,
             out DialogCondition_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            DialogCondition_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             out DialogCondition_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            DialogCondition_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
         #endregion
 
-        #region XML Write
-        public virtual void Write_XML(
+        #region Xml Write
+        public virtual void Write_Xml(
             XElement node,
             out DialogCondition_ErrorMask errorMask,
             bool doMasks = true,
+            DialogCondition_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             string path,
             out DialogCondition_ErrorMask errorMask,
+            DialogCondition_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             Stream stream,
             out DialogCondition_ErrorMask errorMask,
+            DialogCondition_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(stream);
         }
 
-        public void Write_XML(
+        public void Write_Xml(
             XElement node,
-            string name = null)
+            string name = null,
+            DialogCondition_TranslationMask translationMask = null)
         {
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
         }
 
-        public void Write_XML(
+        public void Write_Xml(
             string path,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(path);
         }
 
-        public void Write_XML(
+        public void Write_Xml(
             Stream stream,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(stream);
         }
 
-        protected void Write_XML_Internal(
+        protected void Write_Xml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
-            DialogConditionCommon.Write_XML(
+            DialogConditionCommon.Write_Xml(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             DialogCondition item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
@@ -1982,7 +2039,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(writer: writer);
+                    Write_Binary_Internal(
+                        writer: writer,
+                        recordTypeConverter: null,
+                        errorMask: null);
                 }
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
@@ -1996,7 +2056,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(writer: writer);
+                Write_Binary_Internal(
+                    writer: writer,
+                    recordTypeConverter: null,
+                    errorMask: null);
             }
         }
 
@@ -3208,28 +3271,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml(
             XElement node,
             IDialogConditionGetter item,
             bool doMasks,
             out DialogCondition_ErrorMask errorMask,
+            DialogCondition_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML(
+            Write_Xml(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = DialogCondition_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML(
+        public static void Write_Xml(
             XElement node,
             IDialogConditionGetter item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogCondition");
@@ -3238,54 +3304,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogCondition");
             }
-            EnumXmlTranslation<CompareOperator>.Instance.Write(
-                node: elem,
-                name: nameof(item.CompareOperator),
-                item: item.CompareOperator_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.CompareOperator,
-                errorMask: errorMask);
-            EnumXmlTranslation<DialogCondition.Flag>.Instance.Write(
-                node: elem,
-                name: nameof(item.Flags),
-                item: item.Flags_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.Flags,
-                errorMask: errorMask);
-            ByteArrayXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.Fluff),
-                item: item.Fluff_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.Fluff,
-                errorMask: errorMask);
-            FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.ComparisonValue),
-                item: item.ComparisonValue_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.ComparisonValue,
-                errorMask: errorMask);
-            EnumXmlTranslation<Function>.Instance.Write(
-                node: elem,
-                name: nameof(item.Function),
-                item: item.Function_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.Function,
-                errorMask: errorMask);
-            Int32XmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.FirstParameter),
-                item: item.FirstParameter_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.FirstParameter,
-                errorMask: errorMask);
-            Int32XmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.SecondParameter),
-                item: item.SecondParameter_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.SecondParameter,
-                errorMask: errorMask);
-            Int32XmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.ThirdParameter),
-                item: item.ThirdParameter_Property,
-                fieldIndex: (int)DialogCondition_FieldIndex.ThirdParameter,
-                errorMask: errorMask);
+            if ((translationMask?.GetShouldTranslate((int)DialogCondition_FieldIndex.CompareOperator) ?? true))
+            {
+                EnumXmlTranslation<CompareOperator>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.CompareOperator),
+                    item: item.CompareOperator_Property,
+                    fieldIndex: (int)DialogCondition_FieldIndex.CompareOperator,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DialogCondition_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<DialogCondition.Flag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)DialogCondition_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DialogCondition_FieldIndex.Fluff) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Fluff),
+                    item: item.Fluff_Property,
+                    fieldIndex: (int)DialogCondition_FieldIndex.Fluff,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DialogCondition_FieldIndex.ComparisonValue) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ComparisonValue),
+                    item: item.ComparisonValue_Property,
+                    fieldIndex: (int)DialogCondition_FieldIndex.ComparisonValue,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DialogCondition_FieldIndex.Function) ?? true))
+            {
+                EnumXmlTranslation<Function>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Function),
+                    item: item.Function_Property,
+                    fieldIndex: (int)DialogCondition_FieldIndex.Function,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DialogCondition_FieldIndex.FirstParameter) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FirstParameter),
+                    item: item.FirstParameter_Property,
+                    fieldIndex: (int)DialogCondition_FieldIndex.FirstParameter,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DialogCondition_FieldIndex.SecondParameter) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SecondParameter),
+                    item: item.SecondParameter_Property,
+                    fieldIndex: (int)DialogCondition_FieldIndex.SecondParameter,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DialogCondition_FieldIndex.ThirdParameter) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ThirdParameter),
+                    item: item.ThirdParameter_Property,
+                    fieldIndex: (int)DialogCondition_FieldIndex.ThirdParameter,
+                    errorMask: errorMask);
+            }
         }
         #endregion
 
@@ -3769,6 +3859,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ThirdParameter;
         #endregion
 
+    }
+    public class DialogCondition_TranslationMask : ITranslationMask
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public bool CompareOperator;
+        public bool Flags;
+        public bool Fluff;
+        public bool ComparisonValue;
+        public bool Function;
+        public bool FirstParameter;
+        public bool SecondParameter;
+        public bool ThirdParameter;
+        #endregion
+
+        public TranslationCrystal GetCrystal()
+        {
+            if (_crystal != null) return _crystal;
+            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            GetCrystal(ret);
+            _crystal = new TranslationCrystal()
+            {
+                Crystal = ret.ToArray()
+            };
+            return _crystal;
+        }
+
+        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            ret.Add((CompareOperator, null));
+            ret.Add((Flags, null));
+            ret.Add((Fluff, null));
+            ret.Add((ComparisonValue, null));
+            ret.Add((Function, null));
+            ret.Add((FirstParameter, null));
+            ret.Add((SecondParameter, null));
+            ret.Add((ThirdParameter, null));
+        }
     }
     #endregion
 

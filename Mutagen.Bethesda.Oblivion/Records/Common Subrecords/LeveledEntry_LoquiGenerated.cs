@@ -345,46 +345,55 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region XML Translation
-        #region XML Create
+        #region Xml Translation
+        #region Xml Create
         [DebuggerStepThrough]
-        public static LeveledEntry<T> Create_XML(XElement root)
+        public static LeveledEntry<T> Create_Xml<T_TranslMask>(
+            XElement root,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
-        public static LeveledEntry<T> Create_XML<T_ErrMask>(
+        public static LeveledEntry<T> Create_Xml<T_ErrMask, T_TranslMask>(
             XElement root,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true)
+            bool doMasks = true,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_XML(
+            var ret = Create_Xml(
                 root: root,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
             errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
             return ret;
         }
 
         [DebuggerStepThrough]
-        public static LeveledEntry<T> Create_XML(
+        public static LeveledEntry<T> Create_Xml(
             XElement root,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             var ret = new LeveledEntry<T>();
             try
             {
                 foreach (var elem in root.Elements())
                 {
-                    Fill_XML_Internal(
+                    Fill_Xml_Internal(
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                 }
             }
             catch (Exception ex)
@@ -395,217 +404,279 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LeveledEntry<T> Create_XML(string path)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(root: root);
-        }
-
-        public static LeveledEntry<T> Create_XML<T_ErrMask>(
+        public static LeveledEntry<T> Create_Xml<T_TranslMask>(
             string path,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var root = XDocument.Load(path).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
         }
 
-        public static LeveledEntry<T> Create_XML(Stream stream)
-        {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(root: root);
-        }
-
-        public static LeveledEntry<T> Create_XML<T_ErrMask>(
-            Stream stream,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask)
+        public static LeveledEntry<T> Create_Xml<T_ErrMask, T_TranslMask>(
+            string path,
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var root = XDocument.Load(path).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static LeveledEntry<T> Create_Xml<T_TranslMask>(
+            Stream stream,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var root = XDocument.Load(stream).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
+        }
+
+        public static LeveledEntry<T> Create_Xml<T_ErrMask, T_TranslMask>(
+            Stream stream,
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
         #endregion
 
-        #region XML Copy In
-        public void CopyIn_XML(
+        #region Xml Copy In
+        public void CopyIn_Xml(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<LeveledEntry<T>>.Instance.CopyIn(
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: null,
+                translationMask: null,
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML<T_ErrMask>(
+        public virtual void CopyIn_Xml<T_ErrMask, T_TranslMask>(
             XElement root,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<LeveledEntry<T>>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                errorMask: errorMaskBuilder,
-                cmds: cmds);
-            errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML<T_ErrMask>(
-            string path,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            Stream stream,
-            NotifyingFireParameters cmds = null)
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML<T_ErrMask>(
-            Stream stream,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out errorMask,
-                cmds: cmds);
-        }
-
-        #endregion
-
-        #region XML Write
-        public virtual void Write_XML<T_ErrMask>(
-            XElement node,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
             bool doMasks = true,
-            string name = null)
+            NotifyingFireParameters cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
-                node: node,
-                name: name,
-                errorMask: errorMaskBuilder);
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
             errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML<T_ErrMask>(
+        protected void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<LeveledEntry<T>>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                errorMask: errorMask,
+                translationMask: translationMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml(
+            string path,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_Xml(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml<T_ErrMask, T_TranslMask>(
             string path,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true,
-            string name = null)
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            XElement topNode = new XElement("topnode");
-            Write_XML(
-                node: topNode,
-                name: name,
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_Xml(
+                root: root,
                 errorMask: out errorMask,
+                translationMask: translationMask,
+                cmds: cmds,
                 doMasks: doMasks);
-            topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML<T_ErrMask>(
+        public void CopyIn_Xml(
+            Stream stream,
+            NotifyingFireParameters cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_Xml(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml<T_ErrMask, T_TranslMask>(
             Stream stream,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true,
-            string name = null)
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            XElement topNode = new XElement("topnode");
-            Write_XML(
-                node: topNode,
-                name: name,
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_Xml(
+                root: root,
                 errorMask: out errorMask,
+                translationMask: translationMask,
+                cmds: cmds,
                 doMasks: doMasks);
-            topNode.Elements().First().Save(stream);
         }
 
-        public void Write_XML(
+        #endregion
+
+        #region Xml Write
+        public virtual void Write_Xml<T_ErrMask, T_TranslMask>(
             XElement node,
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            bool doMasks = true,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
             string name = null)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            this.Write_XML_Internal(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: null);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public void Write_XML(
+        public virtual void Write_Xml<T_ErrMask, T_TranslMask>(
+            string path,
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
+            bool doMasks = true,
+            string name = null)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(path);
+        }
+
+        public virtual void Write_Xml<T_ErrMask, T_TranslMask>(
+            Stream stream,
+            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
+            bool doMasks = true,
+            string name = null)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: out errorMask,
+                doMasks: doMasks,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(stream);
+        }
+
+        public void Write_Xml<T_ErrMask, T_TranslMask>(
+            XElement node,
+            string name = null,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
+        {
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
+        }
+
+        public void Write_Xml(
             string path,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(path);
         }
 
-        public void Write_XML(
+        public void Write_Xml(
             Stream stream,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(stream);
         }
 
-        protected void Write_XML_Internal(
+        protected void Write_Xml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
-            LeveledEntryCommon.Write_XML<T>(
+            LeveledEntryCommon.Write_Xml<T>(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             LeveledEntry<T> item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
@@ -1199,7 +1270,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary<T_ErrMask>(MutagenWriter writer)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             this.Write_Binary_Internal(
                 writer: writer,
@@ -1213,7 +1285,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(writer: writer);
+                    Write_Binary_Internal(
+                        writer: writer,
+                        recordTypeConverter: null,
+                        errorMask: null);
                 }
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
@@ -1227,7 +1302,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(writer: writer);
+                Write_Binary_Internal(
+                    writer: writer,
+                    recordTypeConverter: null,
+                    errorMask: null);
             }
         }
 
@@ -2197,30 +2275,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML<T, T_ErrMask>(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml<T, T_ErrMask, T_TranslMask>(
             XElement node,
             ILeveledEntryGetter<T> item,
             bool doMasks,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask,
             string name = null)
             where T : Bethesda.MajorRecord, ILoquiObject<T>
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML<T>(
+            Write_Xml<T>(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML<T>(
+        public static void Write_Xml<T>(
             XElement node,
             ILeveledEntryGetter<T> item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
             where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
@@ -2230,25 +2312,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledEntry");
             }
-            Int16XmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.Level),
-                item: item.Level_Property,
-                fieldIndex: (int)LeveledEntry_FieldIndex.Level,
-                errorMask: errorMask);
-            ByteArrayXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.Fluff),
-                item: item.Fluff_Property,
-                fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
-                errorMask: errorMask);
-            FormIDXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.Reference),
-                item: item.Reference?.FormID,
-                fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
-                errorMask: errorMask);
-            if (item.Count_Property.HasBeenSet)
+            if ((translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Level) ?? true))
+            {
+                Int16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Level),
+                    item: item.Level_Property,
+                    fieldIndex: (int)LeveledEntry_FieldIndex.Level,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Fluff) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Fluff),
+                    item: item.Fluff_Property,
+                    fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Reference) ?? true))
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Reference),
+                    item: item.Reference?.FormID,
+                    fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
+                    errorMask: errorMask);
+            }
+            if (item.Count_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Count) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
                     node: elem,
@@ -2257,7 +2349,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LeveledEntry_FieldIndex.Count,
                     errorMask: errorMask);
             }
-            if (item.Fluff2_Property.HasBeenSet)
+            if (item.Fluff2_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Fluff2) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
@@ -2672,6 +2765,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Fluff2;
         #endregion
 
+    }
+    public class LeveledEntry_TranslationMask<T_TranslMask> : ITranslationMask
+        where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public bool Level;
+        public bool Fluff;
+        public bool Reference;
+        public bool Count;
+        public bool Fluff2;
+        #endregion
+
+        public TranslationCrystal GetCrystal()
+        {
+            if (_crystal != null) return _crystal;
+            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            GetCrystal(ret);
+            _crystal = new TranslationCrystal()
+            {
+                Crystal = ret.ToArray()
+            };
+            return _crystal;
+        }
+
+        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            ret.Add((Level, null));
+            ret.Add((Fluff, null));
+            ret.Add((Reference, null));
+            ret.Add((Count, null));
+            ret.Add((Fluff2, null));
+        }
     }
     #endregion
 

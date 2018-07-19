@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Binary;
 using System.IO;
 using System.Windows.Media;
 using Noggog;
+using Loqui.Internal;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -23,6 +24,7 @@ namespace Mutagen.Bethesda.Generation
         {
             this.ExportWithIGetter = false;
             this.ShouldGenerateCopyIn = false;
+            this.TranslationMaskParameter = false;
             this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(ModuleNickname);
             this._typeGenerations[typeof(BoolNullType)] = new PrimitiveBinaryTranslationGeneration<bool?>();
             this._typeGenerations[typeof(BoolType)] = new PrimitiveBinaryTranslationGeneration<bool>();
@@ -686,6 +688,7 @@ namespace Mutagen.Bethesda.Generation
                 typeGen: field,
                 readerAccessor: frameAccessor,
                 itemAccessor: new Accessor(field, "item."),
+                translationAccessor: null,
                 maskAccessor: $"errorMask");
         }
 
@@ -715,32 +718,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
                 internalToDo(this.MainAPI.ReaderMemberNames(obj));
-            }
-        }
-
-        protected override void GenerateCopyInSnippet(ObjectGeneration obj, FileGeneration fg, bool usingErrorMask)
-        {
-            using (var args = new ArgsWrapper(fg,
-                $"LoquiBinaryTranslation<{obj.ObjectName}, {(usingErrorMask ? obj.Mask(MaskType.Error) : obj.Mask_GenericAssumed(MaskType.Error))}>.Instance.CopyIn"))
-            using (new DepthWrapper(fg))
-            {
-                foreach (var item in this.MainAPI.ReaderPassArgs(obj))
-                {
-                    args.Add(item);
-                }
-                args.Add($"item: this");
-                args.Add($"skipProtected: true");
-                if (usingErrorMask)
-                {
-                    args.Add($"doMasks: true");
-                    args.Add($"mask: out errorMask");
-                }
-                else
-                {
-                    args.Add($"doMasks: false");
-                    args.Add($"mask: out var errorMask");
-                }
-                args.Add($"cmds: cmds");
             }
         }
 
@@ -804,7 +781,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
+                fg.AppendLine($"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}();");
                 fg.AppendLine("try");
                 using (new BraceWrapper(fg))
                 {
@@ -1007,8 +984,8 @@ namespace Mutagen.Bethesda.Generation
             if (HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_{ModuleNickname}_Embedded{obj.GenericTypes}",
-                    wheres: obj.GenerateWhereClauses().ToArray()))
+                    $"public static void Write_{ModuleNickname}_Embedded{obj.GetGenericTypes(MaskType.Normal)}",
+                    wheres: obj.GenericTypeMaskWheres(MaskType.Normal)))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenWriter writer");
@@ -1055,6 +1032,7 @@ namespace Mutagen.Bethesda.Generation
                             typeGen: field,
                             writerAccessor: "writer",
                             itemAccessor: new Accessor(field, "item."),
+                            translationAccessor: null,
                             maskAccessor: "errorMask");
                     }
                 }
@@ -1064,8 +1042,8 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes}",
-                    wheres: obj.GenerateWhereClauses().ToArray()))
+                    $"public static void Write_{ModuleNickname}_RecordTypes{obj.GetGenericTypes(MaskType.Normal)}",
+                    wheres: obj.GenericTypeMaskWheres(MaskType.Normal)))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenWriter writer");
@@ -1170,6 +1148,7 @@ namespace Mutagen.Bethesda.Generation
                                         typeGen: subField.Field,
                                         writerAccessor: "writer",
                                         itemAccessor: new Accessor(subField.Field, "item."),
+                                        translationAccessor: null,
                                         maskAccessor: $"errorMask");
                                 }
                                 for (int i = 0; i < dataType.BreakIndices.Count; i++)
@@ -1199,6 +1178,7 @@ namespace Mutagen.Bethesda.Generation
                                     typeGen: field,
                                     writerAccessor: "writer",
                                     itemAccessor: new Accessor(field, "item."),
+                                    translationAccessor: null,
                                     maskAccessor: $"errorMask");
                             }
                         }

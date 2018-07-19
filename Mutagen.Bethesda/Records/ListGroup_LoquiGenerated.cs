@@ -296,38 +296,43 @@ namespace Mutagen.Bethesda
         #endregion
 
 
-        #region XML Translation
-        #region XML Create
+        #region Xml Translation
+        #region Xml Create
         [DebuggerStepThrough]
-        public static ListGroup<T> Create_XML<T_ErrMask>(
+        public static ListGroup<T> Create_Xml<T_ErrMask, T_TranslMask>(
             XElement root,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true)
+            bool doMasks = true,
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_XML(
+            var ret = Create_Xml(
                 root: root,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
             errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
             return ret;
         }
 
         [DebuggerStepThrough]
-        public static ListGroup<T> Create_XML(
+        public static ListGroup<T> Create_Xml(
             XElement root,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             var ret = new ListGroup<T>();
             try
             {
                 foreach (var elem in root.Elements())
                 {
-                    Fill_XML_Internal(
+                    Fill_Xml_Internal(
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                 }
             }
             catch (Exception ex)
@@ -338,173 +343,226 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static ListGroup<T> Create_XML<T_ErrMask>(
+        public static ListGroup<T> Create_Xml<T_ErrMask, T_TranslMask>(
             string path,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask)
+            out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             var root = XDocument.Load(path).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
-        public static ListGroup<T> Create_XML<T_ErrMask>(
+        public static ListGroup<T> Create_Xml<T_ErrMask, T_TranslMask>(
             Stream stream,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask)
+            out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             var root = XDocument.Load(stream).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
         #endregion
 
-        #region XML Copy In
-        public virtual void CopyIn_XML<T_ErrMask>(
+        #region Xml Copy In
+        public virtual void CopyIn_Xml<T_ErrMask, T_TranslMask>(
             XElement root,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+        }
+
+        protected void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
             LoquiXmlTranslation<ListGroup<T>>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
-                errorMask: errorMaskBuilder,
+                errorMask: errorMask,
+                translationMask: translationMask,
                 cmds: cmds);
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public void CopyIn_XML<T_ErrMask>(
+        public void CopyIn_Xml<T_ErrMask, T_TranslMask>(
             string path,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
+            ListGroup_TranslationMask<T_TranslMask> translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public void CopyIn_XML<T_ErrMask>(
+        public void CopyIn_Xml<T_ErrMask, T_TranslMask>(
             Stream stream,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters cmds = null)
+            ListGroup_TranslationMask<T_TranslMask> translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
         #endregion
 
-        #region XML Write
-        public virtual void Write_XML<T_ErrMask>(
+        #region Xml Write
+        public virtual void Write_Xml<T_ErrMask, T_TranslMask>(
             XElement node,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true,
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML<T_ErrMask>(
+        public virtual void Write_Xml<T_ErrMask, T_TranslMask>(
             string path,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
             bool doMasks = true,
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML<T_ErrMask>(
+        public virtual void Write_Xml<T_ErrMask, T_TranslMask>(
             Stream stream,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
             bool doMasks = true,
             string name = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(stream);
         }
 
-        public void Write_XML(
+        public void Write_Xml<T_ErrMask, T_TranslMask>(
             XElement node,
-            string name = null)
+            string name = null,
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
+            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
         }
 
-        public void Write_XML(
+        public void Write_Xml(
             string path,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(path);
         }
 
-        public void Write_XML(
+        public void Write_Xml(
             Stream stream,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(stream);
         }
 
-        protected void Write_XML_Internal(
+        protected void Write_Xml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
-            ListGroupCommon.Write_XML<T>(
+            ListGroupCommon.Write_Xml<T>(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             ListGroup<T> item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
@@ -568,7 +626,8 @@ namespace Mutagen.Bethesda
                             root: root,
                             enumer: out var ItemsItem,
                             transl: LoquiXmlTranslation<T>.Instance.Parse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
                             item.Items.SetTo(ItemsItem);
                         }
@@ -1145,7 +1204,8 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary<T_ErrMask>(MutagenWriter writer)
+            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             this.Write_Binary_Internal(
                 writer: writer,
@@ -1159,7 +1219,10 @@ namespace Mutagen.Bethesda
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(writer: writer);
+                    Write_Binary_Internal(
+                        writer: writer,
+                        recordTypeConverter: null,
+                        errorMask: null);
                 }
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
@@ -1173,7 +1236,10 @@ namespace Mutagen.Bethesda
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(writer: writer);
+                Write_Binary_Internal(
+                    writer: writer,
+                    recordTypeConverter: null,
+                    errorMask: null);
             }
         }
 
@@ -1306,7 +1372,7 @@ namespace Mutagen.Bethesda
         public ListGroup<T> Copy<T_CopyMask>(
             ListGroup_CopyMask<T_CopyMask> copyMask = null,
             IListGroupGetter<T> def = null)
-            where T_CopyMask : new()
+            where T_CopyMask : class, new()
         {
             return ListGroup<T>.Copy(
                 this,
@@ -1318,7 +1384,7 @@ namespace Mutagen.Bethesda
             IListGroup<T> item,
             ListGroup_CopyMask<T_CopyMask> copyMask = null,
             IListGroupGetter<T> def = null)
-            where T_CopyMask : new()
+            where T_CopyMask : class, new()
         {
             ListGroup<T> ret;
             if (item.GetType().Equals(typeof(ListGroup<T>)))
@@ -1340,7 +1406,7 @@ namespace Mutagen.Bethesda
             IListGroupGetter<T> item,
             ListGroup_CopyMask<T_CopyMask> copyMask = null,
             IListGroupGetter<T> def = null)
-            where T_CopyMask : new()
+            where T_CopyMask : class, new()
         {
             ListGroup<T> ret;
             if (item.GetType().Equals(typeof(ListGroup<T>)))
@@ -1361,7 +1427,7 @@ namespace Mutagen.Bethesda
         public void CopyFieldsFrom<T_CopyMask>(
             IListGroupGetter<T> rhs,
             NotifyingFireParameters cmds = null)
-            where T_CopyMask : new()
+            where T_CopyMask : class, new()
         {
             this.CopyFieldsFrom<ErrorMaskPlaceholder, T_CopyMask>(
                 rhs: rhs,
@@ -1377,7 +1443,7 @@ namespace Mutagen.Bethesda
             ListGroup_CopyMask<T_CopyMask> copyMask,
             IListGroupGetter<T> def = null,
             NotifyingFireParameters cmds = null)
-            where T_CopyMask : new()
+            where T_CopyMask : class, new()
         {
             this.CopyFieldsFrom<ErrorMaskPlaceholder, T_CopyMask>(
                 rhs: rhs,
@@ -1396,7 +1462,7 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_CopyMask : new()
+            where T_CopyMask : class, new()
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ListGroupCommon.CopyFieldsFrom<T, T_CopyMask>(
@@ -1416,7 +1482,7 @@ namespace Mutagen.Bethesda
             IListGroupGetter<T> def = null,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
-            where T_CopyMask : new()
+            where T_CopyMask : class, new()
         {
             ListGroupCommon.CopyFieldsFrom<T, T_CopyMask>(
                 item: this,
@@ -1790,7 +1856,7 @@ namespace Mutagen.Bethesda.Internals
             ListGroup_CopyMask<T_CopyMask> copyMask,
             NotifyingFireParameters cmds = null)
             where T : ILoquiObject<T>
-            where T_CopyMask : new()
+            where T_CopyMask : class, new()
         {
             if (copyMask?.GroupType ?? true)
             {
@@ -2079,30 +2145,34 @@ namespace Mutagen.Bethesda.Internals
             return ret;
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML<T, T_ErrMask>(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml<T, T_ErrMask, T_TranslMask>(
             XElement node,
             IListGroupGetter<T> item,
             bool doMasks,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            ListGroup_TranslationMask<T_TranslMask> translationMask,
             string name = null)
             where T : ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML<T>(
+            Write_Xml<T>(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML<T>(
+        public static void Write_Xml<T>(
             XElement node,
             IListGroupGetter<T> item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
             where T : ILoquiObject<T>
         {
@@ -2112,33 +2182,44 @@ namespace Mutagen.Bethesda.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.ListGroup");
             }
-            EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                node: elem,
-                name: nameof(item.GroupType),
-                item: item.GroupType_Property,
-                fieldIndex: (int)ListGroup_FieldIndex.GroupType,
-                errorMask: errorMask);
-            ByteArrayXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.LastModified),
-                item: item.LastModified_Property,
-                fieldIndex: (int)ListGroup_FieldIndex.LastModified,
-                errorMask: errorMask);
-            ListXmlTranslation<T>.Instance.Write(
-                node: elem,
-                name: nameof(item.Items),
-                item: item.Items,
-                fieldIndex: (int)ListGroup_FieldIndex.Items,
-                errorMask: errorMask,
-                transl: (XElement subNode, T subItem, ErrorMaskBuilder listSubMask) =>
-                {
-                    LoquiXmlTranslation<T>.Instance.Write(
-                        node: subNode,
-                        item: subItem,
-                        name: "Item",
-                        errorMask: listSubMask);
-                }
-                );
+            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.GroupType) ?? true))
+            {
+                EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.GroupType),
+                    item: item.GroupType_Property,
+                    fieldIndex: (int)ListGroup_FieldIndex.GroupType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.LastModified) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.LastModified),
+                    item: item.LastModified_Property,
+                    fieldIndex: (int)ListGroup_FieldIndex.LastModified,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.Items) ?? true))
+            {
+                ListXmlTranslation<T>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Items),
+                    item: item.Items,
+                    fieldIndex: (int)ListGroup_FieldIndex.Items,
+                    errorMask: errorMask,
+                    translationMask: translationMask.GetSubCrystal((int)ListGroup_FieldIndex.Items),
+                    transl: (XElement subNode, T subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        LoquiXmlTranslation<T>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
         }
         #endregion
 
@@ -2597,7 +2678,7 @@ namespace Mutagen.Bethesda.Internals
 
     }
     public class ListGroup_CopyMask<T_CopyMask>
-        where T_CopyMask : new()
+        where T_CopyMask : class, new()
     {
         #region Members
         public bool ContainedRecordType;
@@ -2606,6 +2687,37 @@ namespace Mutagen.Bethesda.Internals
         public MaskItem<CopyOption, T_CopyMask> Items;
         #endregion
 
+    }
+    public class ListGroup_TranslationMask<T_TranslMask> : ITranslationMask
+        where T_TranslMask : class, ITranslationMask, new()
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public bool ContainedRecordType;
+        public bool GroupType;
+        public bool LastModified;
+        public MaskItem<bool, T_TranslMask> Items;
+        #endregion
+
+        public TranslationCrystal GetCrystal()
+        {
+            if (_crystal != null) return _crystal;
+            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            GetCrystal(ret);
+            _crystal = new TranslationCrystal()
+            {
+                Crystal = ret.ToArray()
+            };
+            return _crystal;
+        }
+
+        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            ret.Add((ContainedRecordType, null));
+            ret.Add((GroupType, null));
+            ret.Add((LastModified, null));
+            ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+        }
     }
     #endregion
 

@@ -21,7 +21,8 @@ namespace Mutagen.Bethesda.Generation
             string nodeAccessor,
             Accessor retAccessor, 
             string doMaskAccessor, 
-            string maskAccessor)
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             using (var args = new ArgsWrapper(fg,
@@ -35,7 +36,13 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateCopyIn(FileGeneration fg, TypeGeneration typeGen, string frameAccessor, Accessor itemAccessor, string maskAccessor)
+        public override void GenerateCopyIn(
+            FileGeneration fg,
+            TypeGeneration typeGen, 
+            string frameAccessor, 
+            Accessor itemAccessor,
+            string maskAccessor,
+            string translationMaskAccessor)
         {
             TranslationGeneration.WrapParseCall(
                 fg: fg,
@@ -43,6 +50,7 @@ namespace Mutagen.Bethesda.Generation
                 translatorLine: $"{this.TypeName}XmlTranslation.Instance",
                 maskAccessor: maskAccessor,
                 itemAccessor: itemAccessor,
+                translationMaskAccessor: null,
                 indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                 extraargs: $"root: {frameAccessor}");
         }

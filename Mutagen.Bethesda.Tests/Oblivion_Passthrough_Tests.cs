@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda.Tests
             Assert.False(inputErrMask?.IsInError() ?? false);
             using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
             {
-                mod[FormID.Factory("0006371E")].Write_XML(Path.Combine(tmp.Dir.Path, "Test"));
+                mod[FormID.Factory("0006371E")].Write_Xml(Path.Combine(tmp.Dir.Path, "Test"));
                 var exportMask = await mod.Write_XmlFolder(
                     tmp.Dir);
                 Assert.False(exportMask?.IsInError() ?? false);
@@ -1034,10 +1034,10 @@ namespace Mutagen.Bethesda.Tests
             using (var tmp = new TempFolder("Mutagen_Oblivion_XML"))
             {
                 var outputPath = Path.Combine(tmp.Dir.Path, Path.GetRandomFileName());
-                modFromBinary.Write_XML(
+                modFromBinary.Write_Xml(
                     outputPath,
                     out var outputErrMask);
-                var modFromXML = OblivionMod.Create_XML(
+                var modFromXML = OblivionMod.Create_Xml(
                     outputPath,
                     out var xmlInputErrMask);
                 Assert.Equal(modFromBinary, modFromXML);
@@ -1055,10 +1055,10 @@ namespace Mutagen.Bethesda.Tests
             using (var tmp = new TempFolder("Mutagen_Knights_XML"))
             {
                 var outputPath = Path.Combine(tmp.Dir.Path, Path.GetRandomFileName());
-                modFromBinary.Write_XML(
+                modFromBinary.Write_Xml(
                     outputPath,
                     out var outputErrMask);
-                var modFromXML = OblivionMod.Create_XML(
+                var modFromXML = OblivionMod.Create_Xml(
                     outputPath,
                     out var xmlInputErrMask);
                 Assert.Equal(modFromBinary, modFromXML);

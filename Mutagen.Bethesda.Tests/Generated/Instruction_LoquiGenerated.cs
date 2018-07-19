@@ -237,45 +237,52 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
 
-        #region XML Translation
-        #region XML Create
+        #region Xml Translation
+        #region Xml Create
         [DebuggerStepThrough]
-        public static Instruction Create_XML(XElement root)
+        public static Instruction Create_Xml(
+            XElement root,
+            Instruction_TranslationMask translationMask = null)
         {
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
-        public static Instruction Create_XML(
+        public static Instruction Create_Xml(
             XElement root,
             out Instruction_ErrorMask errorMask,
-            bool doMasks = true)
+            bool doMasks = true,
+            Instruction_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_XML(
+            var ret = Create_Xml(
                 root: root,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
             errorMask = Instruction_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         [DebuggerStepThrough]
-        public static Instruction Create_XML(
+        public static Instruction Create_Xml(
             XElement root,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             var ret = new Instruction();
             try
             {
                 foreach (var elem in root.Elements())
                 {
-                    Fill_XML_Internal(
+                    Fill_Xml_Internal(
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                 }
             }
             catch (Exception ex)
@@ -286,209 +293,259 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public static Instruction Create_XML(string path)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(root: root);
-        }
-
-        public static Instruction Create_XML(
+        public static Instruction Create_Xml(
             string path,
-            out Instruction_ErrorMask errorMask)
+            Instruction_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(path).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
         }
 
-        public static Instruction Create_XML(Stream stream)
+        public static Instruction Create_Xml(
+            string path,
+            out Instruction_ErrorMask errorMask,
+            Instruction_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(root: root);
+            var root = XDocument.Load(path).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
-        public static Instruction Create_XML(
+        public static Instruction Create_Xml(
             Stream stream,
-            out Instruction_ErrorMask errorMask)
+            Instruction_TranslationMask translationMask = null)
         {
             var root = XDocument.Load(stream).Root;
-            return Create_XML(
+            return Create_Xml(
                 root: root,
-                errorMask: out errorMask);
+                translationMask: translationMask);
+        }
+
+        public static Instruction Create_Xml(
+            Stream stream,
+            out Instruction_ErrorMask errorMask,
+            Instruction_TranslationMask translationMask = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_Xml(
+                root: root,
+                errorMask: out errorMask,
+                translationMask: translationMask);
         }
 
         #endregion
 
-        #region XML Copy In
-        public virtual void CopyIn_XML(
+        #region Xml Copy In
+        public virtual void CopyIn_Xml(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Instruction>.Instance.CopyIn(
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: null,
+                translationMask: null,
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(
+        public virtual void CopyIn_Xml(
             XElement root,
             out Instruction_ErrorMask errorMask,
+            Instruction_TranslationMask translationMask = null,
+            bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            LoquiXmlTranslation<Instruction>.Instance.CopyIn(
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
                 root: root,
-                item: this,
-                skipProtected: true,
                 errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
             errorMask = Instruction_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public void CopyIn_XML(
+        protected virtual void CopyIn_Xml_Internal(
+            XElement root,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            NotifyingFireParameters cmds = null)
+        {
+            LoquiXmlTranslation<Instruction>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                errorMask: errorMask,
+                translationMask: translationMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_Xml(
             string path,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             string path,
             out Instruction_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            Instruction_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(path).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 cmds: cmds);
         }
 
-        public void CopyIn_XML(
+        public void CopyIn_Xml(
             Stream stream,
             out Instruction_ErrorMask errorMask,
-            NotifyingFireParameters cmds = null)
+            Instruction_TranslationMask translationMask,
+            NotifyingFireParameters cmds = null,
+            bool doMasks = true)
         {
             var root = XDocument.Load(stream).Root;
-            this.CopyIn_XML(
+            this.CopyIn_Xml(
                 root: root,
                 errorMask: out errorMask,
-                cmds: cmds);
+                translationMask: translationMask,
+                cmds: cmds,
+                doMasks: doMasks);
         }
 
         #endregion
 
-        #region XML Write
-        public virtual void Write_XML(
+        #region Xml Write
+        public virtual void Write_Xml(
             XElement node,
             out Instruction_ErrorMask errorMask,
             bool doMasks = true,
+            Instruction_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Instruction_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             string path,
             out Instruction_ErrorMask errorMask,
+            Instruction_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             Stream stream,
             out Instruction_ErrorMask errorMask,
+            Instruction_TranslationMask translationMask = null,
             bool doMasks = true,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: out errorMask,
-                doMasks: doMasks);
+                doMasks: doMasks,
+                translationMask: translationMask);
             topNode.Elements().First().Save(stream);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             XElement node,
-            string name = null)
+            string name = null,
+            Instruction_TranslationMask translationMask = null)
         {
-            this.Write_XML_Internal(
+            this.Write_Xml_Internal(
                 node: node,
                 name: name,
-                errorMask: null);
+                errorMask: null,
+                translationMask: translationMask.GetCrystal());
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             string path,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(path);
         }
 
-        public virtual void Write_XML(
+        public virtual void Write_Xml(
             Stream stream,
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_XML(
+            Write_Xml_Internal(
                 node: topNode,
-                name: name);
+                name: name,
+                errorMask: null,
+                translationMask: null);
             topNode.Elements().First().Save(stream);
         }
 
-        protected virtual void Write_XML_Internal(
+        protected virtual void Write_Xml_Internal(
             XElement node,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
-            InstructionCommon.Write_XML(
+            InstructionCommon.Write_Xml(
                 item: this,
                 node: node,
                 name: name,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        protected static void Fill_XML_Internal(
+        protected static void Fill_Xml_Internal(
             Instruction item,
             XElement root,
             string name,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             switch (name)
             {
@@ -500,7 +557,8 @@ namespace Mutagen.Bethesda.Tests
                             root: root,
                             enumer: out var MovesItem,
                             transl: LoquiXmlTranslation<Move>.Instance.Parse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
                             item.Moves.SetTo(MovesItem);
                         }
@@ -527,7 +585,8 @@ namespace Mutagen.Bethesda.Tests
                             root: root,
                             enumer: out var SubstitutionsItem,
                             transl: LoquiXmlTranslation<DataTarget>.Instance.Parse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
                             item.Substitutions.SetTo(SubstitutionsItem);
                         }
@@ -554,7 +613,8 @@ namespace Mutagen.Bethesda.Tests
                             root: root,
                             enumer: out var AdditionsItem,
                             transl: LoquiXmlTranslation<DataTarget>.Instance.Parse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
                             item.Additions.SetTo(AdditionsItem);
                         }
@@ -581,7 +641,8 @@ namespace Mutagen.Bethesda.Tests
                             root: root,
                             enumer: out var SkipSourceSectionsItem,
                             transl: RangeInt64XmlTranslation.Instance.Parse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
                             item.SkipSourceSections.SetTo(SkipSourceSectionsItem);
                         }
@@ -608,7 +669,8 @@ namespace Mutagen.Bethesda.Tests
                             root: root,
                             enumer: out var SkipOutputSectionsItem,
                             transl: RangeInt64XmlTranslation.Instance.Parse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
                             item.SkipOutputSections.SetTo(SkipOutputSectionsItem);
                         }
@@ -635,7 +697,8 @@ namespace Mutagen.Bethesda.Tests
                             root: root,
                             enumer: out var IgnoreDifferenceSectionsItem,
                             transl: RangeInt64XmlTranslation.Instance.Parse,
-                            errorMask: errorMask))
+                            errorMask: errorMask,
+                            translationMask: translationMask))
                         {
                             item.IgnoreDifferenceSections.SetTo(IgnoreDifferenceSectionsItem);
                         }
@@ -1653,28 +1716,31 @@ namespace Mutagen.Bethesda.Tests.Internals
             return ret;
         }
 
-        #region XML Translation
-        #region XML Write
-        public static void Write_XML(
+        #region Xml Translation
+        #region Xml Write
+        public static void Write_Xml(
             XElement node,
             IInstructionGetter item,
             bool doMasks,
             out Instruction_ErrorMask errorMask,
+            Instruction_TranslationMask translationMask,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_XML(
+            Write_Xml(
                 node: node,
                 name: name,
                 item: item,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Instruction_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_XML(
+        public static void Write_Xml(
             XElement node,
             IInstructionGetter item,
             ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
             string name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.Instruction");
@@ -1683,96 +1749,123 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Instruction");
             }
-            ListXmlTranslation<Move>.Instance.Write(
-                node: elem,
-                name: nameof(item.Moves),
-                item: item.Moves,
-                fieldIndex: (int)Instruction_FieldIndex.Moves,
-                errorMask: errorMask,
-                transl: (XElement subNode, Move subItem, ErrorMaskBuilder listSubMask) =>
-                {
-                    LoquiXmlTranslation<Move>.Instance.Write(
-                        node: subNode,
-                        item: subItem,
-                        name: "Item",
-                        errorMask: listSubMask);
-                }
-                );
-            ListXmlTranslation<DataTarget>.Instance.Write(
-                node: elem,
-                name: nameof(item.Substitutions),
-                item: item.Substitutions,
-                fieldIndex: (int)Instruction_FieldIndex.Substitutions,
-                errorMask: errorMask,
-                transl: (XElement subNode, DataTarget subItem, ErrorMaskBuilder listSubMask) =>
-                {
-                    LoquiXmlTranslation<DataTarget>.Instance.Write(
-                        node: subNode,
-                        item: subItem,
-                        name: "Item",
-                        errorMask: listSubMask);
-                }
-                );
-            ListXmlTranslation<DataTarget>.Instance.Write(
-                node: elem,
-                name: nameof(item.Additions),
-                item: item.Additions,
-                fieldIndex: (int)Instruction_FieldIndex.Additions,
-                errorMask: errorMask,
-                transl: (XElement subNode, DataTarget subItem, ErrorMaskBuilder listSubMask) =>
-                {
-                    LoquiXmlTranslation<DataTarget>.Instance.Write(
-                        node: subNode,
-                        item: subItem,
-                        name: "Item",
-                        errorMask: listSubMask);
-                }
-                );
-            ListXmlTranslation<RangeInt64>.Instance.Write(
-                node: elem,
-                name: nameof(item.SkipSourceSections),
-                item: item.SkipSourceSections,
-                fieldIndex: (int)Instruction_FieldIndex.SkipSourceSections,
-                errorMask: errorMask,
-                transl: (XElement subNode, RangeInt64 subItem, ErrorMaskBuilder listSubMask) =>
-                {
-                    RangeInt64XmlTranslation.Instance.Write(
-                        node: subNode,
-                        name: "Item",
-                        item: subItem,
-                        errorMask: listSubMask);
-                }
-                );
-            ListXmlTranslation<RangeInt64>.Instance.Write(
-                node: elem,
-                name: nameof(item.SkipOutputSections),
-                item: item.SkipOutputSections,
-                fieldIndex: (int)Instruction_FieldIndex.SkipOutputSections,
-                errorMask: errorMask,
-                transl: (XElement subNode, RangeInt64 subItem, ErrorMaskBuilder listSubMask) =>
-                {
-                    RangeInt64XmlTranslation.Instance.Write(
-                        node: subNode,
-                        name: "Item",
-                        item: subItem,
-                        errorMask: listSubMask);
-                }
-                );
-            ListXmlTranslation<RangeInt64>.Instance.Write(
-                node: elem,
-                name: nameof(item.IgnoreDifferenceSections),
-                item: item.IgnoreDifferenceSections,
-                fieldIndex: (int)Instruction_FieldIndex.IgnoreDifferenceSections,
-                errorMask: errorMask,
-                transl: (XElement subNode, RangeInt64 subItem, ErrorMaskBuilder listSubMask) =>
-                {
-                    RangeInt64XmlTranslation.Instance.Write(
-                        node: subNode,
-                        name: "Item",
-                        item: subItem,
-                        errorMask: listSubMask);
-                }
-                );
+            if ((translationMask?.GetShouldTranslate((int)Instruction_FieldIndex.Moves) ?? true))
+            {
+                ListXmlTranslation<Move>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Moves),
+                    item: item.Moves,
+                    fieldIndex: (int)Instruction_FieldIndex.Moves,
+                    errorMask: errorMask,
+                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.Moves),
+                    transl: (XElement subNode, Move subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        LoquiXmlTranslation<Move>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if ((translationMask?.GetShouldTranslate((int)Instruction_FieldIndex.Substitutions) ?? true))
+            {
+                ListXmlTranslation<DataTarget>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Substitutions),
+                    item: item.Substitutions,
+                    fieldIndex: (int)Instruction_FieldIndex.Substitutions,
+                    errorMask: errorMask,
+                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.Substitutions),
+                    transl: (XElement subNode, DataTarget subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        LoquiXmlTranslation<DataTarget>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if ((translationMask?.GetShouldTranslate((int)Instruction_FieldIndex.Additions) ?? true))
+            {
+                ListXmlTranslation<DataTarget>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Additions),
+                    item: item.Additions,
+                    fieldIndex: (int)Instruction_FieldIndex.Additions,
+                    errorMask: errorMask,
+                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.Additions),
+                    transl: (XElement subNode, DataTarget subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        LoquiXmlTranslation<DataTarget>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: "Item",
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if ((translationMask?.GetShouldTranslate((int)Instruction_FieldIndex.SkipSourceSections) ?? true))
+            {
+                ListXmlTranslation<RangeInt64>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SkipSourceSections),
+                    item: item.SkipSourceSections,
+                    fieldIndex: (int)Instruction_FieldIndex.SkipSourceSections,
+                    errorMask: errorMask,
+                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.SkipSourceSections),
+                    transl: (XElement subNode, RangeInt64 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        RangeInt64XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if ((translationMask?.GetShouldTranslate((int)Instruction_FieldIndex.SkipOutputSections) ?? true))
+            {
+                ListXmlTranslation<RangeInt64>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.SkipOutputSections),
+                    item: item.SkipOutputSections,
+                    fieldIndex: (int)Instruction_FieldIndex.SkipOutputSections,
+                    errorMask: errorMask,
+                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.SkipOutputSections),
+                    transl: (XElement subNode, RangeInt64 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        RangeInt64XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+            if ((translationMask?.GetShouldTranslate((int)Instruction_FieldIndex.IgnoreDifferenceSections) ?? true))
+            {
+                ListXmlTranslation<RangeInt64>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.IgnoreDifferenceSections),
+                    item: item.IgnoreDifferenceSections,
+                    fieldIndex: (int)Instruction_FieldIndex.IgnoreDifferenceSections,
+                    errorMask: errorMask,
+                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.IgnoreDifferenceSections),
+                    transl: (XElement subNode, RangeInt64 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        RangeInt64XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Item",
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
         }
         #endregion
 
@@ -2560,6 +2653,40 @@ namespace Mutagen.Bethesda.Tests.Internals
         public CopyOption IgnoreDifferenceSections;
         #endregion
 
+    }
+    public class Instruction_TranslationMask : ITranslationMask
+    {
+        #region Members
+        private TranslationCrystal _crystal;
+        public MaskItem<bool, Move_TranslationMask> Moves;
+        public MaskItem<bool, DataTarget_TranslationMask> Substitutions;
+        public MaskItem<bool, DataTarget_TranslationMask> Additions;
+        public bool SkipSourceSections;
+        public bool SkipOutputSections;
+        public bool IgnoreDifferenceSections;
+        #endregion
+
+        public TranslationCrystal GetCrystal()
+        {
+            if (_crystal != null) return _crystal;
+            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            GetCrystal(ret);
+            _crystal = new TranslationCrystal()
+            {
+                Crystal = ret.ToArray()
+            };
+            return _crystal;
+        }
+
+        protected virtual void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            ret.Add((Moves?.Overall ?? true, Moves?.Specific?.GetCrystal()));
+            ret.Add((Substitutions?.Overall ?? true, Substitutions?.Specific?.GetCrystal()));
+            ret.Add((Additions?.Overall ?? true, Additions?.Specific?.GetCrystal()));
+            ret.Add((SkipSourceSections, null));
+            ret.Add((SkipOutputSections, null));
+            ret.Add((IgnoreDifferenceSections, null));
+        }
     }
     #endregion
 

@@ -122,7 +122,10 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public bool Parse<T>(XElement root, out FormIDLink<T> item, ErrorMaskBuilder errorMask)
+        public bool Parse<T>(
+            XElement root, 
+            out FormIDLink<T> item, 
+            ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             if (Parse(root, out FormID id, errorMask))
@@ -134,7 +137,23 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public bool Parse<T>(XElement root, out FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public bool Parse<T>(
+            XElement root,
+            out FormIDLink<T> item, 
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : MajorRecord
+        {
+            return this.Parse(
+                root: root,
+                item: out item,
+                errorMask: errorMask);
+        }
+
+        public bool Parse<T>(
+            XElement root, 
+            out FormIDSetLink<T> item,
+            ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             if (Parse(root, out FormID id, errorMask))
@@ -146,7 +165,23 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public bool Parse<T>(XElement root, out EDIDLink<T> item, ErrorMaskBuilder errorMask)
+        public bool Parse<T>(
+            XElement root, 
+            out FormIDSetLink<T> item, 
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : MajorRecord
+        {
+            return this.Parse(
+                root: root,
+                item: out item,
+                errorMask: errorMask);
+        }
+
+        public bool Parse<T>(
+            XElement root, 
+            out EDIDLink<T> item,
+            ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             if (Parse(root, out FormID id, errorMask))
@@ -158,7 +193,23 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public bool Parse<T>(XElement root, out EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public bool Parse<T>(
+            XElement root, 
+            out EDIDLink<T> item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : MajorRecord
+        {
+            return this.Parse(
+                root: root,
+                item: out item,
+                errorMask: errorMask);
+        }
+
+        public bool Parse<T>(
+            XElement root,
+            out EDIDSetLink<T> item,
+            ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
             if (Parse(root, out FormID id, errorMask))
@@ -168,6 +219,19 @@ namespace Mutagen.Bethesda
             }
             item = new EDIDSetLink<T>();
             return false;
+        }
+
+        public bool Parse<T>(
+            XElement root, 
+            out EDIDSetLink<T> item, 
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : MajorRecord
+        {
+            return this.Parse(
+                root: root,
+                item: out item,
+                errorMask: errorMask);
         }
 
         protected override bool ParseNonNullString(string str, out FormID value, ErrorMaskBuilder errorMask)

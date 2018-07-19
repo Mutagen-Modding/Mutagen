@@ -19,9 +19,16 @@ namespace Mutagen.Bethesda.Binary
     {
         public static readonly LoquiBinaryTranslation<T> Instance = new LoquiBinaryTranslation<T>();
         private static readonly ILoquiRegistration Registration = LoquiRegistration.GetRegister(typeof(T));
-        public delegate T CREATE_FUNC(MutagenFrame reader, RecordTypeConverter recordTypeConverter, ErrorMaskBuilder errorMask);
+        public delegate T CREATE_FUNC(
+            MutagenFrame reader, 
+            RecordTypeConverter recordTypeConverter, 
+            ErrorMaskBuilder errorMask);
         public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
-        public delegate void WRITE_FUNC(MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, ErrorMaskBuilder errorMask);
+        public delegate void WRITE_FUNC(
+            MutagenWriter writer,
+            T item,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask);
         public static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
 
         private IEnumerable<KeyValuePair<ushort, object>> EnumerateObjects(
@@ -73,8 +80,8 @@ namespace Mutagen.Bethesda.Binary
                 errorMask?.PushIndex(fieldIndex);
                 if (Parse(
                     frame,
-                    out T subItem,
-                    errorMask))
+                    item: out T subItem,
+                    errorMask: errorMask))
                 {
                     item.Item = subItem;
                 }
@@ -120,8 +127,8 @@ namespace Mutagen.Bethesda.Binary
                 if (Parse(
                     frame,
                     out T subItem,
-                    errorMask,
-                    recordTypeConverter))
+                    errorMask: errorMask,
+                    recordTypeConverter: recordTypeConverter))
                 {
                     item.Item = subItem;
                 }
@@ -179,6 +186,14 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new NotImplementedException();
             }
+        }
+
+        bool IBinaryTranslation<T>.Parse(MutagenFrame reader, out T item, ErrorMaskBuilder errorMask)
+        {
+            return this.Parse(
+                frame: reader,
+                item: out item,
+                errorMask: errorMask);
         }
 
         void IBinaryTranslation<T>.Write(MutagenWriter writer, T item, long length, ErrorMaskBuilder errorMask)
@@ -247,10 +262,10 @@ namespace Mutagen.Bethesda.Binary
         {
             if (!item.HasBeenSet) return;
             this.Write(
-                writer,
-                item.Item,
-                fieldIndex,
-                errorMask,
+                writer: writer,
+                item: item.Item,
+                fieldIndex: fieldIndex,
+                errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter);
         }
 
@@ -265,7 +280,7 @@ namespace Mutagen.Bethesda.Binary
                 writer,
                 item.Item,
                 fieldIndex,
-                errorMask,
+                errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter);
         }
         #endregion
