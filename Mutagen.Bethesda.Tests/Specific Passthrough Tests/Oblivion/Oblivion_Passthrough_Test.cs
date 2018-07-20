@@ -148,11 +148,11 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        protected virtual BinaryProcessorInstructions GetInstructions(
+        protected virtual BinaryFileProcessor.Config GetInstructions(
             Dictionary<long, uint> lengthTracker,
             MajorRecordLocator.FileLocations fileLocs)
         {
-            return new BinaryProcessorInstructions();
+            return new BinaryFileProcessor.Config();
         }
 
         #region Dynamic Processing
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream stream,
             FormID formID,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessNPC_Mismatch(
             BinaryReadStream stream,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             bool processing)
         {
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessCreature_Mismatch(
             BinaryReadStream stream,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             bool processing)
         {
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessLeveledItemDataFields(
             BinaryReadStream stream,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             bool processing)
         {
@@ -274,10 +274,9 @@ namespace Mutagen.Bethesda.Tests
             {
                 var index = str.IndexOf("LVLD");
                 index += 7;
-                var addition = new DataTarget()
-                {
-                    Location = index + loc.Min,
-                    Data = new byte[]
+                instr.SetAddition(
+                    loc: index + loc.Min,
+                    addition: new byte[]
                     {
                             (byte)'L',
                             (byte)'V',
@@ -286,9 +285,7 @@ namespace Mutagen.Bethesda.Tests
                             0x1,
                             0x0,
                             0x2
-                    }
-                };
-                instr.Additions.Add(addition);
+                    });
             }
             else
             {
@@ -300,27 +297,20 @@ namespace Mutagen.Bethesda.Tests
                 {
                     writer.Write((ushort)(existingLen - 7));
                 }
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = loc.Min + Constants.HEADER_LENGTH,
-                        Data = lenData
-                    });
+                instr.SetSubstitution(
+                    loc: loc.Min + Constants.HEADER_LENGTH,
+                    sub: lenData);
             }
 
             // Remove DATA
-            var move = new Move()
-            {
-                LocationToMove = long.MaxValue,
-                SectionToMove = new RangeInt64(dataIndex + loc.Min, dataIndex + loc.Min + 7 - 1)
-            };
-            instr.Moves.Add(move);
+            instr.SetRemove(
+                new RangeInt64(dataIndex + loc.Min, dataIndex + loc.Min + 7 - 1));
         }
 
         private void ProcessRegions(
             BinaryReadStream stream,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             bool processing)
         {
@@ -346,12 +336,9 @@ namespace Mutagen.Bethesda.Tests
             foreach (var item in rdats.Reverse())
             {
                 if (item.Key == (int)RegionData.RegionDataType.Icon) continue;
-                instr.Moves.Add(
-                    new Move()
-                    {
-                        LocationToMove = loc.Max + 1,
-                        SectionToMove = item.Value
-                    });
+                instr.SetMove(
+                    loc: loc.Max + 1,
+                    section: item.Value);
             }
 
             if (rdats.ContainsKey((int)RegionData.RegionDataType.Icon))
@@ -385,18 +372,11 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                instr.Additions.Add(
-                    new DataTarget()
-                    {
-                        Location = locToPlace,
-                        Data = memStream.ToArray()
-                    });
-                instr.Moves.Add(
-                    new Move()
-                    {
-                        LocationToMove = long.MaxValue,
-                        SectionToMove = iconLoc
-                    });
+                instr.SetAddition(
+                    loc: locToPlace,
+                    addition: memStream.ToArray());
+                instr.SetRemove(
+                    section: iconLoc);
             }
         }
 
@@ -406,7 +386,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream stream,
             FormID formID,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -427,20 +407,13 @@ namespace Mutagen.Bethesda.Tests
                     {
                         lengthTracker[loc.Min] = lengthTracker[loc.Min] - 4;
                         var removeStart = loc.Min + datIndex + 6 + 12;
-                        instr.Substitutions.Add(
-                            new DataTarget()
-                            {
-                                Location = loc.Min + datIndex + 4,
-                                Data = new byte[] { 12, 0 }
-                            });
-                        instr.Moves.Add(
-                            new Move()
-                            {
-                                SectionToMove = new RangeInt64(
-                                     removeStart,
-                                     removeStart + 3),
-                                LocationToMove = long.MaxValue,
-                            });
+                        instr.SetSubstitution(
+                            loc: loc.Min + datIndex + 4,
+                            sub: new byte[] { 12, 0 });
+                        instr.SetRemove(
+                            section: new RangeInt64(
+                                removeStart,
+                                removeStart + 3));
                         foreach (var k in fileLocs.GetContainingGroupLocations(formID))
                         {
                             lengthTracker[k] = lengthTracker[k] - 4;
@@ -457,20 +430,13 @@ namespace Mutagen.Bethesda.Tests
                     {
                         lengthTracker[loc.Min] = lengthTracker[loc.Min] - 3;
                         var removeStart = loc.Min + datIndex + 6 + 1;
-                        instr.Substitutions.Add(
-                            new DataTarget()
-                            {
-                                Location = loc.Min + datIndex + 4,
-                                Data = new byte[] { 1, 0 }
-                            });
-                        instr.Moves.Add(
-                            new Move()
-                            {
-                                SectionToMove = new RangeInt64(
-                                     removeStart,
-                                     removeStart + 2),
-                                LocationToMove = long.MaxValue,
-                            });
+                        instr.SetSubstitution(
+                            loc: loc.Min + datIndex + 4,
+                            sub: new byte[] { 1, 0 });
+                        instr.SetRemove(
+                            section: new RangeInt64(
+                                removeStart,
+                                removeStart + 2));
                         foreach (var k in fileLocs.GetContainingGroupLocations(formID))
                         {
                             lengthTracker[k] = lengthTracker[k] - 3;
@@ -480,43 +446,43 @@ namespace Mutagen.Bethesda.Tests
             }
             else
             {
-                var datIndex = str.IndexOf("DATA");
-                if (datIndex != -1)
-                {
-                    stream.Position = loc.Min + datIndex;
-                    stream.Position += 6;
-                    for (int i = 0; i < 6; i++)
-                    {
-                        var bytes = stream.ReadBytes(4);
-                        if (bytes.SequenceEqual(ZeroFloat))
-                        {
-                            instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
-                        }
-                    }
-                }
+                //var datIndex = str.IndexOf("DATA");
+                //if (datIndex != -1)
+                //{
+                //    stream.Position = loc.Min + datIndex;
+                //    stream.Position += 6;
+                //    for (int i = 0; i < 6; i++)
+                //    {
+                //        var bytes = stream.ReadBytes(4);
+                //        if (bytes.SequenceEqual(ZeroFloat))
+                //        {
+                //            instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
+                //        }
+                //    }
+                //}
 
-                datIndex = str.IndexOf("XLOC");
-                if (datIndex != -1)
-                {
-                    instr.IgnoreDifferenceSections.Add(
-                        new RangeInt64(
-                            loc.Min + datIndex + 7,
-                            loc.Min + datIndex + 9));
-                }
+                //datIndex = str.IndexOf("XLOC");
+                //if (datIndex != -1)
+                //{
+                //    instr.IgnoreDifferenceSections.Add(
+                //        new RangeInt64(
+                //            loc.Min + datIndex + 7,
+                //            loc.Min + datIndex + 9));
+                //}
 
-                datIndex = str.IndexOf("XTEL");
-                if (datIndex != -1)
-                {
-                    stream.Position = loc.Min + datIndex + 10;
-                    for (int i = 0; i < 6; i++)
-                    {
-                        var bytes = stream.ReadBytes(4);
-                        if (bytes.SequenceEqual(ZeroFloat))
-                        {
-                            instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
-                        }
-                    }
-                }
+                //datIndex = str.IndexOf("XTEL");
+                //if (datIndex != -1)
+                //{
+                //    stream.Position = loc.Min + datIndex + 10;
+                //    for (int i = 0; i < 6; i++)
+                //    {
+                //        var bytes = stream.ReadBytes(4);
+                //        if (bytes.SequenceEqual(ZeroFloat))
+                //        {
+                //            instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
+                //        }
+                //    }
+                //}
             }
         }
 
@@ -524,7 +490,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream stream,
             FormID formID,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -571,12 +537,8 @@ namespace Mutagen.Bethesda.Tests
             var parentGrups = fileLocs.GetContainingGroupLocations(formID);
             foreach (var move in moves)
             {
-                instr.Moves.Add(
-                    new Move()
-                    {
-                        LocationToMove = long.MaxValue,
-                        SectionToMove = move
-                    });
+                instr.SetRemove(
+                    section: move);
                 foreach (var parentGroup in parentGrups)
                 {
                     lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - move.Width);
@@ -586,12 +548,8 @@ namespace Mutagen.Bethesda.Tests
             if (lengthTracker[grupPos] == 0x14)
             {
                 var move = new RangeInt64(grupPos, grupPos + 0x13);
-                instr.Moves.Add(
-                    new Move()
-                    {
-                        LocationToMove = long.MaxValue,
-                        SectionToMove = move
-                    });
+                instr.SetRemove(
+                    section: move);
                 foreach (var parentGroup in parentGrups)
                 {
                     lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - move.Width);
@@ -603,7 +561,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream stream,
             FormID formID,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -623,12 +581,8 @@ namespace Mutagen.Bethesda.Tests
                 var grupLen = stream.ReadUInt32();
                 if (grupLen == 0x14)
                 {
-                    instr.Moves.Add(
-                        new Move()
-                        {
-                            SectionToMove = new RangeInt64(grupPos, grupPos + 0x14 - 1),
-                            LocationToMove = long.MaxValue
-                        });
+                    instr.SetRemove(
+                        section: new RangeInt64(grupPos, grupPos + 0x14 - 1));
 
                     foreach (var parentGroup in parentGrups)
                     {
@@ -642,7 +596,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream stream,
             FormID formID,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -657,18 +611,12 @@ namespace Mutagen.Bethesda.Tests
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
             {
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = dataIndex + loc.Min + 3,
-                        Data = new byte[] { (byte)'A', 0x18 }
-                    });
-                instr.Additions.Add(
-                    new DataTarget()
-                    {
-                        Data = new byte[4],
-                        Location = dataIndex + loc.Min + 0x1A
-                    });
+                instr.SetSubstitution(
+                    loc: dataIndex + loc.Min + 3,
+                    sub: new byte[] { (byte)'A', 0x18 });
+                instr.SetAddition(
+                    addition: new byte[4],
+                    loc: dataIndex + loc.Min + 0x1A);
                 foreach (var parentGroup in parentGrups)
                 {
                     lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + 4);
@@ -682,22 +630,15 @@ namespace Mutagen.Bethesda.Tests
                 stream.Position = loc.Min + dataIndex + 4;
                 var existingLen = stream.ReadUInt16();
                 var diff = existingLen - 0x14;
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = dataIndex + loc.Min + 3,
-                        Data = new byte[] { (byte)'R', 0x14 }
-                    });
+                instr.SetSubstitution(
+                    loc: dataIndex + loc.Min + 3,
+                    sub: new byte[] { (byte)'R', 0x14 });
                 if (diff == 0) continue;
                 var locToRemove = loc.Min + dataIndex + 6 + 0x14;
-                instr.Moves.Add(
-                    new Move()
-                    {
-                        SectionToMove = new RangeInt64(
-                             locToRemove,
-                             locToRemove + diff - 1),
-                        LocationToMove = long.MaxValue
-                    });
+                instr.SetRemove(
+                    section: new RangeInt64(
+                        locToRemove,
+                        locToRemove + diff - 1));
                 foreach (var parentGroup in parentGrups)
                 {
                     lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - diff);
@@ -715,12 +656,9 @@ namespace Mutagen.Bethesda.Tests
                 {
                     writer.Write((ushort)(existingLen + amount));
                 }
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = loc.Min + Constants.HEADER_LENGTH,
-                        Data = lenData
-                    });
+                instr.SetSubstitution(
+                    loc: loc.Min + Constants.HEADER_LENGTH,
+                    sub: lenData);
             }
         }
 
@@ -728,7 +666,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream stream,
             FormID formID,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -743,18 +681,12 @@ namespace Mutagen.Bethesda.Tests
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
             {
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = dataIndex + loc.Min + 3,
-                        Data = new byte[] { (byte)'A', 0x18 }
-                    });
-                instr.Additions.Add(
-                    new DataTarget()
-                    {
-                        Data = new byte[4],
-                        Location = dataIndex + loc.Min + 0x1A
-                    });
+                instr.SetSubstitution(
+                    loc: dataIndex + loc.Min + 3,
+                    sub: new byte[] { (byte)'A', 0x18 });
+                instr.SetAddition(
+                    addition: new byte[4],
+                    loc: dataIndex + loc.Min + 0x1A);
                 foreach (var parentGroup in parentGrups)
                 {
                     lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + 4);
@@ -772,12 +704,9 @@ namespace Mutagen.Bethesda.Tests
                 {
                     writer.Write((ushort)(existingLen + amount));
                 }
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = loc.Min + Constants.HEADER_LENGTH,
-                        Data = lenData
-                    });
+                instr.SetSubstitution(
+                    loc: loc.Min + Constants.HEADER_LENGTH,
+                    sub: lenData);
             }
         }
 
@@ -785,7 +714,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream stream,
             FormID formID,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -800,18 +729,12 @@ namespace Mutagen.Bethesda.Tests
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
             {
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = dataIndex + loc.Min + 3,
-                        Data = new byte[] { (byte)'A', 0x18 }
-                    });
-                instr.Additions.Add(
-                    new DataTarget()
-                    {
-                        Data = new byte[4],
-                        Location = dataIndex + loc.Min + 0x1A
-                    });
+                instr.SetSubstitution(
+                    loc: dataIndex + loc.Min + 3,
+                    sub: new byte[] { (byte)'A', 0x18 });
+                instr.SetAddition(
+                    addition: new byte[4],
+                    loc: dataIndex + loc.Min + 0x1A);
                 amount += 4;
             }
 
@@ -821,28 +744,19 @@ namespace Mutagen.Bethesda.Tests
                 var len = stream.ReadUInt16();
                 if (len == 4)
                 {
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Location = loc.Min + dataIndex + 4,
-                            Data = new byte[] { 0x8 }
-                        });
+                    instr.SetSubstitution(
+                        loc: loc.Min + dataIndex + 4,
+                        sub: new byte[] { 0x8 });
                     var first1 = stream.ReadUInt8();
                     var first2 = stream.ReadUInt8();
                     var second1 = stream.ReadUInt8();
                     var second2 = stream.ReadUInt8();
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Location = loc.Min + dataIndex + 6,
-                            Data = new byte[] { first1, first2, 0, 0 }
-                        });
-                    instr.Additions.Add(
-                        new DataTarget()
-                        {
-                            Location = loc.Min + dataIndex + 10,
-                            Data = new byte[] { second1, 0, 0, 0 }
-                        });
+                    instr.SetSubstitution(
+                        loc: loc.Min + dataIndex + 6,
+                        sub: new byte[] { first1, first2, 0, 0 });
+                    instr.SetAddition(
+                        loc: loc.Min + dataIndex + 10,
+                        addition: new byte[] { second1, 0, 0, 0 });
                     amount += 4;
                 }
             }
@@ -857,12 +771,9 @@ namespace Mutagen.Bethesda.Tests
                 {
                     writer.Write((ushort)(existingLen + amount));
                 }
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = loc.Min + Constants.HEADER_LENGTH,
-                        Data = lenData
-                    });
+                instr.SetSubstitution(
+                    loc: loc.Min + Constants.HEADER_LENGTH,
+                    sub: lenData);
                 foreach (var parentGroup in parentGrups)
                 {
                     lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + amount);
@@ -874,7 +785,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream stream,
             FormID formID,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -891,52 +802,34 @@ namespace Mutagen.Bethesda.Tests
             if (dataIndex != -1)
             {
                 var move = 2;
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Data = new byte[] { 0, 0 },
-                        Location = loc.Min + dataIndex + 6 + move
-                    });
+                instr.SetSubstitution(
+                    sub: new byte[] { 0, 0 },
+                    loc: loc.Min + dataIndex + 6 + move);
                 move = 38;
                 if (len < 2 + move) return;
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Data = new byte[] { 0, 0 },
-                        Location = loc.Min + dataIndex + 6 + move
-                    });
+                instr.SetSubstitution(
+                    sub: new byte[] { 0, 0 },
+                    loc: loc.Min + dataIndex + 6 + move);
                 move = 53;
                 if (len < 3 + move) return;
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Data = new byte[] { 0, 0, 0 },
-                        Location = loc.Min + dataIndex + 6 + 53
-                    });
+                instr.SetSubstitution(
+                    sub: new byte[] { 0, 0, 0 },
+                    loc: loc.Min + dataIndex + 6 + 53);
                 move = 69;
                 if (len < 3 + move) return;
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Data = new byte[] { 0, 0, 0 },
-                        Location = loc.Min + dataIndex + 6 + 69
-                    });
+                instr.SetSubstitution(
+                    sub: new byte[] { 0, 0, 0 },
+                    loc: loc.Min + dataIndex + 6 + 69);
                 move = 82;
                 if (len < 2 + move) return;
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Data = new byte[] { 0, 0 },
-                        Location = loc.Min + dataIndex + 6 + 82
-                    });
+                instr.SetSubstitution(
+                    sub: new byte[] { 0, 0 },
+                    loc: loc.Min + dataIndex + 6 + 82);
                 move = 113;
                 if (len < 3 + move) return;
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Data = new byte[] { 0, 0, 0 },
-                        Location = loc.Min + dataIndex + 6 + 113
-                    });
+                instr.SetSubstitution(
+                    sub: new byte[] { 0, 0, 0 },
+                    loc: loc.Min + dataIndex + 6 + 113);
             }
         }
 
@@ -944,7 +837,7 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream stream,
             FormID formID,
             Type recType,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             MajorRecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
@@ -964,89 +857,58 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (len == 0x02)
                 {
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Location = loc.Min + dataIndex + Constants.HEADER_LENGTH,
-                            Data = new byte[] { 0, 0 }
-                        });
-                    instr.Moves.Add(
-                        new Move()
-                        {
-                            SectionToMove = RangeInt64.FactoryFromLength(
-                                loc: loc.Min + dataIndex + 6,
-                                length: 2),
-                            LocationToMove = long.MaxValue
-                        });
+                    instr.SetSubstitution(
+                        loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                        sub: new byte[] { 0, 0 });
+                    instr.SetRemove(
+                        section: RangeInt64.FactoryFromLength(
+                            loc: loc.Min + dataIndex + 6,
+                            length: 2));
                     amount -= 2;
                 }
 
                 if (len == 0x56)
                 {
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Location = loc.Min + dataIndex + Constants.HEADER_LENGTH,
-                            Data = new byte[] { 0x54, 0 }
-                        });
-                    instr.Moves.Add(
-                        new Move()
-                        {
-                            SectionToMove = RangeInt64.FactoryFromLength(
-                                loc: loc.Min + dataIndex + 6 + 0x54,
-                                length: 2),
-                            LocationToMove = long.MaxValue
-                        });
+                    instr.SetSubstitution(
+                        loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                        sub: new byte[] { 0x54, 0 });
+                    instr.SetRemove(
+                        section: RangeInt64.FactoryFromLength(
+                            loc: loc.Min + dataIndex + 6 + 0x54,
+                            length: 2));
                     amount -= 2;
                 }
 
                 if (len == 0x2A)
                 {
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Location = loc.Min + dataIndex + Constants.HEADER_LENGTH,
-                            Data = new byte[] { 0x28, 0 }
-                        });
-                    instr.Moves.Add(
-                        new Move()
-                        {
-                            SectionToMove = RangeInt64.FactoryFromLength(
-                                loc: loc.Min + dataIndex + 6 + 0x28,
-                                length: 2),
-                            LocationToMove = long.MaxValue
-                        });
+                    instr.SetSubstitution(
+                        loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                        sub: new byte[] { 0x28, 0 });
+                    instr.SetRemove(
+                        section: RangeInt64.FactoryFromLength(
+                            loc: loc.Min + dataIndex + 6 + 0x28,
+                            length: 2));
                     amount -= 2;
                 }
 
                 if (len == 0x3E)
                 {
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Location = loc.Min + dataIndex + Constants.HEADER_LENGTH,
-                            Data = new byte[] { 0x3C, 0 }
-                        });
-                    instr.Moves.Add(
-                        new Move()
-                        {
-                            SectionToMove = RangeInt64.FactoryFromLength(
-                                loc: loc.Min + dataIndex + 6 + 0x3C,
-                                length: 2),
-                            LocationToMove = long.MaxValue
-                        });
+                    instr.SetSubstitution(
+                        loc: loc.Min + dataIndex + Constants.HEADER_LENGTH,
+                        sub: new byte[] { 0x3C, 0 });
+                    instr.SetRemove(
+                        section: RangeInt64.FactoryFromLength(
+                            loc: loc.Min + dataIndex + 6 + 0x3C,
+                            length: 2));
                     amount -= 2;
                 }
 
                 var move = 0x39;
                 if (len >= 3 + move)
                 {
-                    instr.Substitutions.Add(
-                        new DataTarget()
-                        {
-                            Data = new byte[] { 0, 0, 0 },
-                            Location = loc.Min + dataIndex + 6 + move
-                        });
+                    instr.SetSubstitution(
+                        sub: new byte[] { 0, 0, 0 },
+                        loc: loc.Min + dataIndex + 6 + move);
                 }
             }
 
@@ -1060,12 +922,9 @@ namespace Mutagen.Bethesda.Tests
                 {
                     writer.Write((ushort)(existingLen + amount));
                 }
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = loc.Min + Constants.HEADER_LENGTH,
-                        Data = lenData
-                    });
+                instr.SetSubstitution(
+                    loc: loc.Min + Constants.HEADER_LENGTH,
+                    sub: lenData);
                 foreach (var parentGroup in parentGrups)
                 {
                     lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + amount);
@@ -1075,7 +934,7 @@ namespace Mutagen.Bethesda.Tests
 
         private bool DynamicMove(
             string str,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             IEnumerable<RecordType> offendingIndices,
             IEnumerable<RecordType> offendingLimits,
@@ -1108,12 +967,9 @@ namespace Mutagen.Bethesda.Tests
                 {
                     throw new ArgumentException();
                 }
-                instr.Moves.Add(
-                    new Move()
-                    {
-                        SectionToMove = new RangeInt64(offender, limit - 1),
-                        LocationToMove = locToMove
-                    });
+                instr.SetMove(
+                    section: new RangeInt64(offender, limit - 1),
+                    loc: locToMove);
                 return true;
             }
             return false;
@@ -1121,7 +977,7 @@ namespace Mutagen.Bethesda.Tests
 
         private void AlignRecords(
             BinaryReadStream stream,
-            Instruction instr,
+            BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             IEnumerable<RecordType> rectypes)
         {
@@ -1164,12 +1020,9 @@ namespace Mutagen.Bethesda.Tests
                 {
                     data[index] = bytes[item.loc + index];
                 }
-                instr.Substitutions.Add(
-                    new DataTarget()
-                    {
-                        Location = start + loc.Min,
-                        Data = data
-                    });
+                instr.SetSubstitution(
+                    loc: start + loc.Min,
+                    sub: data);
                 start += len;
             }
         }
@@ -1224,7 +1077,7 @@ namespace Mutagen.Bethesda.Tests
                         temp: tmp);
                 }
 
-                BinaryProcessorInstructions instructions;
+                BinaryFileProcessor.Config instructions;
                 if (!reuseOld || !File.Exists(processedPath))
                 {
                     var alignedFileLocs = MajorRecordLocator.GetFileLocations(
@@ -1255,7 +1108,7 @@ namespace Mutagen.Bethesda.Tests
                                     stream: stream,
                                     formID: id,
                                     recType: recType.Key,
-                                    instr: instructions.Instruction,
+                                    instr: instructions,
                                     loc: alignedFileLocs[id],
                                     fileLocs: alignedFileLocs,
                                     lengthTracker: lengthTracker,
@@ -1270,19 +1123,15 @@ namespace Mutagen.Bethesda.Tests
                         {
                             reader.Position = grup.Key + 4;
                             if (grup.Value == reader.ReadUInt32()) continue;
-                            instructions.Instruction.Substitutions.Add(
-                                new DataTarget()
-                                {
-                                    Location = grup.Key + 4,
-                                    Data = BitConverter.GetBytes(grup.Value)
-                                });
+                            instructions.SetSubstitution(
+                                loc: grup.Key + 4,
+                                sub: BitConverter.GetBytes(grup.Value));
                         }
                     }
-
-                    var binConfig = instructions.Instruction.ToProcessorConfig();
+                    
                     using (var processor = new BinaryFileProcessor(
                         new FileStream(alignedPath, FileMode.Open, FileAccess.Read),
-                        binConfig))
+                        instructions))
                     {
                         using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
                         {
@@ -1291,7 +1140,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                instructions = new BinaryProcessorInstructions();
+                instructions = new BinaryFileProcessor.Config();
                 var processedFileLocs = MajorRecordLocator.GetFileLocations(
                     processedPath);
                 using (var stream = new BinaryReadStream(processedPath))
@@ -1304,7 +1153,7 @@ namespace Mutagen.Bethesda.Tests
                                 stream: stream,
                                 formID: id,
                                 recType: recType.Key,
-                                instr: instructions.Instruction,
+                                instr: instructions,
                                 loc: processedFileLocs[id],
                                 fileLocs: processedFileLocs,
                                 lengthTracker: null,
@@ -1318,9 +1167,6 @@ namespace Mutagen.Bethesda.Tests
                     var ret = Passthrough_Tests.AssertFilesEqual(
                         stream,
                         outputPath,
-                        ignoreList: new RangeCollection(instructions.Instruction.IgnoreDifferenceSections),
-                        sourceSkips: new RangeCollection(instructions.Instruction.SkipSourceSections),
-                        targetSkips: new RangeCollection(instructions.Instruction.SkipOutputSections),
                         amountToReport: 15);
                     if (ret.Exception != null)
                     {

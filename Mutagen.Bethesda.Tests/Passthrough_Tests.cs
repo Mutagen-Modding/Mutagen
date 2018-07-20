@@ -22,19 +22,11 @@ namespace Mutagen.Bethesda.Tests
             Stream stream,
             string path2,
             RangeCollection ignoreList = null,
-            RangeCollection sourceSkips = null,
-            RangeCollection targetSkips = null,
             ushort amountToReport = 5)
         {
             List<RangeInt32> errorRanges = new List<RangeInt32>();
             using (var reader2 = new BinaryReadStream(path2))
             {
-                if (!sourceSkips.Empty
-                    || !targetSkips.Empty)
-                {
-                    throw new NotImplementedException("Need to implement skip section stream");
-                }
-
                 Stream compareStream = new ComparisonStream(
                     stream,
                     reader2);
