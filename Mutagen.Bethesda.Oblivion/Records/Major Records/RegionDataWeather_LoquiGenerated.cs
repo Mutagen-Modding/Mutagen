@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Weathers,
                     fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)RegionDataWeather_FieldIndex.Weathers),
+                    translationMask: translationMask?.GetSubCrystal((int)RegionDataWeather_FieldIndex.Weathers),
                     transl: (XElement subNode, WeatherChance subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<WeatherChance>.Instance.Write(

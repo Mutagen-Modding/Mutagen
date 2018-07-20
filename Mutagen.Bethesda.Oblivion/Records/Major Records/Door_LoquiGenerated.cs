@@ -2773,7 +2773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script?.FormID,
+                    item: item.Script_Property?.FormID,
                     fieldIndex: (int)Door_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2783,7 +2783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.OpenSound),
-                    item: item.OpenSound?.FormID,
+                    item: item.OpenSound_Property?.FormID,
                     fieldIndex: (int)Door_FieldIndex.OpenSound,
                     errorMask: errorMask);
             }
@@ -2793,7 +2793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.CloseSound),
-                    item: item.CloseSound?.FormID,
+                    item: item.CloseSound_Property?.FormID,
                     fieldIndex: (int)Door_FieldIndex.CloseSound,
                     errorMask: errorMask);
             }
@@ -2803,7 +2803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.LoopSound),
-                    item: item.LoopSound?.FormID,
+                    item: item.LoopSound_Property?.FormID,
                     fieldIndex: (int)Door_FieldIndex.LoopSound,
                     errorMask: errorMask);
             }
@@ -2826,7 +2826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.RandomTeleportDestinations,
                     fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Door_FieldIndex.RandomTeleportDestinations),
+                    translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.RandomTeleportDestinations),
                     transl: (XElement subNode, FormIDSetLink<Worldspace> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(

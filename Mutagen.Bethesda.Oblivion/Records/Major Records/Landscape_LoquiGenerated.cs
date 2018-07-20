@@ -2583,7 +2583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Layers,
                     fieldIndex: (int)Landscape_FieldIndex.Layers,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Landscape_FieldIndex.Layers),
+                    translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Layers),
                     transl: (XElement subNode, BaseLayer subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<BaseLayer>.Instance.Write(
@@ -2604,7 +2604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Textures,
                     fieldIndex: (int)Landscape_FieldIndex.Textures,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Landscape_FieldIndex.Textures),
+                    translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Textures),
                     transl: (XElement subNode, FormIDLink<LandTexture> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(

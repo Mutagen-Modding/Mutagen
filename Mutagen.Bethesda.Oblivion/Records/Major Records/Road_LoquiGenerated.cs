@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Points,
                     fieldIndex: (int)Road_FieldIndex.Points,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Road_FieldIndex.Points),
+                    translationMask: translationMask?.GetSubCrystal((int)Road_FieldIndex.Points),
                     transl: (XElement subNode, RoadPoint subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<RoadPoint>.Instance.Write(

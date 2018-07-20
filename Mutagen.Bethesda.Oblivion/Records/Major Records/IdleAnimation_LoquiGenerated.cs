@@ -2214,7 +2214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Conditions,
                     fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)IdleAnimation_FieldIndex.Conditions),
+                    translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Conditions),
                     transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Condition>.Instance.Write(
@@ -2245,7 +2245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.RelatedIdleAnimations,
                     fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdleAnimations,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)IdleAnimation_FieldIndex.RelatedIdleAnimations),
+                    translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.RelatedIdleAnimations),
                     transl: (XElement subNode, FormIDLink<IdleAnimation> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(

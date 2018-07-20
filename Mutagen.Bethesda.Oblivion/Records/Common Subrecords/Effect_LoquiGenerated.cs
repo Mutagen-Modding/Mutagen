@@ -2934,7 +2934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MagicEffect),
-                    item: item.MagicEffect?.FormID,
+                    item: item.MagicEffect_Property?.FormID,
                     fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                     errorMask: errorMask);
             }

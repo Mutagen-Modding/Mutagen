@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Sound),
-                    item: item.Sound?.FormID,
+                    item: item.Sound_Property?.FormID,
                     fieldIndex: (int)RegionSound_FieldIndex.Sound,
                     errorMask: errorMask);
             }

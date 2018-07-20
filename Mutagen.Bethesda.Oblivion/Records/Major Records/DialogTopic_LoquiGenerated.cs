@@ -2216,7 +2216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Quests,
                     fieldIndex: (int)DialogTopic_FieldIndex.Quests,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)DialogTopic_FieldIndex.Quests),
+                    translationMask: translationMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Quests),
                     transl: (XElement subNode, FormIDSetLink<Quest> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
@@ -2256,7 +2256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Items,
                     fieldIndex: (int)DialogTopic_FieldIndex.Items,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)DialogTopic_FieldIndex.Items),
+                    translationMask: translationMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Items),
                     transl: (XElement subNode, DialogItem subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<DialogItem>.Instance.Write(

@@ -3461,7 +3461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PrimaryAttributes,
                     fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Class_FieldIndex.PrimaryAttributes),
+                    translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.PrimaryAttributes),
                     transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         EnumXmlTranslation<ActorValue>.Instance.Write(
@@ -3489,7 +3489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.SecondaryAttributes,
                     fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Class_FieldIndex.SecondaryAttributes),
+                    translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.SecondaryAttributes),
                     transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         EnumXmlTranslation<ActorValue>.Instance.Write(

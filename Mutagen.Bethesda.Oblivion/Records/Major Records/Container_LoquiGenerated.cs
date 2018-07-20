@@ -2993,7 +2993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script?.FormID,
+                    item: item.Script_Property?.FormID,
                     fieldIndex: (int)Container_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -3006,7 +3006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Items,
                     fieldIndex: (int)Container_FieldIndex.Items,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Container_FieldIndex.Items),
+                    translationMask: translationMask?.GetSubCrystal((int)Container_FieldIndex.Items),
                     transl: (XElement subNode, ContainerItem subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<ContainerItem>.Instance.Write(
@@ -3042,7 +3042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.OpenSound),
-                    item: item.OpenSound?.FormID,
+                    item: item.OpenSound_Property?.FormID,
                     fieldIndex: (int)Container_FieldIndex.OpenSound,
                     errorMask: errorMask);
             }
@@ -3052,7 +3052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.CloseSound),
-                    item: item.CloseSound?.FormID,
+                    item: item.CloseSound_Property?.FormID,
                     fieldIndex: (int)Container_FieldIndex.CloseSound,
                     errorMask: errorMask);
             }

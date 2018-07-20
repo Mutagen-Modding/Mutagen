@@ -2414,7 +2414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Conditions,
                     fieldIndex: (int)LogEntry_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)LogEntry_FieldIndex.Conditions),
+                    translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions),
                     transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Condition>.Instance.Write(

@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Sounds,
                     fieldIndex: (int)CreatureSound_FieldIndex.Sounds,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)CreatureSound_FieldIndex.Sounds),
+                    translationMask: translationMask?.GetSubCrystal((int)CreatureSound_FieldIndex.Sounds),
                     transl: (XElement subNode, SoundItem subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<SoundItem>.Instance.Write(

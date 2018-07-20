@@ -2228,7 +2228,7 @@ namespace Mutagen.Bethesda.Internals
                     item: item.Items,
                     fieldIndex: (int)ListGroup_FieldIndex.Items,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)ListGroup_FieldIndex.Items),
+                    translationMask: translationMask?.GetSubCrystal((int)ListGroup_FieldIndex.Items),
                     transl: (XElement subNode, T subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<T>.Instance.Write(

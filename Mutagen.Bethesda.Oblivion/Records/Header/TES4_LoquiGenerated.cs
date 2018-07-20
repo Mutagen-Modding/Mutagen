@@ -3016,7 +3016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.MasterReferences,
                     fieldIndex: (int)TES4_FieldIndex.MasterReferences,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)TES4_FieldIndex.MasterReferences),
+                    translationMask: translationMask?.GetSubCrystal((int)TES4_FieldIndex.MasterReferences),
                     transl: (XElement subNode, MasterReference subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<MasterReference>.Instance.Write(

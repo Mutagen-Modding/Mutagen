@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Item),
-                    item: item.Item?.FormID,
+                    item: item.Item_Property?.FormID,
                     fieldIndex: (int)ItemEntry_FieldIndex.Item,
                     errorMask: errorMask);
             }

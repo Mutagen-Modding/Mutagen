@@ -4782,7 +4782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Parent),
-                    item: item.Parent?.FormID,
+                    item: item.Parent_Property?.FormID,
                     fieldIndex: (int)Worldspace_FieldIndex.Parent,
                     errorMask: errorMask);
             }
@@ -4792,7 +4792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Climate),
-                    item: item.Climate?.FormID,
+                    item: item.Climate_Property?.FormID,
                     fieldIndex: (int)Worldspace_FieldIndex.Climate,
                     errorMask: errorMask);
             }
@@ -4802,7 +4802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Water),
-                    item: item.Water?.FormID,
+                    item: item.Water_Property?.FormID,
                     fieldIndex: (int)Worldspace_FieldIndex.Water,
                     errorMask: errorMask);
             }
@@ -4908,7 +4908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.SubCells,
                     fieldIndex: (int)Worldspace_FieldIndex.SubCells,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Worldspace_FieldIndex.SubCells),
+                    translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells),
                     transl: (XElement subNode, WorldspaceBlock subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<WorldspaceBlock>.Instance.Write(

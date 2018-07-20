@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Direct),
-                    item: item.Direct?.FormID,
+                    item: item.Direct_Property?.FormID,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                     errorMask: errorMask);
             }
@@ -1668,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Indirect),
-                    item: item.Indirect?.FormID,
+                    item: item.Indirect_Property?.FormID,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
                     errorMask: errorMask);
             }

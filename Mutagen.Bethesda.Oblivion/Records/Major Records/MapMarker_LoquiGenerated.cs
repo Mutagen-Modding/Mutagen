@@ -2043,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Types,
                     fieldIndex: (int)MapMarker_FieldIndex.Types,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)MapMarker_FieldIndex.Types),
+                    translationMask: translationMask?.GetSubCrystal((int)MapMarker_FieldIndex.Types),
                     transl: (XElement subNode, MapMarker.Type subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         EnumXmlTranslation<MapMarker.Type>.Instance.Write(

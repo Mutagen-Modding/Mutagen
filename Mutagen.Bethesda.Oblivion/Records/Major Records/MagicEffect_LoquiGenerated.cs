@@ -5018,7 +5018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Light),
-                    item: item.Light?.FormID,
+                    item: item.Light_Property?.FormID,
                     fieldIndex: (int)MagicEffect_FieldIndex.Light,
                     errorMask: errorMask);
             }
@@ -5036,7 +5036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.EffectShader),
-                    item: item.EffectShader?.FormID,
+                    item: item.EffectShader_Property?.FormID,
                     fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                     errorMask: errorMask);
             }
@@ -5059,7 +5059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.CounterEffects,
                     fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)MagicEffect_FieldIndex.CounterEffects),
+                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.CounterEffects),
                     transl: (XElement subNode, EDIDLink<MagicEffect> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(

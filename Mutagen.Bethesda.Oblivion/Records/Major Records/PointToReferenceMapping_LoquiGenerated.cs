@@ -1392,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Reference),
-                    item: item.Reference?.FormID,
+                    item: item.Reference_Property?.FormID,
                     fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
                     errorMask: errorMask);
             }
@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Points,
                     fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)PointToReferenceMapping_FieldIndex.Points),
+                    translationMask: translationMask?.GetSubCrystal((int)PointToReferenceMapping_FieldIndex.Points),
                     transl: (XElement subNode, Int16 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         Int16XmlTranslation.Instance.Write(

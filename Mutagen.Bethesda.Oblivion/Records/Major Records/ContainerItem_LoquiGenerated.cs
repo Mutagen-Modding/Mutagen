@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Item),
-                    item: item.Item?.FormID,
+                    item: item.Item_Property?.FormID,
                     fieldIndex: (int)ContainerItem_FieldIndex.Item,
                     errorMask: errorMask);
             }

@@ -2080,7 +2080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.EnchantEffect),
-                    item: item.EnchantEffect?.FormID,
+                    item: item.EnchantEffect_Property?.FormID,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                     errorMask: errorMask);
             }
@@ -2089,7 +2089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.CastingSound),
-                    item: item.CastingSound?.FormID,
+                    item: item.CastingSound_Property?.FormID,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                     errorMask: errorMask);
             }
@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BoltSound),
-                    item: item.BoltSound?.FormID,
+                    item: item.BoltSound_Property?.FormID,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                     errorMask: errorMask);
             }
@@ -2107,7 +2107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.HitSound),
-                    item: item.HitSound?.FormID,
+                    item: item.HitSound_Property?.FormID,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                     errorMask: errorMask);
             }
@@ -2116,7 +2116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AreaSound),
-                    item: item.AreaSound?.FormID,
+                    item: item.AreaSound_Property?.FormID,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
                     errorMask: errorMask);
             }

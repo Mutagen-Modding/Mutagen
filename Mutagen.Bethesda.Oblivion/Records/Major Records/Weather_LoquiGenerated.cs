@@ -8417,7 +8417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.WeatherTypes,
                     fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Weather_FieldIndex.WeatherTypes),
+                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.WeatherTypes),
                     transl: (XElement subNode, WeatherType subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<WeatherType>.Instance.Write(
@@ -8717,7 +8717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Sounds,
                     fieldIndex: (int)Weather_FieldIndex.Sounds,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Weather_FieldIndex.Sounds),
+                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Sounds),
                     transl: (XElement subNode, WeatherSound subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<WeatherSound>.Instance.Write(

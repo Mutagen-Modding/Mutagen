@@ -2221,7 +2221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Items,
                     fieldIndex: (int)CellBlock_FieldIndex.Items,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)CellBlock_FieldIndex.Items),
+                    translationMask: translationMask?.GetSubCrystal((int)CellBlock_FieldIndex.Items),
                     transl: (XElement subNode, CellSubBlock subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<CellSubBlock>.Instance.Write(

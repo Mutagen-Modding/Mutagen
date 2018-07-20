@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Target),
-                    item: item.Target?.FormID,
+                    item: item.Target_Property?.FormID,
                     fieldIndex: (int)QuestTarget_FieldIndex.Target,
                     errorMask: errorMask);
             }
@@ -1819,7 +1819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Conditions,
                     fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)QuestTarget_FieldIndex.Conditions),
+                    translationMask: translationMask?.GetSubCrystal((int)QuestTarget_FieldIndex.Conditions),
                     transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Condition>.Instance.Write(

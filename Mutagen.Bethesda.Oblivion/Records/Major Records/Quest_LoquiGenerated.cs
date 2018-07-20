@@ -2985,7 +2985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script?.FormID,
+                    item: item.Script_Property?.FormID,
                     fieldIndex: (int)Quest_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -3036,7 +3036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Conditions,
                     fieldIndex: (int)Quest_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Quest_FieldIndex.Conditions),
+                    translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Conditions),
                     transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Condition>.Instance.Write(
@@ -3057,7 +3057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Stages,
                     fieldIndex: (int)Quest_FieldIndex.Stages,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Quest_FieldIndex.Stages),
+                    translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Stages),
                     transl: (XElement subNode, QuestStage subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<QuestStage>.Instance.Write(
@@ -3078,7 +3078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Targets,
                     fieldIndex: (int)Quest_FieldIndex.Targets,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Quest_FieldIndex.Targets),
+                    translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Targets),
                     transl: (XElement subNode, QuestTarget subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<QuestTarget>.Instance.Write(

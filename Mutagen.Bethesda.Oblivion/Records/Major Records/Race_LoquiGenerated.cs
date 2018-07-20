@@ -6939,7 +6939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Spells,
                     fieldIndex: (int)Race_FieldIndex.Spells,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Race_FieldIndex.Spells),
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Spells),
                     transl: (XElement subNode, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
@@ -6959,7 +6959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Relations,
                     fieldIndex: (int)Race_FieldIndex.Relations,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Race_FieldIndex.Relations),
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Relations),
                     transl: (XElement subNode, Relation subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Relation>.Instance.Write(
@@ -6979,7 +6979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.SkillBoosts,
                     fieldIndex: (int)Race_FieldIndex.SkillBoosts,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Race_FieldIndex.SkillBoosts),
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoosts),
                     transl: (XElement subNode, SkillBoost subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<SkillBoost>.Instance.Write(
@@ -7117,7 +7117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.FaceData,
                     fieldIndex: (int)Race_FieldIndex.FaceData,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Race_FieldIndex.FaceData),
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceData),
                     transl: (XElement subNode, FacePart subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<FacePart>.Instance.Write(
@@ -7149,7 +7149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Hairs,
                     fieldIndex: (int)Race_FieldIndex.Hairs,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Race_FieldIndex.Hairs),
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Hairs),
                     transl: (XElement subNode, FormIDLink<Hair> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
@@ -7169,7 +7169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Eyes,
                     fieldIndex: (int)Race_FieldIndex.Eyes,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Race_FieldIndex.Eyes),
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Eyes),
                     transl: (XElement subNode, FormIDLink<Eye> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(

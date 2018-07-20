@@ -1763,7 +1763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.BodyParts,
                     fieldIndex: (int)BodyData_FieldIndex.BodyParts,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)BodyData_FieldIndex.BodyParts),
+                    translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.BodyParts),
                     transl: (XElement subNode, BodyPart subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<BodyPart>.Instance.Write(

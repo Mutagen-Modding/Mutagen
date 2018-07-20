@@ -1883,7 +1883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.LocationReference),
-                    item: item.LocationReference?.FormID,
+                    item: item.LocationReference_Property?.FormID,
                     fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
                     errorMask: errorMask);
             }

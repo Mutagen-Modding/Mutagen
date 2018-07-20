@@ -3189,7 +3189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Quest),
-                    item: item.Quest?.FormID,
+                    item: item.Quest_Property?.FormID,
                     fieldIndex: (int)DialogItem_FieldIndex.Quest,
                     errorMask: errorMask);
             }
@@ -3199,7 +3199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PreviousTopic),
-                    item: item.PreviousTopic?.FormID,
+                    item: item.PreviousTopic_Property?.FormID,
                     fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
                     errorMask: errorMask);
             }
@@ -3212,7 +3212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Topics,
                     fieldIndex: (int)DialogItem_FieldIndex.Topics,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)DialogItem_FieldIndex.Topics),
+                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Topics),
                     transl: (XElement subNode, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
@@ -3232,7 +3232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Responses,
                     fieldIndex: (int)DialogItem_FieldIndex.Responses,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)DialogItem_FieldIndex.Responses),
+                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Responses),
                     transl: (XElement subNode, DialogResponse subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<DialogResponse>.Instance.Write(
@@ -3253,7 +3253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Conditions,
                     fieldIndex: (int)DialogItem_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)DialogItem_FieldIndex.Conditions),
+                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Conditions),
                     transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Condition>.Instance.Write(
@@ -3274,7 +3274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Choices,
                     fieldIndex: (int)DialogItem_FieldIndex.Choices,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)DialogItem_FieldIndex.Choices),
+                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Choices),
                     transl: (XElement subNode, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
@@ -3294,7 +3294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.LinkFrom,
                     fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)DialogItem_FieldIndex.LinkFrom),
+                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.LinkFrom),
                     transl: (XElement subNode, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(

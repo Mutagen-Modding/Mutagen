@@ -2714,7 +2714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Effects,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)SpellUnleveled_FieldIndex.Effects),
+                    translationMask: translationMask?.GetSubCrystal((int)SpellUnleveled_FieldIndex.Effects),
                     transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Effect>.Instance.Write(

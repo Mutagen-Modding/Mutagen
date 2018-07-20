@@ -1931,7 +1931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Locations,
                     fieldIndex: (int)LoadScreen_FieldIndex.Locations,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)LoadScreen_FieldIndex.Locations),
+                    translationMask: translationMask?.GetSubCrystal((int)LoadScreen_FieldIndex.Locations),
                     transl: (XElement subNode, LoadScreenLocation subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<LoadScreenLocation>.Instance.Write(

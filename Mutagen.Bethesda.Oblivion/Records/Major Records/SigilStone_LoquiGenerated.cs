@@ -3291,7 +3291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script?.FormID,
+                    item: item.Script_Property?.FormID,
                     fieldIndex: (int)SigilStone_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -3304,7 +3304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Effects,
                     fieldIndex: (int)SigilStone_FieldIndex.Effects,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)SigilStone_FieldIndex.Effects),
+                    translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Effects),
                     transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Effect>.Instance.Write(

@@ -2318,7 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Entries,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries),
+                    translationMask: translationMask?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries),
                     transl: (XElement subNode, LeveledEntry<NPCSpawn> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<LeveledEntry<NPCSpawn>>.Instance.Write(
@@ -2336,7 +2336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script?.FormID,
+                    item: item.Script_Property?.FormID,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2346,7 +2346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Template),
-                    item: item.Template?.FormID,
+                    item: item.Template_Property?.FormID,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                     errorMask: errorMask);
             }

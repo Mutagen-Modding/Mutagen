@@ -1750,7 +1750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Door),
-                    item: item.Door?.FormID,
+                    item: item.Door_Property?.FormID,
                     fieldIndex: (int)TeleportDestination_FieldIndex.Door,
                     errorMask: errorMask);
             }

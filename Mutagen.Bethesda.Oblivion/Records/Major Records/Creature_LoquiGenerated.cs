@@ -11327,7 +11327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Items,
                     fieldIndex: (int)Creature_FieldIndex.Items,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Creature_FieldIndex.Items),
+                    translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Items),
                     transl: (XElement subNode, ItemEntry subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<ItemEntry>.Instance.Write(
@@ -11348,7 +11348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Spells,
                     fieldIndex: (int)Creature_FieldIndex.Spells,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Creature_FieldIndex.Spells),
+                    translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Spells),
                     transl: (XElement subNode, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
@@ -11368,7 +11368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Models,
                     fieldIndex: (int)Creature_FieldIndex.Models,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Creature_FieldIndex.Models),
+                    translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Models),
                     transl: (XElement subNode, String subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         StringXmlTranslation.Instance.Write(
@@ -11461,7 +11461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Factions,
                     fieldIndex: (int)Creature_FieldIndex.Factions,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Creature_FieldIndex.Factions),
+                    translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Factions),
                     transl: (XElement subNode, RankPlacement subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<RankPlacement>.Instance.Write(
@@ -11479,7 +11479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DeathItem),
-                    item: item.DeathItem?.FormID,
+                    item: item.DeathItem_Property?.FormID,
                     fieldIndex: (int)Creature_FieldIndex.DeathItem,
                     errorMask: errorMask);
             }
@@ -11489,7 +11489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script?.FormID,
+                    item: item.Script_Property?.FormID,
                     fieldIndex: (int)Creature_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -11565,7 +11565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.AIPackages,
                     fieldIndex: (int)Creature_FieldIndex.AIPackages,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Creature_FieldIndex.AIPackages),
+                    translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.AIPackages),
                     transl: (XElement subNode, FormIDSetLink<AIPackage> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
@@ -11585,7 +11585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Animations,
                     fieldIndex: (int)Creature_FieldIndex.Animations,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Creature_FieldIndex.Animations),
+                    translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Animations),
                     transl: (XElement subNode, String subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         StringXmlTranslation.Instance.Write(
@@ -11747,7 +11747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.CombatStyle),
-                    item: item.CombatStyle?.FormID,
+                    item: item.CombatStyle_Property?.FormID,
                     fieldIndex: (int)Creature_FieldIndex.CombatStyle,
                     errorMask: errorMask);
             }
@@ -11807,7 +11807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.InheritsSoundFrom),
-                    item: item.InheritsSoundFrom?.FormID,
+                    item: item.InheritsSoundFrom_Property?.FormID,
                     fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
                     errorMask: errorMask);
             }
@@ -11820,7 +11820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Sounds,
                     fieldIndex: (int)Creature_FieldIndex.Sounds,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Creature_FieldIndex.Sounds),
+                    translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Sounds),
                     transl: (XElement subNode, CreatureSound subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<CreatureSound>.Instance.Write(

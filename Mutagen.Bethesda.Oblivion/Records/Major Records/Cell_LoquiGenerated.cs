@@ -5315,7 +5315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Regions,
                     fieldIndex: (int)Cell_FieldIndex.Regions,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Cell_FieldIndex.Regions),
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Regions),
                     transl: (XElement subNode, FormIDLink<Region> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
@@ -5352,7 +5352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Climate),
-                    item: item.Climate?.FormID,
+                    item: item.Climate_Property?.FormID,
                     fieldIndex: (int)Cell_FieldIndex.Climate,
                     errorMask: errorMask);
             }
@@ -5362,7 +5362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Water),
-                    item: item.Water?.FormID,
+                    item: item.Water_Property?.FormID,
                     fieldIndex: (int)Cell_FieldIndex.Water,
                     errorMask: errorMask);
             }
@@ -5372,7 +5372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Owner),
-                    item: item.Owner?.FormID,
+                    item: item.Owner_Property?.FormID,
                     fieldIndex: (int)Cell_FieldIndex.Owner,
                     errorMask: errorMask);
             }
@@ -5392,7 +5392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable?.FormID,
+                    item: item.GlobalVariable_Property?.FormID,
                     fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }
@@ -5427,7 +5427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Persistent,
                     fieldIndex: (int)Cell_FieldIndex.Persistent,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Cell_FieldIndex.Persistent),
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Persistent),
                     transl: (XElement subNode, Placed subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Placed>.Instance.Write(
@@ -5448,7 +5448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Temporary,
                     fieldIndex: (int)Cell_FieldIndex.Temporary,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Cell_FieldIndex.Temporary),
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Temporary),
                     transl: (XElement subNode, Placed subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Placed>.Instance.Write(
@@ -5469,7 +5469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.VisibleWhenDistant,
                     fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Cell_FieldIndex.VisibleWhenDistant),
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.VisibleWhenDistant),
                     transl: (XElement subNode, Placed subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Placed>.Instance.Write(

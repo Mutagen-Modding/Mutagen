@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.LogEntries,
                     fieldIndex: (int)QuestStage_FieldIndex.LogEntries,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries),
+                    translationMask: translationMask?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries),
                     transl: (XElement subNode, LogEntry subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<LogEntry>.Instance.Write(

@@ -2181,7 +2181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PointToPointConnections,
                     fieldIndex: (int)PathGrid_FieldIndex.PointToPointConnections,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)PathGrid_FieldIndex.PointToPointConnections),
+                    translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToPointConnections),
                     transl: (XElement subNode, PathGridPoint subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<PathGridPoint>.Instance.Write(
@@ -2212,7 +2212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.InterCellConnections,
                     fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)PathGrid_FieldIndex.InterCellConnections),
+                    translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.InterCellConnections),
                     transl: (XElement subNode, InterCellPoint subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<InterCellPoint>.Instance.Write(
@@ -2233,7 +2233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PointToReferenceMappings,
                     fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings),
+                    translationMask: translationMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings),
                     transl: (XElement subNode, PointToReferenceMapping subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<PointToReferenceMapping>.Instance.Write(

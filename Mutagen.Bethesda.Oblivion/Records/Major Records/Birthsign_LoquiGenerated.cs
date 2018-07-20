@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Spells,
                     fieldIndex: (int)Birthsign_FieldIndex.Spells,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Birthsign_FieldIndex.Spells),
+                    translationMask: translationMask?.GetSubCrystal((int)Birthsign_FieldIndex.Spells),
                     transl: (XElement subNode, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(

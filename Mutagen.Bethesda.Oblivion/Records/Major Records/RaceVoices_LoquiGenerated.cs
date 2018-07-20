@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Male),
-                    item: item.Male?.FormID,
+                    item: item.Male_Property?.FormID,
                     fieldIndex: (int)RaceVoices_FieldIndex.Male,
                     errorMask: errorMask);
             }
@@ -1355,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Female),
-                    item: item.Female?.FormID,
+                    item: item.Female_Property?.FormID,
                     fieldIndex: (int)RaceVoices_FieldIndex.Female,
                     errorMask: errorMask);
             }

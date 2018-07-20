@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Objects,
                     fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)RegionDataObjects_FieldIndex.Objects),
+                    translationMask: translationMask?.GetSubCrystal((int)RegionDataObjects_FieldIndex.Objects),
                     transl: (XElement subNode, RegionDataObject subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<RegionDataObject>.Instance.Write(

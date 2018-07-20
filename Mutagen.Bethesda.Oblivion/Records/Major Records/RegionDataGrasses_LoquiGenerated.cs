@@ -1360,7 +1360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Grasses,
                     fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)RegionDataGrasses_FieldIndex.Grasses),
+                    translationMask: translationMask?.GetSubCrystal((int)RegionDataGrasses_FieldIndex.Grasses),
                     transl: (XElement subNode, FormIDLink<Grass> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(

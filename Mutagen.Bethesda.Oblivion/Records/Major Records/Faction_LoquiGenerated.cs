@@ -2547,7 +2547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Relations,
                     fieldIndex: (int)Faction_FieldIndex.Relations,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Faction_FieldIndex.Relations),
+                    translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Relations),
                     transl: (XElement subNode, Relation subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Relation>.Instance.Write(
@@ -2588,7 +2588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Ranks,
                     fieldIndex: (int)Faction_FieldIndex.Ranks,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Faction_FieldIndex.Ranks),
+                    translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks),
                     transl: (XElement subNode, Rank subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Rank>.Instance.Write(

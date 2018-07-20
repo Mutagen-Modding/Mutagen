@@ -1708,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.RegionPoints,
                     fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)RegionArea_FieldIndex.RegionPoints),
+                    translationMask: translationMask?.GetSubCrystal((int)RegionArea_FieldIndex.RegionPoints),
                     transl: (XElement subNode, P2Float subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         P2FloatXmlTranslation.Instance.Write(

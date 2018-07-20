@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Generation
     {
         protected override string ItemWriteAccess(Accessor itemAccessor)
         {
-            return $"{itemAccessor.DirectAccess}?.FormID";
+            return $"{itemAccessor.PropertyOrDirectAccess}?.FormID";
         }
 
         public override void GenerateCopyInRet(

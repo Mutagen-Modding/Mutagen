@@ -1756,7 +1756,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     item: item.Moves,
                     fieldIndex: (int)Instruction_FieldIndex.Moves,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.Moves),
+                    translationMask: translationMask?.GetSubCrystal((int)Instruction_FieldIndex.Moves),
                     transl: (XElement subNode, Move subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<Move>.Instance.Write(
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     item: item.Substitutions,
                     fieldIndex: (int)Instruction_FieldIndex.Substitutions,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.Substitutions),
+                    translationMask: translationMask?.GetSubCrystal((int)Instruction_FieldIndex.Substitutions),
                     transl: (XElement subNode, DataTarget subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<DataTarget>.Instance.Write(
@@ -1796,7 +1796,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     item: item.Additions,
                     fieldIndex: (int)Instruction_FieldIndex.Additions,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.Additions),
+                    translationMask: translationMask?.GetSubCrystal((int)Instruction_FieldIndex.Additions),
                     transl: (XElement subNode, DataTarget subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<DataTarget>.Instance.Write(
@@ -1816,7 +1816,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     item: item.SkipSourceSections,
                     fieldIndex: (int)Instruction_FieldIndex.SkipSourceSections,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.SkipSourceSections),
+                    translationMask: translationMask?.GetSubCrystal((int)Instruction_FieldIndex.SkipSourceSections),
                     transl: (XElement subNode, RangeInt64 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         RangeInt64XmlTranslation.Instance.Write(
@@ -1835,7 +1835,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     item: item.SkipOutputSections,
                     fieldIndex: (int)Instruction_FieldIndex.SkipOutputSections,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.SkipOutputSections),
+                    translationMask: translationMask?.GetSubCrystal((int)Instruction_FieldIndex.SkipOutputSections),
                     transl: (XElement subNode, RangeInt64 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         RangeInt64XmlTranslation.Instance.Write(
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     item: item.IgnoreDifferenceSections,
                     fieldIndex: (int)Instruction_FieldIndex.IgnoreDifferenceSections,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Instruction_FieldIndex.IgnoreDifferenceSections),
+                    translationMask: translationMask?.GetSubCrystal((int)Instruction_FieldIndex.IgnoreDifferenceSections),
                     transl: (XElement subNode, RangeInt64 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         RangeInt64XmlTranslation.Instance.Write(

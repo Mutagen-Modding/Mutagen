@@ -4064,7 +4064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.SpeedTreeSeeds,
                     fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)Tree_FieldIndex.SpeedTreeSeeds),
+                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.SpeedTreeSeeds),
                     transl: (XElement subNode, UInt32 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         UInt32XmlTranslation.Instance.Write(

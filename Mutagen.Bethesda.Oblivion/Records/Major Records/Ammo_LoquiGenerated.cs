@@ -3838,7 +3838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Enchantment),
-                    item: item.Enchantment?.FormID,
+                    item: item.Enchantment_Property?.FormID,
                     fieldIndex: (int)Ammo_FieldIndex.Enchantment,
                     errorMask: errorMask);
             }

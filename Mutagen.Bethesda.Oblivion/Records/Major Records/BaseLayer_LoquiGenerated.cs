@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Texture),
-                    item: item.Texture?.FormID,
+                    item: item.Texture_Property?.FormID,
                     fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                     errorMask: errorMask);
             }

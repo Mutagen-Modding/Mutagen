@@ -2594,7 +2594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.LocalVariables,
                     fieldIndex: (int)ScriptFields_FieldIndex.LocalVariables,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)ScriptFields_FieldIndex.LocalVariables),
+                    translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.LocalVariables),
                     transl: (XElement subNode, LocalVariable subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<LocalVariable>.Instance.Write(
@@ -2615,7 +2615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.References,
                     fieldIndex: (int)ScriptFields_FieldIndex.References,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)ScriptFields_FieldIndex.References),
+                    translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.References),
                     transl: (XElement subNode, ScriptReference subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         LoquiXmlTranslation<ScriptReference>.Instance.Write(

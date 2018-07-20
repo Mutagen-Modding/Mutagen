@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormIDXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Weather),
-                    item: item.Weather?.FormID,
+                    item: item.Weather_Property?.FormID,
                     fieldIndex: (int)WeatherChance_FieldIndex.Weather,
                     errorMask: errorMask);
             }

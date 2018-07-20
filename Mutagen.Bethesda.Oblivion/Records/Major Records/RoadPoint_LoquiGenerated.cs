@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Connections,
                     fieldIndex: (int)RoadPoint_FieldIndex.Connections,
                     errorMask: errorMask,
-                    translationMask: translationMask.GetSubCrystal((int)RoadPoint_FieldIndex.Connections),
+                    translationMask: translationMask?.GetSubCrystal((int)RoadPoint_FieldIndex.Connections),
                     transl: (XElement subNode, P3Float subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         P3FloatXmlTranslation.Instance.Write(
