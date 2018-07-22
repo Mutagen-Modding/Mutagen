@@ -2028,7 +2028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IBirthsignGetter item,
+            Birthsign item,
             bool doMasks,
             out Birthsign_ErrorMask errorMask,
             Birthsign_TranslationMask translationMask,
@@ -2046,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IBirthsignGetter item,
+            Birthsign item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

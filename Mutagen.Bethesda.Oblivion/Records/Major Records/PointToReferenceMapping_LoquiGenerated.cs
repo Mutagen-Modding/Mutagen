@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IPointToReferenceMappingGetter item,
+            PointToReferenceMapping item,
             bool doMasks,
             out PointToReferenceMapping_ErrorMask errorMask,
             PointToReferenceMapping_TranslationMask translationMask,
@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IPointToReferenceMappingGetter item,
+            PointToReferenceMapping item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

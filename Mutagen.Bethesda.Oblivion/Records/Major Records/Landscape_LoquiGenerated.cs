@@ -2505,7 +2505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ILandscapeGetter item,
+            Landscape item,
             bool doMasks,
             out Landscape_ErrorMask errorMask,
             Landscape_TranslationMask translationMask,
@@ -2523,7 +2523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ILandscapeGetter item,
+            Landscape item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

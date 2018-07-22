@@ -3136,7 +3136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IDialogItemGetter item,
+            DialogItem item,
             bool doMasks,
             out DialogItem_ErrorMask errorMask,
             DialogItem_TranslationMask translationMask,
@@ -3154,7 +3154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IDialogItemGetter item,
+            DialogItem item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -3174,14 +3174,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)DialogItem_FieldIndex.DialogType,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Flags) ?? true))
+            if (!item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0))
             {
-                EnumXmlTranslation<DialogItem.Flag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)DialogItem_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<DialogItem.Flag>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)DialogItem_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             if (item.Quest_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))

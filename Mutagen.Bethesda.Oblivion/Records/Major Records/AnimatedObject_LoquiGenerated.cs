@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IAnimatedObjectGetter item,
+            AnimatedObject item,
             bool doMasks,
             out AnimatedObject_ErrorMask errorMask,
             AnimatedObject_TranslationMask translationMask,
@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IAnimatedObjectGetter item,
+            AnimatedObject item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

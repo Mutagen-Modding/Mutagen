@@ -2157,7 +2157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ICellSubBlockGetter item,
+            CellSubBlock item,
             bool doMasks,
             out CellSubBlock_ErrorMask errorMask,
             CellSubBlock_TranslationMask translationMask,
@@ -2175,7 +2175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ICellSubBlockGetter item,
+            CellSubBlock item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

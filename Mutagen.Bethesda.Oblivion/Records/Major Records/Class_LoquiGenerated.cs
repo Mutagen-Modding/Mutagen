@@ -3394,7 +3394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IClassGetter item,
+            Class item,
             bool doMasks,
             out Class_ErrorMask errorMask,
             Class_TranslationMask translationMask,
@@ -3412,7 +3412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IClassGetter item,
+            Class item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -3518,15 +3518,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Class_FieldIndex.ClassServices,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Training) ?? true))
+            if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
             {
-                LoquiXmlTranslation<ClassTraining>.Instance.Write(
-                    node: elem,
-                    item: item.Training_Property,
-                    name: nameof(item.Training),
-                    fieldIndex: (int)Class_FieldIndex.Training,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Training) ?? true))
+                {
+                    LoquiXmlTranslation<ClassTraining>.Instance.Write(
+                        node: elem,
+                        item: item.Training_Property,
+                        name: nameof(item.Training),
+                        fieldIndex: (int)Class_FieldIndex.Training,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
             }
         }
         #endregion

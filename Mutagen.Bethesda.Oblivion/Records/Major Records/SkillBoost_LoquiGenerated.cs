@@ -1742,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ISkillBoostGetter item,
+            SkillBoost item,
             bool doMasks,
             out SkillBoost_ErrorMask errorMask,
             SkillBoost_TranslationMask translationMask,
@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ISkillBoostGetter item,
+            SkillBoost item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

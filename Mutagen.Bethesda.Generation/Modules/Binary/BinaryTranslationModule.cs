@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Generation
                                     }
 
                                     var subData = subField.Field.GetFieldData();
-                                    if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
+                                    if (!subGenerator.ShouldGenerateWrite(subField.Field)) continue;
                                     if (subData.CustomBinary)
                                     {
                                         using (var args = new ArgsWrapper(fg,

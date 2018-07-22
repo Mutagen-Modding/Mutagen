@@ -1478,13 +1478,13 @@ namespace Mutagen.Bethesda.Tests
                 Properties.Settings.Default.OblivionESM,
                 out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
-            using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
-            {
-                mod[FormID.Factory("0006371E")].Write_Xml(Path.Combine(tmp.Dir.Path, "Test"));
-                var exportMask = await mod.Write_XmlFolder(
-                    tmp.Dir);
-                Assert.False(exportMask?.IsInError() ?? false);
-            }
+            //using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
+            //{
+            //    mod[FormID.Factory("0006371E")].Write_Xml(Path.Combine(tmp.Dir.Path, "Test"));
+            //    var exportMask = await mod.Write_XmlFolder(
+            //        tmp.Dir);
+            //    Assert.False(exportMask?.IsInError() ?? false);
+            //}
         }
 
         public void OblivionESM_Equals()

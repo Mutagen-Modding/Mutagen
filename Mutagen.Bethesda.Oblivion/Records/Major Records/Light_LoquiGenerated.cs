@@ -4469,7 +4469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ILightGetter item,
+            Light item,
             bool doMasks,
             out Light_ErrorMask errorMask,
             Light_TranslationMask translationMask,
@@ -4487,7 +4487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ILightGetter item,
+            Light item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -4575,23 +4575,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Light_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
+            if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FalloffExponent),
-                    item: item.FalloffExponent_Property,
-                    fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FOV),
-                    item: item.FOV_Property,
-                    fieldIndex: (int)Light_FieldIndex.FOV,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FalloffExponent),
+                        item: item.FalloffExponent_Property,
+                        fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FOV),
+                        item: item.FOV_Property,
+                        fieldIndex: (int)Light_FieldIndex.FOV,
+                        errorMask: errorMask);
+                }
             }
             if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
             {

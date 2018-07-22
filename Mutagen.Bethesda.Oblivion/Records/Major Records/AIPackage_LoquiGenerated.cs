@@ -3002,7 +3002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IAIPackageGetter item,
+            AIPackage item,
             bool doMasks,
             out AIPackage_ErrorMask errorMask,
             AIPackage_TranslationMask translationMask,
@@ -3020,7 +3020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IAIPackageGetter item,
+            AIPackage item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

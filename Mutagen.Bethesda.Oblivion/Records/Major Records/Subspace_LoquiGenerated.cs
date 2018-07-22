@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ISubspaceGetter item,
+            Subspace item,
             bool doMasks,
             out Subspace_ErrorMask errorMask,
             Subspace_TranslationMask translationMask,
@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ISubspaceGetter item,
+            Subspace item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

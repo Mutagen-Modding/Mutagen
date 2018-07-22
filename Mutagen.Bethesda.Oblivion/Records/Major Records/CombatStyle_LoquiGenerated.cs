@@ -8279,7 +8279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ICombatStyleGetter item,
+            CombatStyle item,
             bool doMasks,
             out CombatStyle_ErrorMask errorMask,
             CombatStyle_TranslationMask translationMask,
@@ -8297,7 +8297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ICombatStyleGetter item,
+            CombatStyle item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -8551,86 +8551,98 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultOptimal) ?? true))
+            if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RangeMultOptimal),
-                    item: item.RangeMultOptimal_Property,
-                    fieldIndex: (int)CombatStyle_FieldIndex.RangeMultOptimal,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultMax) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RangeMultMax),
-                    item: item.RangeMultMax_Property,
-                    fieldIndex: (int)CombatStyle_FieldIndex.RangeMultMax,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceMelee) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.SwitchDistanceMelee),
-                    item: item.SwitchDistanceMelee_Property,
-                    fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceRanged) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.SwitchDistanceRanged),
-                    item: item.SwitchDistanceRanged_Property,
-                    fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BuffStandoffDistance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.BuffStandoffDistance),
-                    item: item.BuffStandoffDistance_Property,
-                    fieldIndex: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedStandoffDistance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RangedStandoffDistance),
-                    item: item.RangedStandoffDistance_Property,
-                    fieldIndex: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupStandoffDistance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.GroupStandoffDistance),
-                    item: item.GroupStandoffDistance_Property,
-                    fieldIndex: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackPercentChance) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RushingAttackPercentChance),
-                    item: item.RushingAttackPercentChance_Property,
-                    fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackDistanceMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RushingAttackDistanceMult),
-                    item: item.RushingAttackDistanceMult_Property,
-                    fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultOptimal) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.RangeMultOptimal),
+                        item: item.RangeMultOptimal_Property,
+                        fieldIndex: (int)CombatStyle_FieldIndex.RangeMultOptimal,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultMax) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.RangeMultMax),
+                        item: item.RangeMultMax_Property,
+                        fieldIndex: (int)CombatStyle_FieldIndex.RangeMultMax,
+                        errorMask: errorMask);
+                }
+                if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceMelee) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: elem,
+                            name: nameof(item.SwitchDistanceMelee),
+                            item: item.SwitchDistanceMelee_Property,
+                            fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceRanged) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: elem,
+                            name: nameof(item.SwitchDistanceRanged),
+                            item: item.SwitchDistanceRanged_Property,
+                            fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BuffStandoffDistance) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: elem,
+                            name: nameof(item.BuffStandoffDistance),
+                            item: item.BuffStandoffDistance_Property,
+                            fieldIndex: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
+                            errorMask: errorMask);
+                    }
+                    if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2))
+                    {
+                        if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedStandoffDistance) ?? true))
+                        {
+                            FloatXmlTranslation.Instance.Write(
+                                node: elem,
+                                name: nameof(item.RangedStandoffDistance),
+                                item: item.RangedStandoffDistance_Property,
+                                fieldIndex: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
+                                errorMask: errorMask);
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupStandoffDistance) ?? true))
+                        {
+                            FloatXmlTranslation.Instance.Write(
+                                node: elem,
+                                name: nameof(item.GroupStandoffDistance),
+                                item: item.GroupStandoffDistance_Property,
+                                fieldIndex: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
+                                errorMask: errorMask);
+                        }
+                        if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3))
+                        {
+                            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackPercentChance) ?? true))
+                            {
+                                ByteXmlTranslation.Instance.Write(
+                                    node: elem,
+                                    name: nameof(item.RushingAttackPercentChance),
+                                    item: item.RushingAttackPercentChance_Property,
+                                    fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
+                                    errorMask: errorMask);
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackDistanceMult) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: elem,
+                                    name: nameof(item.RushingAttackDistanceMult),
+                                    item: item.RushingAttackDistanceMult_Property,
+                                    fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
+                                    errorMask: errorMask);
+                            }
+                        }
+                    }
+                }
             }
             if (item.Advanced_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
@@ -8713,7 +8725,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.LeftRightPercentChance_Property,
                     fieldIndex: (int)CombatStyle_FieldIndex.LeftRightPercentChance,
                     errorMask: errorMask);
-                writer.WriteZeros(2);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DodgeLeftRightTimerMin_Property,
@@ -8764,7 +8775,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.AttackPercentChance_Property,
                     fieldIndex: (int)CombatStyle_FieldIndex.AttackPercentChance,
                     errorMask: errorMask);
-                writer.WriteZeros(2);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RecoilStaggerBonusToAttack_Property,
@@ -8785,7 +8795,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PowerAttackPercentChance_Property,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackPercentChance,
                     errorMask: errorMask);
-                writer.WriteZeros(3);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RecoilStaggerBonusToPowerAttack_Property,
@@ -8821,7 +8830,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PowerAttackRight_Property,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackRight,
                     errorMask: errorMask);
-                writer.WriteZeros(3);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.HoldTimerMin_Property,
@@ -8843,7 +8851,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.AcrobaticDodgePercentChance_Property,
                     fieldIndex: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
                     errorMask: errorMask);
-                writer.WriteZeros(2);
                 if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0))
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -8892,7 +8899,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     item: item.RushingAttackPercentChance_Property,
                                     fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
                                     errorMask: errorMask);
-                                writer.WriteZeros(3);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
                                     item: item.RushingAttackDistanceMult_Property,

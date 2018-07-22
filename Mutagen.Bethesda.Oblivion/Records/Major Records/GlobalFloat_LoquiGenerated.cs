@@ -1442,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IGlobalFloatGetter item,
+            GlobalFloat item,
             bool doMasks,
             out GlobalFloat_ErrorMask errorMask,
             GlobalFloat_TranslationMask translationMask,
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IGlobalFloatGetter item,
+            GlobalFloat item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

@@ -1814,7 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IBodyPartGetter item,
+            BodyPart item,
             bool doMasks,
             out BodyPart_ErrorMask errorMask,
             BodyPart_TranslationMask translationMask,
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IBodyPartGetter item,
+            BodyPart item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

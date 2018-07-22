@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IEyeGetter item,
+            Eye item,
             bool doMasks,
             out Eye_ErrorMask errorMask,
             Eye_TranslationMask translationMask,
@@ -2008,7 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IEyeGetter item,
+            Eye item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

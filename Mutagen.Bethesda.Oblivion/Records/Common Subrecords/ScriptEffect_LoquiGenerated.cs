@@ -2315,7 +2315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IScriptEffectGetter item,
+            ScriptEffect item,
             bool doMasks,
             out ScriptEffect_ErrorMask errorMask,
             ScriptEffect_TranslationMask translationMask,
@@ -2333,7 +2333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IScriptEffectGetter item,
+            ScriptEffect item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -2353,32 +2353,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
+            if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
             {
-                EnumXmlTranslation<MagicSchool>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.MagicSchool),
-                    item: item.MagicSchool_Property,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
-            {
-                FormIDXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.VisualEffect),
-                    item: item.VisualEffect_Property?.FormID,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Flags),
-                    item: item.Flags_Property,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
+                {
+                    EnumXmlTranslation<MagicSchool>.Instance.Write(
+                        node: elem,
+                        name: nameof(item.MagicSchool),
+                        item: item.MagicSchool_Property,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
+                {
+                    FormIDXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.VisualEffect),
+                        item: item.VisualEffect_Property?.FormID,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                        errorMask: errorMask);
+                }
+                if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
+                    {
+                        EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
+                            node: elem,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
+                }
             }
             if (item.Name_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))

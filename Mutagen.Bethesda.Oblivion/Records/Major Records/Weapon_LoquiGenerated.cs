@@ -4452,7 +4452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IWeaponGetter item,
+            Weapon item,
             bool doMasks,
             out Weapon_ErrorMask errorMask,
             Weapon_TranslationMask translationMask,
@@ -4470,7 +4470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IWeaponGetter item,
+            Weapon item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

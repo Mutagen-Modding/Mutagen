@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IDistantLODDataGetter item,
+            DistantLODData item,
             bool doMasks,
             out DistantLODData_ErrorMask errorMask,
             DistantLODData_TranslationMask translationMask,
@@ -1820,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IDistantLODDataGetter item,
+            DistantLODData item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

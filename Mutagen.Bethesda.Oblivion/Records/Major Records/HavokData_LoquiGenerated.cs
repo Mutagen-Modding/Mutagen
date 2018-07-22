@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IHavokDataGetter item,
+            HavokData item,
             bool doMasks,
             out HavokData_ErrorMask errorMask,
             HavokData_TranslationMask translationMask,
@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IHavokDataGetter item,
+            HavokData item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IWeatherSoundGetter item,
+            WeatherSound item,
             bool doMasks,
             out WeatherSound_ErrorMask errorMask,
             WeatherSound_TranslationMask translationMask,
@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IWeatherSoundGetter item,
+            WeatherSound item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

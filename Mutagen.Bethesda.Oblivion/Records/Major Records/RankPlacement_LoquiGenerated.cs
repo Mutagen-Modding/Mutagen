@@ -1845,7 +1845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IRankPlacementGetter item,
+            RankPlacement item,
             bool doMasks,
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_TranslationMask translationMask,
@@ -1863,7 +1863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IRankPlacementGetter item,
+            RankPlacement item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

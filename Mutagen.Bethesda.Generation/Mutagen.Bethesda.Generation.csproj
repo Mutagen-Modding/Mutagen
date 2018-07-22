@@ -99,6 +99,7 @@
     <Compile Include="Modules\Mutagen Module\RecordTypeConverterModule.cs" />
     <Compile Include="Modules\Mutagen Module\SpecialParseModule.cs" />
     <Compile Include="Modules\Mutagen Module\TriggeringRecordModule.cs" />
+    <Compile Include="Modules\XML\DataTypeXmlTranslationGeneration.cs" />
     <Compile Include="Modules\XML\FormIDLinkXmlTranslationGeneration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

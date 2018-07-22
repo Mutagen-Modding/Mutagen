@@ -4790,7 +4790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IRegionDataObjectGetter item,
+            RegionDataObject item,
             bool doMasks,
             out RegionDataObject_ErrorMask errorMask,
             RegionDataObject_TranslationMask translationMask,
@@ -4808,7 +4808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IRegionDataObjectGetter item,
+            RegionDataObject item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

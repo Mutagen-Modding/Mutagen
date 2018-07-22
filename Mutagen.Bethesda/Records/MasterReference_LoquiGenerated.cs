@@ -1813,7 +1813,7 @@ namespace Mutagen.Bethesda.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IMasterReferenceGetter item,
+            MasterReference item,
             bool doMasks,
             out MasterReference_ErrorMask errorMask,
             MasterReference_TranslationMask translationMask,
@@ -1831,7 +1831,7 @@ namespace Mutagen.Bethesda.Internals
 
         public static void Write_Xml(
             XElement node,
-            IMasterReferenceGetter item,
+            MasterReference item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

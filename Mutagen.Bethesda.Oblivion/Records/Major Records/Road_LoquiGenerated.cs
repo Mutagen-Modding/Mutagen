@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IRoadGetter item,
+            Road item,
             bool doMasks,
             out Road_ErrorMask errorMask,
             Road_TranslationMask translationMask,
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IRoadGetter item,
+            Road item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

@@ -3819,7 +3819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IBookGetter item,
+            Book item,
             bool doMasks,
             out Book_ErrorMask errorMask,
             Book_TranslationMask translationMask,
@@ -3837,7 +3837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IBookGetter item,
+            Book item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

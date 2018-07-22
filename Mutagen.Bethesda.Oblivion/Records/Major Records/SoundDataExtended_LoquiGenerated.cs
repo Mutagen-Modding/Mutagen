@@ -1811,7 +1811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             bool doMasks,
             out SoundDataExtended_ErrorMask errorMask,
             SoundDataExtended_TranslationMask translationMask,
@@ -1829,7 +1829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ISpellLeveledGetter item,
+            SpellLeveled item,
             bool doMasks,
             out SpellLeveled_ErrorMask errorMask,
             SpellLeveled_TranslationMask translationMask,
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ISpellLeveledGetter item,
+            SpellLeveled item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

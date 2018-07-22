@@ -11268,7 +11268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ICreatureGetter item,
+            Creature item,
             bool doMasks,
             out Creature_ErrorMask errorMask,
             Creature_TranslationMask translationMask,
@@ -11286,7 +11286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ICreatureGetter item,
+            Creature item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -12027,7 +12027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.MaximumTrainingLevel_Property,
                     fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
                     errorMask: errorMask);
-                writer.WriteZeros(2);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.WriteListOfRecords(
                 writer: writer,

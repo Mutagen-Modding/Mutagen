@@ -1742,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IInterCellPointGetter item,
+            InterCellPoint item,
             bool doMasks,
             out InterCellPoint_ErrorMask errorMask,
             InterCellPoint_TranslationMask translationMask,
@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IInterCellPointGetter item,
+            InterCellPoint item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

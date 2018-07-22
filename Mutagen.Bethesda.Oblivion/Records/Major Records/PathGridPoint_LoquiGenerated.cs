@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IPathGridPointGetter item,
+            PathGridPoint item,
             bool doMasks,
             out PathGridPoint_ErrorMask errorMask,
             PathGridPoint_TranslationMask translationMask,
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IPathGridPointGetter item,
+            PathGridPoint item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

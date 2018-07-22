@@ -2169,7 +2169,7 @@ namespace Mutagen.Bethesda.Internals
         #region Xml Write
         public static void Write_Xml<T, T_ErrMask, T_TranslMask>(
             XElement node,
-            IListGroupGetter<T> item,
+            ListGroup<T> item,
             bool doMasks,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             ListGroup_TranslationMask<T_TranslMask> translationMask,
@@ -2190,7 +2190,7 @@ namespace Mutagen.Bethesda.Internals
 
         public static void Write_Xml<T>(
             XElement node,
-            IListGroupGetter<T> item,
+            ListGroup<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

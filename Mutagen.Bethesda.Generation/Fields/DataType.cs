@@ -102,6 +102,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+            this.HasBeenSetProperty.Set(false);
         }
 
         public IEnumerable<DataTypeIteration> IterateFieldsWithMeta()

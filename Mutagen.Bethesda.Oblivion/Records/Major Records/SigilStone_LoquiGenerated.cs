@@ -3225,7 +3225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ISigilStoneGetter item,
+            SigilStone item,
             bool doMasks,
             out SigilStone_ErrorMask errorMask,
             SigilStone_TranslationMask translationMask,
@@ -3243,7 +3243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ISigilStoneGetter item,
+            SigilStone item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

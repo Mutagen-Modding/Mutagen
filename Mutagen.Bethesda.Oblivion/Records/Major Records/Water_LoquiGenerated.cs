@@ -7831,7 +7831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IWaterGetter item,
+            Water item,
             bool doMasks,
             out Water_ErrorMask errorMask,
             Water_TranslationMask translationMask,
@@ -7849,7 +7849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IWaterGetter item,
+            Water item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -7910,239 +7910,251 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Water_FieldIndex.Sound,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindVelocity) ?? true))
+            if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break0))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.WindVelocity),
-                    item: item.WindVelocity_Property,
-                    fieldIndex: (int)Water_FieldIndex.WindVelocity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindDirection) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.WindDirection),
-                    item: item.WindDirection_Property,
-                    fieldIndex: (int)Water_FieldIndex.WindDirection,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveAmplitude) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.WaveAmplitude),
-                    item: item.WaveAmplitude_Property,
-                    fieldIndex: (int)Water_FieldIndex.WaveAmplitude,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveFrequency) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.WaveFrequency),
-                    item: item.WaveFrequency_Property,
-                    fieldIndex: (int)Water_FieldIndex.WaveFrequency,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SunPower) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.SunPower),
-                    item: item.SunPower_Property,
-                    fieldIndex: (int)Water_FieldIndex.SunPower,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectivityAmount) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ReflectivityAmount),
-                    item: item.ReflectivityAmount_Property,
-                    fieldIndex: (int)Water_FieldIndex.ReflectivityAmount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FresnelAmount) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FresnelAmount),
-                    item: item.FresnelAmount_Property,
-                    fieldIndex: (int)Water_FieldIndex.FresnelAmount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollXSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ScrollXSpeed),
-                    item: item.ScrollXSpeed_Property,
-                    fieldIndex: (int)Water_FieldIndex.ScrollXSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollYSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ScrollYSpeed),
-                    item: item.ScrollYSpeed_Property,
-                    fieldIndex: (int)Water_FieldIndex.ScrollYSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceNearPlane) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FogDistanceNearPlane),
-                    item: item.FogDistanceNearPlane_Property,
-                    fieldIndex: (int)Water_FieldIndex.FogDistanceNearPlane,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceFarPlane) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.FogDistanceFarPlane),
-                    item: item.FogDistanceFarPlane_Property,
-                    fieldIndex: (int)Water_FieldIndex.FogDistanceFarPlane,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ShallowColor),
-                    item: item.ShallowColor_Property,
-                    fieldIndex: (int)Water_FieldIndex.ShallowColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DeepColor),
-                    item: item.DeepColor_Property,
-                    fieldIndex: (int)Water_FieldIndex.DeepColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.ReflectionColor),
-                    item: item.ReflectionColor_Property,
-                    fieldIndex: (int)Water_FieldIndex.ReflectionColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.TextureBlend) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.TextureBlend),
-                    item: item.TextureBlend_Property,
-                    fieldIndex: (int)Water_FieldIndex.TextureBlend,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorForce) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RainSimulatorForce),
-                    item: item.RainSimulatorForce_Property,
-                    fieldIndex: (int)Water_FieldIndex.RainSimulatorForce,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorVelocity) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RainSimulatorVelocity),
-                    item: item.RainSimulatorVelocity_Property,
-                    fieldIndex: (int)Water_FieldIndex.RainSimulatorVelocity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorFalloff) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RainSimulatorFalloff),
-                    item: item.RainSimulatorFalloff_Property,
-                    fieldIndex: (int)Water_FieldIndex.RainSimulatorFalloff,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorDampner) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RainSimulatorDampner),
-                    item: item.RainSimulatorDampner_Property,
-                    fieldIndex: (int)Water_FieldIndex.RainSimulatorDampner,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorStartingSize) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.RainSimulatorStartingSize),
-                    item: item.RainSimulatorStartingSize_Property,
-                    fieldIndex: (int)Water_FieldIndex.RainSimulatorStartingSize,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorForce) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DisplacementSimulatorForce),
-                    item: item.DisplacementSimulatorForce_Property,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorForce,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorVelocity) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DisplacementSimulatorVelocity),
-                    item: item.DisplacementSimulatorVelocity_Property,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorFalloff) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DisplacementSimulatorFalloff),
-                    item: item.DisplacementSimulatorFalloff_Property,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorDampner) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DisplacementSimulatorDampner),
-                    item: item.DisplacementSimulatorDampner_Property,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorDampner,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.DisplacementSimulatorStartingSize),
-                    item: item.DisplacementSimulatorStartingSize_Property,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Damage) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: elem,
-                    name: nameof(item.Damage),
-                    item: item.Damage_Property,
-                    fieldIndex: (int)Water_FieldIndex.Damage,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindVelocity) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.WindVelocity),
+                        item: item.WindVelocity_Property,
+                        fieldIndex: (int)Water_FieldIndex.WindVelocity,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindDirection) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.WindDirection),
+                        item: item.WindDirection_Property,
+                        fieldIndex: (int)Water_FieldIndex.WindDirection,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveAmplitude) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.WaveAmplitude),
+                        item: item.WaveAmplitude_Property,
+                        fieldIndex: (int)Water_FieldIndex.WaveAmplitude,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveFrequency) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.WaveFrequency),
+                        item: item.WaveFrequency_Property,
+                        fieldIndex: (int)Water_FieldIndex.WaveFrequency,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SunPower) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.SunPower),
+                        item: item.SunPower_Property,
+                        fieldIndex: (int)Water_FieldIndex.SunPower,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectivityAmount) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.ReflectivityAmount),
+                        item: item.ReflectivityAmount_Property,
+                        fieldIndex: (int)Water_FieldIndex.ReflectivityAmount,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FresnelAmount) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FresnelAmount),
+                        item: item.FresnelAmount_Property,
+                        fieldIndex: (int)Water_FieldIndex.FresnelAmount,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollXSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.ScrollXSpeed),
+                        item: item.ScrollXSpeed_Property,
+                        fieldIndex: (int)Water_FieldIndex.ScrollXSpeed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollYSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.ScrollYSpeed),
+                        item: item.ScrollYSpeed_Property,
+                        fieldIndex: (int)Water_FieldIndex.ScrollYSpeed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceNearPlane) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: elem,
+                        name: nameof(item.FogDistanceNearPlane),
+                        item: item.FogDistanceNearPlane_Property,
+                        fieldIndex: (int)Water_FieldIndex.FogDistanceNearPlane,
+                        errorMask: errorMask);
+                }
+                if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break1))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceFarPlane) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: elem,
+                            name: nameof(item.FogDistanceFarPlane),
+                            item: item.FogDistanceFarPlane_Property,
+                            fieldIndex: (int)Water_FieldIndex.FogDistanceFarPlane,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
+                    {
+                        ColorXmlTranslation.Instance.Write(
+                            node: elem,
+                            name: nameof(item.ShallowColor),
+                            item: item.ShallowColor_Property,
+                            fieldIndex: (int)Water_FieldIndex.ShallowColor,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
+                    {
+                        ColorXmlTranslation.Instance.Write(
+                            node: elem,
+                            name: nameof(item.DeepColor),
+                            item: item.DeepColor_Property,
+                            fieldIndex: (int)Water_FieldIndex.DeepColor,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
+                    {
+                        ColorXmlTranslation.Instance.Write(
+                            node: elem,
+                            name: nameof(item.ReflectionColor),
+                            item: item.ReflectionColor_Property,
+                            fieldIndex: (int)Water_FieldIndex.ReflectionColor,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.TextureBlend) ?? true))
+                    {
+                        ByteXmlTranslation.Instance.Write(
+                            node: elem,
+                            name: nameof(item.TextureBlend),
+                            item: item.TextureBlend_Property,
+                            fieldIndex: (int)Water_FieldIndex.TextureBlend,
+                            errorMask: errorMask);
+                    }
+                    if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break2))
+                    {
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorForce) ?? true))
+                        {
+                            FloatXmlTranslation.Instance.Write(
+                                node: elem,
+                                name: nameof(item.RainSimulatorForce),
+                                item: item.RainSimulatorForce_Property,
+                                fieldIndex: (int)Water_FieldIndex.RainSimulatorForce,
+                                errorMask: errorMask);
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorVelocity) ?? true))
+                        {
+                            FloatXmlTranslation.Instance.Write(
+                                node: elem,
+                                name: nameof(item.RainSimulatorVelocity),
+                                item: item.RainSimulatorVelocity_Property,
+                                fieldIndex: (int)Water_FieldIndex.RainSimulatorVelocity,
+                                errorMask: errorMask);
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorFalloff) ?? true))
+                        {
+                            FloatXmlTranslation.Instance.Write(
+                                node: elem,
+                                name: nameof(item.RainSimulatorFalloff),
+                                item: item.RainSimulatorFalloff_Property,
+                                fieldIndex: (int)Water_FieldIndex.RainSimulatorFalloff,
+                                errorMask: errorMask);
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorDampner) ?? true))
+                        {
+                            FloatXmlTranslation.Instance.Write(
+                                node: elem,
+                                name: nameof(item.RainSimulatorDampner),
+                                item: item.RainSimulatorDampner_Property,
+                                fieldIndex: (int)Water_FieldIndex.RainSimulatorDampner,
+                                errorMask: errorMask);
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorStartingSize) ?? true))
+                        {
+                            FloatXmlTranslation.Instance.Write(
+                                node: elem,
+                                name: nameof(item.RainSimulatorStartingSize),
+                                item: item.RainSimulatorStartingSize_Property,
+                                fieldIndex: (int)Water_FieldIndex.RainSimulatorStartingSize,
+                                errorMask: errorMask);
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorForce) ?? true))
+                        {
+                            FloatXmlTranslation.Instance.Write(
+                                node: elem,
+                                name: nameof(item.DisplacementSimulatorForce),
+                                item: item.DisplacementSimulatorForce_Property,
+                                fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorForce,
+                                errorMask: errorMask);
+                        }
+                        if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break3))
+                        {
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorVelocity) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: elem,
+                                    name: nameof(item.DisplacementSimulatorVelocity),
+                                    item: item.DisplacementSimulatorVelocity_Property,
+                                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
+                                    errorMask: errorMask);
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorFalloff) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: elem,
+                                    name: nameof(item.DisplacementSimulatorFalloff),
+                                    item: item.DisplacementSimulatorFalloff_Property,
+                                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
+                                    errorMask: errorMask);
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorDampner) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: elem,
+                                    name: nameof(item.DisplacementSimulatorDampner),
+                                    item: item.DisplacementSimulatorDampner_Property,
+                                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorDampner,
+                                    errorMask: errorMask);
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: elem,
+                                    name: nameof(item.DisplacementSimulatorStartingSize),
+                                    item: item.DisplacementSimulatorStartingSize_Property,
+                                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
+                                    errorMask: errorMask);
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Damage) ?? true))
+                            {
+                                UInt16XmlTranslation.Instance.Write(
+                                    node: elem,
+                                    name: nameof(item.Damage),
+                                    item: item.Damage_Property,
+                                    fieldIndex: (int)Water_FieldIndex.Damage,
+                                    errorMask: errorMask);
+                            }
+                        }
+                    }
+                }
             }
             if (item.RelatedWaters_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
@@ -8341,7 +8353,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item: item.TextureBlend_Property,
                             fieldIndex: (int)Water_FieldIndex.TextureBlend,
                             errorMask: errorMask);
-                        writer.WriteZeros(3);
                         Water.WriteBinary_OilCustomLogic(
                             writer: writer,
                             item: item,

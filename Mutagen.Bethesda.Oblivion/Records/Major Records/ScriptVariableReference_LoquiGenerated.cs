@@ -1469,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IScriptVariableReferenceGetter item,
+            ScriptVariableReference item,
             bool doMasks,
             out ScriptVariableReference_ErrorMask errorMask,
             ScriptVariableReference_TranslationMask translationMask,
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IScriptVariableReferenceGetter item,
+            ScriptVariableReference item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

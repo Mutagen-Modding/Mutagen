@@ -1716,7 +1716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            ITeleportDestinationGetter item,
+            TeleportDestination item,
             bool doMasks,
             out TeleportDestination_ErrorMask errorMask,
             TeleportDestination_TranslationMask translationMask,
@@ -1734,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            ITeleportDestinationGetter item,
+            TeleportDestination item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

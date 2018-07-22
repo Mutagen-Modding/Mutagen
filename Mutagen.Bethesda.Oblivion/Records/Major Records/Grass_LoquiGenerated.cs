@@ -3889,7 +3889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IGrassGetter item,
+            Grass item,
             bool doMasks,
             out Grass_ErrorMask errorMask,
             Grass_TranslationMask translationMask,
@@ -3907,7 +3907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IGrassGetter item,
+            Grass item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)

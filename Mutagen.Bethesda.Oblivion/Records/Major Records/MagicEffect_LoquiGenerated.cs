@@ -4889,7 +4889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Xml Write
         public static void Write_Xml(
             XElement node,
-            IMagicEffectGetter item,
+            MagicEffect item,
             bool doMasks,
             out MagicEffect_ErrorMask errorMask,
             MagicEffect_TranslationMask translationMask,
@@ -4907,7 +4907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Write_Xml(
             XElement node,
-            IMagicEffectGetter item,
+            MagicEffect item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
@@ -5040,15 +5040,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SubData) ?? true))
+            if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
             {
-                LoquiXmlTranslation<MagicEffectSubData>.Instance.Write(
-                    node: elem,
-                    item: item.SubData_Property,
-                    name: nameof(item.SubData),
-                    fieldIndex: (int)MagicEffect_FieldIndex.SubData,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SubData) ?? true))
+                {
+                    LoquiXmlTranslation<MagicEffectSubData>.Instance.Write(
+                        node: elem,
+                        item: item.SubData_Property,
+                        name: nameof(item.SubData),
+                        fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
             }
             if (item.CounterEffects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
