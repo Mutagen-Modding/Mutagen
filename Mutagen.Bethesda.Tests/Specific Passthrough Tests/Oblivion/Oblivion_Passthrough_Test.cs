@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Tests
             if (!typeof(Cell).Equals(recType)) return;
 
             // Clean empty child groups
-            List<RangeInt64> moves = new List<RangeInt64>();
+            List<RangeInt64> removes = new List<RangeInt64>();
             stream.Position = loc.Min + 4;
             var len = stream.ReadUInt32();
             stream.Position += len + 12;
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Tests
             var grupLen = stream.ReadUInt32();
             if (grupLen == 0x14)
             {
-                moves.Add(new RangeInt64(grupPos, grupPos + 0x14));
+                removes.Add(new RangeInt64(grupPos, grupPos + 0x13));
             }
             else
             {
@@ -528,31 +528,20 @@ namespace Mutagen.Bethesda.Tests
                     if (subGrupLen == 0x14)
                     { // Empty group
                         lengthTracker[grupPos] = lengthTracker[grupPos] - 0x14;
-                        moves.Add(new RangeInt64(stream.Position - 0x14, stream.Position - 1));
+                        removes.Add(new RangeInt64(stream.Position - 0x14, stream.Position - 1));
                     }
                 }
             }
 
-            if (moves.Count == 0) return;
+            if (removes.Count == 0) return;
             var parentGrups = fileLocs.GetContainingGroupLocations(formID);
-            foreach (var move in moves)
+            foreach (var remove in removes)
             {
                 instr.SetRemove(
-                    section: move);
+                    section: remove);
                 foreach (var parentGroup in parentGrups)
                 {
-                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - move.Width);
-                }
-            }
-
-            if (lengthTracker[grupPos] == 0x14)
-            {
-                var move = new RangeInt64(grupPos, grupPos + 0x13);
-                instr.SetRemove(
-                    section: move);
-                foreach (var parentGroup in parentGrups)
-                {
-                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - move.Width);
+                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - remove.Width);
                 }
             }
         }

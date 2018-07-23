@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>cfcb0cea9b60e5f7c5d394c1addfcda2ae823def</Sha>
+         <Sha>ba375b15f321623e2bb4f015d204a57351adad3f</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-15-2018 17:19:37</CommitDate>
-         <Description>RangeInts FactoryFromLength</Description>
+         <CommitDate>07-23-2018 08:23:11</CommitDate>
+         <Description>RangeCollection enumerator</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
