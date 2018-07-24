@@ -518,6 +518,7 @@ namespace Mutagen.Bethesda.Tests
                 var grupType = (GroupTypeEnum)stream.ReadUInt32();
                 if (grupType != GroupTypeEnum.CellChildren) return;
                 stream.Position += 4;
+                var amountRemoved = 0;
                 for (int i = 0; i < 3; i++)
                 {
                     var startPos = stream.Position;
@@ -529,7 +530,15 @@ namespace Mutagen.Bethesda.Tests
                     { // Empty group
                         lengthTracker[grupPos] = lengthTracker[grupPos] - 0x14;
                         removes.Add(new RangeInt64(stream.Position - 0x14, stream.Position - 1));
+                        amountRemoved++;
                     }
+                }
+
+                // Check to see if removed subgroups left parent empty
+                if (amountRemoved > 0
+                    && grupLen - 0x14 * amountRemoved == 0x14)
+                {
+                    removes.Add(new RangeInt64(grupPos, grupPos + 0x13));
                 }
             }
 
