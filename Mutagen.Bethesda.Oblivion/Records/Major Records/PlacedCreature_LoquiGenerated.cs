@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<EnableParent>,
         IPropertySupporter<Byte[]>,
         IPropertySupporter<Single>,
-        IPropertySupporter<P3Float>,
+        IPropertySupporter<PlacedLocation>,
         IEquatable<PlacedCreature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -266,33 +266,33 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Single> IPlacedCreatureGetter.Scale_Property => this.Scale_Property;
         #endregion
-        #region Position
-        protected P3Float _Position;
-        protected PropertyForwarder<PlacedCreature, P3Float> _PositionForwarder;
-        public INotifyingSetItem<P3Float> Position_Property => _PositionForwarder ?? (_PositionForwarder = new PropertyForwarder<PlacedCreature, P3Float>(this, (int)PlacedCreature_FieldIndex.Position));
+        #region Location
+        protected PlacedLocation _Location;
+        protected PropertyForwarder<PlacedCreature, PlacedLocation> _LocationForwarder;
+        public INotifyingSetItem<PlacedLocation> Location_Property => _LocationForwarder ?? (_LocationForwarder = new PropertyForwarder<PlacedCreature, PlacedLocation>(this, (int)PlacedCreature_FieldIndex.Location));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public P3Float Position
+        public PlacedLocation Location
         {
-            get => this._Position;
-            set => this.SetPosition(value);
+            get => this._Location;
+            set => this.SetLocation(value);
         }
-        protected void SetPosition(
-            P3Float item,
+        protected void SetLocation(
+            PlacedLocation item,
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Position];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Position == item) return;
+            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Location];
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Location, item)) return;
             if (oldHasBeenSet != hasBeenSet)
             {
-                _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Position] = hasBeenSet;
+                _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Location] = hasBeenSet;
             }
-            if (_P3Float_subscriptions != null)
+            if (_PlacedLocation_subscriptions != null)
             {
-                var tmp = Position;
-                _Position = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)PlacedCreature_FieldIndex.Position,
+                var tmp = Location;
+                _Location = item;
+                _PlacedLocation_subscriptions.FireSubscriptions(
+                    index: (int)PlacedCreature_FieldIndex.Location,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
                     oldVal: tmp,
@@ -301,66 +301,18 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                _Position = item;
+                _Location = item;
             }
         }
-        protected void UnsetPosition()
+        protected void UnsetLocation()
         {
-            _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Position] = false;
-            Position = default(P3Float);
+            _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Location] = false;
+            Location = default(PlacedLocation);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IPlacedCreature.Position_Property => this.Position_Property;
+        INotifyingSetItem<PlacedLocation> IPlacedCreature.Location_Property => this.Location_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IPlacedCreatureGetter.Position_Property => this.Position_Property;
-        #endregion
-        #region Rotation
-        protected P3Float _Rotation;
-        protected PropertyForwarder<PlacedCreature, P3Float> _RotationForwarder;
-        public INotifyingSetItem<P3Float> Rotation_Property => _RotationForwarder ?? (_RotationForwarder = new PropertyForwarder<PlacedCreature, P3Float>(this, (int)PlacedCreature_FieldIndex.Rotation));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public P3Float Rotation
-        {
-            get => this._Rotation;
-            set => this.SetRotation(value);
-        }
-        protected void SetRotation(
-            P3Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Rotation];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Rotation == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Rotation] = hasBeenSet;
-            }
-            if (_P3Float_subscriptions != null)
-            {
-                var tmp = Rotation;
-                _Rotation = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)PlacedCreature_FieldIndex.Rotation,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Rotation = item;
-            }
-        }
-        protected void UnsetRotation()
-        {
-            _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Rotation] = false;
-            Rotation = default(P3Float);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IPlacedCreature.Rotation_Property => this.Rotation_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IPlacedCreatureGetter.Rotation_Property => this.Rotation_Property;
+        INotifyingSetItemGetter<PlacedLocation> IPlacedCreatureGetter.Location_Property => this.Location_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -456,8 +408,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Scale.EqualsWithin(rhs.Scale)) return false;
             }
-            if (this.Position != rhs.Position) return false;
-            if (this.Rotation != rhs.Rotation) return false;
+            if (Location_Property.HasBeenSet != rhs.Location_Property.HasBeenSet) return false;
+            if (Location_Property.HasBeenSet)
+            {
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+            }
             return true;
         }
 
@@ -492,8 +447,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Scale).CombineHashCode(ret);
             }
-            ret = HashHelper.GetHashCode(Position).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Rotation).CombineHashCode(ret);
+            if (Location_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Location).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -904,46 +861,20 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Position":
+                case "Location":
                     try
                     {
-                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Position);
-                        if (P3FloatXmlTranslation.Instance.Parse(
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Location);
+                        if (LoquiXmlTranslation<PlacedLocation>.Instance.Parse(
                             root: root,
-                            item: out P3Float PositionParse,
+                            item: out PlacedLocation LocationParse,
                             errorMask: errorMask))
                         {
-                            item.Position = PositionParse;
+                            item.Location = LocationParse;
                         }
                         else
                         {
-                            item.UnsetPosition();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Rotation":
-                    try
-                    {
-                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
-                        if (P3FloatXmlTranslation.Instance.Parse(
-                            root: root,
-                            item: out P3Float RotationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Rotation = RotationParse;
-                        }
-                        else
-                        {
-                            item.UnsetRotation();
+                            item.UnsetLocation();
                         }
                     }
                     catch (Exception ex)
@@ -976,6 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case PlacedCreature_FieldIndex.EnableParent:
                 case PlacedCreature_FieldIndex.RagdollData:
                 case PlacedCreature_FieldIndex.Scale:
+                case PlacedCreature_FieldIndex.Location:
                     return _hasBeenSetTracker[index];
                 case PlacedCreature_FieldIndex.Base:
                     return Base_Property.HasBeenSet;
@@ -983,9 +915,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return Owner_Property.HasBeenSet;
                 case PlacedCreature_FieldIndex.GlobalVariable:
                     return GlobalVariable_Property.HasBeenSet;
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
-                    return true;
                 default:
                     return base.GetHasBeenSet(index);
             }
@@ -1534,112 +1463,102 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region IPropertySupporter P3Float
-        protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
-        P3Float IPropertySupporter<P3Float>.Get(int index)
+        #region IPropertySupporter PlacedLocation
+        protected ObjectCentralizationSubscriptions<PlacedLocation> _PlacedLocation_subscriptions;
+        PlacedLocation IPropertySupporter<PlacedLocation>.Get(int index)
         {
-            return GetP3Float(index: index);
+            return GetPlacedLocation(index: index);
         }
 
-        protected P3Float GetP3Float(int index)
+        protected PlacedLocation GetPlacedLocation(int index)
         {
             switch ((PlacedCreature_FieldIndex)index)
             {
-                case PlacedCreature_FieldIndex.Position:
-                    return Position;
-                case PlacedCreature_FieldIndex.Rotation:
-                    return Rotation;
+                case PlacedCreature_FieldIndex.Location:
+                    return Location;
                 default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
+                    throw new ArgumentException($"Unknown index for field type PlacedLocation: {index}");
             }
         }
 
-        void IPropertySupporter<P3Float>.Set(
+        void IPropertySupporter<PlacedLocation>.Set(
             int index,
-            P3Float item,
+            PlacedLocation item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            SetP3Float(
+            SetPlacedLocation(
                 index: index,
                 item: item,
                 hasBeenSet: hasBeenSet,
                 cmds: cmds);
         }
 
-        protected void SetP3Float(
+        protected void SetPlacedLocation(
             int index,
-            P3Float item,
+            PlacedLocation item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
             switch ((PlacedCreature_FieldIndex)index)
             {
-                case PlacedCreature_FieldIndex.Position:
-                    SetPosition(item, hasBeenSet, cmds);
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    SetRotation(item, hasBeenSet, cmds);
+                case PlacedCreature_FieldIndex.Location:
+                    SetLocation(item, hasBeenSet, cmds);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
+                    throw new ArgumentException($"Unknown index for field type PlacedLocation: {index}");
             }
         }
 
-        bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
+        bool IPropertySupporter<PlacedLocation>.GetHasBeenSet(int index)
         {
             return this.GetHasBeenSet(index: index);
         }
 
-        void IPropertySupporter<P3Float>.SetHasBeenSet(
+        void IPropertySupporter<PlacedLocation>.SetHasBeenSet(
             int index,
             bool on)
         {
             _hasBeenSetTracker[index] = on;
         }
 
-        void IPropertySupporter<P3Float>.Unset(
+        void IPropertySupporter<PlacedLocation>.Unset(
             int index,
             NotifyingUnsetParameters cmds)
         {
-            UnsetP3Float(
+            UnsetPlacedLocation(
                 index: index,
                 cmds: cmds);
         }
 
-        protected void UnsetP3Float(
+        protected void UnsetPlacedLocation(
             int index,
             NotifyingUnsetParameters cmds)
         {
             switch ((PlacedCreature_FieldIndex)index)
             {
-                case PlacedCreature_FieldIndex.Position:
-                    SetPosition(
-                        item: default(P3Float),
-                        hasBeenSet: false);
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    SetRotation(
-                        item: default(P3Float),
+                case PlacedCreature_FieldIndex.Location:
+                    SetLocation(
+                        item: default(PlacedLocation),
                         hasBeenSet: false);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
+                    throw new ArgumentException($"Unknown index for field type PlacedLocation: {index}");
             }
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Subscribe(
+        void IPropertySupporter<PlacedLocation>.Subscribe(
             int index,
             object owner,
-            NotifyingSetItemInternalCallback<P3Float> callback,
+            NotifyingSetItemInternalCallback<PlacedLocation> callback,
             NotifyingSubscribeParameters cmds)
         {
-            if (_P3Float_subscriptions == null)
+            if (_PlacedLocation_subscriptions == null)
             {
-                _P3Float_subscriptions = new ObjectCentralizationSubscriptions<P3Float>();
+                _PlacedLocation_subscriptions = new ObjectCentralizationSubscriptions<PlacedLocation>();
             }
-            _P3Float_subscriptions.Subscribe(
+            _PlacedLocation_subscriptions.Subscribe(
                 index: index,
                 owner: owner,
                 prop: this,
@@ -1648,32 +1567,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Unsubscribe(
+        void IPropertySupporter<PlacedLocation>.Unsubscribe(
             int index,
             object owner)
         {
-            _P3Float_subscriptions?.Unsubscribe(index, owner);
+            _PlacedLocation_subscriptions?.Unsubscribe(index, owner);
         }
 
-        void IPropertySupporter<P3Float>.SetCurrentAsDefault(int index)
+        void IPropertySupporter<PlacedLocation>.SetCurrentAsDefault(int index)
         {
             throw new NotImplementedException();
         }
 
-        P3Float IPropertySupporter<P3Float>.DefaultValue(int index)
+        PlacedLocation IPropertySupporter<PlacedLocation>.DefaultValue(int index)
         {
-            return DefaultValueP3Float(index: index);
+            return DefaultValuePlacedLocation(index: index);
         }
 
-        protected P3Float DefaultValueP3Float(int index)
+        protected PlacedLocation DefaultValuePlacedLocation(int index)
         {
             switch ((PlacedCreature_FieldIndex)index)
             {
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
-                    return default(P3Float);
+                case PlacedCreature_FieldIndex.Location:
+                    return default(PlacedLocation);
                 default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
+                    throw new ArgumentException($"Unknown index for field type PlacedLocation: {index}");
             }
         }
 
@@ -2039,59 +1957,31 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Scale);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    try
                     {
-                        try
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Location);
+                        if (LoquiBinaryTranslation<PlacedLocation>.Instance.Parse(
+                            frame: frame,
+                            item: out PlacedLocation LocationParse,
+                            errorMask: errorMask))
                         {
-                            errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Position);
-                            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out P3Float PositionParse,
-                                errorMask: errorMask))
-                            {
-                                item.Position = PositionParse;
-                            }
-                            else
-                            {
-                                item.UnsetPosition();
-                            }
+                            item.Location = LocationParse;
                         }
-                        catch (Exception ex)
-                        when (errorMask != null)
+                        else
                         {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
-                            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out P3Float RotationParse,
-                                errorMask: errorMask))
-                            {
-                                item.Rotation = RotationParse;
-                            }
-                            else
-                            {
-                                item.UnsetRotation();
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.UnsetLocation();
                         }
                     }
-                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Rotation);
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Location);
                 default:
                     return Placed.Fill_Binary_RecordTypes(
                         item: item,
@@ -2246,14 +2136,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (Single)obj,
                         cmds: cmds);
                     break;
-                case PlacedCreature_FieldIndex.Position:
-                    this.SetPosition(
-                        (P3Float)obj,
-                        cmds: cmds);
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    this.SetRotation(
-                        (P3Float)obj,
+                case PlacedCreature_FieldIndex.Location:
+                    this.SetLocation(
+                        (PlacedLocation)obj,
                         cmds: cmds);
                     break;
                 default:
@@ -2322,14 +2207,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (Single)pair.Value,
                         cmds: null);
                     break;
-                case PlacedCreature_FieldIndex.Position:
-                    obj.SetPosition(
-                        (P3Float)pair.Value,
-                        cmds: null);
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    obj.SetRotation(
-                        (P3Float)pair.Value,
+                case PlacedCreature_FieldIndex.Location:
+                    obj.SetLocation(
+                        (PlacedLocation)pair.Value,
                         cmds: null);
                     break;
                 default:
@@ -2362,11 +2242,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Single Scale { get; set; }
         new INotifyingSetItem<Single> Scale_Property { get; }
 
-        new P3Float Position { get; set; }
-        new INotifyingItem<P3Float> Position_Property { get; }
-
-        new P3Float Rotation { get; set; }
-        new INotifyingItem<P3Float> Rotation_Property { get; }
+        new PlacedLocation Location { get; set; }
+        new INotifyingSetItem<PlacedLocation> Location_Property { get; }
 
     }
 
@@ -2407,14 +2284,9 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Single> Scale_Property { get; }
 
         #endregion
-        #region Position
-        P3Float Position { get; }
-        INotifyingItemGetter<P3Float> Position_Property { get; }
-
-        #endregion
-        #region Rotation
-        P3Float Rotation { get; }
-        INotifyingItemGetter<P3Float> Rotation_Property { get; }
+        #region Location
+        PlacedLocation Location { get; }
+        INotifyingSetItemGetter<PlacedLocation> Location_Property { get; }
 
         #endregion
 
@@ -2441,8 +2313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         EnableParent = 9,
         RagdollData = 10,
         Scale = 11,
-        Position = 12,
-        Rotation = 13,
+        Location = 12,
     }
     #endregion
 
@@ -2460,9 +2331,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b0f41e71-09f4-46b3-8769-7252455d209f";
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(PlacedCreature_Mask<>);
 
@@ -2504,10 +2375,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)PlacedCreature_FieldIndex.RagdollData;
                 case "SCALE":
                     return (ushort)PlacedCreature_FieldIndex.Scale;
-                case "POSITION":
-                    return (ushort)PlacedCreature_FieldIndex.Position;
-                case "ROTATION":
-                    return (ushort)PlacedCreature_FieldIndex.Rotation;
+                case "LOCATION":
+                    return (ushort)PlacedCreature_FieldIndex.Location;
                 default:
                     return null;
             }
@@ -2525,8 +2394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.EnableParent:
                 case PlacedCreature_FieldIndex.RagdollData:
                 case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedCreature_FieldIndex.Location:
                     return false;
                 default:
                     return Placed_Registration.GetNthIsEnumerable(index);
@@ -2539,6 +2407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedCreature_FieldIndex.EnableParent:
+                case PlacedCreature_FieldIndex.Location:
                     return true;
                 case PlacedCreature_FieldIndex.Base:
                 case PlacedCreature_FieldIndex.Owner:
@@ -2546,8 +2415,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.GlobalVariable:
                 case PlacedCreature_FieldIndex.RagdollData:
                 case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
                     return Placed_Registration.GetNthIsLoqui(index);
@@ -2566,8 +2433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.EnableParent:
                 case PlacedCreature_FieldIndex.RagdollData:
                 case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedCreature_FieldIndex.Location:
                     return false;
                 default:
                     return Placed_Registration.GetNthIsSingleton(index);
@@ -2593,10 +2459,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "RagdollData";
                 case PlacedCreature_FieldIndex.Scale:
                     return "Scale";
-                case PlacedCreature_FieldIndex.Position:
-                    return "Position";
-                case PlacedCreature_FieldIndex.Rotation:
-                    return "Rotation";
+                case PlacedCreature_FieldIndex.Location:
+                    return "Location";
                 default:
                     return Placed_Registration.GetNthName(index);
             }
@@ -2614,8 +2478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.EnableParent:
                 case PlacedCreature_FieldIndex.RagdollData:
                 case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedCreature_FieldIndex.Location:
                     return false;
                 default:
                     return Placed_Registration.IsNthDerivative(index);
@@ -2634,8 +2497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.EnableParent:
                 case PlacedCreature_FieldIndex.RagdollData:
                 case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
+                case PlacedCreature_FieldIndex.Location:
                     return false;
                 default:
                     return Placed_Registration.IsProtected(index);
@@ -2661,10 +2523,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Byte[]);
                 case PlacedCreature_FieldIndex.Scale:
                     return typeof(Single);
-                case PlacedCreature_FieldIndex.Position:
-                    return typeof(P3Float);
-                case PlacedCreature_FieldIndex.Rotation:
-                    return typeof(P3Float);
+                case PlacedCreature_FieldIndex.Location:
+                    return typeof(PlacedLocation);
                 default:
                     return Placed_Registration.GetNthType(index);
             }
@@ -2681,7 +2541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = ACRE_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 7;
+        public const int NumTypedFields = 8;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2894,33 +2754,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask.PopIndex();
                 }
             }
-            if (copyMask?.Position ?? true)
+            if (copyMask?.Location.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Position);
+                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Location);
                 try
                 {
-                    item.Position_Property.Set(
-                        value: rhs.Position,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask.PopIndex();
-                }
-            }
-            if (copyMask?.Rotation ?? true)
-            {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
-                try
-                {
-                    item.Rotation_Property.Set(
-                        value: rhs.Rotation,
-                        cmds: cmds);
+                    item.Location_Property.SetToWithDefault(
+                        rhs.Location_Property,
+                        def?.Location_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Location.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    PlacedLocationCommon.CopyFieldsFrom(
+                                        item: item.Location,
+                                        rhs: rhs.Location,
+                                        def: def?.Location,
+                                        errorMask: errorMask,
+                                        copyMask: copyMask?.Location.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(PlacedLocation);
+                                    return PlacedLocation.Copy(
+                                        r,
+                                        copyMask?.Location?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Location?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2945,10 +2813,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case PlacedCreature_FieldIndex.Base:
                     obj.Base_Property.HasBeenSet = on;
                     break;
@@ -2969,6 +2833,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case PlacedCreature_FieldIndex.Scale:
                     obj.Scale_Property.HasBeenSet = on;
+                    break;
+                case PlacedCreature_FieldIndex.Location:
+                    obj.Location_Property.HasBeenSet = on;
                     break;
                 default:
                     PlacedCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -3005,11 +2872,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Scale:
                     obj.Scale_Property.Unset(cmds);
                     break;
-                case PlacedCreature_FieldIndex.Position:
-                    obj.Position = default(P3Float);
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    obj.Rotation = default(P3Float);
+                case PlacedCreature_FieldIndex.Location:
+                    obj.Location_Property.Unset(cmds);
                     break;
                 default:
                     PlacedCommon.UnsetNthObject(index, obj);
@@ -3024,9 +2888,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
             switch (enu)
             {
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
-                    return true;
                 case PlacedCreature_FieldIndex.Base:
                     return obj.Base_Property.HasBeenSet;
                 case PlacedCreature_FieldIndex.Owner:
@@ -3041,6 +2902,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.RagdollData_Property.HasBeenSet;
                 case PlacedCreature_FieldIndex.Scale:
                     return obj.Scale_Property.HasBeenSet;
+                case PlacedCreature_FieldIndex.Location:
+                    return obj.Location_Property.HasBeenSet;
                 default:
                     return PlacedCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -3067,10 +2930,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.RagdollData;
                 case PlacedCreature_FieldIndex.Scale:
                     return obj.Scale;
-                case PlacedCreature_FieldIndex.Position:
-                    return obj.Position;
-                case PlacedCreature_FieldIndex.Rotation:
-                    return obj.Rotation;
+                case PlacedCreature_FieldIndex.Location:
+                    return obj.Location;
                 default:
                     return PlacedCommon.GetNthObject(index, obj);
             }
@@ -3087,8 +2948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.EnableParent_Property.Unset(cmds.ToUnsetParams());
             item.RagdollData_Property.Unset(cmds.ToUnsetParams());
             item.Scale_Property.Unset(cmds.ToUnsetParams());
-            item.Position = default(P3Float);
-            item.Rotation = default(P3Float);
+            item.Location_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static PlacedCreature_Mask<bool> GetEqualsMask(
@@ -3113,8 +2973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.EnableParent = item.EnableParent_Property.LoquiEqualsHelper(rhs.EnableParent_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.RagdollData = item.RagdollData_Property.Equals(rhs.RagdollData_Property, (l, r) => l.EqualsFast(r));
             ret.Scale = item.Scale_Property.Equals(rhs.Scale_Property, (l, r) => l == r);
-            ret.Position = item.Position == rhs.Position;
-            ret.Rotation = item.Rotation == rhs.Rotation;
+            ret.Location = item.Location_Property.LoquiEqualsHelper(rhs.Location_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             PlacedCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -3173,13 +3032,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Scale => {item.Scale}");
                 }
-                if (printMask?.Position ?? true)
+                if (printMask?.Location?.Overall ?? true)
                 {
-                    fg.AppendLine($"Position => {item.Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {item.Rotation}");
+                    item.Location?.ToString(fg, "Location");
                 }
             }
             fg.AppendLine("]");
@@ -3197,6 +3052,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_Property.HasBeenSet) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_Property.HasBeenSet) return false;
+            if (checkMask.Location.Overall.HasValue && checkMask.Location.Overall.Value != item.Location_Property.HasBeenSet) return false;
+            if (checkMask.Location.Specific != null && (item.Location == null || !item.Location.HasBeenSet(checkMask.Location.Specific))) return false;
             return true;
         }
 
@@ -3210,8 +3067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_Property.HasBeenSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
             ret.RagdollData = item.RagdollData_Property.HasBeenSet;
             ret.Scale = item.Scale_Property.HasBeenSet;
-            ret.Position = true;
-            ret.Rotation = true;
+            ret.Location = new MaskItem<bool, PlacedLocation_Mask<bool>>(item.Location_Property.HasBeenSet, PlacedLocationCommon.GetHasBeenSetMask(item.Location));
             return ret;
         }
 
@@ -3358,18 +3214,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
                     errorMask: errorMask);
             }
-            P3FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.Position),
-                item: item.Position_Property,
-                fieldIndex: (int)PlacedCreature_FieldIndex.Position,
-                errorMask: errorMask);
-            P3FloatXmlTranslation.Instance.Write(
-                node: elem,
-                name: nameof(item.Rotation),
-                item: item.Rotation_Property,
-                fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
-                errorMask: errorMask);
+            if (item.Location_Property.HasBeenSet)
+            {
+                LoquiXmlTranslation<PlacedLocation>.Instance.Write(
+                    node: elem,
+                    item: item.Location_Property,
+                    name: nameof(item.Location),
+                    fieldIndex: (int)PlacedCreature_FieldIndex.Location,
+                    errorMask: errorMask);
+            }
         }
         #endregion
 
@@ -3475,19 +3328,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XSCL_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.DATA_HEADER)))
-            {
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Position_Property,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Position,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Rotation_Property,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
-                    errorMask: errorMask);
-            }
+            LoquiBinaryTranslation<PlacedLocation>.Instance.Write(
+                writer: writer,
+                item: item.Location_Property,
+                fieldIndex: (int)PlacedCreature_FieldIndex.Location,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -3514,8 +3359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.EnableParent = new MaskItem<T, EnableParent_Mask<T>>(initialValue, new EnableParent_Mask<T>(initialValue));
             this.RagdollData = initialValue;
             this.Scale = initialValue;
-            this.Position = initialValue;
-            this.Rotation = initialValue;
+            this.Location = new MaskItem<T, PlacedLocation_Mask<T>>(initialValue, new PlacedLocation_Mask<T>(initialValue));
         }
         #endregion
 
@@ -3527,8 +3371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, EnableParent_Mask<T>> EnableParent { get; set; }
         public T RagdollData;
         public T Scale;
-        public T Position;
-        public T Rotation;
+        public MaskItem<T, PlacedLocation_Mask<T>> Location { get; set; }
         #endregion
 
         #region Equals
@@ -3549,8 +3392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
             if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
             if (!object.Equals(this.Scale, rhs.Scale)) return false;
-            if (!object.Equals(this.Position, rhs.Position)) return false;
-            if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
+            if (!object.Equals(this.Location, rhs.Location)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3563,8 +3405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
             ret = ret.CombineHashCode(this.RagdollData?.GetHashCode());
             ret = ret.CombineHashCode(this.Scale?.GetHashCode());
-            ret = ret.CombineHashCode(this.Position?.GetHashCode());
-            ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
+            ret = ret.CombineHashCode(this.Location?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -3586,8 +3427,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (!eval(this.RagdollData)) return false;
             if (!eval(this.Scale)) return false;
-            if (!eval(this.Position)) return false;
-            if (!eval(this.Rotation)) return false;
+            if (Location != null)
+            {
+                if (!eval(this.Location.Overall)) return false;
+                if (this.Location.Specific != null && !this.Location.Specific.AllEqual(eval)) return false;
+            }
             return true;
         }
         #endregion
@@ -3618,8 +3462,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             obj.RagdollData = eval(this.RagdollData);
             obj.Scale = eval(this.Scale);
-            obj.Position = eval(this.Position);
-            obj.Rotation = eval(this.Rotation);
+            if (this.Location != null)
+            {
+                obj.Location = new MaskItem<R, PlacedLocation_Mask<R>>();
+                obj.Location.Overall = eval(this.Location.Overall);
+                if (this.Location.Specific != null)
+                {
+                    obj.Location.Specific = this.Location.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -3677,13 +3528,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Scale => {Scale}");
                 }
-                if (printMask?.Position ?? true)
+                if (printMask?.Location?.Overall ?? true)
                 {
-                    fg.AppendLine($"Position => {Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {Rotation}");
+                    Location?.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -3702,8 +3549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, EnableParent_ErrorMask> EnableParent;
         public Exception RagdollData;
         public Exception Scale;
-        public Exception Position;
-        public Exception Rotation;
+        public MaskItem<Exception, PlacedLocation_ErrorMask> Location;
         #endregion
 
         #region IErrorMask
@@ -3726,10 +3572,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return RagdollData;
                 case PlacedCreature_FieldIndex.Scale:
                     return Scale;
-                case PlacedCreature_FieldIndex.Position:
-                    return Position;
-                case PlacedCreature_FieldIndex.Rotation:
-                    return Rotation;
+                case PlacedCreature_FieldIndex.Location:
+                    return Location;
                 default:
                     return base.GetNthMask(index);
             }
@@ -3761,11 +3605,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Scale:
                     this.Scale = ex;
                     break;
-                case PlacedCreature_FieldIndex.Position:
-                    this.Position = ex;
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    this.Rotation = ex;
+                case PlacedCreature_FieldIndex.Location:
+                    this.Location = new MaskItem<Exception, PlacedLocation_ErrorMask>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -3799,11 +3640,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Scale:
                     this.Scale = (Exception)obj;
                     break;
-                case PlacedCreature_FieldIndex.Position:
-                    this.Position = (Exception)obj;
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    this.Rotation = (Exception)obj;
+                case PlacedCreature_FieldIndex.Location:
+                    this.Location = (MaskItem<Exception, PlacedLocation_ErrorMask>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -3821,8 +3659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (EnableParent != null) return true;
             if (RagdollData != null) return true;
             if (Scale != null) return true;
-            if (Position != null) return true;
-            if (Rotation != null) return true;
+            if (Location != null) return true;
             return false;
         }
         #endregion
@@ -3865,8 +3702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EnableParent?.ToString(fg);
             fg.AppendLine($"RagdollData => {RagdollData}");
             fg.AppendLine($"Scale => {Scale}");
-            fg.AppendLine($"Position => {Position}");
-            fg.AppendLine($"Rotation => {Rotation}");
+            Location?.ToString(fg);
         }
         #endregion
 
@@ -3881,8 +3717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.EnableParent = new MaskItem<Exception, EnableParent_ErrorMask>(this.EnableParent.Overall.Combine(rhs.EnableParent.Overall), ((IErrorMask<EnableParent_ErrorMask>)this.EnableParent.Specific).Combine(rhs.EnableParent.Specific));
             ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
             ret.Scale = this.Scale.Combine(rhs.Scale);
-            ret.Position = this.Position.Combine(rhs.Position);
-            ret.Rotation = this.Rotation.Combine(rhs.Rotation);
+            ret.Location = new MaskItem<Exception, PlacedLocation_ErrorMask>(this.Location.Overall.Combine(rhs.Location.Overall), ((IErrorMask<PlacedLocation_ErrorMask>)this.Location.Specific).Combine(rhs.Location.Specific));
             return ret;
         }
         public static PlacedCreature_ErrorMask Combine(PlacedCreature_ErrorMask lhs, PlacedCreature_ErrorMask rhs)
@@ -3911,8 +3746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, EnableParent_CopyMask> EnableParent;
         public bool RagdollData;
         public bool Scale;
-        public bool Position;
-        public bool Rotation;
+        public MaskItem<CopyOption, PlacedLocation_CopyMask> Location;
         #endregion
 
     }

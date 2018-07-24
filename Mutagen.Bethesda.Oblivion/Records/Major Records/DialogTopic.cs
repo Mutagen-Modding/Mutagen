@@ -60,7 +60,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (obj.Items.Count == 0) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
-                writer.Write(obj.FormID.ID);
+                FormIDBinaryTranslation.Instance.Write(
+                    writer,
+                    obj.FormID,
+                    errorMask);
                 writer.Write((int)GroupTypeEnum.TopicChildren);
                 if (obj._overallTimeStamp != null)
                 {

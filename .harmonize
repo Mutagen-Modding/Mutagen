@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>ba375b15f321623e2bb4f015d204a57351adad3f</Sha>
+         <Sha>0fab9ce70bde60cc43651267b16feb9235a28f78</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-23-2018 08:23:11</CommitDate>
-         <Description>RangeCollection enumerator</Description>
+         <CommitDate>07-23-2018 20:29:04</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/master'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

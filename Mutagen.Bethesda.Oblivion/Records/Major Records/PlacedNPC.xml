@@ -11,12 +11,7 @@
       <FormIDLink name="Horse" recordType="XHRS" refName="PlacedCreature" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <Float name="Scale" recordType="XSCL" />
-      <Data>
-        <Fields>
-          <P3Float name="Position" />
-          <P3Float name="Rotation" />
-        </Fields>
-      </Data>
+      <RefDirect name="Location" refName="PlacedLocation" />
     </Fields>
   </Object>
 </Loqui>

@@ -726,6 +726,9 @@
     <Compile Include="Records\Major Records\RelatedWaters_LoquiGenerated.cs">
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\PlacedLocation_LoquiGenerated.cs">
+      <DependentUpon>PlacedLocation.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Condition.xml">
@@ -744,6 +747,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\Model.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Common Subrecords\PlacedLocation.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\Relation.xml">
