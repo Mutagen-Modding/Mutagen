@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Tests
     {
         private BinaryProcessorInstructions GetOblivionInstructions(
             Dictionary<long, uint> lengthTracker,
-            MajorRecordLocator.FileLocations fileLocs)
+            RecordLocator.FileLocations fileLocs)
         {
             var instructions = new BinaryProcessorInstructions();
             instructions.Instruction.Substitutions.Add(new DataTarget()
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Tests
             Type recType,
             Instruction instr,
             RangeInt64 loc,
-            MajorRecordLocator.FileLocations fileLocs,
+            RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Tests
             Type recType,
             Instruction instr,
             RangeInt64 loc,
-            MajorRecordLocator.FileLocations fileLocs,
+            RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Tests
             Type recType,
             Instruction instr,
             RangeInt64 loc,
-            MajorRecordLocator.FileLocations fileLocs,
+            RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Tests
             Type recType,
             Instruction instr,
             RangeInt64 loc,
-            MajorRecordLocator.FileLocations fileLocs,
+            RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Tests
             Type recType,
             Instruction instr,
             RangeInt64 loc,
-            MajorRecordLocator.FileLocations fileLocs,
+            RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Tests
             Type recType,
             Instruction instr,
             RangeInt64 loc,
-            MajorRecordLocator.FileLocations fileLocs,
+            RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Tests
             Type recType,
             Instruction instr,
             RangeInt64 loc,
-            MajorRecordLocator.FileLocations fileLocs,
+            RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Tests
             Type recType,
             Instruction instr,
             RangeInt64 loc,
-            MajorRecordLocator.FileLocations fileLocs,
+            RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Tests
             Type recType,
             Instruction instr,
             RangeInt64 loc,
-            MajorRecordLocator.FileLocations fileLocs,
+            RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker,
             bool processing)
         {
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Tests
                 BinaryProcessorInstructions instructions;
                 if (!reuseOld || !File.Exists(processedPath))
                 {
-                    var alignedFileLocs = MajorRecordLocator.GetFileLocations(
+                    var alignedFileLocs = RecordLocator.GetFileLocations(
                     alignedPath);
 
                     Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Tests
                 }
 
                 instructions = new BinaryProcessorInstructions();
-                var processedFileLocs = MajorRecordLocator.GetFileLocations(
+                var processedFileLocs = RecordLocator.GetFileLocations(
                     processedPath);
                 using (var stream = new BinaryReadStream(processedPath))
                 {
@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Tests
                     oblivionOutputPath,
                     out var outputErrMask);
                 Assert.False(outputErrMask?.IsInError() ?? false);
-                var fileLocs = MajorRecordLocator.GetFileLocations(oblivionOutputPath);
+                var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath);
                 using (var reader = new BinaryReadStream(oblivionOutputPath))
                 {
                     foreach (var rec in fileLocs.ListedRecords.Keys)
@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Tests
                         NPCs = true
                     });
                 Assert.False(outputErrMask?.IsInError() ?? false);
-                var fileLocs = MajorRecordLocator.GetFileLocations(oblivionOutputPath);
+                var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath);
                 using (var reader = new BinaryReadStream(oblivionOutputPath))
                 {
                     foreach (var rec in fileLocs.ListedRecords.Keys)
@@ -1416,11 +1416,11 @@ namespace Mutagen.Bethesda.Tests
             string origPath,
             string processedPath,
             string outputPath,
-            MajorRecordLocator.FileLocations originalFileLocs)
+            RecordLocator.FileLocations originalFileLocs)
         {
             if (!sections.Any()) return;
 
-            var outputFileLocs = MajorRecordLocator.GetFileLocations(outputPath);
+            var outputFileLocs = RecordLocator.GetFileLocations(outputPath);
 
             HashSet<FormID> ids = new HashSet<FormID>();
             foreach (var (Source, Output) in sections)

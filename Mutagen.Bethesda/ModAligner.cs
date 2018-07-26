@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda
             TempFolder temp = null)
         {
             var interest = new RecordInterest(alignmentRules.Alignments.Keys);
-            var fileLocs = MajorRecordLocator.GetFileLocations(inputPath.Path, interest);
+            var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, interest);
             temp = temp ?? new TempFolder();
             using (temp)
             {
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda
                     }
                 }
 
-                fileLocs = MajorRecordLocator.GetFileLocations(alignedGroupsFile, interest);
+                fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, interest);
                 var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda
                     }
                 }
 
-                fileLocs = MajorRecordLocator.GetFileLocations(alignedCellsFile, interest);
+                fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, interest);
                 using (var mutaReader = new BinaryReadStream(alignedCellsFile))
                 {
                     using (var writer = new MutagenWriter(outputPath.Path))
@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda
             BinaryReadStream inputStream,
             MutagenWriter writer,
             AlignmentRules alignmentRules,
-            MajorRecordLocator.FileLocations fileLocs)
+            RecordLocator.FileLocations fileLocs)
         {
             while (!inputStream.Complete)
             {
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda
             BinaryReadStream inputStream,
             MutagenWriter writer,
             AlignmentRules alignmentRules,
-            MajorRecordLocator.FileLocations fileLocs)
+            RecordLocator.FileLocations fileLocs)
         {
             while (!inputStream.Complete)
             {

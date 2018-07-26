@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
         }
 
-        protected static void Fill_Binary_Structs(
+        public static void Fill_Binary_Structs(
             Group<T> item,
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)

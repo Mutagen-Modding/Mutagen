@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="BinaryFileProcessor.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="INamed.cs" />
     <Compile Include="Links\EDIDSetLink.cs" />
@@ -57,7 +58,7 @@
     <Compile Include="FormID.cs" />
     <Compile Include="Links\FormIDLink.cs" />
     <Compile Include="IMod.cs" />
-    <Compile Include="MajorRecordLocator.cs" />
+    <Compile Include="RecordLocator.cs" />
     <Compile Include="ModAligner.cs" />
     <Compile Include="ModID.cs" />
     <Compile Include="ModKey.cs" />

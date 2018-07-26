@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public static class MajorRecordLocator
+    public static class RecordLocator
     {
         private readonly static RecordType GRUP = new RecordType("GRUP");
 
+        #region Get File Locations
         internal class FileLocationConstructor
         {
             public Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)> FromFormIDs = new Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)>();
@@ -149,17 +150,22 @@ namespace Mutagen.Bethesda
             }
         }
 
+        private static void SkipHeader(
+            IBinaryReadStream reader)
+        {
+            reader.Position += 4;
+            var headerLen = reader.ReadUInt32();
+            reader.Position += 12;
+            reader.Position += headerLen;
+        }
+
         public static FileLocations GetFileLocations(
             BinaryReadStream reader,
             RecordInterest interest = null,
             Func<IBinaryReadStream, RecordType, uint, bool> additionalCriteria = null)
         {
             FileLocationConstructor ret = new FileLocationConstructor();
-            // Skip header
-            reader.Position += 4;
-            var headerLen = reader.ReadUInt32();
-            reader.Position += 12;
-            reader.Position += headerLen;
+            SkipHeader(reader);
 
             HashSet<RecordType> remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
             Stack<long> grupPositions = new Stack<long>();
@@ -440,5 +446,75 @@ namespace Mutagen.Bethesda
                 }
             }
         }
+        #endregion
+
+        #region Base GRUP Iterator
+        public static IEnumerable<KeyValuePair<RecordType, long>> IterateBaseGroupLocations(
+            IBinaryReadStream reader)
+        {
+            SkipHeader(reader);
+            while (!reader.Complete)
+            {
+                var grupLoc = reader.Position;
+                var grup = HeaderTranslation.ReadNextRecordType(reader);
+                var grupLength = reader.ReadUInt32();
+                var recType = HeaderTranslation.ReadNextRecordType(reader);
+                yield return new KeyValuePair<RecordType, long>(recType, grupLoc);
+                reader.Position += grupLength - 12;
+            }
+        }
+
+        public static IEnumerable<KeyValuePair<FormID, long>> ParseTopLevelGRUP(
+            IBinaryReadStream reader,
+            bool checkOverallGrupType = true)
+        {
+            var grupLoc = reader.Position;
+            var grup = HeaderTranslation.ReadNextRecordType(reader);
+            if (!grup.Equals(GRUP))
+            {
+                throw new ArgumentException();
+            }
+            var grupLength = reader.ReadUInt32();
+            var grupRec = HeaderTranslation.ReadNextRecordType(reader);
+            var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(reader, 4));
+
+            reader.Position += 4;
+
+            using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + grupLength - 20))
+            {
+                while (!frame.Complete)
+                {
+                    var recordLocation = reader.Position;
+                    var targetRec = HeaderTranslation.ReadNextRecordType(reader);
+                    if (!grupRec.Equals(targetRec))
+                    {
+                        reader.Position -= 4;
+                        if (IsSubLevelGRUP(reader))
+                        {
+                            reader.Position += 4;
+                            var subGrupLen = reader.ReadUInt32();
+                            reader.Position += subGrupLen - 8;
+                            continue;
+                        }
+                        else if (!checkOverallGrupType)
+                        {
+                            reader.Position += 4;
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
+                        }
+                    }
+                    var recLength = reader.ReadUInt32();
+                    reader.Position += 4; // Skip flags
+                    var formID = FormID.Factory(reader.ReadUInt32());
+                    yield return new KeyValuePair<FormID, long>(
+                        formID,
+                        recordLocation);
+                    reader.Position += 4 + recLength;
+                }
+            }
+        }
+        #endregion
     }
 }

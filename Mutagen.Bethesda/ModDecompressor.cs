@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
                     using (var writer = new System.IO.BinaryWriter(fs))
                     {
                         long runningDiff = 0;
-                        var fileLocs = MajorRecordLocator.GetFileLocations(
+                        var fileLocs = RecordLocator.GetFileLocations(
                             inputStream,
                             interest,
                             additionalCriteria: (stream, recType, len) =>

@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Records\Observables\GroupObservable.cs" />
+    <Compile Include="Records\Observables\OblivionMod_Observable.cs" />
     <Compile Include="Records\Common Enums\ActorValue.cs" />
     <Compile Include="Records\Common Enums\ActorValueExtended.cs" />
     <Compile Include="Records\Common Enums\Attribute.cs" />
@@ -988,6 +990,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="System.Reactive">
+      <Version>3.1.1</Version>
+    </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.4.0</Version>
     </PackageReference>
