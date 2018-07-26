@@ -7015,6 +7015,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = NPC_Registration.TRIGGERING_RECORD_TYPE;
+        public ACBSDataType ACBSDataTypeState;
+        [Flags]
+        public enum ACBSDataType
+        {
+            Has = 1
+        }
+        public AIDTDataType AIDTDataTypeState;
+        [Flags]
+        public enum AIDTDataType
+        {
+            Has = 1
+        }
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -7303,6 +7321,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.ACBSDataTypeState = ACBSDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)NPC_FieldIndex.NPCFlags);
@@ -7531,6 +7553,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.AIDTDataTypeState = AIDTDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)NPC_FieldIndex.Aggression);
@@ -7765,6 +7791,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)NPC_FieldIndex.Armorer);
@@ -14217,44 +14247,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)NPC_FieldIndex.Model,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.ACBS_HEADER)))
+            if (item.ACBSDataTypeState.HasFlag(NPC.ACBSDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Write(
-                    writer,
-                    item.NPCFlags_Property,
-                    length: 4,
-                    fieldIndex: (int)NPC_FieldIndex.NPCFlags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BaseSpellPoints_Property,
-                    fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fatigue_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Fatigue,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BarterGold_Property,
-                    fieldIndex: (int)NPC_FieldIndex.BarterGold,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LevelOffset_Property,
-                    fieldIndex: (int)NPC_FieldIndex.LevelOffset,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CalcMin_Property,
-                    fieldIndex: (int)NPC_FieldIndex.CalcMin,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CalcMax_Property,
-                    fieldIndex: (int)NPC_FieldIndex.CalcMax,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.ACBS_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Write(
+                        writer,
+                        item.NPCFlags_Property,
+                        length: 4,
+                        fieldIndex: (int)NPC_FieldIndex.NPCFlags,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BaseSpellPoints_Property,
+                        fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fatigue_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Fatigue,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BarterGold_Property,
+                        fieldIndex: (int)NPC_FieldIndex.BarterGold,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LevelOffset_Property,
+                        fieldIndex: (int)NPC_FieldIndex.LevelOffset,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CalcMin_Property,
+                        fieldIndex: (int)NPC_FieldIndex.CalcMin,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CalcMax_Property,
+                        fieldIndex: (int)NPC_FieldIndex.CalcMax,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Write(
                 writer: writer,
@@ -14296,50 +14329,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)NPC_FieldIndex.Items,
                 errorMask: errorMask,
                 transl: LoquiBinaryTranslation<ItemEntry>.Instance.Write);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.AIDT_HEADER)))
+            if (item.AIDTDataTypeState.HasFlag(NPC.AIDTDataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Aggression_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Aggression,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Confidence_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Confidence,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EnergyLevel_Property,
-                    fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Responsibility_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Responsibility,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Write(
-                    writer,
-                    item.BuySellServices_Property,
-                    length: 4,
-                    fieldIndex: (int)NPC_FieldIndex.BuySellServices,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
-                    writer,
-                    item.Teaches_Property,
-                    length: 1,
-                    fieldIndex: (int)NPC_FieldIndex.Teaches,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaximumTrainingLevel_Property,
-                    fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fluff_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Fluff,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.AIDT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Aggression_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Aggression,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Confidence_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Confidence,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EnergyLevel_Property,
+                        fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Responsibility_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Responsibility,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+                        writer,
+                        item.BuySellServices_Property,
+                        length: 4,
+                        fieldIndex: (int)NPC_FieldIndex.BuySellServices,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+                        writer,
+                        item.Teaches_Property,
+                        length: 1,
+                        fieldIndex: (int)NPC_FieldIndex.Teaches,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MaximumTrainingLevel_Property,
+                        fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Fluff,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.WriteListOfRecords(
                 writer: writer,
@@ -14362,158 +14398,161 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.CNAM_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(NPC.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Armorer_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Armorer,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Athletics_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Athletics,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Blade_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Blade,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Block_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Block,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Blunt_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Blunt,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HandToHand_Property,
-                    fieldIndex: (int)NPC_FieldIndex.HandToHand,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HeavyArmor_Property,
-                    fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Alchemy_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Alchemy,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Alteration_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Alteration,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Conjuration_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Conjuration,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Destruction_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Destruction,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Illusion_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Illusion,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Mysticism_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Mysticism,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Restoration_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Restoration,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Acrobatics_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Acrobatics,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LightArmor_Property,
-                    fieldIndex: (int)NPC_FieldIndex.LightArmor,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Marksman_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Marksman,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Mercantile_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Mercantile,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Security_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Security,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Sneak_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Sneak,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Speechcraft_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Speechcraft,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Health_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Health,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Strength_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Strength,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Intelligence_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Intelligence,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Willpower_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Willpower,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Agility_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Agility,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Speed_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Speed,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Endurance_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Endurance,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Personality_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Personality,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Luck_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Luck,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Armorer_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Armorer,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Athletics_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Athletics,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Blade_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Blade,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Block_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Block,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Blunt_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Blunt,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HandToHand_Property,
+                        fieldIndex: (int)NPC_FieldIndex.HandToHand,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HeavyArmor_Property,
+                        fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Alchemy_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Alchemy,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Alteration_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Alteration,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Conjuration_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Conjuration,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Destruction_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Destruction,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Illusion_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Illusion,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Mysticism_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Mysticism,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Restoration_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Restoration,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Acrobatics_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Acrobatics,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LightArmor_Property,
+                        fieldIndex: (int)NPC_FieldIndex.LightArmor,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Marksman_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Marksman,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Mercantile_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Mercantile,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Security_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Security,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Sneak_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Sneak,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Speechcraft_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Speechcraft,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Health_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Health,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Strength_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Strength,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Intelligence_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Intelligence,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Willpower_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Willpower,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Agility_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Agility,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Speed_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Speed,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Endurance_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Endurance,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Personality_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Personality,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Luck_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Luck,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,

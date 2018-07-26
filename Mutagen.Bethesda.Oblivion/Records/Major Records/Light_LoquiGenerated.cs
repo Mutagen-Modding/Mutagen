@@ -2430,7 +2430,8 @@ namespace Mutagen.Bethesda.Oblivion
         [Flags]
         public enum DATADataType
         {
-            Range0 = 1
+            Has = 1,
+            Range0 = 2
         }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
@@ -2744,6 +2745,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Light_FieldIndex.Time);
@@ -4653,53 +4658,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Light_Registration.ICON_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Light.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Time_Property,
-                    fieldIndex: (int)Light_FieldIndex.Time,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Radius_Property,
-                    fieldIndex: (int)Light_FieldIndex.Radius,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Color_Property,
-                    fieldIndex: (int)Light_FieldIndex.Color,
-                    errorMask: errorMask,
-                    extraByte: true);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)Light_FieldIndex.Flags,
-                    errorMask: errorMask);
-                if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FalloffExponent_Property,
-                        fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                        item: item.Time_Property,
+                        fieldIndex: (int)Light_FieldIndex.Time,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Radius_Property,
+                        fieldIndex: (int)Light_FieldIndex.Radius,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Color_Property,
+                        fieldIndex: (int)Light_FieldIndex.Color,
+                        errorMask: errorMask,
+                        extraByte: true);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)Light_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))
+                    {
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.FalloffExponent_Property,
+                            fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.FOV_Property,
+                            fieldIndex: (int)Light_FieldIndex.FOV,
+                            errorMask: errorMask);
+                    }
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Value_Property,
+                        fieldIndex: (int)Light_FieldIndex.Value,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FOV_Property,
-                        fieldIndex: (int)Light_FieldIndex.FOV,
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Light_FieldIndex.Weight,
                         errorMask: errorMask);
                 }
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Value_Property,
-                    fieldIndex: (int)Light_FieldIndex.Value,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Weight_Property,
-                    fieldIndex: (int)Light_FieldIndex.Weight,
-                    errorMask: errorMask);
             }
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,

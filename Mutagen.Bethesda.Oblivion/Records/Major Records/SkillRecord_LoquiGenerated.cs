@@ -2017,6 +2017,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = SkillRecord_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -2311,6 +2317,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
@@ -4059,36 +4069,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ICON_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                    writer,
-                    item.Action_Property,
-                    length: 4,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Action,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                    writer,
-                    item.Attribute_Property,
-                    length: 4,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
-                    writer,
-                    item.Specialization_Property,
-                    length: 4,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.UseValueFirst_Property,
-                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.UseValueSecond_Property,
-                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                        writer,
+                        item.Action_Property,
+                        length: 4,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                        writer,
+                        item.Attribute_Property,
+                        length: 4,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
+                        writer,
+                        item.Specialization_Property,
+                        length: 4,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.UseValueFirst_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.UseValueSecond_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,

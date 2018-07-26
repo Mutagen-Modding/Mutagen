@@ -1306,6 +1306,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = SpellUnleveled_Registration.TRIGGERING_RECORD_TYPE;
+        public SPITDataType SPITDataTypeState;
+        [Flags]
+        public enum SPITDataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -1530,6 +1536,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.SPITDataTypeState = SPITDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
@@ -2686,31 +2696,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SpellUnleveled_Registration.SPIT_HEADER)))
+            if (item.SPITDataTypeState.HasFlag(SpellUnleveled.SPITDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Write(
-                    writer,
-                    item.Type_Property,
-                    length: 4,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Cost_Property,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Write(
-                    writer,
-                    item.Level_Property,
-                    length: 4,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Write(
-                    writer,
-                    item.Flag_Property,
-                    length: 4,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SpellUnleveled_Registration.SPIT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Write(
+                        writer,
+                        item.Type_Property,
+                        length: 4,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Cost_Property,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Write(
+                        writer,
+                        item.Level_Property,
+                        length: 4,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Write(
+                        writer,
+                        item.Flag_Property,
+                        length: 4,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
                 writer: writer,

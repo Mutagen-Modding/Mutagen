@@ -5803,6 +5803,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Creature_Registration.TRIGGERING_RECORD_TYPE;
+        public ACBSDataType ACBSDataTypeState;
+        [Flags]
+        public enum ACBSDataType
+        {
+            Has = 1
+        }
+        public AIDTDataType AIDTDataTypeState;
+        [Flags]
+        public enum AIDTDataType
+        {
+            Has = 1
+        }
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -6158,6 +6176,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.ACBSDataTypeState = ACBSDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Creature_FieldIndex.Flags);
@@ -6358,6 +6380,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.AIDTDataTypeState = AIDTDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Creature_FieldIndex.Aggression);
@@ -6561,6 +6587,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Creature_FieldIndex.CreatureType);
@@ -11640,44 +11670,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.NIFT_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.ACBS_HEADER)))
+            if (item.ACBSDataTypeState.HasFlag(Creature.ACBSDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)Creature_FieldIndex.Flags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BaseSpellPoints_Property,
-                    fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fatigue_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Fatigue,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BarterGold_Property,
-                    fieldIndex: (int)Creature_FieldIndex.BarterGold,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LevelOffset_Property,
-                    fieldIndex: (int)Creature_FieldIndex.LevelOffset,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CalcMin_Property,
-                    fieldIndex: (int)Creature_FieldIndex.CalcMin,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CalcMax_Property,
-                    fieldIndex: (int)Creature_FieldIndex.CalcMax,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.ACBS_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)Creature_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BaseSpellPoints_Property,
+                        fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fatigue_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Fatigue,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BarterGold_Property,
+                        fieldIndex: (int)Creature_FieldIndex.BarterGold,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LevelOffset_Property,
+                        fieldIndex: (int)Creature_FieldIndex.LevelOffset,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CalcMin_Property,
+                        fieldIndex: (int)Creature_FieldIndex.CalcMin,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CalcMax_Property,
+                        fieldIndex: (int)Creature_FieldIndex.CalcMax,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Write(
                 writer: writer,
@@ -11699,46 +11732,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.SCRI_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.AIDT_HEADER)))
+            if (item.AIDTDataTypeState.HasFlag(Creature.AIDTDataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Aggression_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Aggression,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Confidence_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Confidence,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EnergyLevel_Property,
-                    fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Responsibility_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Responsibility,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Write(
-                    writer,
-                    item.BuySellServices_Property,
-                    length: 4,
-                    fieldIndex: (int)Creature_FieldIndex.BuySellServices,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
-                    writer,
-                    item.Teaches_Property,
-                    length: 1,
-                    fieldIndex: (int)Creature_FieldIndex.Teaches,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaximumTrainingLevel_Property,
-                    fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
-                    errorMask: errorMask);
-                writer.WriteZeros(2);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.AIDT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Aggression_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Aggression,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Confidence_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Confidence,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EnergyLevel_Property,
+                        fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Responsibility_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Responsibility,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+                        writer,
+                        item.BuySellServices_Property,
+                        length: 4,
+                        fieldIndex: (int)Creature_FieldIndex.BuySellServices,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+                        writer,
+                        item.Teaches_Property,
+                        length: 1,
+                        fieldIndex: (int)Creature_FieldIndex.Teaches,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MaximumTrainingLevel_Property,
+                        fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
+                        errorMask: errorMask);
+                    writer.WriteZeros(2);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.WriteListOfRecords(
                 writer: writer,
@@ -11754,85 +11790,88 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: Creature_Registration.KFFZ_HEADER,
                 errorMask: errorMask,
                 transl: StringBinaryTranslation.Instance.Write);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Creature.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Write(
-                    writer,
-                    item.CreatureType_Property,
-                    length: 1,
-                    fieldIndex: (int)Creature_FieldIndex.CreatureType,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CombatSKill_Property,
-                    fieldIndex: (int)Creature_FieldIndex.CombatSKill,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MagicSKill_Property,
-                    fieldIndex: (int)Creature_FieldIndex.MagicSKill,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.StealthSKill_Property,
-                    fieldIndex: (int)Creature_FieldIndex.StealthSKill,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Write(
-                    writer,
-                    item.SoulLevel_Property,
-                    length: 2,
-                    fieldIndex: (int)Creature_FieldIndex.SoulLevel,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Health_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Health,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AttackDamage_Property,
-                    fieldIndex: (int)Creature_FieldIndex.AttackDamage,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Strength_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Strength,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Intelligence_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Intelligence,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Willpower_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Willpower,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Agility_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Agility,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Speed_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Speed,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Endurance_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Endurance,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Personality_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Personality,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Luck_Property,
-                    fieldIndex: (int)Creature_FieldIndex.Luck,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Write(
+                        writer,
+                        item.CreatureType_Property,
+                        length: 1,
+                        fieldIndex: (int)Creature_FieldIndex.CreatureType,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CombatSKill_Property,
+                        fieldIndex: (int)Creature_FieldIndex.CombatSKill,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MagicSKill_Property,
+                        fieldIndex: (int)Creature_FieldIndex.MagicSKill,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.StealthSKill_Property,
+                        fieldIndex: (int)Creature_FieldIndex.StealthSKill,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Write(
+                        writer,
+                        item.SoulLevel_Property,
+                        length: 2,
+                        fieldIndex: (int)Creature_FieldIndex.SoulLevel,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Health_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Health,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.AttackDamage_Property,
+                        fieldIndex: (int)Creature_FieldIndex.AttackDamage,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Strength_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Strength,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Intelligence_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Intelligence,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Willpower_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Willpower,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Agility_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Agility,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Speed_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Speed,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Endurance_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Endurance,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Personality_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Personality,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Luck_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Luck,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,

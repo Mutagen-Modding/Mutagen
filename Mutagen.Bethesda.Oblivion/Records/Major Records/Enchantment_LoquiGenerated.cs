@@ -1397,6 +1397,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Enchantment_Registration.TRIGGERING_RECORD_TYPE;
+        public ENITDataType ENITDataTypeState;
+        [Flags]
+        public enum ENITDataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -1649,6 +1655,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.ENITDataTypeState = ENITDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
@@ -2861,30 +2871,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Enchantment_Registration.FULL_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
+            if (item.ENITDataTypeState.HasFlag(Enchantment.ENITDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
-                    writer,
-                    item.Type_Property,
-                    length: 4,
-                    fieldIndex: (int)Enchantment_FieldIndex.Type,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ChargeAmount_Property,
-                    fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EnchantCost_Property,
-                    fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
+                        writer,
+                        item.Type_Property,
+                        length: 4,
+                        fieldIndex: (int)Enchantment_FieldIndex.Type,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ChargeAmount_Property,
+                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EnchantCost_Property,
+                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
                 writer: writer,

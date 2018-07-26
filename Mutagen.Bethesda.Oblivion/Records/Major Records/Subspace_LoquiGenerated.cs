@@ -796,6 +796,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Subspace_Registration.TRIGGERING_RECORD_TYPE;
+        public DNAMDataType DNAMDataTypeState;
+        [Flags]
+        public enum DNAMDataType
+        {
+            Has = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -1007,6 +1013,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DNAMDataTypeState = DNAMDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Subspace_FieldIndex.X);
@@ -1896,23 +1906,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Subspace_Registration.DNAM_HEADER)))
+            if (item.DNAMDataTypeState.HasFlag(Subspace.DNAMDataType.Has))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.X_Property,
-                    fieldIndex: (int)Subspace_FieldIndex.X,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Y_Property,
-                    fieldIndex: (int)Subspace_FieldIndex.Y,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Z_Property,
-                    fieldIndex: (int)Subspace_FieldIndex.Z,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Subspace_Registration.DNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.X_Property,
+                        fieldIndex: (int)Subspace_FieldIndex.X,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Y_Property,
+                        fieldIndex: (int)Subspace_FieldIndex.Y,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Z_Property,
+                        fieldIndex: (int)Subspace_FieldIndex.Z,
+                        errorMask: errorMask);
+                }
             }
         }
 

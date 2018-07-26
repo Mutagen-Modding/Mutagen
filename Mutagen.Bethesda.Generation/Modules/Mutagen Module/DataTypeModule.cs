@@ -16,8 +16,10 @@ namespace Mutagen.Bethesda.Generation
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
             {
                 if (!(field is DataType dataType)) continue;
-                if (!dataType.HasStateLogic) continue;
-                List<string> enumTypes = new List<string>();
+                List<string> enumTypes = new List<string>()
+                {
+                    "Has"
+                };
                 int breaks = 0;
                 int ranges = 0;
                 foreach (var node in dataType.Node.Element(XName.Get(Loqui.Generation.Constants.FIELDS, LoquiGenerator.Namespace)).Elements())

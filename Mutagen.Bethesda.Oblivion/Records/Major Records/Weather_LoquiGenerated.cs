@@ -4249,6 +4249,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Weather_Registration.TRIGGERING_RECORD_TYPE;
+        public FNAMDataType FNAMDataTypeState;
+        [Flags]
+        public enum FNAMDataType
+        {
+            Has = 1
+        }
+        public HNAMDataType HNAMDataTypeState;
+        [Flags]
+        public enum HNAMDataType
+        {
+            Has = 1
+        }
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -4565,6 +4583,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.FNAMDataTypeState = FNAMDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
@@ -4667,6 +4689,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.HNAMDataTypeState = HNAMDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
@@ -5009,6 +5035,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
@@ -8639,170 +8669,179 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: Weather_Registration.NAM0_HEADER,
                 errorMask: errorMask,
                 transl: LoquiBinaryTranslation<WeatherType>.Instance.Write);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
+            if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogDayNear_Property,
-                    fieldIndex: (int)Weather_FieldIndex.FogDayNear,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogDayFar_Property,
-                    fieldIndex: (int)Weather_FieldIndex.FogDayFar,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogNightNear_Property,
-                    fieldIndex: (int)Weather_FieldIndex.FogNightNear,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogNightFar_Property,
-                    fieldIndex: (int)Weather_FieldIndex.FogNightFar,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogDayNear_Property,
+                        fieldIndex: (int)Weather_FieldIndex.FogDayNear,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogDayFar_Property,
+                        fieldIndex: (int)Weather_FieldIndex.FogDayFar,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogNightNear_Property,
+                        fieldIndex: (int)Weather_FieldIndex.FogNightNear,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogNightFar_Property,
+                        fieldIndex: (int)Weather_FieldIndex.FogNightFar,
+                        errorMask: errorMask);
+                }
             }
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.HNAM_HEADER)))
+            if (item.HNAMDataTypeState.HasFlag(Weather.HNAMDataType.Has))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrEyeAdaptSpeed_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrBlurRadius_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrBlurPasses_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrEmissiveMult_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrTargetLum_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrUpperLumClamp_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrBrightScale_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrBrightClamp_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrLumRampNoTex_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrLumRampMin_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrLumRampMax_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrSunlightDimmer_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrGrassDimmer_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrTreeDimmer_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.HNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrEyeAdaptSpeed_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBlurRadius_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBlurPasses_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrEmissiveMult_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrTargetLum_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrUpperLumClamp_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBrightScale_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBrightClamp_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrLumRampNoTex_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrLumRampMin_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrLumRampMax_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrSunlightDimmer_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrGrassDimmer_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrTreeDimmer_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
+                        errorMask: errorMask);
+                }
             }
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Weather.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.WindSpeed_Property,
-                    fieldIndex: (int)Weather_FieldIndex.WindSpeed,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CloudSpeedLower_Property,
-                    fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CloudSpeedUpper_Property,
-                    fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.TransDelta_Property,
-                    fieldIndex: (int)Weather_FieldIndex.TransDelta,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.SunGlare_Property,
-                    fieldIndex: (int)Weather_FieldIndex.SunGlare,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.SunDamage_Property,
-                    fieldIndex: (int)Weather_FieldIndex.SunDamage,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.PrecipitationBeginFadeIn_Property,
-                    fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.PrecipitationEndFadeOut_Property,
-                    fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ThunderLightningBeginFadeIn_Property,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ThunderLightningEndFadeOut_Property,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ThunderLightningFrequency_Property,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
-                    writer,
-                    item.Classification_Property,
-                    length: 1,
-                    fieldIndex: (int)Weather_FieldIndex.Classification,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LightningColor_Property,
-                    fieldIndex: (int)Weather_FieldIndex.LightningColor,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.WindSpeed_Property,
+                        fieldIndex: (int)Weather_FieldIndex.WindSpeed,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CloudSpeedLower_Property,
+                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CloudSpeedUpper_Property,
+                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.TransDelta_Property,
+                        fieldIndex: (int)Weather_FieldIndex.TransDelta,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.SunGlare_Property,
+                        fieldIndex: (int)Weather_FieldIndex.SunGlare,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.SunDamage_Property,
+                        fieldIndex: (int)Weather_FieldIndex.SunDamage,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.PrecipitationBeginFadeIn_Property,
+                        fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.PrecipitationEndFadeOut_Property,
+                        fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ThunderLightningBeginFadeIn_Property,
+                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ThunderLightningEndFadeOut_Property,
+                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ThunderLightningFrequency_Property,
+                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
+                        writer,
+                        item.Classification_Property,
+                        length: 1,
+                        fieldIndex: (int)Weather_FieldIndex.Classification,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LightningColor_Property,
+                        fieldIndex: (int)Weather_FieldIndex.LightningColor,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.Write(
                 writer: writer,

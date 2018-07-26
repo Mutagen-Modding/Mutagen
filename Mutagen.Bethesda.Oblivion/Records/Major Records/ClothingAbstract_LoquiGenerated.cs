@@ -1910,6 +1910,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        public BMDTDataType BMDTDataTypeState;
+        [Flags]
+        public enum BMDTDataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -2074,6 +2080,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.BMDTDataTypeState = BMDTDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
@@ -3966,20 +3976,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.ANAM_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.BMDT_HEADER)))
+            if (item.BMDTDataTypeState.HasFlag(ClothingAbstract.BMDTDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Write(
-                    writer,
-                    item.BipedFlags_Property,
-                    length: 2,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 2,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.BMDT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Write(
+                        writer,
+                        item.BipedFlags_Property,
+                        length: 2,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 2,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,

@@ -660,6 +660,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = QuestTarget_Registration.TRIGGERING_RECORD_TYPE;
+        public QSTADataType QSTADataTypeState;
+        [Flags]
+        public enum QSTADataType
+        {
+            Has = 1
+        }
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -896,6 +902,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.QSTADataTypeState = QSTADataType.Has;
+                        }
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)QuestTarget_FieldIndex.Target,
@@ -1779,19 +1789,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(QuestTarget_Registration.QSTA_HEADER)))
+            if (item.QSTADataTypeState.HasFlag(QuestTarget.QSTADataType.Has))
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Target_Property,
-                    fieldIndex: (int)QuestTarget_FieldIndex.Target,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestTarget.Flag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)QuestTarget_FieldIndex.Flags,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(QuestTarget_Registration.QSTA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Target_Property,
+                        fieldIndex: (int)QuestTarget_FieldIndex.Target,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestTarget.Flag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)QuestTarget_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
                 writer: writer,

@@ -1527,6 +1527,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AIPackage_Registration.TRIGGERING_RECORD_TYPE;
+        public PKDTDataType PKDTDataTypeState;
+        [Flags]
+        public enum PKDTDataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -1796,6 +1802,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.PKDTDataTypeState = PKDTDataType.Has;
+                        }
                         FillBinary_Flags_Custom(
                             frame: dataFrame,
                             item: item,
@@ -3093,16 +3103,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(AIPackage_Registration.PKDT_HEADER)))
+            if (item.PKDTDataTypeState.HasFlag(AIPackage.PKDTDataType.Has))
             {
-                AIPackage.WriteBinary_Flags(
-                    writer: writer,
-                    item: item,
-                    errorMask: errorMask);
-                AIPackage.WriteBinary_GeneralType(
-                    writer: writer,
-                    item: item,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(AIPackage_Registration.PKDT_HEADER)))
+                {
+                    AIPackage.WriteBinary_Flags(
+                        writer: writer,
+                        item: item,
+                        errorMask: errorMask);
+                    AIPackage.WriteBinary_GeneralType(
+                        writer: writer,
+                        item: item,
+                        errorMask: errorMask);
+                }
             }
             LoquiBinaryTranslation<AIPackageLocation>.Instance.Write(
                 writer: writer,

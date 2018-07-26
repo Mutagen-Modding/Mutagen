@@ -924,6 +924,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RegionData_Registration.TRIGGERING_RECORD_TYPE;
+        public RDATDataType RDATDataTypeState;
+        [Flags]
+        public enum RDATDataType
+        {
+            Has = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -1010,6 +1016,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.RDATDataTypeState = RDATDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)RegionData_FieldIndex.DataType);
@@ -1817,26 +1827,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER)))
+            if (item.RDATDataTypeState.HasFlag(RegionData.RDATDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Write(
-                    writer,
-                    item.DataType_Property,
-                    length: 4,
-                    fieldIndex: (int)RegionData_FieldIndex.DataType,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 1,
-                    fieldIndex: (int)RegionData_FieldIndex.Flags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Priority_Property,
-                    fieldIndex: (int)RegionData_FieldIndex.Priority,
-                    errorMask: errorMask);
-                writer.WriteZeros(2);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Write(
+                        writer,
+                        item.DataType_Property,
+                        length: 4,
+                        fieldIndex: (int)RegionData_FieldIndex.DataType,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 1,
+                        fieldIndex: (int)RegionData_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Priority_Property,
+                        fieldIndex: (int)RegionData_FieldIndex.Priority,
+                        errorMask: errorMask);
+                    writer.WriteZeros(2);
+                }
             }
         }
 

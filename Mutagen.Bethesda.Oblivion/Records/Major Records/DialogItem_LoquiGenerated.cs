@@ -1272,7 +1272,8 @@ namespace Mutagen.Bethesda.Oblivion
         [Flags]
         public enum DATADataType
         {
-            Break0 = 1
+            Has = 1,
+            Break0 = 2
         }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
@@ -1496,6 +1497,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
@@ -3221,22 +3226,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogItem_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogType>.Instance.Write(
-                    writer,
-                    item.DialogType_Property,
-                    length: 2,
-                    fieldIndex: (int)DialogItem_FieldIndex.DialogType,
-                    errorMask: errorMask);
-                if (!item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0))
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogItem_Registration.DATA_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogItem.Flag>.Instance.Write(
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogType>.Instance.Write(
                         writer,
-                        item.Flags_Property,
-                        length: 1,
-                        fieldIndex: (int)DialogItem_FieldIndex.Flags,
+                        item.DialogType_Property,
+                        length: 2,
+                        fieldIndex: (int)DialogItem_FieldIndex.DialogType,
                         errorMask: errorMask);
+                    if (!item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0))
+                    {
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogItem.Flag>.Instance.Write(
+                            writer,
+                            item.Flags_Property,
+                            length: 1,
+                            fieldIndex: (int)DialogItem_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
                 }
             }
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(

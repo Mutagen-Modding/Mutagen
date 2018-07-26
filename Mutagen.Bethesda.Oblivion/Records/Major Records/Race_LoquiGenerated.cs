@@ -3584,6 +3584,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Race_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -3898,6 +3904,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost>.Instance.ParseRepeatedItem(
                             frame: frame,
                             amount: 7,
@@ -7080,45 +7090,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)Race_FieldIndex.Relations,
                 errorMask: errorMask,
                 transl: LoquiBinaryTranslation<Relation>.Instance.Write);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost>.Instance.Write(
-                    writer: writer,
-                    items: item.SkillBoosts,
-                    fieldIndex: (int)Race_FieldIndex.SkillBoosts,
-                    errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<SkillBoost>.Instance.Write);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fluff_Property,
-                    fieldIndex: (int)Race_FieldIndex.Fluff,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaleHeight_Property,
-                    fieldIndex: (int)Race_FieldIndex.MaleHeight,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FemaleHeight_Property,
-                    fieldIndex: (int)Race_FieldIndex.FemaleHeight,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaleWeight_Property,
-                    fieldIndex: (int)Race_FieldIndex.MaleWeight,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FemaleWeight_Property,
-                    fieldIndex: (int)Race_FieldIndex.FemaleWeight,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 2,
-                    fieldIndex: (int)Race_FieldIndex.Flags,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost>.Instance.Write(
+                        writer: writer,
+                        items: item.SkillBoosts,
+                        fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                        errorMask: errorMask,
+                        transl: LoquiBinaryTranslation<SkillBoost>.Instance.Write);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff_Property,
+                        fieldIndex: (int)Race_FieldIndex.Fluff,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MaleHeight_Property,
+                        fieldIndex: (int)Race_FieldIndex.MaleHeight,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FemaleHeight_Property,
+                        fieldIndex: (int)Race_FieldIndex.FemaleHeight,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MaleWeight_Property,
+                        fieldIndex: (int)Race_FieldIndex.MaleWeight,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FemaleWeight_Property,
+                        fieldIndex: (int)Race_FieldIndex.FemaleWeight,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 2,
+                        fieldIndex: (int)Race_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             LoquiBinaryTranslation<RaceVoices>.Instance.Write(
                 writer: writer,

@@ -2129,6 +2129,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Grass_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -2408,6 +2414,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Grass_FieldIndex.Density);
@@ -4019,58 +4029,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)Grass_FieldIndex.Model,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Grass.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Density_Property,
-                    fieldIndex: (int)Grass_FieldIndex.Density,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MinSlope_Property,
-                    fieldIndex: (int)Grass_FieldIndex.MinSlope,
-                    errorMask: errorMask);
-                Grass.WriteBinary_MaxSlope(
-                    writer: writer,
-                    item: item,
-                    errorMask: errorMask);
-                Grass.WriteBinary_UnitFromWaterAmount(
-                    writer: writer,
-                    item: item,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
-                    writer,
-                    item.UnitFromWaterMode_Property,
-                    length: 4,
-                    fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.PositionRange_Property,
-                    fieldIndex: (int)Grass_FieldIndex.PositionRange,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HeightRange_Property,
-                    fieldIndex: (int)Grass_FieldIndex.HeightRange,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ColorRange_Property,
-                    fieldIndex: (int)Grass_FieldIndex.ColorRange,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.WavePeriod_Property,
-                    fieldIndex: (int)Grass_FieldIndex.WavePeriod,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)Grass_FieldIndex.Flags,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Density_Property,
+                        fieldIndex: (int)Grass_FieldIndex.Density,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MinSlope_Property,
+                        fieldIndex: (int)Grass_FieldIndex.MinSlope,
+                        errorMask: errorMask);
+                    Grass.WriteBinary_MaxSlope(
+                        writer: writer,
+                        item: item,
+                        errorMask: errorMask);
+                    Grass.WriteBinary_UnitFromWaterAmount(
+                        writer: writer,
+                        item: item,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
+                        writer,
+                        item.UnitFromWaterMode_Property,
+                        length: 4,
+                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.PositionRange_Property,
+                        fieldIndex: (int)Grass_FieldIndex.PositionRange,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HeightRange_Property,
+                        fieldIndex: (int)Grass_FieldIndex.HeightRange,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ColorRange_Property,
+                        fieldIndex: (int)Grass_FieldIndex.ColorRange,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.WavePeriod_Property,
+                        fieldIndex: (int)Grass_FieldIndex.WavePeriod,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)Grass_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
         }
 

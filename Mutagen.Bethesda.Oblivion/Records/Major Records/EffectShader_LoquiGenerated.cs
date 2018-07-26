@@ -6407,7 +6407,8 @@ namespace Mutagen.Bethesda.Oblivion
         [Flags]
         public enum DATADataType
         {
-            Break0 = 1
+            Has = 1,
+            Break0 = 2
         }
         #endregion
 
@@ -6676,6 +6677,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)EffectShader_FieldIndex.Flags);
@@ -12672,304 +12677,307 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICO2_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(EffectShader_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.Flag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)EffectShader_FieldIndex.Flags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                    writer,
-                    item.MembraneShaderSourceBlendMode_Property,
-                    length: 4,
-                    fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Write(
-                    writer,
-                    item.MembraneShaderBlendOperation_Property,
-                    length: 4,
-                    fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderBlendOperation,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Write(
-                    writer,
-                    item.MembraneShaderZTestFunction_Property,
-                    length: 4,
-                    fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderZTestFunction,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectColor_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectColor,
-                    errorMask: errorMask,
-                    extraByte: true);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectAlphaFadeInTime_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectFullAlphaTime_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectAlphaFadeOutTime_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectPersistentAlphaRatio_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectAlphaPulseAmplitude_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectAlphaPulseFrequency_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectTextureAnimationSpeedU_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectTextureAnimationSpeedV_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeEffectFallOff_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFallOff,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeEffectColor_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectColor,
-                    errorMask: errorMask,
-                    extraByte: true);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeEffectAlphaFadeInTime_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeEffectFullAlphaTime_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeEffectAlphaFadeOutTime_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeEffectPersistentAlphaRatio_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeEffectAlphaPulseAmplitude_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeEffectAlphaPulseFrequency_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTextureEffectFullAlphaRatio_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeEffectFullAlphaRatio_Property,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                    writer,
-                    item.MembraneShaderDestBlendMode_Property,
-                    length: 4,
-                    fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderDestBlendMode,
-                    errorMask: errorMask);
-                if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0))
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(EffectShader_Registration.DATA_HEADER)))
                 {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.Flag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)EffectShader_FieldIndex.Flags,
+                        errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
                         writer,
-                        item.ParticleShaderSourceBlendMode_Property,
+                        item.MembraneShaderSourceBlendMode_Property,
                         length: 4,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode,
+                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Write(
                         writer,
-                        item.ParticleShaderBlendOperation_Property,
+                        item.MembraneShaderBlendOperation_Property,
                         length: 4,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderBlendOperation,
+                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderBlendOperation,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Write(
                         writer,
-                        item.ParticleShaderZTestFunction_Property,
+                        item.MembraneShaderZTestFunction_Property,
                         length: 4,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderZTestFunction,
+                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderZTestFunction,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectColor_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectColor,
+                        errorMask: errorMask,
+                        extraByte: true);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectAlphaFadeInTime_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectFullAlphaTime_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectAlphaFadeOutTime_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectPersistentAlphaRatio_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectAlphaPulseAmplitude_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectAlphaPulseFrequency_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectTextureAnimationSpeedU_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectTextureAnimationSpeedV_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectFallOff_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFallOff,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectColor_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectColor,
+                        errorMask: errorMask,
+                        extraByte: true);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectAlphaFadeInTime_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectFullAlphaTime_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectAlphaFadeOutTime_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectPersistentAlphaRatio_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectAlphaPulseAmplitude_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectAlphaPulseFrequency_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectFullAlphaRatio_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectFullAlphaRatio_Property,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
                         writer,
-                        item.ParticleShaderDestBlendMode_Property,
+                        item.MembraneShaderDestBlendMode_Property,
                         length: 4,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderDestBlendMode,
+                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderDestBlendMode,
                         errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderParticleBirthRampUpTime_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderFullParticleBirthTime_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderParticleBirthRampDownTime_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderFullParticleBirthRatio_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderPersistentParticleBirthRatio_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderParticleLifetime_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetime,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderParticleLifetimePlusMinus_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderInitialSpeedAlongNormal_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderAccelerationAlongNormal_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderInitialVelocity1_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderInitialVelocity2_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderInitialVelocity3_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderAcceleration1_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration1,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderAcceleration2_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration2,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderAcceleration3_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration3,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderScaleKey1_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderScaleKey2_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderScaleKey1Time_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ParticleShaderScaleKey2Time_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorKey1Color_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ColorKey1Color,
-                        errorMask: errorMask,
-                        extraByte: true);
-                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorKey2Color_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ColorKey2Color,
-                        errorMask: errorMask,
-                        extraByte: true);
-                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorKey3Color_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ColorKey3Color,
-                        errorMask: errorMask,
-                        extraByte: true);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorKey1ColorAlpha_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorAlpha,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorKey2ColorAlpha_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorAlpha,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorKey3ColorAlpha_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorAlpha,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorKey1ColorKeyTime_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorKeyTime,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorKey2ColorKeyTime_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorKeyTime,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorKey3ColorKeyTime_Property,
-                        fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorKeyTime,
-                        errorMask: errorMask);
+                    if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0))
+                    {
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                            writer,
+                            item.ParticleShaderSourceBlendMode_Property,
+                            length: 4,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Write(
+                            writer,
+                            item.ParticleShaderBlendOperation_Property,
+                            length: 4,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderBlendOperation,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Write(
+                            writer,
+                            item.ParticleShaderZTestFunction_Property,
+                            length: 4,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderZTestFunction,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                            writer,
+                            item.ParticleShaderDestBlendMode_Property,
+                            length: 4,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderDestBlendMode,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderParticleBirthRampUpTime_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderFullParticleBirthTime_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderParticleBirthRampDownTime_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderFullParticleBirthRatio_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderPersistentParticleBirthRatio_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderParticleLifetime_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetime,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderParticleLifetimePlusMinus_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderInitialSpeedAlongNormal_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderAccelerationAlongNormal_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderInitialVelocity1_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderInitialVelocity2_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderInitialVelocity3_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderAcceleration1_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration1,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderAcceleration2_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration2,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderAcceleration3_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration3,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderScaleKey1_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderScaleKey2_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderScaleKey1Time_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderScaleKey2Time_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey1Color_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey1Color,
+                            errorMask: errorMask,
+                            extraByte: true);
+                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey2Color_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey2Color,
+                            errorMask: errorMask,
+                            extraByte: true);
+                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey3Color_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey3Color,
+                            errorMask: errorMask,
+                            extraByte: true);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey1ColorAlpha_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorAlpha,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey2ColorAlpha_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorAlpha,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey3ColorAlpha_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorAlpha,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey1ColorKeyTime_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorKeyTime,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey2ColorKeyTime_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorKeyTime,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey3ColorKeyTime_Property,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorKeyTime,
+                            errorMask: errorMask);
+                    }
                 }
             }
         }

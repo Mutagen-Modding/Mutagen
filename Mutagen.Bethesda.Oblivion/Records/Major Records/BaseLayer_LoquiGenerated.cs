@@ -831,6 +831,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        public BTXTDataType BTXTDataTypeState;
+        [Flags]
+        public enum BTXTDataType
+        {
+            Has = 1
+        }
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -1067,6 +1073,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.BTXTDataTypeState = BTXTDataType.Has;
+                        }
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)BaseLayer_FieldIndex.Texture,
@@ -1884,24 +1894,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(BaseLayer_Registration.BTXT_HEADER)))
+            if (item.BTXTDataTypeState.HasFlag(BaseLayer.BTXTDataType.Has))
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Texture_Property,
-                    fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
-                    writer,
-                    item.Quadrant_Property,
-                    length: 2,
-                    fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LayerNumber_Property,
-                    fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(BaseLayer_Registration.BTXT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Texture_Property,
+                        fieldIndex: (int)BaseLayer_FieldIndex.Texture,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
+                        writer,
+                        item.Quadrant_Property,
+                        length: 2,
+                        fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LayerNumber_Property,
+                        fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
+                        errorMask: errorMask);
+                }
             }
         }
 
