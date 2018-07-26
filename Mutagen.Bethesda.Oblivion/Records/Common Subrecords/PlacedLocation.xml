@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedLocation" recordType="DATA" objType="Subrecord" GUID="a2b115bd-79c0-4fa0-a081-3a6e038d6c3b" ID="167">
-    <Fields>
-      <P3Float name="Position" />
-      <P3Float name="Rotation" />
-    </Fields>
-  </Object>
-</Loqui>

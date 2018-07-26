@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -726,9 +726,6 @@
     <Compile Include="Records\Major Records\RelatedWaters_LoquiGenerated.cs">
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\PlacedLocation_LoquiGenerated.cs">
-      <DependentUpon>PlacedLocation.xml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Condition.xml">
@@ -747,9 +744,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\Model.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\Common Subrecords\PlacedLocation.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\Relation.xml">
