@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="RecordType_Tests.cs" />
     <Compile Include="Specific Passthrough Tests\Oblivion\Oblivion_Passthrough_Test.cs" />
+    <Compile Include="TestBattery.cs" />
     <Compile Include="TestingConstants.cs" />
   </ItemGroup>
   <ItemGroup>

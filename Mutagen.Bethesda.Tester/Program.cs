@@ -19,10 +19,9 @@ namespace Mutagen.Bethesda.Tester
         {
             LoquiRegistrationSettings.AutomaticRegistration = false;
 
-            var tests = new OblivionESM_Passthrough_Tests();
-            tests.BinaryPassthroughTest(
-                reuseOld: false,
-                deleteAfter: false).Wait();
+            TestBattery.RunTests(
+                reuseCaches: false,
+                deleteCaches: false).Wait();
         }
     }
 }
