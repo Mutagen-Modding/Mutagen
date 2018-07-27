@@ -17,9 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
         where T : class, ILoquiObject<T>, IFormID
     {
         public static readonly RecordType T_RecordType;
-        
-        private Dictionary<FormID, IObservable<T>> _observables = new Dictionary<FormID, IObservable<T>>();
-        
+
         #region ContainedRecordType
         protected String _ContainedRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -47,7 +45,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Items
-        public Dictionary<FormID, IObservable<T>> Items => _observables;
+        private Dictionary<FormID, IObservable<T>> _observable { get; } = new Dictionary<FormID, IObservable<T>>();
+        public IDictionaryGetter<FormID, IObservable<T>> Items => new DictionaryGetterWrapper<FormID, IObservable<T>>(_observable);
+        public IObservable<T> ItemsObservable { get; }
         #endregion
 
         static GroupObservable()
@@ -55,42 +55,98 @@ namespace Mutagen.Bethesda.Oblivion
             T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T)).GetType().GetField(Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER).GetValue(null);
         }
 
-        public GroupObservable(Func<Stream> streamGetter, IEnumerable<KeyValuePair<FormID, long>> values)
+        public GroupObservable(long pos, Func<MutagenFrame> streamGetter)
         {
-            foreach (var val in values)
+            using (var frame = streamGetter())
             {
-                _observables[val.Key] = Observable.Create<T>(
-                    (o) =>
+                frame.Reader.Position = pos + 8;
+                if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+                    frame: frame.SpawnWithLength(4),
+                    item: out GroupTypeEnum GroupTypeParse,
+                    errorMask: null))
+                {
+                    this._GroupType = GroupTypeParse;
+                }
+                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    frame: frame.SpawnWithLength(4),
+                    item: out Byte[] LastModifiedParse,
+                    errorMask: null))
+                {
+                    this._LastModified = LastModifiedParse;
+                }
+
+                frame.Reader.Position = pos;
+                foreach (var val in RecordLocator.ParseTopLevelGRUP(frame.Reader))
+                {
+                    this._observable[val.Key] = GetRecordObservable(val.Value, streamGetter);
+                }
+            }
+
+            ItemsObservable = Observable.Create<T>(
+                (o) =>
+                {
+                    try
                     {
-                        using (var frame = new MutagenFrame(
-                            new BinaryReadStream(
-                                streamGetter())))
+                        var frame = streamGetter();
+                        frame.Reader.Position = pos + 4;
+                        var len = frame.Reader.ReadUInt32();
+                        frame = frame.SpawnWithLength(len - 8);
+                        using (frame)
                         {
-                            try
+                            frame.Reader.Position += 12;
+                            while (!frame.Complete)
                             {
-                                frame.Reader.Position = val.Value;
                                 if (LoquiBinaryTranslation<T>.Instance.Parse(
-                                   frame,
-                                   out var item,
-                                   errorMask: null))
+                                    frame,
+                                    out var item,
+                                    errorMask: null))
                                 {
                                     o.OnNext(item);
                                 }
                             }
-                            catch (Exception ex)
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        o.OnError(ex);
+                    }
+                    o.OnCompleted();
+                    return () => { };
+                })
+                .SubscribeOn(Scheduler.Default)
+                .Publish()
+                .RefCount();
+        }
+
+        private IObservable<T> GetRecordObservable(long pos, Func<MutagenFrame> streamGetter)
+        {
+            return Observable.Create<T>(
+                (o) =>
+                {
+                    using (var frame = streamGetter())
+                    {
+                        try
+                        {
+                            frame.Reader.Position = pos;
+                            if (LoquiBinaryTranslation<T>.Instance.Parse(
+                                frame,
+                                out var item,
+                                errorMask: null))
                             {
-                                o.OnError(ex);
+                                o.OnNext(item);
                             }
                         }
-                        o.OnCompleted();
-                        return () => { };
-                    })
-                    .SubscribeOn(Scheduler.Default)
-                    .Publish()
-                    .RefCount();
-            }
-            int wer = 23;
-            wer++;
+                        catch (Exception ex)
+                        {
+                            o.OnError(ex);
+                        }
+                    }
+                    o.OnCompleted();
+                    return () => { };
+                })
+                .SubscribeOn(Scheduler.Default)
+                .Publish()
+                .RefCount();
         }
     }
 }
