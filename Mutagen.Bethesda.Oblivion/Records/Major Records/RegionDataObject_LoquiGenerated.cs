@@ -4039,7 +4039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Object ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Object);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Object);
                 try
                 {
                     item.Object_Property.Set(
@@ -4053,12 +4053,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ParentIndex ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
                 try
                 {
                     item.ParentIndex_Property.Set(
@@ -4072,12 +4072,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Unknown1 ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
                 try
                 {
                     item.Unknown1_Property.Set(
@@ -4091,12 +4091,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Density ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Density);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
                 try
                 {
                     item.Density_Property.Set(
@@ -4110,12 +4110,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Clustering ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
                 try
                 {
                     item.Clustering_Property.Set(
@@ -4129,12 +4129,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MinSlope ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
                 try
                 {
                     item.MinSlope_Property.Set(
@@ -4148,12 +4148,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaxSlope ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
                 try
                 {
                     item.MaxSlope_Property.Set(
@@ -4167,12 +4167,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Flags);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -4186,12 +4186,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RadiusWrtPercent ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
                 try
                 {
                     item.RadiusWrtPercent_Property.Set(
@@ -4205,12 +4205,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Radius ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Radius);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
                 try
                 {
                     item.Radius_Property.Set(
@@ -4224,12 +4224,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MinHeight ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
                 try
                 {
                     item.MinHeight_Property.Set(
@@ -4243,12 +4243,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaxHeight ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
                 try
                 {
                     item.MaxHeight_Property.Set(
@@ -4262,12 +4262,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Sink ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Sink);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
                 try
                 {
                     item.Sink_Property.Set(
@@ -4281,12 +4281,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SinkVariance ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
                 try
                 {
                     item.SinkVariance_Property.Set(
@@ -4300,12 +4300,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SizeVariance ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
                 try
                 {
                     item.SizeVariance_Property.Set(
@@ -4319,12 +4319,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AngleVariance ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
                 try
                 {
                     item.AngleVariance_Property.Set(
@@ -4338,12 +4338,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Unknow2n ?? true)
             {
-                errorMask.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
+                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
                 try
                 {
                     item.Unknow2n_Property.Set(
@@ -4357,7 +4357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

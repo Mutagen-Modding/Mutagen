@@ -1637,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Material ?? true)
             {
-                errorMask.PushIndex((int)HavokData_FieldIndex.Material);
+                errorMask?.PushIndex((int)HavokData_FieldIndex.Material);
                 try
                 {
                     item.Material_Property.Set(
@@ -1651,12 +1651,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Friction ?? true)
             {
-                errorMask.PushIndex((int)HavokData_FieldIndex.Friction);
+                errorMask?.PushIndex((int)HavokData_FieldIndex.Friction);
                 try
                 {
                     item.Friction_Property.Set(
@@ -1670,12 +1670,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Restitution ?? true)
             {
-                errorMask.PushIndex((int)HavokData_FieldIndex.Restitution);
+                errorMask?.PushIndex((int)HavokData_FieldIndex.Restitution);
                 try
                 {
                     item.Restitution_Property.Set(
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

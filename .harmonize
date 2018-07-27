@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2313c2421685cd737313e5eae1a75639892531b9</Sha>
+         <Sha>b89c67fbe59703ea9cb4aa635f0672da7afd3089</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-15-2018 22:58:37</CommitDate>
-         <Description>PropertyForwarder.ToString</Description>
+         <CommitDate>07-27-2018 18:32:58</CommitDate>
+         <Description>unused error mask null fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

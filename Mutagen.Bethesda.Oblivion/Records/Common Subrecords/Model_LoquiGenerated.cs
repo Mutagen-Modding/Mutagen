@@ -1810,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.File ?? true)
             {
-                errorMask.PushIndex((int)Model_FieldIndex.File);
+                errorMask?.PushIndex((int)Model_FieldIndex.File);
                 try
                 {
                     item.File_Property.Set(
@@ -1824,12 +1824,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BoundRadius ?? true)
             {
-                errorMask.PushIndex((int)Model_FieldIndex.BoundRadius);
+                errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
                 try
                 {
                     item.BoundRadius_Property.Set(
@@ -1843,12 +1843,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Hashes ?? true)
             {
-                errorMask.PushIndex((int)Model_FieldIndex.Hashes);
+                errorMask?.PushIndex((int)Model_FieldIndex.Hashes);
                 try
                 {
                     item.Hashes_Property.SetToWithDefault(
@@ -1862,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

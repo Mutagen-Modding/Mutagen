@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.MetadataSummary.Overall ?? true)
             {
-                errorMask.PushIndex((int)ScriptFields_FieldIndex.MetadataSummary);
+                errorMask?.PushIndex((int)ScriptFields_FieldIndex.MetadataSummary);
                 try
                 {
                     ScriptMetaSummaryCommon.CopyFieldsFrom(
@@ -2016,12 +2016,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CompiledScript ?? true)
             {
-                errorMask.PushIndex((int)ScriptFields_FieldIndex.CompiledScript);
+                errorMask?.PushIndex((int)ScriptFields_FieldIndex.CompiledScript);
                 try
                 {
                     item.CompiledScript_Property.SetToWithDefault(
@@ -2035,12 +2035,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SourceCode ?? true)
             {
-                errorMask.PushIndex((int)ScriptFields_FieldIndex.SourceCode);
+                errorMask?.PushIndex((int)ScriptFields_FieldIndex.SourceCode);
                 try
                 {
                     item.SourceCode_Property.SetToWithDefault(
@@ -2054,12 +2054,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LocalVariables.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)ScriptFields_FieldIndex.LocalVariables);
+                errorMask?.PushIndex((int)ScriptFields_FieldIndex.LocalVariables);
                 try
                 {
                     item.LocalVariables.SetToWithDefault(
@@ -2091,12 +2091,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.References.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)ScriptFields_FieldIndex.References);
+                errorMask?.PushIndex((int)ScriptFields_FieldIndex.References);
                 try
                 {
                     item.References.SetToWithDefault(
@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

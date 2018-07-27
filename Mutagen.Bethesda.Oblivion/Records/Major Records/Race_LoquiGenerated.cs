@@ -5367,7 +5367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Name);
+                errorMask?.PushIndex((int)Race_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -5381,12 +5381,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Description ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Description);
+                errorMask?.PushIndex((int)Race_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -5400,12 +5400,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Spells != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Spells);
+                errorMask?.PushIndex((int)Race_FieldIndex.Spells);
                 try
                 {
                     item.Spells.SetToWithDefault(
@@ -5420,12 +5420,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Relations.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Relations);
+                errorMask?.PushIndex((int)Race_FieldIndex.Relations);
                 try
                 {
                     item.Relations.SetToWithDefault(
@@ -5457,12 +5457,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SkillBoosts.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.SkillBoosts);
+                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoosts);
                 try
                 {
                     item.SkillBoosts.SetToWithDefault(
@@ -5494,12 +5494,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)Race_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -5513,12 +5513,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaleHeight ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.MaleHeight);
+                errorMask?.PushIndex((int)Race_FieldIndex.MaleHeight);
                 try
                 {
                     item.MaleHeight_Property.Set(
@@ -5532,12 +5532,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FemaleHeight ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.FemaleHeight);
+                errorMask?.PushIndex((int)Race_FieldIndex.FemaleHeight);
                 try
                 {
                     item.FemaleHeight_Property.Set(
@@ -5551,12 +5551,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaleWeight ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.MaleWeight);
+                errorMask?.PushIndex((int)Race_FieldIndex.MaleWeight);
                 try
                 {
                     item.MaleWeight_Property.Set(
@@ -5570,12 +5570,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FemaleWeight ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.FemaleWeight);
+                errorMask?.PushIndex((int)Race_FieldIndex.FemaleWeight);
                 try
                 {
                     item.FemaleWeight_Property.Set(
@@ -5589,12 +5589,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Race_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -5608,12 +5608,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Voices.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Voices);
+                errorMask?.PushIndex((int)Race_FieldIndex.Voices);
                 try
                 {
                     item.Voices_Property.SetToWithDefault(
@@ -5654,12 +5654,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DefaultHair.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.DefaultHair);
+                errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
                 try
                 {
                     item.DefaultHair_Property.SetToWithDefault(
@@ -5700,12 +5700,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DefaultHairColor ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.DefaultHairColor);
+                errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColor);
                 try
                 {
                     item.DefaultHairColor_Property.SetToWithDefault(
@@ -5719,12 +5719,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FaceGenMainClamp ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.FaceGenMainClamp);
+                errorMask?.PushIndex((int)Race_FieldIndex.FaceGenMainClamp);
                 try
                 {
                     item.FaceGenMainClamp_Property.SetToWithDefault(
@@ -5738,12 +5738,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FaceGenFaceClamp ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.FaceGenFaceClamp);
+                errorMask?.PushIndex((int)Race_FieldIndex.FaceGenFaceClamp);
                 try
                 {
                     item.FaceGenFaceClamp_Property.SetToWithDefault(
@@ -5757,12 +5757,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RaceStats.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.RaceStats);
+                errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
                 try
                 {
                     item.RaceStats_Property.SetToWithDefault(
@@ -5803,12 +5803,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FaceData.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.FaceData);
+                errorMask?.PushIndex((int)Race_FieldIndex.FaceData);
                 try
                 {
                     item.FaceData.SetToWithDefault(
@@ -5840,12 +5840,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BodyData.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.BodyData);
+                errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
                 try
                 {
                     item.BodyData_Property.SetToWithDefault(
@@ -5886,12 +5886,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Hairs != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Hairs);
+                errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
                 try
                 {
                     item.Hairs.SetToWithDefault(
@@ -5906,12 +5906,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Eyes != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Eyes);
+                errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
                 try
                 {
                     item.Eyes.SetToWithDefault(
@@ -5926,12 +5926,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FaceGenData.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.FaceGenData);
+                errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
                 try
                 {
                     item.FaceGenData_Property.SetToWithDefault(
@@ -5972,12 +5972,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Unknown ?? true)
             {
-                errorMask.PushIndex((int)Race_FieldIndex.Unknown);
+                errorMask?.PushIndex((int)Race_FieldIndex.Unknown);
                 try
                 {
                     item.Unknown_Property.SetToWithDefault(
@@ -5991,7 +5991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

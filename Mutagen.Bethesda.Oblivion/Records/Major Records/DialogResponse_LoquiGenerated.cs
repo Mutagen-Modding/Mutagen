@@ -2656,7 +2656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Emotion ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.Emotion);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
                 try
                 {
                     item.Emotion_Property.Set(
@@ -2670,12 +2670,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EmotionValue ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
                 try
                 {
                     item.EmotionValue_Property.Set(
@@ -2689,12 +2689,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff1 ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
                 try
                 {
                     item.Fluff1_Property.Set(
@@ -2708,12 +2708,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ResponseNumber ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
                 try
                 {
                     item.ResponseNumber_Property.Set(
@@ -2727,12 +2727,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff2 ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
                 try
                 {
                     item.Fluff2_Property.Set(
@@ -2746,12 +2746,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ResponseText ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
                 try
                 {
                     item.ResponseText_Property.SetToWithDefault(
@@ -2765,12 +2765,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ActorNotes ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
                 try
                 {
                     item.ActorNotes_Property.SetToWithDefault(
@@ -2784,7 +2784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

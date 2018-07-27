@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Item ?? true)
             {
-                errorMask.PushIndex((int)ContainerItem_FieldIndex.Item);
+                errorMask?.PushIndex((int)ContainerItem_FieldIndex.Item);
                 try
                 {
                     item.Item_Property.Set(
@@ -1299,12 +1299,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Count ?? true)
             {
-                errorMask.PushIndex((int)ContainerItem_FieldIndex.Count);
+                errorMask?.PushIndex((int)ContainerItem_FieldIndex.Count);
                 try
                 {
                     item.Count_Property.Set(
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

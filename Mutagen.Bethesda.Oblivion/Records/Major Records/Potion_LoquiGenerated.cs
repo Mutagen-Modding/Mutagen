@@ -2674,7 +2674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Potion_FieldIndex.Name);
+                errorMask?.PushIndex((int)Potion_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2688,12 +2688,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Potion_FieldIndex.Model);
+                errorMask?.PushIndex((int)Potion_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2734,12 +2734,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)Potion_FieldIndex.Icon);
+                errorMask?.PushIndex((int)Potion_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -2753,12 +2753,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Potion_FieldIndex.Script);
+                errorMask?.PushIndex((int)Potion_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2773,12 +2773,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)Potion_FieldIndex.Weight);
+                errorMask?.PushIndex((int)Potion_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.SetToWithDefault(
@@ -2792,12 +2792,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)Potion_FieldIndex.Value);
+                errorMask?.PushIndex((int)Potion_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -2811,12 +2811,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Potion_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Potion_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2830,12 +2830,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Effects.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Potion_FieldIndex.Effects);
+                errorMask?.PushIndex((int)Potion_FieldIndex.Effects);
                 try
                 {
                     item.Effects.SetToWithDefault(
@@ -2867,7 +2867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

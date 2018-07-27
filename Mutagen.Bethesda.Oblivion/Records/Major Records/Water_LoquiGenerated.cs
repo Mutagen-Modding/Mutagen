@@ -6544,7 +6544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Texture ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.Texture);
+                errorMask?.PushIndex((int)Water_FieldIndex.Texture);
                 try
                 {
                     item.Texture_Property.SetToWithDefault(
@@ -6558,12 +6558,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Opacity ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.Opacity);
+                errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
                 try
                 {
                     item.Opacity_Property.SetToWithDefault(
@@ -6577,12 +6577,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Water_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
@@ -6596,12 +6596,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaterialID ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.MaterialID);
+                errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
                 try
                 {
                     item.MaterialID_Property.SetToWithDefault(
@@ -6615,12 +6615,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Sound ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.Sound);
+                errorMask?.PushIndex((int)Water_FieldIndex.Sound);
                 try
                 {
                     item.Sound_Property.SetToWithDefault(
@@ -6635,12 +6635,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WindVelocity ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.WindVelocity);
+                errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
                 try
                 {
                     item.WindVelocity_Property.Set(
@@ -6654,12 +6654,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WindDirection ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.WindDirection);
+                errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
                 try
                 {
                     item.WindDirection_Property.Set(
@@ -6673,12 +6673,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WaveAmplitude ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.WaveAmplitude);
+                errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
                 try
                 {
                     item.WaveAmplitude_Property.Set(
@@ -6692,12 +6692,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WaveFrequency ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.WaveFrequency);
+                errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
                 try
                 {
                     item.WaveFrequency_Property.Set(
@@ -6711,12 +6711,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunPower ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.SunPower);
+                errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
                 try
                 {
                     item.SunPower_Property.Set(
@@ -6730,12 +6730,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ReflectivityAmount ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
+                errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
                 try
                 {
                     item.ReflectivityAmount_Property.Set(
@@ -6749,12 +6749,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FresnelAmount ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.FresnelAmount);
+                errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
                 try
                 {
                     item.FresnelAmount_Property.Set(
@@ -6768,12 +6768,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ScrollXSpeed ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
+                errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
                 try
                 {
                     item.ScrollXSpeed_Property.Set(
@@ -6787,12 +6787,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ScrollYSpeed ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
+                errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
                 try
                 {
                     item.ScrollYSpeed_Property.Set(
@@ -6806,12 +6806,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogDistanceNearPlane ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
+                errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
                 try
                 {
                     item.FogDistanceNearPlane_Property.Set(
@@ -6825,12 +6825,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogDistanceFarPlane ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
+                errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
                 try
                 {
                     item.FogDistanceFarPlane_Property.Set(
@@ -6844,12 +6844,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ShallowColor ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.ShallowColor);
+                errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
                 try
                 {
                     item.ShallowColor_Property.Set(
@@ -6863,12 +6863,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DeepColor ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.DeepColor);
+                errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
                 try
                 {
                     item.DeepColor_Property.Set(
@@ -6882,12 +6882,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ReflectionColor ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.ReflectionColor);
+                errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
                 try
                 {
                     item.ReflectionColor_Property.Set(
@@ -6901,12 +6901,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.TextureBlend ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.TextureBlend);
+                errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
                 try
                 {
                     item.TextureBlend_Property.Set(
@@ -6920,12 +6920,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RainSimulatorForce ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
+                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
                 try
                 {
                     item.RainSimulatorForce_Property.Set(
@@ -6939,12 +6939,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RainSimulatorVelocity ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
+                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
                 try
                 {
                     item.RainSimulatorVelocity_Property.Set(
@@ -6958,12 +6958,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RainSimulatorFalloff ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
+                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
                 try
                 {
                     item.RainSimulatorFalloff_Property.Set(
@@ -6977,12 +6977,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RainSimulatorDampner ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
+                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
                 try
                 {
                     item.RainSimulatorDampner_Property.Set(
@@ -6996,12 +6996,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RainSimulatorStartingSize ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
+                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
                 try
                 {
                     item.RainSimulatorStartingSize_Property.Set(
@@ -7015,12 +7015,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DisplacementSimulatorForce ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
+                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
                 try
                 {
                     item.DisplacementSimulatorForce_Property.Set(
@@ -7034,12 +7034,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DisplacementSimulatorVelocity ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
+                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
                 try
                 {
                     item.DisplacementSimulatorVelocity_Property.Set(
@@ -7053,12 +7053,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DisplacementSimulatorFalloff ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
+                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
                 try
                 {
                     item.DisplacementSimulatorFalloff_Property.Set(
@@ -7072,12 +7072,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DisplacementSimulatorDampner ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
+                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
                 try
                 {
                     item.DisplacementSimulatorDampner_Property.Set(
@@ -7091,12 +7091,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DisplacementSimulatorStartingSize ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
+                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
                 try
                 {
                     item.DisplacementSimulatorStartingSize_Property.Set(
@@ -7110,12 +7110,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Damage ?? true)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.Damage);
+                errorMask?.PushIndex((int)Water_FieldIndex.Damage);
                 try
                 {
                     item.Damage_Property.Set(
@@ -7129,12 +7129,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RelatedWaters.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Water_FieldIndex.RelatedWaters);
+                errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
                 try
                 {
                     item.RelatedWaters_Property.SetToWithDefault(
@@ -7175,7 +7175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

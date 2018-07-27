@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.RawFloat ?? true)
             {
-                errorMask.PushIndex((int)Global_FieldIndex.RawFloat);
+                errorMask?.PushIndex((int)Global_FieldIndex.RawFloat);
                 try
                 {
                     item.RawFloat_Property.SetToWithDefault(
@@ -1249,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

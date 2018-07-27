@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Reference ?? true)
             {
-                errorMask.PushIndex((int)ScriptObjectReference_FieldIndex.Reference);
+                errorMask?.PushIndex((int)ScriptObjectReference_FieldIndex.Reference);
                 try
                 {
                     item.Reference_Property.Set(
@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

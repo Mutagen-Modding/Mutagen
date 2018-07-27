@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.VariableIndex ?? true)
             {
-                errorMask.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);
+                errorMask?.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);
                 try
                 {
                     item.VariableIndex_Property.Set(
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

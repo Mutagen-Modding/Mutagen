@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Index ?? true)
             {
-                errorMask.PushIndex((int)BodyPart_FieldIndex.Index);
+                errorMask?.PushIndex((int)BodyPart_FieldIndex.Index);
                 try
                 {
                     item.Index_Property.SetToWithDefault(
@@ -1567,12 +1567,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)BodyPart_FieldIndex.Icon);
+                errorMask?.PushIndex((int)BodyPart_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -1586,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

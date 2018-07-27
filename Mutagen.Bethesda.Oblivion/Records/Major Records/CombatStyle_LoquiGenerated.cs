@@ -6848,7 +6848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.DodgePercentChance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
                 try
                 {
                     item.DodgePercentChance_Property.Set(
@@ -6862,12 +6862,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LeftRightPercentChance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
                 try
                 {
                     item.LeftRightPercentChance_Property.Set(
@@ -6881,12 +6881,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeLeftRightTimerMin ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
                 try
                 {
                     item.DodgeLeftRightTimerMin_Property.Set(
@@ -6900,12 +6900,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeLeftRightTimerMax ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
                 try
                 {
                     item.DodgeLeftRightTimerMax_Property.Set(
@@ -6919,12 +6919,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeForwardTimerMin ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
                 try
                 {
                     item.DodgeForwardTimerMin_Property.Set(
@@ -6938,12 +6938,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeForwardTimerMax ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
                 try
                 {
                     item.DodgeForwardTimerMax_Property.Set(
@@ -6957,12 +6957,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeBackTimerMin ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
                 try
                 {
                     item.DodgeBackTimerMin_Property.Set(
@@ -6976,12 +6976,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeBackTimerMax ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
                 try
                 {
                     item.DodgeBackTimerMax_Property.Set(
@@ -6995,12 +6995,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.IdleTimerMin ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
                 try
                 {
                     item.IdleTimerMin_Property.Set(
@@ -7014,12 +7014,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.IdleTimerMax ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
                 try
                 {
                     item.IdleTimerMax_Property.Set(
@@ -7033,12 +7033,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BlockPercentChance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
                 try
                 {
                     item.BlockPercentChance_Property.Set(
@@ -7052,12 +7052,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AttackPercentChance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
                 try
                 {
                     item.AttackPercentChance_Property.Set(
@@ -7071,12 +7071,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RecoilStaggerBonusToAttack ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
                 try
                 {
                     item.RecoilStaggerBonusToAttack_Property.Set(
@@ -7090,12 +7090,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UnconsciousBonusToAttack ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
                 try
                 {
                     item.UnconsciousBonusToAttack_Property.Set(
@@ -7109,12 +7109,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HandToHandBonusToAttack ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
                 try
                 {
                     item.HandToHandBonusToAttack_Property.Set(
@@ -7128,12 +7128,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PowerAttackPercentChance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
                 try
                 {
                     item.PowerAttackPercentChance_Property.Set(
@@ -7147,12 +7147,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RecoilStaggerBonusToPowerAttack ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
                 try
                 {
                     item.RecoilStaggerBonusToPowerAttack_Property.Set(
@@ -7166,12 +7166,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UnconsciousBonusToPowerAttack ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
                 try
                 {
                     item.UnconsciousBonusToPowerAttack_Property.Set(
@@ -7185,12 +7185,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PowerAttackNormal ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
                 try
                 {
                     item.PowerAttackNormal_Property.Set(
@@ -7204,12 +7204,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PowerAttackForward ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
                 try
                 {
                     item.PowerAttackForward_Property.Set(
@@ -7223,12 +7223,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PowerAttackBack ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
                 try
                 {
                     item.PowerAttackBack_Property.Set(
@@ -7242,12 +7242,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PowerAttackLeft ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
                 try
                 {
                     item.PowerAttackLeft_Property.Set(
@@ -7261,12 +7261,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PowerAttackRight ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
                 try
                 {
                     item.PowerAttackRight_Property.Set(
@@ -7280,12 +7280,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HoldTimerMin ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
                 try
                 {
                     item.HoldTimerMin_Property.Set(
@@ -7299,12 +7299,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HoldTimerMax ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
                 try
                 {
                     item.HoldTimerMax_Property.Set(
@@ -7318,12 +7318,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.Flags);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -7337,12 +7337,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AcrobaticDodgePercentChance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
                 try
                 {
                     item.AcrobaticDodgePercentChance_Property.Set(
@@ -7356,12 +7356,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RangeMultOptimal ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
                 try
                 {
                     item.RangeMultOptimal_Property.Set(
@@ -7375,12 +7375,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RangeMultMax ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
                 try
                 {
                     item.RangeMultMax_Property.Set(
@@ -7394,12 +7394,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SwitchDistanceMelee ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
                 try
                 {
                     item.SwitchDistanceMelee_Property.Set(
@@ -7413,12 +7413,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SwitchDistanceRanged ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
                 try
                 {
                     item.SwitchDistanceRanged_Property.Set(
@@ -7432,12 +7432,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BuffStandoffDistance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
                 try
                 {
                     item.BuffStandoffDistance_Property.Set(
@@ -7451,12 +7451,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RangedStandoffDistance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
                 try
                 {
                     item.RangedStandoffDistance_Property.Set(
@@ -7470,12 +7470,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.GroupStandoffDistance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
                 try
                 {
                     item.GroupStandoffDistance_Property.Set(
@@ -7489,12 +7489,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RushingAttackPercentChance ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
                 try
                 {
                     item.RushingAttackPercentChance_Property.Set(
@@ -7508,12 +7508,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RushingAttackDistanceMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
                 try
                 {
                     item.RushingAttackDistanceMult_Property.Set(
@@ -7527,12 +7527,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Advanced.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)CombatStyle_FieldIndex.Advanced);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
                 try
                 {
                     item.Advanced_Property.SetToWithDefault(
@@ -7573,7 +7573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

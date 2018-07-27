@@ -3225,7 +3225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Name);
+                errorMask?.PushIndex((int)Book_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -3239,12 +3239,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Model);
+                errorMask?.PushIndex((int)Book_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -3285,12 +3285,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Icon);
+                errorMask?.PushIndex((int)Book_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -3304,12 +3304,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Script);
+                errorMask?.PushIndex((int)Book_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -3324,12 +3324,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Enchantment ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Enchantment);
+                errorMask?.PushIndex((int)Book_FieldIndex.Enchantment);
                 try
                 {
                     item.Enchantment_Property.SetToWithDefault(
@@ -3344,12 +3344,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EnchantmentPoints ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.EnchantmentPoints);
+                errorMask?.PushIndex((int)Book_FieldIndex.EnchantmentPoints);
                 try
                 {
                     item.EnchantmentPoints_Property.SetToWithDefault(
@@ -3363,12 +3363,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Description ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Description);
+                errorMask?.PushIndex((int)Book_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -3382,12 +3382,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Book_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -3401,12 +3401,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Teaches ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Teaches);
+                errorMask?.PushIndex((int)Book_FieldIndex.Teaches);
                 try
                 {
                     item.Teaches_Property.Set(
@@ -3420,12 +3420,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Value);
+                errorMask?.PushIndex((int)Book_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -3439,12 +3439,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Weight);
+                errorMask?.PushIndex((int)Book_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -3458,7 +3458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

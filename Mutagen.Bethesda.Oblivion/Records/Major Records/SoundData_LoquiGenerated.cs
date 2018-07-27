@@ -1702,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.MinimumAttenuationDistance ?? true)
             {
-                errorMask.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
+                errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
                 try
                 {
                     item.MinimumAttenuationDistance_Property.Set(
@@ -1716,12 +1716,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaximumAttenuationDistance ?? true)
             {
-                errorMask.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
+                errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
                 try
                 {
                     item.MaximumAttenuationDistance_Property.Set(
@@ -1735,12 +1735,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FrequencyAdjustment ?? true)
             {
-                errorMask.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
+                errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
                 try
                 {
                     item.FrequencyAdjustment_Property.Set(
@@ -1754,12 +1754,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)SoundData_FieldIndex.Flags);
+                errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -1773,7 +1773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

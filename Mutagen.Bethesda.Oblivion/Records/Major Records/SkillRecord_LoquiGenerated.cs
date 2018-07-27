@@ -3291,7 +3291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Skill ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Skill);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Skill);
                 try
                 {
                     item.Skill_Property.SetToWithDefault(
@@ -3305,12 +3305,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Description ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Description);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -3324,12 +3324,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Icon);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -3343,12 +3343,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Action ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Action);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
                 try
                 {
                     item.Action_Property.Set(
@@ -3362,12 +3362,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Attribute ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Attribute);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
                 try
                 {
                     item.Attribute_Property.Set(
@@ -3381,12 +3381,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Specialization ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Specialization);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
                 try
                 {
                     item.Specialization_Property.Set(
@@ -3400,12 +3400,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UseValueFirst ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
                 try
                 {
                     item.UseValueFirst_Property.Set(
@@ -3419,12 +3419,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UseValueSecond ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
                 try
                 {
                     item.UseValueSecond_Property.Set(
@@ -3438,12 +3438,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ApprenticeText ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
                 try
                 {
                     item.ApprenticeText_Property.SetToWithDefault(
@@ -3457,12 +3457,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.JourneymanText ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
                 try
                 {
                     item.JourneymanText_Property.SetToWithDefault(
@@ -3476,12 +3476,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ExpertText ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
                 try
                 {
                     item.ExpertText_Property.SetToWithDefault(
@@ -3495,12 +3495,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MasterText ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.MasterText);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.MasterText);
                 try
                 {
                     item.MasterText_Property.SetToWithDefault(
@@ -3514,7 +3514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

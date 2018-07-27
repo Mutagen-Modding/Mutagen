@@ -1057,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Grasses != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
+                errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
                 try
                 {
                     item.Grasses.SetToWithDefault(
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

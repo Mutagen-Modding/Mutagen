@@ -3050,7 +3050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Base ?? true)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.Base);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Base);
                 try
                 {
                     item.Base_Property.SetToWithDefault(
@@ -3065,12 +3065,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.XPCIFluff ?? true)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.XPCIFluff);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.XPCIFluff);
                 try
                 {
                     item.XPCIFluff_Property.SetToWithDefault(
@@ -3084,12 +3084,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FULLFluff ?? true)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.FULLFluff);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.FULLFluff);
                 try
                 {
                     item.FULLFluff_Property.SetToWithDefault(
@@ -3103,12 +3103,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DistantLODData.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.DistantLODData);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DistantLODData);
                 try
                 {
                     item.DistantLODData_Property.SetToWithDefault(
@@ -3149,12 +3149,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EnableParent.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.EnableParent);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.EnableParent);
                 try
                 {
                     item.EnableParent_Property.SetToWithDefault(
@@ -3195,12 +3195,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MerchantContainer ?? true)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.MerchantContainer);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.MerchantContainer);
                 try
                 {
                     item.MerchantContainer_Property.SetToWithDefault(
@@ -3215,12 +3215,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Horse ?? true)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.Horse);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Horse);
                 try
                 {
                     item.Horse_Property.SetToWithDefault(
@@ -3235,12 +3235,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RagdollData ?? true)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.RagdollData);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.RagdollData);
                 try
                 {
                     item.RagdollData_Property.SetToWithDefault(
@@ -3254,12 +3254,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Scale ?? true)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.Scale);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Scale);
                 try
                 {
                     item.Scale_Property.SetToWithDefault(
@@ -3273,12 +3273,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Position ?? true)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.Position);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Position);
                 try
                 {
                     item.Position_Property.Set(
@@ -3292,12 +3292,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Rotation ?? true)
             {
-                errorMask.PushIndex((int)PlacedNPC_FieldIndex.Rotation);
+                errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Rotation);
                 try
                 {
                     item.Rotation_Property.Set(
@@ -3311,7 +3311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

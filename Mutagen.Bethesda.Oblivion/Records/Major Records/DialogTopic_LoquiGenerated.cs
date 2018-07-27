@@ -1722,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Quests != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)DialogTopic_FieldIndex.Quests);
+                errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
                 try
                 {
                     item.Quests.SetToWithDefault(
@@ -1737,12 +1737,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)DialogTopic_FieldIndex.Name);
+                errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -1756,12 +1756,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DialogType ?? true)
             {
-                errorMask.PushIndex((int)DialogTopic_FieldIndex.DialogType);
+                errorMask?.PushIndex((int)DialogTopic_FieldIndex.DialogType);
                 try
                 {
                     item.DialogType_Property.SetToWithDefault(
@@ -1775,12 +1775,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)DialogTopic_FieldIndex.Items);
+                errorMask?.PushIndex((int)DialogTopic_FieldIndex.Items);
                 try
                 {
                     item.Items.SetToWithDefault(
@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -2753,7 +2753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Name);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2767,12 +2767,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Model);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2813,12 +2813,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Icon);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -2832,12 +2832,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Script);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2852,12 +2852,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Value);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -2871,12 +2871,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Weight);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -2890,12 +2890,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ContainedSoul ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.ContainedSoul);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.ContainedSoul);
                 try
                 {
                     item.ContainedSoul_Property.SetToWithDefault(
@@ -2909,12 +2909,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaximumCapacity ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.MaximumCapacity);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.MaximumCapacity);
                 try
                 {
                     item.MaximumCapacity_Property.SetToWithDefault(
@@ -2928,7 +2928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

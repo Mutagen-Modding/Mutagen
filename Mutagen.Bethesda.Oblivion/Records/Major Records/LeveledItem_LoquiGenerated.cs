@@ -1647,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.ChanceNone ?? true)
             {
-                errorMask.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
                 try
                 {
                     item.ChanceNone_Property.SetToWithDefault(
@@ -1661,12 +1661,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)LeveledItem_FieldIndex.Flags);
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
@@ -1680,12 +1680,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Entries.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)LeveledItem_FieldIndex.Entries);
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
                 try
                 {
                     item.Entries.SetToWithDefault(
@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

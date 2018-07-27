@@ -4085,7 +4085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Name);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -4099,12 +4099,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Description ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Description);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -4118,12 +4118,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Icon);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -4137,12 +4137,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Model);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -4183,12 +4183,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Flags);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -4202,12 +4202,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BaseCost ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
                 try
                 {
                     item.BaseCost_Property.Set(
@@ -4221,12 +4221,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Unused ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Unused);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unused);
                 try
                 {
                     item.Unused_Property.Set(
@@ -4240,12 +4240,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MagicSchool ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.MagicSchool);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.MagicSchool);
                 try
                 {
                     item.MagicSchool_Property.Set(
@@ -4259,12 +4259,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Resistance ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Resistance);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Resistance);
                 try
                 {
                     item.Resistance_Property.Set(
@@ -4278,12 +4278,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CounterEffectCount ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
                 try
                 {
                     item.CounterEffectCount_Property.Set(
@@ -4297,12 +4297,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Light ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Light);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Light);
                 try
                 {
                     item.Light_Property.Set(
@@ -4316,12 +4316,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ProjectileSpeed ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.ProjectileSpeed);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.ProjectileSpeed);
                 try
                 {
                     item.ProjectileSpeed_Property.Set(
@@ -4335,12 +4335,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EffectShader ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.EffectShader);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.EffectShader);
                 try
                 {
                     item.EffectShader_Property.Set(
@@ -4354,12 +4354,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SubData.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.SubData);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.SubData);
                 try
                 {
                     switch (copyMask?.SubData?.Overall ?? CopyOption.Reference)
@@ -4400,12 +4400,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CounterEffects != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
                 try
                 {
                     item.CounterEffects.SetToWithDefault(
@@ -4420,7 +4420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

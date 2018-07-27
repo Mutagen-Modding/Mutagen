@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Sound ?? true)
             {
-                errorMask.PushIndex((int)WeatherSound_FieldIndex.Sound);
+                errorMask?.PushIndex((int)WeatherSound_FieldIndex.Sound);
                 try
                 {
                     item.Sound_Property.Set(
@@ -1299,12 +1299,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask.PushIndex((int)WeatherSound_FieldIndex.Type);
+                errorMask?.PushIndex((int)WeatherSound_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

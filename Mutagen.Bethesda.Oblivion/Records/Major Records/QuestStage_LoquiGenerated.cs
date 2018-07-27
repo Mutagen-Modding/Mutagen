@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Stage ?? true)
             {
-                errorMask.PushIndex((int)QuestStage_FieldIndex.Stage);
+                errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
                 try
                 {
                     item.Stage_Property.Set(
@@ -1367,12 +1367,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LogEntries.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)QuestStage_FieldIndex.LogEntries);
+                errorMask?.PushIndex((int)QuestStage_FieldIndex.LogEntries);
                 try
                 {
                     item.LogEntries.SetToWithDefault(
@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

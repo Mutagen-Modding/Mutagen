@@ -2876,7 +2876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Weathers.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.Weathers);
+                errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
                 try
                 {
                     item.Weathers.SetToWithDefault(
@@ -2908,12 +2908,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunTexture ?? true)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.SunTexture);
+                errorMask?.PushIndex((int)Climate_FieldIndex.SunTexture);
                 try
                 {
                     item.SunTexture_Property.SetToWithDefault(
@@ -2927,12 +2927,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunGlareTexture ?? true)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.SunGlareTexture);
+                errorMask?.PushIndex((int)Climate_FieldIndex.SunGlareTexture);
                 try
                 {
                     item.SunGlareTexture_Property.SetToWithDefault(
@@ -2946,12 +2946,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.Model);
+                errorMask?.PushIndex((int)Climate_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2992,12 +2992,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunriseBegin ?? true)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.SunriseBegin);
+                errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
                 try
                 {
                     item.SunriseBegin_Property.Set(
@@ -3011,12 +3011,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunriseEnd ?? true)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.SunriseEnd);
+                errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
                 try
                 {
                     item.SunriseEnd_Property.Set(
@@ -3030,12 +3030,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunsetBegin ?? true)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.SunsetBegin);
+                errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
                 try
                 {
                     item.SunsetBegin_Property.Set(
@@ -3049,12 +3049,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunsetEnd ?? true)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.SunsetEnd);
+                errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
                 try
                 {
                     item.SunsetEnd_Property.Set(
@@ -3068,12 +3068,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Volatility ?? true)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.Volatility);
+                errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
                 try
                 {
                     item.Volatility_Property.Set(
@@ -3087,12 +3087,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Phase ?? true)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.Phase);
+                errorMask?.PushIndex((int)Climate_FieldIndex.Phase);
                 try
                 {
                     item.Phase_Property.Set(
@@ -3106,12 +3106,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PhaseLength ?? true)
             {
-                errorMask.PushIndex((int)Climate_FieldIndex.PhaseLength);
+                errorMask?.PushIndex((int)Climate_FieldIndex.PhaseLength);
                 try
                 {
                     item.PhaseLength_Property.Set(
@@ -3125,7 +3125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

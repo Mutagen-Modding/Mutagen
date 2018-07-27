@@ -3321,7 +3321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.Model);
+                errorMask?.PushIndex((int)Grass_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -3362,12 +3362,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Density ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.Density);
+                errorMask?.PushIndex((int)Grass_FieldIndex.Density);
                 try
                 {
                     item.Density_Property.Set(
@@ -3381,12 +3381,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MinSlope ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.MinSlope);
+                errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
                 try
                 {
                     item.MinSlope_Property.Set(
@@ -3400,12 +3400,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaxSlope ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.MaxSlope);
+                errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
                 try
                 {
                     item.MaxSlope_Property.Set(
@@ -3419,12 +3419,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UnitFromWaterAmount ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
+                errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
                 try
                 {
                     item.UnitFromWaterAmount_Property.Set(
@@ -3438,12 +3438,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UnitFromWaterMode ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
+                errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
                 try
                 {
                     item.UnitFromWaterMode_Property.Set(
@@ -3457,12 +3457,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PositionRange ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.PositionRange);
+                errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
                 try
                 {
                     item.PositionRange_Property.Set(
@@ -3476,12 +3476,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HeightRange ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.HeightRange);
+                errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
                 try
                 {
                     item.HeightRange_Property.Set(
@@ -3495,12 +3495,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ColorRange ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.ColorRange);
+                errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
                 try
                 {
                     item.ColorRange_Property.Set(
@@ -3514,12 +3514,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WavePeriod ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.WavePeriod);
+                errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
                 try
                 {
                     item.WavePeriod_Property.Set(
@@ -3533,12 +3533,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -3552,7 +3552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

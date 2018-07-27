@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Name);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2406,12 +2406,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Model);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2452,12 +2452,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Script);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2472,12 +2472,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Ingredient ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Ingredient);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Ingredient);
                 try
                 {
                     item.Ingredient_Property.SetToWithDefault(
@@ -2492,12 +2492,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Spring ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Spring);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Spring);
                 try
                 {
                     item.Spring_Property.Set(
@@ -2511,12 +2511,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Summer ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Summer);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Summer);
                 try
                 {
                     item.Summer_Property.Set(
@@ -2530,12 +2530,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fall ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Fall);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Fall);
                 try
                 {
                     item.Fall_Property.Set(
@@ -2549,12 +2549,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Winter ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Winter);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Winter);
                 try
                 {
                     item.Winter_Property.Set(
@@ -2568,7 +2568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -1651,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Sunrise ?? true)
             {
-                errorMask.PushIndex((int)WeatherType_FieldIndex.Sunrise);
+                errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunrise);
                 try
                 {
                     item.Sunrise_Property.Set(
@@ -1665,12 +1665,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Day ?? true)
             {
-                errorMask.PushIndex((int)WeatherType_FieldIndex.Day);
+                errorMask?.PushIndex((int)WeatherType_FieldIndex.Day);
                 try
                 {
                     item.Day_Property.Set(
@@ -1684,12 +1684,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Sunset ?? true)
             {
-                errorMask.PushIndex((int)WeatherType_FieldIndex.Sunset);
+                errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunset);
                 try
                 {
                     item.Sunset_Property.Set(
@@ -1703,12 +1703,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Night ?? true)
             {
-                errorMask.PushIndex((int)WeatherType_FieldIndex.Night);
+                errorMask?.PushIndex((int)WeatherType_FieldIndex.Night);
                 try
                 {
                     item.Night_Property.Set(
@@ -1722,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

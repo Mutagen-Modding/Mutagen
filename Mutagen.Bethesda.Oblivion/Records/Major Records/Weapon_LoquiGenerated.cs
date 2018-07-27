@@ -3763,7 +3763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Name);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -3777,12 +3777,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Model);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -3823,12 +3823,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Icon);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -3842,12 +3842,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Script);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -3862,12 +3862,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Enchantment ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Enchantment);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Enchantment);
                 try
                 {
                     item.Enchantment_Property.SetToWithDefault(
@@ -3882,12 +3882,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EnchantmentPoints ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.EnchantmentPoints);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.EnchantmentPoints);
                 try
                 {
                     item.EnchantmentPoints_Property.SetToWithDefault(
@@ -3901,12 +3901,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Type);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -3920,12 +3920,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Speed ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Speed);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Speed);
                 try
                 {
                     item.Speed_Property.Set(
@@ -3939,12 +3939,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Reach ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Reach);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Reach);
                 try
                 {
                     item.Reach_Property.Set(
@@ -3958,12 +3958,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -3977,12 +3977,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Value);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -3996,12 +3996,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Health ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Health);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Health);
                 try
                 {
                     item.Health_Property.Set(
@@ -4015,12 +4015,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Weight);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -4034,12 +4034,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Damage ?? true)
             {
-                errorMask.PushIndex((int)Weapon_FieldIndex.Damage);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Damage);
                 try
                 {
                     item.Damage_Property.Set(
@@ -4053,7 +4053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.StaticAttenuation ?? true)
             {
-                errorMask.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
+                errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
                 try
                 {
                     item.StaticAttenuation_Property.Set(
@@ -1566,12 +1566,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.StopTime ?? true)
             {
-                errorMask.PushIndex((int)SoundDataExtended_FieldIndex.StopTime);
+                errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StopTime);
                 try
                 {
                     item.StopTime_Property.Set(
@@ -1585,12 +1585,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.StartTime ?? true)
             {
-                errorMask.PushIndex((int)SoundDataExtended_FieldIndex.StartTime);
+                errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StartTime);
                 try
                 {
                     item.StartTime_Property.Set(
@@ -1604,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

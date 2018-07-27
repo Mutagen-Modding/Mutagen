@@ -26,9 +26,9 @@ namespace Mutagen.Bethesda.Tests
             yield return new Knights_Passthrough_Tests().BinaryPassthroughTest(reuseOld: reuseCaches, deleteAfter: deleteCaches);
 
             var obliv = new OblivionESM_Passthrough_Tests();
-            yield return obliv.BinaryPassthroughTest(reuseOld: reuseCaches, deleteAfter: deleteCaches);
-            yield return obliv.OblivionESM_GroupMask_Import();
-            yield return obliv.OblivionESM_GroupMask_Export();
+            //yield return obliv.BinaryPassthroughTest(reuseOld: reuseCaches, deleteAfter: deleteCaches);
+            //yield return obliv.OblivionESM_GroupMask_Import();
+            //yield return obliv.OblivionESM_GroupMask_Export();
         }
     }
 }

@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.Script);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.Set(
@@ -1975,12 +1975,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MagicSchool ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
                 try
                 {
                     item.MagicSchool_Property.Set(
@@ -1994,12 +1994,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.VisualEffect ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
                 try
                 {
                     item.VisualEffect_Property.Set(
@@ -2013,12 +2013,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.Flags);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2032,12 +2032,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.Name);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2051,7 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Point ?? true)
             {
-                errorMask.PushIndex((int)PathGridPoint_FieldIndex.Point);
+                errorMask?.PushIndex((int)PathGridPoint_FieldIndex.Point);
                 try
                 {
                     item.Point_Property.Set(
@@ -1564,12 +1564,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.NumConnectionsFluffBytes ?? true)
             {
-                errorMask.PushIndex((int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes);
+                errorMask?.PushIndex((int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes);
                 try
                 {
                     item.NumConnectionsFluffBytes_Property.Set(
@@ -1583,12 +1583,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Connections != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)PathGridPoint_FieldIndex.Connections);
+                errorMask?.PushIndex((int)PathGridPoint_FieldIndex.Connections);
                 try
                 {
                     item.Connections.SetToWithDefault(
@@ -1603,7 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

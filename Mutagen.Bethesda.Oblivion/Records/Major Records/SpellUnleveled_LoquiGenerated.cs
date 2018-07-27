@@ -2163,7 +2163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Type ?? true)
             {
-                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Type);
+                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -2177,12 +2177,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Cost ?? true)
             {
-                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
+                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
                 try
                 {
                     item.Cost_Property.Set(
@@ -2196,12 +2196,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Level ?? true)
             {
-                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Level);
+                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
                 try
                 {
                     item.Level_Property.Set(
@@ -2215,12 +2215,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flag ?? true)
             {
-                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
+                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
                 try
                 {
                     item.Flag_Property.Set(
@@ -2234,12 +2234,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Effects.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
+                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
                 try
                 {
                     item.Effects.SetToWithDefault(
@@ -2271,7 +2271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

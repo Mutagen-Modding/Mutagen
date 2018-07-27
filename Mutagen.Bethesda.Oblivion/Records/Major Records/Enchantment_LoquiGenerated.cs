@@ -2312,7 +2312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.Name);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2326,12 +2326,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.Type);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -2345,12 +2345,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ChargeAmount ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
                 try
                 {
                     item.ChargeAmount_Property.Set(
@@ -2364,12 +2364,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EnchantCost ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
                 try
                 {
                     item.EnchantCost_Property.Set(
@@ -2383,12 +2383,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2402,12 +2402,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Effects.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.Effects);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.Effects);
                 try
                 {
                     item.Effects.SetToWithDefault(
@@ -2439,7 +2439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

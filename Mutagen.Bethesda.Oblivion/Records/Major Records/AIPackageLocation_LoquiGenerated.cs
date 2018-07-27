@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Type ?? true)
             {
-                errorMask.PushIndex((int)AIPackageLocation_FieldIndex.Type);
+                errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -1565,12 +1565,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LocationReference ?? true)
             {
-                errorMask.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
+                errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
                 try
                 {
                     item.LocationReference_Property.Set(
@@ -1584,12 +1584,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Radius ?? true)
             {
-                errorMask.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
+                errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
                 try
                 {
                     item.Radius_Property.Set(
@@ -1603,7 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

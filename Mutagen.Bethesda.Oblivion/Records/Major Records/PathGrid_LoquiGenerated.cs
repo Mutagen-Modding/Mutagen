@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.PointToPointConnections.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)PathGrid_FieldIndex.PointToPointConnections);
+                errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToPointConnections);
                 try
                 {
                     item.PointToPointConnections.SetToWithDefault(
@@ -1558,12 +1558,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Unknown ?? true)
             {
-                errorMask.PushIndex((int)PathGrid_FieldIndex.Unknown);
+                errorMask?.PushIndex((int)PathGrid_FieldIndex.Unknown);
                 try
                 {
                     item.Unknown_Property.SetToWithDefault(
@@ -1577,12 +1577,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.InterCellConnections.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)PathGrid_FieldIndex.InterCellConnections);
+                errorMask?.PushIndex((int)PathGrid_FieldIndex.InterCellConnections);
                 try
                 {
                     item.InterCellConnections.SetToWithDefault(
@@ -1614,12 +1614,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PointToReferenceMappings.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)PathGrid_FieldIndex.PointToReferenceMappings);
+                errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToReferenceMappings);
                 try
                 {
                     item.PointToReferenceMappings.SetToWithDefault(
@@ -1651,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

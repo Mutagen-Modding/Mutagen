@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.ArmorValue ?? true)
             {
-                errorMask.PushIndex((int)Armor_FieldIndex.ArmorValue);
+                errorMask?.PushIndex((int)Armor_FieldIndex.ArmorValue);
                 try
                 {
                     item.ArmorValue_Property.Set(
@@ -1856,12 +1856,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)Armor_FieldIndex.Value);
+                errorMask?.PushIndex((int)Armor_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -1875,12 +1875,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Health ?? true)
             {
-                errorMask.PushIndex((int)Armor_FieldIndex.Health);
+                errorMask?.PushIndex((int)Armor_FieldIndex.Health);
                 try
                 {
                     item.Health_Property.Set(
@@ -1894,12 +1894,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)Armor_FieldIndex.Weight);
+                errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

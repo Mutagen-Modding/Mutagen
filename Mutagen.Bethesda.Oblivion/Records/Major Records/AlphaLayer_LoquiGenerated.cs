@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.AlphaLayerData ?? true)
             {
-                errorMask.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
+                errorMask?.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 try
                 {
                     item.AlphaLayerData_Property.SetToWithDefault(
@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

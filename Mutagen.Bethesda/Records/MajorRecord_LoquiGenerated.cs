@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Internals
         {
             if (copyMask?.MajorRecordFlags ?? true)
             {
-                errorMask.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
+                errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
                 try
                 {
                     item.MajorRecordFlags_Property.Set(
@@ -1820,12 +1820,12 @@ namespace Mutagen.Bethesda.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Version ?? true)
             {
-                errorMask.PushIndex((int)MajorRecord_FieldIndex.Version);
+                errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
                 try
                 {
                     item.Version_Property.Set(
@@ -1839,12 +1839,12 @@ namespace Mutagen.Bethesda.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EditorID ?? true)
             {
-                errorMask.PushIndex((int)MajorRecord_FieldIndex.EditorID);
+                errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
                 try
                 {
                     item.EditorID_Property.SetToWithDefault(
@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

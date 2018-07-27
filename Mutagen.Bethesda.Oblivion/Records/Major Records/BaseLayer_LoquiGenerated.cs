@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Texture ?? true)
             {
-                errorMask.PushIndex((int)BaseLayer_FieldIndex.Texture);
+                errorMask?.PushIndex((int)BaseLayer_FieldIndex.Texture);
                 try
                 {
                     item.Texture_Property.Set(
@@ -1616,12 +1616,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Quadrant ?? true)
             {
-                errorMask.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
+                errorMask?.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
                 try
                 {
                     item.Quadrant_Property.Set(
@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

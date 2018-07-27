@@ -1822,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.LockLevel ?? true)
             {
-                errorMask.PushIndex((int)LockInformation_FieldIndex.LockLevel);
+                errorMask?.PushIndex((int)LockInformation_FieldIndex.LockLevel);
                 try
                 {
                     item.LockLevel_Property.Set(
@@ -1836,12 +1836,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask.PushIndex((int)LockInformation_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)LockInformation_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -1855,12 +1855,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Key ?? true)
             {
-                errorMask.PushIndex((int)LockInformation_FieldIndex.Key);
+                errorMask?.PushIndex((int)LockInformation_FieldIndex.Key);
                 try
                 {
                     item.Key_Property.Set(
@@ -1874,12 +1874,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)LockInformation_FieldIndex.Flags);
+                errorMask?.PushIndex((int)LockInformation_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -1893,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Male ?? true)
             {
-                errorMask.PushIndex((int)RaceVoices_FieldIndex.Male);
+                errorMask?.PushIndex((int)RaceVoices_FieldIndex.Male);
                 try
                 {
                     item.Male_Property.Set(
@@ -1070,12 +1070,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Female ?? true)
             {
-                errorMask.PushIndex((int)RaceVoices_FieldIndex.Female);
+                errorMask?.PushIndex((int)RaceVoices_FieldIndex.Female);
                 try
                 {
                     item.Female_Property.Set(
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

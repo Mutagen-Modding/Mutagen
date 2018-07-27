@@ -2877,7 +2877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.CompareOperator ?? true)
             {
-                errorMask.PushIndex((int)Condition_FieldIndex.CompareOperator);
+                errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
                 try
                 {
                     item.CompareOperator_Property.Set(
@@ -2891,12 +2891,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Condition_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2910,12 +2910,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask.PushIndex((int)Condition_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -2929,12 +2929,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ComparisonValue ?? true)
             {
-                errorMask.PushIndex((int)Condition_FieldIndex.ComparisonValue);
+                errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
                 try
                 {
                     item.ComparisonValue_Property.Set(
@@ -2948,12 +2948,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Function ?? true)
             {
-                errorMask.PushIndex((int)Condition_FieldIndex.Function);
+                errorMask?.PushIndex((int)Condition_FieldIndex.Function);
                 try
                 {
                     item.Function_Property.Set(
@@ -2967,12 +2967,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FirstParameter ?? true)
             {
-                errorMask.PushIndex((int)Condition_FieldIndex.FirstParameter);
+                errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
                 try
                 {
                     item.FirstParameter_Property.Set(
@@ -2986,12 +2986,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SecondParameter ?? true)
             {
-                errorMask.PushIndex((int)Condition_FieldIndex.SecondParameter);
+                errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
                 try
                 {
                     item.SecondParameter_Property.Set(
@@ -3005,12 +3005,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ThirdParameter ?? true)
             {
-                errorMask.PushIndex((int)Condition_FieldIndex.ThirdParameter);
+                errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
                 try
                 {
                     item.ThirdParameter_Property.Set(
@@ -3024,7 +3024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

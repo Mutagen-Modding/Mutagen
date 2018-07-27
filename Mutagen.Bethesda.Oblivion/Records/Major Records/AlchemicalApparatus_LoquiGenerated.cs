@@ -2733,7 +2733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2747,12 +2747,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2793,12 +2793,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Icon);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -2812,12 +2812,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Script);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2832,12 +2832,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Type);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -2851,12 +2851,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Value);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -2870,12 +2870,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Weight);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -2889,12 +2889,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Quality ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Quality);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Quality);
                 try
                 {
                     item.Quality_Property.Set(
@@ -2908,7 +2908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -1680,7 +1680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)IdleAnimation_FieldIndex.Model);
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -1721,12 +1721,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Conditions.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
                 try
                 {
                     item.Conditions.SetToWithDefault(
@@ -1758,12 +1758,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AnimationGroupSection ?? true)
             {
-                errorMask.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 try
                 {
                     item.AnimationGroupSection_Property.SetToWithDefault(
@@ -1777,12 +1777,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RelatedIdleAnimations != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
                 try
                 {
                     item.RelatedIdleAnimations.SetToWithDefault(
@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

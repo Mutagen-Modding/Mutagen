@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.RelatedWaterDaytime ?? true)
             {
-                errorMask.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
+                errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
                 try
                 {
                     item.RelatedWaterDaytime_Property.Set(
@@ -1120,12 +1120,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RelatedWaterNighttime ?? true)
             {
-                errorMask.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
+                errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
                 try
                 {
                     item.RelatedWaterNighttime_Property.Set(
@@ -1139,12 +1139,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RelatedWaterUnderwater ?? true)
             {
-                errorMask.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
+                errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
                 try
                 {
                     item.RelatedWaterUnderwater_Property.Set(
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

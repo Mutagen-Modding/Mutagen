@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Fields.Overall ?? true)
             {
-                errorMask.PushIndex((int)Script_FieldIndex.Fields);
+                errorMask?.PushIndex((int)Script_FieldIndex.Fields);
                 try
                 {
                     ScriptFieldsCommon.CopyFieldsFrom(
@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Door_FieldIndex.Name);
+                errorMask?.PushIndex((int)Door_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2170,12 +2170,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Door_FieldIndex.Model);
+                errorMask?.PushIndex((int)Door_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2216,12 +2216,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Door_FieldIndex.Script);
+                errorMask?.PushIndex((int)Door_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2236,12 +2236,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.OpenSound ?? true)
             {
-                errorMask.PushIndex((int)Door_FieldIndex.OpenSound);
+                errorMask?.PushIndex((int)Door_FieldIndex.OpenSound);
                 try
                 {
                     item.OpenSound_Property.SetToWithDefault(
@@ -2256,12 +2256,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CloseSound ?? true)
             {
-                errorMask.PushIndex((int)Door_FieldIndex.CloseSound);
+                errorMask?.PushIndex((int)Door_FieldIndex.CloseSound);
                 try
                 {
                     item.CloseSound_Property.SetToWithDefault(
@@ -2276,12 +2276,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LoopSound ?? true)
             {
-                errorMask.PushIndex((int)Door_FieldIndex.LoopSound);
+                errorMask?.PushIndex((int)Door_FieldIndex.LoopSound);
                 try
                 {
                     item.LoopSound_Property.SetToWithDefault(
@@ -2296,12 +2296,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Door_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Door_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
@@ -2315,12 +2315,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RandomTeleportDestinations != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
+                errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
                 try
                 {
                     item.RandomTeleportDestinations.SetToWithDefault(
@@ -2335,7 +2335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

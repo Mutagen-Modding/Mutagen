@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Weathers.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
+                errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
                 try
                 {
                     item.Weathers.SetToWithDefault(
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

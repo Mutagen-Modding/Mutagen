@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)Clothing_FieldIndex.Value);
+                errorMask?.PushIndex((int)Clothing_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -1571,12 +1571,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)Clothing_FieldIndex.Weight);
+                errorMask?.PushIndex((int)Clothing_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -1590,7 +1590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

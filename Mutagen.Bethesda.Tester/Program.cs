@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Tester
             LoquiRegistrationSettings.AutomaticRegistration = false;
 
             TestBattery.RunTests(
-                reuseCaches: false,
+                reuseCaches: true,
                 deleteCaches: false).Wait();
         }
     }

@@ -6805,7 +6805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.TextureLowerLayer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
                 try
                 {
                     item.TextureLowerLayer_Property.SetToWithDefault(
@@ -6819,12 +6819,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.TextureUpperLayer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
                 try
                 {
                     item.TextureUpperLayer_Property.SetToWithDefault(
@@ -6838,12 +6838,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.Model);
+                errorMask?.PushIndex((int)Weather_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -6884,12 +6884,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WeatherTypes.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.WeatherTypes);
+                errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
                 try
                 {
                     item.WeatherTypes.SetToWithDefault(
@@ -6921,12 +6921,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogDayNear ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.FogDayNear);
+                errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
                 try
                 {
                     item.FogDayNear_Property.Set(
@@ -6940,12 +6940,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogDayFar ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.FogDayFar);
+                errorMask?.PushIndex((int)Weather_FieldIndex.FogDayFar);
                 try
                 {
                     item.FogDayFar_Property.Set(
@@ -6959,12 +6959,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogNightNear ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.FogNightNear);
+                errorMask?.PushIndex((int)Weather_FieldIndex.FogNightNear);
                 try
                 {
                     item.FogNightNear_Property.Set(
@@ -6978,12 +6978,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogNightFar ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.FogNightFar);
+                errorMask?.PushIndex((int)Weather_FieldIndex.FogNightFar);
                 try
                 {
                     item.FogNightFar_Property.Set(
@@ -6997,12 +6997,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrEyeAdaptSpeed ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
                 try
                 {
                     item.HdrEyeAdaptSpeed_Property.Set(
@@ -7016,12 +7016,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrBlurRadius ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
                 try
                 {
                     item.HdrBlurRadius_Property.Set(
@@ -7035,12 +7035,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrBlurPasses ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
                 try
                 {
                     item.HdrBlurPasses_Property.Set(
@@ -7054,12 +7054,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrEmissiveMult ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
                 try
                 {
                     item.HdrEmissiveMult_Property.Set(
@@ -7073,12 +7073,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrTargetLum ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
                 try
                 {
                     item.HdrTargetLum_Property.Set(
@@ -7092,12 +7092,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrUpperLumClamp ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
                 try
                 {
                     item.HdrUpperLumClamp_Property.Set(
@@ -7111,12 +7111,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrBrightScale ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
                 try
                 {
                     item.HdrBrightScale_Property.Set(
@@ -7130,12 +7130,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrBrightClamp ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
                 try
                 {
                     item.HdrBrightClamp_Property.Set(
@@ -7149,12 +7149,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrLumRampNoTex ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
                 try
                 {
                     item.HdrLumRampNoTex_Property.Set(
@@ -7168,12 +7168,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrLumRampMin ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
                 try
                 {
                     item.HdrLumRampMin_Property.Set(
@@ -7187,12 +7187,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrLumRampMax ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
                 try
                 {
                     item.HdrLumRampMax_Property.Set(
@@ -7206,12 +7206,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrSunlightDimmer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
                 try
                 {
                     item.HdrSunlightDimmer_Property.Set(
@@ -7225,12 +7225,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrGrassDimmer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
                 try
                 {
                     item.HdrGrassDimmer_Property.Set(
@@ -7244,12 +7244,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrTreeDimmer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
                 try
                 {
                     item.HdrTreeDimmer_Property.Set(
@@ -7263,12 +7263,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WindSpeed ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.WindSpeed);
+                errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
                 try
                 {
                     item.WindSpeed_Property.Set(
@@ -7282,12 +7282,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CloudSpeedLower ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
+                errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
                 try
                 {
                     item.CloudSpeedLower_Property.Set(
@@ -7301,12 +7301,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CloudSpeedUpper ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
+                errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
                 try
                 {
                     item.CloudSpeedUpper_Property.Set(
@@ -7320,12 +7320,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.TransDelta ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.TransDelta);
+                errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
                 try
                 {
                     item.TransDelta_Property.Set(
@@ -7339,12 +7339,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunGlare ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.SunGlare);
+                errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
                 try
                 {
                     item.SunGlare_Property.Set(
@@ -7358,12 +7358,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunDamage ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.SunDamage);
+                errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
                 try
                 {
                     item.SunDamage_Property.Set(
@@ -7377,12 +7377,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PrecipitationBeginFadeIn ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
+                errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
                 try
                 {
                     item.PrecipitationBeginFadeIn_Property.Set(
@@ -7396,12 +7396,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PrecipitationEndFadeOut ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
+                errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
                 try
                 {
                     item.PrecipitationEndFadeOut_Property.Set(
@@ -7415,12 +7415,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ThunderLightningBeginFadeIn ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
+                errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
                 try
                 {
                     item.ThunderLightningBeginFadeIn_Property.Set(
@@ -7434,12 +7434,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ThunderLightningEndFadeOut ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
+                errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
                 try
                 {
                     item.ThunderLightningEndFadeOut_Property.Set(
@@ -7453,12 +7453,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ThunderLightningFrequency ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
+                errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
                 try
                 {
                     item.ThunderLightningFrequency_Property.Set(
@@ -7472,12 +7472,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Classification ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.Classification);
+                errorMask?.PushIndex((int)Weather_FieldIndex.Classification);
                 try
                 {
                     item.Classification_Property.Set(
@@ -7491,12 +7491,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LightningColor ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.LightningColor);
+                errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
                 try
                 {
                     item.LightningColor_Property.Set(
@@ -7510,12 +7510,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Sounds.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.Sounds);
+                errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
                 try
                 {
                     item.Sounds.SetToWithDefault(
@@ -7547,7 +7547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Weather ?? true)
             {
-                errorMask.PushIndex((int)WeatherChance_FieldIndex.Weather);
+                errorMask?.PushIndex((int)WeatherChance_FieldIndex.Weather);
                 try
                 {
                     item.Weather_Property.Set(
@@ -1293,12 +1293,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Chance ?? true)
             {
-                errorMask.PushIndex((int)WeatherChance_FieldIndex.Chance);
+                errorMask?.PushIndex((int)WeatherChance_FieldIndex.Chance);
                 try
                 {
                     item.Chance_Property.Set(
@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

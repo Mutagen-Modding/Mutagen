@@ -1796,7 +1796,7 @@ namespace Mutagen.Bethesda.Internals
         {
             if (copyMask?.GroupType ?? true)
             {
-                errorMask.PushIndex((int)Group_FieldIndex.GroupType);
+                errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
                 try
                 {
                     item.GroupType_Property.Set(
@@ -1810,12 +1810,12 @@ namespace Mutagen.Bethesda.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LastModified ?? true)
             {
-                errorMask.PushIndex((int)Group_FieldIndex.LastModified);
+                errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
                 try
                 {
                     item.LastModified_Property.Set(
@@ -1829,12 +1829,12 @@ namespace Mutagen.Bethesda.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Group_FieldIndex.Items);
+                errorMask?.PushIndex((int)Group_FieldIndex.Items);
                 try
                 {
                     item.Items.SetToWithDefault(
@@ -1864,7 +1864,7 @@ namespace Mutagen.Bethesda.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

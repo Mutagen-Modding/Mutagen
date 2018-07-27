@@ -2214,7 +2214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Strength ?? true)
             {
-                errorMask.PushIndex((int)RaceStats_FieldIndex.Strength);
+                errorMask?.PushIndex((int)RaceStats_FieldIndex.Strength);
                 try
                 {
                     item.Strength_Property.Set(
@@ -2228,12 +2228,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Intelligence ?? true)
             {
-                errorMask.PushIndex((int)RaceStats_FieldIndex.Intelligence);
+                errorMask?.PushIndex((int)RaceStats_FieldIndex.Intelligence);
                 try
                 {
                     item.Intelligence_Property.Set(
@@ -2247,12 +2247,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Willpower ?? true)
             {
-                errorMask.PushIndex((int)RaceStats_FieldIndex.Willpower);
+                errorMask?.PushIndex((int)RaceStats_FieldIndex.Willpower);
                 try
                 {
                     item.Willpower_Property.Set(
@@ -2266,12 +2266,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Agility ?? true)
             {
-                errorMask.PushIndex((int)RaceStats_FieldIndex.Agility);
+                errorMask?.PushIndex((int)RaceStats_FieldIndex.Agility);
                 try
                 {
                     item.Agility_Property.Set(
@@ -2285,12 +2285,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Speed ?? true)
             {
-                errorMask.PushIndex((int)RaceStats_FieldIndex.Speed);
+                errorMask?.PushIndex((int)RaceStats_FieldIndex.Speed);
                 try
                 {
                     item.Speed_Property.Set(
@@ -2304,12 +2304,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Endurance ?? true)
             {
-                errorMask.PushIndex((int)RaceStats_FieldIndex.Endurance);
+                errorMask?.PushIndex((int)RaceStats_FieldIndex.Endurance);
                 try
                 {
                     item.Endurance_Property.Set(
@@ -2323,12 +2323,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Personality ?? true)
             {
-                errorMask.PushIndex((int)RaceStats_FieldIndex.Personality);
+                errorMask?.PushIndex((int)RaceStats_FieldIndex.Personality);
                 try
                 {
                     item.Personality_Property.Set(
@@ -2342,12 +2342,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Luck ?? true)
             {
-                errorMask.PushIndex((int)RaceStats_FieldIndex.Luck);
+                errorMask?.PushIndex((int)RaceStats_FieldIndex.Luck);
                 try
                 {
                     item.Luck_Property.Set(
@@ -2361,7 +2361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
