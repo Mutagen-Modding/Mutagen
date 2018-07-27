@@ -1426,6 +1426,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Flora_Registration.TRIGGERING_RECORD_TYPE;
+        public PFPCDataType PFPCDataTypeState;
+        [Flags]
+        public enum PFPCDataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -1702,6 +1708,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.PFPCDataTypeState = PFPCDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Flora_FieldIndex.Spring);
@@ -2410,7 +2420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Name);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2424,12 +2434,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Model);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2470,12 +2480,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Script);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2490,12 +2500,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Ingredient ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Ingredient);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Ingredient);
                 try
                 {
                     item.Ingredient_Property.SetToWithDefault(
@@ -2510,12 +2520,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Spring ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Spring);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Spring);
                 try
                 {
                     item.Spring_Property.Set(
@@ -2529,12 +2539,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Summer ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Summer);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Summer);
                 try
                 {
                     item.Summer_Property.Set(
@@ -2548,12 +2558,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fall ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Fall);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Fall);
                 try
                 {
                     item.Fall_Property.Set(
@@ -2567,12 +2577,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Winter ?? true)
             {
-                errorMask.PushIndex((int)Flora_FieldIndex.Winter);
+                errorMask?.PushIndex((int)Flora_FieldIndex.Winter);
                 try
                 {
                     item.Winter_Property.Set(
@@ -2586,7 +2596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -3065,28 +3075,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
+            if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Spring_Property,
-                    fieldIndex: (int)Flora_FieldIndex.Spring,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Summer_Property,
-                    fieldIndex: (int)Flora_FieldIndex.Summer,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fall_Property,
-                    fieldIndex: (int)Flora_FieldIndex.Fall,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Winter_Property,
-                    fieldIndex: (int)Flora_FieldIndex.Winter,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Spring_Property,
+                        fieldIndex: (int)Flora_FieldIndex.Spring,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Summer_Property,
+                        fieldIndex: (int)Flora_FieldIndex.Summer,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fall_Property,
+                        fieldIndex: (int)Flora_FieldIndex.Fall,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Winter_Property,
+                        fieldIndex: (int)Flora_FieldIndex.Winter,
+                        errorMask: errorMask);
+                }
             }
         }
 

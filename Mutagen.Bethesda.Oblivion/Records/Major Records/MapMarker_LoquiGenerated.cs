@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)MapMarker_FieldIndex.Flags);
+                errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
@@ -1731,12 +1731,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)MapMarker_FieldIndex.Name);
+                errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -1750,12 +1750,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Types != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)MapMarker_FieldIndex.Types);
+                errorMask?.PushIndex((int)MapMarker_FieldIndex.Types);
                 try
                 {
                     item.Types.SetToWithDefault(
@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

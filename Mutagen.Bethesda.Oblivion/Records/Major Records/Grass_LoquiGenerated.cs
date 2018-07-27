@@ -2173,6 +2173,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Grass_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -2436,6 +2442,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Grass_FieldIndex.Density);
@@ -3339,7 +3349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.Model);
+                errorMask?.PushIndex((int)Grass_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -3380,12 +3390,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Density ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.Density);
+                errorMask?.PushIndex((int)Grass_FieldIndex.Density);
                 try
                 {
                     item.Density_Property.Set(
@@ -3399,12 +3409,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MinSlope ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.MinSlope);
+                errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
                 try
                 {
                     item.MinSlope_Property.Set(
@@ -3418,12 +3428,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaxSlope ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.MaxSlope);
+                errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
                 try
                 {
                     item.MaxSlope_Property.Set(
@@ -3437,12 +3447,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UnitFromWaterAmount ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
+                errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
                 try
                 {
                     item.UnitFromWaterAmount_Property.Set(
@@ -3456,12 +3466,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UnitFromWaterMode ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
+                errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
                 try
                 {
                     item.UnitFromWaterMode_Property.Set(
@@ -3475,12 +3485,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PositionRange ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.PositionRange);
+                errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
                 try
                 {
                     item.PositionRange_Property.Set(
@@ -3494,12 +3504,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HeightRange ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.HeightRange);
+                errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
                 try
                 {
                     item.HeightRange_Property.Set(
@@ -3513,12 +3523,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ColorRange ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.ColorRange);
+                errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
                 try
                 {
                     item.ColorRange_Property.Set(
@@ -3532,12 +3542,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WavePeriod ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.WavePeriod);
+                errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
                 try
                 {
                     item.WavePeriod_Property.Set(
@@ -3551,12 +3561,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Grass_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -3570,7 +3580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -4082,58 +4092,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)Grass_FieldIndex.Model,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Grass.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Density_Property,
-                    fieldIndex: (int)Grass_FieldIndex.Density,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MinSlope_Property,
-                    fieldIndex: (int)Grass_FieldIndex.MinSlope,
-                    errorMask: errorMask);
-                Grass.WriteBinary_MaxSlope(
-                    writer: writer,
-                    item: item,
-                    errorMask: errorMask);
-                Grass.WriteBinary_UnitFromWaterAmount(
-                    writer: writer,
-                    item: item,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
-                    writer,
-                    item.UnitFromWaterMode_Property,
-                    length: 4,
-                    fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.PositionRange_Property,
-                    fieldIndex: (int)Grass_FieldIndex.PositionRange,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HeightRange_Property,
-                    fieldIndex: (int)Grass_FieldIndex.HeightRange,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ColorRange_Property,
-                    fieldIndex: (int)Grass_FieldIndex.ColorRange,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.WavePeriod_Property,
-                    fieldIndex: (int)Grass_FieldIndex.WavePeriod,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)Grass_FieldIndex.Flags,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Density_Property,
+                        fieldIndex: (int)Grass_FieldIndex.Density,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MinSlope_Property,
+                        fieldIndex: (int)Grass_FieldIndex.MinSlope,
+                        errorMask: errorMask);
+                    Grass.WriteBinary_MaxSlope(
+                        writer: writer,
+                        item: item,
+                        errorMask: errorMask);
+                    Grass.WriteBinary_UnitFromWaterAmount(
+                        writer: writer,
+                        item: item,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
+                        writer,
+                        item.UnitFromWaterMode_Property,
+                        length: 4,
+                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.PositionRange_Property,
+                        fieldIndex: (int)Grass_FieldIndex.PositionRange,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HeightRange_Property,
+                        fieldIndex: (int)Grass_FieldIndex.HeightRange,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ColorRange_Property,
+                        fieldIndex: (int)Grass_FieldIndex.ColorRange,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.WavePeriod_Property,
+                        fieldIndex: (int)Grass_FieldIndex.WavePeriod,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)Grass_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
         }
 

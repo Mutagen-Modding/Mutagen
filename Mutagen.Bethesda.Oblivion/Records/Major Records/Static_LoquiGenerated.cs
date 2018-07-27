@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Static_FieldIndex.Model);
+                errorMask?.PushIndex((int)Static_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

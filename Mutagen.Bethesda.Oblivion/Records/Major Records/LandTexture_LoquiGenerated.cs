@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)LandTexture_FieldIndex.Icon);
+                errorMask?.PushIndex((int)LandTexture_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -1956,12 +1956,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Havok.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)LandTexture_FieldIndex.Havok);
+                errorMask?.PushIndex((int)LandTexture_FieldIndex.Havok);
                 try
                 {
                     item.Havok_Property.SetToWithDefault(
@@ -2002,12 +2002,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.TextureSpecularExponent ?? true)
             {
-                errorMask.PushIndex((int)LandTexture_FieldIndex.TextureSpecularExponent);
+                errorMask?.PushIndex((int)LandTexture_FieldIndex.TextureSpecularExponent);
                 try
                 {
                     item.TextureSpecularExponent_Property.SetToWithDefault(
@@ -2021,12 +2021,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PotentialGrass != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)LandTexture_FieldIndex.PotentialGrass);
+                errorMask?.PushIndex((int)LandTexture_FieldIndex.PotentialGrass);
                 try
                 {
                     item.PotentialGrass.SetToWithDefault(
@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

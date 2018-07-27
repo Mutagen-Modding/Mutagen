@@ -1688,7 +1688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.EnchantEffect ?? true)
             {
-                errorMask.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
+                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
                 try
                 {
                     item.EnchantEffect_Property.Set(
@@ -1702,12 +1702,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CastingSound ?? true)
             {
-                errorMask.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
+                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
                 try
                 {
                     item.CastingSound_Property.Set(
@@ -1721,12 +1721,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BoltSound ?? true)
             {
-                errorMask.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
+                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
                 try
                 {
                     item.BoltSound_Property.Set(
@@ -1740,12 +1740,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HitSound ?? true)
             {
-                errorMask.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
+                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
                 try
                 {
                     item.HitSound_Property.Set(
@@ -1759,12 +1759,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AreaSound ?? true)
             {
-                errorMask.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
+                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
                 try
                 {
                     item.AreaSound_Property.Set(
@@ -1778,12 +1778,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ConstantEffectEnchantmentFactor ?? true)
             {
-                errorMask.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
+                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
                 try
                 {
                     item.ConstantEffectEnchantmentFactor_Property.Set(
@@ -1797,12 +1797,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ConstantEffectBarterFactor ?? true)
             {
-                errorMask.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
+                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
                 try
                 {
                     item.ConstantEffectBarterFactor_Property.Set(
@@ -1816,7 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

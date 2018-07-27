@@ -1745,6 +1745,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = PlacedCreature_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -2103,6 +2109,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Position);
@@ -2794,7 +2804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Base ?? true)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Base);
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Base);
                 try
                 {
                     item.Base_Property.SetToWithDefault(
@@ -2809,12 +2819,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Owner ?? true)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Owner);
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Owner);
                 try
                 {
                     item.Owner_Property.SetToWithDefault(
@@ -2829,12 +2839,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FactionRank ?? true)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.FactionRank);
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.FactionRank);
                 try
                 {
                     item.FactionRank_Property.SetToWithDefault(
@@ -2848,12 +2858,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.GlobalVariable ?? true)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.GlobalVariable);
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.GlobalVariable);
                 try
                 {
                     item.GlobalVariable_Property.SetToWithDefault(
@@ -2868,12 +2878,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EnableParent.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
                 try
                 {
                     item.EnableParent_Property.SetToWithDefault(
@@ -2914,12 +2924,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RagdollData ?? true)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.RagdollData);
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.RagdollData);
                 try
                 {
                     item.RagdollData_Property.SetToWithDefault(
@@ -2933,12 +2943,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Scale ?? true)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Scale);
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Scale);
                 try
                 {
                     item.Scale_Property.SetToWithDefault(
@@ -2952,12 +2962,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Position ?? true)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Position);
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Position);
                 try
                 {
                     item.Position_Property.Set(
@@ -2971,12 +2981,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Rotation ?? true)
             {
-                errorMask.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
                 try
                 {
                     item.Rotation_Property.Set(
@@ -2990,7 +3000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -3553,18 +3563,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XSCL_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(PlacedCreature.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Position_Property,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Position,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Rotation_Property,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Position_Property,
+                        fieldIndex: (int)PlacedCreature_FieldIndex.Position,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Rotation_Property,
+                        fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
+                        errorMask: errorMask);
+                }
             }
         }
 

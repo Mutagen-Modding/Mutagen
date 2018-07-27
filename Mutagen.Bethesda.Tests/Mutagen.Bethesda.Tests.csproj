@@ -48,11 +48,9 @@
   <ItemGroup>
     <Compile Include="BinaryProcessor_Tests.cs" />
     <Compile Include="ComparisonStream.cs" />
-    <Compile Include="Generated\Instruction.cs">
-      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
-    </Compile>
+    <Compile Include="Specific Passthrough Tests\Oblivion\Knights_Passthrough_Tests.cs" />
     <Compile Include="Misc_Tests.cs" />
-    <Compile Include="Oblivion_Passthrough_Tests.cs" />
+    <Compile Include="Specific Passthrough Tests\Oblivion\OblivionESM_Passthrough_Tests.cs" />
     <Compile Include="FormID_Tests.cs" />
     <Compile Include="Passthrough_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,23 +59,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Generated\BinaryProcessorInstructions_LoquiGenerated.cs">
-      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Generated\Move_LoquiGenerated.cs">
-      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Generated\Instruction_LoquiGenerated.cs">
-      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Generated\RecordInstruction_LoquiGenerated.cs">
-      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Generated\ProtocolDefinition_Tests.cs" />
-    <Compile Include="Generated\DataTarget_LoquiGenerated.cs">
-      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
-    </Compile>
     <Compile Include="RecordType_Tests.cs" />
+    <Compile Include="Specific Passthrough Tests\Oblivion\Oblivion_Passthrough_Test.cs" />
+    <Compile Include="TestBattery.cs" />
+    <Compile Include="TestingConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ValueTuple">
@@ -117,11 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Generated\BinaryProcessorInstructions.xml">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

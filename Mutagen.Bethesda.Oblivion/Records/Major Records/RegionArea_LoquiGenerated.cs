@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.EdgeFallOff ?? true)
             {
-                errorMask.PushIndex((int)RegionArea_FieldIndex.EdgeFallOff);
+                errorMask?.PushIndex((int)RegionArea_FieldIndex.EdgeFallOff);
                 try
                 {
                     item.EdgeFallOff_Property.SetToWithDefault(
@@ -1443,12 +1443,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RegionPoints != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)RegionArea_FieldIndex.RegionPoints);
+                errorMask?.PushIndex((int)RegionArea_FieldIndex.RegionPoints);
                 try
                 {
                     item.RegionPoints.SetToWithDefault(
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

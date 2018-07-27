@@ -4333,6 +4333,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Weather_Registration.TRIGGERING_RECORD_TYPE;
+        public FNAMDataType FNAMDataTypeState;
+        [Flags]
+        public enum FNAMDataType
+        {
+            Has = 1
+        }
+        public HNAMDataType HNAMDataTypeState;
+        [Flags]
+        public enum HNAMDataType
+        {
+            Has = 1
+        }
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -4633,6 +4651,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.FNAMDataTypeState = FNAMDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
@@ -4735,6 +4757,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.HNAMDataTypeState = HNAMDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
@@ -5077,6 +5103,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
@@ -6843,7 +6873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.TextureLowerLayer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
                 try
                 {
                     item.TextureLowerLayer_Property.SetToWithDefault(
@@ -6857,12 +6887,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.TextureUpperLayer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
                 try
                 {
                     item.TextureUpperLayer_Property.SetToWithDefault(
@@ -6876,12 +6906,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.Model);
+                errorMask?.PushIndex((int)Weather_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -6922,12 +6952,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WeatherTypes.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.WeatherTypes);
+                errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
                 try
                 {
                     item.WeatherTypes.SetToWithDefault(
@@ -6959,12 +6989,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogDayNear ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.FogDayNear);
+                errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
                 try
                 {
                     item.FogDayNear_Property.Set(
@@ -6978,12 +7008,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogDayFar ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.FogDayFar);
+                errorMask?.PushIndex((int)Weather_FieldIndex.FogDayFar);
                 try
                 {
                     item.FogDayFar_Property.Set(
@@ -6997,12 +7027,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogNightNear ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.FogNightNear);
+                errorMask?.PushIndex((int)Weather_FieldIndex.FogNightNear);
                 try
                 {
                     item.FogNightNear_Property.Set(
@@ -7016,12 +7046,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FogNightFar ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.FogNightFar);
+                errorMask?.PushIndex((int)Weather_FieldIndex.FogNightFar);
                 try
                 {
                     item.FogNightFar_Property.Set(
@@ -7035,12 +7065,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrEyeAdaptSpeed ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
                 try
                 {
                     item.HdrEyeAdaptSpeed_Property.Set(
@@ -7054,12 +7084,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrBlurRadius ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
                 try
                 {
                     item.HdrBlurRadius_Property.Set(
@@ -7073,12 +7103,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrBlurPasses ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
                 try
                 {
                     item.HdrBlurPasses_Property.Set(
@@ -7092,12 +7122,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrEmissiveMult ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
                 try
                 {
                     item.HdrEmissiveMult_Property.Set(
@@ -7111,12 +7141,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrTargetLum ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
                 try
                 {
                     item.HdrTargetLum_Property.Set(
@@ -7130,12 +7160,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrUpperLumClamp ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
                 try
                 {
                     item.HdrUpperLumClamp_Property.Set(
@@ -7149,12 +7179,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrBrightScale ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
                 try
                 {
                     item.HdrBrightScale_Property.Set(
@@ -7168,12 +7198,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrBrightClamp ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
                 try
                 {
                     item.HdrBrightClamp_Property.Set(
@@ -7187,12 +7217,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrLumRampNoTex ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
                 try
                 {
                     item.HdrLumRampNoTex_Property.Set(
@@ -7206,12 +7236,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrLumRampMin ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
                 try
                 {
                     item.HdrLumRampMin_Property.Set(
@@ -7225,12 +7255,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrLumRampMax ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
                 try
                 {
                     item.HdrLumRampMax_Property.Set(
@@ -7244,12 +7274,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrSunlightDimmer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
                 try
                 {
                     item.HdrSunlightDimmer_Property.Set(
@@ -7263,12 +7293,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrGrassDimmer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
                 try
                 {
                     item.HdrGrassDimmer_Property.Set(
@@ -7282,12 +7312,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HdrTreeDimmer ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
+                errorMask?.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
                 try
                 {
                     item.HdrTreeDimmer_Property.Set(
@@ -7301,12 +7331,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.WindSpeed ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.WindSpeed);
+                errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
                 try
                 {
                     item.WindSpeed_Property.Set(
@@ -7320,12 +7350,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CloudSpeedLower ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
+                errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
                 try
                 {
                     item.CloudSpeedLower_Property.Set(
@@ -7339,12 +7369,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CloudSpeedUpper ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
+                errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
                 try
                 {
                     item.CloudSpeedUpper_Property.Set(
@@ -7358,12 +7388,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.TransDelta ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.TransDelta);
+                errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
                 try
                 {
                     item.TransDelta_Property.Set(
@@ -7377,12 +7407,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunGlare ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.SunGlare);
+                errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
                 try
                 {
                     item.SunGlare_Property.Set(
@@ -7396,12 +7426,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SunDamage ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.SunDamage);
+                errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
                 try
                 {
                     item.SunDamage_Property.Set(
@@ -7415,12 +7445,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PrecipitationBeginFadeIn ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
+                errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
                 try
                 {
                     item.PrecipitationBeginFadeIn_Property.Set(
@@ -7434,12 +7464,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PrecipitationEndFadeOut ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
+                errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
                 try
                 {
                     item.PrecipitationEndFadeOut_Property.Set(
@@ -7453,12 +7483,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ThunderLightningBeginFadeIn ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
+                errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
                 try
                 {
                     item.ThunderLightningBeginFadeIn_Property.Set(
@@ -7472,12 +7502,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ThunderLightningEndFadeOut ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
+                errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
                 try
                 {
                     item.ThunderLightningEndFadeOut_Property.Set(
@@ -7491,12 +7521,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ThunderLightningFrequency ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
+                errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
                 try
                 {
                     item.ThunderLightningFrequency_Property.Set(
@@ -7510,12 +7540,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Classification ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.Classification);
+                errorMask?.PushIndex((int)Weather_FieldIndex.Classification);
                 try
                 {
                     item.Classification_Property.Set(
@@ -7529,12 +7559,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LightningColor ?? true)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.LightningColor);
+                errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
                 try
                 {
                     item.LightningColor_Property.Set(
@@ -7548,12 +7578,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Sounds.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Weather_FieldIndex.Sounds);
+                errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
                 try
                 {
                     item.Sounds.SetToWithDefault(
@@ -7585,7 +7615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -8813,170 +8843,179 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: Weather_Registration.NAM0_HEADER,
                 errorMask: errorMask,
                 transl: LoquiBinaryTranslation<WeatherType>.Instance.Write);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
+            if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogDayNear_Property,
-                    fieldIndex: (int)Weather_FieldIndex.FogDayNear,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogDayFar_Property,
-                    fieldIndex: (int)Weather_FieldIndex.FogDayFar,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogNightNear_Property,
-                    fieldIndex: (int)Weather_FieldIndex.FogNightNear,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FogNightFar_Property,
-                    fieldIndex: (int)Weather_FieldIndex.FogNightFar,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogDayNear_Property,
+                        fieldIndex: (int)Weather_FieldIndex.FogDayNear,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogDayFar_Property,
+                        fieldIndex: (int)Weather_FieldIndex.FogDayFar,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogNightNear_Property,
+                        fieldIndex: (int)Weather_FieldIndex.FogNightNear,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogNightFar_Property,
+                        fieldIndex: (int)Weather_FieldIndex.FogNightFar,
+                        errorMask: errorMask);
+                }
             }
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.HNAM_HEADER)))
+            if (item.HNAMDataTypeState.HasFlag(Weather.HNAMDataType.Has))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrEyeAdaptSpeed_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrBlurRadius_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrBlurPasses_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrEmissiveMult_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrTargetLum_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrUpperLumClamp_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrBrightScale_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrBrightClamp_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrLumRampNoTex_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrLumRampMin_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrLumRampMax_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrSunlightDimmer_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrGrassDimmer_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HdrTreeDimmer_Property,
-                    fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.HNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrEyeAdaptSpeed_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBlurRadius_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBlurPasses_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrEmissiveMult_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrTargetLum_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrUpperLumClamp_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBrightScale_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBrightClamp_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrLumRampNoTex_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrLumRampMin_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrLumRampMax_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrSunlightDimmer_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrGrassDimmer_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HdrTreeDimmer_Property,
+                        fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
+                        errorMask: errorMask);
+                }
             }
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Weather.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.WindSpeed_Property,
-                    fieldIndex: (int)Weather_FieldIndex.WindSpeed,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CloudSpeedLower_Property,
-                    fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CloudSpeedUpper_Property,
-                    fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.TransDelta_Property,
-                    fieldIndex: (int)Weather_FieldIndex.TransDelta,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.SunGlare_Property,
-                    fieldIndex: (int)Weather_FieldIndex.SunGlare,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.SunDamage_Property,
-                    fieldIndex: (int)Weather_FieldIndex.SunDamage,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.PrecipitationBeginFadeIn_Property,
-                    fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.PrecipitationEndFadeOut_Property,
-                    fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ThunderLightningBeginFadeIn_Property,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ThunderLightningEndFadeOut_Property,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ThunderLightningFrequency_Property,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
-                    writer,
-                    item.Classification_Property,
-                    length: 1,
-                    fieldIndex: (int)Weather_FieldIndex.Classification,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LightningColor_Property,
-                    fieldIndex: (int)Weather_FieldIndex.LightningColor,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.WindSpeed_Property,
+                        fieldIndex: (int)Weather_FieldIndex.WindSpeed,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CloudSpeedLower_Property,
+                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CloudSpeedUpper_Property,
+                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.TransDelta_Property,
+                        fieldIndex: (int)Weather_FieldIndex.TransDelta,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.SunGlare_Property,
+                        fieldIndex: (int)Weather_FieldIndex.SunGlare,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.SunDamage_Property,
+                        fieldIndex: (int)Weather_FieldIndex.SunDamage,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.PrecipitationBeginFadeIn_Property,
+                        fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.PrecipitationEndFadeOut_Property,
+                        fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ThunderLightningBeginFadeIn_Property,
+                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ThunderLightningEndFadeOut_Property,
+                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ThunderLightningFrequency_Property,
+                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
+                        writer,
+                        item.Classification_Property,
+                        length: 1,
+                        fieldIndex: (int)Weather_FieldIndex.Classification,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LightningColor_Property,
+                        fieldIndex: (int)Weather_FieldIndex.LightningColor,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.Write(
                 writer: writer,

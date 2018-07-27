@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Unknown ?? true)
             {
-                errorMask.PushIndex((int)Landscape_FieldIndex.Unknown);
+                errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
                 try
                 {
                     item.Unknown_Property.SetToWithDefault(
@@ -2031,12 +2031,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.VertexNormals ?? true)
             {
-                errorMask.PushIndex((int)Landscape_FieldIndex.VertexNormals);
+                errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
                 try
                 {
                     item.VertexNormals_Property.SetToWithDefault(
@@ -2050,12 +2050,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.VertexHeightMap ?? true)
             {
-                errorMask.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
+                errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
                 try
                 {
                     item.VertexHeightMap_Property.SetToWithDefault(
@@ -2069,12 +2069,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.VertexColors ?? true)
             {
-                errorMask.PushIndex((int)Landscape_FieldIndex.VertexColors);
+                errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
                 try
                 {
                     item.VertexColors_Property.SetToWithDefault(
@@ -2088,12 +2088,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Layers.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Landscape_FieldIndex.Layers);
+                errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
                 try
                 {
                     item.Layers.SetToWithDefault(
@@ -2125,12 +2125,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Textures != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Landscape_FieldIndex.Textures);
+                errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
                 try
                 {
                     item.Textures.SetToWithDefault(
@@ -2145,7 +2145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

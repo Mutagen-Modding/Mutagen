@@ -1711,6 +1711,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = DialogResponse_Registration.TRIGGERING_RECORD_TYPE;
+        public TRDTDataType TRDTDataTypeState;
+        [Flags]
+        public enum TRDTDataType
+        {
+            Has = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -1947,6 +1953,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.TRDTDataTypeState = TRDTDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
@@ -2709,7 +2719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Emotion ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.Emotion);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
                 try
                 {
                     item.Emotion_Property.Set(
@@ -2723,12 +2733,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EmotionValue ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
                 try
                 {
                     item.EmotionValue_Property.Set(
@@ -2742,12 +2752,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff1 ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
                 try
                 {
                     item.Fluff1_Property.Set(
@@ -2761,12 +2771,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ResponseNumber ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
                 try
                 {
                     item.ResponseNumber_Property.Set(
@@ -2780,12 +2790,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff2 ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
                 try
                 {
                     item.Fluff2_Property.Set(
@@ -2799,12 +2809,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ResponseText ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
                 try
                 {
                     item.ResponseText_Property.SetToWithDefault(
@@ -2818,12 +2828,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ActorNotes ?? true)
             {
-                errorMask.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
                 try
                 {
                     item.ActorNotes_Property.SetToWithDefault(
@@ -2837,7 +2847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -3212,34 +3222,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogResponse_Registration.TRDT_HEADER)))
+            if (item.TRDTDataTypeState.HasFlag(DialogResponse.TRDTDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Write(
-                    writer,
-                    item.Emotion_Property,
-                    length: 4,
-                    fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EmotionValue_Property,
-                    fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fluff1_Property,
-                    fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ResponseNumber_Property,
-                    fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fluff2_Property,
-                    fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogResponse_Registration.TRDT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Write(
+                        writer,
+                        item.Emotion_Property,
+                        length: 4,
+                        fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EmotionValue_Property,
+                        fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff1_Property,
+                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ResponseNumber_Property,
+                        fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff2_Property,
+                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,

@@ -1970,6 +1970,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        public BMDTDataType BMDTDataTypeState;
+        [Flags]
+        public enum BMDTDataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -2150,6 +2156,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.BMDTDataTypeState = BMDTDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
@@ -3129,7 +3139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.Name);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -3143,12 +3153,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.Script);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -3163,12 +3173,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Enchantment ?? true)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.Enchantment);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Enchantment);
                 try
                 {
                     item.Enchantment_Property.SetToWithDefault(
@@ -3183,12 +3193,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EnchantmentPoints ?? true)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
                 try
                 {
                     item.EnchantmentPoints_Property.SetToWithDefault(
@@ -3202,12 +3212,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BipedFlags ?? true)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
                 try
                 {
                     item.BipedFlags_Property.Set(
@@ -3221,12 +3231,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.Flags);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -3240,12 +3250,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaleBipedModel.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
                 try
                 {
                     item.MaleBipedModel_Property.SetToWithDefault(
@@ -3286,12 +3296,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaleWorldModel.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
                 try
                 {
                     item.MaleWorldModel_Property.SetToWithDefault(
@@ -3332,12 +3342,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaleIcon ?? true)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.MaleIcon);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleIcon);
                 try
                 {
                     item.MaleIcon_Property.SetToWithDefault(
@@ -3351,12 +3361,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FemaleBipedModel.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
                 try
                 {
                     item.FemaleBipedModel_Property.SetToWithDefault(
@@ -3397,12 +3407,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FemaleWorldModel.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
                 try
                 {
                     item.FemaleWorldModel_Property.SetToWithDefault(
@@ -3443,12 +3453,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FemaleIcon ?? true)
             {
-                errorMask.PushIndex((int)ClothingAbstract_FieldIndex.FemaleIcon);
+                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleIcon);
                 try
                 {
                     item.FemaleIcon_Property.SetToWithDefault(
@@ -3462,7 +3472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -4065,20 +4075,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.ANAM_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.BMDT_HEADER)))
+            if (item.BMDTDataTypeState.HasFlag(ClothingAbstract.BMDTDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Write(
-                    writer,
-                    item.BipedFlags_Property,
-                    length: 2,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 2,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.BMDT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Write(
+                        writer,
+                        item.BipedFlags_Property,
+                        length: 2,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 2,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             LoquiBinaryTranslation<Model>.Instance.Write(
                 writer: writer,

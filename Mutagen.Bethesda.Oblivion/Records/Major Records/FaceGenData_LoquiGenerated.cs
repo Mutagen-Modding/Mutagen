@@ -1649,7 +1649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.SymmetricGeometry ?? true)
             {
-                errorMask.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
+                errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 try
                 {
                     item.SymmetricGeometry_Property.SetToWithDefault(
@@ -1663,12 +1663,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AsymmetricGeometry ?? true)
             {
-                errorMask.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
+                errorMask?.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 try
                 {
                     item.AsymmetricGeometry_Property.SetToWithDefault(
@@ -1682,12 +1682,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SymmetricTexture ?? true)
             {
-                errorMask.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);
+                errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);
                 try
                 {
                     item.SymmetricTexture_Property.SetToWithDefault(
@@ -1701,7 +1701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

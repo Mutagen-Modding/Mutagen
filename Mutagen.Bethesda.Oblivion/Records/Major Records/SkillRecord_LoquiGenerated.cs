@@ -2060,6 +2060,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = SkillRecord_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -2338,6 +2344,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
@@ -3308,7 +3318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Skill ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Skill);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Skill);
                 try
                 {
                     item.Skill_Property.SetToWithDefault(
@@ -3322,12 +3332,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Description ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Description);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -3341,12 +3351,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Icon);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -3360,12 +3370,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Action ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Action);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
                 try
                 {
                     item.Action_Property.Set(
@@ -3379,12 +3389,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Attribute ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Attribute);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
                 try
                 {
                     item.Attribute_Property.Set(
@@ -3398,12 +3408,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Specialization ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.Specialization);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
                 try
                 {
                     item.Specialization_Property.Set(
@@ -3417,12 +3427,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UseValueFirst ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
                 try
                 {
                     item.UseValueFirst_Property.Set(
@@ -3436,12 +3446,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.UseValueSecond ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
                 try
                 {
                     item.UseValueSecond_Property.Set(
@@ -3455,12 +3465,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ApprenticeText ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
                 try
                 {
                     item.ApprenticeText_Property.SetToWithDefault(
@@ -3474,12 +3484,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.JourneymanText ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
                 try
                 {
                     item.JourneymanText_Property.SetToWithDefault(
@@ -3493,12 +3503,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ExpertText ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
                 try
                 {
                     item.ExpertText_Property.SetToWithDefault(
@@ -3512,12 +3522,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MasterText ?? true)
             {
-                errorMask.PushIndex((int)SkillRecord_FieldIndex.MasterText);
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.MasterText);
                 try
                 {
                     item.MasterText_Property.SetToWithDefault(
@@ -3531,7 +3541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -4111,36 +4121,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ICON_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                    writer,
-                    item.Action_Property,
-                    length: 4,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Action,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                    writer,
-                    item.Attribute_Property,
-                    length: 4,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
-                    writer,
-                    item.Specialization_Property,
-                    length: 4,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.UseValueFirst_Property,
-                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.UseValueSecond_Property,
-                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                        writer,
+                        item.Action_Property,
+                        length: 4,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                        writer,
+                        item.Attribute_Property,
+                        length: 4,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
+                        writer,
+                        item.Specialization_Property,
+                        length: 4,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.UseValueFirst_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.UseValueSecond_Property,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,

@@ -2232,7 +2232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Month ?? true)
             {
-                errorMask.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
+                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
                 try
                 {
                     item.Month_Property.Set(
@@ -2246,12 +2246,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DayOfWeek ?? true)
             {
-                errorMask.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
+                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
                 try
                 {
                     item.DayOfWeek_Property.Set(
@@ -2265,12 +2265,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Day ?? true)
             {
-                errorMask.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
+                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
                 try
                 {
                     item.Day_Property.Set(
@@ -2284,12 +2284,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Time ?? true)
             {
-                errorMask.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
+                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
                 try
                 {
                     item.Time_Property.Set(
@@ -2303,12 +2303,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Duration ?? true)
             {
-                errorMask.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
+                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
                 try
                 {
                     item.Duration_Property.Set(
@@ -2322,7 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

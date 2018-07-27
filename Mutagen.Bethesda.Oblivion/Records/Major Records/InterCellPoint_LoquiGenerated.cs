@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.PointID ?? true)
             {
-                errorMask.PushIndex((int)InterCellPoint_FieldIndex.PointID);
+                errorMask?.PushIndex((int)InterCellPoint_FieldIndex.PointID);
                 try
                 {
                     item.PointID_Property.Set(
@@ -1563,12 +1563,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Point ?? true)
             {
-                errorMask.PushIndex((int)InterCellPoint_FieldIndex.Point);
+                errorMask?.PushIndex((int)InterCellPoint_FieldIndex.Point);
                 try
                 {
                     item.Point_Property.Set(
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.BlockNumber ?? true)
             {
-                errorMask.PushIndex((int)CellSubBlock_FieldIndex.BlockNumber);
+                errorMask?.PushIndex((int)CellSubBlock_FieldIndex.BlockNumber);
                 try
                 {
                     item.BlockNumber_Property.Set(
@@ -1852,12 +1852,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.GroupType ?? true)
             {
-                errorMask.PushIndex((int)CellSubBlock_FieldIndex.GroupType);
+                errorMask?.PushIndex((int)CellSubBlock_FieldIndex.GroupType);
                 try
                 {
                     item.GroupType_Property.Set(
@@ -1871,12 +1871,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LastModified ?? true)
             {
-                errorMask.PushIndex((int)CellSubBlock_FieldIndex.LastModified);
+                errorMask?.PushIndex((int)CellSubBlock_FieldIndex.LastModified);
                 try
                 {
                     item.LastModified_Property.Set(
@@ -1890,12 +1890,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)CellSubBlock_FieldIndex.Items);
+                errorMask?.PushIndex((int)CellSubBlock_FieldIndex.Items);
                 try
                 {
                     item.Items.SetToWithDefault(
@@ -1927,7 +1927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

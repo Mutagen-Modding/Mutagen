@@ -1460,6 +1460,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Enchantment_Registration.TRIGGERING_RECORD_TYPE;
+        public ENITDataType ENITDataTypeState;
+        [Flags]
+        public enum ENITDataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -1696,6 +1702,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.ENITDataTypeState = ENITDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
@@ -2349,7 +2359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.Name);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2363,12 +2373,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.Type);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -2382,12 +2392,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ChargeAmount ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
                 try
                 {
                     item.ChargeAmount_Property.Set(
@@ -2401,12 +2411,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EnchantCost ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
                 try
                 {
                     item.EnchantCost_Property.Set(
@@ -2420,12 +2430,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2439,12 +2449,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Effects.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Enchantment_FieldIndex.Effects);
+                errorMask?.PushIndex((int)Enchantment_FieldIndex.Effects);
                 try
                 {
                     item.Effects.SetToWithDefault(
@@ -2476,7 +2486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -2927,30 +2937,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Enchantment_Registration.FULL_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
+            if (item.ENITDataTypeState.HasFlag(Enchantment.ENITDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
-                    writer,
-                    item.Type_Property,
-                    length: 4,
-                    fieldIndex: (int)Enchantment_FieldIndex.Type,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ChargeAmount_Property,
-                    fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EnchantCost_Property,
-                    fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
+                        writer,
+                        item.Type_Property,
+                        length: 4,
+                        fieldIndex: (int)Enchantment_FieldIndex.Type,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ChargeAmount_Property,
+                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EnchantCost_Property,
+                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
                 writer: writer,

@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Skill ?? true)
             {
-                errorMask.PushIndex((int)SkillBoost_FieldIndex.Skill);
+                errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
                 try
                 {
                     item.Skill_Property.Set(
@@ -1563,12 +1563,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Boost ?? true)
             {
-                errorMask.PushIndex((int)SkillBoost_FieldIndex.Boost);
+                errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
                 try
                 {
                     item.Boost_Property.Set(
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

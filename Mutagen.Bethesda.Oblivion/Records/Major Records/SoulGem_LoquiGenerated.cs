@@ -1758,6 +1758,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = SoulGem_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -2053,6 +2059,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)SoulGem_FieldIndex.Value);
@@ -2771,7 +2781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Name);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2785,12 +2795,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Model);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2831,12 +2841,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Icon);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -2850,12 +2860,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Script);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2870,12 +2880,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Value);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -2889,12 +2899,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.Weight);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -2908,12 +2918,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ContainedSoul ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.ContainedSoul);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.ContainedSoul);
                 try
                 {
                     item.ContainedSoul_Property.SetToWithDefault(
@@ -2927,12 +2937,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaximumCapacity ?? true)
             {
-                errorMask.PushIndex((int)SoulGem_FieldIndex.MaximumCapacity);
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.MaximumCapacity);
                 try
                 {
                     item.MaximumCapacity_Property.SetToWithDefault(
@@ -2946,7 +2956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -3435,18 +3445,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SCRI_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SoulGem_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(SoulGem.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Value_Property,
-                    fieldIndex: (int)SoulGem_FieldIndex.Value,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Weight_Property,
-                    fieldIndex: (int)SoulGem_FieldIndex.Weight,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SoulGem_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Value_Property,
+                        fieldIndex: (int)SoulGem_FieldIndex.Value,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Weight_Property,
+                        fieldIndex: (int)SoulGem_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Write(
                 writer,

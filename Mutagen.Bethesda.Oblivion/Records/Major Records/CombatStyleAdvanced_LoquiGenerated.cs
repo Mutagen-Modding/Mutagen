@@ -4132,7 +4132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.DodgeFatigueModMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
                 try
                 {
                     item.DodgeFatigueModMult_Property.Set(
@@ -4146,12 +4146,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeFatigueModBase ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
                 try
                 {
                     item.DodgeFatigueModBase_Property.Set(
@@ -4165,12 +4165,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EncumbSpeedModBase ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
                 try
                 {
                     item.EncumbSpeedModBase_Property.Set(
@@ -4184,12 +4184,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EncumbSpeedModMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
                 try
                 {
                     item.EncumbSpeedModMult_Property.Set(
@@ -4203,12 +4203,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeWhileUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
                 try
                 {
                     item.DodgeWhileUnderAttackMult_Property.Set(
@@ -4222,12 +4222,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeNotUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
                 try
                 {
                     item.DodgeNotUnderAttackMult_Property.Set(
@@ -4241,12 +4241,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeBackWhileUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
                 try
                 {
                     item.DodgeBackWhileUnderAttackMult_Property.Set(
@@ -4260,12 +4260,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeBackNotUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
                 try
                 {
                     item.DodgeBackNotUnderAttackMult_Property.Set(
@@ -4279,12 +4279,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeForwardWhileUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
                 try
                 {
                     item.DodgeForwardWhileUnderAttackMult_Property.Set(
@@ -4298,12 +4298,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DodgeForwardNotUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
                 try
                 {
                     item.DodgeForwardNotUnderAttackMult_Property.Set(
@@ -4317,12 +4317,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BlockSkillModifierMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
                 try
                 {
                     item.BlockSkillModifierMult_Property.Set(
@@ -4336,12 +4336,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BlockSkillModifierBase ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
                 try
                 {
                     item.BlockSkillModifierBase_Property.Set(
@@ -4355,12 +4355,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BlockWhileUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
                 try
                 {
                     item.BlockWhileUnderAttackMult_Property.Set(
@@ -4374,12 +4374,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BlockNotUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
                 try
                 {
                     item.BlockNotUnderAttackMult_Property.Set(
@@ -4393,12 +4393,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AttackSkillModifierMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
                 try
                 {
                     item.AttackSkillModifierMult_Property.Set(
@@ -4412,12 +4412,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AttackSkillModifierBase ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
                 try
                 {
                     item.AttackSkillModifierBase_Property.Set(
@@ -4431,12 +4431,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AttackWhileUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
                 try
                 {
                     item.AttackWhileUnderAttackMult_Property.Set(
@@ -4450,12 +4450,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AttackNotUnderAttackMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
                 try
                 {
                     item.AttackNotUnderAttackMult_Property.Set(
@@ -4469,12 +4469,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AttackDuringBlockMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
                 try
                 {
                     item.AttackDuringBlockMult_Property.Set(
@@ -4488,12 +4488,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PowerAttackFatigueModBase ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
                 try
                 {
                     item.PowerAttackFatigueModBase_Property.Set(
@@ -4507,12 +4507,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.PowerAttackFatigueModMult ?? true)
             {
-                errorMask.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
+                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
                 try
                 {
                     item.PowerAttackFatigueModMult_Property.Set(
@@ -4526,7 +4526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

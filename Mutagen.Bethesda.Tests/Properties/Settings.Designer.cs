@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Steam\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Oblivion\\Data\\Oblivion.esm")]
         public string OblivionESM {
             get {
                 return ((string)(this["OblivionESM"]));
@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Tests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Steam\\steamapps\\common\\Oblivion\\Data\\Knights.esp")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Oblivion\\Data\\Knights.esp")]
         public string KnightsESP {
             get {
                 return ((string)(this["KnightsESP"]));

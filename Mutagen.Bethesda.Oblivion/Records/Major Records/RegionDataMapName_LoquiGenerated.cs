@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.MapName ?? true)
             {
-                errorMask.PushIndex((int)RegionDataMapName_FieldIndex.MapName);
+                errorMask?.PushIndex((int)RegionDataMapName_FieldIndex.MapName);
                 try
                 {
                     item.MapName_Property.SetToWithDefault(
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

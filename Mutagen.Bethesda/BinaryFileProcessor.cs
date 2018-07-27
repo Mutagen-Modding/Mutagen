@@ -54,11 +54,18 @@ namespace Mutagen.Bethesda
                 _additions[loc] = addition;
             }
 
-            public void SetMove(RangeInt64 move, long loc)
+            public void SetRemove(RangeInt64 section)
             {
-                if (move.Width == 0) return;
-                if (loc == move.Min) return;
-                if (loc <= move.Max)
+                SetMove(
+                    section: section,
+                    loc: long.MaxValue);
+            }
+
+            public void SetMove(RangeInt64 section, long loc)
+            {
+                if (section.Width == 0) return;
+                if (loc == section.Min) return;
+                if (loc <= section.Max)
                 {
                     throw new NotImplementedException("Cannot move a section earlier in the stream, within the move itself, or into the same spot");
                 }
@@ -68,13 +75,13 @@ namespace Mutagen.Bethesda
                     _moves = new Dictionary<RangeInt64, long>();
                     _sameLocMoves = new Dictionary<long, List<RangeInt64>>();
                 }
-                if (_moveRanges.Collides(move))
+                if (_moveRanges.Collides(section))
                 {
                     throw new ArgumentException("Can not have colliding moves.");
                 }
-                _moveRanges.Add(move);
-                _moves[move] = loc;
-                _sameLocMoves.TryCreateValue(loc).Add(move);
+                _moveRanges.Add(section);
+                _moves[section] = loc;
+                _sameLocMoves.TryCreateValue(loc).Add(section);
                 if (_moveRanges.IsEncapsulated(loc))
                 {
                     throw new ArgumentException($"Cannot move to a section that is marked to be moved: {loc}");

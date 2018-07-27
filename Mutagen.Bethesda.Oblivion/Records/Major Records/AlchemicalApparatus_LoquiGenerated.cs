@@ -1746,6 +1746,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AlchemicalApparatus_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -2041,6 +2047,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Type);
@@ -2751,7 +2761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2765,12 +2775,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2811,12 +2821,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Icon);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -2830,12 +2840,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Script);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2850,12 +2860,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Type);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -2869,12 +2879,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Value);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -2888,12 +2898,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Weight);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -2907,12 +2917,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Quality ?? true)
             {
-                errorMask.PushIndex((int)AlchemicalApparatus_FieldIndex.Quality);
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Quality);
                 try
                 {
                     item.Quality_Property.Set(
@@ -2926,7 +2936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -3405,29 +3415,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.SCRI_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(AlchemicalApparatus.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
-                    writer,
-                    item.Type_Property,
-                    length: 1,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Value_Property,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Weight_Property,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Quality_Property,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
+                        writer,
+                        item.Type_Property,
+                        length: 1,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Value_Property,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Weight_Property,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Quality_Property,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
+                        errorMask: errorMask);
+                }
             }
         }
 

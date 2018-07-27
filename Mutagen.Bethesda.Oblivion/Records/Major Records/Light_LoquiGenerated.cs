@@ -2474,7 +2474,8 @@ namespace Mutagen.Bethesda.Oblivion
         [Flags]
         public enum DATADataType
         {
-            Range0 = 1
+            Has = 1,
+            Range0 = 2
         }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
@@ -2772,6 +2773,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Light_FieldIndex.Time);
@@ -3798,7 +3803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Model);
+                errorMask?.PushIndex((int)Light_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -3839,12 +3844,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Script);
+                errorMask?.PushIndex((int)Light_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -3859,12 +3864,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Name);
+                errorMask?.PushIndex((int)Light_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -3878,12 +3883,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Icon);
+                errorMask?.PushIndex((int)Light_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -3897,12 +3902,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Time ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Time);
+                errorMask?.PushIndex((int)Light_FieldIndex.Time);
                 try
                 {
                     item.Time_Property.Set(
@@ -3916,12 +3921,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Radius ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Radius);
+                errorMask?.PushIndex((int)Light_FieldIndex.Radius);
                 try
                 {
                     item.Radius_Property.Set(
@@ -3935,12 +3940,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Color ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Color);
+                errorMask?.PushIndex((int)Light_FieldIndex.Color);
                 try
                 {
                     item.Color_Property.Set(
@@ -3954,12 +3959,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Light_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -3973,12 +3978,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FalloffExponent ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.FalloffExponent);
+                errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
                 try
                 {
                     item.FalloffExponent_Property.Set(
@@ -3992,12 +3997,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FOV ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.FOV);
+                errorMask?.PushIndex((int)Light_FieldIndex.FOV);
                 try
                 {
                     item.FOV_Property.Set(
@@ -4011,12 +4016,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Value);
+                errorMask?.PushIndex((int)Light_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -4030,12 +4035,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Weight);
+                errorMask?.PushIndex((int)Light_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -4049,12 +4054,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fade ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Fade);
+                errorMask?.PushIndex((int)Light_FieldIndex.Fade);
                 try
                 {
                     item.Fade_Property.SetToWithDefault(
@@ -4068,12 +4073,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Sound ?? true)
             {
-                errorMask.PushIndex((int)Light_FieldIndex.Sound);
+                errorMask?.PushIndex((int)Light_FieldIndex.Sound);
                 try
                 {
                     item.Sound_Property.SetToWithDefault(
@@ -4088,7 +4093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -4575,26 +4580,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Light_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FalloffExponent),
-                        item: item.FalloffExponent_Property,
-                        fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.FOV),
-                        item: item.FOV_Property,
-                        fieldIndex: (int)Light_FieldIndex.FOV,
-                        errorMask: errorMask);
-                }
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FalloffExponent),
+                    item: item.FalloffExponent_Property,
+                    fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.FOV),
+                    item: item.FOV_Property,
+                    fieldIndex: (int)Light_FieldIndex.FOV,
+                    errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
             {
@@ -4718,53 +4720,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Light_Registration.ICON_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Light.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Time_Property,
-                    fieldIndex: (int)Light_FieldIndex.Time,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Radius_Property,
-                    fieldIndex: (int)Light_FieldIndex.Radius,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Color_Property,
-                    fieldIndex: (int)Light_FieldIndex.Color,
-                    errorMask: errorMask,
-                    extraByte: true);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)Light_FieldIndex.Flags,
-                    errorMask: errorMask);
-                if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FalloffExponent_Property,
-                        fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                        item: item.Time_Property,
+                        fieldIndex: (int)Light_FieldIndex.Time,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Radius_Property,
+                        fieldIndex: (int)Light_FieldIndex.Radius,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Color_Property,
+                        fieldIndex: (int)Light_FieldIndex.Color,
+                        errorMask: errorMask,
+                        extraByte: true);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)Light_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))
+                    {
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.FalloffExponent_Property,
+                            fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                            errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.FOV_Property,
+                            fieldIndex: (int)Light_FieldIndex.FOV,
+                            errorMask: errorMask);
+                    }
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Value_Property,
+                        fieldIndex: (int)Light_FieldIndex.Value,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FOV_Property,
-                        fieldIndex: (int)Light_FieldIndex.FOV,
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Light_FieldIndex.Weight,
                         errorMask: errorMask);
                 }
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Value_Property,
-                    fieldIndex: (int)Light_FieldIndex.Value,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Weight_Property,
-                    fieldIndex: (int)Light_FieldIndex.Weight,
-                    errorMask: errorMask);
             }
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,

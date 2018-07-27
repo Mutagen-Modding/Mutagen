@@ -2083,6 +2083,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Book_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -2442,6 +2448,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Book_FieldIndex.Flags);
@@ -3243,7 +3253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Name);
+                errorMask?.PushIndex((int)Book_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -3257,12 +3267,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Model);
+                errorMask?.PushIndex((int)Book_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -3303,12 +3313,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Icon);
+                errorMask?.PushIndex((int)Book_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -3322,12 +3332,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Script);
+                errorMask?.PushIndex((int)Book_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -3342,12 +3352,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Enchantment ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Enchantment);
+                errorMask?.PushIndex((int)Book_FieldIndex.Enchantment);
                 try
                 {
                     item.Enchantment_Property.SetToWithDefault(
@@ -3362,12 +3372,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EnchantmentPoints ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.EnchantmentPoints);
+                errorMask?.PushIndex((int)Book_FieldIndex.EnchantmentPoints);
                 try
                 {
                     item.EnchantmentPoints_Property.SetToWithDefault(
@@ -3381,12 +3391,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Description ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Description);
+                errorMask?.PushIndex((int)Book_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -3400,12 +3410,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Book_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -3419,12 +3429,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Teaches ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Teaches);
+                errorMask?.PushIndex((int)Book_FieldIndex.Teaches);
                 try
                 {
                     item.Teaches_Property.Set(
@@ -3438,12 +3448,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Value);
+                errorMask?.PushIndex((int)Book_FieldIndex.Value);
                 try
                 {
                     item.Value_Property.Set(
@@ -3457,12 +3467,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)Book_FieldIndex.Weight);
+                errorMask?.PushIndex((int)Book_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -3476,7 +3486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -4060,30 +4070,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Book_Registration.DESC_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Book_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Book.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 1,
-                    fieldIndex: (int)Book_FieldIndex.Flags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
-                    writer,
-                    item.Teaches_Property,
-                    length: 1,
-                    fieldIndex: (int)Book_FieldIndex.Teaches,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Value_Property,
-                    fieldIndex: (int)Book_FieldIndex.Value,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Weight_Property,
-                    fieldIndex: (int)Book_FieldIndex.Weight,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Book_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 1,
+                        fieldIndex: (int)Book_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+                        writer,
+                        item.Teaches_Property,
+                        length: 1,
+                        fieldIndex: (int)Book_FieldIndex.Teaches,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Value_Property,
+                        fieldIndex: (int)Book_FieldIndex.Value,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Book_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
             }
         }
 

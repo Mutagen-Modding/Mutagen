@@ -2452,7 +2452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Fluff ?? true)
             {
-                errorMask.PushIndex((int)TES4_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)TES4_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -2466,12 +2466,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Header.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)TES4_FieldIndex.Header);
+                errorMask?.PushIndex((int)TES4_FieldIndex.Header);
                 try
                 {
                     item.Header_Property.SetToWithDefault(
@@ -2512,12 +2512,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.TypeOffsets ?? true)
             {
-                errorMask.PushIndex((int)TES4_FieldIndex.TypeOffsets);
+                errorMask?.PushIndex((int)TES4_FieldIndex.TypeOffsets);
                 try
                 {
                     item.TypeOffsets_Property.SetToWithDefault(
@@ -2531,12 +2531,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Deleted ?? true)
             {
-                errorMask.PushIndex((int)TES4_FieldIndex.Deleted);
+                errorMask?.PushIndex((int)TES4_FieldIndex.Deleted);
                 try
                 {
                     item.Deleted_Property.SetToWithDefault(
@@ -2550,12 +2550,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Author ?? true)
             {
-                errorMask.PushIndex((int)TES4_FieldIndex.Author);
+                errorMask?.PushIndex((int)TES4_FieldIndex.Author);
                 try
                 {
                     item.Author_Property.SetToWithDefault(
@@ -2569,12 +2569,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Description ?? true)
             {
-                errorMask.PushIndex((int)TES4_FieldIndex.Description);
+                errorMask?.PushIndex((int)TES4_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -2588,12 +2588,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MasterReferences.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)TES4_FieldIndex.MasterReferences);
+                errorMask?.PushIndex((int)TES4_FieldIndex.MasterReferences);
                 try
                 {
                     item.MasterReferences.SetToWithDefault(
@@ -2625,7 +2625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -6583,7 +6583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.TES4.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.TES4);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.TES4);
                 try
                 {
                     TES4Common.CopyFieldsFrom(
@@ -6601,12 +6601,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.GameSettings.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6624,12 +6624,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Globals.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Globals);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6647,12 +6647,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Classes.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Classes);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6670,12 +6670,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Factions.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Factions);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6693,12 +6693,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Hairs.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Hairs);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6716,12 +6716,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Eyes.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Eyes);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6739,12 +6739,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Races.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Races);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6762,12 +6762,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Sounds.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Sounds);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6785,12 +6785,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Skills.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Skills);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6808,12 +6808,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MagicEffects.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6831,12 +6831,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Scripts.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Scripts);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6854,12 +6854,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LandTextures.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6877,12 +6877,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Enchantments.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6900,12 +6900,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Spells.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Spells);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6923,12 +6923,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Birthsigns.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6946,12 +6946,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Activators.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Activators);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6969,12 +6969,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AlchemicalApparatus.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -6992,12 +6992,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Armors.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Armors);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7015,12 +7015,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Books.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Books);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7038,12 +7038,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Clothes.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Clothes);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7061,12 +7061,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Containers.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Containers);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7084,12 +7084,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Doors.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Doors);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7107,12 +7107,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Ingredients.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7130,12 +7130,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Lights.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Lights);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7153,12 +7153,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Miscellaneous.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7176,12 +7176,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Statics.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Statics);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7199,12 +7199,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Grasses.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Grasses);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7222,12 +7222,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Trees.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Trees);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7245,12 +7245,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flora.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Flora);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7268,12 +7268,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Furnature.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Furnature);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7291,12 +7291,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weapons.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Weapons);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7314,12 +7314,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Ammo.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Ammo);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7337,12 +7337,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.NPCs.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.NPCs);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7360,12 +7360,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Creatures.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Creatures);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7383,12 +7383,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LeveledCreatures.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7406,12 +7406,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SoulGems.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7429,12 +7429,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Keys.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Keys);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7452,12 +7452,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Potions.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Potions);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7475,12 +7475,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Subspaces.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7498,12 +7498,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SigilStones.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7521,12 +7521,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LeveledItems.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7544,12 +7544,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weathers.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Weathers);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7567,12 +7567,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Climates.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Climates);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7590,12 +7590,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Regions.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Regions);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7613,12 +7613,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Cells.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Cells);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
                 try
                 {
                     ListGroupCommon.CopyFieldsFrom(
@@ -7636,12 +7636,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Worldspaces.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7659,12 +7659,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DialogTopics.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7682,12 +7682,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Quests.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Quests);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7705,12 +7705,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.IdleAnimations.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7728,12 +7728,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AIPackages.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7751,12 +7751,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CombatStyles.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7774,12 +7774,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LoadScreens.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7797,12 +7797,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LeveledSpells.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7820,12 +7820,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AnimatedObjects.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7843,12 +7843,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Waters.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.Waters);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7866,12 +7866,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EffectShaders.Overall ?? true)
             {
-                errorMask.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
                 try
                 {
                     GroupCommon.CopyFieldsFrom(
@@ -7889,7 +7889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

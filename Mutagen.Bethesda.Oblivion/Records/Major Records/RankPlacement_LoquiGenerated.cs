@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Faction ?? true)
             {
-                errorMask.PushIndex((int)RankPlacement_FieldIndex.Faction);
+                errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
                 try
                 {
                     item.Faction_Property.Set(
@@ -1633,12 +1633,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Rank ?? true)
             {
-                errorMask.PushIndex((int)RankPlacement_FieldIndex.Rank);
+                errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
                 try
                 {
                     item.Rank_Property.Set(
@@ -1652,12 +1652,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask.PushIndex((int)RankPlacement_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -1671,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

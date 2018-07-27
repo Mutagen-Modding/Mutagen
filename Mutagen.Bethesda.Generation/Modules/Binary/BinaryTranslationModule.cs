@@ -624,6 +624,11 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"using (var dataFrame = {frameAccessor}.SpawnWithLength(contentLength))");
                 using (new BraceWrapper(fg))
                 {
+                    fg.AppendLine($"if (!dataFrame.Complete)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"item.{set.StateName} = {set.EnumName}.Has;");
+                    }
                     bool isInRange = false;
                     foreach (var subField in set.IterateFieldsWithMeta())
                     {
@@ -1145,62 +1150,66 @@ namespace Mutagen.Bethesda.Generation
 
                         if (field is DataType dataType)
                         {
-                            fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
+                            fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
                             using (new BraceWrapper(fg))
                             {
-                                bool isInRange = false;
-                                foreach (var subField in dataType.IterateFieldsWithMeta())
+                                fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
+                                using (new BraceWrapper(fg))
                                 {
-                                    if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
+                                    bool isInRange = false;
+                                    foreach (var subField in dataType.IterateFieldsWithMeta())
                                     {
-                                        throw new ArgumentException("Unsupported type generator: " + subField.Field);
-                                    }
-
-                                    var subData = subField.Field.GetFieldData();
-                                    if (!subGenerator.ShouldGenerateWrite(subField.Field)) continue;
-                                    if (subData.CustomBinary)
-                                    {
-                                        using (var args = new ArgsWrapper(fg,
-                                            $"{obj.ObjectName}.WriteBinary_{subField.Field.Name}"))
+                                        if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
                                         {
-                                            args.Add("writer: writer");
-                                            args.Add("item: item");
-                                            args.Add("errorMask: errorMask");
+                                            throw new ArgumentException("Unsupported type generator: " + subField.Field);
                                         }
-                                        continue;
+
+                                        var subData = subField.Field.GetFieldData();
+                                        if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
+                                        if (subData.CustomBinary)
+                                        {
+                                            using (var args = new ArgsWrapper(fg,
+                                                $"{obj.ObjectName}.WriteBinary_{subField.Field.Name}"))
+                                            {
+                                                args.Add("writer: writer");
+                                                args.Add("item: item");
+                                                args.Add("errorMask: errorMask");
+                                            }
+                                            continue;
+                                        }
+                                        if (subField.BreakIndex != -1)
+                                        {
+                                            fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
+                                            fg.AppendLine("{");
+                                            fg.Depth++;
+                                        }
+                                        if (subField.Range != null && !isInRange)
+                                        {
+                                            isInRange = true;
+                                            fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
+                                            fg.AppendLine("{");
+                                            fg.Depth++;
+                                        }
+                                        if (subField.Range == null && isInRange)
+                                        {
+                                            isInRange = false;
+                                            fg.Depth--;
+                                            fg.AppendLine("}");
+                                        }
+                                        subGenerator.GenerateWrite(
+                                            fg: fg,
+                                            objGen: obj,
+                                            typeGen: subField.Field,
+                                            writerAccessor: "writer",
+                                                translationAccessor: null,
+                                            itemAccessor: new Accessor(subField.Field, "item."),
+                                            maskAccessor: $"errorMask");
                                     }
-                                    if (subField.BreakIndex != -1)
+                                    for (int i = 0; i < dataType.BreakIndices.Count; i++)
                                     {
-                                        fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
-                                        fg.AppendLine("{");
-                                        fg.Depth++;
-                                    }
-                                    if (subField.Range != null && !isInRange)
-                                    {
-                                        isInRange = true;
-                                        fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
-                                        fg.AppendLine("{");
-                                        fg.Depth++;
-                                    }
-                                    if (subField.Range == null && isInRange)
-                                    {
-                                        isInRange = false;
                                         fg.Depth--;
                                         fg.AppendLine("}");
                                     }
-                                    subGenerator.GenerateWrite(
-                                        fg: fg,
-                                        objGen: obj,
-                                        typeGen: subField.Field,
-                                        writerAccessor: "writer",
-                                        itemAccessor: new Accessor(subField.Field, "item."),
-                                        translationAccessor: null,
-                                        maskAccessor: $"errorMask");
-                                }
-                                for (int i = 0; i < dataType.BreakIndices.Count; i++)
-                                {
-                                    fg.Depth--;
-                                    fg.AppendLine("}");
                                 }
                             }
                         }

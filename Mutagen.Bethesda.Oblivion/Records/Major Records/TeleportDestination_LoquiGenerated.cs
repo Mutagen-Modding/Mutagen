@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Door ?? true)
             {
-                errorMask.PushIndex((int)TeleportDestination_FieldIndex.Door);
+                errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Door);
                 try
                 {
                     item.Door_Property.Set(
@@ -1504,12 +1504,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Position ?? true)
             {
-                errorMask.PushIndex((int)TeleportDestination_FieldIndex.Position);
+                errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
                 try
                 {
                     item.Position_Property.Set(
@@ -1523,12 +1523,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Rotation ?? true)
             {
-                errorMask.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
+                errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
                 try
                 {
                     item.Rotation_Property.Set(
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

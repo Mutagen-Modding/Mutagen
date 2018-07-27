@@ -1392,6 +1392,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Quest_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -1665,6 +1671,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Quest_FieldIndex.Flags);
@@ -2338,7 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Quest_FieldIndex.Script);
+                errorMask?.PushIndex((int)Quest_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2353,12 +2363,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Quest_FieldIndex.Name);
+                errorMask?.PushIndex((int)Quest_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2372,12 +2382,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)Quest_FieldIndex.Icon);
+                errorMask?.PushIndex((int)Quest_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -2391,12 +2401,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Quest_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Quest_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2410,12 +2420,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Priority ?? true)
             {
-                errorMask.PushIndex((int)Quest_FieldIndex.Priority);
+                errorMask?.PushIndex((int)Quest_FieldIndex.Priority);
                 try
                 {
                     item.Priority_Property.Set(
@@ -2429,12 +2439,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Conditions.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Quest_FieldIndex.Conditions);
+                errorMask?.PushIndex((int)Quest_FieldIndex.Conditions);
                 try
                 {
                     item.Conditions.SetToWithDefault(
@@ -2466,12 +2476,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Stages.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Quest_FieldIndex.Stages);
+                errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
                 try
                 {
                     item.Stages.SetToWithDefault(
@@ -2503,12 +2513,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Targets.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Quest_FieldIndex.Targets);
+                errorMask?.PushIndex((int)Quest_FieldIndex.Targets);
                 try
                 {
                     item.Targets.SetToWithDefault(
@@ -2540,7 +2550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -3169,19 +3179,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Quest_Registration.ICON_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Quest_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Quest.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.Flag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 1,
-                    fieldIndex: (int)Quest_FieldIndex.Flags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Priority_Property,
-                    fieldIndex: (int)Quest_FieldIndex.Priority,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Quest_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.Flag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 1,
+                        fieldIndex: (int)Quest_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Priority_Property,
+                        fieldIndex: (int)Quest_FieldIndex.Priority,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
                 writer: writer,

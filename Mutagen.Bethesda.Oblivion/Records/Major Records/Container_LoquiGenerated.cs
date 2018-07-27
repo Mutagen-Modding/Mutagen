@@ -1455,6 +1455,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Container_Registration.TRIGGERING_RECORD_TYPE;
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -1738,6 +1744,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Container_FieldIndex.Flags);
@@ -2407,7 +2417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Container_FieldIndex.Name);
+                errorMask?.PushIndex((int)Container_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2421,12 +2431,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Container_FieldIndex.Model);
+                errorMask?.PushIndex((int)Container_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -2467,12 +2477,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)Container_FieldIndex.Script);
+                errorMask?.PushIndex((int)Container_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -2487,12 +2497,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Container_FieldIndex.Items);
+                errorMask?.PushIndex((int)Container_FieldIndex.Items);
                 try
                 {
                     item.Items.SetToWithDefault(
@@ -2524,12 +2534,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Container_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Container_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2543,12 +2553,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask.PushIndex((int)Container_FieldIndex.Weight);
+                errorMask?.PushIndex((int)Container_FieldIndex.Weight);
                 try
                 {
                     item.Weight_Property.Set(
@@ -2562,12 +2572,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.OpenSound ?? true)
             {
-                errorMask.PushIndex((int)Container_FieldIndex.OpenSound);
+                errorMask?.PushIndex((int)Container_FieldIndex.OpenSound);
                 try
                 {
                     item.OpenSound_Property.SetToWithDefault(
@@ -2582,12 +2592,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CloseSound ?? true)
             {
-                errorMask.PushIndex((int)Container_FieldIndex.CloseSound);
+                errorMask?.PushIndex((int)Container_FieldIndex.CloseSound);
                 try
                 {
                     item.CloseSound_Property.SetToWithDefault(
@@ -2602,7 +2612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -3139,19 +3149,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)Container_FieldIndex.Items,
                 errorMask: errorMask,
                 transl: LoquiBinaryTranslation<ContainerItem>.Instance.Write);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Container_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(Container.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 1,
-                    fieldIndex: (int)Container_FieldIndex.Flags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Weight_Property,
-                    fieldIndex: (int)Container_FieldIndex.Weight,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Container_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 1,
+                        fieldIndex: (int)Container_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Container_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,

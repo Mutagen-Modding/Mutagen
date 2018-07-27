@@ -2084,6 +2084,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Tree_Registration.TRIGGERING_RECORD_TYPE;
+        public CNAMDataType CNAMDataTypeState;
+        [Flags]
+        public enum CNAMDataType
+        {
+            Has = 1
+        }
+        public BNAMDataType BNAMDataTypeState;
+        [Flags]
+        public enum BNAMDataType
+        {
+            Has = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -2343,6 +2355,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.CNAMDataTypeState = CNAMDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
@@ -2541,6 +2557,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.BNAMDataTypeState = BNAMDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
@@ -3348,7 +3368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.Model);
+                errorMask?.PushIndex((int)Tree_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -3389,12 +3409,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.Icon);
+                errorMask?.PushIndex((int)Tree_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -3408,12 +3428,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SpeedTreeSeeds != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
+                errorMask?.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
                 try
                 {
                     item.SpeedTreeSeeds.SetToWithDefault(
@@ -3428,12 +3448,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LeafCurvature ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.LeafCurvature);
+                errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
                 try
                 {
                     item.LeafCurvature_Property.Set(
@@ -3447,12 +3467,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MinimumLeafAngle ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
+                errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
                 try
                 {
                     item.MinimumLeafAngle_Property.Set(
@@ -3466,12 +3486,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaximumLeafAngle ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
+                errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
                 try
                 {
                     item.MaximumLeafAngle_Property.Set(
@@ -3485,12 +3505,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BranchDimmingValue ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
+                errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
                 try
                 {
                     item.BranchDimmingValue_Property.Set(
@@ -3504,12 +3524,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LeafDimmingValue ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
+                errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
                 try
                 {
                     item.LeafDimmingValue_Property.Set(
@@ -3523,12 +3543,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ShadowRadius ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.ShadowRadius);
+                errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
                 try
                 {
                     item.ShadowRadius_Property.Set(
@@ -3542,12 +3562,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RockingSpeed ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.RockingSpeed);
+                errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
                 try
                 {
                     item.RockingSpeed_Property.Set(
@@ -3561,12 +3581,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.RustleSpeed ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.RustleSpeed);
+                errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
                 try
                 {
                     item.RustleSpeed_Property.Set(
@@ -3580,12 +3600,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BillboardWidth ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.BillboardWidth);
+                errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
                 try
                 {
                     item.BillboardWidth_Property.Set(
@@ -3599,12 +3619,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BillboardHeight ?? true)
             {
-                errorMask.PushIndex((int)Tree_FieldIndex.BillboardHeight);
+                errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
                 try
                 {
                     item.BillboardHeight_Property.Set(
@@ -3618,7 +3638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -4242,61 +4262,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: Tree_Registration.SNAM_HEADER,
                 errorMask: errorMask,
                 transl: UInt32BinaryTranslation.Instance.Write);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
+            if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LeafCurvature_Property,
-                    fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MinimumLeafAngle_Property,
-                    fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaximumLeafAngle_Property,
-                    fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BranchDimmingValue_Property,
-                    fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LeafDimmingValue_Property,
-                    fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ShadowRadius_Property,
-                    fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.RockingSpeed_Property,
-                    fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.RustleSpeed_Property,
-                    fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LeafCurvature_Property,
+                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MinimumLeafAngle_Property,
+                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MaximumLeafAngle_Property,
+                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BranchDimmingValue_Property,
+                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LeafDimmingValue_Property,
+                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ShadowRadius_Property,
+                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.RockingSpeed_Property,
+                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.RustleSpeed_Property,
+                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
+                        errorMask: errorMask);
+                }
             }
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.BNAM_HEADER)))
+            if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BillboardWidth_Property,
-                    fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BillboardHeight_Property,
-                    fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.BNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BillboardWidth_Property,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BillboardHeight_Property,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
+                        errorMask: errorMask);
+                }
             }
         }
 

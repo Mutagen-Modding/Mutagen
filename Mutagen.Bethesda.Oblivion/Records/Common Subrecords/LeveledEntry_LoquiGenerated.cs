@@ -1996,7 +1996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Level ?? true)
             {
-                errorMask.PushIndex((int)LeveledEntry_FieldIndex.Level);
+                errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Level);
                 try
                 {
                     item.Level_Property.Set(
@@ -2010,12 +2010,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask.PushIndex((int)LeveledEntry_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -2029,12 +2029,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Reference ?? true)
             {
-                errorMask.PushIndex((int)LeveledEntry_FieldIndex.Reference);
+                errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Reference);
                 try
                 {
                     item.Reference_Property.Set(
@@ -2048,12 +2048,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Count ?? true)
             {
-                errorMask.PushIndex((int)LeveledEntry_FieldIndex.Count);
+                errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Count);
                 try
                 {
                     item.Count_Property.SetToWithDefault(
@@ -2067,12 +2067,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff2 ?? true)
             {
-                errorMask.PushIndex((int)LeveledEntry_FieldIndex.Fluff2);
+                errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff2);
                 try
                 {
                     item.Fluff2_Property.SetToWithDefault(
@@ -2086,7 +2086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

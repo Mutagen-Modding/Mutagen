@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="OblivionESM" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Games\Steam\steamapps\common\Oblivion\Data\Oblivion.esm</Value>
+      <Value Profile="(Default)">C:\Games\Oblivion\Data\Oblivion.esm</Value>
     </Setting>
     <Setting Name="KnightsESP" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Games\Steam\steamapps\common\Oblivion\Data\Knights.esp</Value>
+      <Value Profile="(Default)">C:\Games\Oblivion\Data\Knights.esp</Value>
     </Setting>
     <Setting Name="OblivionInstructions" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />

@@ -1615,7 +1615,7 @@ namespace Mutagen.Bethesda.Internals
         {
             if (copyMask?.Master ?? true)
             {
-                errorMask.PushIndex((int)MasterReference_FieldIndex.Master);
+                errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
                 try
                 {
                     item.Master_Property.SetToWithDefault(
@@ -1629,12 +1629,12 @@ namespace Mutagen.Bethesda.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FileSize ?? true)
             {
-                errorMask.PushIndex((int)MasterReference_FieldIndex.FileSize);
+                errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);
                 try
                 {
                     item.FileSize_Property.SetToWithDefault(
@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

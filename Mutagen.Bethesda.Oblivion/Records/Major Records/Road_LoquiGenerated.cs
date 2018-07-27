@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Points.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Road_FieldIndex.Points);
+                errorMask?.PushIndex((int)Road_FieldIndex.Points);
                 try
                 {
                     item.Points.SetToWithDefault(
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

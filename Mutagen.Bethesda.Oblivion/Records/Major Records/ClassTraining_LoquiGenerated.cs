@@ -1822,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.TrainedSkill ?? true)
             {
-                errorMask.PushIndex((int)ClassTraining_FieldIndex.TrainedSkill);
+                errorMask?.PushIndex((int)ClassTraining_FieldIndex.TrainedSkill);
                 try
                 {
                     item.TrainedSkill_Property.Set(
@@ -1836,12 +1836,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaximumTrainingLevel ?? true)
             {
-                errorMask.PushIndex((int)ClassTraining_FieldIndex.MaximumTrainingLevel);
+                errorMask?.PushIndex((int)ClassTraining_FieldIndex.MaximumTrainingLevel);
                 try
                 {
                     item.MaximumTrainingLevel_Property.Set(
@@ -1855,12 +1855,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask.PushIndex((int)ClassTraining_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)ClassTraining_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

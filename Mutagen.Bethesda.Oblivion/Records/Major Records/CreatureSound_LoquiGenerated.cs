@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.SoundType ?? true)
             {
-                errorMask.PushIndex((int)CreatureSound_FieldIndex.SoundType);
+                errorMask?.PushIndex((int)CreatureSound_FieldIndex.SoundType);
                 try
                 {
                     item.SoundType_Property.SetToWithDefault(
@@ -1459,12 +1459,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Sounds.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)CreatureSound_FieldIndex.Sounds);
+                errorMask?.PushIndex((int)CreatureSound_FieldIndex.Sounds);
                 try
                 {
                     item.Sounds.SetToWithDefault(
@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -1840,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.ChanceNone ?? true)
             {
-                errorMask.PushIndex((int)LeveledCreature_FieldIndex.ChanceNone);
+                errorMask?.PushIndex((int)LeveledCreature_FieldIndex.ChanceNone);
                 try
                 {
                     item.ChanceNone_Property.SetToWithDefault(
@@ -1854,12 +1854,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)LeveledCreature_FieldIndex.Flags);
+                errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
@@ -1873,12 +1873,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Entries.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)LeveledCreature_FieldIndex.Entries);
+                errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Entries);
                 try
                 {
                     item.Entries.SetToWithDefault(
@@ -1910,12 +1910,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)LeveledCreature_FieldIndex.Script);
+                errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -1930,12 +1930,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Template ?? true)
             {
-                errorMask.PushIndex((int)LeveledCreature_FieldIndex.Template);
+                errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Template);
                 try
                 {
                     item.Template_Property.SetToWithDefault(
@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

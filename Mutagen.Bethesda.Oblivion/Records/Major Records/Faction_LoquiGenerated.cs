@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)Faction_FieldIndex.Name);
+                errorMask?.PushIndex((int)Faction_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2064,12 +2064,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Relations.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Faction_FieldIndex.Relations);
+                errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                 try
                 {
                     item.Relations.SetToWithDefault(
@@ -2101,12 +2101,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)Faction_FieldIndex.Flags);
+                errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
@@ -2120,12 +2120,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CrimeGoldMultiplier ?? true)
             {
-                errorMask.PushIndex((int)Faction_FieldIndex.CrimeGoldMultiplier);
+                errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGoldMultiplier);
                 try
                 {
                     item.CrimeGoldMultiplier_Property.SetToWithDefault(
@@ -2139,12 +2139,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Ranks.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Faction_FieldIndex.Ranks);
+                errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                 try
                 {
                     item.Ranks.SetToWithDefault(
@@ -2176,7 +2176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

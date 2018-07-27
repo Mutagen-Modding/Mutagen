@@ -38,12 +38,12 @@ namespace Mutagen.Bethesda.Oblivion
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
             if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
-            var id = frame.Reader.ReadUInt32();
+            var id = FormID.Factory(frame.Reader.ReadUInt32());
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
             if (grupType == GroupTypeEnum.CellChildren)
             {
                 obj._overallTimeStamp = frame.Reader.ReadBytes(4);
-                if (id != obj.FormID.ID)
+                if (id != obj.FormID)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
@@ -110,8 +110,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool persistentParse)
         {
             frame.Reader.Position += 8;
-            var id = frame.Reader.ReadUInt32();
-            if (id != obj.FormID.ID)
+            var id = FormID.Factory(frame.Reader.ReadUInt32());
+            if (id != obj.FormID)
             {
                 throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
             }
@@ -210,8 +210,8 @@ namespace Mutagen.Bethesda.Oblivion
         static void ParseTemporary(MutagenFrame frame, Cell obj, ErrorMaskBuilder errorMask)
         {
             frame.Reader.Position += 8;
-            var id = frame.Reader.ReadUInt32();
-            if (id != obj.FormID.ID)
+            var id = FormID.Factory(frame.Reader.ReadUInt32());
+            if (id != obj.FormID)
             {
                 throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
             }
@@ -280,7 +280,10 @@ namespace Mutagen.Bethesda.Oblivion
                 && !obj.Landscape_Property.HasBeenSet) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
-                writer.Write(obj.FormID.ID);
+                FormIDBinaryTranslation.Instance.Write(
+                    writer, 
+                    obj.FormID, 
+                    errorMask);
                 writer.Write((int)GroupTypeEnum.CellChildren);
                 if (obj._overallTimeStamp != null)
                 {
@@ -294,7 +297,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
-                        writer.Write(obj.FormID.ID);
+                        FormIDBinaryTranslation.Instance.Write(
+                            writer,
+                            obj.FormID,
+                            errorMask);
                         writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                         if (obj._persistentTimeStamp != null)
                         {
@@ -318,7 +324,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
-                        writer.Write(obj.FormID.ID);
+                        FormIDBinaryTranslation.Instance.Write(
+                            writer,
+                            obj.FormID,
+                            errorMask);
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
                         if (obj._temporaryTimeStamp != null)
                         {
@@ -356,7 +365,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
-                        writer.Write(obj.FormID.ID);
+                        FormIDBinaryTranslation.Instance.Write(
+                            writer,
+                            obj.FormID,
+                            errorMask);
                         writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
                         if (obj._visibleWhenDistantTimeStamp != null)
                         {

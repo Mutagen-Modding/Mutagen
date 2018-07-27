@@ -7179,6 +7179,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = NPC_Registration.TRIGGERING_RECORD_TYPE;
+        public ACBSDataType ACBSDataTypeState;
+        [Flags]
+        public enum ACBSDataType
+        {
+            Has = 1
+        }
+        public AIDTDataType AIDTDataTypeState;
+        [Flags]
+        public enum AIDTDataType
+        {
+            Has = 1
+        }
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Has = 1
+        }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -7451,6 +7469,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.ACBSDataTypeState = ACBSDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)NPC_FieldIndex.NPCFlags);
@@ -7679,6 +7701,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.AIDTDataTypeState = AIDTDataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)NPC_FieldIndex.Aggression);
@@ -7913,6 +7939,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)NPC_FieldIndex.Armorer);
@@ -11107,7 +11137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Name);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -11121,12 +11151,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Model);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -11167,12 +11197,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.NPCFlags ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.NPCFlags);
+                errorMask?.PushIndex((int)NPC_FieldIndex.NPCFlags);
                 try
                 {
                     item.NPCFlags_Property.Set(
@@ -11186,12 +11216,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BaseSpellPoints ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.BaseSpellPoints);
+                errorMask?.PushIndex((int)NPC_FieldIndex.BaseSpellPoints);
                 try
                 {
                     item.BaseSpellPoints_Property.Set(
@@ -11205,12 +11235,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fatigue ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Fatigue);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Fatigue);
                 try
                 {
                     item.Fatigue_Property.Set(
@@ -11224,12 +11254,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BarterGold ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.BarterGold);
+                errorMask?.PushIndex((int)NPC_FieldIndex.BarterGold);
                 try
                 {
                     item.BarterGold_Property.Set(
@@ -11243,12 +11273,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LevelOffset ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.LevelOffset);
+                errorMask?.PushIndex((int)NPC_FieldIndex.LevelOffset);
                 try
                 {
                     item.LevelOffset_Property.Set(
@@ -11262,12 +11292,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CalcMin ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.CalcMin);
+                errorMask?.PushIndex((int)NPC_FieldIndex.CalcMin);
                 try
                 {
                     item.CalcMin_Property.Set(
@@ -11281,12 +11311,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CalcMax ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.CalcMax);
+                errorMask?.PushIndex((int)NPC_FieldIndex.CalcMax);
                 try
                 {
                     item.CalcMax_Property.Set(
@@ -11300,12 +11330,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Factions.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Factions);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Factions);
                 try
                 {
                     item.Factions.SetToWithDefault(
@@ -11337,12 +11367,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.DeathItem ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.DeathItem);
+                errorMask?.PushIndex((int)NPC_FieldIndex.DeathItem);
                 try
                 {
                     item.DeathItem_Property.SetToWithDefault(
@@ -11357,12 +11387,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Race ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Race);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Race);
                 try
                 {
                     item.Race_Property.SetToWithDefault(
@@ -11377,12 +11407,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Spells != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Spells);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Spells);
                 try
                 {
                     item.Spells.SetToWithDefault(
@@ -11397,12 +11427,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Script);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.SetToWithDefault(
@@ -11417,12 +11447,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Items);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Items);
                 try
                 {
                     item.Items.SetToWithDefault(
@@ -11454,12 +11484,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Aggression ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Aggression);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Aggression);
                 try
                 {
                     item.Aggression_Property.Set(
@@ -11473,12 +11503,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Confidence ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Confidence);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Confidence);
                 try
                 {
                     item.Confidence_Property.Set(
@@ -11492,12 +11522,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EnergyLevel ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.EnergyLevel);
+                errorMask?.PushIndex((int)NPC_FieldIndex.EnergyLevel);
                 try
                 {
                     item.EnergyLevel_Property.Set(
@@ -11511,12 +11541,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Responsibility ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Responsibility);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Responsibility);
                 try
                 {
                     item.Responsibility_Property.Set(
@@ -11530,12 +11560,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BuySellServices ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.BuySellServices);
+                errorMask?.PushIndex((int)NPC_FieldIndex.BuySellServices);
                 try
                 {
                     item.BuySellServices_Property.Set(
@@ -11549,12 +11579,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Teaches ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Teaches);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Teaches);
                 try
                 {
                     item.Teaches_Property.Set(
@@ -11568,12 +11598,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MaximumTrainingLevel ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.MaximumTrainingLevel);
+                errorMask?.PushIndex((int)NPC_FieldIndex.MaximumTrainingLevel);
                 try
                 {
                     item.MaximumTrainingLevel_Property.Set(
@@ -11587,12 +11617,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Fluff);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Fluff);
                 try
                 {
                     item.Fluff_Property.Set(
@@ -11606,12 +11636,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.AIPackages != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.AIPackages);
+                errorMask?.PushIndex((int)NPC_FieldIndex.AIPackages);
                 try
                 {
                     item.AIPackages.SetToWithDefault(
@@ -11626,12 +11656,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Animations != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Animations);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Animations);
                 try
                 {
                     item.Animations.SetToWithDefault(
@@ -11646,12 +11676,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Class ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Class);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Class);
                 try
                 {
                     item.Class_Property.SetToWithDefault(
@@ -11666,12 +11696,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Armorer ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Armorer);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Armorer);
                 try
                 {
                     item.Armorer_Property.Set(
@@ -11685,12 +11715,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Athletics ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Athletics);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Athletics);
                 try
                 {
                     item.Athletics_Property.Set(
@@ -11704,12 +11734,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Blade ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Blade);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Blade);
                 try
                 {
                     item.Blade_Property.Set(
@@ -11723,12 +11753,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Block ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Block);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Block);
                 try
                 {
                     item.Block_Property.Set(
@@ -11742,12 +11772,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Blunt ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Blunt);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Blunt);
                 try
                 {
                     item.Blunt_Property.Set(
@@ -11761,12 +11791,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HandToHand ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.HandToHand);
+                errorMask?.PushIndex((int)NPC_FieldIndex.HandToHand);
                 try
                 {
                     item.HandToHand_Property.Set(
@@ -11780,12 +11810,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HeavyArmor ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.HeavyArmor);
+                errorMask?.PushIndex((int)NPC_FieldIndex.HeavyArmor);
                 try
                 {
                     item.HeavyArmor_Property.Set(
@@ -11799,12 +11829,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Alchemy ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Alchemy);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Alchemy);
                 try
                 {
                     item.Alchemy_Property.Set(
@@ -11818,12 +11848,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Alteration ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Alteration);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Alteration);
                 try
                 {
                     item.Alteration_Property.Set(
@@ -11837,12 +11867,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Conjuration ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Conjuration);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Conjuration);
                 try
                 {
                     item.Conjuration_Property.Set(
@@ -11856,12 +11886,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Destruction ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Destruction);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Destruction);
                 try
                 {
                     item.Destruction_Property.Set(
@@ -11875,12 +11905,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Illusion ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Illusion);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Illusion);
                 try
                 {
                     item.Illusion_Property.Set(
@@ -11894,12 +11924,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Mysticism ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Mysticism);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Mysticism);
                 try
                 {
                     item.Mysticism_Property.Set(
@@ -11913,12 +11943,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Restoration ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Restoration);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Restoration);
                 try
                 {
                     item.Restoration_Property.Set(
@@ -11932,12 +11962,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Acrobatics ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Acrobatics);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Acrobatics);
                 try
                 {
                     item.Acrobatics_Property.Set(
@@ -11951,12 +11981,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.LightArmor ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.LightArmor);
+                errorMask?.PushIndex((int)NPC_FieldIndex.LightArmor);
                 try
                 {
                     item.LightArmor_Property.Set(
@@ -11970,12 +12000,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Marksman ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Marksman);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Marksman);
                 try
                 {
                     item.Marksman_Property.Set(
@@ -11989,12 +12019,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Mercantile ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Mercantile);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Mercantile);
                 try
                 {
                     item.Mercantile_Property.Set(
@@ -12008,12 +12038,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Security ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Security);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Security);
                 try
                 {
                     item.Security_Property.Set(
@@ -12027,12 +12057,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Sneak ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Sneak);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Sneak);
                 try
                 {
                     item.Sneak_Property.Set(
@@ -12046,12 +12076,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Speechcraft ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Speechcraft);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Speechcraft);
                 try
                 {
                     item.Speechcraft_Property.Set(
@@ -12065,12 +12095,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Health ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Health);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Health);
                 try
                 {
                     item.Health_Property.Set(
@@ -12084,12 +12114,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Strength ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Strength);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Strength);
                 try
                 {
                     item.Strength_Property.Set(
@@ -12103,12 +12133,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Intelligence ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Intelligence);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Intelligence);
                 try
                 {
                     item.Intelligence_Property.Set(
@@ -12122,12 +12152,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Willpower ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Willpower);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Willpower);
                 try
                 {
                     item.Willpower_Property.Set(
@@ -12141,12 +12171,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Agility ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Agility);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Agility);
                 try
                 {
                     item.Agility_Property.Set(
@@ -12160,12 +12190,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Speed ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Speed);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Speed);
                 try
                 {
                     item.Speed_Property.Set(
@@ -12179,12 +12209,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Endurance ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Endurance);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Endurance);
                 try
                 {
                     item.Endurance_Property.Set(
@@ -12198,12 +12228,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Personality ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Personality);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Personality);
                 try
                 {
                     item.Personality_Property.Set(
@@ -12217,12 +12247,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Luck ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Luck);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Luck);
                 try
                 {
                     item.Luck_Property.Set(
@@ -12236,12 +12266,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Hair ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Hair);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Hair);
                 try
                 {
                     item.Hair_Property.SetToWithDefault(
@@ -12256,12 +12286,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HairLength ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.HairLength);
+                errorMask?.PushIndex((int)NPC_FieldIndex.HairLength);
                 try
                 {
                     item.HairLength_Property.SetToWithDefault(
@@ -12275,12 +12305,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Eyes != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Eyes);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Eyes);
                 try
                 {
                     item.Eyes.SetToWithDefault(
@@ -12295,12 +12325,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.HairColor ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.HairColor);
+                errorMask?.PushIndex((int)NPC_FieldIndex.HairColor);
                 try
                 {
                     item.HairColor_Property.SetToWithDefault(
@@ -12314,12 +12344,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CombatStyle ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.CombatStyle);
+                errorMask?.PushIndex((int)NPC_FieldIndex.CombatStyle);
                 try
                 {
                     item.CombatStyle_Property.SetToWithDefault(
@@ -12334,12 +12364,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FaceGenGeometrySymmetric ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.FaceGenGeometrySymmetric);
+                errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenGeometrySymmetric);
                 try
                 {
                     item.FaceGenGeometrySymmetric_Property.SetToWithDefault(
@@ -12353,12 +12383,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FaceGenGeometryAsymmetric ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.FaceGenGeometryAsymmetric);
+                errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenGeometryAsymmetric);
                 try
                 {
                     item.FaceGenGeometryAsymmetric_Property.SetToWithDefault(
@@ -12372,12 +12402,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.FaceGenTextureSymmetric ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.FaceGenTextureSymmetric);
+                errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenTextureSymmetric);
                 try
                 {
                     item.FaceGenTextureSymmetric_Property.SetToWithDefault(
@@ -12391,12 +12421,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Unknown ?? true)
             {
-                errorMask.PushIndex((int)NPC_FieldIndex.Unknown);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Unknown);
                 try
                 {
                     item.Unknown_Property.SetToWithDefault(
@@ -12410,7 +12440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -14532,44 +14562,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)NPC_FieldIndex.Model,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.ACBS_HEADER)))
+            if (item.ACBSDataTypeState.HasFlag(NPC.ACBSDataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Write(
-                    writer,
-                    item.NPCFlags_Property,
-                    length: 4,
-                    fieldIndex: (int)NPC_FieldIndex.NPCFlags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BaseSpellPoints_Property,
-                    fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fatigue_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Fatigue,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BarterGold_Property,
-                    fieldIndex: (int)NPC_FieldIndex.BarterGold,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LevelOffset_Property,
-                    fieldIndex: (int)NPC_FieldIndex.LevelOffset,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CalcMin_Property,
-                    fieldIndex: (int)NPC_FieldIndex.CalcMin,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CalcMax_Property,
-                    fieldIndex: (int)NPC_FieldIndex.CalcMax,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.ACBS_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Write(
+                        writer,
+                        item.NPCFlags_Property,
+                        length: 4,
+                        fieldIndex: (int)NPC_FieldIndex.NPCFlags,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BaseSpellPoints_Property,
+                        fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fatigue_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Fatigue,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BarterGold_Property,
+                        fieldIndex: (int)NPC_FieldIndex.BarterGold,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LevelOffset_Property,
+                        fieldIndex: (int)NPC_FieldIndex.LevelOffset,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CalcMin_Property,
+                        fieldIndex: (int)NPC_FieldIndex.CalcMin,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CalcMax_Property,
+                        fieldIndex: (int)NPC_FieldIndex.CalcMax,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Write(
                 writer: writer,
@@ -14611,50 +14644,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)NPC_FieldIndex.Items,
                 errorMask: errorMask,
                 transl: LoquiBinaryTranslation<ItemEntry>.Instance.Write);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.AIDT_HEADER)))
+            if (item.AIDTDataTypeState.HasFlag(NPC.AIDTDataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Aggression_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Aggression,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Confidence_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Confidence,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EnergyLevel_Property,
-                    fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Responsibility_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Responsibility,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Write(
-                    writer,
-                    item.BuySellServices_Property,
-                    length: 4,
-                    fieldIndex: (int)NPC_FieldIndex.BuySellServices,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
-                    writer,
-                    item.Teaches_Property,
-                    length: 1,
-                    fieldIndex: (int)NPC_FieldIndex.Teaches,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaximumTrainingLevel_Property,
-                    fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fluff_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Fluff,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.AIDT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Aggression_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Aggression,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Confidence_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Confidence,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EnergyLevel_Property,
+                        fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Responsibility_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Responsibility,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+                        writer,
+                        item.BuySellServices_Property,
+                        length: 4,
+                        fieldIndex: (int)NPC_FieldIndex.BuySellServices,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+                        writer,
+                        item.Teaches_Property,
+                        length: 1,
+                        fieldIndex: (int)NPC_FieldIndex.Teaches,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MaximumTrainingLevel_Property,
+                        fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Fluff,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<AIPackage>>.Instance.WriteListOfRecords(
                 writer: writer,
@@ -14677,158 +14713,161 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.CNAM_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(NPC.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Armorer_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Armorer,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Athletics_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Athletics,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Blade_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Blade,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Block_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Block,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Blunt_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Blunt,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HandToHand_Property,
-                    fieldIndex: (int)NPC_FieldIndex.HandToHand,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HeavyArmor_Property,
-                    fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Alchemy_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Alchemy,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Alteration_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Alteration,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Conjuration_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Conjuration,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Destruction_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Destruction,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Illusion_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Illusion,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Mysticism_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Mysticism,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Restoration_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Restoration,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Acrobatics_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Acrobatics,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LightArmor_Property,
-                    fieldIndex: (int)NPC_FieldIndex.LightArmor,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Marksman_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Marksman,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Mercantile_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Mercantile,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Security_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Security,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Sneak_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Sneak,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Speechcraft_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Speechcraft,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Health_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Health,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Strength_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Strength,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Intelligence_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Intelligence,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Willpower_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Willpower,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Agility_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Agility,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Speed_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Speed,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Endurance_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Endurance,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Personality_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Personality,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Luck_Property,
-                    fieldIndex: (int)NPC_FieldIndex.Luck,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(NPC_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Armorer_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Armorer,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Athletics_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Athletics,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Blade_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Blade,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Block_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Block,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Blunt_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Blunt,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HandToHand_Property,
+                        fieldIndex: (int)NPC_FieldIndex.HandToHand,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HeavyArmor_Property,
+                        fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Alchemy_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Alchemy,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Alteration_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Alteration,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Conjuration_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Conjuration,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Destruction_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Destruction,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Illusion_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Illusion,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Mysticism_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Mysticism,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Restoration_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Restoration,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Acrobatics_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Acrobatics,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LightArmor_Property,
+                        fieldIndex: (int)NPC_FieldIndex.LightArmor,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Marksman_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Marksman,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Mercantile_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Mercantile,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Security_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Security,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Sneak_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Sneak,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Speechcraft_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Speechcraft,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Health_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Health,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Strength_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Strength,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Intelligence_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Intelligence,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Willpower_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Willpower,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Agility_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Agility,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Speed_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Speed,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Endurance_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Endurance,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Personality_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Personality,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Luck_Property,
+                        fieldIndex: (int)NPC_FieldIndex.Luck,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,

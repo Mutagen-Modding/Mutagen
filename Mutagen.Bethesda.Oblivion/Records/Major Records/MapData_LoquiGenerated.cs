@@ -1700,7 +1700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.UsableDimensions ?? true)
             {
-                errorMask.PushIndex((int)MapData_FieldIndex.UsableDimensions);
+                errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
                 try
                 {
                     item.UsableDimensions_Property.Set(
@@ -1714,12 +1714,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CellCoordinatesNWCell ?? true)
             {
-                errorMask.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
+                errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
                 try
                 {
                     item.CellCoordinatesNWCell_Property.Set(
@@ -1733,12 +1733,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CellCoordinatesSECell ?? true)
             {
-                errorMask.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
+                errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
                 try
                 {
                     item.CellCoordinatesSECell_Property.Set(
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

@@ -1133,8 +1133,9 @@ namespace Mutagen.Bethesda.Oblivion
         [Flags]
         public enum SCITDataType
         {
-            Break0 = 1,
-            Break1 = 2
+            Has = 1,
+            Break0 = 2,
+            Break1 = 4
         }
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
@@ -1402,6 +1403,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.SCITDataTypeState = SCITDataType.Has;
+                        }
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             property: item.Script_Property,
@@ -2019,7 +2024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Script ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.Script);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Script);
                 try
                 {
                     item.Script_Property.Set(
@@ -2033,12 +2038,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MagicSchool ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
                 try
                 {
                     item.MagicSchool_Property.Set(
@@ -2052,12 +2057,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.VisualEffect ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
                 try
                 {
                     item.VisualEffect_Property.Set(
@@ -2071,12 +2076,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.Flags);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -2090,12 +2095,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)ScriptEffect_FieldIndex.Name);
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -2109,7 +2114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -2353,38 +2358,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
+            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
-                {
-                    EnumXmlTranslation<MagicSchool>.Instance.Write(
-                        node: elem,
-                        name: nameof(item.MagicSchool),
-                        item: item.MagicSchool_Property,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
-                {
-                    FormIDXmlTranslation.Instance.Write(
-                        node: elem,
-                        name: nameof(item.VisualEffect),
-                        item: item.VisualEffect_Property?.FormID,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                        errorMask: errorMask);
-                }
-                if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
-                    {
-                        EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
-                            node: elem,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
-                }
+                EnumXmlTranslation<MagicSchool>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.MagicSchool),
+                    item: item.MagicSchool_Property,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
+            {
+                FormIDXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.VisualEffect),
+                    item: item.VisualEffect_Property?.FormID,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Flags),
+                    item: item.Flags_Property,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                    errorMask: errorMask);
             }
             if (item.Name_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))
@@ -2439,34 +2438,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
+            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Script_Property,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                    errorMask: errorMask);
-                if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
-                        writer,
-                        item.MagicSchool_Property,
-                        length: 4,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                        errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.VisualEffect_Property,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                        item: item.Script_Property,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                         errorMask: errorMask);
-                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
+                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
                     {
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
                             writer,
-                            item.Flags_Property,
+                            item.MagicSchool_Property,
                             length: 4,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                             errorMask: errorMask);
+                        Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.VisualEffect_Property,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                            errorMask: errorMask);
+                        if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
+                        {
+                            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
+                                writer,
+                                item.Flags_Property,
+                                length: 4,
+                                fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                                errorMask: errorMask);
+                        }
                     }
                 }
             }

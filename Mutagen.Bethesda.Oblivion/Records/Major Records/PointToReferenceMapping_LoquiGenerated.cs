@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Reference ?? true)
             {
-                errorMask.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
+                errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
                 try
                 {
                     item.Reference_Property.Set(
@@ -1161,12 +1161,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Points != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)PointToReferenceMapping_FieldIndex.Points);
+                errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Points);
                 try
                 {
                     item.Points.SetToWithDefault(
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }

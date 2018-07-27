@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Oblivion
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
             if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
-            var id = frame.Reader.ReadUInt32();
+            var id =  FormID.Factory(frame.Reader.ReadUInt32());
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
             if (grupType == GroupTypeEnum.WorldChildren)
             {
                 obj._timeStamp = frame.Reader.ReadBytes(4);
-                if (id != obj.FormID.ID)
+                if (id != obj.FormID)
                 {
                     errorMask.ReportExceptionOrThrow(
                         new ArgumentException("Cell children group did not match the FormID of the parent worldspace."));
@@ -153,7 +153,10 @@ namespace Mutagen.Bethesda.Oblivion
                 && !obj.TopCell_Property.HasBeenSet) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
-                writer.Write(obj.FormID.ID);
+                FormIDBinaryTranslation.Instance.Write(
+                    writer,
+                    obj.FormID,
+                    errorMask);
                 writer.Write((int)GroupTypeEnum.WorldChildren);
                 if (obj._timeStamp != null)
                 {

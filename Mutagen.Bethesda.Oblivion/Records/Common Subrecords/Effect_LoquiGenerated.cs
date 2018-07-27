@@ -1519,6 +1519,12 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 errorMask: errorMask);
         }
+        public EFITDataType EFITDataTypeState;
+        [Flags]
+        public enum EFITDataType
+        {
+            Has = 1
+        }
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -1774,6 +1780,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.EFITDataTypeState = EFITDataType.Has;
+                        }
                         Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             property: item.MagicEffect_Property,
@@ -2510,7 +2520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.MagicEffect ?? true)
             {
-                errorMask.PushIndex((int)Effect_FieldIndex.MagicEffect);
+                errorMask?.PushIndex((int)Effect_FieldIndex.MagicEffect);
                 try
                 {
                     item.MagicEffect_Property.Set(
@@ -2524,12 +2534,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Magnitude ?? true)
             {
-                errorMask.PushIndex((int)Effect_FieldIndex.Magnitude);
+                errorMask?.PushIndex((int)Effect_FieldIndex.Magnitude);
                 try
                 {
                     item.Magnitude_Property.Set(
@@ -2543,12 +2553,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Area ?? true)
             {
-                errorMask.PushIndex((int)Effect_FieldIndex.Area);
+                errorMask?.PushIndex((int)Effect_FieldIndex.Area);
                 try
                 {
                     item.Area_Property.Set(
@@ -2562,12 +2572,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Duration ?? true)
             {
-                errorMask.PushIndex((int)Effect_FieldIndex.Duration);
+                errorMask?.PushIndex((int)Effect_FieldIndex.Duration);
                 try
                 {
                     item.Duration_Property.Set(
@@ -2581,12 +2591,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask.PushIndex((int)Effect_FieldIndex.Type);
+                errorMask?.PushIndex((int)Effect_FieldIndex.Type);
                 try
                 {
                     item.Type_Property.Set(
@@ -2600,12 +2610,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ActorValue ?? true)
             {
-                errorMask.PushIndex((int)Effect_FieldIndex.ActorValue);
+                errorMask?.PushIndex((int)Effect_FieldIndex.ActorValue);
                 try
                 {
                     item.ActorValue_Property.Set(
@@ -2619,12 +2629,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ScriptEffect.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)Effect_FieldIndex.ScriptEffect);
+                errorMask?.PushIndex((int)Effect_FieldIndex.ScriptEffect);
                 try
                 {
                     item.ScriptEffect_Property.SetToWithDefault(
@@ -2665,7 +2675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -3041,40 +3051,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Effect_Registration.EFIT_HEADER)))
+            if (item.EFITDataTypeState.HasFlag(Effect.EFITDataType.Has))
             {
-                Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MagicEffect_Property,
-                    fieldIndex: (int)Effect_FieldIndex.MagicEffect,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Magnitude_Property,
-                    fieldIndex: (int)Effect_FieldIndex.Magnitude,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Area_Property,
-                    fieldIndex: (int)Effect_FieldIndex.Area,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Duration_Property,
-                    fieldIndex: (int)Effect_FieldIndex.Duration,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
-                    writer,
-                    item.Type_Property,
-                    length: 4,
-                    fieldIndex: (int)Effect_FieldIndex.Type,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
-                    writer,
-                    item.ActorValue_Property,
-                    length: 4,
-                    fieldIndex: (int)Effect_FieldIndex.ActorValue,
-                    errorMask: errorMask);
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Effect_Registration.EFIT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MagicEffect_Property,
+                        fieldIndex: (int)Effect_FieldIndex.MagicEffect,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Magnitude_Property,
+                        fieldIndex: (int)Effect_FieldIndex.Magnitude,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Area_Property,
+                        fieldIndex: (int)Effect_FieldIndex.Area,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Duration_Property,
+                        fieldIndex: (int)Effect_FieldIndex.Duration,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
+                        writer,
+                        item.Type_Property,
+                        length: 4,
+                        fieldIndex: (int)Effect_FieldIndex.Type,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+                        writer,
+                        item.ActorValue_Property,
+                        length: 4,
+                        fieldIndex: (int)Effect_FieldIndex.ActorValue,
+                        errorMask: errorMask);
+                }
             }
             LoquiBinaryTranslation<ScriptEffect>.Instance.Write(
                 writer: writer,

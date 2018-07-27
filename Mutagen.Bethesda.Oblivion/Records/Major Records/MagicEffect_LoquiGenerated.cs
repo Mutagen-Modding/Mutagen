@@ -2774,7 +2774,8 @@ namespace Mutagen.Bethesda.Oblivion
         [Flags]
         public enum DATADataType
         {
-            Break0 = 1
+            Has = 1,
+            Break0 = 2
         }
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
@@ -3096,6 +3097,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
+                        if (!dataFrame.Complete)
+                        {
+                            item.DATADataTypeState = DATADataType.Has;
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)MagicEffect_FieldIndex.Flags);
@@ -4129,7 +4134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 cmds);
             if (copyMask?.Name ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Name);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Name);
                 try
                 {
                     item.Name_Property.SetToWithDefault(
@@ -4143,12 +4148,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Description ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Description);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Description);
                 try
                 {
                     item.Description_Property.SetToWithDefault(
@@ -4162,12 +4167,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Icon ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Icon);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Icon);
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
@@ -4181,12 +4186,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Model);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
                 try
                 {
                     item.Model_Property.SetToWithDefault(
@@ -4227,12 +4232,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Flags);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Flags);
                 try
                 {
                     item.Flags_Property.Set(
@@ -4246,12 +4251,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.BaseCost ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
                 try
                 {
                     item.BaseCost_Property.Set(
@@ -4265,12 +4270,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Unused ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Unused);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unused);
                 try
                 {
                     item.Unused_Property.Set(
@@ -4284,12 +4289,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.MagicSchool ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.MagicSchool);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.MagicSchool);
                 try
                 {
                     item.MagicSchool_Property.Set(
@@ -4303,12 +4308,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Resistance ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Resistance);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Resistance);
                 try
                 {
                     item.Resistance_Property.Set(
@@ -4322,12 +4327,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CounterEffectCount ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
                 try
                 {
                     item.CounterEffectCount_Property.Set(
@@ -4341,12 +4346,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Light ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.Light);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Light);
                 try
                 {
                     item.Light_Property.Set(
@@ -4360,12 +4365,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.ProjectileSpeed ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.ProjectileSpeed);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.ProjectileSpeed);
                 try
                 {
                     item.ProjectileSpeed_Property.Set(
@@ -4379,12 +4384,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.EffectShader ?? true)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.EffectShader);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.EffectShader);
                 try
                 {
                     item.EffectShader_Property.Set(
@@ -4398,12 +4403,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.SubData.Overall != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.SubData);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.SubData);
                 try
                 {
                     switch (copyMask?.SubData?.Overall ?? CopyOption.Reference)
@@ -4444,12 +4449,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.CounterEffects != CopyOption.Skip)
             {
-                errorMask.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
                 try
                 {
                     item.CounterEffects.SetToWithDefault(
@@ -4464,7 +4469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -5040,18 +5045,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                     errorMask: errorMask);
             }
-            if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SubData) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SubData) ?? true))
-                {
-                    LoquiXmlTranslation<MagicEffectSubData>.Instance.Write(
-                        node: elem,
-                        item: item.SubData_Property,
-                        name: nameof(item.SubData),
-                        fieldIndex: (int)MagicEffect_FieldIndex.SubData,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
+                LoquiXmlTranslation<MagicEffectSubData>.Instance.Write(
+                    node: elem,
+                    item: item.SubData_Property,
+                    name: nameof(item.SubData),
+                    fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                    errorMask: errorMask,
+                    translationMask: translationMask);
             }
             if (item.CounterEffects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
@@ -5157,63 +5159,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)MagicEffect_FieldIndex.Model,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DATA_HEADER)))
+            if (item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Has))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: 4,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Flags,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BaseCost_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Unused_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Unused,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
-                    writer,
-                    item.MagicSchool_Property,
-                    length: 4,
-                    fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Write(
-                    writer,
-                    item.Resistance_Property,
-                    length: 4,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CounterEffectCount_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Light_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Light,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ProjectileSpeed_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EffectShader_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
-                    errorMask: errorMask);
-                if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DATA_HEADER)))
                 {
-                    LoquiBinaryTranslation<MagicEffectSubData>.Instance.Write(
-                        writer: writer,
-                        item: item.SubData_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Write(
+                        writer,
+                        item.Flags_Property,
+                        length: 4,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Flags,
                         errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BaseCost_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Unused_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Unused,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
+                        writer,
+                        item.MagicSchool_Property,
+                        length: 4,
+                        fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Write(
+                        writer,
+                        item.Resistance_Property,
+                        length: 4,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.CounterEffectCount_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Light_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Light,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ProjectileSpeed_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EffectShader_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
+                        errorMask: errorMask);
+                    if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
+                    {
+                        LoquiBinaryTranslation<MagicEffectSubData>.Instance.Write(
+                            writer: writer,
+                            item: item.SubData_Property,
+                            fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                            errorMask: errorMask);
+                    }
                 }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>>.Instance.Write(

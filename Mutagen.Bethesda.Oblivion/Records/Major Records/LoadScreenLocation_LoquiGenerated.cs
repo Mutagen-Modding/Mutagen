@@ -1399,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (copyMask?.Direct ?? true)
             {
-                errorMask.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
+                errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
                 try
                 {
                     item.Direct_Property.Set(
@@ -1413,12 +1413,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.Indirect ?? true)
             {
-                errorMask.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
+                errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
                 try
                 {
                     item.Indirect_Property.Set(
@@ -1432,12 +1432,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
             if (copyMask?.GridPoint ?? true)
             {
-                errorMask.PushIndex((int)LoadScreenLocation_FieldIndex.GridPoint);
+                errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.GridPoint);
                 try
                 {
                     item.GridPoint_Property.Set(
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 finally
                 {
-                    errorMask.PopIndex();
+                    errorMask?.PopIndex();
                 }
             }
         }
