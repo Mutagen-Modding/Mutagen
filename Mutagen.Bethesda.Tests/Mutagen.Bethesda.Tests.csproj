@@ -67,6 +67,9 @@
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
     <Compile Include="Settings\ProtocolDefinition_Tests.cs" />
+    <Compile Include="Settings\Passthrough_LoquiGenerated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ValueTuple">
@@ -89,6 +92,9 @@
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </None>
     <None Include="Settings\Common.xsd" />
+    <None Include="Settings\Passthrough.xsd">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">

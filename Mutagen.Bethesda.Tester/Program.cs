@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,10 +17,10 @@ namespace Mutagen.Bethesda.Tester
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             LoquiRegistrationSettings.AutomaticRegistration = false;
-            
+
             FilePath settingsFile = new FilePath("../../TestingSettings.xml");
             if (!settingsFile.Exists)
             {
@@ -30,8 +31,8 @@ namespace Mutagen.Bethesda.Tester
 
             TestBattery.RunTests(
                 settings,
-                reuseCaches: true,
-                deleteCaches: false).Wait();
+                reuseCaches: settings.ReuseCaches,
+                deleteCaches: settings.DeleteCachesAfter).Wait();
         }
     }
 }

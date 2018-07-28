@@ -17,24 +17,25 @@ namespace Mutagen.Bethesda
         #region Get File Locations
         internal class FileLocationConstructor
         {
-            public Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)> FromFormIDs = new Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)>();
+            public Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)> FromFormIDs = new Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)>();
             public List<long> FromStartPositions = new List<long>();
             public List<long> FromEndPositions = new List<long>();
-            public List<FormID> IDs = new List<FormID>();
+            public List<(FormID FormID, RecordType Record)> IDs = new List<(FormID FormID, RecordType Record)>();
             public List<long> GrupLocations = new List<long>();
             public FormID LastParsed;
             public long LastLoc;
 
             public void Add(
                 FormID id,
+                RecordType record,
                 Stack<long> parentGrupLocations,
                 RangeInt64 section)
             {
                 var grupArr = parentGrupLocations.ToArray();
-                this.FromFormIDs[id] = (section, grupArr);
+                this.FromFormIDs[id] = (section, grupArr, record);
                 this.FromStartPositions.Add(section.Min);
                 this.FromEndPositions.Add(section.Max);
-                this.IDs.Add(id);
+                this.IDs.Add((id, record));
                 this.LastParsed = id;
                 this.LastLoc = section.Min;
             }
@@ -42,20 +43,20 @@ namespace Mutagen.Bethesda
 
         public class FileLocations
         {
-            private readonly Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions)> _fromFormIDs;
-            private readonly SortingListDictionary<long, FormID> _fromStart;
-            private readonly SortingListDictionary<long, FormID> _fromEnd;
+            private readonly Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)> _fromFormIDs;
+            private readonly SortingListDictionary<long, (FormID FormID, RecordType Record)> _fromStart;
+            private readonly SortingListDictionary<long, (FormID FormID, RecordType Record)> _fromEnd;
             public readonly SortingList<long> GrupLocations;
-            public SortingListDictionary<long, FormID> ListedRecords => _fromStart;
+            public SortingListDictionary<long, (FormID FormID, RecordType Record)> ListedRecords => _fromStart;
             public RangeInt64 this[FormID id] => _fromFormIDs[id].Range;
 
             internal FileLocations(FileLocationConstructor constructor)
             {
                 _fromFormIDs = constructor.FromFormIDs;
-                _fromStart = SortingListDictionary<long, FormID>.Factory_Wrap_AssumeSorted(
+                _fromStart = SortingListDictionary<long, (FormID FormID, RecordType Record)>.Factory_Wrap_AssumeSorted(
                     constructor.FromStartPositions,
                     constructor.IDs);
-                _fromEnd = SortingListDictionary<long, FormID>.Factory_Wrap_AssumeSorted(
+                _fromEnd = SortingListDictionary<long, (FormID FormID, RecordType Record)>.Factory_Wrap_AssumeSorted(
                     constructor.FromEndPositions,
                     constructor.IDs);
                 GrupLocations = SortingList<long>.Factory_Wrap_AssumeSorted(constructor.GrupLocations);
@@ -72,14 +73,14 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            public bool TryGetRecord(long loc, out FormID id)
+            public bool TryGetRecord(long loc, out (FormID FormID, RecordType Record) record)
             {
                 if (!_fromStart.TryGetInDirection(
                     key: loc,
                     higher: false,
                     result: out var lowerID))
                 {
-                    id = default(FormID);
+                    record = default;
                     return false;
                 }
                 if (!_fromEnd.TryGetInDirection(
@@ -87,19 +88,19 @@ namespace Mutagen.Bethesda
                     higher: true,
                     result: out var higherID))
                 {
-                    id = default(FormID);
+                    record = default;
                     return false;
                 }
-                if (lowerID.Value != higherID.Value)
+                if (lowerID.Value.FormID != higherID.Value.FormID)
                 {
-                    id = default(FormID);
+                    record = default;
                     return false;
                 }
-                id = lowerID.Value;
+                record = lowerID.Value;
                 return true;
             }
 
-            public bool TryGetRecords(RangeInt64 section, out IEnumerable<FormID> ids)
+            public bool TryGetRecords(RangeInt64 section, out IEnumerable<(FormID FormID, RecordType Record)> ids)
             {
                 var gotStart = _fromStart.TryGetIndexInDirection(
                     key: section.Min,
@@ -125,7 +126,7 @@ namespace Mutagen.Bethesda
                     ids = null;
                     return false;
                 }
-                var ret = new HashSet<FormID>();
+                var ret = new HashSet<(FormID FormID, RecordType Record)>();
                 for (int i = start; i <= end; i++)
                 {
                     ret.Add(_fromStart.Values[i]);
@@ -272,6 +273,7 @@ namespace Mutagen.Bethesda
                         parentGroupLocations.Push(grupLoc);
                         fileLocs.Add(
                             id: formID,
+                            record: targetRec,
                             parentGrupLocations: parentGroupLocations,
                             section: new RangeInt64(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + Constants.RECORD_META_OFFSET - 1));
                         parentGroupLocations.Pop();

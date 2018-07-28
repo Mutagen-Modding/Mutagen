@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda
                                 if (lengthDiff == 0) continue;
 
                                 // Modify parent group lengths
-                                foreach (var grupLoc in fileLocs.GetContainingGroupLocations(nextRec.Value))
+                                foreach (var grupLoc in fileLocs.GetContainingGroupLocations(nextRec.Value.FormID))
                                 {
                                     if (!grupMeta.TryGetValue(grupLoc, out var meta))
                                     {

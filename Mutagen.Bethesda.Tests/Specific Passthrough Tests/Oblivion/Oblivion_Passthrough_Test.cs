@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -23,28 +24,42 @@ namespace Mutagen.Bethesda.Tests
             this.FilePath = path;
         }
 
-        public Dictionary<Type, List<FormID>> ImportExport(
+        public async Task ImportExport(
+            TestingSettings settings,
             string inputPath,
-            string outputPath)
+            string outputPathStraight,
+            string outputPathObservable)
         {
-            var mod = OblivionMod.Create_Binary(
-                inputPath);
-            foreach (var record in mod.MajorRecords.Values)
+            // Do normal
+            if (settings.TestNormal)
             {
-                if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                var mod = OblivionMod.Create_Binary(
+                    inputPath);
+
+                foreach (var record in mod.MajorRecords.Values)
                 {
-                    record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                    if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                    {
+                        record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                    }
                 }
+                mod.Write_Binary(outputPathStraight);
             }
 
-            mod.Write_Binary(outputPath);
-
-            Dictionary<Type, List<FormID>> ret = new Dictionary<Type, List<FormID>>();
-            foreach (var rec in mod.MajorRecords.Values)
+            // Do Observable
+            if (settings.TestObservable)
             {
-                ret.TryCreateValue(rec.GetType()).Add(rec.FormID);
+                await OblivionMod_Observable.FromPath(Observable.Return(inputPath))
+                    .Do((kv) =>
+                    {
+                        var record = kv.Value.Last();
+                        if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                        {
+                            record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                        }
+                    })
+                    .Write_Binary(outputPathObservable);
             }
-            return ret;
         }
 
         public ModAligner.AlignmentRules GetAlignmentRules()
@@ -159,36 +174,33 @@ namespace Mutagen.Bethesda.Tests
         protected virtual void AddDynamicProcessorInstructions(
             BinaryReadStream stream,
             FormID formID,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool processing)
+            Dictionary<long, uint> lengthTracker)
         {
-            ProcessNPC_Mismatch(stream, recType, instr, loc, processing);
-            ProcessCreature_Mismatch(stream, recType, instr, loc, processing);
-            ProcessLeveledItemDataFields(stream, recType, instr, loc, processing);
-            ProcessRegions(stream, recType, instr, loc, processing);
-            ProcessPlacedObject_Mismatch(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
-            ProcessCells(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
-            ProcessDialogTopics(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
-            ProcessDialogItems(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
-            ProcessIdleAnimations(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
-            ProcessAIPackages(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
-            ProcessCombatStyle(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
-            ProcessWater(stream, formID, recType, instr, loc, fileLocs, lengthTracker, processing);
+            ProcessNPC_Mismatch(stream, recType, instr, loc);
+            ProcessCreature_Mismatch(stream, recType, instr, loc);
+            ProcessLeveledItemDataFields(stream, recType, instr, loc);
+            ProcessRegions(stream, recType, instr, loc);
+            ProcessPlacedObject_Mismatch(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessCells(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessDialogTopics(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessDialogItems(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessIdleAnimations(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessAIPackages(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessCombatStyle(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessWater(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
         }
 
         private void ProcessNPC_Mismatch(
             BinaryReadStream stream,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            bool processing)
+            RangeInt64 loc)
         {
-            if (!processing) return;
-            if (!typeof(NPC).Equals(recType)) return;
+            if (!NPC_Registration.NPC__HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width);
             this.DynamicMove(
@@ -213,13 +225,11 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessCreature_Mismatch(
             BinaryReadStream stream,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            bool processing)
+            RangeInt64 loc)
         {
-            if (!processing) return;
-            if (!typeof(Creature).Equals(recType)) return;
+            if (!Creature_Registration.CREA_HEADER.Equals(recType)) return;
             this.AlignRecords(
                 stream,
                 instr,
@@ -254,13 +264,11 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessLeveledItemDataFields(
             BinaryReadStream stream,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            bool processing)
+            RangeInt64 loc)
         {
-            if (!processing) return;
-            if (!typeof(LeveledItem).Equals(recType)) return;
+            if (!LeveledItem_Registration.LVLI_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = str.IndexOf("DATA");
@@ -306,13 +314,11 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessRegions(
             BinaryReadStream stream,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
-            RangeInt64 loc,
-            bool processing)
+            RangeInt64 loc)
         {
-            if (!processing) return;
-            if (!typeof(Region).Equals(recType)) return;
+            if (!Region_Registration.REGN_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
             var lenToRead = (int)loc.Width + Constants.RECORD_HEADER_LENGTH;
             var str = stream.ReadString(lenToRead);
@@ -382,119 +388,73 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessPlacedObject_Mismatch(
             BinaryReadStream stream,
             FormID formID,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool processing)
+            Dictionary<long, uint> lengthTracker)
         {
-            if (!typeof(PlacedObject).Equals(recType)) return;
+            if (!PlacedObject_Registration.REFR_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width);
-            if (processing)
+            var datIndex = str.IndexOf("XLOC");
+            if (datIndex != -1)
             {
-                var datIndex = str.IndexOf("XLOC");
-                if (datIndex != -1)
+                stream.Position = loc.Min + datIndex;
+                stream.Position += 4;
+                var len = stream.ReadUInt16();
+                if (len == 16)
                 {
-                    stream.Position = loc.Min + datIndex;
-                    stream.Position += 4;
-                    var len = stream.ReadUInt16();
-                    if (len == 16)
+                    lengthTracker[loc.Min] = lengthTracker[loc.Min] - 4;
+                    var removeStart = loc.Min + datIndex + 6 + 12;
+                    instr.SetSubstitution(
+                        loc: loc.Min + datIndex + 4,
+                        sub: new byte[] { 12, 0 });
+                    instr.SetRemove(
+                        section: new RangeInt64(
+                            removeStart,
+                            removeStart + 3));
+                    foreach (var k in fileLocs.GetContainingGroupLocations(formID))
                     {
-                        lengthTracker[loc.Min] = lengthTracker[loc.Min] - 4;
-                        var removeStart = loc.Min + datIndex + 6 + 12;
-                        instr.SetSubstitution(
-                            loc: loc.Min + datIndex + 4,
-                            sub: new byte[] { 12, 0 });
-                        instr.SetRemove(
-                            section: new RangeInt64(
-                                removeStart,
-                                removeStart + 3));
-                        foreach (var k in fileLocs.GetContainingGroupLocations(formID))
-                        {
-                            lengthTracker[k] = lengthTracker[k] - 4;
-                        }
-                    }
-                }
-                datIndex = str.IndexOf("XSED");
-                if (datIndex != -1)
-                {
-                    stream.Position = loc.Min + datIndex;
-                    stream.Position += 4;
-                    var len = stream.ReadUInt16();
-                    if (len == 4)
-                    {
-                        lengthTracker[loc.Min] = lengthTracker[loc.Min] - 3;
-                        var removeStart = loc.Min + datIndex + 6 + 1;
-                        instr.SetSubstitution(
-                            loc: loc.Min + datIndex + 4,
-                            sub: new byte[] { 1, 0 });
-                        instr.SetRemove(
-                            section: new RangeInt64(
-                                removeStart,
-                                removeStart + 2));
-                        foreach (var k in fileLocs.GetContainingGroupLocations(formID))
-                        {
-                            lengthTracker[k] = lengthTracker[k] - 3;
-                        }
+                        lengthTracker[k] = lengthTracker[k] - 4;
                     }
                 }
             }
-            else
+            datIndex = str.IndexOf("XSED");
+            if (datIndex != -1)
             {
-                //var datIndex = str.IndexOf("DATA");
-                //if (datIndex != -1)
-                //{
-                //    stream.Position = loc.Min + datIndex;
-                //    stream.Position += 6;
-                //    for (int i = 0; i < 6; i++)
-                //    {
-                //        var bytes = stream.ReadBytes(4);
-                //        if (bytes.SequenceEqual(ZeroFloat))
-                //        {
-                //            instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
-                //        }
-                //    }
-                //}
-
-                //datIndex = str.IndexOf("XLOC");
-                //if (datIndex != -1)
-                //{
-                //    instr.IgnoreDifferenceSections.Add(
-                //        new RangeInt64(
-                //            loc.Min + datIndex + 7,
-                //            loc.Min + datIndex + 9));
-                //}
-
-                //datIndex = str.IndexOf("XTEL");
-                //if (datIndex != -1)
-                //{
-                //    stream.Position = loc.Min + datIndex + 10;
-                //    for (int i = 0; i < 6; i++)
-                //    {
-                //        var bytes = stream.ReadBytes(4);
-                //        if (bytes.SequenceEqual(ZeroFloat))
-                //        {
-                //            instr.IgnoreDifferenceSections.Add(new RangeInt64(stream.Position - 4, stream.Position - 1));
-                //        }
-                //    }
-                //}
+                stream.Position = loc.Min + datIndex;
+                stream.Position += 4;
+                var len = stream.ReadUInt16();
+                if (len == 4)
+                {
+                    lengthTracker[loc.Min] = lengthTracker[loc.Min] - 3;
+                    var removeStart = loc.Min + datIndex + 6 + 1;
+                    instr.SetSubstitution(
+                        loc: loc.Min + datIndex + 4,
+                        sub: new byte[] { 1, 0 });
+                    instr.SetRemove(
+                        section: new RangeInt64(
+                            removeStart,
+                            removeStart + 2));
+                    foreach (var k in fileLocs.GetContainingGroupLocations(formID))
+                    {
+                        lengthTracker[k] = lengthTracker[k] - 3;
+                    }
+                }
             }
         }
 
         private void ProcessCells(
             BinaryReadStream stream,
             FormID formID,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool processing)
+            Dictionary<long, uint> lengthTracker)
         {
-            if (!processing) return;
-            if (!typeof(Cell).Equals(recType)) return;
+            if (!Cell_Registration.CELL_HEADER.Equals(recType)) return;
 
             // Clean empty child groups
             List<RangeInt64> removes = new List<RangeInt64>();
@@ -555,14 +515,13 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessDialogTopics(
             BinaryReadStream stream,
             FormID formID,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool processing)
+            Dictionary<long, uint> lengthTracker)
         {
-            if (!typeof(DialogTopic).Equals(recType)) return;
+            if (!DialogTopic_Registration.DIAL_HEADER.Equals(recType)) return;
 
             // Clean empty child groups
             stream.Position = loc.Min + 4;
@@ -590,14 +549,13 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessDialogItems(
             BinaryReadStream stream,
             FormID formID,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool processing)
+            Dictionary<long, uint> lengthTracker)
         {
-            if (!typeof(DialogItem).Equals(recType)) return;
+            if (!DialogItem_Registration.INFO_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
@@ -660,14 +618,13 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessIdleAnimations(
             BinaryReadStream stream,
             FormID formID,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool processing)
+            Dictionary<long, uint> lengthTracker)
         {
-            if (!typeof(IdleAnimation).Equals(recType)) return;
+            if (!IdleAnimation_Registration.IDLE_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
@@ -708,14 +665,13 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessAIPackages(
             BinaryReadStream stream,
             FormID formID,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool processing)
+            Dictionary<long, uint> lengthTracker)
         {
-            if (!typeof(AIPackage).Equals(recType)) return;
+            if (!AIPackage_Registration.PACK_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
@@ -779,16 +735,13 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessCombatStyle(
             BinaryReadStream stream,
             FormID formID,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool processing)
+            Dictionary<long, uint> lengthTracker)
         {
-            if (!typeof(CombatStyle).Equals(recType)) return;
-
-            if (!processing) return;
+            if (!CombatStyle_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = str.IndexOf("CSTD");
@@ -831,16 +784,13 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessWater(
             BinaryReadStream stream,
             FormID formID,
-            Type recType,
+            RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             RecordLocator.FileLocations fileLocs,
-            Dictionary<long, uint> lengthTracker,
-            bool processing)
+            Dictionary<long, uint> lengthTracker)
         {
-            if (!typeof(Water).Equals(recType)) return;
-
-            if (!processing) return;
+            if (!Water_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = str.IndexOf("DATA");
@@ -1044,26 +994,30 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         public async Task BinaryPassthroughTest(
-            bool reuseOld = true,
-            bool deleteAfter = false)
+            TestingSettings settings)
         {
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}")), deleteAfter: deleteAfter))
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}")), deleteAfter: settings.DeleteCachesAfter))
             {
-                var outputPath = Path.Combine(tmp.Dir.Path, this.Nickname);
+                var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
+                var observableOutputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
                 var uncompressedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed");
                 var alignedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
                 var processedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
 
-                if (!reuseOld || !File.Exists(uncompressedPath))
+                if (!settings.ReuseCaches || !File.Exists(uncompressedPath))
                 {
                     ModDecompressor.Decompress(
                         inputPath: this.FilePath,
                         outputPath: uncompressedPath);
                 }
 
-                var importRecs = ImportExport(uncompressedPath, outputPath);
+                await ImportExport(
+                    settings: settings,
+                    inputPath: uncompressedPath,
+                    outputPathStraight: outputPath, 
+                    outputPathObservable: observableOutputPath);
 
-                if (!reuseOld || !File.Exists(alignedPath))
+                if (!settings.ReuseCaches || !File.Exists(alignedPath))
                 {
                     ModAligner.Align(
                         inputPath: uncompressedPath,
@@ -1073,7 +1027,7 @@ namespace Mutagen.Bethesda.Tests
                 }
 
                 BinaryFileProcessor.Config instructions;
-                if (!reuseOld || !File.Exists(processedPath))
+                if (!settings.ReuseCaches || !File.Exists(processedPath))
                 {
                     var alignedFileLocs = RecordLocator.GetFileLocations(
                     alignedPath);
@@ -1095,20 +1049,16 @@ namespace Mutagen.Bethesda.Tests
 
                     using (var stream = new BinaryReadStream(alignedPath))
                     {
-                        foreach (var recType in importRecs)
+                        foreach (var rec in RecordLocator.GetFileLocations(this.FilePath).ListedRecords)
                         {
-                            foreach (var id in recType.Value)
-                            {
-                                AddDynamicProcessorInstructions(
-                                    stream: stream,
-                                    formID: id,
-                                    recType: recType.Key,
-                                    instr: instructions,
-                                    loc: alignedFileLocs[id],
-                                    fileLocs: alignedFileLocs,
-                                    lengthTracker: lengthTracker,
-                                    processing: true);
-                            }
+                            AddDynamicProcessorInstructions(
+                                stream: stream,
+                                formID: rec.Value.FormID,
+                                recType: rec.Value.Record,
+                                instr: instructions,
+                                loc: alignedFileLocs[rec.Value.FormID],
+                                fileLocs: alignedFileLocs,
+                                lengthTracker: lengthTracker);
                         }
                     }
 
@@ -1135,37 +1085,33 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                instructions = new BinaryFileProcessor.Config();
-                var processedFileLocs = RecordLocator.GetFileLocations(
-                    processedPath);
                 using (var stream = new BinaryReadStream(processedPath))
                 {
-                    foreach (var recType in importRecs)
+                    if (settings.TestNormal)
                     {
-                        foreach (var id in recType.Value)
+                        var ret = Passthrough_Tests.AssertFilesEqual(
+                            stream,
+                            outputPath,
+                            amountToReport: 15);
+                        if (ret.Exception != null)
                         {
-                            AddDynamicProcessorInstructions(
-                                stream: stream,
-                                formID: id,
-                                recType: recType.Key,
-                                instr: instructions,
-                                loc: processedFileLocs[id],
-                                fileLocs: processedFileLocs,
-                                lengthTracker: null,
-                                processing: false);
+                            throw ret.Exception;
                         }
                     }
                 }
 
                 using (var stream = new BinaryReadStream(processedPath))
                 {
-                    var ret = Passthrough_Tests.AssertFilesEqual(
-                        stream,
-                        outputPath,
-                        amountToReport: 15);
-                    if (ret.Exception != null)
+                    if (settings.TestObservable)
                     {
-                        throw ret.Exception;
+                        var ret = Passthrough_Tests.AssertFilesEqual(
+                            stream,
+                            observableOutputPath,
+                            amountToReport: 15);
+                        if (ret.Exception != null)
+                        {
+                            throw ret.Exception;
+                        }
                     }
                 }
             }

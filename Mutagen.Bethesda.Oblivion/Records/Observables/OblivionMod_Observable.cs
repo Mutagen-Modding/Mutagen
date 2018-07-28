@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -17,16 +18,15 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public class OblivionMod_Observable : IDisposable
+    public class OblivionMod_Observable
     {
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        public IObservable<TES4> TES4 { get; private set; }
+        public IObservable<GroupObservable<GameSetting>> GameSettings { get; private set; }
 
-        public IObservable<TES4> TES4 { get; }
-        public IObservable<GroupObservable<GameSetting>> GameSettings { get; }
-
-        public OblivionMod_Observable(IObservable<string> streamSource)
+        public static OblivionMod_Observable FromPath(IObservable<string> streamSource)
         {
-            this.TES4 = streamSource
+            OblivionMod_Observable ret = new OblivionMod_Observable();
+            ret.TES4 = streamSource
                 .Select((s) => GetStream(s))
                 .Select((frame) =>
                 {
@@ -52,25 +52,89 @@ namespace Mutagen.Bethesda.Oblivion
                 })
                 .Publish()
                 .RefCount();
-            this.GameSettings = grupLocObservable
+            ret.GameSettings = grupLocObservable
                 .Where((kv) => kv.Key == GameSetting_Registration.GMST_HEADER)
                 .Select((kv) => kv.Value)
                 .WithLatestFromFixed(streamSource, (loc, path) => (loc, path))
                 .Select((v) =>
                 {
-                    return new GroupObservable<GameSetting>(v.loc, () => GetStream(v.path));
+                    return GroupObservable<GameSetting>.FromStream(v.loc, () => GetStream(v.path));
                 });
+            return ret;
         }
 
-        private MutagenFrame GetStream(string stream)
+        public OblivionMod_Observable Where(Func<KeyValuePair<FormID, IObservable<MajorRecord>>, bool> selector)
+        {
+            return new OblivionMod_Observable()
+            {
+                TES4 = this.TES4,
+                GameSettings = this.GameSettings.Select((g) => g.Where(selector))
+            };
+        }
+
+        public OblivionMod_Observable Do(Action<KeyValuePair<FormID, IObservable<MajorRecord>>> doAction)
+        {
+            return new OblivionMod_Observable()
+            {
+                TES4 = this.TES4,
+                GameSettings = this.GameSettings.Select((g) => g.Do(doAction))
+            };
+        }
+
+        private static MutagenFrame GetStream(string stream)
         {
             return new MutagenFrame(
                 new BinaryReadStream(stream));
         }
 
-        public void Dispose()
+        public async Task Write_Binary(MutagenWriter writer)
         {
-            compositeDisposable.Dispose();
+            (await this.TES4.LastAsync()).Write_Binary(writer);
+            await WriteGroup(writer, this.GameSettings);
+        }
+
+        public async Task Write_Binary(string path)
+        {
+            using (var writer = new MutagenWriter(path))
+            {
+                await Write_Binary(writer);
+            }
+        }
+
+        private async Task WriteGroup<T>(
+            MutagenWriter writer,
+            IObservable<GroupObservable<T>> obs)
+            where T : MajorRecord, IFormID, ILoquiObject<T>
+        {
+            if (await obs.IsEmpty()) return;
+            var grup = (await obs.LastAsync());
+            if (await grup.Items.IsEmpty()) return;
+            using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer,
+                    Group<T>.GRUP_RECORD_TYPE.TypeInt,
+                    errorMask: null);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
+                    writer,
+                    await grup.GroupType.LastAsync(),
+                    length: 4,
+                    fieldIndex: (int)Group_FieldIndex.GroupType,
+                    errorMask: null);
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: await grup.LastModified.LastAsync(),
+                    fieldIndex: (int)Group_FieldIndex.LastModified,
+                    errorMask: null);
+                await grup.Items.SelectMany((i) => i.Value)
+                    .Do((i) =>
+                    {
+                        LoquiBinaryTranslation<T>.Instance.Write(
+                            writer: writer,
+                            item: i,
+                            errorMask: null);
+                    });
+            }
         }
     }
 }

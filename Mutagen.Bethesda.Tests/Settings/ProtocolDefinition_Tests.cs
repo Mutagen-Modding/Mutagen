@@ -9,6 +9,7 @@ namespace Loqui
         public void Register()
         {
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.TestingSettings_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.Passthrough_Registration.Instance);
         }
     }
 }

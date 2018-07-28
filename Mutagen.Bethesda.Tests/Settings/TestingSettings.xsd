@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <xs:schema id="TestingSettings" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="Passthrough.xsd" />
    <xs:include schemaLocation="Common.xsd" />
    <xs:element name="TestingSettings" type="TestingSettingsType" />
    <xs:complexType name="TestingSettingsType">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-         <xs:element name="OblivionESM" type="NullableValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="KnightsESP" type="NullableValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="TestNormal" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="TestObservable" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="ReuseCaches" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="DeleteCachesAfter" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="OblivionESM" type="PassthroughType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="KnightsESP" type="PassthroughType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
    </xs:complexType>
 </xs:schema>

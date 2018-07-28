@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0fab9ce70bde60cc43651267b16feb9235a28f78</Sha>
+         <Sha>6db78873cd60fc8947dc3c18f4d257c4e937609b</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-23-2018 20:29:04</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/master'</Description>
+         <CommitDate>07-28-2018 13:53:34</CommitDate>
+         <Description>Bugfix for XmlExt.ContentEqual</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>901e27fbd2a997a75b8e7b4d3c550606d2227711</Sha>
+         <Sha>8b66200371d8b20c73162943216479d4d94e9b41</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-27-2018 19:51:17</CommitDate>
-         <Description>Fix for primitive xsd generation of nullable type</Description>
+         <CommitDate>07-28-2018 13:53:38</CommitDate>
+         <Description>Some XML generation and creation fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

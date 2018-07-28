@@ -14,49 +14,28 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda.Oblivion
 {
     public class GroupObservable<T>
-        where T : class, ILoquiObject<T>, IFormID
+        where T : MajorRecord, IFormID, ILoquiObject<T>
     {
         public static readonly RecordType T_RecordType;
+        public static readonly GroupObservable<T> Empty = new GroupObservable<T>();
 
-        #region ContainedRecordType
-        protected String _ContainedRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public String ContainedRecordType
-        {
-            get => this._ContainedRecordType;
-            protected set => this._ContainedRecordType = value;
-        }
-        #endregion
-        #region GroupType
-        protected GroupTypeEnum _GroupType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public GroupTypeEnum GroupType
-        {
-            get => this._GroupType;
-            set => this._GroupType = value;
-        }
-        #endregion
-        #region LastModified
-        protected Byte[] _LastModified = new byte[4];
-        public Byte[] LastModified
-        {
-            get => this._LastModified;
-            set => this._LastModified = value;
-        }
-        #endregion
-        #region Items
-        private Dictionary<FormID, IObservable<T>> _observable { get; } = new Dictionary<FormID, IObservable<T>>();
-        public IDictionaryGetter<FormID, IObservable<T>> Items => new DictionaryGetterWrapper<FormID, IObservable<T>>(_observable);
-        public IObservable<T> ItemsObservable { get; }
-        #endregion
+        public IObservable<GroupTypeEnum> GroupType { get; private set; }
+        public IObservable<Byte[]> LastModified { get; private set; }
+
+        public IObservable<KeyValuePair<FormID, IObservable<T>>> Items { get; private set; }
 
         static GroupObservable()
         {
             T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T)).GetType().GetField(Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER).GetValue(null);
         }
 
-        public GroupObservable(long pos, Func<MutagenFrame> streamGetter)
+        private GroupObservable()
         {
+        }
+
+        public static GroupObservable<T> FromStream(long pos, Func<MutagenFrame> streamGetter)
+        {
+            var ret = new GroupObservable<T>();
             using (var frame = streamGetter())
             {
                 frame.Reader.Position = pos + 8;
@@ -65,44 +44,31 @@ namespace Mutagen.Bethesda.Oblivion
                     item: out GroupTypeEnum GroupTypeParse,
                     errorMask: null))
                 {
-                    this._GroupType = GroupTypeParse;
+                    ret.GroupType = Observable.Return(GroupTypeParse);
                 }
                 if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                     frame: frame.SpawnWithLength(4),
                     item: out Byte[] LastModifiedParse,
                     errorMask: null))
                 {
-                    this._LastModified = LastModifiedParse;
-                }
-
-                frame.Reader.Position = pos;
-                foreach (var val in RecordLocator.ParseTopLevelGRUP(frame.Reader))
-                {
-                    this._observable[val.Key] = GetRecordObservable(val.Value, streamGetter);
+                    ret.LastModified = Observable.Return(LastModifiedParse);
                 }
             }
 
-            ItemsObservable = Observable.Create<T>(
+            ret.Items = Observable.Create<KeyValuePair<FormID, IObservable<T>>>(
                 (o) =>
                 {
                     try
                     {
-                        var frame = streamGetter();
-                        frame.Reader.Position = pos + 4;
-                        var len = frame.Reader.ReadUInt32();
-                        frame = frame.SpawnWithLength(len - 8);
-                        using (frame)
+                        using (var frame = streamGetter())
                         {
-                            frame.Reader.Position += 12;
-                            while (!frame.Complete)
+                            frame.Reader.Position = pos;
+                            foreach (var val in RecordLocator.ParseTopLevelGRUP(frame.Reader))
                             {
-                                if (LoquiBinaryTranslation<T>.Instance.Parse(
-                                    frame,
-                                    out var item,
-                                    errorMask: null))
-                                {
-                                    o.OnNext(item);
-                                }
+                                o.OnNext(
+                                    new KeyValuePair<FormID, IObservable<T>>(
+                                        val.Key,
+                                        GetRecordStreamObservable(val.Value, streamGetter)));
                             }
                         }
                     }
@@ -111,14 +77,66 @@ namespace Mutagen.Bethesda.Oblivion
                         o.OnError(ex);
                     }
                     o.OnCompleted();
-                    return () => { };
+                    return ActionExt.Nothing;
                 })
-                .SubscribeOn(Scheduler.Default)
+                .ObserveOn(Scheduler.Default)
                 .Publish()
                 .RefCount();
+
+            return ret;
         }
 
-        private IObservable<T> GetRecordObservable(long pos, Func<MutagenFrame> streamGetter)
+        public GroupObservable<T> Where(Func<KeyValuePair<FormID, IObservable<MajorRecord>>, bool> selector)
+        {
+            return new GroupObservable<T>()
+            {
+                GroupType = this.GroupType,
+                LastModified = this.LastModified,
+                Items = this.Items.Where(
+                    (o) => selector(
+                        new KeyValuePair<FormID, IObservable<MajorRecord>>(
+                            o.Key,
+                            o.Value.Select<T, MajorRecord>((t) => t))))
+            };
+        }
+
+        public GroupObservable<T> Do(Action<KeyValuePair<FormID, IObservable<MajorRecord>>> doAction)
+        {
+            return new GroupObservable<T>()
+            {
+                GroupType = this.GroupType,
+                LastModified = this.LastModified,
+                Items = this.Items.Do(
+                    (kv) => doAction(
+                        new KeyValuePair<FormID, IObservable<MajorRecord>>(
+                            kv.Key,
+                            kv.Value.Select<T, MajorRecord>((v) => v))))
+            };
+        }
+
+        public GroupObservable<T> With(
+            IObservable<GroupTypeEnum> groupType)
+        {
+            return new GroupObservable<T>()
+            {
+                GroupType = groupType,
+                LastModified = this.LastModified,
+                Items = this.Items
+            };
+        }
+
+        public GroupObservable<T> With(
+            IObservable<byte[]> lastModified)
+        {
+            return new GroupObservable<T>()
+            {
+                GroupType = this.GroupType,
+                LastModified = lastModified,
+                Items = this.Items
+            };
+        }
+
+        private static IObservable<T> GetRecordStreamObservable(long pos, Func<MutagenFrame> streamGetter)
         {
             return Observable.Create<T>(
                 (o) =>

@@ -26,10 +26,12 @@ namespace Mutagen.Bethesda.Tests
             bool reuseCaches = true,
             bool deleteCaches = false)
         {
-            yield return new Knights_Passthrough_Tests(settings).BinaryPassthroughTest(reuseOld: reuseCaches, deleteAfter: deleteCaches);
+            yield return new Knights_Passthrough_Tests(settings).BinaryPassthroughTest(
+                settings: settings);
 
             var obliv = new OblivionESM_Passthrough_Tests(settings);
-            yield return obliv.BinaryPassthroughTest(reuseOld: reuseCaches, deleteAfter: deleteCaches);
+            yield return obliv.BinaryPassthroughTest(
+                settings: settings);
             yield return obliv.OblivionESM_GroupMask_Import();
             yield return obliv.OblivionESM_GroupMask_Export();
         }

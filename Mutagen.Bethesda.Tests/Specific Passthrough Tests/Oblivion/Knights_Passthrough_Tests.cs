@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Tests
         public override string Nickname => TestingConstants.KNIGHTS_ESP;
 
         public Knights_Passthrough_Tests(TestingSettings settings)
-            : base(settings.KnightsESP)
+            : base(settings?.KnightsESP?.Path)
         {
         }
     }

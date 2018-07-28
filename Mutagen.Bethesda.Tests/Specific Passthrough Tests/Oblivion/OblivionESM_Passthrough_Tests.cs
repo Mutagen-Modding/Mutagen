@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Tests
         public override string Nickname => TestingConstants.OBLIVION_ESM;
 
         public OblivionESM_Passthrough_Tests(TestingSettings settings)
-            : base(settings.OblivionESM)
+            : base(settings?.OblivionESM?.Path)
         {
         }
 

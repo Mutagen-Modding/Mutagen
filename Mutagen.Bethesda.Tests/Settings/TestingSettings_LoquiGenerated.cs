@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
+using Mutagen.Bethesda.Tests;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -42,13 +43,27 @@ namespace Mutagen.Bethesda.Tests
         partial void CustomCtor();
         #endregion
 
+        #region TestNormal
+        private Boolean _TestNormal;
+        public Boolean TestNormal { get => _TestNormal; set => _TestNormal = value; }
+        #endregion
+        #region TestObservable
+        private Boolean _TestObservable;
+        public Boolean TestObservable { get => _TestObservable; set => _TestObservable = value; }
+        #endregion
+        #region ReuseCaches
+        private Boolean _ReuseCaches;
+        public Boolean ReuseCaches { get => _ReuseCaches; set => _ReuseCaches = value; }
+        #endregion
+        #region DeleteCachesAfter
+        private Boolean _DeleteCachesAfter;
+        public Boolean DeleteCachesAfter { get => _DeleteCachesAfter; set => _DeleteCachesAfter = value; }
+        #endregion
         #region OblivionESM
-        private String _OblivionESM;
-        public String OblivionESM { get => _OblivionESM; set => _OblivionESM = value; }
+        public Passthrough OblivionESM { get; set; }
         #endregion
         #region KnightsESP
-        private String _KnightsESP;
-        public String KnightsESP { get => _KnightsESP; set => _KnightsESP = value; }
+        public Passthrough KnightsESP { get; set; }
         #endregion
 
         #region Loqui Getter Interface
@@ -112,6 +127,10 @@ namespace Mutagen.Bethesda.Tests
         public bool Equals(TestingSettings rhs)
         {
             if (rhs == null) return false;
+            if (this.TestNormal != rhs.TestNormal) return false;
+            if (this.TestObservable != rhs.TestObservable) return false;
+            if (this.ReuseCaches != rhs.ReuseCaches) return false;
+            if (this.DeleteCachesAfter != rhs.DeleteCachesAfter) return false;
             if (!object.Equals(this.OblivionESM, rhs.OblivionESM)) return false;
             if (!object.Equals(this.KnightsESP, rhs.KnightsESP)) return false;
             return true;
@@ -120,6 +139,10 @@ namespace Mutagen.Bethesda.Tests
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = HashHelper.GetHashCode(TestNormal).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(TestObservable).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(ReuseCaches).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(DeleteCachesAfter).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(OblivionESM).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(KnightsESP).CombineHashCode(ret);
             return ret;
@@ -439,20 +462,125 @@ namespace Mutagen.Bethesda.Tests
         {
             switch (name)
             {
+                case "TestNormal":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestNormal);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Boolean TestNormalParse,
+                            errorMask: errorMask))
+                        {
+                            item.TestNormal = TestNormalParse;
+                        }
+                        else
+                        {
+                            item.TestNormal = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TestObservable":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestObservable);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Boolean TestObservableParse,
+                            errorMask: errorMask))
+                        {
+                            item.TestObservable = TestObservableParse;
+                        }
+                        else
+                        {
+                            item.TestObservable = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReuseCaches":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.ReuseCaches);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Boolean ReuseCachesParse,
+                            errorMask: errorMask))
+                        {
+                            item.ReuseCaches = ReuseCachesParse;
+                        }
+                        else
+                        {
+                            item.ReuseCaches = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DeleteCachesAfter":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.DeleteCachesAfter);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Boolean DeleteCachesAfterParse,
+                            errorMask: errorMask))
+                        {
+                            item.DeleteCachesAfter = DeleteCachesAfterParse;
+                        }
+                        else
+                        {
+                            item.DeleteCachesAfter = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "OblivionESM":
                     try
                     {
                         errorMask?.PushIndex((int)TestingSettings_FieldIndex.OblivionESM);
-                        if (StringXmlTranslation.Instance.Parse(
+                        if (LoquiXmlTranslation<Passthrough>.Instance.Parse(
                             root: root,
-                            item: out String OblivionESMParse,
-                            errorMask: errorMask))
+                            item: out Passthrough OblivionESMParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.OblivionESM)))
                         {
                             item.OblivionESM = OblivionESMParse;
                         }
                         else
                         {
-                            item.OblivionESM = default(String);
+                            item.OblivionESM = default(Passthrough);
                         }
                     }
                     catch (Exception ex)
@@ -469,16 +597,17 @@ namespace Mutagen.Bethesda.Tests
                     try
                     {
                         errorMask?.PushIndex((int)TestingSettings_FieldIndex.KnightsESP);
-                        if (StringXmlTranslation.Instance.Parse(
+                        if (LoquiXmlTranslation<Passthrough>.Instance.Parse(
                             root: root,
-                            item: out String KnightsESPParse,
-                            errorMask: errorMask))
+                            item: out Passthrough KnightsESPParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.KnightsESP)))
                         {
                             item.KnightsESP = KnightsESPParse;
                         }
                         else
                         {
-                            item.KnightsESP = default(String);
+                            item.KnightsESP = default(Passthrough);
                         }
                     }
                     catch (Exception ex)
@@ -620,11 +749,23 @@ namespace Mutagen.Bethesda.Tests
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                    this._TestNormal = (Boolean)obj;
+                    break;
+                case TestingSettings_FieldIndex.TestObservable:
+                    this._TestObservable = (Boolean)obj;
+                    break;
+                case TestingSettings_FieldIndex.ReuseCaches:
+                    this._ReuseCaches = (Boolean)obj;
+                    break;
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
+                    this._DeleteCachesAfter = (Boolean)obj;
+                    break;
                 case TestingSettings_FieldIndex.OblivionESM:
-                    this._OblivionESM = (String)obj;
+                    this.OblivionESM = (Passthrough)obj;
                     break;
                 case TestingSettings_FieldIndex.KnightsESP:
-                    this._KnightsESP = (String)obj;
+                    this.KnightsESP = (Passthrough)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -663,11 +804,23 @@ namespace Mutagen.Bethesda.Tests
             }
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                    obj._TestNormal = (Boolean)pair.Value;
+                    break;
+                case TestingSettings_FieldIndex.TestObservable:
+                    obj._TestObservable = (Boolean)pair.Value;
+                    break;
+                case TestingSettings_FieldIndex.ReuseCaches:
+                    obj._ReuseCaches = (Boolean)pair.Value;
+                    break;
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
+                    obj._DeleteCachesAfter = (Boolean)pair.Value;
+                    break;
                 case TestingSettings_FieldIndex.OblivionESM:
-                    obj._OblivionESM = (String)pair.Value;
+                    obj.OblivionESM = (Passthrough)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.KnightsESP:
-                    obj._KnightsESP = (String)pair.Value;
+                    obj.KnightsESP = (Passthrough)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -684,21 +837,43 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public partial interface ITestingSettings : ITestingSettingsGetter, ILoquiClass<ITestingSettings, ITestingSettingsGetter>, ILoquiClass<TestingSettings, ITestingSettingsGetter>
     {
-        new String OblivionESM { get; set; }
+        new Boolean TestNormal { get; set; }
 
-        new String KnightsESP { get; set; }
+        new Boolean TestObservable { get; set; }
+
+        new Boolean ReuseCaches { get; set; }
+
+        new Boolean DeleteCachesAfter { get; set; }
+
+        new Passthrough OblivionESM { get; set; }
+
+        new Passthrough KnightsESP { get; set; }
 
     }
 
     public partial interface ITestingSettingsGetter : ILoquiObject
     {
-        #region OblivionESM
-        String OblivionESM { get; }
+        #region TestNormal
+        Boolean TestNormal { get; }
 
         #endregion
-        #region KnightsESP
-        String KnightsESP { get; }
+        #region TestObservable
+        Boolean TestObservable { get; }
 
+        #endregion
+        #region ReuseCaches
+        Boolean ReuseCaches { get; }
+
+        #endregion
+        #region DeleteCachesAfter
+        Boolean DeleteCachesAfter { get; }
+
+        #endregion
+        #region OblivionESM
+        Passthrough OblivionESM { get; }
+        #endregion
+        #region KnightsESP
+        Passthrough KnightsESP { get; }
         #endregion
 
     }
@@ -712,8 +887,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     #region Field Index
     public enum TestingSettings_FieldIndex
     {
-        OblivionESM = 0,
-        KnightsESP = 1,
+        TestNormal = 0,
+        TestObservable = 1,
+        ReuseCaches = 2,
+        DeleteCachesAfter = 3,
+        OblivionESM = 4,
+        KnightsESP = 5,
     }
     #endregion
 
@@ -731,9 +910,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "8238bf49-028c-4e0b-b914-3ade480308ec";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(TestingSettings_Mask<>);
 
@@ -761,6 +940,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             switch (str.Upper)
             {
+                case "TESTNORMAL":
+                    return (ushort)TestingSettings_FieldIndex.TestNormal;
+                case "TESTOBSERVABLE":
+                    return (ushort)TestingSettings_FieldIndex.TestObservable;
+                case "REUSECACHES":
+                    return (ushort)TestingSettings_FieldIndex.ReuseCaches;
+                case "DELETECACHESAFTER":
+                    return (ushort)TestingSettings_FieldIndex.DeleteCachesAfter;
                 case "OBLIVIONESM":
                     return (ushort)TestingSettings_FieldIndex.OblivionESM;
                 case "KNIGHTSESP":
@@ -775,6 +962,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.ReuseCaches:
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
                     return false;
@@ -790,6 +981,11 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
+                    return true;
+                case TestingSettings_FieldIndex.TestNormal:
+                case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.ReuseCaches:
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -801,6 +997,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.ReuseCaches:
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
                     return false;
@@ -814,6 +1014,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                    return "TestNormal";
+                case TestingSettings_FieldIndex.TestObservable:
+                    return "TestObservable";
+                case TestingSettings_FieldIndex.ReuseCaches:
+                    return "ReuseCaches";
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
+                    return "DeleteCachesAfter";
                 case TestingSettings_FieldIndex.OblivionESM:
                     return "OblivionESM";
                 case TestingSettings_FieldIndex.KnightsESP:
@@ -828,6 +1036,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.ReuseCaches:
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
                     return false;
@@ -841,6 +1053,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.ReuseCaches:
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
                     return false;
@@ -854,10 +1070,18 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                    return typeof(Boolean);
+                case TestingSettings_FieldIndex.TestObservable:
+                    return typeof(Boolean);
+                case TestingSettings_FieldIndex.ReuseCaches:
+                    return typeof(Boolean);
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
+                    return typeof(Boolean);
                 case TestingSettings_FieldIndex.OblivionESM:
-                    return typeof(String);
+                    return typeof(Passthrough);
                 case TestingSettings_FieldIndex.KnightsESP:
-                    return typeof(String);
+                    return typeof(Passthrough);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -905,17 +1129,121 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            if (copyMask?.OblivionESM ?? true)
+            if (copyMask?.TestNormal ?? true)
             {
-                errorMask?.PushIndex((int)TestingSettings_FieldIndex.OblivionESM);
-                item.OblivionESM = rhs.OblivionESM;
+                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestNormal);
+                item.TestNormal = rhs.TestNormal;
                 errorMask?.PopIndex();
             }
-            if (copyMask?.KnightsESP ?? true)
+            if (copyMask?.TestObservable ?? true)
+            {
+                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestObservable);
+                item.TestObservable = rhs.TestObservable;
+                errorMask?.PopIndex();
+            }
+            if (copyMask?.ReuseCaches ?? true)
+            {
+                errorMask?.PushIndex((int)TestingSettings_FieldIndex.ReuseCaches);
+                item.ReuseCaches = rhs.ReuseCaches;
+                errorMask?.PopIndex();
+            }
+            if (copyMask?.DeleteCachesAfter ?? true)
+            {
+                errorMask?.PushIndex((int)TestingSettings_FieldIndex.DeleteCachesAfter);
+                item.DeleteCachesAfter = rhs.DeleteCachesAfter;
+                errorMask?.PopIndex();
+            }
+            if (copyMask?.OblivionESM.Overall != CopyOption.Skip)
+            {
+                errorMask?.PushIndex((int)TestingSettings_FieldIndex.OblivionESM);
+                try
+                {
+                    switch (copyMask?.OblivionESM?.Overall ?? CopyOption.Reference)
+                    {
+                        case CopyOption.Reference:
+                            item.OblivionESM = rhs.OblivionESM;
+                            break;
+                        case CopyOption.CopyIn:
+                            PassthroughCommon.CopyFieldsFrom(
+                                item: item.OblivionESM,
+                                rhs: rhs.OblivionESM,
+                                def: def?.OblivionESM,
+                                errorMask: errorMask,
+                                copyMask: copyMask?.OblivionESM.Specific,
+                                cmds: cmds);
+                            break;
+                        case CopyOption.MakeCopy:
+                            if (rhs.OblivionESM == null)
+                            {
+                                item.OblivionESM = null;
+                            }
+                            else
+                            {
+                                item.OblivionESM = Passthrough.Copy(
+                                    rhs.OblivionESM,
+                                    copyMask?.OblivionESM?.Specific,
+                                    def?.OblivionESM);
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.OblivionESM?.Overall}. Cannot execute copy.");
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.KnightsESP.Overall != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.KnightsESP);
-                item.KnightsESP = rhs.KnightsESP;
-                errorMask?.PopIndex();
+                try
+                {
+                    switch (copyMask?.KnightsESP?.Overall ?? CopyOption.Reference)
+                    {
+                        case CopyOption.Reference:
+                            item.KnightsESP = rhs.KnightsESP;
+                            break;
+                        case CopyOption.CopyIn:
+                            PassthroughCommon.CopyFieldsFrom(
+                                item: item.KnightsESP,
+                                rhs: rhs.KnightsESP,
+                                def: def?.KnightsESP,
+                                errorMask: errorMask,
+                                copyMask: copyMask?.KnightsESP.Specific,
+                                cmds: cmds);
+                            break;
+                        case CopyOption.MakeCopy:
+                            if (rhs.KnightsESP == null)
+                            {
+                                item.KnightsESP = null;
+                            }
+                            else
+                            {
+                                item.KnightsESP = Passthrough.Copy(
+                                    rhs.KnightsESP,
+                                    copyMask?.KnightsESP?.Specific,
+                                    def?.KnightsESP);
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.KnightsESP?.Overall}. Cannot execute copy.");
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
 
@@ -930,6 +1258,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.ReuseCaches:
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
                     if (on) break;
@@ -947,11 +1279,23 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                    obj.TestNormal = default(Boolean);
+                    break;
+                case TestingSettings_FieldIndex.TestObservable:
+                    obj.TestObservable = default(Boolean);
+                    break;
+                case TestingSettings_FieldIndex.ReuseCaches:
+                    obj.ReuseCaches = default(Boolean);
+                    break;
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
+                    obj.DeleteCachesAfter = default(Boolean);
+                    break;
                 case TestingSettings_FieldIndex.OblivionESM:
-                    obj.OblivionESM = default(String);
+                    obj.OblivionESM = default(Passthrough);
                     break;
                 case TestingSettings_FieldIndex.KnightsESP:
-                    obj.KnightsESP = default(String);
+                    obj.KnightsESP = default(Passthrough);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -965,6 +1309,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.ReuseCaches:
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
                     return true;
@@ -980,6 +1328,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                    return obj.TestNormal;
+                case TestingSettings_FieldIndex.TestObservable:
+                    return obj.TestObservable;
+                case TestingSettings_FieldIndex.ReuseCaches:
+                    return obj.ReuseCaches;
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
+                    return obj.DeleteCachesAfter;
                 case TestingSettings_FieldIndex.OblivionESM:
                     return obj.OblivionESM;
                 case TestingSettings_FieldIndex.KnightsESP:
@@ -993,8 +1349,12 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITestingSettings item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.OblivionESM = default(String);
-            item.KnightsESP = default(String);
+            item.TestNormal = default(Boolean);
+            item.TestObservable = default(Boolean);
+            item.ReuseCaches = default(Boolean);
+            item.DeleteCachesAfter = default(Boolean);
+            item.OblivionESM = default(Passthrough);
+            item.KnightsESP = default(Passthrough);
         }
 
         public static TestingSettings_Mask<bool> GetEqualsMask(
@@ -1012,8 +1372,16 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.OblivionESM = object.Equals(item.OblivionESM, rhs.OblivionESM);
-            ret.KnightsESP = object.Equals(item.KnightsESP, rhs.KnightsESP);
+            ret.TestNormal = item.TestNormal == rhs.TestNormal;
+            ret.TestObservable = item.TestObservable == rhs.TestObservable;
+            ret.ReuseCaches = item.ReuseCaches == rhs.ReuseCaches;
+            ret.DeleteCachesAfter = item.DeleteCachesAfter == rhs.DeleteCachesAfter;
+            ret.OblivionESM = new MaskItem<bool, Passthrough_Mask<bool>>();
+            ret.OblivionESM.Specific = PassthroughCommon.GetEqualsMask(item.OblivionESM, rhs.OblivionESM);
+            ret.OblivionESM.Overall = ret.OblivionESM.Specific.AllEqual((b) => b);
+            ret.KnightsESP = new MaskItem<bool, Passthrough_Mask<bool>>();
+            ret.KnightsESP.Specific = PassthroughCommon.GetEqualsMask(item.KnightsESP, rhs.KnightsESP);
+            ret.KnightsESP.Overall = ret.KnightsESP.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -1043,13 +1411,29 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.OblivionESM ?? true)
+                if (printMask?.TestNormal ?? true)
                 {
-                    fg.AppendLine($"OblivionESM => {item.OblivionESM}");
+                    fg.AppendLine($"TestNormal => {item.TestNormal}");
                 }
-                if (printMask?.KnightsESP ?? true)
+                if (printMask?.TestObservable ?? true)
                 {
-                    fg.AppendLine($"KnightsESP => {item.KnightsESP}");
+                    fg.AppendLine($"TestObservable => {item.TestObservable}");
+                }
+                if (printMask?.ReuseCaches ?? true)
+                {
+                    fg.AppendLine($"ReuseCaches => {item.ReuseCaches}");
+                }
+                if (printMask?.DeleteCachesAfter ?? true)
+                {
+                    fg.AppendLine($"DeleteCachesAfter => {item.DeleteCachesAfter}");
+                }
+                if (printMask?.OblivionESM?.Overall ?? true)
+                {
+                    item.OblivionESM?.ToString(fg, "OblivionESM");
+                }
+                if (printMask?.KnightsESP?.Overall ?? true)
+                {
+                    item.KnightsESP?.ToString(fg, "KnightsESP");
                 }
             }
             fg.AppendLine("]");
@@ -1065,8 +1449,12 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static TestingSettings_Mask<bool> GetHasBeenSetMask(ITestingSettingsGetter item)
         {
             var ret = new TestingSettings_Mask<bool>();
-            ret.OblivionESM = true;
-            ret.KnightsESP = true;
+            ret.TestNormal = true;
+            ret.TestObservable = true;
+            ret.ReuseCaches = true;
+            ret.DeleteCachesAfter = true;
+            ret.OblivionESM = new MaskItem<bool, Passthrough_Mask<bool>>(true, PassthroughCommon.GetHasBeenSetMask(item.OblivionESM));
+            ret.KnightsESP = new MaskItem<bool, Passthrough_Mask<bool>>(true, PassthroughCommon.GetHasBeenSetMask(item.KnightsESP));
             return ret;
         }
 
@@ -1103,23 +1491,61 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.TestingSettings");
             }
+            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestNormal) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.TestNormal),
+                    item: item.TestNormal,
+                    fieldIndex: (int)TestingSettings_FieldIndex.TestNormal,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestObservable) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.TestObservable),
+                    item: item.TestObservable,
+                    fieldIndex: (int)TestingSettings_FieldIndex.TestObservable,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.ReuseCaches) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.ReuseCaches),
+                    item: item.ReuseCaches,
+                    fieldIndex: (int)TestingSettings_FieldIndex.ReuseCaches,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DeleteCachesAfter) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.DeleteCachesAfter),
+                    item: item.DeleteCachesAfter,
+                    fieldIndex: (int)TestingSettings_FieldIndex.DeleteCachesAfter,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.OblivionESM) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                LoquiXmlTranslation<Passthrough>.Instance.Write(
                     node: elem,
-                    name: nameof(item.OblivionESM),
                     item: item.OblivionESM,
+                    name: nameof(item.OblivionESM),
                     fieldIndex: (int)TestingSettings_FieldIndex.OblivionESM,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    translationMask: translationMask);
             }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.KnightsESP) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                LoquiXmlTranslation<Passthrough>.Instance.Write(
                     node: elem,
-                    name: nameof(item.KnightsESP),
                     item: item.KnightsESP,
+                    name: nameof(item.KnightsESP),
                     fieldIndex: (int)TestingSettings_FieldIndex.KnightsESP,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    translationMask: translationMask);
             }
         }
         #endregion
@@ -1141,14 +1567,22 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public TestingSettings_Mask(T initialValue)
         {
-            this.OblivionESM = initialValue;
-            this.KnightsESP = initialValue;
+            this.TestNormal = initialValue;
+            this.TestObservable = initialValue;
+            this.ReuseCaches = initialValue;
+            this.DeleteCachesAfter = initialValue;
+            this.OblivionESM = new MaskItem<T, Passthrough_Mask<T>>(initialValue, new Passthrough_Mask<T>(initialValue));
+            this.KnightsESP = new MaskItem<T, Passthrough_Mask<T>>(initialValue, new Passthrough_Mask<T>(initialValue));
         }
         #endregion
 
         #region Members
-        public T OblivionESM;
-        public T KnightsESP;
+        public T TestNormal;
+        public T TestObservable;
+        public T ReuseCaches;
+        public T DeleteCachesAfter;
+        public MaskItem<T, Passthrough_Mask<T>> OblivionESM { get; set; }
+        public MaskItem<T, Passthrough_Mask<T>> KnightsESP { get; set; }
         #endregion
 
         #region Equals
@@ -1161,6 +1595,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool Equals(TestingSettings_Mask<T> rhs)
         {
             if (rhs == null) return false;
+            if (!object.Equals(this.TestNormal, rhs.TestNormal)) return false;
+            if (!object.Equals(this.TestObservable, rhs.TestObservable)) return false;
+            if (!object.Equals(this.ReuseCaches, rhs.ReuseCaches)) return false;
+            if (!object.Equals(this.DeleteCachesAfter, rhs.DeleteCachesAfter)) return false;
             if (!object.Equals(this.OblivionESM, rhs.OblivionESM)) return false;
             if (!object.Equals(this.KnightsESP, rhs.KnightsESP)) return false;
             return true;
@@ -1168,6 +1606,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.TestNormal?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestObservable?.GetHashCode());
+            ret = ret.CombineHashCode(this.ReuseCaches?.GetHashCode());
+            ret = ret.CombineHashCode(this.DeleteCachesAfter?.GetHashCode());
             ret = ret.CombineHashCode(this.OblivionESM?.GetHashCode());
             ret = ret.CombineHashCode(this.KnightsESP?.GetHashCode());
             return ret;
@@ -1178,8 +1620,20 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.OblivionESM)) return false;
-            if (!eval(this.KnightsESP)) return false;
+            if (!eval(this.TestNormal)) return false;
+            if (!eval(this.TestObservable)) return false;
+            if (!eval(this.ReuseCaches)) return false;
+            if (!eval(this.DeleteCachesAfter)) return false;
+            if (OblivionESM != null)
+            {
+                if (!eval(this.OblivionESM.Overall)) return false;
+                if (this.OblivionESM.Specific != null && !this.OblivionESM.Specific.AllEqual(eval)) return false;
+            }
+            if (KnightsESP != null)
+            {
+                if (!eval(this.KnightsESP.Overall)) return false;
+                if (this.KnightsESP.Specific != null && !this.KnightsESP.Specific.AllEqual(eval)) return false;
+            }
             return true;
         }
         #endregion
@@ -1194,8 +1648,28 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         protected void Translate_InternalFill<R>(TestingSettings_Mask<R> obj, Func<T, R> eval)
         {
-            obj.OblivionESM = eval(this.OblivionESM);
-            obj.KnightsESP = eval(this.KnightsESP);
+            obj.TestNormal = eval(this.TestNormal);
+            obj.TestObservable = eval(this.TestObservable);
+            obj.ReuseCaches = eval(this.ReuseCaches);
+            obj.DeleteCachesAfter = eval(this.DeleteCachesAfter);
+            if (this.OblivionESM != null)
+            {
+                obj.OblivionESM = new MaskItem<R, Passthrough_Mask<R>>();
+                obj.OblivionESM.Overall = eval(this.OblivionESM.Overall);
+                if (this.OblivionESM.Specific != null)
+                {
+                    obj.OblivionESM.Specific = this.OblivionESM.Specific.Translate(eval);
+                }
+            }
+            if (this.KnightsESP != null)
+            {
+                obj.KnightsESP = new MaskItem<R, Passthrough_Mask<R>>();
+                obj.KnightsESP.Overall = eval(this.KnightsESP.Overall);
+                if (this.KnightsESP.Specific != null)
+                {
+                    obj.KnightsESP.Specific = this.KnightsESP.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -1224,13 +1698,29 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.OblivionESM ?? true)
+                if (printMask?.TestNormal ?? true)
                 {
-                    fg.AppendLine($"OblivionESM => {OblivionESM}");
+                    fg.AppendLine($"TestNormal => {TestNormal}");
                 }
-                if (printMask?.KnightsESP ?? true)
+                if (printMask?.TestObservable ?? true)
                 {
-                    fg.AppendLine($"KnightsESP => {KnightsESP}");
+                    fg.AppendLine($"TestObservable => {TestObservable}");
+                }
+                if (printMask?.ReuseCaches ?? true)
+                {
+                    fg.AppendLine($"ReuseCaches => {ReuseCaches}");
+                }
+                if (printMask?.DeleteCachesAfter ?? true)
+                {
+                    fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
+                }
+                if (printMask?.OblivionESM?.Overall ?? true)
+                {
+                    OblivionESM?.ToString(fg);
+                }
+                if (printMask?.KnightsESP?.Overall ?? true)
+                {
+                    KnightsESP?.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -1255,8 +1745,12 @@ namespace Mutagen.Bethesda.Tests.Internals
                 return _warnings;
             }
         }
-        public Exception OblivionESM;
-        public Exception KnightsESP;
+        public Exception TestNormal;
+        public Exception TestObservable;
+        public Exception ReuseCaches;
+        public Exception DeleteCachesAfter;
+        public MaskItem<Exception, Passthrough_ErrorMask> OblivionESM;
+        public MaskItem<Exception, Passthrough_ErrorMask> KnightsESP;
         #endregion
 
         #region IErrorMask
@@ -1265,6 +1759,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                    return TestNormal;
+                case TestingSettings_FieldIndex.TestObservable:
+                    return TestObservable;
+                case TestingSettings_FieldIndex.ReuseCaches:
+                    return ReuseCaches;
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
+                    return DeleteCachesAfter;
                 case TestingSettings_FieldIndex.OblivionESM:
                     return OblivionESM;
                 case TestingSettings_FieldIndex.KnightsESP:
@@ -1279,11 +1781,23 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                    this.TestNormal = ex;
+                    break;
+                case TestingSettings_FieldIndex.TestObservable:
+                    this.TestObservable = ex;
+                    break;
+                case TestingSettings_FieldIndex.ReuseCaches:
+                    this.ReuseCaches = ex;
+                    break;
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
+                    this.DeleteCachesAfter = ex;
+                    break;
                 case TestingSettings_FieldIndex.OblivionESM:
-                    this.OblivionESM = ex;
+                    this.OblivionESM = new MaskItem<Exception, Passthrough_ErrorMask>(ex, null);
                     break;
                 case TestingSettings_FieldIndex.KnightsESP:
-                    this.KnightsESP = ex;
+                    this.KnightsESP = new MaskItem<Exception, Passthrough_ErrorMask>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1295,11 +1809,23 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
+                case TestingSettings_FieldIndex.TestNormal:
+                    this.TestNormal = (Exception)obj;
+                    break;
+                case TestingSettings_FieldIndex.TestObservable:
+                    this.TestObservable = (Exception)obj;
+                    break;
+                case TestingSettings_FieldIndex.ReuseCaches:
+                    this.ReuseCaches = (Exception)obj;
+                    break;
+                case TestingSettings_FieldIndex.DeleteCachesAfter:
+                    this.DeleteCachesAfter = (Exception)obj;
+                    break;
                 case TestingSettings_FieldIndex.OblivionESM:
-                    this.OblivionESM = (Exception)obj;
+                    this.OblivionESM = (MaskItem<Exception, Passthrough_ErrorMask>)obj;
                     break;
                 case TestingSettings_FieldIndex.KnightsESP:
-                    this.KnightsESP = (Exception)obj;
+                    this.KnightsESP = (MaskItem<Exception, Passthrough_ErrorMask>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1309,6 +1835,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
+            if (TestNormal != null) return true;
+            if (TestObservable != null) return true;
+            if (ReuseCaches != null) return true;
+            if (DeleteCachesAfter != null) return true;
             if (OblivionESM != null) return true;
             if (KnightsESP != null) return true;
             return false;
@@ -1345,8 +1875,12 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"OblivionESM => {OblivionESM}");
-            fg.AppendLine($"KnightsESP => {KnightsESP}");
+            fg.AppendLine($"TestNormal => {TestNormal}");
+            fg.AppendLine($"TestObservable => {TestObservable}");
+            fg.AppendLine($"ReuseCaches => {ReuseCaches}");
+            fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
+            OblivionESM?.ToString(fg);
+            KnightsESP?.ToString(fg);
         }
         #endregion
 
@@ -1354,8 +1888,12 @@ namespace Mutagen.Bethesda.Tests.Internals
         public TestingSettings_ErrorMask Combine(TestingSettings_ErrorMask rhs)
         {
             var ret = new TestingSettings_ErrorMask();
-            ret.OblivionESM = this.OblivionESM.Combine(rhs.OblivionESM);
-            ret.KnightsESP = this.KnightsESP.Combine(rhs.KnightsESP);
+            ret.TestNormal = this.TestNormal.Combine(rhs.TestNormal);
+            ret.TestObservable = this.TestObservable.Combine(rhs.TestObservable);
+            ret.ReuseCaches = this.ReuseCaches.Combine(rhs.ReuseCaches);
+            ret.DeleteCachesAfter = this.DeleteCachesAfter.Combine(rhs.DeleteCachesAfter);
+            ret.OblivionESM = new MaskItem<Exception, Passthrough_ErrorMask>(this.OblivionESM.Overall.Combine(rhs.OblivionESM.Overall), ((IErrorMask<Passthrough_ErrorMask>)this.OblivionESM.Specific).Combine(rhs.OblivionESM.Specific));
+            ret.KnightsESP = new MaskItem<Exception, Passthrough_ErrorMask>(this.KnightsESP.Overall.Combine(rhs.KnightsESP.Overall), ((IErrorMask<Passthrough_ErrorMask>)this.KnightsESP.Specific).Combine(rhs.KnightsESP.Specific));
             return ret;
         }
         public static TestingSettings_ErrorMask Combine(TestingSettings_ErrorMask lhs, TestingSettings_ErrorMask rhs)
@@ -1377,8 +1915,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     public class TestingSettings_CopyMask
     {
         #region Members
-        public bool OblivionESM;
-        public bool KnightsESP;
+        public bool TestNormal;
+        public bool TestObservable;
+        public bool ReuseCaches;
+        public bool DeleteCachesAfter;
+        public MaskItem<CopyOption, Passthrough_CopyMask> OblivionESM;
+        public MaskItem<CopyOption, Passthrough_CopyMask> KnightsESP;
         #endregion
 
     }
@@ -1386,8 +1928,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool OblivionESM;
-        public bool KnightsESP;
+        public bool TestNormal;
+        public bool TestObservable;
+        public bool ReuseCaches;
+        public bool DeleteCachesAfter;
+        public MaskItem<bool, Passthrough_TranslationMask> OblivionESM;
+        public MaskItem<bool, Passthrough_TranslationMask> KnightsESP;
         #endregion
 
         public TranslationCrystal GetCrystal()
@@ -1404,8 +1950,12 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((OblivionESM, null));
-            ret.Add((KnightsESP, null));
+            ret.Add((TestNormal, null));
+            ret.Add((TestObservable, null));
+            ret.Add((ReuseCaches, null));
+            ret.Add((DeleteCachesAfter, null));
+            ret.Add((OblivionESM?.Overall ?? true, OblivionESM?.Specific?.GetCrystal()));
+            ret.Add((KnightsESP?.Overall ?? true, KnightsESP?.Specific?.GetCrystal()));
         }
     }
     #endregion
