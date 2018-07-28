@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 else
                                 {
-                                    fg.AppendLine($"errorMask.ReportWarning($\"Unexpected header {{nextRecordType.Type}} at position {{frame.Position}}\");");
+                                    fg.AppendLine($"errorMask?.ReportWarning($\"Unexpected header {{nextRecordType.Type}} at position {{frame.Position}}\");");
                                     string addString;
                                     switch (obj.GetObjectType())
                                     {

@@ -1361,7 +1361,7 @@ namespace Mutagen.Bethesda
                             transl: LoquiBinaryTranslation<T>.Instance.Parse);
                         return TryGet<int?>.Failure;
                     }
-                    errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }

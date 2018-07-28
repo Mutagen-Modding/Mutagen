@@ -1868,7 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<MasterReference>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.MasterReferences);
                 default:
-                    errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }

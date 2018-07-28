@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<Cell>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)WorldspaceSubBlock_FieldIndex.Items);
                 default:
-                    errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }

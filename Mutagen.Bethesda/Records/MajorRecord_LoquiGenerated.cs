@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda
                     }
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
                 default:
-                    errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }

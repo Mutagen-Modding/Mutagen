@@ -4943,7 +4943,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.EffectShaders);
                 default:
-                    errorMask.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
             }
