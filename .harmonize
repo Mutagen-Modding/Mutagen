@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>724f0c63fb0e458de186039ca78c7cdb2c6fdba7</Sha>
+         <Sha>901e27fbd2a997a75b8e7b4d3c550606d2227711</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-27-2018 18:40:15</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/master'</Description>
+         <CommitDate>07-27-2018 19:51:17</CommitDate>
+         <Description>Fix for primitive xsd generation of nullable type</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

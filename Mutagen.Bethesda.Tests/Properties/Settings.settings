@@ -1,15 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Mutagen.Bethesda.Tests.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
   <Profiles />
-  <Settings>
-    <Setting Name="OblivionESM" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Games\Oblivion\Data\Oblivion.esm</Value>
-    </Setting>
-    <Setting Name="KnightsESP" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Games\Oblivion\Data\Knights.esp</Value>
-    </Setting>
-    <Setting Name="OblivionInstructions" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
-    </Setting>
-  </Settings>
+  <Settings />
 </SettingsFile>

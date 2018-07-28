@@ -22,32 +22,5 @@ namespace Mutagen.Bethesda.Tests.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Oblivion\\Data\\Oblivion.esm")]
-        public string OblivionESM {
-            get {
-                return ((string)(this["OblivionESM"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Games\\Oblivion\\Data\\Knights.esp")]
-        public string KnightsESP {
-            get {
-                return ((string)(this["KnightsESP"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string OblivionInstructions {
-            get {
-                return ((string)(this["OblivionInstructions"]));
-            }
-        }
     }
 }

@@ -14,10 +14,11 @@ namespace Mutagen.Bethesda.Generation
         static void Main(string[] args)
         {
             GenerateRecords();
+            GenerateTester();
         }
 
         static void GenerateRecords()
-        {
+        { 
             LoquiGenerator gen = new LoquiGenerator()
             {
                 RaisePropertyChangedDefault = false,
@@ -67,6 +68,29 @@ namespace Mutagen.Bethesda.Generation
                 });
             oblivProto.AddProjectToModify(
                 new FileInfo(Path.Combine(oblivProto.GenerationFolder.FullName, "Mutagen.Bethesda.Oblivion.csproj")));
+
+            gen.Generate().Wait();
+        }
+
+        static void GenerateTester()
+        {
+            LoquiGenerator gen = new LoquiGenerator()
+            {
+                RaisePropertyChangedDefault = false,
+                NotifyingDefault = NotifyingType.None,
+                HasBeenSetDefault = false
+            };
+            gen.XmlTranslation.ShouldGenerateXSD = true;
+            var testerProto = gen.AddProtocol(
+                new ProtocolGeneration(
+                    gen,
+                    new ProtocolKey("Tests"),
+                    new DirectoryInfo("../../../Mutagen.Bethesda.Tests/Settings"))
+                {
+                    DefaultNamespace = "Mutagen.Bethesda.Tests",
+                });
+            testerProto.AddProjectToModify(
+                new FileInfo("../../../Mutagen.Bethesda.Tests/Mutagen.Bethesda.Tests.csproj"));
 
             gen.Generate().Wait();
         }

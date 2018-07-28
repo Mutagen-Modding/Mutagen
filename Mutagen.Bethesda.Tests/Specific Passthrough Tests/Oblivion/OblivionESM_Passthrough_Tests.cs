@@ -20,8 +20,8 @@ namespace Mutagen.Bethesda.Tests
     {
         public override string Nickname => TestingConstants.OBLIVION_ESM;
 
-        public OblivionESM_Passthrough_Tests(string path = null)
-            : base(path ?? Properties.Settings.Default.OblivionESM)
+        public OblivionESM_Passthrough_Tests(TestingSettings settings)
+            : base(settings.OblivionESM)
         {
         }
 
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Tests
         public async Task OblivionESM_GroupMask_Import()
         {
             var mod = OblivionMod.Create_Binary(
-                Properties.Settings.Default.OblivionESM,
+                this.FilePath,
                 out var inputErrMask,
                 importMask: new GroupMask()
                 {
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Tests
         public async Task OblivionESM_GroupMask_Export()
         {
             var mod = OblivionMod.Create_Binary(
-                Properties.Settings.Default.OblivionESM,
+                this.FilePath,
                 out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
 
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Tests
         public async Task OblivionESM_Folder_Reimport()
         {
             var mod = OblivionMod.Create_Binary(
-                Properties.Settings.Default.OblivionESM,
+                this.FilePath,
                 out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
             using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
