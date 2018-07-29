@@ -50,12 +50,11 @@ namespace Mutagen.Bethesda.Tests
             if (settings.TestObservable)
             {
                 await OblivionMod_Observable.FromPath(Observable.Return(inputPath))
-                    .Do((kv) =>
+                    .Do((MajorRecord m) =>
                     {
-                        var record = kv.Value.Last();
-                        if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                        if (m.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
                         {
-                            record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                            m.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
                         }
                     })
                     .Write_Binary(outputPathObservable);
@@ -1014,7 +1013,7 @@ namespace Mutagen.Bethesda.Tests
                 await ImportExport(
                     settings: settings,
                     inputPath: uncompressedPath,
-                    outputPathStraight: outputPath, 
+                    outputPathStraight: outputPath,
                     outputPathObservable: observableOutputPath);
 
                 if (!settings.ReuseCaches || !File.Exists(alignedPath))
@@ -1073,7 +1072,7 @@ namespace Mutagen.Bethesda.Tests
                                 sub: BitConverter.GetBytes(grup.Value));
                         }
                     }
-                    
+
                     using (var processor = new BinaryFileProcessor(
                         new FileStream(alignedPath, FileMode.Open, FileAccess.Read),
                         instructions))
@@ -1085,9 +1084,9 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                using (var stream = new BinaryReadStream(processedPath))
+                if (settings.TestNormal)
                 {
-                    if (settings.TestNormal)
+                    using (var stream = new BinaryReadStream(processedPath))
                     {
                         var ret = Passthrough_Tests.AssertFilesEqual(
                             stream,
@@ -1100,9 +1099,9 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                using (var stream = new BinaryReadStream(processedPath))
+                if (settings.TestObservable)
                 {
-                    if (settings.TestObservable)
+                    using (var stream = new BinaryReadStream(processedPath))
                     {
                         var ret = Passthrough_Tests.AssertFilesEqual(
                             stream,

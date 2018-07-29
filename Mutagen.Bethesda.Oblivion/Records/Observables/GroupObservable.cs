@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new GroupObservable<T>();
             using (var frame = streamGetter())
             {
-                frame.Reader.Position = pos + 8;
+                frame.Reader.Position = pos + 12;
                 if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
                     frame: frame.SpawnWithLength(4),
                     item: out GroupTypeEnum GroupTypeParse,
@@ -79,8 +80,10 @@ namespace Mutagen.Bethesda.Oblivion
                     o.OnCompleted();
                     return ActionExt.Nothing;
                 })
-                .ObserveOn(Scheduler.Default)
+                .SubscribeOn(Scheduler.Default)
                 .Publish()
+                .RefCount()
+                .Replay()
                 .RefCount();
 
             return ret;
@@ -100,17 +103,21 @@ namespace Mutagen.Bethesda.Oblivion
             };
         }
 
-        public GroupObservable<T> Do(Action<KeyValuePair<FormID, IObservable<MajorRecord>>> doAction)
+        public GroupObservable<T> Do(Action<MajorRecord> doAction)
         {
             return new GroupObservable<T>()
             {
                 GroupType = this.GroupType,
                 LastModified = this.LastModified,
-                Items = this.Items.Do(
-                    (kv) => doAction(
-                        new KeyValuePair<FormID, IObservable<MajorRecord>>(
-                            kv.Key,
-                            kv.Value.Select<T, MajorRecord>((v) => v))))
+                Items = this.Items.SelectMany((i) => i.Value)
+                    .Do(doAction)
+                    .Cast<T>()
+                    .Select((m) =>
+                    {
+                        return new KeyValuePair<FormID, IObservable<T>>(
+                            m.FormID,
+                            Observable.Return(m));
+                    })
             };
         }
 
@@ -165,6 +172,36 @@ namespace Mutagen.Bethesda.Oblivion
                 .SubscribeOn(Scheduler.Default)
                 .Publish()
                 .RefCount();
+        }
+
+        public async Task Write(MutagenWriter writer)
+        {
+            using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer,
+                    Group<T>.GRUP_RECORD_TYPE.TypeInt,
+                    errorMask: null);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
+                    writer,
+                    await this.GroupType.LastAsync(),
+                    length: 4,
+                    fieldIndex: (int)Group_FieldIndex.GroupType,
+                    errorMask: null);
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: await this.LastModified.LastAsync(),
+                    fieldIndex: (int)Group_FieldIndex.LastModified,
+                    errorMask: null);
+                await this.Items.SelectMany((i) => i.Value)
+                    .Do((i) =>
+                    {
+                        LoquiBinaryTranslation<T>.Instance.Write(
+                            writer: writer,
+                            item: i,
+                            errorMask: null);
+                    });
+            }
         }
     }
 }

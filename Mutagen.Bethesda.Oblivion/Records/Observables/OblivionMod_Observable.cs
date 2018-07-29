@@ -59,7 +59,9 @@ namespace Mutagen.Bethesda.Oblivion
                 .Select((v) =>
                 {
                     return GroupObservable<GameSetting>.FromStream(v.loc, () => GetStream(v.path));
-                });
+                })
+                .Publish()
+                .RefCount();
             return ret;
         }
 
@@ -71,8 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
                 GameSettings = this.GameSettings.Select((g) => g.Where(selector))
             };
         }
-
-        public OblivionMod_Observable Do(Action<KeyValuePair<FormID, IObservable<MajorRecord>>> doAction)
+        
+        public OblivionMod_Observable Do(Action<MajorRecord> doAction)
         {
             return new OblivionMod_Observable()
             {
@@ -106,35 +108,9 @@ namespace Mutagen.Bethesda.Oblivion
             IObservable<GroupObservable<T>> obs)
             where T : MajorRecord, IFormID, ILoquiObject<T>
         {
-            if (await obs.IsEmpty()) return;
-            var grup = (await obs.LastAsync());
-            if (await grup.Items.IsEmpty()) return;
-            using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
-            {
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer,
-                    Group<T>.GRUP_RECORD_TYPE.TypeInt,
-                    errorMask: null);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
-                    writer,
-                    await grup.GroupType.LastAsync(),
-                    length: 4,
-                    fieldIndex: (int)Group_FieldIndex.GroupType,
-                    errorMask: null);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: await grup.LastModified.LastAsync(),
-                    fieldIndex: (int)Group_FieldIndex.LastModified,
-                    errorMask: null);
-                await grup.Items.SelectMany((i) => i.Value)
-                    .Do((i) =>
-                    {
-                        LoquiBinaryTranslation<T>.Instance.Write(
-                            writer: writer,
-                            item: i,
-                            errorMask: null);
-                    });
-            }
+            var grup = (await obs.LastOrDefaultAsync());
+            if (grup == null) return;
+            await grup.Write(writer);
         }
     }
 }

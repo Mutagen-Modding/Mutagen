@@ -6,6 +6,7 @@
       <Bool name="TestObservable" />
       <Bool name="ReuseCaches" />
       <Bool name="DeleteCachesAfter" default="true" />
+      <Bool name="TestGroupMasks" default="true" />
       <RefDirect name="OblivionESM" refName="Passthrough" />
       <RefDirect name="KnightsESP" refName="Passthrough" />
     </Fields>
