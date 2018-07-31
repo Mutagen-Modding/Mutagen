@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Tests
         {
             ProcessNPC_Mismatch(stream, recType, instr, loc);
             ProcessCreature_Mismatch(stream, recType, instr, loc);
-            ProcessLeveledItemDataFields(stream, recType, instr, loc);
+            ProcessLeveledItemDataFields(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessRegions(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessPlacedObject_Mismatch(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessCells(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
@@ -293,9 +293,12 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessLeveledItemDataFields(
             BinaryReadStream stream,
+            FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
-            RangeInt64 loc)
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
         {
             if (!LeveledItem_Registration.LVLI_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -303,6 +306,7 @@ namespace Mutagen.Bethesda.Tests
             var dataIndex = str.IndexOf("DATA");
             if (dataIndex == -1) return;
 
+            int amount = 0;
             var dataFlag = str[dataIndex + 6];
             if (dataFlag == 1)
             {
@@ -320,6 +324,7 @@ namespace Mutagen.Bethesda.Tests
                             0x0,
                             0x2
                     });
+                amount += 7;
             }
             else
             {
@@ -337,8 +342,18 @@ namespace Mutagen.Bethesda.Tests
             }
 
             // Remove DATA
-            instr.SetRemove(
-                new RangeInt64(dataIndex + loc.Min, dataIndex + loc.Min + 7 - 1));
+            var dataRange = new RangeInt64(dataIndex + loc.Min, dataIndex + loc.Min + 7 - 1);
+            instr.SetRemove(dataRange);
+            amount -= (int)dataRange.Width;
+
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker);
         }
 
         private void ProcessRegions(
@@ -354,6 +369,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var lenToRead = (int)loc.Width + Constants.RECORD_HEADER_LENGTH;
             var str = stream.ReadString(lenToRead);
+            int amount = 0;
             var rdatIndex = str.IndexOf("RDAT");
             if (rdatIndex == -1) return;
             SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
@@ -376,7 +392,6 @@ namespace Mutagen.Bethesda.Tests
                     section: item.Value);
             }
 
-            int amount = 0;
             if (rdats.ContainsKey((int)RegionData.RegionDataType.Icon))
             { // Need to create icon record
                 var edidIndex = str.IndexOf("EDID");
@@ -688,7 +703,7 @@ namespace Mutagen.Bethesda.Tests
                     loc: dataIndex + loc.Min + 0x1A);
                 amount += 4;
             }
-            
+
             ProcessLengths(
                 stream,
                 amount,
@@ -747,7 +762,7 @@ namespace Mutagen.Bethesda.Tests
                     amount += 4;
                 }
             }
-            
+
             ProcessLengths(
                 stream,
                 amount,
@@ -881,7 +896,7 @@ namespace Mutagen.Bethesda.Tests
                         loc: loc.Min + dataIndex + 6 + move);
                 }
             }
-            
+
             ProcessLengths(
                 stream,
                 amount,

@@ -25,23 +25,6 @@ namespace Mutagen.Bethesda.Tests
         {
         }
 
-        protected override BinaryFileProcessor.Config GetInstructions(
-            Dictionary<long, uint> lengthTracker,
-            RecordLocator.FileLocations fileLocs)
-        {
-            var instructions = base.GetInstructions(lengthTracker, fileLocs);
-            instructions.SetSubstitution(
-                loc: 0xC46695,
-                sub: new byte[] { 0x66, 0xDC, 0x05, 0x00 });
-            instructions.SetSubstitution(
-                loc: 0xCA88D9,
-                sub: new byte[] { 0xDB, 0xBC, 0x04, 0x00 });
-            instructions.SetSubstitution(
-                loc: 0xCEAEB5,
-                sub: new byte[] { 0x76, 0x0A, 0x00, 0x00 });
-            return instructions;
-        }
-
         public async Task OblivionESM_GroupMask_Import()
         {
             var mod = OblivionMod.Create_Binary(
