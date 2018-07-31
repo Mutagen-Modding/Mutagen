@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public static class ModAligner
+    public static class ModRecordAligner
     {
         public class AlignmentRules
         {

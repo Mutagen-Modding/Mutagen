@@ -59,8 +59,9 @@
     <Compile Include="FormID.cs" />
     <Compile Include="Links\FormIDLink.cs" />
     <Compile Include="IMod.cs" />
+    <Compile Include="ModRecordSorter.cs" />
     <Compile Include="RecordLocator.cs" />
-    <Compile Include="ModAligner.cs" />
+    <Compile Include="ModRecordAligner.cs" />
     <Compile Include="ModID.cs" />
     <Compile Include="ModKey.cs" />
     <Compile Include="ModList.cs" />

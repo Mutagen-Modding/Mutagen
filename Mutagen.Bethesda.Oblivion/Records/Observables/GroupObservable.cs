@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 o.OnNext(
                                     new KeyValuePair<FormID, IObservable<T>>(
-                                        val.Key,
-                                        GetRecordStreamObservable(val.Value, streamGetter)));
+                                        val.FormID,
+                                        GetRecordStreamObservable(val.Position, streamGetter)));
                             }
                         }
                     }

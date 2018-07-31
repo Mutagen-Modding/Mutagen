@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Tests
 
         public async Task ImportExport(
             TestingSettings settings,
+            TempFolder tmp,
             string inputPath,
             string outputPathStraight,
             string outputPathObservable)
@@ -49,6 +50,7 @@ namespace Mutagen.Bethesda.Tests
             // Do Observable
             if (settings.TestObservable)
             {
+                var observableOutputPathTmp = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExportUnsorted");
                 await OblivionMod_Observable.FromPath(Observable.Return(inputPath))
                     .Do((MajorRecord m) =>
                     {
@@ -57,13 +59,18 @@ namespace Mutagen.Bethesda.Tests
                             m.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
                         }
                     })
-                    .Write_Binary(outputPathObservable);
+                    .Write_Binary(observableOutputPathTmp);
+
+                ModRecordSorter.Sort(
+                    inputPath: observableOutputPathTmp,
+                    outputPath: outputPathObservable,
+                    temp: tmp);
             }
         }
 
-        public ModAligner.AlignmentRules GetAlignmentRules()
+        public ModRecordAligner.AlignmentRules GetAlignmentRules()
         {
-            var ret = new ModAligner.AlignmentRules();
+            var ret = new ModRecordAligner.AlignmentRules();
             ret.AddAlignments(
                 Cell_Registration.CELL_HEADER,
                 new RecordType("EDID"),
@@ -99,35 +106,35 @@ namespace Mutagen.Bethesda.Tests
             };
             ret.AddAlignments(
                 PlacedObject_Registration.REFR_HEADER,
-                new ModAligner.AlignmentStraightRecord("EDID"),
-                new ModAligner.AlignmentStraightRecord("NAME"),
-                new ModAligner.AlignmentStraightRecord("XPCI"),
-                new ModAligner.AlignmentStraightRecord("FULL"),
-                new ModAligner.AlignmentStraightRecord("XTEL"),
-                new ModAligner.AlignmentStraightRecord("XLOC"),
-                new ModAligner.AlignmentStraightRecord("XOWN"),
-                new ModAligner.AlignmentStraightRecord("XRNK"),
-                new ModAligner.AlignmentStraightRecord("XGLB"),
-                new ModAligner.AlignmentStraightRecord("XESP"),
-                new ModAligner.AlignmentStraightRecord("XTRG"),
-                new ModAligner.AlignmentStraightRecord("XSED"),
-                new ModAligner.AlignmentStraightRecord("XLOD"),
-                new ModAligner.AlignmentStraightRecord("XCHG"),
-                new ModAligner.AlignmentStraightRecord("XHLT"),
-                new ModAligner.AlignmentStraightRecord("XLCM"),
-                new ModAligner.AlignmentStraightRecord("XRTM"),
-                new ModAligner.AlignmentStraightRecord("XACT"),
-                new ModAligner.AlignmentStraightRecord("XCNT"),
-                new ModAligner.AlignmentSubRule(
+                new ModRecordAligner.AlignmentStraightRecord("EDID"),
+                new ModRecordAligner.AlignmentStraightRecord("NAME"),
+                new ModRecordAligner.AlignmentStraightRecord("XPCI"),
+                new ModRecordAligner.AlignmentStraightRecord("FULL"),
+                new ModRecordAligner.AlignmentStraightRecord("XTEL"),
+                new ModRecordAligner.AlignmentStraightRecord("XLOC"),
+                new ModRecordAligner.AlignmentStraightRecord("XOWN"),
+                new ModRecordAligner.AlignmentStraightRecord("XRNK"),
+                new ModRecordAligner.AlignmentStraightRecord("XGLB"),
+                new ModRecordAligner.AlignmentStraightRecord("XESP"),
+                new ModRecordAligner.AlignmentStraightRecord("XTRG"),
+                new ModRecordAligner.AlignmentStraightRecord("XSED"),
+                new ModRecordAligner.AlignmentStraightRecord("XLOD"),
+                new ModRecordAligner.AlignmentStraightRecord("XCHG"),
+                new ModRecordAligner.AlignmentStraightRecord("XHLT"),
+                new ModRecordAligner.AlignmentStraightRecord("XLCM"),
+                new ModRecordAligner.AlignmentStraightRecord("XRTM"),
+                new ModRecordAligner.AlignmentStraightRecord("XACT"),
+                new ModRecordAligner.AlignmentStraightRecord("XCNT"),
+                new ModRecordAligner.AlignmentSubRule(
                     new RecordType("XMRK"),
                     new RecordType("FNAM"),
                     new RecordType("FULL"),
                     new RecordType("TNAM")),
-                new ModAligner.AlignmentStraightRecord("ONAM"),
-                new ModAligner.AlignmentStraightRecord("XRGD"),
-                new ModAligner.AlignmentStraightRecord("XSCL"),
-                new ModAligner.AlignmentStraightRecord("XSOL"),
-                new ModAligner.AlignmentStraightRecord("DATA"));
+                new ModRecordAligner.AlignmentStraightRecord("ONAM"),
+                new ModRecordAligner.AlignmentStraightRecord("XRGD"),
+                new ModRecordAligner.AlignmentStraightRecord("XSCL"),
+                new ModRecordAligner.AlignmentStraightRecord("XSOL"),
+                new ModRecordAligner.AlignmentStraightRecord("DATA"));
             ret.AddAlignments(
                 PlacedCreature_Registration.ACRE_HEADER,
                 new RecordType("EDID"),
@@ -1032,6 +1039,8 @@ namespace Mutagen.Bethesda.Tests
                 var observableOutputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
                 var uncompressedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed");
                 var alignedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
+                var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
+                var preprocessedPath = alignedPath;
                 var processedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
 
                 if (!settings.ReuseCaches || !File.Exists(uncompressedPath))
@@ -1041,16 +1050,25 @@ namespace Mutagen.Bethesda.Tests
                         outputPath: uncompressedPath);
                 }
 
+                if (!settings.ReuseCaches || !File.Exists(orderedPath))
+                {
+                    ModRecordSorter.Sort(
+                        inputPath: uncompressedPath,
+                        outputPath: orderedPath,
+                        temp: tmp);
+                }
+
                 await ImportExport(
                     settings: settings,
-                    inputPath: uncompressedPath,
+                    tmp: tmp,
+                    inputPath: orderedPath,
                     outputPathStraight: outputPath,
                     outputPathObservable: observableOutputPath);
 
                 if (!settings.ReuseCaches || !File.Exists(alignedPath))
                 {
-                    ModAligner.Align(
-                        inputPath: uncompressedPath,
+                    ModRecordAligner.Align(
+                        inputPath: orderedPath,
                         outputPath: alignedPath,
                         alignmentRules: GetAlignmentRules(),
                         temp: tmp);
@@ -1059,12 +1077,11 @@ namespace Mutagen.Bethesda.Tests
                 BinaryFileProcessor.Config instructions;
                 if (!settings.ReuseCaches || !File.Exists(processedPath))
                 {
-                    var alignedFileLocs = RecordLocator.GetFileLocations(
-                    alignedPath);
+                    var alignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath);
 
                     Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
 
-                    using (var reader = new BinaryReadStream(alignedPath))
+                    using (var reader = new BinaryReadStream(preprocessedPath))
                     {
                         foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
                         {
@@ -1077,7 +1094,7 @@ namespace Mutagen.Bethesda.Tests
                         lengthTracker,
                         alignedFileLocs);
 
-                    using (var stream = new BinaryReadStream(alignedPath))
+                    using (var stream = new BinaryReadStream(preprocessedPath))
                     {
                         foreach (var rec in RecordLocator.GetFileLocations(this.FilePath).ListedRecords)
                         {
@@ -1092,7 +1109,7 @@ namespace Mutagen.Bethesda.Tests
                         }
                     }
 
-                    using (var reader = new BinaryReadStream(alignedPath))
+                    using (var reader = new BinaryReadStream(preprocessedPath))
                     {
                         foreach (var grup in lengthTracker)
                         {
@@ -1105,7 +1122,7 @@ namespace Mutagen.Bethesda.Tests
                     }
 
                     using (var processor = new BinaryFileProcessor(
-                        new FileStream(alignedPath, FileMode.Open, FileAccess.Read),
+                        new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
                         instructions))
                     {
                         using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))

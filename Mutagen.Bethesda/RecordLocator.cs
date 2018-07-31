@@ -462,11 +462,11 @@ namespace Mutagen.Bethesda
                 var grupLength = reader.ReadUInt32();
                 var recType = HeaderTranslation.ReadNextRecordType(reader);
                 yield return new KeyValuePair<RecordType, long>(recType, grupLoc);
-                reader.Position += grupLength - 12;
+                reader.Position = grupLoc + grupLength;
             }
         }
 
-        public static IEnumerable<KeyValuePair<FormID, long>> ParseTopLevelGRUP(
+        public static IEnumerable<(FormID FormID, long Position)> ParseTopLevelGRUP(
             IBinaryReadStream reader,
             bool checkOverallGrupType = true)
         {
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda
                     var recLength = reader.ReadUInt32();
                     reader.Position += 4; // Skip flags
                     var formID = FormID.Factory(reader.ReadUInt32());
-                    yield return new KeyValuePair<FormID, long>(
+                    yield return (
                         formID,
                         recordLocation);
                     reader.Position += 4 + recLength;
