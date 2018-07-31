@@ -2858,7 +2858,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class RaceStats_Mask<T> : IMask<T>, IEquatable<RaceStats_Mask<T>>
     {
@@ -3287,10 +3286,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

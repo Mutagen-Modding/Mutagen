@@ -3485,7 +3485,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class SoulGem_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<SoulGem_Mask<T>>
     {
@@ -3910,10 +3909,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

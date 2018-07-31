@@ -2008,7 +2008,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class PathGridPoint_Mask<T> : IMask<T>, IEquatable<PathGridPoint_Mask<T>>
     {
@@ -2380,10 +2379,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

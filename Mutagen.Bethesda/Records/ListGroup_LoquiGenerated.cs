@@ -2334,7 +2334,6 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class ListGroup_Mask<T> : IMask<T>, IEquatable<ListGroup_Mask<T>>
     {
@@ -2740,10 +2739,6 @@ namespace Mutagen.Bethesda.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

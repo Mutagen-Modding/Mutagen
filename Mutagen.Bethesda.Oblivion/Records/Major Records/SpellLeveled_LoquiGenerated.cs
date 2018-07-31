@@ -1282,7 +1282,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class SpellLeveled_Mask<T> : Spell_Mask<T>, IMask<T>, IEquatable<SpellLeveled_Mask<T>>
     {
@@ -1486,10 +1485,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

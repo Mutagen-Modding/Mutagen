@@ -2700,7 +2700,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Faction_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Faction_Mask<T>>
     {
@@ -3192,10 +3191,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

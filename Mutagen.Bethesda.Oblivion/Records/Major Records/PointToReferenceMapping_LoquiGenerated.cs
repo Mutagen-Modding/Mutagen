@@ -1481,7 +1481,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class PointToReferenceMapping_Mask<T> : IMask<T>, IEquatable<PointToReferenceMapping_Mask<T>>
     {
@@ -1828,10 +1827,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

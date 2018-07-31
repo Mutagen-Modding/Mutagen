@@ -1528,7 +1528,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class GlobalShort_Mask<T> : Global_Mask<T>, IMask<T>, IEquatable<GlobalShort_Mask<T>>
     {
@@ -1766,10 +1765,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

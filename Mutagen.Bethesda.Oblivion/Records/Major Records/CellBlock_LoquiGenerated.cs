@@ -2323,7 +2323,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class CellBlock_Mask<T> : IMask<T>, IEquatable<CellBlock_Mask<T>>
     {
@@ -2729,10 +2728,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

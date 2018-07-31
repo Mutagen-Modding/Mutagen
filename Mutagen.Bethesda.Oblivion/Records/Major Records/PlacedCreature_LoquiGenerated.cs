@@ -3587,7 +3587,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class PlacedCreature_Mask<T> : Placed_Mask<T>, IMask<T>, IEquatable<PlacedCreature_Mask<T>>
     {
@@ -4037,10 +4036,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

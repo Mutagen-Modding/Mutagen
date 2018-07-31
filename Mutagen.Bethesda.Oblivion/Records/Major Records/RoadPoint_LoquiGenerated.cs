@@ -2008,7 +2008,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class RoadPoint_Mask<T> : IMask<T>, IEquatable<RoadPoint_Mask<T>>
     {
@@ -2380,10 +2379,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

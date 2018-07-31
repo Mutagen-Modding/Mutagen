@@ -2451,7 +2451,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class LeveledCreature_Mask<T> : NPCSpawn_Mask<T>, IMask<T>, IEquatable<LeveledCreature_Mask<T>>
     {
@@ -2866,10 +2865,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

@@ -2427,7 +2427,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Furnature_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Furnature_Mask<T>>
     {
@@ -2752,10 +2751,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

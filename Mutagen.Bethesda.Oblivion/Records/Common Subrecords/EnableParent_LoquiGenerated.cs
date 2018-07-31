@@ -1654,7 +1654,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class EnableParent_Mask<T> : IMask<T>, IEquatable<EnableParent_Mask<T>>
     {
@@ -1933,10 +1932,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

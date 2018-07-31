@@ -2053,7 +2053,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class HavokData_Mask<T> : IMask<T>, IEquatable<HavokData_Mask<T>>
     {
@@ -2357,10 +2356,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

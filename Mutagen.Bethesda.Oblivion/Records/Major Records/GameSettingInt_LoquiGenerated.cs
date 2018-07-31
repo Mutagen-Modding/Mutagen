@@ -1659,7 +1659,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class GameSettingInt_Mask<T> : GameSetting_Mask<T>, IMask<T>, IEquatable<GameSettingInt_Mask<T>>
     {
@@ -1897,10 +1896,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

@@ -4038,7 +4038,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Ammo_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<Ammo_Mask<T>>
     {
@@ -4513,10 +4512,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

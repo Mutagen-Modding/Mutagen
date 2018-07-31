@@ -3317,7 +3317,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class CellLighting_Mask<T> : IMask<T>, IEquatable<CellLighting_Mask<T>>
     {
@@ -3771,10 +3770,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

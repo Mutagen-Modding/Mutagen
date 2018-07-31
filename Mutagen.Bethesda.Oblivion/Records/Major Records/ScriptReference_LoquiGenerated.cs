@@ -977,7 +977,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class ScriptReference_Mask<T> : IMask<T>, IEquatable<ScriptReference_Mask<T>>
     {
@@ -1200,10 +1199,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

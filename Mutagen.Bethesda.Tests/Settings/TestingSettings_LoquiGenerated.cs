@@ -1641,7 +1641,6 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class TestingSettings_Mask<T> : IMask<T>, IEquatable<TestingSettings_Mask<T>>
     {
@@ -2069,8 +2068,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
     }
     #endregion
-
-
 
     #endregion
 

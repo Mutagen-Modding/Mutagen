@@ -2360,7 +2360,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class DialogTopic_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<DialogTopic_Mask<T>>
     {
@@ -2818,10 +2817,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

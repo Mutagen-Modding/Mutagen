@@ -3450,7 +3450,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class AlchemicalApparatus_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<AlchemicalApparatus_Mask<T>>
     {
@@ -3875,10 +3874,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

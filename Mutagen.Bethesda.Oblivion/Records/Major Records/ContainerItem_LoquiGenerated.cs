@@ -1653,7 +1653,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class ContainerItem_Mask<T> : IMask<T>, IEquatable<ContainerItem_Mask<T>>
     {
@@ -1932,10 +1931,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

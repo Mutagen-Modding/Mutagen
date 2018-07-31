@@ -2015,7 +2015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class FaceGenData_Mask<T> : IMask<T>, IEquatable<FaceGenData_Mask<T>>
     {
@@ -2319,10 +2318,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

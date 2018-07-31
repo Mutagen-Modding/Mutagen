@@ -2945,7 +2945,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Miscellaneous_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Miscellaneous_Mask<T>>
     {
@@ -3320,10 +3319,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

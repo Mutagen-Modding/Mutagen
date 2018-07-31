@@ -1535,7 +1535,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class GlobalFloat_Mask<T> : Global_Mask<T>, IMask<T>, IEquatable<GlobalFloat_Mask<T>>
     {
@@ -1773,10 +1772,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

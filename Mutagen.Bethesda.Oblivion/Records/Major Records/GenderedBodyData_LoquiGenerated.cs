@@ -1868,7 +1868,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class GenderedBodyData_Mask<T> : IMask<T>, IEquatable<GenderedBodyData_Mask<T>>
     {
@@ -2171,10 +2170,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

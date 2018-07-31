@@ -1812,7 +1812,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class QuestStage_Mask<T> : IMask<T>, IEquatable<QuestStage_Mask<T>>
     {
@@ -2168,10 +2167,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

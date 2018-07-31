@@ -1928,7 +1928,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class DistantLODData_Mask<T> : IMask<T>, IEquatable<DistantLODData_Mask<T>>
     {
@@ -2232,10 +2231,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

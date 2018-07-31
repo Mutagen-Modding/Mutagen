@@ -1521,7 +1521,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class RelatedWaters_Mask<T> : IMask<T>, IEquatable<RelatedWaters_Mask<T>>
     {
@@ -1825,10 +1824,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

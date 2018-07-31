@@ -2285,7 +2285,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class LockInformation_Mask<T> : IMask<T>, IEquatable<LockInformation_Mask<T>>
     {
@@ -2614,10 +2613,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

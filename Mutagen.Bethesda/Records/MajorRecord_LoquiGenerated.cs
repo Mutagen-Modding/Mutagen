@@ -2306,7 +2306,6 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class MajorRecord_Mask<T> : IMask<T>, IEquatable<MajorRecord_Mask<T>>
     {
@@ -2660,10 +2659,6 @@ namespace Mutagen.Bethesda.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

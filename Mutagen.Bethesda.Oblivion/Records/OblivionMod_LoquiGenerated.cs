@@ -10153,7 +10153,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class OblivionMod_Mask<T> : IMask<T>, IEquatable<OblivionMod_Mask<T>>
     {
@@ -12492,8 +12491,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     #endregion
 
-
-
     #region Mutagen
     public class GroupMask
     {
@@ -12617,8 +12614,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
 
     #endregion
 

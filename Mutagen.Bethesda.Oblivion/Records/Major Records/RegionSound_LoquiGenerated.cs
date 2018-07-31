@@ -1957,7 +1957,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class RegionSound_Mask<T> : IMask<T>, IEquatable<RegionSound_Mask<T>>
     {
@@ -2261,10 +2260,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

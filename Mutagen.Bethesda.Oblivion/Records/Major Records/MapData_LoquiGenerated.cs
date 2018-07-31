@@ -2052,7 +2052,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class MapData_Mask<T> : IMask<T>, IEquatable<MapData_Mask<T>>
     {
@@ -2356,10 +2355,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

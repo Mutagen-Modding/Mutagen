@@ -2222,7 +2222,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class MagicEffectSubData_Mask<T> : IMask<T>, IEquatable<MagicEffectSubData_Mask<T>>
     {
@@ -2626,10 +2625,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

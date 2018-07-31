@@ -2348,7 +2348,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class IdleAnimation_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<IdleAnimation_Mask<T>>
     {
@@ -2818,10 +2817,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

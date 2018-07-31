@@ -3472,7 +3472,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class SigilStone_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<SigilStone_Mask<T>>
     {
@@ -3974,10 +3973,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

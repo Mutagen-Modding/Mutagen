@@ -2394,7 +2394,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Armor_Mask<T> : ClothingAbstract_Mask<T>, IMask<T>, IEquatable<Armor_Mask<T>>
     {
@@ -2707,10 +2706,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

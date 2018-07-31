@@ -1434,7 +1434,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class RegionDataGrasses_Mask<T> : RegionData_Mask<T>, IMask<T>, IEquatable<RegionDataGrasses_Mask<T>>
     {
@@ -1740,10 +1739,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

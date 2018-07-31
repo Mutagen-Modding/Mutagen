@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>8b66200371d8b20c73162943216479d4d94e9b41</Sha>
+         <Sha>4e15ff2aaf4355f3c1331896b0d8082d01d81524</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-28-2018 13:53:38</CommitDate>
-         <Description>Some XML generation and creation fixes</Description>
+         <CommitDate>07-31-2018 18:45:43</CommitDate>
+         <Description>Removed extra line generation</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

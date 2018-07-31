@@ -2332,7 +2332,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class PathGrid_Mask<T> : Placed_Mask<T>, IMask<T>, IEquatable<PathGrid_Mask<T>>
     {
@@ -2876,10 +2875,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

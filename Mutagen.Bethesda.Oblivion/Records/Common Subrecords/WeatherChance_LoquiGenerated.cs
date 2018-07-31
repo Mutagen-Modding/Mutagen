@@ -1641,7 +1641,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class WeatherChance_Mask<T> : IMask<T>, IEquatable<WeatherChance_Mask<T>>
     {
@@ -1920,10 +1919,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

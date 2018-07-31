@@ -5068,7 +5068,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Worldspace_Mask<T> : Place_Mask<T>, IMask<T>, IEquatable<Worldspace_Mask<T>>
     {
@@ -5744,10 +5743,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

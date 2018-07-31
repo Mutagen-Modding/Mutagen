@@ -1927,7 +1927,6 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class MasterReference_Mask<T> : IMask<T>, IEquatable<MasterReference_Mask<T>>
     {
@@ -2206,10 +2205,6 @@ namespace Mutagen.Bethesda.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

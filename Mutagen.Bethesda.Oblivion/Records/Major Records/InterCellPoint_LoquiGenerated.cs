@@ -1848,7 +1848,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class InterCellPoint_Mask<T> : IMask<T>, IEquatable<InterCellPoint_Mask<T>>
     {
@@ -2127,10 +2126,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

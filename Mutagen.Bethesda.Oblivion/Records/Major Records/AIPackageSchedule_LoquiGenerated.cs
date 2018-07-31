@@ -2680,7 +2680,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class AIPackageSchedule_Mask<T> : IMask<T>, IEquatable<AIPackageSchedule_Mask<T>>
     {
@@ -3034,10 +3033,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

@@ -2487,7 +2487,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class ScriptEffect_Mask<T> : IMask<T>, IEquatable<ScriptEffect_Mask<T>>
     {
@@ -2841,10 +2840,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

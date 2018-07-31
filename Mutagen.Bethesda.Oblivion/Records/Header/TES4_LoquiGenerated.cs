@@ -3140,7 +3140,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class TES4_Mask<T> : IMask<T>, IEquatable<TES4_Mask<T>>
     {
@@ -3633,10 +3632,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

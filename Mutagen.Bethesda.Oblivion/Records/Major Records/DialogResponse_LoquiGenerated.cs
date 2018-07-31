@@ -3276,7 +3276,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class DialogResponse_Mask<T> : IMask<T>, IEquatable<DialogResponse_Mask<T>>
     {
@@ -3680,10 +3679,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

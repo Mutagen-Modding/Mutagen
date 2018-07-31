@@ -3739,7 +3739,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Climate_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Climate_Mask<T>>
     {
@@ -4316,10 +4315,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

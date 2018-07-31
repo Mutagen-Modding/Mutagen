@@ -14941,7 +14941,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class NPC_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<NPC_Mask<T>>
     {
@@ -17217,10 +17216,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

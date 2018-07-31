@@ -4106,7 +4106,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Book_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Book_Mask<T>>
     {
@@ -4606,10 +4605,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

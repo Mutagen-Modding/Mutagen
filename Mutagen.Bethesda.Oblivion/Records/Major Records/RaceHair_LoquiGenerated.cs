@@ -1424,7 +1424,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class RaceHair_Mask<T> : IMask<T>, IEquatable<RaceHair_Mask<T>>
     {
@@ -1703,10 +1702,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

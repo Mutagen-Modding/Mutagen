@@ -2958,7 +2958,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Door_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Door_Mask<T>>
     {
@@ -3451,10 +3450,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 

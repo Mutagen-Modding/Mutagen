@@ -1130,7 +1130,6 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class Passthrough_Mask<T> : IMask<T>, IEquatable<Passthrough_Mask<T>>
     {
@@ -1409,8 +1408,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
     }
     #endregion
-
-
 
     #endregion
 

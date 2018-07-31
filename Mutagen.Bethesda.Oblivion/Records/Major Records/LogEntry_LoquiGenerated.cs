@@ -2524,7 +2524,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
-
     #region Mask
     public class LogEntry_Mask<T> : IMask<T>, IEquatable<LogEntry_Mask<T>>
     {
@@ -2942,10 +2941,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
     #endregion
-
-
-
-
 
     #endregion
 
