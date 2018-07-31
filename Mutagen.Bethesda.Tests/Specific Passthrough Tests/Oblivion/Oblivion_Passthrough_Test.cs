@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessNPC_Mismatch(stream, recType, instr, loc);
             ProcessCreature_Mismatch(stream, recType, instr, loc);
             ProcessLeveledItemDataFields(stream, recType, instr, loc);
-            ProcessRegions(stream, recType, instr, loc);
+            ProcessRegions(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessPlacedObject_Mismatch(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessCells(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessDialogTopics(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
@@ -191,6 +191,36 @@ namespace Mutagen.Bethesda.Tests
             ProcessAIPackages(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessCombatStyle(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessWater(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+        }
+
+        private void ProcessLengths(
+            BinaryReadStream stream,
+            int amount,
+            RangeInt64 loc,
+            FormID formID,
+            BinaryFileProcessor.Config instr,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker,
+            bool doRecordLen = true)
+        {
+            if (amount == 0) return;
+            foreach (var k in fileLocs.GetContainingGroupLocations(formID))
+            {
+                lengthTracker[k] = (uint)(lengthTracker[k] + amount);
+            }
+
+            if (!doRecordLen) return;
+            // Modify Length
+            stream.Position = loc.Min + Constants.HEADER_LENGTH;
+            var existingLen = stream.ReadUInt16();
+            byte[] lenData = new byte[2];
+            using (var writer = new MutagenWriter(new MemoryStream(lenData)))
+            {
+                writer.Write((ushort)(existingLen + amount));
+            }
+            instr.SetSubstitution(
+                loc: loc.Min + Constants.HEADER_LENGTH,
+                sub: lenData);
         }
 
         private void ProcessNPC_Mismatch(
@@ -313,9 +343,12 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessRegions(
             BinaryReadStream stream,
+            FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
-            RangeInt64 loc)
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
         {
             if (!Region_Registration.REGN_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
@@ -343,6 +376,7 @@ namespace Mutagen.Bethesda.Tests
                     section: item.Value);
             }
 
+            int amount = 0;
             if (rdats.ContainsKey((int)RegionData.RegionDataType.Icon))
             { // Need to create icon record
                 var edidIndex = str.IndexOf("EDID");
@@ -374,12 +408,24 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
+                var arr = memStream.ToArray();
                 instr.SetAddition(
                     loc: locToPlace,
-                    addition: memStream.ToArray());
+                    addition: arr);
                 instr.SetRemove(
                     section: iconLoc);
+                amount += arr.Length;
+                amount -= (int)iconLoc.Width;
             }
+
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker);
         }
 
         private static byte[] ZeroFloat = new byte[] { 0, 0, 0, 0x80 };
@@ -394,6 +440,7 @@ namespace Mutagen.Bethesda.Tests
             Dictionary<long, uint> lengthTracker)
         {
             if (!PlacedObject_Registration.REFR_HEADER.Equals(recType)) return;
+            int amount = 0;
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width);
             var datIndex = str.IndexOf("XLOC");
@@ -413,10 +460,7 @@ namespace Mutagen.Bethesda.Tests
                         section: new RangeInt64(
                             removeStart,
                             removeStart + 3));
-                    foreach (var k in fileLocs.GetContainingGroupLocations(formID))
-                    {
-                        lengthTracker[k] = lengthTracker[k] - 4;
-                    }
+                    amount -= 4;
                 }
             }
             datIndex = str.IndexOf("XSED");
@@ -436,12 +480,18 @@ namespace Mutagen.Bethesda.Tests
                         section: new RangeInt64(
                             removeStart,
                             removeStart + 2));
-                    foreach (var k in fileLocs.GetContainingGroupLocations(formID))
-                    {
-                        lengthTracker[k] = lengthTracker[k] - 3;
-                    }
+                    amount -= 3;
                 }
             }
+
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker);
         }
 
         private void ProcessCells(
@@ -499,16 +549,24 @@ namespace Mutagen.Bethesda.Tests
             }
 
             if (removes.Count == 0) return;
-            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
+
+            int amount = 0;
             foreach (var remove in removes)
             {
                 instr.SetRemove(
                     section: remove);
-                foreach (var parentGroup in parentGrups)
-                {
-                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - remove.Width);
-                }
+                amount -= (int)remove.Width;
             }
+
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker,
+                doRecordLen: false);
         }
 
         private void ProcessDialogTopics(
@@ -528,21 +586,27 @@ namespace Mutagen.Bethesda.Tests
             stream.Position += len + 12;
             var grupPos = stream.Position;
             var grup = stream.ReadString(4);
+            int amount = 0;
             if (grup.Equals("GRUP"))
             {
-                var parentGrups = fileLocs.GetContainingGroupLocations(formID);
                 var grupLen = stream.ReadUInt32();
                 if (grupLen == 0x14)
                 {
                     instr.SetRemove(
                         section: new RangeInt64(grupPos, grupPos + 0x14 - 1));
-
-                    foreach (var parentGroup in parentGrups)
-                    {
-                        lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - 0x14);
-                    }
+                    amount -= 0x14;
                 }
             }
+
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker,
+                doRecordLen: false);
         }
 
         private void ProcessDialogItems(
@@ -559,7 +623,6 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = -1;
-            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
             {
@@ -569,10 +632,6 @@ namespace Mutagen.Bethesda.Tests
                 instr.SetAddition(
                     addition: new byte[4],
                     loc: dataIndex + loc.Min + 0x1A);
-                foreach (var parentGroup in parentGrups)
-                {
-                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + 4);
-                }
                 amount += 4;
             }
 
@@ -591,27 +650,17 @@ namespace Mutagen.Bethesda.Tests
                     section: new RangeInt64(
                         locToRemove,
                         locToRemove + diff - 1));
-                foreach (var parentGroup in parentGrups)
-                {
-                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] - diff);
-                }
                 amount -= diff;
             }
 
-            if (amount != 0)
-            {
-                // Modify Length
-                stream.Position = loc.Min + Constants.HEADER_LENGTH;
-                var existingLen = stream.ReadUInt16();
-                byte[] lenData = new byte[2];
-                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
-                {
-                    writer.Write((ushort)(existingLen + amount));
-                }
-                instr.SetSubstitution(
-                    loc: loc.Min + Constants.HEADER_LENGTH,
-                    sub: lenData);
-            }
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker);
         }
 
         private void ProcessIdleAnimations(
@@ -628,7 +677,6 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = -1;
-            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
             {
@@ -638,27 +686,17 @@ namespace Mutagen.Bethesda.Tests
                 instr.SetAddition(
                     addition: new byte[4],
                     loc: dataIndex + loc.Min + 0x1A);
-                foreach (var parentGroup in parentGrups)
-                {
-                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + 4);
-                }
                 amount += 4;
             }
-
-            if (amount != 0)
-            {
-                // Modify Length
-                stream.Position = loc.Min + Constants.HEADER_LENGTH;
-                var existingLen = stream.ReadUInt16();
-                byte[] lenData = new byte[2];
-                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
-                {
-                    writer.Write((ushort)(existingLen + amount));
-                }
-                instr.SetSubstitution(
-                    loc: loc.Min + Constants.HEADER_LENGTH,
-                    sub: lenData);
-            }
+            
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker);
         }
 
         private void ProcessAIPackages(
@@ -675,7 +713,6 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = -1;
-            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
             {
@@ -710,25 +747,15 @@ namespace Mutagen.Bethesda.Tests
                     amount += 4;
                 }
             }
-
-            if (amount != 0)
-            {
-                // Modify Length
-                stream.Position = loc.Min + Constants.HEADER_LENGTH;
-                var existingLen = stream.ReadUInt16();
-                byte[] lenData = new byte[2];
-                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
-                {
-                    writer.Write((ushort)(existingLen + amount));
-                }
-                instr.SetSubstitution(
-                    loc: loc.Min + Constants.HEADER_LENGTH,
-                    sub: lenData);
-                foreach (var parentGroup in parentGrups)
-                {
-                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + amount);
-                }
-            }
+            
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker);
         }
 
         private void ProcessCombatStyle(
@@ -794,7 +821,6 @@ namespace Mutagen.Bethesda.Tests
             var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = str.IndexOf("DATA");
             stream.Position = loc.Min + dataIndex + 4;
-            var parentGrups = fileLocs.GetContainingGroupLocations(formID);
             var amount = 0;
             var len = stream.ReadUInt16();
             if (dataIndex != -1)
@@ -855,25 +881,15 @@ namespace Mutagen.Bethesda.Tests
                         loc: loc.Min + dataIndex + 6 + move);
                 }
             }
-
-            if (amount != 0)
-            {
-                // Modify Length
-                stream.Position = loc.Min + Constants.HEADER_LENGTH;
-                var existingLen = stream.ReadUInt16();
-                byte[] lenData = new byte[2];
-                using (var writer = new MutagenWriter(new MemoryStream(lenData)))
-                {
-                    writer.Write((ushort)(existingLen + amount));
-                }
-                instr.SetSubstitution(
-                    loc: loc.Min + Constants.HEADER_LENGTH,
-                    sub: lenData);
-                foreach (var parentGroup in parentGrups)
-                {
-                    lengthTracker[parentGroup] = (uint)(lengthTracker[parentGroup] + amount);
-                }
-            }
+            
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker);
         }
 
         private bool DynamicMove(
