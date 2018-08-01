@@ -46,6 +46,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
+    <Compile Include="Extensions\NoggogRxExt.cs" />
     <Compile Include="INamed.cs" />
     <Compile Include="Links\EDIDSetLink.cs" />
     <Compile Include="Links\EDIDLink.cs" />
@@ -60,6 +61,8 @@
     <Compile Include="Links\FormIDLink.cs" />
     <Compile Include="IMod.cs" />
     <Compile Include="ModRecordSorter.cs" />
+    <Compile Include="Observable\GroupObservable.cs" />
+    <Compile Include="Observable\ObservableModBase.cs" />
     <Compile Include="RecordLocator.cs" />
     <Compile Include="ModRecordAligner.cs" />
     <Compile Include="ModID.cs" />
@@ -157,6 +160,9 @@
   <ItemGroup>
     <PackageReference Include="DotNetZip">
       <Version>1.10.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Reactive">
+      <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.4.0</Version>

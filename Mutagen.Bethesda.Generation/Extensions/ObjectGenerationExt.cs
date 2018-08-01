@@ -177,6 +177,12 @@ namespace Mutagen.Bethesda.Generation
             return loquiType;
         }
 
+        public static ObjectGeneration GetGroupTarget(this LoquiType loqui)
+        {
+            loqui.TryGetSpecificationAsObject("T", out var ret);
+            return ret;
+        }
+
         public static bool IsTypelessStruct(this ObjectGeneration objGen)
         {
             return objGen.GetObjectType() == ObjectType.Subrecord && !objGen.HasRecordType();

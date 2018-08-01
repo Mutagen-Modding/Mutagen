@@ -10,14 +10,19 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public class OblivionMod_Observable_Manual
+    public class OblivionMod_Observable_Manual : ObservableModBase
     {
         public IObservable<TES4> TES4 { get; private set; }
         public IObservable<GroupObservable<GameSetting>> GameSettings { get; private set; }
 
+        public OblivionMod_Observable_Manual(IObservable<string> streamSource) 
+            : base(streamSource)
+        {
+        }
+
         public static OblivionMod_Observable_Manual FromPath(IObservable<string> streamSource)
         {
-            OblivionMod_Observable_Manual ret = new OblivionMod_Observable_Manual();
+            OblivionMod_Observable_Manual ret = new OblivionMod_Observable_Manual(streamSource);
             ret.TES4 = streamSource
                 .Select((s) => GetStream(s))
                 .Select((frame) =>
@@ -36,24 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
                             throw new ArgumentException("Mod did not start with TES4");
                     }
                 });
-            var grupLocObservable = streamSource
-                .Select((s) => GetStream(s))
-                .SelectMany((frame) =>
-                {
-                    return RecordLocator.IterateBaseGroupLocations(frame.Reader);
-                })
-                .Publish()
-                .RefCount();
-            ret.GameSettings = grupLocObservable
-                .Where((kv) => kv.Key == GameSetting_Registration.GMST_HEADER)
-                .Select((kv) => kv.Value)
-                .WithLatestFromFixed(streamSource, (loc, path) => (loc, path))
-                .Select((v) =>
-                {
-                    return GroupObservable<GameSetting>.FromStream(v.loc, () => GetStream(v.path));
-                })
-                .Publish()
-                .RefCount();
+            ret.GameSettings = ret.GetGroupObservable<GameSetting>(GameSetting_Registration.GMST_HEADER);
             return ret;
         }
 
@@ -75,12 +63,6 @@ namespace Mutagen.Bethesda.Oblivion
             };
         }
 
-        private static MutagenFrame GetStream(string stream)
-        {
-            return new MutagenFrame(
-                new BinaryReadStream(stream));
-        }
-
         public async Task Write_Binary(MutagenWriter writer)
         {
             (await this.TES4.LastAsync()).Write_Binary(writer);
@@ -93,16 +75,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 await Write_Binary(writer);
             }
-        }
-
-        private async Task WriteGroup<T>(
-            MutagenWriter writer,
-            IObservable<GroupObservable<T>> obs)
-            where T : MajorRecord, IFormID, ILoquiObject<T>
-        {
-            var grup = (await obs.LastOrDefaultAsync());
-            if (grup == null) return;
-            await grup.Write(writer);
         }
     }
 }
