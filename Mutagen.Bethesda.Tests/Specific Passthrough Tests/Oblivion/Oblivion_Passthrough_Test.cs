@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Tests
             if (settings.TestObservable)
             {
                 var observableOutputPathTmp = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExportUnsorted");
-                await OblivionMod_Observable.FromPath(Observable.Return(inputPath))
+                await OblivionMod_Observable_Manual.FromPath(Observable.Return(inputPath))
                     .Do((MajorRecord m) =>
                     {
                         if (m.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))

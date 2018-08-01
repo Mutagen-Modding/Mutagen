@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Generation
             gen.MaskModule.AddTypeAssociation<FormIDLinkType>(MaskModule.TypicalField);
             gen.GenerationModules.Add(new MutagenModule());
             gen.Add(new BinaryTranslationModule(gen));
+            gen.Add(new ObservableModModule());
             gen.AddTypeAssociation<FormIDLinkType>("FormIDLink");
             gen.AddTypeAssociation<FormIDType>("FormID");
             gen.AddTypeAssociation<BufferType>("Buffer");

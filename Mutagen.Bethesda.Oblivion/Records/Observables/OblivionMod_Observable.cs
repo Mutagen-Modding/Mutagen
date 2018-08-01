@@ -1,31 +1,23 @@
 ﻿using Loqui;
-using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reactive;
-using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public class OblivionMod_Observable
+    public class OblivionMod_Observable_Manual
     {
         public IObservable<TES4> TES4 { get; private set; }
         public IObservable<GroupObservable<GameSetting>> GameSettings { get; private set; }
 
-        public static OblivionMod_Observable FromPath(IObservable<string> streamSource)
+        public static OblivionMod_Observable_Manual FromPath(IObservable<string> streamSource)
         {
-            OblivionMod_Observable ret = new OblivionMod_Observable();
+            OblivionMod_Observable_Manual ret = new OblivionMod_Observable_Manual();
             ret.TES4 = streamSource
                 .Select((s) => GetStream(s))
                 .Select((frame) =>
@@ -65,18 +57,18 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public OblivionMod_Observable Where(Func<KeyValuePair<FormID, IObservable<MajorRecord>>, bool> selector)
+        public OblivionMod_Observable_Manual Where(Func<KeyValuePair<FormID, IObservable<MajorRecord>>, bool> selector)
         {
-            return new OblivionMod_Observable()
+            return new OblivionMod_Observable_Manual()
             {
                 TES4 = this.TES4,
                 GameSettings = this.GameSettings.Select((g) => g.Where(selector))
             };
         }
         
-        public OblivionMod_Observable Do(Action<MajorRecord> doAction)
+        public OblivionMod_Observable_Manual Do(Action<MajorRecord> doAction)
         {
-            return new OblivionMod_Observable()
+            return new OblivionMod_Observable_Manual()
             {
                 TES4 = this.TES4,
                 GameSettings = this.GameSettings.Select((g) => g.Do(doAction))
