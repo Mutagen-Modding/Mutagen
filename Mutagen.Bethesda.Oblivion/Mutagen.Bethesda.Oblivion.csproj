@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Records\Observables\OblivionMod_Observable.cs" />
     <Compile Include="Records\Common Enums\ActorValue.cs" />
     <Compile Include="Records\Common Enums\ActorValueExtended.cs" />
     <Compile Include="Records\Common Enums\Attribute.cs" />

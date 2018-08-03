@@ -24,7 +24,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     await GenerateMembers(obj, fg);
                     GenerateCtor(obj, fg);
-                    await GenerateFromPath(obj, fg);
+                    await GenerateInit(obj, fg);
+                    GenerateWhere(obj, fg);
+                    GenerateDo(obj, fg);
+                    GenerateWrite(obj, fg);
                 }
             }
 
@@ -35,13 +38,19 @@ namespace Mutagen.Bethesda.Generation
 
         private static void GenerateCtor(ObjectGeneration obj, FileGeneration fg)
         {
+            fg.AppendLine($"public {obj.Name}_Observable()");
+            using (new BraceWrapper(fg))
+            {
+            }
+            fg.AppendLine();
+
             fg.AppendLine($"public {obj.Name}_Observable(IObservable<string> streamSource)");
             using (new DepthWrapper(fg))
             {
-                fg.AppendLine(": base(streamSource)");
             }
             using (new BraceWrapper(fg))
             {
+                fg.AppendLine("Init();");
             }
             fg.AppendLine();
         }
@@ -76,21 +85,23 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
         }
 
-        private async Task GenerateFromPath(ObjectGeneration obj, FileGeneration fg)
+        private async Task GenerateInit(ObjectGeneration obj, FileGeneration fg)
         {
-            fg.AppendLine($"public static {obj.Name}_Observable FromPath(IObservable<string> streamSource)");
+            fg.AppendLine($"private void Init()");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"{obj.Name}_Observable ret = new {obj.Name}_Observable(streamSource);");
                 foreach (var item in IterateLoqui(obj))
                 {
                     if (item.IsGroup)
                     {
                         var grupTargetObj = item.Loqui.GetGroupTarget();
-                        fg.AppendLine($"ret.{item.Loqui.Name} = ret.GetGroupObservable<{grupTargetObj.Name}>({grupTargetObj.RegistrationName}.{Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER});");
+                        fg.AppendLine($"this.{item.Loqui.Name} = this.GetGroupObservable<{grupTargetObj.Name}>({grupTargetObj.RegistrationName}.{Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER});");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"this.{item.Loqui.Name} = this.GetObservableRecord<{item.Loqui.TargetObjectGeneration.Name}>({item.Loqui.TargetObjectGeneration.RegistrationName}.{Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER});");
                     }
                 }
-                fg.AppendLine("return ret;");
             }
             fg.AppendLine();
         }
@@ -99,14 +110,100 @@ namespace Mutagen.Bethesda.Generation
         {
             foreach (var item in obj.IterateFields())
             {
+                switch (item.Name)
+                {
+                    case "Cells":
+                        yield break;
+                    default:
+                        break;
+                }
                 if (!(item is LoquiType loqui))
                 {
                     throw new ArgumentException();
                 }
                 yield return (
                     loqui,
-                    loqui.TargetObjectGeneration?.Name.Equals("Group") ?? false);
+                    loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
             }
+        }
+
+        private void GenerateDo(ObjectGeneration obj, FileGeneration fg)
+        {
+            fg.AppendLine($"public {obj.Name}_Observable Do(Action<MajorRecord> doAction)");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"return new {obj.Name}_Observable()");
+                using (new BraceWrapper(fg) { AppendSemicolon = true })
+                {
+                    foreach (var item in this.IterateLoqui(obj))
+                    {
+                        if (item.IsGroup)
+                        {
+                            fg.AppendLine($"{item.Loqui.Name} = this.{item.Loqui.Name}.Select((g) => g.Do(doAction)),");
+                        }
+                        else
+                        {
+                            fg.AppendLine($"{item.Loqui.Name} = this.{item.Loqui.Name},");
+                        }
+                    }
+                }
+            }
+            fg.AppendLine();
+        }
+
+        private void GenerateWhere(ObjectGeneration obj, FileGeneration fg)
+        {
+            fg.AppendLine($"public {obj.Name}_Observable Where(Func<KeyValuePair<FormID, IObservable<MajorRecord>>, bool> selector)");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"return new {obj.Name}_Observable()");
+                using (new BraceWrapper(fg) { AppendSemicolon = true })
+                {
+                    foreach (var item in this.IterateLoqui(obj))
+                    {
+                        if (item.IsGroup)
+                        {
+                            fg.AppendLine($"{item.Loqui.Name} = this.{item.Loqui.Name}.Select((g) => g.Where(selector)),");
+                        }
+                        else
+                        {
+                            fg.AppendLine($"{item.Loqui.Name} = this.{item.Loqui.Name},");
+                        }
+                    }
+                }
+            }
+            fg.AppendLine();
+        }
+
+        private void GenerateWrite(ObjectGeneration obj, FileGeneration fg)
+        {
+            fg.AppendLine("public async Task Write_Binary(MutagenWriter writer)");
+            using (new BraceWrapper(fg))
+            {
+                foreach (var item in this.IterateLoqui(obj))
+                {
+                    if (item.IsGroup)
+                    {
+                        fg.AppendLine($"await WriteGroup(writer, this.{item.Loqui.Name});");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"(await this.{item.Loqui.Name}.LastAsync()).Write_Binary(writer);");
+                    }
+                }
+            }
+            fg.AppendLine();
+
+            fg.AppendLine($"public async Task Write_Binary(string path)");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"using (var writer = new MutagenWriter(path))");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"await Write_Binary(writer);");
+                }
+            }
+            fg.AppendLine();
         }
     }
 }

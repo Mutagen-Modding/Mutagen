@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda
         public IObservable<Byte[]> LastModified { get; private set; }
 
         public IObservable<KeyValuePair<FormID, IObservable<T>>> Items { get; private set; }
+        public IObservable<T> ItemsTest { get; private set; }
 
         static GroupObservable()
         {
@@ -36,10 +37,12 @@ namespace Mutagen.Bethesda
 
         public static GroupObservable<T> FromStream(long pos, Func<MutagenFrame> streamGetter)
         {
+            System.Console.WriteLine($"Parsing GRUP meta for {typeof(T)}");
             var ret = new GroupObservable<T>();
-            using (var frame = streamGetter())
+            var frame = streamGetter();
+            using (frame.Reader)
             {
-                frame.Reader.Position = pos + 12;
+                frame.Position = pos + 12;
                 if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
                     frame: frame.SpawnWithLength(4),
                     item: out GroupTypeEnum GroupTypeParse,
@@ -59,12 +62,14 @@ namespace Mutagen.Bethesda
             ret.Items = Observable.Create<KeyValuePair<FormID, IObservable<T>>>(
                 (o) =>
                 {
+                    System.Console.WriteLine($"Parsing top GRUP for {typeof(T)}");
                     try
                     {
-                        using (var frame = streamGetter())
+                        var itemFrame = streamGetter();
+                        using (itemFrame.Reader)
                         {
-                            frame.Reader.Position = pos;
-                            foreach (var val in RecordLocator.ParseTopLevelGRUP(frame.Reader))
+                            itemFrame.Position = pos;
+                            foreach (var val in RecordLocator.ParseTopLevelGRUP(itemFrame.Reader))
                             {
                                 o.OnNext(
                                     new KeyValuePair<FormID, IObservable<T>>(
@@ -80,11 +85,47 @@ namespace Mutagen.Bethesda
                     o.OnCompleted();
                     return ActionExt.Nothing;
                 })
-                .SubscribeOn(Scheduler.Default)
-                .Publish()
-                .RefCount()
                 .Replay()
-                .RefCount();
+                .RefCount(); ;
+
+            ret.ItemsTest = Observable.Create<T>(
+                (o) =>
+                {
+                    System.Console.WriteLine($"Parsing top GRUP for {typeof(T)}");
+                    try
+                    {
+                        var itemFrame = streamGetter();
+                        using (itemFrame.Reader)
+                        {
+                            itemFrame.Position = pos;
+                            HeaderTranslation.GetNextRecordType(itemFrame.Reader, out var len);
+                            using (var grupFrame = itemFrame.SpawnWithLength(len))
+                            {
+                                grupFrame.Reader.Position += Constants.GRUP_LENGTH;
+                                while (!grupFrame.Complete)
+                                {
+                                    if (!LoquiBinaryTranslation<T>.Instance.Parse(
+                                        grupFrame.Spawn(snapToFinalPosition: false),
+                                        out var item,
+                                        errorMask: null))
+                                    {
+                                        throw new DataMisalignedException();
+                                    }
+
+                                    o.OnNext(item);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        o.OnError(ex);
+                    }
+                    o.OnCompleted();
+                    return ActionExt.Nothing;
+                })
+                .Replay()
+                .RefCount(); ;
 
             return ret;
         }
@@ -99,7 +140,8 @@ namespace Mutagen.Bethesda
                     (o) => selector(
                         new KeyValuePair<FormID, IObservable<MajorRecord>>(
                             o.Key,
-                            o.Value.Select<T, MajorRecord>((t) => t))))
+                            o.Value.Select<T, MajorRecord>((t) => t)))),
+                ItemsTest = ItemsTest,
             };
         }
 
@@ -117,7 +159,10 @@ namespace Mutagen.Bethesda
                         return new KeyValuePair<FormID, IObservable<T>>(
                             m.FormID,
                             Observable.Return(m));
-                    })
+                    }),
+                ItemsTest = this.ItemsTest
+                    .Do(doAction)
+                    .Cast<T>(),
             };
         }
 
@@ -128,7 +173,8 @@ namespace Mutagen.Bethesda
             {
                 GroupType = groupType,
                 LastModified = this.LastModified,
-                Items = this.Items
+                Items = this.Items,
+                ItemsTest = this.ItemsTest
             };
         }
 
@@ -139,7 +185,8 @@ namespace Mutagen.Bethesda
             {
                 GroupType = this.GroupType,
                 LastModified = lastModified,
-                Items = this.Items
+                Items = this.Items,
+                ItemsTest = this.ItemsTest
             };
         }
 
@@ -160,6 +207,7 @@ namespace Mutagen.Bethesda
                             {
                                 o.OnNext(item);
                             }
+                            //System.Console.WriteLine($"Parsed record {typeof(T)} {item.FormID}");
                         }
                         catch (Exception ex)
                         {
@@ -168,10 +216,7 @@ namespace Mutagen.Bethesda
                     }
                     o.OnCompleted();
                     return () => { };
-                })
-                .SubscribeOn(Scheduler.Default)
-                .Publish()
-                .RefCount();
+                });
         }
 
         public async Task Write(MutagenWriter writer)
@@ -193,7 +238,7 @@ namespace Mutagen.Bethesda
                     item: await this.LastModified.LastAsync(),
                     fieldIndex: (int)Group_FieldIndex.LastModified,
                     errorMask: null);
-                await this.Items.SelectMany((i) => i.Value)
+                await this.ItemsTest
                     .Do((i) =>
                     {
                         LoquiBinaryTranslation<T>.Instance.Write(
