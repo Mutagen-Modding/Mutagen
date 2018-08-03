@@ -23,62 +23,69 @@ namespace Mutagen.Bethesda.Oblivion
         {
             // Skip to FNAM
             var initialPos = frame.Position;
-            frame.CheckUpcomingRead(26);
-            frame.Position += 24;
-            var edidLength = frame.Reader.ReadInt16();
-            frame.Position += edidLength;
-
-            // Confirm FNAM
-            var type = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
-            if (!type.Equals(FNAM))
+            if (HeaderTranslation.ReadNextRecordType(frame.Reader, out var recLen) != Global_Registration.GLOB_HEADER)
             {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"Could not find FNAM in its expected location: {frame.Position}"));
-                return null;
+                throw new ArgumentException();
             }
-            if (len != 1)
+            using (var subFrame = frame.SpawnWithLength(recLen + Constants.RECORD_META_SKIP))
             {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"FNAM had non 1 length: {len}"));
-            }
+                subFrame.CheckUpcomingRead(18);
+                subFrame.Reader.Position += 16;
+                var edidLength = subFrame.Reader.ReadInt16();
+                subFrame.Reader.Position += edidLength;
 
-            // Create proper Global subclass
-            var triggerChar = (char)frame.Reader.ReadUInt8();
-            Global g;
-            switch (triggerChar)
-            {
-                case GlobalInt.TRIGGER_CHAR:
-                    g = new GlobalInt();
-                    break;
-                case GlobalShort.TRIGGER_CHAR:
-                    g = new GlobalShort();
-                    break;
-                case GlobalFloat.TRIGGER_CHAR:
-                    g = new GlobalFloat();
-                    break;
-                default:
+                // Confirm FNAM
+                var type = HeaderTranslation.ReadNextSubRecordType(subFrame.Reader, out var len);
+                if (!type.Equals(FNAM))
+                {
                     errorMask.ReportExceptionOrThrow(
-                        new ArgumentException($"Unknown trigger char: {triggerChar}"));
+                        new ArgumentException($"Could not find FNAM in its expected location: {subFrame.Position}"));
                     return null;
-            }
+                }
+                if (len != 1)
+                {
+                    errorMask.ReportExceptionOrThrow(
+                        new ArgumentException($"FNAM had non 1 length: {len}"));
+                }
 
-            // Fill with major record fields
-            frame.Position = initialPos + 8;
-            MajorRecord.Fill_Binary(
-                frame,
-                g,
-                errorMask);
+                // Create proper Global subclass
+                var triggerChar = (char)subFrame.Reader.ReadUInt8();
+                Global g;
+                switch (triggerChar)
+                {
+                    case GlobalInt.TRIGGER_CHAR:
+                        g = new GlobalInt();
+                        break;
+                    case GlobalShort.TRIGGER_CHAR:
+                        g = new GlobalShort();
+                        break;
+                    case GlobalFloat.TRIGGER_CHAR:
+                        g = new GlobalFloat();
+                        break;
+                    default:
+                        errorMask.ReportExceptionOrThrow(
+                            new ArgumentException($"Unknown trigger char: {triggerChar}"));
+                        return null;
+                }
 
-            // Skip to and read data
-            frame.Reader.Position += 13;
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame,
-                out var rawFloat,
-                errorMask))
-            {
-                g.RawFloat = rawFloat;
+                // Fill with major record fields
+                subFrame.Reader.Position = initialPos + 8;
+                MajorRecord.Fill_Binary(
+                    subFrame,
+                    g,
+                    errorMask);
+
+                // Skip to and read data
+                subFrame.Reader.Position += 13;
+                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    subFrame,
+                    out var rawFloat,
+                    errorMask))
+                {
+                    g.RawFloat = rawFloat;
+                }
+                return g;
             }
-            return g;
         }
 
         static partial void WriteBinary_TypeChar_Custom(
