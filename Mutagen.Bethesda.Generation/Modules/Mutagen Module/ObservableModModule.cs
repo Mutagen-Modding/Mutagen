@@ -47,6 +47,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"public {obj.Name}_Observable(IObservable<string> streamSource)");
             using (new DepthWrapper(fg))
             {
+                fg.AppendLine($": base(streamSource)");
             }
             using (new BraceWrapper(fg))
             {

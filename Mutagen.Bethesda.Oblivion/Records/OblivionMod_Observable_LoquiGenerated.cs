@@ -63,6 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public OblivionMod_Observable(IObservable<string> streamSource)
+            : base(streamSource)
         {
             Init();
         }
