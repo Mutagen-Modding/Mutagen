@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>ac024de196b1018b43278955fbf069a064488674</Sha>
+         <Sha>2679c84a3f2de4d3ffa2d54c8652fe947042daf3</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-05-2018 18:15:42</CommitDate>
-         <Description>Added missing translation mask drill down</Description>
+         <CommitDate>08-05-2018 18:16:39</CommitDate>
+         <Description>Missing error mask index push</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
