@@ -43,6 +43,10 @@ namespace Mutagen.Bethesda.Tests
                 yield return obliv.OblivionESM_GroupMask_Import();
                 yield return obliv.OblivionESM_GroupMask_Export();
             }
+            if (settings.TestFolder)
+            {
+                yield return obliv.OblivionESM_Folder_Reimport();
+            }
         }
     }
 }

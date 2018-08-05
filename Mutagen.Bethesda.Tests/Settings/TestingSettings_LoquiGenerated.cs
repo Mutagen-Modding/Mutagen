@@ -51,6 +51,10 @@ namespace Mutagen.Bethesda.Tests
         private Boolean _TestObservable;
         public Boolean TestObservable { get => _TestObservable; set => _TestObservable = value; }
         #endregion
+        #region TestFolder
+        private Boolean _TestFolder;
+        public Boolean TestFolder { get => _TestFolder; set => _TestFolder = value; }
+        #endregion
         #region ReuseCaches
         private Boolean _ReuseCaches;
         public Boolean ReuseCaches { get => _ReuseCaches; set => _ReuseCaches = value; }
@@ -133,6 +137,7 @@ namespace Mutagen.Bethesda.Tests
             if (rhs == null) return false;
             if (this.TestNormal != rhs.TestNormal) return false;
             if (this.TestObservable != rhs.TestObservable) return false;
+            if (this.TestFolder != rhs.TestFolder) return false;
             if (this.ReuseCaches != rhs.ReuseCaches) return false;
             if (this.DeleteCachesAfter != rhs.DeleteCachesAfter) return false;
             if (this.TestGroupMasks != rhs.TestGroupMasks) return false;
@@ -146,6 +151,7 @@ namespace Mutagen.Bethesda.Tests
             int ret = 0;
             ret = HashHelper.GetHashCode(TestNormal).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestObservable).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(TestFolder).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(ReuseCaches).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(DeleteCachesAfter).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestGroupMasks).CombineHashCode(ret);
@@ -520,6 +526,32 @@ namespace Mutagen.Bethesda.Tests
                         errorMask?.PopIndex();
                     }
                     break;
+                case "TestFolder":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFolder);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Boolean TestFolderParse,
+                            errorMask: errorMask))
+                        {
+                            item.TestFolder = TestFolderParse;
+                        }
+                        else
+                        {
+                            item.TestFolder = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "ReuseCaches":
                     try
                     {
@@ -787,6 +819,9 @@ namespace Mutagen.Bethesda.Tests
                 case TestingSettings_FieldIndex.TestObservable:
                     this._TestObservable = (Boolean)obj;
                     break;
+                case TestingSettings_FieldIndex.TestFolder:
+                    this._TestFolder = (Boolean)obj;
+                    break;
                 case TestingSettings_FieldIndex.ReuseCaches:
                     this._ReuseCaches = (Boolean)obj;
                     break;
@@ -845,6 +880,9 @@ namespace Mutagen.Bethesda.Tests
                 case TestingSettings_FieldIndex.TestObservable:
                     obj._TestObservable = (Boolean)pair.Value;
                     break;
+                case TestingSettings_FieldIndex.TestFolder:
+                    obj._TestFolder = (Boolean)pair.Value;
+                    break;
                 case TestingSettings_FieldIndex.ReuseCaches:
                     obj._ReuseCaches = (Boolean)pair.Value;
                     break;
@@ -879,6 +917,8 @@ namespace Mutagen.Bethesda.Tests
 
         new Boolean TestObservable { get; set; }
 
+        new Boolean TestFolder { get; set; }
+
         new Boolean ReuseCaches { get; set; }
 
         new Boolean DeleteCachesAfter { get; set; }
@@ -899,6 +939,10 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region TestObservable
         Boolean TestObservable { get; }
+
+        #endregion
+        #region TestFolder
+        Boolean TestFolder { get; }
 
         #endregion
         #region ReuseCaches
@@ -933,11 +977,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         TestNormal = 0,
         TestObservable = 1,
-        ReuseCaches = 2,
-        DeleteCachesAfter = 3,
-        TestGroupMasks = 4,
-        OblivionESM = 5,
-        KnightsESP = 6,
+        TestFolder = 2,
+        ReuseCaches = 3,
+        DeleteCachesAfter = 4,
+        TestGroupMasks = 5,
+        OblivionESM = 6,
+        KnightsESP = 7,
     }
     #endregion
 
@@ -955,9 +1000,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "8238bf49-028c-4e0b-b914-3ade480308ec";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(TestingSettings_Mask<>);
 
@@ -989,6 +1034,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)TestingSettings_FieldIndex.TestNormal;
                 case "TESTOBSERVABLE":
                     return (ushort)TestingSettings_FieldIndex.TestObservable;
+                case "TESTFOLDER":
+                    return (ushort)TestingSettings_FieldIndex.TestFolder;
                 case "REUSECACHES":
                     return (ushort)TestingSettings_FieldIndex.ReuseCaches;
                 case "DELETECACHESAFTER":
@@ -1011,6 +1058,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TestingSettings_FieldIndex.TestNormal:
                 case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.ReuseCaches:
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
@@ -1032,6 +1080,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return true;
                 case TestingSettings_FieldIndex.TestNormal:
                 case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.ReuseCaches:
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
@@ -1048,6 +1097,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TestingSettings_FieldIndex.TestNormal:
                 case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.ReuseCaches:
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
@@ -1068,6 +1118,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "TestNormal";
                 case TestingSettings_FieldIndex.TestObservable:
                     return "TestObservable";
+                case TestingSettings_FieldIndex.TestFolder:
+                    return "TestFolder";
                 case TestingSettings_FieldIndex.ReuseCaches:
                     return "ReuseCaches";
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
@@ -1090,6 +1142,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TestingSettings_FieldIndex.TestNormal:
                 case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.ReuseCaches:
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
@@ -1108,6 +1161,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TestingSettings_FieldIndex.TestNormal:
                 case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.ReuseCaches:
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
@@ -1127,6 +1181,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestNormal:
                     return typeof(Boolean);
                 case TestingSettings_FieldIndex.TestObservable:
+                    return typeof(Boolean);
+                case TestingSettings_FieldIndex.TestFolder:
                     return typeof(Boolean);
                 case TestingSettings_FieldIndex.ReuseCaches:
                     return typeof(Boolean);
@@ -1195,6 +1251,12 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestObservable);
                 item.TestObservable = rhs.TestObservable;
+                errorMask?.PopIndex();
+            }
+            if (copyMask?.TestFolder ?? true)
+            {
+                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFolder);
+                item.TestFolder = rhs.TestFolder;
                 errorMask?.PopIndex();
             }
             if (copyMask?.ReuseCaches ?? true)
@@ -1322,6 +1384,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TestingSettings_FieldIndex.TestNormal:
                 case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.ReuseCaches:
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
@@ -1347,6 +1410,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case TestingSettings_FieldIndex.TestObservable:
                     obj.TestObservable = default(Boolean);
+                    break;
+                case TestingSettings_FieldIndex.TestFolder:
+                    obj.TestFolder = default(Boolean);
                     break;
                 case TestingSettings_FieldIndex.ReuseCaches:
                     obj.ReuseCaches = default(Boolean);
@@ -1377,6 +1443,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TestingSettings_FieldIndex.TestNormal:
                 case TestingSettings_FieldIndex.TestObservable:
+                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.ReuseCaches:
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
@@ -1399,6 +1466,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return obj.TestNormal;
                 case TestingSettings_FieldIndex.TestObservable:
                     return obj.TestObservable;
+                case TestingSettings_FieldIndex.TestFolder:
+                    return obj.TestFolder;
                 case TestingSettings_FieldIndex.ReuseCaches:
                     return obj.ReuseCaches;
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
@@ -1420,6 +1489,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             item.TestNormal = default(Boolean);
             item.TestObservable = default(Boolean);
+            item.TestFolder = default(Boolean);
             item.ReuseCaches = default(Boolean);
             item.DeleteCachesAfter = default(Boolean);
             item.TestGroupMasks = default(Boolean);
@@ -1444,6 +1514,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (rhs == null) return;
             ret.TestNormal = item.TestNormal == rhs.TestNormal;
             ret.TestObservable = item.TestObservable == rhs.TestObservable;
+            ret.TestFolder = item.TestFolder == rhs.TestFolder;
             ret.ReuseCaches = item.ReuseCaches == rhs.ReuseCaches;
             ret.DeleteCachesAfter = item.DeleteCachesAfter == rhs.DeleteCachesAfter;
             ret.TestGroupMasks = item.TestGroupMasks == rhs.TestGroupMasks;
@@ -1490,6 +1561,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestObservable => {item.TestObservable}");
                 }
+                if (printMask?.TestFolder ?? true)
+                {
+                    fg.AppendLine($"TestFolder => {item.TestFolder}");
+                }
                 if (printMask?.ReuseCaches ?? true)
                 {
                     fg.AppendLine($"ReuseCaches => {item.ReuseCaches}");
@@ -1526,6 +1601,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             var ret = new TestingSettings_Mask<bool>();
             ret.TestNormal = true;
             ret.TestObservable = true;
+            ret.TestFolder = true;
             ret.ReuseCaches = true;
             ret.DeleteCachesAfter = true;
             ret.TestGroupMasks = true;
@@ -1583,6 +1659,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.TestObservable),
                     item: item.TestObservable,
                     fieldIndex: (int)TestingSettings_FieldIndex.TestObservable,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestFolder) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.TestFolder),
+                    item: item.TestFolder,
+                    fieldIndex: (int)TestingSettings_FieldIndex.TestFolder,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.ReuseCaches) ?? true))
@@ -1653,6 +1738,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             this.TestNormal = initialValue;
             this.TestObservable = initialValue;
+            this.TestFolder = initialValue;
             this.ReuseCaches = initialValue;
             this.DeleteCachesAfter = initialValue;
             this.TestGroupMasks = initialValue;
@@ -1664,6 +1750,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region Members
         public T TestNormal;
         public T TestObservable;
+        public T TestFolder;
         public T ReuseCaches;
         public T DeleteCachesAfter;
         public T TestGroupMasks;
@@ -1683,6 +1770,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (rhs == null) return false;
             if (!object.Equals(this.TestNormal, rhs.TestNormal)) return false;
             if (!object.Equals(this.TestObservable, rhs.TestObservable)) return false;
+            if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
             if (!object.Equals(this.ReuseCaches, rhs.ReuseCaches)) return false;
             if (!object.Equals(this.DeleteCachesAfter, rhs.DeleteCachesAfter)) return false;
             if (!object.Equals(this.TestGroupMasks, rhs.TestGroupMasks)) return false;
@@ -1695,6 +1783,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.TestNormal?.GetHashCode());
             ret = ret.CombineHashCode(this.TestObservable?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
             ret = ret.CombineHashCode(this.ReuseCaches?.GetHashCode());
             ret = ret.CombineHashCode(this.DeleteCachesAfter?.GetHashCode());
             ret = ret.CombineHashCode(this.TestGroupMasks?.GetHashCode());
@@ -1710,6 +1799,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (!eval(this.TestNormal)) return false;
             if (!eval(this.TestObservable)) return false;
+            if (!eval(this.TestFolder)) return false;
             if (!eval(this.ReuseCaches)) return false;
             if (!eval(this.DeleteCachesAfter)) return false;
             if (!eval(this.TestGroupMasks)) return false;
@@ -1739,6 +1829,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             obj.TestNormal = eval(this.TestNormal);
             obj.TestObservable = eval(this.TestObservable);
+            obj.TestFolder = eval(this.TestFolder);
             obj.ReuseCaches = eval(this.ReuseCaches);
             obj.DeleteCachesAfter = eval(this.DeleteCachesAfter);
             obj.TestGroupMasks = eval(this.TestGroupMasks);
@@ -1796,6 +1887,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestObservable => {TestObservable}");
                 }
+                if (printMask?.TestFolder ?? true)
+                {
+                    fg.AppendLine($"TestFolder => {TestFolder}");
+                }
                 if (printMask?.ReuseCaches ?? true)
                 {
                     fg.AppendLine($"ReuseCaches => {ReuseCaches}");
@@ -1841,6 +1936,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         public Exception TestNormal;
         public Exception TestObservable;
+        public Exception TestFolder;
         public Exception ReuseCaches;
         public Exception DeleteCachesAfter;
         public Exception TestGroupMasks;
@@ -1858,6 +1954,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return TestNormal;
                 case TestingSettings_FieldIndex.TestObservable:
                     return TestObservable;
+                case TestingSettings_FieldIndex.TestFolder:
+                    return TestFolder;
                 case TestingSettings_FieldIndex.ReuseCaches:
                     return ReuseCaches;
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
@@ -1883,6 +1981,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case TestingSettings_FieldIndex.TestObservable:
                     this.TestObservable = ex;
+                    break;
+                case TestingSettings_FieldIndex.TestFolder:
+                    this.TestFolder = ex;
                     break;
                 case TestingSettings_FieldIndex.ReuseCaches:
                     this.ReuseCaches = ex;
@@ -1915,6 +2016,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestObservable:
                     this.TestObservable = (Exception)obj;
                     break;
+                case TestingSettings_FieldIndex.TestFolder:
+                    this.TestFolder = (Exception)obj;
+                    break;
                 case TestingSettings_FieldIndex.ReuseCaches:
                     this.ReuseCaches = (Exception)obj;
                     break;
@@ -1940,6 +2044,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (Overall != null) return true;
             if (TestNormal != null) return true;
             if (TestObservable != null) return true;
+            if (TestFolder != null) return true;
             if (ReuseCaches != null) return true;
             if (DeleteCachesAfter != null) return true;
             if (TestGroupMasks != null) return true;
@@ -1981,6 +2086,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             fg.AppendLine($"TestNormal => {TestNormal}");
             fg.AppendLine($"TestObservable => {TestObservable}");
+            fg.AppendLine($"TestFolder => {TestFolder}");
             fg.AppendLine($"ReuseCaches => {ReuseCaches}");
             fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
             fg.AppendLine($"TestGroupMasks => {TestGroupMasks}");
@@ -1995,6 +2101,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             var ret = new TestingSettings_ErrorMask();
             ret.TestNormal = this.TestNormal.Combine(rhs.TestNormal);
             ret.TestObservable = this.TestObservable.Combine(rhs.TestObservable);
+            ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
             ret.ReuseCaches = this.ReuseCaches.Combine(rhs.ReuseCaches);
             ret.DeleteCachesAfter = this.DeleteCachesAfter.Combine(rhs.DeleteCachesAfter);
             ret.TestGroupMasks = this.TestGroupMasks.Combine(rhs.TestGroupMasks);
@@ -2023,6 +2130,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region Members
         public bool TestNormal;
         public bool TestObservable;
+        public bool TestFolder;
         public bool ReuseCaches;
         public bool DeleteCachesAfter;
         public bool TestGroupMasks;
@@ -2037,6 +2145,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         private TranslationCrystal _crystal;
         public bool TestNormal;
         public bool TestObservable;
+        public bool TestFolder;
         public bool ReuseCaches;
         public bool DeleteCachesAfter;
         public bool TestGroupMasks;
@@ -2060,6 +2169,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             ret.Add((TestNormal, null));
             ret.Add((TestObservable, null));
+            ret.Add((TestFolder, null));
             ret.Add((ReuseCaches, null));
             ret.Add((DeleteCachesAfter, null));
             ret.Add((TestGroupMasks, null));

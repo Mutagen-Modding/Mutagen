@@ -4,6 +4,7 @@
     <Fields>
       <Bool name="TestNormal" />
       <Bool name="TestObservable" />
+      <Bool name="TestFolder"/>
       <Bool name="ReuseCaches" />
       <Bool name="DeleteCachesAfter" default="true" />
       <Bool name="TestGroupMasks" default="true" />
