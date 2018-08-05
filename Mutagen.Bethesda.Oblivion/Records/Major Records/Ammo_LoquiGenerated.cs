@@ -3830,7 +3830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Model),
                     fieldIndex: (int)Ammo_FieldIndex.Model,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Ammo_FieldIndex.Model));
             }
             if (item.Icon_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Icon) ?? true))

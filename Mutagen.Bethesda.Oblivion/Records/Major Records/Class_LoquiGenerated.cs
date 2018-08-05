@@ -3531,7 +3531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Training),
                     fieldIndex: (int)Class_FieldIndex.Training,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training));
             }
         }
         #endregion

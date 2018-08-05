@@ -7170,7 +7170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.TeleportDestination),
                     fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
             }
             if (item.Lock_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
@@ -7181,7 +7181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Lock),
                     fieldIndex: (int)PlacedObject_FieldIndex.Lock,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
             }
             if (item.Owner_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
@@ -7222,7 +7222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
             }
             if (item.Target_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
@@ -7253,7 +7253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.DistantLODData),
                     fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DistantLODData));
             }
             if (item.Charge_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
@@ -7324,7 +7324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.MapMarker),
                     fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
             }
             if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
             {

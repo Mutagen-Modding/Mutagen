@@ -5304,7 +5304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Lighting),
                     fieldIndex: (int)Cell_FieldIndex.Lighting,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting));
             }
             if (item.Regions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
@@ -5405,7 +5405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.PathGrid),
                     fieldIndex: (int)Cell_FieldIndex.PathGrid,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid));
             }
             if (item.Landscape_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
@@ -5416,7 +5416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Landscape),
                     fieldIndex: (int)Cell_FieldIndex.Landscape,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape));
             }
             if (item.Persistent.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))

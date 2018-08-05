@@ -2203,7 +2203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Model),
                     fieldIndex: (int)IdleAnimation_FieldIndex.Model,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Model));
             }
             if (item.Conditions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))

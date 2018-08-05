@@ -3940,7 +3940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.MaleBipedModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel));
             }
             if (item.MaleWorldModel_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleWorldModel) ?? true))
@@ -3951,7 +3951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.MaleWorldModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel));
             }
             if (item.MaleIcon_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleIcon) ?? true))
@@ -3972,7 +3972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.FemaleBipedModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel));
             }
             if (item.FemaleWorldModel_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleWorldModel) ?? true))
@@ -3983,7 +3983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.FemaleWorldModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel));
             }
             if (item.FemaleIcon_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleIcon) ?? true))

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>4e15ff2aaf4355f3c1331896b0d8082d01d81524</Sha>
+         <Sha>ac024de196b1018b43278955fbf069a064488674</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-31-2018 18:45:43</CommitDate>
-         <Description>Removed extra line generation</Description>
+         <CommitDate>08-05-2018 18:15:42</CommitDate>
+         <Description>Added missing translation mask drill down</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

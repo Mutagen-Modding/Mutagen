@@ -4063,7 +4063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Model),
                     fieldIndex: (int)Tree_FieldIndex.Model,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
             }
             if (item.Icon_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))

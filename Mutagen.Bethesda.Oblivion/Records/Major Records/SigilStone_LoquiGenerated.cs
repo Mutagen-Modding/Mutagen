@@ -3283,7 +3283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Model),
                     fieldIndex: (int)SigilStone_FieldIndex.Model,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Model));
             }
             if (item.Icon_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Icon) ?? true))

@@ -4825,7 +4825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.MapData),
                     fieldIndex: (int)Worldspace_FieldIndex.MapData,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapData));
             }
             if (item.Flags_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
@@ -4886,7 +4886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Road),
                     fieldIndex: (int)Worldspace_FieldIndex.Road,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.Road));
             }
             if (item.TopCell_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
@@ -4897,7 +4897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.TopCell),
                     fieldIndex: (int)Worldspace_FieldIndex.TopCell,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell));
             }
             if (item.SubCells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))

@@ -7064,7 +7064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Voices),
                     fieldIndex: (int)Race_FieldIndex.Voices,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Voices));
             }
             if (item.DefaultHair_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHair) ?? true))
@@ -7075,7 +7075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.DefaultHair),
                     fieldIndex: (int)Race_FieldIndex.DefaultHair,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHair));
             }
             if (item.DefaultHairColor_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColor) ?? true))
@@ -7116,7 +7116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.RaceStats),
                     fieldIndex: (int)Race_FieldIndex.RaceStats,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.RaceStats));
             }
             if (item.FaceData.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceData) ?? true))
@@ -7148,7 +7148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.BodyData),
                     fieldIndex: (int)Race_FieldIndex.BodyData,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyData));
             }
             if (item.Hairs.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
@@ -7199,7 +7199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.FaceGenData),
                     fieldIndex: (int)Race_FieldIndex.FaceGenData,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceGenData));
             }
             if (item.Unknown_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))

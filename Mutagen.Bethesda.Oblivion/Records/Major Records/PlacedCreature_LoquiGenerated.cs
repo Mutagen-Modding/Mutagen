@@ -3418,7 +3418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedCreature_FieldIndex.EnableParent));
             }
             if (item.RagdollData_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.RagdollData) ?? true))

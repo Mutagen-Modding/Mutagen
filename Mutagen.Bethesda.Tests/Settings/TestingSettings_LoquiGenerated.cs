@@ -1620,7 +1620,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.OblivionESM),
                     fieldIndex: (int)TestingSettings_FieldIndex.OblivionESM,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.OblivionESM));
             }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.KnightsESP) ?? true))
             {
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.KnightsESP),
                     fieldIndex: (int)TestingSettings_FieldIndex.KnightsESP,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.KnightsESP));
             }
         }
         #endregion

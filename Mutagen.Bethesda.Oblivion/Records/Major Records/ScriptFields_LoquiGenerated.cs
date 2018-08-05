@@ -2563,7 +2563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.MetadataSummary),
                     fieldIndex: (int)ScriptFields_FieldIndex.MetadataSummary,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.MetadataSummary));
             }
             if (item.CompiledScript_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))

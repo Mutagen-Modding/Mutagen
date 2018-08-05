@@ -3068,7 +3068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Location),
                     fieldIndex: (int)AIPackage_FieldIndex.Location,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Location));
             }
             if (item.Schedule_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Schedule) ?? true))
@@ -3079,7 +3079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Schedule),
                     fieldIndex: (int)AIPackage_FieldIndex.Schedule,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Schedule));
             }
             if (item.Target_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Target) ?? true))
@@ -3090,7 +3090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Target),
                     fieldIndex: (int)AIPackage_FieldIndex.Target,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Target));
             }
             if (item.Conditions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Conditions) ?? true))

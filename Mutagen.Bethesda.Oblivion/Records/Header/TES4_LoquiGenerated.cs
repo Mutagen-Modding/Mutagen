@@ -2965,7 +2965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Header),
                     fieldIndex: (int)TES4_FieldIndex.Header,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)TES4_FieldIndex.Header));
             }
             if (item.TypeOffsets_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.TypeOffsets) ?? true))

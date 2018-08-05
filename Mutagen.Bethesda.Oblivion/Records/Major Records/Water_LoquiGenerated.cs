@@ -8158,7 +8158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.RelatedWaters),
                     fieldIndex: (int)Water_FieldIndex.RelatedWaters,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
             }
         }
         #endregion

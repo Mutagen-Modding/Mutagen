@@ -1903,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Data),
                     fieldIndex: (int)Sound_FieldIndex.Data,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data));
             }
         }
         #endregion

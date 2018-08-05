@@ -3818,7 +3818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.DistantLODData),
                     fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedNPC_FieldIndex.DistantLODData));
             }
             if (item.EnableParent_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.EnableParent) ?? true))
@@ -3829,7 +3829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedNPC_FieldIndex.EnableParent));
             }
             if (item.MerchantContainer_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.MerchantContainer) ?? true))

@@ -8646,7 +8646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Advanced),
                     fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced));
             }
         }
         #endregion

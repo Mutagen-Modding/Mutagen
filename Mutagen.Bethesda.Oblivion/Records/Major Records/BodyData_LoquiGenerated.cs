@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Model),
                     fieldIndex: (int)BodyData_FieldIndex.Model,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
             }
             if (item.BodyParts.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.BodyParts) ?? true))

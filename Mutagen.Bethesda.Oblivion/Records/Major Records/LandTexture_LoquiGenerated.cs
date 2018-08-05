@@ -2351,7 +2351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Havok),
                     fieldIndex: (int)LandTexture_FieldIndex.Havok,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok));
             }
             if (item.TextureSpecularExponent_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))

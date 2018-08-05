@@ -3319,7 +3319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Script),
                     fieldIndex: (int)DialogItem_FieldIndex.Script,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Script));
             }
         }
         #endregion

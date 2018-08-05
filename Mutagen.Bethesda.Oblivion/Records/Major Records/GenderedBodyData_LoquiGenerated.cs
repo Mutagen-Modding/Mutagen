@@ -1786,7 +1786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Male),
                     fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Male));
             }
             if (item.Female_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)GenderedBodyData_FieldIndex.Female) ?? true))
@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Female),
                     fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Female));
             }
         }
         #endregion

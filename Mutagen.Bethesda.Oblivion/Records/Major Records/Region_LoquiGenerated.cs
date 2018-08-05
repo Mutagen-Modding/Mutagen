@@ -3813,7 +3813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Objects),
                     fieldIndex: (int)Region_FieldIndex.Objects,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
             }
             if (item.Weather_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
@@ -3824,7 +3824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Weather),
                     fieldIndex: (int)Region_FieldIndex.Weather,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
             }
             if (item.MapName_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapName) ?? true))
@@ -3835,7 +3835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.MapName),
                     fieldIndex: (int)Region_FieldIndex.MapName,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName));
             }
             if (item.Grasses_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
@@ -3846,7 +3846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Grasses),
                     fieldIndex: (int)Region_FieldIndex.Grasses,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
             }
             if (item.Sounds_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
@@ -3857,7 +3857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Sounds),
                     fieldIndex: (int)Region_FieldIndex.Sounds,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
             }
         }
         #endregion

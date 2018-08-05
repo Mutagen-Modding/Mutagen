@@ -4962,7 +4962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Model),
                     fieldIndex: (int)MagicEffect_FieldIndex.Model,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Model));
             }
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
@@ -5053,7 +5053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.SubData),
                     fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.SubData));
             }
             if (item.CounterEffects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))

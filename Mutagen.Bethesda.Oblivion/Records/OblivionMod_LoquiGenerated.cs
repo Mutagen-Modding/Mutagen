@@ -8914,7 +8914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.TES4),
                     fieldIndex: (int)OblivionMod_FieldIndex.TES4,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.TES4));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.GameSettings) ?? true))
             {
@@ -8924,7 +8924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.GameSettings),
                     fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.GameSettings));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Globals) ?? true))
             {
@@ -8934,7 +8934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Globals),
                     fieldIndex: (int)OblivionMod_FieldIndex.Globals,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Globals));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Classes) ?? true))
             {
@@ -8944,7 +8944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Classes),
                     fieldIndex: (int)OblivionMod_FieldIndex.Classes,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Classes));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Factions) ?? true))
             {
@@ -8954,7 +8954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Factions),
                     fieldIndex: (int)OblivionMod_FieldIndex.Factions,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Factions));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Hairs) ?? true))
             {
@@ -8964,7 +8964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Hairs),
                     fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Hairs));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Eyes) ?? true))
             {
@@ -8974,7 +8974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Eyes),
                     fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Eyes));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Races) ?? true))
             {
@@ -8984,7 +8984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Races),
                     fieldIndex: (int)OblivionMod_FieldIndex.Races,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Races));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Sounds) ?? true))
             {
@@ -8994,7 +8994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Sounds),
                     fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Sounds));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Skills) ?? true))
             {
@@ -9004,7 +9004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Skills),
                     fieldIndex: (int)OblivionMod_FieldIndex.Skills,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Skills));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.MagicEffects) ?? true))
             {
@@ -9014,7 +9014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.MagicEffects),
                     fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.MagicEffects));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Scripts) ?? true))
             {
@@ -9024,7 +9024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Scripts),
                     fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Scripts));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LandTextures) ?? true))
             {
@@ -9034,7 +9034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.LandTextures),
                     fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LandTextures));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Enchantments) ?? true))
             {
@@ -9044,7 +9044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Enchantments),
                     fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Enchantments));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Spells) ?? true))
             {
@@ -9054,7 +9054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Spells),
                     fieldIndex: (int)OblivionMod_FieldIndex.Spells,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Spells));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Birthsigns) ?? true))
             {
@@ -9064,7 +9064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Birthsigns),
                     fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Birthsigns));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Activators) ?? true))
             {
@@ -9074,7 +9074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Activators),
                     fieldIndex: (int)OblivionMod_FieldIndex.Activators,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Activators));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AlchemicalApparatus) ?? true))
             {
@@ -9084,7 +9084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.AlchemicalApparatus),
                     fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AlchemicalApparatus));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Armors) ?? true))
             {
@@ -9094,7 +9094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Armors),
                     fieldIndex: (int)OblivionMod_FieldIndex.Armors,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Armors));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Books) ?? true))
             {
@@ -9104,7 +9104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Books),
                     fieldIndex: (int)OblivionMod_FieldIndex.Books,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Books));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Clothes) ?? true))
             {
@@ -9114,7 +9114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Clothes),
                     fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Clothes));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Containers) ?? true))
             {
@@ -9124,7 +9124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Containers),
                     fieldIndex: (int)OblivionMod_FieldIndex.Containers,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Containers));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Doors) ?? true))
             {
@@ -9134,7 +9134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Doors),
                     fieldIndex: (int)OblivionMod_FieldIndex.Doors,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Doors));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ingredients) ?? true))
             {
@@ -9144,7 +9144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Ingredients),
                     fieldIndex: (int)OblivionMod_FieldIndex.Ingredients,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ingredients));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Lights) ?? true))
             {
@@ -9154,7 +9154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Lights),
                     fieldIndex: (int)OblivionMod_FieldIndex.Lights,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Lights));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Miscellaneous) ?? true))
             {
@@ -9164,7 +9164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Miscellaneous),
                     fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Miscellaneous));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Statics) ?? true))
             {
@@ -9174,7 +9174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Statics),
                     fieldIndex: (int)OblivionMod_FieldIndex.Statics,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Statics));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Grasses) ?? true))
             {
@@ -9184,7 +9184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Grasses),
                     fieldIndex: (int)OblivionMod_FieldIndex.Grasses,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Grasses));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Trees) ?? true))
             {
@@ -9194,7 +9194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Trees),
                     fieldIndex: (int)OblivionMod_FieldIndex.Trees,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Trees));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Flora) ?? true))
             {
@@ -9204,7 +9204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Flora),
                     fieldIndex: (int)OblivionMod_FieldIndex.Flora,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Flora));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Furnature) ?? true))
             {
@@ -9214,7 +9214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Furnature),
                     fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Furnature));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weapons) ?? true))
             {
@@ -9224,7 +9224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Weapons),
                     fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Weapons));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammo) ?? true))
             {
@@ -9234,7 +9234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Ammo),
                     fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ammo));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.NPCs) ?? true))
             {
@@ -9244,7 +9244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.NPCs),
                     fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.NPCs));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Creatures) ?? true))
             {
@@ -9254,7 +9254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Creatures),
                     fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Creatures));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledCreatures) ?? true))
             {
@@ -9264,7 +9264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.LeveledCreatures),
                     fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledCreatures));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SoulGems) ?? true))
             {
@@ -9274,7 +9274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.SoulGems),
                     fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.SoulGems));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Keys) ?? true))
             {
@@ -9284,7 +9284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Keys),
                     fieldIndex: (int)OblivionMod_FieldIndex.Keys,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Keys));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Potions) ?? true))
             {
@@ -9294,7 +9294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Potions),
                     fieldIndex: (int)OblivionMod_FieldIndex.Potions,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Potions));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Subspaces) ?? true))
             {
@@ -9304,7 +9304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Subspaces),
                     fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Subspaces));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SigilStones) ?? true))
             {
@@ -9314,7 +9314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.SigilStones),
                     fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.SigilStones));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledItems) ?? true))
             {
@@ -9324,7 +9324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.LeveledItems),
                     fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledItems));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weathers) ?? true))
             {
@@ -9334,7 +9334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Weathers),
                     fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Weathers));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Climates) ?? true))
             {
@@ -9344,7 +9344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Climates),
                     fieldIndex: (int)OblivionMod_FieldIndex.Climates,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Climates));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Regions) ?? true))
             {
@@ -9354,7 +9354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Regions),
                     fieldIndex: (int)OblivionMod_FieldIndex.Regions,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Regions));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Cells) ?? true))
             {
@@ -9364,7 +9364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Cells),
                     fieldIndex: (int)OblivionMod_FieldIndex.Cells,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Cells));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Worldspaces) ?? true))
             {
@@ -9374,7 +9374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Worldspaces),
                     fieldIndex: (int)OblivionMod_FieldIndex.Worldspaces,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Worldspaces));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.DialogTopics) ?? true))
             {
@@ -9384,7 +9384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.DialogTopics),
                     fieldIndex: (int)OblivionMod_FieldIndex.DialogTopics,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.DialogTopics));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Quests) ?? true))
             {
@@ -9394,7 +9394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Quests),
                     fieldIndex: (int)OblivionMod_FieldIndex.Quests,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Quests));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.IdleAnimations) ?? true))
             {
@@ -9404,7 +9404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.IdleAnimations),
                     fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.IdleAnimations));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AIPackages) ?? true))
             {
@@ -9414,7 +9414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.AIPackages),
                     fieldIndex: (int)OblivionMod_FieldIndex.AIPackages,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AIPackages));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.CombatStyles) ?? true))
             {
@@ -9424,7 +9424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.CombatStyles),
                     fieldIndex: (int)OblivionMod_FieldIndex.CombatStyles,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.CombatStyles));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LoadScreens) ?? true))
             {
@@ -9434,7 +9434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.LoadScreens),
                     fieldIndex: (int)OblivionMod_FieldIndex.LoadScreens,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LoadScreens));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledSpells) ?? true))
             {
@@ -9444,7 +9444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.LeveledSpells),
                     fieldIndex: (int)OblivionMod_FieldIndex.LeveledSpells,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledSpells));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AnimatedObjects) ?? true))
             {
@@ -9454,7 +9454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.AnimatedObjects),
                     fieldIndex: (int)OblivionMod_FieldIndex.AnimatedObjects,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AnimatedObjects));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Waters) ?? true))
             {
@@ -9464,7 +9464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Waters),
                     fieldIndex: (int)OblivionMod_FieldIndex.Waters,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Waters));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.EffectShaders) ?? true))
             {
@@ -9474,7 +9474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.EffectShaders),
                     fieldIndex: (int)OblivionMod_FieldIndex.EffectShaders,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.EffectShaders));
             }
         }
         #endregion

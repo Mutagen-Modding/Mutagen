@@ -3937,7 +3937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Model),
                     fieldIndex: (int)Grass_FieldIndex.Model,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
             }
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
             {

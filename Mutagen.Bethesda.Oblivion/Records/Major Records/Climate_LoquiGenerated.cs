@@ -3547,7 +3547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Model),
                     fieldIndex: (int)Climate_FieldIndex.Model,
                     errorMask: errorMask,
-                    translationMask: translationMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Model));
             }
             if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
             {
