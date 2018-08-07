@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Light":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Light_Property,
+                        item: item.Light_Property,
                         fieldIndex: (int)MagicEffect_FieldIndex.Light,
                         errorMask: errorMask);
                     break;
@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "EffectShader":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.EffectShader_Property,
+                        item: item.EffectShader_Property,
                         fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                         errorMask: errorMask);
                     break;
@@ -3247,7 +3247,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            property: item.Light_Property,
+                            item: item.Light_Property,
                             fieldIndex: (int)MagicEffect_FieldIndex.Light,
                             errorMask: errorMask);
                         try
@@ -3276,7 +3276,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            property: item.EffectShader_Property,
+                            item: item.EffectShader_Property,
                             fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                             errorMask: errorMask);
                         if (dataFrame.Complete)

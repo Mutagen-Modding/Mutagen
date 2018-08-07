@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Faction":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Faction_Property,
+                        item: item.Faction_Property,
                         fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                         errorMask: errorMask);
                     break;
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.Faction_Property,
+                item: item.Faction_Property,
                 fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                 errorMask: errorMask);
             try

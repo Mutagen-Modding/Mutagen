@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IdleAnimation":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.IdleAnimation_Property,
+                        item: item.IdleAnimation_Property,
                         fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
                         errorMask: errorMask);
                     break;
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.IdleAnimation_Property,
+                        item: item.IdleAnimation_Property,
                         fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);

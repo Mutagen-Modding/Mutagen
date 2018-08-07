@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Worldspace":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Worldspace_Property,
+                        item: item.Worldspace_Property,
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
                         errorMask: errorMask);
                     break;
@@ -2382,7 +2382,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Worldspace_Property,
+                        item: item.Worldspace_Property,
                         fieldIndex: (int)Region_FieldIndex.Worldspace,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);

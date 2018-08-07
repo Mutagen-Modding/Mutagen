@@ -717,14 +717,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                         errorMask: errorMask);
                     break;
                 case "Template":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Template_Property,
+                        item: item.Template_Property,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                         errorMask: errorMask);
                     break;
@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
@@ -1323,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Template_Property,
+                        item: item.Template_Property,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);

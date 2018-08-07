@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MagicEffect":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.MagicEffect_Property,
+                        item: item.MagicEffect_Property,
                         fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                         errorMask: errorMask);
                     break;
@@ -1786,7 +1786,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            property: item.MagicEffect_Property,
+                            item: item.MagicEffect_Property,
                             fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                             errorMask: errorMask);
                         try

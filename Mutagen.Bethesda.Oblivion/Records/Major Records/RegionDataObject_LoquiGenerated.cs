@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Object":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Object_Property,
+                        item: item.Object_Property,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Object,
                         errorMask: errorMask);
                     break;
@@ -2840,7 +2840,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.Object_Property,
+                item: item.Object_Property,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Object,
                 errorMask: errorMask);
             try

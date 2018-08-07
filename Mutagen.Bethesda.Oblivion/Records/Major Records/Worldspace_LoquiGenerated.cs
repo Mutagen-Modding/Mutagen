@@ -1143,21 +1143,21 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Parent":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Parent_Property,
+                        item: item.Parent_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Parent,
                         errorMask: errorMask);
                     break;
                 case "Climate":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Climate_Property,
+                        item: item.Climate_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Climate,
                         errorMask: errorMask);
                     break;
                 case "Water":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Water_Property,
+                        item: item.Water_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Water,
                         errorMask: errorMask);
                     break;
@@ -2890,7 +2890,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Parent_Property,
+                        item: item.Parent_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Parent,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
@@ -2898,7 +2898,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Climate_Property,
+                        item: item.Climate_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Climate,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
@@ -2906,7 +2906,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Water_Property,
+                        item: item.Water_Property,
                         fieldIndex: (int)Worldspace_FieldIndex.Water,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);

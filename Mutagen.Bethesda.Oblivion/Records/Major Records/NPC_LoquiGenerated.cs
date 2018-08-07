@@ -3680,14 +3680,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "DeathItem":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.DeathItem_Property,
+                        item: item.DeathItem_Property,
                         fieldIndex: (int)NPC_FieldIndex.DeathItem,
                         errorMask: errorMask);
                     break;
                 case "Race":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Race_Property,
+                        item: item.Race_Property,
                         fieldIndex: (int)NPC_FieldIndex.Race,
                         errorMask: errorMask);
                     break;
@@ -3722,7 +3722,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)NPC_FieldIndex.Script,
                         errorMask: errorMask);
                     break;
@@ -4021,7 +4021,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Class":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Class_Property,
+                        item: item.Class_Property,
                         fieldIndex: (int)NPC_FieldIndex.Class,
                         errorMask: errorMask);
                     break;
@@ -4808,7 +4808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Hair":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Hair_Property,
+                        item: item.Hair_Property,
                         fieldIndex: (int)NPC_FieldIndex.Hair,
                         errorMask: errorMask);
                     break;
@@ -4895,7 +4895,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CombatStyle":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.CombatStyle_Property,
+                        item: item.CombatStyle_Property,
                         fieldIndex: (int)NPC_FieldIndex.CombatStyle,
                         errorMask: errorMask);
                     break;
@@ -7657,7 +7657,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.DeathItem_Property,
+                        item: item.DeathItem_Property,
                         fieldIndex: (int)NPC_FieldIndex.DeathItem,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.DeathItem);
@@ -7665,7 +7665,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Race_Property,
+                        item: item.Race_Property,
                         fieldIndex: (int)NPC_FieldIndex.Race,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Race);
@@ -7683,7 +7683,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)NPC_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Script);
@@ -7931,7 +7931,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Class_Property,
+                        item: item.Class_Property,
                         fieldIndex: (int)NPC_FieldIndex.Class,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Class);
@@ -8669,7 +8669,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Hair_Property,
+                        item: item.Hair_Property,
                         fieldIndex: (int)NPC_FieldIndex.Hair,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Hair);
@@ -8742,7 +8742,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.CombatStyle_Property,
+                        item: item.CombatStyle_Property,
                         fieldIndex: (int)NPC_FieldIndex.CombatStyle,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.CombatStyle);

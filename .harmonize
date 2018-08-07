@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>6db78873cd60fc8947dc3c18f4d257c4e937609b</Sha>
+         <Sha>aaad0279927c27f8041cd8f1e177908d30e8f0d2</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-28-2018 13:53:34</CommitDate>
-         <Description>Bugfix for XmlExt.ContentEqual</Description>
+         <CommitDate>08-05-2018 22:31:18</CommitDate>
+         <Description>bool flip fix</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2679c84a3f2de4d3ffa2d54c8652fe947042daf3</Sha>
+         <Sha>2754f49e589b9a624d9ee8dc6f5ac04a6a0ba31e</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-05-2018 18:16:39</CommitDate>
-         <Description>Missing error mask index push</Description>
+         <CommitDate>08-07-2018 18:24:54</CommitDate>
+         <Description>Small tweaks to parameter naming and generation bugs related to generating non-notifying fields</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

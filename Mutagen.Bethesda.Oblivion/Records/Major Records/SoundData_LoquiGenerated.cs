@@ -569,14 +569,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MinimumAttenuationDistance":
                     UInt16XmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.MinimumAttenuationDistance_Property,
+                        item: item.MinimumAttenuationDistance_Property,
                         fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
                         errorMask: errorMask);
                     break;
                 case "MaximumAttenuationDistance":
                     UInt16XmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.MaximumAttenuationDistance_Property,
+                        item: item.MaximumAttenuationDistance_Property,
                         fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                         errorMask: errorMask);
                     break;

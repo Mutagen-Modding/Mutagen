@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Texture":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Texture_Property,
+                        item: item.Texture_Property,
                         fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                         errorMask: errorMask);
                     break;
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            property: item.Texture_Property,
+                            item: item.Texture_Property,
                             fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                             errorMask: errorMask);
                         try

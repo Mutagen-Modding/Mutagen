@@ -579,35 +579,35 @@ namespace Mutagen.Bethesda.Oblivion
                 case "EnchantEffect":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.EnchantEffect_Property,
+                        item: item.EnchantEffect_Property,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                         errorMask: errorMask);
                     break;
                 case "CastingSound":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.CastingSound_Property,
+                        item: item.CastingSound_Property,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                         errorMask: errorMask);
                     break;
                 case "BoltSound":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.BoltSound_Property,
+                        item: item.BoltSound_Property,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                         errorMask: errorMask);
                     break;
                 case "HitSound":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.HitSound_Property,
+                        item: item.HitSound_Property,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                         errorMask: errorMask);
                     break;
                 case "AreaSound":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.AreaSound_Property,
+                        item: item.AreaSound_Property,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
                         errorMask: errorMask);
                     break;
@@ -1050,27 +1050,27 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.EnchantEffect_Property,
+                item: item.EnchantEffect_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.CastingSound_Property,
+                item: item.CastingSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.BoltSound_Property,
+                item: item.BoltSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.HitSound_Property,
+                item: item.HitSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.AreaSound_Property,
+                item: item.AreaSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
                 errorMask: errorMask);
             try

@@ -459,21 +459,21 @@ namespace Mutagen.Bethesda.Oblivion
                 case "RelatedWaterDaytime":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.RelatedWaterDaytime_Property,
+                        item: item.RelatedWaterDaytime_Property,
                         fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
                         errorMask: errorMask);
                     break;
                 case "RelatedWaterNighttime":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.RelatedWaterNighttime_Property,
+                        item: item.RelatedWaterNighttime_Property,
                         fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
                         errorMask: errorMask);
                     break;
                 case "RelatedWaterUnderwater":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.RelatedWaterUnderwater_Property,
+                        item: item.RelatedWaterUnderwater_Property,
                         fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
                         errorMask: errorMask);
                     break;
@@ -703,17 +703,17 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.RelatedWaterDaytime_Property,
+                item: item.RelatedWaterDaytime_Property,
                 fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.RelatedWaterNighttime_Property,
+                item: item.RelatedWaterNighttime_Property,
                 fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.RelatedWaterUnderwater_Property,
+                item: item.RelatedWaterUnderwater_Property,
                 fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
                 errorMask: errorMask);
         }

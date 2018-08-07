@@ -793,14 +793,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Quest":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Quest_Property,
+                        item: item.Quest_Property,
                         fieldIndex: (int)DialogItem_FieldIndex.Quest,
                         errorMask: errorMask);
                     break;
                 case "PreviousTopic":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.PreviousTopic_Property,
+                        item: item.PreviousTopic_Property,
                         fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
                         errorMask: errorMask);
                     break;
@@ -1688,7 +1688,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Quest_Property,
+                        item: item.Quest_Property,
                         fieldIndex: (int)DialogItem_FieldIndex.Quest,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.PreviousTopic_Property,
+                        item: item.PreviousTopic_Property,
                         fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);

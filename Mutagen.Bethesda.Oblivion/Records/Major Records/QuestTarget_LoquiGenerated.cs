@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Target":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Target_Property,
+                        item: item.Target_Property,
                         fieldIndex: (int)QuestTarget_FieldIndex.Target,
                         errorMask: errorMask);
                     break;
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            property: item.Target_Property,
+                            item: item.Target_Property,
                             fieldIndex: (int)QuestTarget_FieldIndex.Target,
                             errorMask: errorMask);
                         try

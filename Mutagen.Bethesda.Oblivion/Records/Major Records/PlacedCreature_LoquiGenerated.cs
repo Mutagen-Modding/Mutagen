@@ -844,14 +844,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Base":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Base_Property,
+                        item: item.Base_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                         errorMask: errorMask);
                     break;
                 case "Owner":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Owner_Property,
+                        item: item.Owner_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
                         errorMask: errorMask);
                     break;
@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "GlobalVariable":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.GlobalVariable_Property,
+                        item: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
                         errorMask: errorMask);
                     break;
@@ -1978,7 +1978,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Base_Property,
+                        item: item.Base_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Base);
@@ -1986,7 +1986,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Owner_Property,
+                        item: item.Owner_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Owner);
@@ -2021,7 +2021,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.GlobalVariable_Property,
+                        item: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.GlobalVariable);

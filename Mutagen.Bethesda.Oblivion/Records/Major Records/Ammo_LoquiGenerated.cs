@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Enchantment":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Enchantment_Property,
+                        item: item.Enchantment_Property,
                         fieldIndex: (int)Ammo_FieldIndex.Enchantment,
                         errorMask: errorMask);
                     break;
@@ -2389,7 +2389,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Enchantment_Property,
+                        item: item.Enchantment_Property,
                         fieldIndex: (int)Ammo_FieldIndex.Enchantment,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Enchantment);

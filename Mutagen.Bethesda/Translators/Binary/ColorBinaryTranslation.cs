@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static ColorBinaryTranslation Instance = new ColorBinaryTranslation();
         public override int? ExpectedLength => 3;
-        
+
         public bool Parse(
             MutagenFrame frame,
             out Color item,
@@ -30,6 +30,24 @@ namespace Mutagen.Bethesda.Binary
                 frame,
                 out item,
                 errorMask);
+        }
+
+        public void ParseInto(
+            MutagenFrame frame,
+            IHasItem<Color> item,
+            int fieldIndex,
+            bool extraByte,
+            ErrorMaskBuilder errorMask)
+        {
+            if (!extraByte)
+            {
+                throw new NotImplementedException();
+            }
+            this.ParseInto(
+                frame: frame,
+                fieldIndex: fieldIndex,
+                item: item,
+                errorMask: errorMask);
         }
 
         protected override Color ParseValue(MutagenFrame reader)

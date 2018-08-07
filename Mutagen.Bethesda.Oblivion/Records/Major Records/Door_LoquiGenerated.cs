@@ -749,28 +749,28 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)Door_FieldIndex.Script,
                         errorMask: errorMask);
                     break;
                 case "OpenSound":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.OpenSound_Property,
+                        item: item.OpenSound_Property,
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
                         errorMask: errorMask);
                     break;
                 case "CloseSound":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.CloseSound_Property,
+                        item: item.CloseSound_Property,
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
                         errorMask: errorMask);
                     break;
                 case "LoopSound":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.LoopSound_Property,
+                        item: item.LoopSound_Property,
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
                         errorMask: errorMask);
                     break;
@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)Door_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.OpenSound_Property,
+                        item: item.OpenSound_Property,
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.CloseSound_Property,
+                        item: item.CloseSound_Property,
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.LoopSound_Property,
+                        item: item.LoopSound_Property,
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);

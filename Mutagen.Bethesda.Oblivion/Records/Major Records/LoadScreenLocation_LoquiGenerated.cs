@@ -502,14 +502,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Direct":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Direct_Property,
+                        item: item.Direct_Property,
                         fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                         errorMask: errorMask);
                     break;
                 case "Indirect":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Indirect_Property,
+                        item: item.Indirect_Property,
                         fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
                         errorMask: errorMask);
                     break;
@@ -912,12 +912,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.Direct_Property,
+                item: item.Direct_Property,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.Indirect_Property,
+                item: item.Indirect_Property,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
                 errorMask: errorMask);
             try

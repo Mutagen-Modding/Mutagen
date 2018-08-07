@@ -108,13 +108,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
                 writer,
-                item.Flags_Property,
+                item.Flags,
                 length: 4,
                 fieldIndex: (int)AIPackage_FieldIndex.Flags,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
                 writer,
-                item.GeneralType_Property,
+                item.GeneralType,
                 length: 4,
                 fieldIndex: (int)AIPackage_FieldIndex.GeneralType,
                 errorMask: errorMask);

@@ -1033,14 +1033,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)Book_FieldIndex.Script,
                         errorMask: errorMask);
                     break;
                 case "Enchantment":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Enchantment_Property,
+                        item: item.Enchantment_Property,
                         fieldIndex: (int)Book_FieldIndex.Enchantment,
                         errorMask: errorMask);
                     break;
@@ -2377,7 +2377,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)Book_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.Script);
@@ -2385,7 +2385,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Enchantment_Property,
+                        item: item.Enchantment_Property,
                         fieldIndex: (int)Book_FieldIndex.Enchantment,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.Enchantment);

@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Door":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Door_Property,
+                        item: item.Door_Property,
                         fieldIndex: (int)TeleportDestination_FieldIndex.Door,
                         errorMask: errorMask);
                     break;
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.Door_Property,
+                item: item.Door_Property,
                 fieldIndex: (int)TeleportDestination_FieldIndex.Door,
                 errorMask: errorMask);
             try

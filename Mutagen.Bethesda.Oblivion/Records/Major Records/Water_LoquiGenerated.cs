@@ -2143,7 +2143,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Sound":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Sound_Property,
+                        item: item.Sound_Property,
                         fieldIndex: (int)Water_FieldIndex.Sound,
                         errorMask: errorMask);
                     break;
@@ -4534,7 +4534,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Sound_Property,
+                        item: item.Sound_Property,
                         fieldIndex: (int)Water_FieldIndex.Sound,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);

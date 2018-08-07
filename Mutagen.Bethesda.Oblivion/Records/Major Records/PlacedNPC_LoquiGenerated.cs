@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Base":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Base_Property,
+                        item: item.Base_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask);
                     break;
@@ -1073,14 +1073,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MerchantContainer":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.MerchantContainer_Property,
+                        item: item.MerchantContainer_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
                         errorMask: errorMask);
                     break;
                 case "Horse":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Horse_Property,
+                        item: item.Horse_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                         errorMask: errorMask);
                     break;
@@ -2171,7 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Base_Property,
+                        item: item.Base_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Base);
@@ -2285,7 +2285,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.MerchantContainer_Property,
+                        item: item.MerchantContainer_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.MerchantContainer);
@@ -2293,7 +2293,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Horse_Property,
+                        item: item.Horse_Property,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Horse);

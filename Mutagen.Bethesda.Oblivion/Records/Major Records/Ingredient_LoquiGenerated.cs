@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Script":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)Ingredient_FieldIndex.Script,
                         errorMask: errorMask);
                     break;
@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Script_Property,
+                        item: item.Script_Property,
                         fieldIndex: (int)Ingredient_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Script);

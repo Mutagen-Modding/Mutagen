@@ -959,28 +959,28 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SunriseBegin":
                     DateTimeXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.SunriseBegin_Property,
+                        item: item.SunriseBegin_Property,
                         fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
                         errorMask: errorMask);
                     break;
                 case "SunriseEnd":
                     DateTimeXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.SunriseEnd_Property,
+                        item: item.SunriseEnd_Property,
                         fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
                         errorMask: errorMask);
                     break;
                 case "SunsetBegin":
                     DateTimeXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.SunsetBegin_Property,
+                        item: item.SunsetBegin_Property,
                         fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
                         errorMask: errorMask);
                     break;
                 case "SunsetEnd":
                     DateTimeXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.SunsetEnd_Property,
+                        item: item.SunsetEnd_Property,
                         fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
                         errorMask: errorMask);
                     break;

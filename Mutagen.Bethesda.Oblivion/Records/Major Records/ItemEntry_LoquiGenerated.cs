@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Item":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Item_Property,
+                        item: item.Item_Property,
                         fieldIndex: (int)ItemEntry_FieldIndex.Item,
                         errorMask: errorMask);
                     break;
@@ -740,19 +740,6 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         errorMask: errorMask);
                 }
-                if (ret.StructCustom)
-                {
-                    object structUnsubber = new object();
-                    Action unsubAction = () =>
-                    {
-                        ret.Count_Property.Unsubscribe(structUnsubber);
-                        ret.StructCustom = false;
-                    };
-                    ret.Count_Property.Subscribe(
-                        owner: structUnsubber,
-                        callback: unsubAction,
-                        cmds: NotifyingSubscribeParameters.NoFire);
-                }
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -916,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.Item_Property,
+                item: item.Item_Property,
                 fieldIndex: (int)ItemEntry_FieldIndex.Item,
                 errorMask: errorMask);
             if (frame.Complete) return;

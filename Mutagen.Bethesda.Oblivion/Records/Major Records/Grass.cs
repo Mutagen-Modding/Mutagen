@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MaxSlope_Property,
+                item: item.MaxSlope,
                 fieldIndex: (int)Grass_FieldIndex.MaxSlope,
                 errorMask: errorMask);
             if (item._buffer1 != null)
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.UnitFromWaterAmount_Property,
+                item: item.UnitFromWaterAmount,
                 fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
                 errorMask: errorMask);
             if (item._buffer2 != null)

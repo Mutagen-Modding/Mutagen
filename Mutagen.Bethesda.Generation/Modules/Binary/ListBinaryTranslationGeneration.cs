@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     throw new NotImplementedException();
                 }
-                args.Add($"item: {itemAccessor.PropertyAccess}");
+                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (list.CustomData.TryGetValue("lengthLength", out object len))
                 {

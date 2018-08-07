@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "LocationReference":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.LocationReference_Property,
+                        item: item.LocationReference_Property,
                         fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
                         errorMask: errorMask);
                     break;
@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.LocationReference_Property,
+                item: item.LocationReference_Property,
                 fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
                 errorMask: errorMask);
             try

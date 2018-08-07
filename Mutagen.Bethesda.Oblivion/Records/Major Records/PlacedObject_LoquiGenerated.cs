@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Base":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Base_Property,
+                        item: item.Base_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
                         errorMask: errorMask);
                     break;
@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Owner":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Owner_Property,
+                        item: item.Owner_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                         errorMask: errorMask);
                     break;
@@ -1781,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "GlobalVariable":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.GlobalVariable_Property,
+                        item: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                         errorMask: errorMask);
                     break;
@@ -1815,7 +1815,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Target":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Target_Property,
+                        item: item.Target_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Target,
                         errorMask: errorMask);
                     break;
@@ -1953,7 +1953,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Unknown":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Unknown_Property,
+                        item: item.Unknown_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                         errorMask: errorMask);
                     break;
@@ -2117,7 +2117,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ContainedSoul":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.ContainedSoul_Property,
+                        item: item.ContainedSoul_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                         errorMask: errorMask);
                     break;
@@ -4193,7 +4193,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Base_Property,
+                        item: item.Base_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
@@ -4307,7 +4307,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Owner_Property,
+                        item: item.Owner_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Owner);
@@ -4342,7 +4342,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.GlobalVariable_Property,
+                        item: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.GlobalVariable);
@@ -4376,7 +4376,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Target_Property,
+                        item: item.Target_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Target,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Target);
@@ -4518,7 +4518,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.Unknown_Property,
+                        item: item.Unknown_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
@@ -4670,7 +4670,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
-                        property: item.ContainedSoul_Property,
+                        item: item.ContainedSoul_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ContainedSoul);

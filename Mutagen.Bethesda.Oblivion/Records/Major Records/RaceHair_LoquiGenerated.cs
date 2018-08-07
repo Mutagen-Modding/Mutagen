@@ -450,14 +450,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "Male":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Male_Property,
+                        item: item.Male_Property,
                         fieldIndex: (int)RaceHair_FieldIndex.Male,
                         errorMask: errorMask);
                     break;
                 case "Female":
                     FormIDXmlTranslation.Instance.ParseInto(
                         root: root,
-                        property: item.Female_Property,
+                        item: item.Female_Property,
                         fieldIndex: (int)RaceHair_FieldIndex.Female,
                         errorMask: errorMask);
                     break;
@@ -686,12 +686,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.Male_Property,
+                item: item.Male_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                property: item.Female_Property,
+                item: item.Female_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Female,
                 errorMask: errorMask);
         }
