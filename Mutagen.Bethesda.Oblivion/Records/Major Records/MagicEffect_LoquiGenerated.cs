@@ -2092,19 +2092,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
         {
             return GetByteArr(index: index);
         }
 
-        protected override Byte[] GetByteArr(int index)
+        protected Byte[] GetByteArr(int index)
         {
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.Unused:
                     return Unused;
                 default:
-                    return base.GetByteArr(index: index);
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -2121,7 +2122,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        protected override void SetByteArr(
+        protected void SetByteArr(
             int index,
             Byte[] item,
             bool hasBeenSet,
@@ -2133,12 +2134,7 @@ namespace Mutagen.Bethesda.Oblivion
                     SetUnused(item, hasBeenSet, cmds);
                     break;
                 default:
-                    base.SetByteArr(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -2163,7 +2159,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        protected override void UnsetByteArr(
+        protected void UnsetByteArr(
             int index,
             NotifyingUnsetParameters cmds)
         {
@@ -2175,10 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion
                         hasBeenSet: false);
                     break;
                 default:
-                    base.UnsetByteArr(
-                        index: index,
-                        cmds: cmds);
-                    break;
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -2219,14 +2212,14 @@ namespace Mutagen.Bethesda.Oblivion
             return DefaultValueByteArr(index: index);
         }
 
-        protected override Byte[] DefaultValueByteArr(int index)
+        protected Byte[] DefaultValueByteArr(int index)
         {
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.Unused:
                     return default(Byte[]);
                 default:
-                    return base.DefaultValueByteArr(index: index);
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -2501,20 +2494,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region IPropertySupporter UInt32
-        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
         UInt32 IPropertySupporter<UInt32>.Get(int index)
         {
             return GetUInt32(index: index);
         }
 
-        protected UInt32 GetUInt32(int index)
+        protected override UInt32 GetUInt32(int index)
         {
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.CounterEffectCount:
                     return CounterEffectCount;
                 default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+                    return base.GetUInt32(index: index);
             }
         }
 
@@ -2531,7 +2523,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        protected void SetUInt32(
+        protected override void SetUInt32(
             int index,
             UInt32 item,
             bool hasBeenSet,
@@ -2543,7 +2535,12 @@ namespace Mutagen.Bethesda.Oblivion
                     SetCounterEffectCount(item, hasBeenSet, cmds);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+                    base.SetUInt32(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
             }
         }
 
@@ -2568,7 +2565,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        protected void UnsetUInt32(
+        protected override void UnsetUInt32(
             int index,
             NotifyingUnsetParameters cmds)
         {
@@ -2580,7 +2577,10 @@ namespace Mutagen.Bethesda.Oblivion
                         hasBeenSet: false);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+                    base.UnsetUInt32(
+                        index: index,
+                        cmds: cmds);
+                    break;
             }
         }
 
@@ -2621,14 +2621,14 @@ namespace Mutagen.Bethesda.Oblivion
             return DefaultValueUInt32(index: index);
         }
 
-        protected UInt32 DefaultValueUInt32(int index)
+        protected override UInt32 DefaultValueUInt32(int index)
         {
             switch ((MagicEffect_FieldIndex)index)
             {
                 case MagicEffect_FieldIndex.CounterEffectCount:
                     return default(UInt32);
                 default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+                    return base.DefaultValueUInt32(index: index);
             }
         }
 

@@ -1199,6 +1199,29 @@ namespace Mutagen.Bethesda.Oblivion
                         lastParsed = parsed.Value;
                     }
                 }
+                if (ret.SCITDataTypeState != default(SCITDataType))
+                {
+                    object dataTypeStateSubber = new object();
+                    Action unsubAction = () =>
+                    {
+                        ret.MagicSchool_Property.Unsubscribe(dataTypeStateSubber);
+                        ret.VisualEffect_Property.Unsubscribe(dataTypeStateSubber);
+                        ret.Flags_Property.Unsubscribe(dataTypeStateSubber);
+                        ret.SCITDataTypeState = default(SCITDataType);
+                    };
+                    ret.MagicSchool_Property.Subscribe(
+                        owner: dataTypeStateSubber,
+                        callback: unsubAction,
+                        cmds: NotifyingSubscribeParameters.NoFire);
+                    ret.VisualEffect_Property.Subscribe(
+                        owner: dataTypeStateSubber,
+                        callback: unsubAction,
+                        cmds: NotifyingSubscribeParameters.NoFire);
+                    ret.Flags_Property.Subscribe(
+                        owner: dataTypeStateSubber,
+                        callback: unsubAction,
+                        cmds: NotifyingSubscribeParameters.NoFire);
+                }
             }
             catch (Exception ex)
             when (errorMask != null)

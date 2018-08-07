@@ -937,12 +937,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region IPropertySupporter Byte[]
+        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
         Byte[] IPropertySupporter<Byte[]>.Get(int index)
         {
             return GetByteArr(index: index);
         }
 
-        protected override Byte[] GetByteArr(int index)
+        protected Byte[] GetByteArr(int index)
         {
             switch ((Landscape_FieldIndex)index)
             {
@@ -955,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case Landscape_FieldIndex.VertexColors:
                     return VertexColors;
                 default:
-                    return base.GetByteArr(index: index);
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -972,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        protected override void SetByteArr(
+        protected void SetByteArr(
             int index,
             Byte[] item,
             bool hasBeenSet,
@@ -993,12 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
                     SetVertexColors(item, hasBeenSet, cmds);
                     break;
                 default:
-                    base.SetByteArr(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -1023,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        protected override void UnsetByteArr(
+        protected void UnsetByteArr(
             int index,
             NotifyingUnsetParameters cmds)
         {
@@ -1050,10 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
                         hasBeenSet: false);
                     break;
                 default:
-                    base.UnsetByteArr(
-                        index: index,
-                        cmds: cmds);
-                    break;
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 
@@ -1094,7 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion
             return DefaultValueByteArr(index: index);
         }
 
-        protected override Byte[] DefaultValueByteArr(int index)
+        protected Byte[] DefaultValueByteArr(int index)
         {
             switch ((Landscape_FieldIndex)index)
             {
@@ -1104,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case Landscape_FieldIndex.VertexColors:
                     return default(Byte[]);
                 default:
-                    return base.DefaultValueByteArr(index: index);
+                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
             }
         }
 

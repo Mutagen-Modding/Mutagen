@@ -4,7 +4,7 @@
     <Fields>
       <Enum name="MajorRecordFlags" enumName="MajorRecord.MajorRecordFlag" byteLength="4" />
       <FormID name="FormID" protected="true" hasBeenSet="False" notifying="None" />
-      <ByteArray name="Version" length="4" nullable="NotNull" />
+      <UInt32 name="Version" />
       <String name="EditorID" recordType="EDID" />
       <UnsafeObject name="RecordType" derivative="true" hasBeenSet="False" notifying="None">
         <TargetType>RecordType</TargetType>

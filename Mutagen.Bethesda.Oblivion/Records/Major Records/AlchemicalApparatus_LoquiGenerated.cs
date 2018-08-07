@@ -1466,20 +1466,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region IPropertySupporter UInt32
-        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
         UInt32 IPropertySupporter<UInt32>.Get(int index)
         {
             return GetUInt32(index: index);
         }
 
-        protected UInt32 GetUInt32(int index)
+        protected override UInt32 GetUInt32(int index)
         {
             switch ((AlchemicalApparatus_FieldIndex)index)
             {
                 case AlchemicalApparatus_FieldIndex.Value:
                     return Value;
                 default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+                    return base.GetUInt32(index: index);
             }
         }
 
@@ -1496,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        protected void SetUInt32(
+        protected override void SetUInt32(
             int index,
             UInt32 item,
             bool hasBeenSet,
@@ -1508,7 +1507,12 @@ namespace Mutagen.Bethesda.Oblivion
                     SetValue(item, hasBeenSet, cmds);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+                    base.SetUInt32(
+                        index: index,
+                        item: item,
+                        hasBeenSet: hasBeenSet,
+                        cmds: cmds);
+                    break;
             }
         }
 
@@ -1533,7 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        protected void UnsetUInt32(
+        protected override void UnsetUInt32(
             int index,
             NotifyingUnsetParameters cmds)
         {
@@ -1545,7 +1549,10 @@ namespace Mutagen.Bethesda.Oblivion
                         hasBeenSet: false);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+                    base.UnsetUInt32(
+                        index: index,
+                        cmds: cmds);
+                    break;
             }
         }
 
@@ -1586,14 +1593,14 @@ namespace Mutagen.Bethesda.Oblivion
             return DefaultValueUInt32(index: index);
         }
 
-        protected UInt32 DefaultValueUInt32(int index)
+        protected override UInt32 DefaultValueUInt32(int index)
         {
             switch ((AlchemicalApparatus_FieldIndex)index)
             {
                 case AlchemicalApparatus_FieldIndex.Value:
                     return default(UInt32);
                 default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
+                    return base.DefaultValueUInt32(index: index);
             }
         }
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
         ILoquiObject<MajorRecord>,
         ILoquiObjectSetter,
         IPropertySupporter<MajorRecord.MajorRecordFlag>,
-        IPropertySupporter<Byte[]>,
+        IPropertySupporter<UInt32>,
         IPropertySupporter<String>,
         IEquatable<MajorRecord>
     {
@@ -100,35 +100,31 @@ namespace Mutagen.Bethesda
         public FormID FormID { get => _FormID; protected set => _FormID = value; }
         #endregion
         #region Version
-        protected Byte[] _Version = new byte[4];
-        protected PropertyForwarder<MajorRecord, Byte[]> _VersionForwarder;
-        public INotifyingSetItem<Byte[]> Version_Property => _VersionForwarder ?? (_VersionForwarder = new PropertyForwarder<MajorRecord, Byte[]>(this, (int)MajorRecord_FieldIndex.Version));
+        protected UInt32 _Version;
+        protected PropertyForwarder<MajorRecord, UInt32> _VersionForwarder;
+        public INotifyingSetItem<UInt32> Version_Property => _VersionForwarder ?? (_VersionForwarder = new PropertyForwarder<MajorRecord, UInt32>(this, (int)MajorRecord_FieldIndex.Version));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Byte[] Version
+        public UInt32 Version
         {
             get => this._Version;
             set => this.SetVersion(value);
         }
         protected void SetVersion(
-            Byte[] item,
+            UInt32 item,
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
-            if (item == null)
-            {
-                item = new byte[4];
-            }
             var oldHasBeenSet = _hasBeenSetTracker[(int)MajorRecord_FieldIndex.Version];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Version, item)) return;
+            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Version == item) return;
             if (oldHasBeenSet != hasBeenSet)
             {
                 _hasBeenSetTracker[(int)MajorRecord_FieldIndex.Version] = hasBeenSet;
             }
-            if (_ByteArr_subscriptions != null)
+            if (_UInt32_subscriptions != null)
             {
                 var tmp = Version;
                 _Version = item;
-                _ByteArr_subscriptions.FireSubscriptions(
+                _UInt32_subscriptions.FireSubscriptions(
                     index: (int)MajorRecord_FieldIndex.Version,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
@@ -143,14 +139,13 @@ namespace Mutagen.Bethesda
         }
         protected void UnsetVersion()
         {
-            SetVersion(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.Version] = false;
+            Version = default(UInt32);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IMajorRecord.Version_Property => this.Version_Property;
+        INotifyingItem<UInt32> IMajorRecord.Version_Property => this.Version_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IMajorRecordGetter.Version_Property => this.Version_Property;
+        INotifyingItemGetter<UInt32> IMajorRecordGetter.Version_Property => this.Version_Property;
         #endregion
         #region EditorID
         protected String _EditorID;
@@ -268,7 +263,7 @@ namespace Mutagen.Bethesda
             if (rhs == null) return false;
             if (this.MajorRecordFlags != rhs.MajorRecordFlags) return false;
             if (this.FormID != rhs.FormID) return false;
-            if (!this.Version.EqualsFast(rhs.Version)) return false;
+            if (this.Version != rhs.Version) return false;
             if (EditorID_Property.HasBeenSet != rhs.EditorID_Property.HasBeenSet) return false;
             if (EditorID_Property.HasBeenSet)
             {
@@ -562,9 +557,9 @@ namespace Mutagen.Bethesda
                     try
                     {
                         errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        if (UInt32XmlTranslation.Instance.Parse(
                             root: root,
-                            item: out Byte[] VersionParse,
+                            item: out UInt32 VersionParse,
                             errorMask: errorMask))
                         {
                             item.Version = VersionParse;
@@ -768,40 +763,40 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
+        #region IPropertySupporter UInt32
+        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
+        UInt32 IPropertySupporter<UInt32>.Get(int index)
         {
-            return GetByteArr(index: index);
+            return GetUInt32(index: index);
         }
 
-        protected virtual Byte[] GetByteArr(int index)
+        protected virtual UInt32 GetUInt32(int index)
         {
             switch ((MajorRecord_FieldIndex)index)
             {
                 case MajorRecord_FieldIndex.Version:
                     return Version;
                 default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
             }
         }
 
-        void IPropertySupporter<Byte[]>.Set(
+        void IPropertySupporter<UInt32>.Set(
             int index,
-            Byte[] item,
+            UInt32 item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            SetByteArr(
+            SetUInt32(
                 index: index,
                 item: item,
                 hasBeenSet: hasBeenSet,
                 cmds: cmds);
         }
 
-        protected virtual void SetByteArr(
+        protected virtual void SetUInt32(
             int index,
-            Byte[] item,
+            UInt32 item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
@@ -811,32 +806,32 @@ namespace Mutagen.Bethesda
                     SetVersion(item, hasBeenSet, cmds);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
             }
         }
 
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
+        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
         {
             return this.GetHasBeenSet(index: index);
         }
 
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
+        void IPropertySupporter<UInt32>.SetHasBeenSet(
             int index,
             bool on)
         {
             _hasBeenSetTracker[index] = on;
         }
 
-        void IPropertySupporter<Byte[]>.Unset(
+        void IPropertySupporter<UInt32>.Unset(
             int index,
             NotifyingUnsetParameters cmds)
         {
-            UnsetByteArr(
+            UnsetUInt32(
                 index: index,
                 cmds: cmds);
         }
 
-        protected virtual void UnsetByteArr(
+        protected virtual void UnsetUInt32(
             int index,
             NotifyingUnsetParameters cmds)
         {
@@ -844,26 +839,26 @@ namespace Mutagen.Bethesda
             {
                 case MajorRecord_FieldIndex.Version:
                     SetVersion(
-                        item: default(Byte[]),
+                        item: default(UInt32),
                         hasBeenSet: false);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
             }
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
+        void IPropertySupporter<UInt32>.Subscribe(
             int index,
             object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
+            NotifyingSetItemInternalCallback<UInt32> callback,
             NotifyingSubscribeParameters cmds)
         {
-            if (_ByteArr_subscriptions == null)
+            if (_UInt32_subscriptions == null)
             {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
+                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
             }
-            _ByteArr_subscriptions.Subscribe(
+            _UInt32_subscriptions.Subscribe(
                 index: index,
                 owner: owner,
                 prop: this,
@@ -872,31 +867,31 @@ namespace Mutagen.Bethesda
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
+        void IPropertySupporter<UInt32>.Unsubscribe(
             int index,
             object owner)
         {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
+            _UInt32_subscriptions?.Unsubscribe(index, owner);
         }
 
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
+        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
         {
             throw new NotImplementedException();
         }
 
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
+        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
         {
-            return DefaultValueByteArr(index: index);
+            return DefaultValueUInt32(index: index);
         }
 
-        protected virtual Byte[] DefaultValueByteArr(int index)
+        protected virtual UInt32 DefaultValueUInt32(int index)
         {
             switch ((MajorRecord_FieldIndex)index)
             {
                 case MajorRecord_FieldIndex.Version:
-                    return default(Byte[]);
+                    return default(UInt32);
                 default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
+                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
             }
         }
 
@@ -1212,9 +1207,9 @@ namespace Mutagen.Bethesda
             try
             {
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out Byte[] VersionParse,
+                if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out UInt32 VersionParse,
                     errorMask: errorMask))
                 {
                     item.Version = VersionParse;
@@ -1402,7 +1397,7 @@ namespace Mutagen.Bethesda
                     break;
                 case MajorRecord_FieldIndex.Version:
                     this.SetVersion(
-                        (Byte[])obj,
+                        (UInt32)obj,
                         cmds: cmds);
                     break;
                 case MajorRecord_FieldIndex.EditorID:
@@ -1447,7 +1442,7 @@ namespace Mutagen.Bethesda
                     break;
                 case MajorRecord_FieldIndex.Version:
                     obj.SetVersion(
-                        (Byte[])pair.Value,
+                        (UInt32)pair.Value,
                         cmds: null);
                     break;
                 case MajorRecord_FieldIndex.EditorID:
@@ -1473,8 +1468,8 @@ namespace Mutagen.Bethesda
         new MajorRecord.MajorRecordFlag MajorRecordFlags { get; set; }
         new INotifyingItem<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property { get; }
 
-        new Byte[] Version { get; set; }
-        new INotifyingItem<Byte[]> Version_Property { get; }
+        new UInt32 Version { get; set; }
+        new INotifyingItem<UInt32> Version_Property { get; }
 
         new String EditorID { get; set; }
         new INotifyingSetItem<String> EditorID_Property { get; }
@@ -1493,8 +1488,8 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region Version
-        Byte[] Version { get; }
-        INotifyingItemGetter<Byte[]> Version_Property { get; }
+        UInt32 Version { get; }
+        INotifyingItemGetter<UInt32> Version_Property { get; }
 
         #endregion
         #region EditorID
@@ -1697,7 +1692,7 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.FormID:
                     return typeof(FormID);
                 case MajorRecord_FieldIndex.Version:
-                    return typeof(Byte[]);
+                    return typeof(UInt32);
                 case MajorRecord_FieldIndex.EditorID:
                     return typeof(String);
                 case MajorRecord_FieldIndex.RecordType:
@@ -1999,7 +1994,7 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.FormID:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
                 case MajorRecord_FieldIndex.Version:
-                    obj.Version = default(Byte[]);
+                    obj.Version = default(UInt32);
                     break;
                 case MajorRecord_FieldIndex.EditorID:
                     obj.EditorID_Property.Unset(cmds);
@@ -2055,7 +2050,7 @@ namespace Mutagen.Bethesda.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
-            item.Version = default(Byte[]);
+            item.Version = default(UInt32);
             item.EditorID_Property.Unset(cmds.ToUnsetParams());
         }
 
@@ -2076,7 +2071,7 @@ namespace Mutagen.Bethesda.Internals
             if (rhs == null) return;
             ret.MajorRecordFlags = item.MajorRecordFlags == rhs.MajorRecordFlags;
             ret.FormID = item.FormID == rhs.FormID;
-            ret.Version = item.Version.EqualsFast(rhs.Version);
+            ret.Version = item.Version == rhs.Version;
             ret.EditorID = item.EditorID_Property.Equals(rhs.EditorID_Property, (l, r) => object.Equals(l, r));
             ret.RecordType = object.Equals(item.RecordType, rhs.RecordType);
         }
@@ -2204,7 +2199,7 @@ namespace Mutagen.Bethesda.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.Version) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Version),
                     item: item.Version_Property,
@@ -2278,7 +2273,7 @@ namespace Mutagen.Bethesda.Internals
                 item: item.FormID,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Version_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
