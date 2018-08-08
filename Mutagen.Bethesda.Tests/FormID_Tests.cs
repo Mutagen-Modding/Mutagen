@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Tests
             };
             FormID id = FormID.Factory(bytes);
             Assert.Equal(5, id.ModID.ID);
-            bool i = 52184 == id.ID;
-            Assert.True(i);
+            Assert.Equal((uint)0xCBD8, id.ID);
         }
 
         [Fact]
@@ -52,6 +51,24 @@ namespace Mutagen.Bethesda.Tests
             Assert.Equal(
                 new FormID(modID: new ModID(1), id: 0x00C51A),
                 id);
+        }
+
+        [Fact]
+        public void Ctor_Typical()
+        {
+            FormID id = new FormID(0x12345678);
+            Assert.Equal((uint)(0x345678), id.ID);
+            Assert.Equal((byte)(0x12), id.ModID.ID);
+            Assert.Equal((uint)0x12345678, id.Raw);
+        }
+
+        [Fact]
+        public void Ctor_WithModID()
+        {
+            FormID id = new FormID(new ModID(0x12), 0x99345678);
+            Assert.Equal((uint)(0x345678), id.ID);
+            Assert.Equal((byte)(0x12), id.ModID.ID);
+            Assert.Equal((uint)0x12345678, id.Raw);
         }
     }
 }

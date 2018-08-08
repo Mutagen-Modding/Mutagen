@@ -15,19 +15,19 @@ namespace Mutagen.Bethesda
     public struct FormID : IEquatable<FormID>
     {
         public static readonly FormID NULL = new FormID();
-        public readonly ModID ModID;
-        public readonly uint ID;
+        public readonly uint Raw;
+        public ModID ModID => new ModID((byte)(this.Raw >> 24));
+        public uint ID => this.Raw & 0x00FFFFFF;
 
         public FormID(ModID modID, uint id)
         {
-            this.ModID = modID;
-            this.ID = id;
+            this.Raw = (uint)(modID.ID << 24);
+            this.Raw += this.Raw + id & 0x00FFFFFF;
         }
 
-        public FormID(uint id)
+        public FormID(uint idWithModID)
         {
-            this.ModID = new ModID(0);
-            this.ID = id;
+            this.Raw = idWithModID;
         }
 
         public static bool TryFactory(string hexString, out FormID id)
@@ -67,8 +67,7 @@ namespace Mutagen.Bethesda
             try
             {
                 id = new FormID(
-                    new ModID(Convert.ToByte(hexString.Substring(0, 2), 16)),
-                    Convert.ToUInt32(hexString.Substring(2, 6), 16));
+                    Convert.ToUInt32(hexString, 16));
                 return true;
             }
             catch (Exception)
@@ -85,18 +84,12 @@ namespace Mutagen.Bethesda
 
         public static FormID Factory(uint i)
         {
-            return new FormID(
-                new ModID((byte)(i >> 24)),
-                i & 0x00FFFFFF);
+            return new FormID(i);
         }
 
         public byte[] ToBytes()
         {
-            byte[] arr = new byte[4];
-            var bytes = BitConverter.GetBytes(this.ID);
-            Array.Copy(bytes, 0, arr, 0, 3);
-            bytes[3] = this.ModID.ID;
-            return bytes;
+            return BitConverter.GetBytes(this.Raw);
         }
 
         public string ToHex()
@@ -122,20 +115,17 @@ namespace Mutagen.Bethesda
 
         public bool Equals(FormID other)
         {
-            return this.ModID.Equals(other.ModID)
-                && this.ID == other.ID;
+            return this.Raw == other.Raw;
         }
 
         public override int GetHashCode()
         {
-            return this.ModID.GetHashCode()
-                .CombineHashCode(this.ID.GetHashCode());
+            return this.Raw.GetHashCode();
         }
 
         public static bool operator ==(FormID a, FormID b)
         {
-            return a.ModID == b.ModID
-                && a.ID == b.ID;
+            return a.Raw == b.Raw;
         }
 
         public static bool operator !=(FormID a, FormID b)
