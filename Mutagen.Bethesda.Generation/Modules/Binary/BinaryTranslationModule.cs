@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg))
                 {
-                    if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
+                    if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
                     {
                         using (var args = new ArgsWrapper(fg,
                             $"{obj.BaseClass.Name}.Fill_{ModuleNickname}_Structs"))
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Generation
                             }
 
                             // Default case
-                            if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
+                            if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,
                                     $"return {obj.BaseClass.Name}.Fill_{ModuleNickname}_RecordTypes"))
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg))
                 {
-                    if (obj.HasBaseObject)
+                    if (obj.HasLoquiBaseObject)
                     {
                         var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
                         if (firstBase != null)
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg))
                 {
-                    if (obj.HasBaseObject)
+                    if (obj.HasLoquiBaseObject)
                     {
                         var firstBase = obj.BaseClassTrail().FirstOrDefault((f) => HasRecordTypeFields(f));
                         if (firstBase != null)

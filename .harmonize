@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2754f49e589b9a624d9ee8dc6f5ac04a6a0ba31e</Sha>
+         <Sha>89dc2d8febc95df9736067cf93c166d271d4b318</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-07-2018 18:24:54</CommitDate>
-         <Description>Small tweaks to parameter naming and generation bugs related to generating non-notifying fields</Description>
+         <CommitDate>08-07-2018 23:23:46</CommitDate>
+         <Description>Non-Loqui base class support</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
