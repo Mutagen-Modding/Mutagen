@@ -97,6 +97,7 @@
     <Compile Include="Modules\Mutagen Module\MutagenModule.cs" />
     <Compile Include="Modules\Mutagen Module\NumFieldsModule.cs" />
     <Compile Include="Modules\Mutagen Module\ObservableModModule.cs" />
+    <Compile Include="Modules\Mutagen Module\ReactiveModule.cs" />
     <Compile Include="Modules\Mutagen Module\RecordTypeConverterModule.cs" />
     <Compile Include="Modules\Mutagen Module\SpecialParseModule.cs" />
     <Compile Include="Modules\Mutagen Module\TriggeringRecordModule.cs" />

@@ -162,6 +162,9 @@
     <PackageReference Include="DotNetZip">
       <Version>1.10.1</Version>
     </PackageReference>
+    <PackageReference Include="ReactiveUI">
+      <Version>8.4.1</Version>
+    </PackageReference>
     <PackageReference Include="System.Reactive">
       <Version>3.1.1</Version>
     </PackageReference>

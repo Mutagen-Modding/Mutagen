@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
+using ReactiveUI;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -28,6 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class FacePart : 
+        ReactiveObject,
         IFacePart,
         ILoquiObject<FacePart>,
         ILoquiObjectSetter,

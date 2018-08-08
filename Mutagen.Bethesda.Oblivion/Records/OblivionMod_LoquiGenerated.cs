@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
+using ReactiveUI;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -30,6 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class OblivionMod : 
+        ReactiveObject,
         IOblivionMod,
         ILoquiObject<OblivionMod>,
         ILoquiObjectSetter,

@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
+using ReactiveUI;
 using Mutagen.Bethesda.Oblivion;
 using System.Windows.Media;
 using Mutagen.Bethesda;

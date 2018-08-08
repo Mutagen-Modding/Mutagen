@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Internals;
+using ReactiveUI;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -26,6 +27,7 @@ namespace Mutagen.Bethesda
 {
     #region Class
     public partial class MasterReference : 
+        ReactiveObject,
         IMasterReference,
         ILoquiObject<MasterReference>,
         ILoquiObjectSetter,

@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Generation
                 return;
             }
 
-            if (obj.HasBaseObject)
+            if (obj.HasLoquiBaseObject)
             {
                 var baseTrigger = await obj.BaseClass.TryGetTriggeringRecordTypes();
                 if (baseTrigger.Succeeded)

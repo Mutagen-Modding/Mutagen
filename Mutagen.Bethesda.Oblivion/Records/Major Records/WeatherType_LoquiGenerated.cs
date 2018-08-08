@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
+using ReactiveUI;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.Linq;
@@ -28,6 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WeatherType : 
+        ReactiveObject,
         IWeatherType,
         ILoquiObject<WeatherType>,
         ILoquiObjectSetter,
