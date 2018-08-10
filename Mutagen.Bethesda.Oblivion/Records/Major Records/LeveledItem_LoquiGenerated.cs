@@ -670,8 +670,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case LeveledItem_FieldIndex.ChanceNone:
                 case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Entries:
                     return _hasBeenSetTracker[index];
+                case LeveledItem_FieldIndex.Entries:
+                    return Entries.HasBeenSet;
                 default:
                     return base.GetHasBeenSet(index);
             }

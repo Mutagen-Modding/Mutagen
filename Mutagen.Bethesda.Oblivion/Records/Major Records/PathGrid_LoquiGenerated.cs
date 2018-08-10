@@ -727,11 +727,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((PathGrid_FieldIndex)index)
             {
-                case PathGrid_FieldIndex.PointToPointConnections:
                 case PathGrid_FieldIndex.Unknown:
-                case PathGrid_FieldIndex.InterCellConnections:
-                case PathGrid_FieldIndex.PointToReferenceMappings:
                     return _hasBeenSetTracker[index];
+                case PathGrid_FieldIndex.PointToPointConnections:
+                    return PointToPointConnections.HasBeenSet;
+                case PathGrid_FieldIndex.InterCellConnections:
+                    return InterCellConnections.HasBeenSet;
+                case PathGrid_FieldIndex.PointToReferenceMappings:
+                    return PointToReferenceMappings.HasBeenSet;
                 default:
                     return base.GetHasBeenSet(index);
             }

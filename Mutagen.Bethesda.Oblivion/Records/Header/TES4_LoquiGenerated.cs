@@ -1012,8 +1012,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case TES4_FieldIndex.Deleted:
                 case TES4_FieldIndex.Author:
                 case TES4_FieldIndex.Description:
-                case TES4_FieldIndex.MasterReferences:
                     return _hasBeenSetTracker[index];
+                case TES4_FieldIndex.MasterReferences:
+                    return MasterReferences.HasBeenSet;
                 case TES4_FieldIndex.Fluff:
                     return true;
                 default:

@@ -586,8 +586,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((BodyData_FieldIndex)index)
             {
                 case BodyData_FieldIndex.Model:
-                case BodyData_FieldIndex.BodyParts:
                     return _hasBeenSetTracker[index];
+                case BodyData_FieldIndex.BodyParts:
+                    return BodyParts.HasBeenSet;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
             }

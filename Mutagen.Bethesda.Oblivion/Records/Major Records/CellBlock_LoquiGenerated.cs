@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((CellBlock_FieldIndex)index)
             {
                 case CellBlock_FieldIndex.Items:
-                    return _hasBeenSetTracker[index];
+                    return Items.HasBeenSet;
                 case CellBlock_FieldIndex.BlockNumber:
                 case CellBlock_FieldIndex.GroupType:
                 case CellBlock_FieldIndex.LastModified:

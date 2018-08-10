@@ -584,8 +584,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((RegionDataSounds_FieldIndex)index)
             {
                 case RegionDataSounds_FieldIndex.MusicType:
-                case RegionDataSounds_FieldIndex.Sounds:
                     return _hasBeenSetTracker[index];
+                case RegionDataSounds_FieldIndex.Sounds:
+                    return Sounds.HasBeenSet;
                 default:
                     return base.GetHasBeenSet(index);
             }

@@ -893,8 +893,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Enchantment_FieldIndex)index)
             {
                 case Enchantment_FieldIndex.Name:
-                case Enchantment_FieldIndex.Effects:
                     return _hasBeenSetTracker[index];
+                case Enchantment_FieldIndex.Effects:
+                    return Effects.HasBeenSet;
                 case Enchantment_FieldIndex.Type:
                 case Enchantment_FieldIndex.ChargeAmount:
                 case Enchantment_FieldIndex.EnchantCost:

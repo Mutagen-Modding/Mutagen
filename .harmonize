@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>89dc2d8febc95df9736067cf93c166d271d4b318</Sha>
+         <Sha>d209a49d5786c78eedc351ba0958fb7d86e8d9a6</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-07-2018 23:23:46</CommitDate>
-         <Description>Non-Loqui base class support</Description>
+         <CommitDate>08-09-2018 20:28:11</CommitDate>
+         <Description>Object centralization separated into into its own property</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

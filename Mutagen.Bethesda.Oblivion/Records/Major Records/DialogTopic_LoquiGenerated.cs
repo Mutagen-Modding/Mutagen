@@ -726,10 +726,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case DialogTopic_FieldIndex.Name:
                 case DialogTopic_FieldIndex.DialogType:
-                case DialogTopic_FieldIndex.Items:
                     return _hasBeenSetTracker[index];
                 case DialogTopic_FieldIndex.Quests:
                     return Quests.HasBeenSet;
+                case DialogTopic_FieldIndex.Items:
+                    return Items.HasBeenSet;
                 default:
                     return base.GetHasBeenSet(index);
             }

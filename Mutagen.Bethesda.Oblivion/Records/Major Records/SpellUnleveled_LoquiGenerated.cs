@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((SpellUnleveled_FieldIndex)index)
             {
                 case SpellUnleveled_FieldIndex.Effects:
-                    return _hasBeenSetTracker[index];
+                    return Effects.HasBeenSet;
                 case SpellUnleveled_FieldIndex.Type:
                 case SpellUnleveled_FieldIndex.Cost:
                 case SpellUnleveled_FieldIndex.Level:

@@ -912,8 +912,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case AIPackage_FieldIndex.Location:
                 case AIPackage_FieldIndex.Schedule:
                 case AIPackage_FieldIndex.Target:
-                case AIPackage_FieldIndex.Conditions:
                     return _hasBeenSetTracker[index];
+                case AIPackage_FieldIndex.Conditions:
+                    return Conditions.HasBeenSet;
                 case AIPackage_FieldIndex.Flags:
                 case AIPackage_FieldIndex.GeneralType:
                     return true;

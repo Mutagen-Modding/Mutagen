@@ -1018,10 +1018,11 @@ namespace Mutagen.Bethesda.Oblivion
                 case Ingredient_FieldIndex.Model:
                 case Ingredient_FieldIndex.Icon:
                 case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.Effects:
                     return _hasBeenSetTracker[index];
                 case Ingredient_FieldIndex.Script:
                     return Script_Property.HasBeenSet;
+                case Ingredient_FieldIndex.Effects:
+                    return Effects.HasBeenSet;
                 case Ingredient_FieldIndex.Value:
                 case Ingredient_FieldIndex.Flags:
                     return true;

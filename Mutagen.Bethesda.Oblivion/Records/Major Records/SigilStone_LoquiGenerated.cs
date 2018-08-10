@@ -1010,10 +1010,11 @@ namespace Mutagen.Bethesda.Oblivion
                 case SigilStone_FieldIndex.Name:
                 case SigilStone_FieldIndex.Model:
                 case SigilStone_FieldIndex.Icon:
-                case SigilStone_FieldIndex.Effects:
                     return _hasBeenSetTracker[index];
                 case SigilStone_FieldIndex.Script:
                     return Script_Property.HasBeenSet;
+                case SigilStone_FieldIndex.Effects:
+                    return Effects.HasBeenSet;
                 case SigilStone_FieldIndex.Uses:
                 case SigilStone_FieldIndex.Value:
                 case SigilStone_FieldIndex.Weight:

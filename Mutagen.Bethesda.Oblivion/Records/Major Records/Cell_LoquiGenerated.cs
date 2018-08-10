@@ -1558,9 +1558,6 @@ namespace Mutagen.Bethesda.Oblivion
                 case Cell_FieldIndex.FactionRank:
                 case Cell_FieldIndex.PathGrid:
                 case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.Temporary:
-                case Cell_FieldIndex.VisibleWhenDistant:
                     return _hasBeenSetTracker[index];
                 case Cell_FieldIndex.Regions:
                     return Regions.HasBeenSet;
@@ -1572,6 +1569,12 @@ namespace Mutagen.Bethesda.Oblivion
                     return Owner_Property.HasBeenSet;
                 case Cell_FieldIndex.GlobalVariable:
                     return GlobalVariable_Property.HasBeenSet;
+                case Cell_FieldIndex.Persistent:
+                    return Persistent.HasBeenSet;
+                case Cell_FieldIndex.Temporary:
+                    return Temporary.HasBeenSet;
+                case Cell_FieldIndex.VisibleWhenDistant:
+                    return VisibleWhenDistant.HasBeenSet;
                 default:
                     return base.GetHasBeenSet(index);
             }

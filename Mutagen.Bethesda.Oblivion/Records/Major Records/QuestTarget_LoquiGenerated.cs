@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((QuestTarget_FieldIndex)index)
             {
                 case QuestTarget_FieldIndex.Conditions:
-                    return _hasBeenSetTracker[index];
+                    return Conditions.HasBeenSet;
                 case QuestTarget_FieldIndex.Target:
                 case QuestTarget_FieldIndex.Flags:
                     return true;

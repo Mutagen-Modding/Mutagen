@@ -725,9 +725,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((IdleAnimation_FieldIndex)index)
             {
                 case IdleAnimation_FieldIndex.Model:
-                case IdleAnimation_FieldIndex.Conditions:
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     return _hasBeenSetTracker[index];
+                case IdleAnimation_FieldIndex.Conditions:
+                    return Conditions.HasBeenSet;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return RelatedIdleAnimations.HasBeenSet;
                 default:

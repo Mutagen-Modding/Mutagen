@@ -585,8 +585,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((CreatureSound_FieldIndex)index)
             {
                 case CreatureSound_FieldIndex.SoundType:
-                case CreatureSound_FieldIndex.Sounds:
                     return _hasBeenSetTracker[index];
+                case CreatureSound_FieldIndex.Sounds:
+                    return Sounds.HasBeenSet;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
             }

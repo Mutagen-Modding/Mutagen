@@ -1119,7 +1119,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Region_FieldIndex.Icon:
                 case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Areas:
                 case Region_FieldIndex.Objects:
                 case Region_FieldIndex.Weather:
                 case Region_FieldIndex.MapName:
@@ -1128,6 +1127,8 @@ namespace Mutagen.Bethesda.Oblivion
                     return _hasBeenSetTracker[index];
                 case Region_FieldIndex.Worldspace:
                     return Worldspace_Property.HasBeenSet;
+                case Region_FieldIndex.Areas:
+                    return Areas.HasBeenSet;
                 default:
                     return base.GetHasBeenSet(index);
             }

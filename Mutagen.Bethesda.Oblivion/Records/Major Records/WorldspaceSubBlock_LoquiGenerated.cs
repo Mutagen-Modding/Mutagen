@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((WorldspaceSubBlock_FieldIndex)index)
             {
                 case WorldspaceSubBlock_FieldIndex.Items:
-                    return _hasBeenSetTracker[index];
+                    return Items.HasBeenSet;
                 case WorldspaceSubBlock_FieldIndex.BlockNumber:
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                 case WorldspaceSubBlock_FieldIndex.LastModified:

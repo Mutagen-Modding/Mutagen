@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((QuestStage_FieldIndex)index)
             {
                 case QuestStage_FieldIndex.LogEntries:
-                    return _hasBeenSetTracker[index];
+                    return LogEntries.HasBeenSet;
                 case QuestStage_FieldIndex.Stage:
                     return true;
                 default:

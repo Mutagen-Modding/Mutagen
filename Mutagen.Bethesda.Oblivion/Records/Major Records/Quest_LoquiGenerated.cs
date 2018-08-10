@@ -957,12 +957,15 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Quest_FieldIndex.Name:
                 case Quest_FieldIndex.Icon:
-                case Quest_FieldIndex.Conditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Targets:
                     return _hasBeenSetTracker[index];
                 case Quest_FieldIndex.Script:
                     return Script_Property.HasBeenSet;
+                case Quest_FieldIndex.Conditions:
+                    return Conditions.HasBeenSet;
+                case Quest_FieldIndex.Stages:
+                    return Stages.HasBeenSet;
+                case Quest_FieldIndex.Targets:
+                    return Targets.HasBeenSet;
                 case Quest_FieldIndex.Flags:
                 case Quest_FieldIndex.Priority:
                     return true;

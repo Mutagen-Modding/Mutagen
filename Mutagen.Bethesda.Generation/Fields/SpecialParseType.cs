@@ -14,6 +14,7 @@ namespace Mutagen.Bethesda.Generation
         {
             await base.Load(node, requireName);
             this.NotifyingProperty.Item = Loqui.NotifyingType.None;
+            this.ObjectCentralizedProperty.Item = false;
             this.HasBeenSetProperty.Item = false;
         }
     }

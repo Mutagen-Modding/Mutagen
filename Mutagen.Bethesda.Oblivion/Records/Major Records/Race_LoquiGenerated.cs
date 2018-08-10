@@ -2166,20 +2166,22 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
-                case Race_FieldIndex.Relations:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
                 case Race_FieldIndex.FaceGenMainClamp:
                 case Race_FieldIndex.FaceGenFaceClamp:
                 case Race_FieldIndex.RaceStats:
-                case Race_FieldIndex.FaceData:
                 case Race_FieldIndex.BodyData:
                 case Race_FieldIndex.FaceGenData:
                 case Race_FieldIndex.Unknown:
                     return _hasBeenSetTracker[index];
                 case Race_FieldIndex.Spells:
                     return Spells.HasBeenSet;
+                case Race_FieldIndex.Relations:
+                    return Relations.HasBeenSet;
+                case Race_FieldIndex.FaceData:
+                    return FaceData.HasBeenSet;
                 case Race_FieldIndex.Hairs:
                     return Hairs.HasBeenSet;
                 case Race_FieldIndex.Eyes:

@@ -794,9 +794,11 @@ namespace Mutagen.Bethesda.Oblivion
                 case ScriptFields_FieldIndex.MetadataSummary:
                 case ScriptFields_FieldIndex.CompiledScript:
                 case ScriptFields_FieldIndex.SourceCode:
-                case ScriptFields_FieldIndex.LocalVariables:
-                case ScriptFields_FieldIndex.References:
                     return _hasBeenSetTracker[index];
+                case ScriptFields_FieldIndex.LocalVariables:
+                    return LocalVariables.HasBeenSet;
+                case ScriptFields_FieldIndex.References:
+                    return References.HasBeenSet;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
             }

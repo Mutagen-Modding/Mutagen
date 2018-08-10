@@ -895,10 +895,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Container_FieldIndex.Name:
                 case Container_FieldIndex.Model:
-                case Container_FieldIndex.Items:
                     return _hasBeenSetTracker[index];
                 case Container_FieldIndex.Script:
                     return Script_Property.HasBeenSet;
+                case Container_FieldIndex.Items:
+                    return Items.HasBeenSet;
                 case Container_FieldIndex.OpenSound:
                     return OpenSound_Property.HasBeenSet;
                 case Container_FieldIndex.CloseSound:

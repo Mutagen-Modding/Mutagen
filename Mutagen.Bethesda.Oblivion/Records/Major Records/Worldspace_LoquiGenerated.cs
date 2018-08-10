@@ -1454,7 +1454,6 @@ namespace Mutagen.Bethesda.Oblivion
                 case Worldspace_FieldIndex.OffsetData:
                 case Worldspace_FieldIndex.Road:
                 case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCells:
                     return _hasBeenSetTracker[index];
                 case Worldspace_FieldIndex.Parent:
                     return Parent_Property.HasBeenSet;
@@ -1462,6 +1461,8 @@ namespace Mutagen.Bethesda.Oblivion
                     return Climate_Property.HasBeenSet;
                 case Worldspace_FieldIndex.Water:
                     return Water_Property.HasBeenSet;
+                case Worldspace_FieldIndex.SubCells:
+                    return SubCells.HasBeenSet;
                 default:
                     return base.GetHasBeenSet(index);
             }

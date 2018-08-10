@@ -3898,7 +3898,6 @@ namespace Mutagen.Bethesda.Oblivion
                 case Creature_FieldIndex.FootWeight:
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
-                case Creature_FieldIndex.Sounds:
                     return _hasBeenSetTracker[index];
                 case Creature_FieldIndex.Items:
                     return Items.HasBeenSet;
@@ -3920,6 +3919,8 @@ namespace Mutagen.Bethesda.Oblivion
                     return CombatStyle_Property.HasBeenSet;
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return InheritsSoundFrom_Property.HasBeenSet;
+                case Creature_FieldIndex.Sounds:
+                    return Sounds.HasBeenSet;
                 case Creature_FieldIndex.Flags:
                 case Creature_FieldIndex.BaseSpellPoints:
                 case Creature_FieldIndex.Fatigue:

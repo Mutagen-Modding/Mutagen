@@ -928,8 +928,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Landscape_FieldIndex.VertexNormals:
                 case Landscape_FieldIndex.VertexHeightMap:
                 case Landscape_FieldIndex.VertexColors:
-                case Landscape_FieldIndex.Layers:
                     return _hasBeenSetTracker[index];
+                case Landscape_FieldIndex.Layers:
+                    return Layers.HasBeenSet;
                 case Landscape_FieldIndex.Textures:
                     return Textures.HasBeenSet;
                 default:

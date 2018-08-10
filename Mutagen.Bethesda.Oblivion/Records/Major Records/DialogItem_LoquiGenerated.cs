@@ -987,8 +987,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((DialogItem_FieldIndex)index)
             {
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
                 case DialogItem_FieldIndex.Script:
                     return _hasBeenSetTracker[index];
                 case DialogItem_FieldIndex.Quest:
@@ -997,6 +995,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return PreviousTopic_Property.HasBeenSet;
                 case DialogItem_FieldIndex.Topics:
                     return Topics.HasBeenSet;
+                case DialogItem_FieldIndex.Responses:
+                    return Responses.HasBeenSet;
+                case DialogItem_FieldIndex.Conditions:
+                    return Conditions.HasBeenSet;
                 case DialogItem_FieldIndex.Choices:
                     return Choices.HasBeenSet;
                 case DialogItem_FieldIndex.LinkFrom:

@@ -22,7 +22,8 @@ namespace Mutagen.Bethesda.Generation
             LoquiGenerator gen = new LoquiGenerator()
             {
                 RaisePropertyChangedDefault = false,
-                NotifyingDefault = NotifyingType.ObjectCentralized,
+                NotifyingDefault = NotifyingType.NotifyingItem,
+                ObjectCentralizedDefault = true,
                 HasBeenSetDefault = true
             };
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
@@ -79,6 +80,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 RaisePropertyChangedDefault = false,
                 NotifyingDefault = NotifyingType.None,
+                ObjectCentralizedDefault = false,
                 HasBeenSetDefault = false
             };
             gen.XmlTranslation.ShouldGenerateXSD = true;

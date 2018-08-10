@@ -31,12 +31,15 @@ namespace Mutagen.Bethesda.Generation
         {
             await base.Load(node, requireName);
             this.NotifyingProperty.Set(NotifyingType.NotifyingItem);
+            this.ObjectCentralizedProperty.Set(false);
             loquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
             await loquiType.Load(node, requireName: false);
             loquiType.Name = this.Name;
             _rawFormID.Name = this.Name;
             this.NotifyingProperty.Forward(loquiType.NotifyingProperty);
             this.NotifyingProperty.Forward(_rawFormID.NotifyingProperty);
+            this.ObjectCentralizedProperty.Forward(loquiType.ObjectCentralizedProperty);
+            this.ObjectCentralizedProperty.Forward(_rawFormID.ObjectCentralizedProperty);
             this.HasBeenSetProperty.Forward(loquiType.HasBeenSetProperty);
             this.HasBeenSetProperty.Forward(_rawFormID.HasBeenSetProperty);
             this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);

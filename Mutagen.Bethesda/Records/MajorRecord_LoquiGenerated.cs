@@ -1395,7 +1395,7 @@ namespace Mutagen.Bethesda
                         cmds: cmds);
                     break;
                 case MajorRecord_FieldIndex.FormID:
-                    this._FormID = (FormID)obj;
+                    this.FormID = (FormID)obj;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     this.SetVersion(
@@ -1440,7 +1440,7 @@ namespace Mutagen.Bethesda
                         cmds: null);
                     break;
                 case MajorRecord_FieldIndex.FormID:
-                    obj._FormID = (FormID)pair.Value;
+                    obj.FormID = (FormID)pair.Value;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     obj.SetVersion(

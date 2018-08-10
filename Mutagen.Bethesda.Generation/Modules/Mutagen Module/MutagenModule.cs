@@ -72,6 +72,7 @@ namespace Mutagen.Bethesda.Generation
             loqui.SingletonType = SingletonLevel.Singleton;
             loqui.HasBeenSetProperty.Set(false);
             loqui.NotifyingProperty.Set(NotifyingType.None);
+            loqui.ObjectCentralizedProperty.Set(false);
         }
     }
 }

@@ -809,11 +809,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Faction_FieldIndex)index)
             {
                 case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Relations:
                 case Faction_FieldIndex.Flags:
                 case Faction_FieldIndex.CrimeGoldMultiplier:
-                case Faction_FieldIndex.Ranks:
                     return _hasBeenSetTracker[index];
+                case Faction_FieldIndex.Relations:
+                    return Relations.HasBeenSet;
+                case Faction_FieldIndex.Ranks:
+                    return Ranks.HasBeenSet;
                 default:
                     return base.GetHasBeenSet(index);
             }

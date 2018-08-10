@@ -754,10 +754,11 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((LogEntry_FieldIndex)index)
             {
                 case LogEntry_FieldIndex.Flags:
-                case LogEntry_FieldIndex.Conditions:
                 case LogEntry_FieldIndex.Entry:
                 case LogEntry_FieldIndex.ResultScript:
                     return _hasBeenSetTracker[index];
+                case LogEntry_FieldIndex.Conditions:
+                    return Conditions.HasBeenSet;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
             }

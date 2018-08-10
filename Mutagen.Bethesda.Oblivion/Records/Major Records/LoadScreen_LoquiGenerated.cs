@@ -669,8 +669,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case LoadScreen_FieldIndex.Icon:
                 case LoadScreen_FieldIndex.Description:
-                case LoadScreen_FieldIndex.Locations:
                     return _hasBeenSetTracker[index];
+                case LoadScreen_FieldIndex.Locations:
+                    return Locations.HasBeenSet;
                 default:
                     return base.GetHasBeenSet(index);
             }

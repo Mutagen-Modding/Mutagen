@@ -748,8 +748,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case LeveledCreature_FieldIndex.ChanceNone:
                 case LeveledCreature_FieldIndex.Flags:
-                case LeveledCreature_FieldIndex.Entries:
                     return _hasBeenSetTracker[index];
+                case LeveledCreature_FieldIndex.Entries:
+                    return Entries.HasBeenSet;
                 case LeveledCreature_FieldIndex.Script:
                     return Script_Property.HasBeenSet;
                 case LeveledCreature_FieldIndex.Template:
