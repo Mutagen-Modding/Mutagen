@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Generation
 
         protected virtual string ItemWriteAccess(Accessor itemAccessor)
         {
-            return itemAccessor.PropertyOrDirectAccess;
+            return itemAccessor.DirectAccess;
         }
 
         public virtual string Typename(TypeGeneration typeGen) => typeName;

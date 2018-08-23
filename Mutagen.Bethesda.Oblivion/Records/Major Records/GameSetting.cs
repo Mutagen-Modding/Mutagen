@@ -4,8 +4,10 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog.Notifying;
 using System;
+using ReactiveUI;
 using System.Collections.Generic;
 using System.IO;
+using System.Reactive.Linq;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -15,18 +17,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor()
         {
-            this.EditorID_Property.Subscribe(CorrectEDID, cmds: NotifyingSubscribeParameters.NoFire);
+            this.WhenAny(x => x.EditorID)
+                .Skip(1)
+                .DistinctUntilChanged()
+                .Subscribe(CorrectEDID);
         }
 
-        private void CorrectEDID(Change<string> change)
+        private void CorrectEDID(string change)
         {
-            if (change.New.Length == 0)
+            if (change.Length == 0)
             {
                 this.EditorID = string.Empty + this.TriggerChar;
             }
-            else if (!this.TriggerChar.Equals(change.New[0]))
+            else if (!this.TriggerChar.Equals(change[0]))
             {
-                this.EditorID = this.TriggerChar + change.New;
+                this.EditorID = this.TriggerChar + change;
             }
         }
 

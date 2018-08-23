@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,11 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class FaceGenData : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IFaceGenData,
         ILoquiObject<FaceGenData>,
         ILoquiObjectSetter,
-        IPropertySupporter<Byte[]>,
         IEquatable<FaceGenData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -49,151 +50,88 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region SymmetricGeometry
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool SymmetricGeometry_IsSet
+        {
+            get => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricGeometry];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)FaceGenData_FieldIndex.SymmetricGeometry, nameof(SymmetricGeometry_IsSet));
+        }
+        bool IFaceGenDataGetter.SymmetricGeometry_IsSet => SymmetricGeometry_IsSet;
         protected Byte[] _SymmetricGeometry;
-        protected PropertyForwarder<FaceGenData, Byte[]> _SymmetricGeometryForwarder;
-        public INotifyingSetItem<Byte[]> SymmetricGeometry_Property => _SymmetricGeometryForwarder ?? (_SymmetricGeometryForwarder = new PropertyForwarder<FaceGenData, Byte[]>(this, (int)FaceGenData_FieldIndex.SymmetricGeometry));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] SymmetricGeometry
         {
             get => this._SymmetricGeometry;
-            set => this.SetSymmetricGeometry(value);
-        }
-        protected void SetSymmetricGeometry(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricGeometry];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(SymmetricGeometry, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricGeometry] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = SymmetricGeometry;
-                _SymmetricGeometry = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SymmetricGeometry = item;
-            }
-        }
-        protected void UnsetSymmetricGeometry()
-        {
-            SetSymmetricGeometry(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => SymmetricGeometry_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IFaceGenData.SymmetricGeometry_Property => this.SymmetricGeometry_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IFaceGenDataGetter.SymmetricGeometry_Property => this.SymmetricGeometry_Property;
+        Byte[] IFaceGenDataGetter.SymmetricGeometry => this.SymmetricGeometry;
+        public void SymmetricGeometry_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _SymmetricGeometry, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.SymmetricGeometry, nameof(SymmetricGeometry), nameof(SymmetricGeometry_IsSet));
+        }
+        public void SymmetricGeometry_Unset()
+        {
+            this.SymmetricGeometry_Set(default(Byte[]), false);
+        }
         #endregion
         #region AsymmetricGeometry
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool AsymmetricGeometry_IsSet
+        {
+            get => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.AsymmetricGeometry];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)FaceGenData_FieldIndex.AsymmetricGeometry, nameof(AsymmetricGeometry_IsSet));
+        }
+        bool IFaceGenDataGetter.AsymmetricGeometry_IsSet => AsymmetricGeometry_IsSet;
         protected Byte[] _AsymmetricGeometry;
-        protected PropertyForwarder<FaceGenData, Byte[]> _AsymmetricGeometryForwarder;
-        public INotifyingSetItem<Byte[]> AsymmetricGeometry_Property => _AsymmetricGeometryForwarder ?? (_AsymmetricGeometryForwarder = new PropertyForwarder<FaceGenData, Byte[]>(this, (int)FaceGenData_FieldIndex.AsymmetricGeometry));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] AsymmetricGeometry
         {
             get => this._AsymmetricGeometry;
-            set => this.SetAsymmetricGeometry(value);
-        }
-        protected void SetAsymmetricGeometry(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)FaceGenData_FieldIndex.AsymmetricGeometry];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(AsymmetricGeometry, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)FaceGenData_FieldIndex.AsymmetricGeometry] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = AsymmetricGeometry;
-                _AsymmetricGeometry = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AsymmetricGeometry = item;
-            }
-        }
-        protected void UnsetAsymmetricGeometry()
-        {
-            SetAsymmetricGeometry(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => AsymmetricGeometry_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IFaceGenData.AsymmetricGeometry_Property => this.AsymmetricGeometry_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IFaceGenDataGetter.AsymmetricGeometry_Property => this.AsymmetricGeometry_Property;
+        Byte[] IFaceGenDataGetter.AsymmetricGeometry => this.AsymmetricGeometry;
+        public void AsymmetricGeometry_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _AsymmetricGeometry, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.AsymmetricGeometry, nameof(AsymmetricGeometry), nameof(AsymmetricGeometry_IsSet));
+        }
+        public void AsymmetricGeometry_Unset()
+        {
+            this.AsymmetricGeometry_Set(default(Byte[]), false);
+        }
         #endregion
         #region SymmetricTexture
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool SymmetricTexture_IsSet
+        {
+            get => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricTexture];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)FaceGenData_FieldIndex.SymmetricTexture, nameof(SymmetricTexture_IsSet));
+        }
+        bool IFaceGenDataGetter.SymmetricTexture_IsSet => SymmetricTexture_IsSet;
         protected Byte[] _SymmetricTexture;
-        protected PropertyForwarder<FaceGenData, Byte[]> _SymmetricTextureForwarder;
-        public INotifyingSetItem<Byte[]> SymmetricTexture_Property => _SymmetricTextureForwarder ?? (_SymmetricTextureForwarder = new PropertyForwarder<FaceGenData, Byte[]>(this, (int)FaceGenData_FieldIndex.SymmetricTexture));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] SymmetricTexture
         {
             get => this._SymmetricTexture;
-            set => this.SetSymmetricTexture(value);
-        }
-        protected void SetSymmetricTexture(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricTexture];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(SymmetricTexture, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricTexture] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = SymmetricTexture;
-                _SymmetricTexture = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)FaceGenData_FieldIndex.SymmetricTexture,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SymmetricTexture = item;
-            }
-        }
-        protected void UnsetSymmetricTexture()
-        {
-            SetSymmetricTexture(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => SymmetricTexture_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IFaceGenData.SymmetricTexture_Property => this.SymmetricTexture_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IFaceGenDataGetter.SymmetricTexture_Property => this.SymmetricTexture_Property;
+        Byte[] IFaceGenDataGetter.SymmetricTexture => this.SymmetricTexture;
+        public void SymmetricTexture_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _SymmetricTexture, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.SymmetricTexture, nameof(SymmetricTexture), nameof(SymmetricTexture_IsSet));
+        }
+        public void SymmetricTexture_Unset()
+        {
+            this.SymmetricTexture_Set(default(Byte[]), false);
+        }
         #endregion
 
         #region Loqui Getter Interface
@@ -257,18 +195,18 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(FaceGenData rhs)
         {
             if (rhs == null) return false;
-            if (SymmetricGeometry_Property.HasBeenSet != rhs.SymmetricGeometry_Property.HasBeenSet) return false;
-            if (SymmetricGeometry_Property.HasBeenSet)
+            if (SymmetricGeometry_IsSet != rhs.SymmetricGeometry_IsSet) return false;
+            if (SymmetricGeometry_IsSet)
             {
                 if (!this.SymmetricGeometry.EqualsFast(rhs.SymmetricGeometry)) return false;
             }
-            if (AsymmetricGeometry_Property.HasBeenSet != rhs.AsymmetricGeometry_Property.HasBeenSet) return false;
-            if (AsymmetricGeometry_Property.HasBeenSet)
+            if (AsymmetricGeometry_IsSet != rhs.AsymmetricGeometry_IsSet) return false;
+            if (AsymmetricGeometry_IsSet)
             {
                 if (!this.AsymmetricGeometry.EqualsFast(rhs.AsymmetricGeometry)) return false;
             }
-            if (SymmetricTexture_Property.HasBeenSet != rhs.SymmetricTexture_Property.HasBeenSet) return false;
-            if (SymmetricTexture_Property.HasBeenSet)
+            if (SymmetricTexture_IsSet != rhs.SymmetricTexture_IsSet) return false;
+            if (SymmetricTexture_IsSet)
             {
                 if (!this.SymmetricTexture.EqualsFast(rhs.SymmetricTexture)) return false;
             }
@@ -278,15 +216,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (SymmetricGeometry_Property.HasBeenSet)
+            if (SymmetricGeometry_IsSet)
             {
                 ret = HashHelper.GetHashCode(SymmetricGeometry).CombineHashCode(ret);
             }
-            if (AsymmetricGeometry_Property.HasBeenSet)
+            if (AsymmetricGeometry_IsSet)
             {
                 ret = HashHelper.GetHashCode(AsymmetricGeometry).CombineHashCode(ret);
             }
-            if (SymmetricTexture_Property.HasBeenSet)
+            if (SymmetricTexture_IsSet)
             {
                 ret = HashHelper.GetHashCode(SymmetricTexture).CombineHashCode(ret);
             }
@@ -620,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSymmetricGeometry();
+                            item.SymmetricGeometry = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -646,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAsymmetricGeometry();
+                            item.AsymmetricGeometry = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -672,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSymmetricTexture();
+                            item.SymmetricTexture = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -705,162 +643,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((FaceGenData_FieldIndex)index)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    return SymmetricGeometry;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    return AsymmetricGeometry;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    return SymmetricTexture;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((FaceGenData_FieldIndex)index)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    SetSymmetricGeometry(item, hasBeenSet, cmds);
-                    break;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    SetAsymmetricGeometry(item, hasBeenSet, cmds);
-                    break;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    SetSymmetricTexture(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((FaceGenData_FieldIndex)index)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    SetSymmetricGeometry(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    SetAsymmetricGeometry(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    SetSymmetricTexture(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((FaceGenData_FieldIndex)index)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1106,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSymmetricGeometry();
+                            item.SymmetricGeometry = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1134,7 +916,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAsymmetricGeometry();
+                            item.AsymmetricGeometry = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1162,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSymmetricTexture();
+                            item.SymmetricTexture = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1305,19 +1087,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case FaceGenData_FieldIndex.SymmetricGeometry:
-                    this.SetSymmetricGeometry(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.SymmetricGeometry = (Byte[])obj;
                     break;
                 case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    this.SetAsymmetricGeometry(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.AsymmetricGeometry = (Byte[])obj;
                     break;
                 case FaceGenData_FieldIndex.SymmetricTexture:
-                    this.SetSymmetricTexture(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.SymmetricTexture = (Byte[])obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1357,19 +1133,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case FaceGenData_FieldIndex.SymmetricGeometry:
-                    obj.SetSymmetricGeometry(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.SymmetricGeometry = (Byte[])pair.Value;
                     break;
                 case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    obj.SetAsymmetricGeometry(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.AsymmetricGeometry = (Byte[])pair.Value;
                     break;
                 case FaceGenData_FieldIndex.SymmetricTexture:
-                    obj.SetSymmetricTexture(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.SymmetricTexture = (Byte[])pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1387,13 +1157,19 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFaceGenData : IFaceGenDataGetter, ILoquiClass<IFaceGenData, IFaceGenDataGetter>, ILoquiClass<FaceGenData, IFaceGenDataGetter>
     {
         new Byte[] SymmetricGeometry { get; set; }
-        new INotifyingSetItem<Byte[]> SymmetricGeometry_Property { get; }
+        new bool SymmetricGeometry_IsSet { get; set; }
+        void SymmetricGeometry_Set(Byte[] item, bool hasBeenSet = true);
+        void SymmetricGeometry_Unset();
 
         new Byte[] AsymmetricGeometry { get; set; }
-        new INotifyingSetItem<Byte[]> AsymmetricGeometry_Property { get; }
+        new bool AsymmetricGeometry_IsSet { get; set; }
+        void AsymmetricGeometry_Set(Byte[] item, bool hasBeenSet = true);
+        void AsymmetricGeometry_Unset();
 
         new Byte[] SymmetricTexture { get; set; }
-        new INotifyingSetItem<Byte[]> SymmetricTexture_Property { get; }
+        new bool SymmetricTexture_IsSet { get; set; }
+        void SymmetricTexture_Set(Byte[] item, bool hasBeenSet = true);
+        void SymmetricTexture_Unset();
 
     }
 
@@ -1401,17 +1177,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region SymmetricGeometry
         Byte[] SymmetricGeometry { get; }
-        INotifyingSetItemGetter<Byte[]> SymmetricGeometry_Property { get; }
+        bool SymmetricGeometry_IsSet { get; }
 
         #endregion
         #region AsymmetricGeometry
         Byte[] AsymmetricGeometry { get; }
-        INotifyingSetItemGetter<Byte[]> AsymmetricGeometry_Property { get; }
+        bool AsymmetricGeometry_IsSet { get; }
 
         #endregion
         #region SymmetricTexture
         Byte[] SymmetricTexture { get; }
-        INotifyingSetItemGetter<Byte[]> SymmetricTexture_Property { get; }
+        bool SymmetricTexture_IsSet { get; }
 
         #endregion
 
@@ -1654,9 +1430,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 try
                 {
-                    item.SymmetricGeometry_Property.SetToWithDefault(
-                        rhs: rhs.SymmetricGeometry_Property,
-                        def: def?.SymmetricGeometry_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.SymmetricGeometry,
+                        rhsHasBeenSet: rhs.SymmetricGeometry_IsSet,
+                        defItem: def?.SymmetricGeometry ?? default(Byte[]),
+                        defHasBeenSet: def?.SymmetricGeometry_IsSet ?? false,
+                        outRhsItem: out var rhsSymmetricGeometryItem,
+                        outDefItem: out var defSymmetricGeometryItem))
+                    {
+                        item.SymmetricGeometry = rhsSymmetricGeometryItem;
+                    }
+                    else
+                    {
+                        item.SymmetricGeometry_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1673,9 +1460,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 try
                 {
-                    item.AsymmetricGeometry_Property.SetToWithDefault(
-                        rhs: rhs.AsymmetricGeometry_Property,
-                        def: def?.AsymmetricGeometry_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.AsymmetricGeometry,
+                        rhsHasBeenSet: rhs.AsymmetricGeometry_IsSet,
+                        defItem: def?.AsymmetricGeometry ?? default(Byte[]),
+                        defHasBeenSet: def?.AsymmetricGeometry_IsSet ?? false,
+                        outRhsItem: out var rhsAsymmetricGeometryItem,
+                        outDefItem: out var defAsymmetricGeometryItem))
+                    {
+                        item.AsymmetricGeometry = rhsAsymmetricGeometryItem;
+                    }
+                    else
+                    {
+                        item.AsymmetricGeometry_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1692,9 +1490,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);
                 try
                 {
-                    item.SymmetricTexture_Property.SetToWithDefault(
-                        rhs: rhs.SymmetricTexture_Property,
-                        def: def?.SymmetricTexture_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.SymmetricTexture,
+                        rhsHasBeenSet: rhs.SymmetricTexture_IsSet,
+                        defItem: def?.SymmetricTexture ?? default(Byte[]),
+                        defHasBeenSet: def?.SymmetricTexture_IsSet ?? false,
+                        outRhsItem: out var rhsSymmetricTextureItem,
+                        outDefItem: out var defSymmetricTextureItem))
+                    {
+                        item.SymmetricTexture = rhsSymmetricTextureItem;
+                    }
+                    else
+                    {
+                        item.SymmetricTexture_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1720,13 +1529,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case FaceGenData_FieldIndex.SymmetricGeometry:
-                    obj.SymmetricGeometry_Property.HasBeenSet = on;
+                    obj.SymmetricGeometry_IsSet = on;
                     break;
                 case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    obj.AsymmetricGeometry_Property.HasBeenSet = on;
+                    obj.AsymmetricGeometry_IsSet = on;
                     break;
                 case FaceGenData_FieldIndex.SymmetricTexture:
-                    obj.SymmetricTexture_Property.HasBeenSet = on;
+                    obj.SymmetricTexture_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1742,13 +1551,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case FaceGenData_FieldIndex.SymmetricGeometry:
-                    obj.SymmetricGeometry_Property.Unset(cmds);
+                    obj.SymmetricGeometry_Unset();
                     break;
                 case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    obj.AsymmetricGeometry_Property.Unset(cmds);
+                    obj.AsymmetricGeometry_Unset();
                     break;
                 case FaceGenData_FieldIndex.SymmetricTexture:
-                    obj.SymmetricTexture_Property.Unset(cmds);
+                    obj.SymmetricTexture_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1763,11 +1572,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case FaceGenData_FieldIndex.SymmetricGeometry:
-                    return obj.SymmetricGeometry_Property.HasBeenSet;
+                    return obj.SymmetricGeometry_IsSet;
                 case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    return obj.AsymmetricGeometry_Property.HasBeenSet;
+                    return obj.AsymmetricGeometry_IsSet;
                 case FaceGenData_FieldIndex.SymmetricTexture:
-                    return obj.SymmetricTexture_Property.HasBeenSet;
+                    return obj.SymmetricTexture_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1795,9 +1604,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFaceGenData item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.SymmetricGeometry_Property.Unset(cmds.ToUnsetParams());
-            item.AsymmetricGeometry_Property.Unset(cmds.ToUnsetParams());
-            item.SymmetricTexture_Property.Unset(cmds.ToUnsetParams());
+            item.SymmetricGeometry_Unset();
+            item.AsymmetricGeometry_Unset();
+            item.SymmetricTexture_Unset();
         }
 
         public static FaceGenData_Mask<bool> GetEqualsMask(
@@ -1815,9 +1624,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FaceGenData_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.SymmetricGeometry = item.SymmetricGeometry_Property.Equals(rhs.SymmetricGeometry_Property, (l, r) => l.EqualsFast(r));
-            ret.AsymmetricGeometry = item.AsymmetricGeometry_Property.Equals(rhs.AsymmetricGeometry_Property, (l, r) => l.EqualsFast(r));
-            ret.SymmetricTexture = item.SymmetricTexture_Property.Equals(rhs.SymmetricTexture_Property, (l, r) => l.EqualsFast(r));
+            ret.SymmetricGeometry = item.SymmetricGeometry_IsSet == rhs.SymmetricGeometry_IsSet && item.SymmetricGeometry.EqualsFast(rhs.SymmetricGeometry);
+            ret.AsymmetricGeometry = item.AsymmetricGeometry_IsSet == rhs.AsymmetricGeometry_IsSet && item.AsymmetricGeometry.EqualsFast(rhs.AsymmetricGeometry);
+            ret.SymmetricTexture = item.SymmetricTexture_IsSet == rhs.SymmetricTexture_IsSet && item.SymmetricTexture.EqualsFast(rhs.SymmetricTexture);
         }
 
         public static string ToString(
@@ -1867,18 +1676,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IFaceGenDataGetter item,
             FaceGenData_Mask<bool?> checkMask)
         {
-            if (checkMask.SymmetricGeometry.HasValue && checkMask.SymmetricGeometry.Value != item.SymmetricGeometry_Property.HasBeenSet) return false;
-            if (checkMask.AsymmetricGeometry.HasValue && checkMask.AsymmetricGeometry.Value != item.AsymmetricGeometry_Property.HasBeenSet) return false;
-            if (checkMask.SymmetricTexture.HasValue && checkMask.SymmetricTexture.Value != item.SymmetricTexture_Property.HasBeenSet) return false;
+            if (checkMask.SymmetricGeometry.HasValue && checkMask.SymmetricGeometry.Value != item.SymmetricGeometry_IsSet) return false;
+            if (checkMask.AsymmetricGeometry.HasValue && checkMask.AsymmetricGeometry.Value != item.AsymmetricGeometry_IsSet) return false;
+            if (checkMask.SymmetricTexture.HasValue && checkMask.SymmetricTexture.Value != item.SymmetricTexture_IsSet) return false;
             return true;
         }
 
         public static FaceGenData_Mask<bool> GetHasBeenSetMask(IFaceGenDataGetter item)
         {
             var ret = new FaceGenData_Mask<bool>();
-            ret.SymmetricGeometry = item.SymmetricGeometry_Property.HasBeenSet;
-            ret.AsymmetricGeometry = item.AsymmetricGeometry_Property.HasBeenSet;
-            ret.SymmetricTexture = item.SymmetricTexture_Property.HasBeenSet;
+            ret.SymmetricGeometry = item.SymmetricGeometry_IsSet;
+            ret.AsymmetricGeometry = item.AsymmetricGeometry_IsSet;
+            ret.SymmetricTexture = item.SymmetricTexture_IsSet;
             return ret;
         }
 
@@ -1915,33 +1724,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FaceGenData");
             }
-            if (item.SymmetricGeometry_Property.HasBeenSet
+            if (item.SymmetricGeometry_IsSet
                 && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SymmetricGeometry),
-                    item: item.SymmetricGeometry_Property,
+                    item: item.SymmetricGeometry,
                     fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                     errorMask: errorMask);
             }
-            if (item.AsymmetricGeometry_Property.HasBeenSet
+            if (item.AsymmetricGeometry_IsSet
                 && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AsymmetricGeometry),
-                    item: item.AsymmetricGeometry_Property,
+                    item: item.AsymmetricGeometry,
                     fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                     errorMask: errorMask);
             }
-            if (item.SymmetricTexture_Property.HasBeenSet
+            if (item.SymmetricTexture_IsSet
                 && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SymmetricTexture),
-                    item: item.SymmetricTexture_Property,
+                    item: item.SymmetricTexture,
                     fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                     errorMask: errorMask);
             }
@@ -1988,27 +1797,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SymmetricGeometry_Property,
-                fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGS_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.AsymmetricGeometry_Property,
-                fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGA_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SymmetricTexture_Property,
-                fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGTS_HEADER),
-                nullable: false);
+            if (item.SymmetricGeometry_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SymmetricGeometry,
+                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGS_HEADER),
+                    nullable: false);
+            }
+            if (item.AsymmetricGeometry_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AsymmetricGeometry,
+                    fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGA_HEADER),
+                    nullable: false);
+            }
+            if (item.SymmetricTexture_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SymmetricTexture,
+                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGTS_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

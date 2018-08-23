@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -35,14 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Worldspace>,
         ILoquiObjectSetter,
         INamed, IPlace,
-        IPropertySupporter<String>,
-        IPropertySupporter<MapData>,
-        IPropertySupporter<Worldspace.Flag>,
-        IPropertySupporter<P2Float>,
-        IPropertySupporter<MusicType>,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<Road>,
-        IPropertySupporter<Cell>,
         IEquatable<Worldspace>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -58,52 +52,30 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<Worldspace, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Worldspace, String>(this, (int)Worldspace_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool IWorldspaceGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IWorldspaceGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IWorldspace.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IWorldspaceGetter.Name_Property => this.Name_Property;
         #endregion
         #region Parent
         public FormIDSetLink<Worldspace> Parent_Property { get; } = new FormIDSetLink<Worldspace>();
@@ -127,437 +99,243 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Water> IWorldspaceGetter.Water_Property => this.Water_Property;
         #endregion
         #region Icon
-        protected String _Icon;
-        protected PropertyForwarder<Worldspace, String> _IconForwarder;
-        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Worldspace, String>(this, (int)Worldspace_FieldIndex.Icon));
+        public bool Icon_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Icon];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.Icon, nameof(Icon_IsSet));
+        }
+        bool IWorldspaceGetter.Icon_IsSet => Icon_IsSet;
+        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
             get => this._Icon;
-            set => this.SetIcon(value);
+            set => Icon_Set(value);
         }
-        protected void SetIcon(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IWorldspaceGetter.Icon => this.Icon;
+        public void Icon_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.Icon];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.Icon] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Icon;
-                _Icon = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.Icon,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Icon = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
-        protected void UnsetIcon()
+        public void Icon_Unset()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Icon] = false;
-            Icon = default(String);
+            this.Icon_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IWorldspace.Icon_Property => this.Icon_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IWorldspaceGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region MapData
-        protected MapData _MapData;
-        protected PropertyForwarder<Worldspace, MapData> _MapDataForwarder;
-        public INotifyingSetItem<MapData> MapData_Property => _MapDataForwarder ?? (_MapDataForwarder = new PropertyForwarder<Worldspace, MapData>(this, (int)Worldspace_FieldIndex.MapData));
+        public bool MapData_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.MapData];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.MapData, nameof(MapData_IsSet));
+        }
+        bool IWorldspaceGetter.MapData_IsSet => MapData_IsSet;
+        private MapData _MapData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MapData MapData
         {
-            get => this._MapData;
-            set => this.SetMapData(value);
+            get => _MapData;
+            set => MapData_Set(value);
         }
-        protected void SetMapData(
-            MapData item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void MapData_Set(
+            MapData value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.MapData];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(MapData, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.MapData] = hasBeenSet;
-            }
-            if (_MapData_subscriptions != null)
-            {
-                var tmp = MapData;
-                _MapData = item;
-                _MapData_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.MapData,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MapData = item;
-            }
+            this.RaiseAndSetIfChanged(ref _MapData, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.MapData, nameof(MapData), nameof(MapData_IsSet));
         }
-        protected void UnsetMapData()
+        public void MapData_Unset()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.MapData] = false;
-            MapData = default(MapData);
+            this.MapData_Set(default(MapData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<MapData> IWorldspace.MapData_Property => this.MapData_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<MapData> IWorldspaceGetter.MapData_Property => this.MapData_Property;
+        MapData IWorldspaceGetter.MapData => this.MapData;
         #endregion
         #region Flags
-        protected Worldspace.Flag _Flags;
-        protected PropertyForwarder<Worldspace, Worldspace.Flag> _FlagsForwarder;
-        public INotifyingSetItem<Worldspace.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Worldspace, Worldspace.Flag>(this, (int)Worldspace_FieldIndex.Flags));
+        public bool Flags_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Flags];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.Flags, nameof(Flags_IsSet));
+        }
+        bool IWorldspaceGetter.Flags_IsSet => Flags_IsSet;
+        private Worldspace.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Worldspace.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => Flags_Set(value);
         }
-        protected void SetFlags(
-            Worldspace.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Worldspace.Flag IWorldspaceGetter.Flags => this.Flags;
+        public void Flags_Set(
+            Worldspace.Flag value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_WorldspaceFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _WorldspaceFlag_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
         }
-        protected void UnsetFlags()
+        public void Flags_Unset()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Flags] = false;
-            Flags = default(Worldspace.Flag);
+            this.Flags_Set(default(Worldspace.Flag), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Worldspace.Flag> IWorldspace.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Worldspace.Flag> IWorldspaceGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region ObjectBoundsMin
-        protected P2Float _ObjectBoundsMin;
-        protected PropertyForwarder<Worldspace, P2Float> _ObjectBoundsMinForwarder;
-        public INotifyingSetItem<P2Float> ObjectBoundsMin_Property => _ObjectBoundsMinForwarder ?? (_ObjectBoundsMinForwarder = new PropertyForwarder<Worldspace, P2Float>(this, (int)Worldspace_FieldIndex.ObjectBoundsMin));
+        public bool ObjectBoundsMin_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMin];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.ObjectBoundsMin, nameof(ObjectBoundsMin_IsSet));
+        }
+        bool IWorldspaceGetter.ObjectBoundsMin_IsSet => ObjectBoundsMin_IsSet;
+        private P2Float _ObjectBoundsMin;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public P2Float ObjectBoundsMin
         {
             get => this._ObjectBoundsMin;
-            set => this.SetObjectBoundsMin(value);
+            set => ObjectBoundsMin_Set(value);
         }
-        protected void SetObjectBoundsMin(
-            P2Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        P2Float IWorldspaceGetter.ObjectBoundsMin => this.ObjectBoundsMin;
+        public void ObjectBoundsMin_Set(
+            P2Float value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMin];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ObjectBoundsMin == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMin] = hasBeenSet;
-            }
-            if (_P2Float_subscriptions != null)
-            {
-                var tmp = ObjectBoundsMin;
-                _ObjectBoundsMin = item;
-                _P2Float_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.ObjectBoundsMin,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ObjectBoundsMin = item;
-            }
+            this.RaiseAndSetIfChanged(ref _ObjectBoundsMin, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.ObjectBoundsMin, nameof(ObjectBoundsMin), nameof(ObjectBoundsMin_IsSet));
         }
-        protected void UnsetObjectBoundsMin()
+        public void ObjectBoundsMin_Unset()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMin] = false;
-            ObjectBoundsMin = default(P2Float);
+            this.ObjectBoundsMin_Set(default(P2Float), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<P2Float> IWorldspace.ObjectBoundsMin_Property => this.ObjectBoundsMin_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<P2Float> IWorldspaceGetter.ObjectBoundsMin_Property => this.ObjectBoundsMin_Property;
         #endregion
         #region ObjectBoundsMax
-        protected P2Float _ObjectBoundsMax;
-        protected PropertyForwarder<Worldspace, P2Float> _ObjectBoundsMaxForwarder;
-        public INotifyingSetItem<P2Float> ObjectBoundsMax_Property => _ObjectBoundsMaxForwarder ?? (_ObjectBoundsMaxForwarder = new PropertyForwarder<Worldspace, P2Float>(this, (int)Worldspace_FieldIndex.ObjectBoundsMax));
+        public bool ObjectBoundsMax_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMax];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.ObjectBoundsMax, nameof(ObjectBoundsMax_IsSet));
+        }
+        bool IWorldspaceGetter.ObjectBoundsMax_IsSet => ObjectBoundsMax_IsSet;
+        private P2Float _ObjectBoundsMax;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public P2Float ObjectBoundsMax
         {
             get => this._ObjectBoundsMax;
-            set => this.SetObjectBoundsMax(value);
+            set => ObjectBoundsMax_Set(value);
         }
-        protected void SetObjectBoundsMax(
-            P2Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        P2Float IWorldspaceGetter.ObjectBoundsMax => this.ObjectBoundsMax;
+        public void ObjectBoundsMax_Set(
+            P2Float value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMax];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ObjectBoundsMax == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMax] = hasBeenSet;
-            }
-            if (_P2Float_subscriptions != null)
-            {
-                var tmp = ObjectBoundsMax;
-                _ObjectBoundsMax = item;
-                _P2Float_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.ObjectBoundsMax,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ObjectBoundsMax = item;
-            }
+            this.RaiseAndSetIfChanged(ref _ObjectBoundsMax, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.ObjectBoundsMax, nameof(ObjectBoundsMax), nameof(ObjectBoundsMax_IsSet));
         }
-        protected void UnsetObjectBoundsMax()
+        public void ObjectBoundsMax_Unset()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMax] = false;
-            ObjectBoundsMax = default(P2Float);
+            this.ObjectBoundsMax_Set(default(P2Float), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<P2Float> IWorldspace.ObjectBoundsMax_Property => this.ObjectBoundsMax_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<P2Float> IWorldspaceGetter.ObjectBoundsMax_Property => this.ObjectBoundsMax_Property;
         #endregion
         #region Music
-        protected MusicType _Music;
-        protected PropertyForwarder<Worldspace, MusicType> _MusicForwarder;
-        public INotifyingSetItem<MusicType> Music_Property => _MusicForwarder ?? (_MusicForwarder = new PropertyForwarder<Worldspace, MusicType>(this, (int)Worldspace_FieldIndex.Music));
+        public bool Music_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Music];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.Music, nameof(Music_IsSet));
+        }
+        bool IWorldspaceGetter.Music_IsSet => Music_IsSet;
+        private MusicType _Music;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MusicType Music
         {
             get => this._Music;
-            set => this.SetMusic(value);
+            set => Music_Set(value);
         }
-        protected void SetMusic(
-            MusicType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        MusicType IWorldspaceGetter.Music => this.Music;
+        public void Music_Set(
+            MusicType value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.Music];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Music == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.Music] = hasBeenSet;
-            }
-            if (_MusicType_subscriptions != null)
-            {
-                var tmp = Music;
-                _Music = item;
-                _MusicType_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.Music,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Music = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Music, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Music, nameof(Music), nameof(Music_IsSet));
         }
-        protected void UnsetMusic()
+        public void Music_Unset()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Music] = false;
-            Music = default(MusicType);
+            this.Music_Set(default(MusicType), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<MusicType> IWorldspace.Music_Property => this.Music_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<MusicType> IWorldspaceGetter.Music_Property => this.Music_Property;
         #endregion
         #region OffsetData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool OffsetData_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.OffsetData];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.OffsetData, nameof(OffsetData_IsSet));
+        }
+        bool IWorldspaceGetter.OffsetData_IsSet => OffsetData_IsSet;
         protected Byte[] _OffsetData;
-        protected PropertyForwarder<Worldspace, Byte[]> _OffsetDataForwarder;
-        public INotifyingSetItem<Byte[]> OffsetData_Property => _OffsetDataForwarder ?? (_OffsetDataForwarder = new PropertyForwarder<Worldspace, Byte[]>(this, (int)Worldspace_FieldIndex.OffsetData));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] OffsetData
         {
             get => this._OffsetData;
-            set => this.SetOffsetData(value);
-        }
-        protected void SetOffsetData(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.OffsetData];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(OffsetData, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.OffsetData] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = OffsetData;
-                _OffsetData = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.OffsetData,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _OffsetData = item;
-            }
-        }
-        protected void UnsetOffsetData()
-        {
-            SetOffsetData(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => OffsetData_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IWorldspace.OffsetData_Property => this.OffsetData_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IWorldspaceGetter.OffsetData_Property => this.OffsetData_Property;
+        Byte[] IWorldspaceGetter.OffsetData => this.OffsetData;
+        public void OffsetData_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _OffsetData, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.OffsetData, nameof(OffsetData), nameof(OffsetData_IsSet));
+        }
+        public void OffsetData_Unset()
+        {
+            this.OffsetData_Set(default(Byte[]), false);
+        }
         #endregion
         #region Road
-        protected Road _Road;
-        protected PropertyForwarder<Worldspace, Road> _RoadForwarder;
-        public INotifyingSetItem<Road> Road_Property => _RoadForwarder ?? (_RoadForwarder = new PropertyForwarder<Worldspace, Road>(this, (int)Worldspace_FieldIndex.Road));
+        public bool Road_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Road];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.Road, nameof(Road_IsSet));
+        }
+        bool IWorldspaceGetter.Road_IsSet => Road_IsSet;
+        private Road _Road;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Road Road
         {
-            get => this._Road;
-            set => this.SetRoad(value);
+            get => _Road;
+            set => Road_Set(value);
         }
-        protected void SetRoad(
-            Road item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Road_Set(
+            Road value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.Road];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Road, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.Road] = hasBeenSet;
-            }
-            if (_Road_subscriptions != null)
-            {
-                var tmp = Road;
-                _Road = item;
-                _Road_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.Road,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Road = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Road, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.Road, nameof(Road), nameof(Road_IsSet));
         }
-        protected void UnsetRoad()
+        public void Road_Unset()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Road] = false;
-            Road = default(Road);
+            this.Road_Set(default(Road), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Road> IWorldspace.Road_Property => this.Road_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Road> IWorldspaceGetter.Road_Property => this.Road_Property;
+        Road IWorldspaceGetter.Road => this.Road;
         #endregion
         #region TopCell
-        protected Cell _TopCell;
-        protected PropertyForwarder<Worldspace, Cell> _TopCellForwarder;
-        public INotifyingSetItem<Cell> TopCell_Property => _TopCellForwarder ?? (_TopCellForwarder = new PropertyForwarder<Worldspace, Cell>(this, (int)Worldspace_FieldIndex.TopCell));
+        public bool TopCell_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.TopCell];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Worldspace_FieldIndex.TopCell, nameof(TopCell_IsSet));
+        }
+        bool IWorldspaceGetter.TopCell_IsSet => TopCell_IsSet;
+        private Cell _TopCell;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Cell TopCell
         {
-            get => this._TopCell;
-            set => this.SetTopCell(value);
+            get => _TopCell;
+            set => TopCell_Set(value);
         }
-        protected void SetTopCell(
-            Cell item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void TopCell_Set(
+            Cell value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Worldspace_FieldIndex.TopCell];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(TopCell, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Worldspace_FieldIndex.TopCell] = hasBeenSet;
-            }
-            if (_Cell_subscriptions != null)
-            {
-                var tmp = TopCell;
-                _TopCell = item;
-                _Cell_subscriptions.FireSubscriptions(
-                    index: (int)Worldspace_FieldIndex.TopCell,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _TopCell = item;
-            }
+            this.RaiseAndSetIfChanged(ref _TopCell, value, _hasBeenSetTracker, markSet, (int)Worldspace_FieldIndex.TopCell, nameof(TopCell), nameof(TopCell_IsSet));
         }
-        protected void UnsetTopCell()
+        public void TopCell_Unset()
         {
-            _hasBeenSetTracker[(int)Worldspace_FieldIndex.TopCell] = false;
-            TopCell = default(Cell);
+            this.TopCell_Set(default(Cell), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Cell> IWorldspace.TopCell_Property => this.TopCell_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Cell> IWorldspaceGetter.TopCell_Property => this.TopCell_Property;
+        Cell IWorldspaceGetter.TopCell => this.TopCell;
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -636,8 +414,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
@@ -656,48 +434,48 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Water_Property.Equals(rhs.Water_Property)) return false;
             }
-            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (Icon_IsSet)
             {
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
-            if (MapData_Property.HasBeenSet != rhs.MapData_Property.HasBeenSet) return false;
-            if (MapData_Property.HasBeenSet)
+            if (MapData_IsSet != rhs.MapData_IsSet) return false;
+            if (MapData_IsSet)
             {
                 if (!object.Equals(this.MapData, rhs.MapData)) return false;
             }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (Flags_IsSet)
             {
                 if (this.Flags != rhs.Flags) return false;
             }
-            if (ObjectBoundsMin_Property.HasBeenSet != rhs.ObjectBoundsMin_Property.HasBeenSet) return false;
-            if (ObjectBoundsMin_Property.HasBeenSet)
+            if (ObjectBoundsMin_IsSet != rhs.ObjectBoundsMin_IsSet) return false;
+            if (ObjectBoundsMin_IsSet)
             {
                 if (this.ObjectBoundsMin != rhs.ObjectBoundsMin) return false;
             }
-            if (ObjectBoundsMax_Property.HasBeenSet != rhs.ObjectBoundsMax_Property.HasBeenSet) return false;
-            if (ObjectBoundsMax_Property.HasBeenSet)
+            if (ObjectBoundsMax_IsSet != rhs.ObjectBoundsMax_IsSet) return false;
+            if (ObjectBoundsMax_IsSet)
             {
                 if (this.ObjectBoundsMax != rhs.ObjectBoundsMax) return false;
             }
-            if (Music_Property.HasBeenSet != rhs.Music_Property.HasBeenSet) return false;
-            if (Music_Property.HasBeenSet)
+            if (Music_IsSet != rhs.Music_IsSet) return false;
+            if (Music_IsSet)
             {
                 if (this.Music != rhs.Music) return false;
             }
-            if (OffsetData_Property.HasBeenSet != rhs.OffsetData_Property.HasBeenSet) return false;
-            if (OffsetData_Property.HasBeenSet)
+            if (OffsetData_IsSet != rhs.OffsetData_IsSet) return false;
+            if (OffsetData_IsSet)
             {
                 if (!this.OffsetData.EqualsFast(rhs.OffsetData)) return false;
             }
-            if (Road_Property.HasBeenSet != rhs.Road_Property.HasBeenSet) return false;
-            if (Road_Property.HasBeenSet)
+            if (Road_IsSet != rhs.Road_IsSet) return false;
+            if (Road_IsSet)
             {
                 if (!object.Equals(this.Road, rhs.Road)) return false;
             }
-            if (TopCell_Property.HasBeenSet != rhs.TopCell_Property.HasBeenSet) return false;
-            if (TopCell_Property.HasBeenSet)
+            if (TopCell_IsSet != rhs.TopCell_IsSet) return false;
+            if (TopCell_IsSet)
             {
                 if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
             }
@@ -712,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
@@ -728,39 +506,39 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Water).CombineHashCode(ret);
             }
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet)
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
-            if (MapData_Property.HasBeenSet)
+            if (MapData_IsSet)
             {
                 ret = HashHelper.GetHashCode(MapData).CombineHashCode(ret);
             }
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet)
             {
                 ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             }
-            if (ObjectBoundsMin_Property.HasBeenSet)
+            if (ObjectBoundsMin_IsSet)
             {
                 ret = HashHelper.GetHashCode(ObjectBoundsMin).CombineHashCode(ret);
             }
-            if (ObjectBoundsMax_Property.HasBeenSet)
+            if (ObjectBoundsMax_IsSet)
             {
                 ret = HashHelper.GetHashCode(ObjectBoundsMax).CombineHashCode(ret);
             }
-            if (Music_Property.HasBeenSet)
+            if (Music_IsSet)
             {
                 ret = HashHelper.GetHashCode(Music).CombineHashCode(ret);
             }
-            if (OffsetData_Property.HasBeenSet)
+            if (OffsetData_IsSet)
             {
                 ret = HashHelper.GetHashCode(OffsetData).CombineHashCode(ret);
             }
-            if (Road_Property.HasBeenSet)
+            if (Road_IsSet)
             {
                 ret = HashHelper.GetHashCode(Road).CombineHashCode(ret);
             }
-            if (TopCell_Property.HasBeenSet)
+            if (TopCell_IsSet)
             {
                 ret = HashHelper.GetHashCode(TopCell).CombineHashCode(ret);
             }
@@ -1128,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1175,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1202,7 +980,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMapData();
+                            item.MapData = default(MapData);
                         }
                     }
                     catch (Exception ex)
@@ -1228,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Worldspace.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -1254,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetObjectBoundsMin();
+                            item.ObjectBoundsMin = default(P2Float);
                         }
                     }
                     catch (Exception ex)
@@ -1280,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetObjectBoundsMax();
+                            item.ObjectBoundsMax = default(P2Float);
                         }
                     }
                     catch (Exception ex)
@@ -1306,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMusic();
+                            item.Music = default(MusicType);
                         }
                     }
                     catch (Exception ex)
@@ -1332,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetOffsetData();
+                            item.OffsetData = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1359,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRoad();
+                            item.Road = default(Road);
                         }
                     }
                     catch (Exception ex)
@@ -1386,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetTopCell();
+                            item.TopCell = default(Cell);
                         }
                     }
                     catch (Exception ex)
@@ -1467,1107 +1245,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Name:
-                    return Name;
-                case Worldspace_FieldIndex.Icon:
-                    return Icon;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                case Worldspace_FieldIndex.Icon:
-                    SetIcon(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case Worldspace_FieldIndex.Icon:
-                    SetIcon(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.Icon:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter MapData
-        protected ObjectCentralizationSubscriptions<MapData> _MapData_subscriptions;
-        MapData IPropertySupporter<MapData>.Get(int index)
-        {
-            return GetMapData(index: index);
-        }
-
-        protected MapData GetMapData(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.MapData:
-                    return MapData;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapData: {index}");
-            }
-        }
-
-        void IPropertySupporter<MapData>.Set(
-            int index,
-            MapData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMapData(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMapData(
-            int index,
-            MapData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.MapData:
-                    SetMapData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapData: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MapData>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MapData>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MapData>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMapData(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMapData(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.MapData:
-                    SetMapData(
-                        item: default(MapData),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapData: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MapData>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MapData> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MapData_subscriptions == null)
-            {
-                _MapData_subscriptions = new ObjectCentralizationSubscriptions<MapData>();
-            }
-            _MapData_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MapData>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MapData_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MapData>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MapData IPropertySupporter<MapData>.DefaultValue(int index)
-        {
-            return DefaultValueMapData(index: index);
-        }
-
-        protected MapData DefaultValueMapData(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.MapData:
-                    return default(MapData);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapData: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Worldspace.Flag
-        protected ObjectCentralizationSubscriptions<Worldspace.Flag> _WorldspaceFlag_subscriptions;
-        Worldspace.Flag IPropertySupporter<Worldspace.Flag>.Get(int index)
-        {
-            return GetWorldspaceFlag(index: index);
-        }
-
-        protected Worldspace.Flag GetWorldspaceFlag(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Worldspace.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<Worldspace.Flag>.Set(
-            int index,
-            Worldspace.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetWorldspaceFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetWorldspaceFlag(
-            int index,
-            Worldspace.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Worldspace.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Worldspace.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Worldspace.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Worldspace.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetWorldspaceFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetWorldspaceFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(Worldspace.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Worldspace.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Worldspace.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Worldspace.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_WorldspaceFlag_subscriptions == null)
-            {
-                _WorldspaceFlag_subscriptions = new ObjectCentralizationSubscriptions<Worldspace.Flag>();
-            }
-            _WorldspaceFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Worldspace.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _WorldspaceFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Worldspace.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Worldspace.Flag IPropertySupporter<Worldspace.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueWorldspaceFlag(index: index);
-        }
-
-        protected Worldspace.Flag DefaultValueWorldspaceFlag(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Flags:
-                    return default(Worldspace.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Worldspace.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter P2Float
-        protected ObjectCentralizationSubscriptions<P2Float> _P2Float_subscriptions;
-        P2Float IPropertySupporter<P2Float>.Get(int index)
-        {
-            return GetP2Float(index: index);
-        }
-
-        protected P2Float GetP2Float(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    return ObjectBoundsMin;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    return ObjectBoundsMax;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Float: {index}");
-            }
-        }
-
-        void IPropertySupporter<P2Float>.Set(
-            int index,
-            P2Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP2Float(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP2Float(
-            int index,
-            P2Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    SetObjectBoundsMin(item, hasBeenSet, cmds);
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    SetObjectBoundsMax(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Float: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P2Float>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P2Float>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P2Float>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP2Float(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP2Float(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    SetObjectBoundsMin(
-                        item: default(P2Float),
-                        hasBeenSet: false);
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    SetObjectBoundsMax(
-                        item: default(P2Float),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Float: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Float>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P2Float> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P2Float_subscriptions == null)
-            {
-                _P2Float_subscriptions = new ObjectCentralizationSubscriptions<P2Float>();
-            }
-            _P2Float_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Float>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P2Float_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P2Float>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P2Float IPropertySupporter<P2Float>.DefaultValue(int index)
-        {
-            return DefaultValueP2Float(index: index);
-        }
-
-        protected P2Float DefaultValueP2Float(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    return default(P2Float);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Float: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter MusicType
-        protected ObjectCentralizationSubscriptions<MusicType> _MusicType_subscriptions;
-        MusicType IPropertySupporter<MusicType>.Get(int index)
-        {
-            return GetMusicType(index: index);
-        }
-
-        protected MusicType GetMusicType(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Music:
-                    return Music;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        void IPropertySupporter<MusicType>.Set(
-            int index,
-            MusicType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMusicType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMusicType(
-            int index,
-            MusicType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Music:
-                    SetMusic(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MusicType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MusicType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MusicType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMusicType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMusicType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Music:
-                    SetMusic(
-                        item: default(MusicType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MusicType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MusicType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MusicType_subscriptions == null)
-            {
-                _MusicType_subscriptions = new ObjectCentralizationSubscriptions<MusicType>();
-            }
-            _MusicType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MusicType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MusicType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MusicType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MusicType IPropertySupporter<MusicType>.DefaultValue(int index)
-        {
-            return DefaultValueMusicType(index: index);
-        }
-
-        protected MusicType DefaultValueMusicType(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Music:
-                    return default(MusicType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.OffsetData:
-                    return OffsetData;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.OffsetData:
-                    SetOffsetData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.OffsetData:
-                    SetOffsetData(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.OffsetData:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Road
-        protected ObjectCentralizationSubscriptions<Road> _Road_subscriptions;
-        Road IPropertySupporter<Road>.Get(int index)
-        {
-            return GetRoad(index: index);
-        }
-
-        protected Road GetRoad(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Road:
-                    return Road;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Road: {index}");
-            }
-        }
-
-        void IPropertySupporter<Road>.Set(
-            int index,
-            Road item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRoad(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRoad(
-            int index,
-            Road item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Road:
-                    SetRoad(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Road: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Road>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Road>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Road>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRoad(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRoad(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Road:
-                    SetRoad(
-                        item: default(Road),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Road: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Road>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Road> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Road_subscriptions == null)
-            {
-                _Road_subscriptions = new ObjectCentralizationSubscriptions<Road>();
-            }
-            _Road_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Road>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Road_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Road>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Road IPropertySupporter<Road>.DefaultValue(int index)
-        {
-            return DefaultValueRoad(index: index);
-        }
-
-        protected Road DefaultValueRoad(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.Road:
-                    return default(Road);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Road: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Cell
-        protected ObjectCentralizationSubscriptions<Cell> _Cell_subscriptions;
-        Cell IPropertySupporter<Cell>.Get(int index)
-        {
-            return GetCell(index: index);
-        }
-
-        protected Cell GetCell(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.TopCell:
-                    return TopCell;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Cell: {index}");
-            }
-        }
-
-        void IPropertySupporter<Cell>.Set(
-            int index,
-            Cell item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetCell(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetCell(
-            int index,
-            Cell item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.TopCell:
-                    SetTopCell(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Cell: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Cell>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Cell>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Cell>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetCell(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetCell(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.TopCell:
-                    SetTopCell(
-                        item: default(Cell),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Cell: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Cell>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Cell> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Cell_subscriptions == null)
-            {
-                _Cell_subscriptions = new ObjectCentralizationSubscriptions<Cell>();
-            }
-            _Cell_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Cell>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Cell_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Cell>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Cell IPropertySupporter<Cell>.DefaultValue(int index)
-        {
-            return DefaultValueCell(index: index);
-        }
-
-        protected Cell DefaultValueCell(int index)
-        {
-            switch ((Worldspace_FieldIndex)index)
-            {
-                case Worldspace_FieldIndex.TopCell:
-                    return default(Cell);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Cell: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Worldspace_Registration.TRIGGERING_RECORD_TYPE;
@@ -2868,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -2920,7 +1597,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -2946,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMapData();
+                            item.MapData = default(MapData);
                         }
                     }
                     catch (Exception ex)
@@ -2973,7 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Worldspace.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -3000,7 +1677,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetObjectBoundsMin();
+                            item.ObjectBoundsMin = default(P2Float);
                         }
                     }
                     catch (Exception ex)
@@ -3027,7 +1704,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetObjectBoundsMax();
+                            item.ObjectBoundsMax = default(P2Float);
                         }
                     }
                     catch (Exception ex)
@@ -3054,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMusic();
+                            item.Music = default(MusicType);
                         }
                     }
                     catch (Exception ex)
@@ -3223,9 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Worldspace_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 case Worldspace_FieldIndex.Parent:
                     this.Parent_Property.Set(
@@ -3243,49 +1918,31 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Worldspace_FieldIndex.Icon:
-                    this.SetIcon(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Icon = (String)obj;
                     break;
                 case Worldspace_FieldIndex.MapData:
-                    this.SetMapData(
-                        (MapData)obj,
-                        cmds: cmds);
+                    this.MapData = (MapData)obj;
                     break;
                 case Worldspace_FieldIndex.Flags:
-                    this.SetFlags(
-                        (Worldspace.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (Worldspace.Flag)obj;
                     break;
                 case Worldspace_FieldIndex.ObjectBoundsMin:
-                    this.SetObjectBoundsMin(
-                        (P2Float)obj,
-                        cmds: cmds);
+                    this.ObjectBoundsMin = (P2Float)obj;
                     break;
                 case Worldspace_FieldIndex.ObjectBoundsMax:
-                    this.SetObjectBoundsMax(
-                        (P2Float)obj,
-                        cmds: cmds);
+                    this.ObjectBoundsMax = (P2Float)obj;
                     break;
                 case Worldspace_FieldIndex.Music:
-                    this.SetMusic(
-                        (MusicType)obj,
-                        cmds: cmds);
+                    this.Music = (MusicType)obj;
                     break;
                 case Worldspace_FieldIndex.OffsetData:
-                    this.SetOffsetData(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.OffsetData = (Byte[])obj;
                     break;
                 case Worldspace_FieldIndex.Road:
-                    this.SetRoad(
-                        (Road)obj,
-                        cmds: cmds);
+                    this.Road = (Road)obj;
                     break;
                 case Worldspace_FieldIndex.TopCell:
-                    this.SetTopCell(
-                        (Cell)obj,
-                        cmds: cmds);
+                    this.TopCell = (Cell)obj;
                     break;
                 case Worldspace_FieldIndex.SubCells:
                     this._SubCells.SetTo((IEnumerable<WorldspaceBlock>)obj, cmds);
@@ -3322,9 +1979,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Worldspace_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 case Worldspace_FieldIndex.Parent:
                     obj.Parent_Property.Set(
@@ -3342,49 +1997,31 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Worldspace_FieldIndex.Icon:
-                    obj.SetIcon(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Icon = (String)pair.Value;
                     break;
                 case Worldspace_FieldIndex.MapData:
-                    obj.SetMapData(
-                        (MapData)pair.Value,
-                        cmds: null);
+                    obj.MapData = (MapData)pair.Value;
                     break;
                 case Worldspace_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (Worldspace.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (Worldspace.Flag)pair.Value;
                     break;
                 case Worldspace_FieldIndex.ObjectBoundsMin:
-                    obj.SetObjectBoundsMin(
-                        (P2Float)pair.Value,
-                        cmds: null);
+                    obj.ObjectBoundsMin = (P2Float)pair.Value;
                     break;
                 case Worldspace_FieldIndex.ObjectBoundsMax:
-                    obj.SetObjectBoundsMax(
-                        (P2Float)pair.Value,
-                        cmds: null);
+                    obj.ObjectBoundsMax = (P2Float)pair.Value;
                     break;
                 case Worldspace_FieldIndex.Music:
-                    obj.SetMusic(
-                        (MusicType)pair.Value,
-                        cmds: null);
+                    obj.Music = (MusicType)pair.Value;
                     break;
                 case Worldspace_FieldIndex.OffsetData:
-                    obj.SetOffsetData(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.OffsetData = (Byte[])pair.Value;
                     break;
                 case Worldspace_FieldIndex.Road:
-                    obj.SetRoad(
-                        (Road)pair.Value,
-                        cmds: null);
+                    obj.Road = (Road)pair.Value;
                     break;
                 case Worldspace_FieldIndex.TopCell:
-                    obj.SetTopCell(
-                        (Cell)pair.Value,
-                        cmds: null);
+                    obj.TopCell = (Cell)pair.Value;
                     break;
                 case Worldspace_FieldIndex.SubCells:
                     obj._SubCells.SetTo((IEnumerable<WorldspaceBlock>)pair.Value, null);
@@ -3405,37 +2042,57 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWorldspace : IWorldspaceGetter, IPlace, ILoquiClass<IWorldspace, IWorldspaceGetter>, ILoquiClass<Worldspace, IWorldspaceGetter>
     {
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
         new Worldspace Parent { get; set; }
         new Climate Climate { get; set; }
         new Water Water { get; set; }
         new String Icon { get; set; }
-        new INotifyingSetItem<String> Icon_Property { get; }
+        new bool Icon_IsSet { get; set; }
+        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Unset();
 
         new MapData MapData { get; set; }
-        new INotifyingSetItem<MapData> MapData_Property { get; }
+        new bool MapData_IsSet { get; set; }
+        void MapData_Set(MapData item, bool hasBeenSet = true);
+        void MapData_Unset();
 
         new Worldspace.Flag Flags { get; set; }
-        new INotifyingSetItem<Worldspace.Flag> Flags_Property { get; }
+        new bool Flags_IsSet { get; set; }
+        void Flags_Set(Worldspace.Flag item, bool hasBeenSet = true);
+        void Flags_Unset();
 
         new P2Float ObjectBoundsMin { get; set; }
-        new INotifyingSetItem<P2Float> ObjectBoundsMin_Property { get; }
+        new bool ObjectBoundsMin_IsSet { get; set; }
+        void ObjectBoundsMin_Set(P2Float item, bool hasBeenSet = true);
+        void ObjectBoundsMin_Unset();
 
         new P2Float ObjectBoundsMax { get; set; }
-        new INotifyingSetItem<P2Float> ObjectBoundsMax_Property { get; }
+        new bool ObjectBoundsMax_IsSet { get; set; }
+        void ObjectBoundsMax_Set(P2Float item, bool hasBeenSet = true);
+        void ObjectBoundsMax_Unset();
 
         new MusicType Music { get; set; }
-        new INotifyingSetItem<MusicType> Music_Property { get; }
+        new bool Music_IsSet { get; set; }
+        void Music_Set(MusicType item, bool hasBeenSet = true);
+        void Music_Unset();
 
         new Byte[] OffsetData { get; set; }
-        new INotifyingSetItem<Byte[]> OffsetData_Property { get; }
+        new bool OffsetData_IsSet { get; set; }
+        void OffsetData_Set(Byte[] item, bool hasBeenSet = true);
+        void OffsetData_Unset();
 
         new Road Road { get; set; }
-        new INotifyingSetItem<Road> Road_Property { get; }
+        new bool Road_IsSet { get; set; }
+        void Road_Set(Road item, bool hasBeenSet = true);
+        void Road_Unset();
 
         new Cell TopCell { get; set; }
-        new INotifyingSetItem<Cell> TopCell_Property { get; }
+        new bool TopCell_IsSet { get; set; }
+        void TopCell_Set(Cell item, bool hasBeenSet = true);
+        void TopCell_Unset();
 
         new INotifyingList<WorldspaceBlock> SubCells { get; }
     }
@@ -3444,7 +2101,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
         #region Parent
@@ -3464,47 +2121,47 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         String Icon { get; }
-        INotifyingSetItemGetter<String> Icon_Property { get; }
+        bool Icon_IsSet { get; }
 
         #endregion
         #region MapData
         MapData MapData { get; }
-        INotifyingSetItemGetter<MapData> MapData_Property { get; }
+        bool MapData_IsSet { get; }
 
         #endregion
         #region Flags
         Worldspace.Flag Flags { get; }
-        INotifyingSetItemGetter<Worldspace.Flag> Flags_Property { get; }
+        bool Flags_IsSet { get; }
 
         #endregion
         #region ObjectBoundsMin
         P2Float ObjectBoundsMin { get; }
-        INotifyingSetItemGetter<P2Float> ObjectBoundsMin_Property { get; }
+        bool ObjectBoundsMin_IsSet { get; }
 
         #endregion
         #region ObjectBoundsMax
         P2Float ObjectBoundsMax { get; }
-        INotifyingSetItemGetter<P2Float> ObjectBoundsMax_Property { get; }
+        bool ObjectBoundsMax_IsSet { get; }
 
         #endregion
         #region Music
         MusicType Music { get; }
-        INotifyingSetItemGetter<MusicType> Music_Property { get; }
+        bool Music_IsSet { get; }
 
         #endregion
         #region OffsetData
         Byte[] OffsetData { get; }
-        INotifyingSetItemGetter<Byte[]> OffsetData_Property { get; }
+        bool OffsetData_IsSet { get; }
 
         #endregion
         #region Road
         Road Road { get; }
-        INotifyingSetItemGetter<Road> Road_Property { get; }
+        bool Road_IsSet { get; }
 
         #endregion
         #region TopCell
         Cell TopCell { get; }
-        INotifyingSetItemGetter<Cell> TopCell_Property { get; }
+        bool TopCell_IsSet { get; }
 
         #endregion
         #region SubCells
@@ -3897,9 +2554,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3976,9 +2644,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Icon);
                 try
                 {
-                    item.Icon_Property.SetToWithDefault(
-                        rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Icon,
+                        rhsHasBeenSet: rhs.Icon_IsSet,
+                        defItem: def?.Icon ?? default(String),
+                        defHasBeenSet: def?.Icon_IsSet ?? false,
+                        outRhsItem: out var rhsIconItem,
+                        outDefItem: out var defIconItem))
+                    {
+                        item.Icon = rhsIconItem;
+                    }
+                    else
+                    {
+                        item.Icon_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3995,36 +2674,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
                 try
                 {
-                    item.MapData_Property.SetToWithDefault(
-                        rhs.MapData_Property,
-                        def?.MapData_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.MapData,
+                        rhsHasBeenSet: rhs.MapData_IsSet,
+                        defItem: def?.MapData,
+                        defHasBeenSet: def?.MapData_IsSet ?? false,
+                        outRhsItem: out var rhsMapDataItem,
+                        outDefItem: out var defMapDataItem))
+                    {
+                        switch (copyMask?.MapData.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.MapData.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    MapDataCommon.CopyFieldsFrom(
-                                        item: item.MapData,
-                                        rhs: rhs.MapData,
-                                        def: def?.MapData,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.MapData.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(MapData);
-                                    return MapData.Copy(
-                                        r,
-                                        copyMask?.MapData?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.MapData?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.MapData = rhsMapDataItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                MapDataCommon.CopyFieldsFrom(
+                                    item: item.MapData,
+                                    rhs: rhs.MapData,
+                                    def: def?.MapData,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.MapData.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.MapData = MapData.Copy(
+                                    rhsMapDataItem,
+                                    copyMask?.MapData?.Specific,
+                                    def: defMapDataItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.MapData?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.MapData_IsSet = false;
+                        item.MapData = default(MapData);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4041,9 +2727,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Flags,
+                        rhsHasBeenSet: rhs.Flags_IsSet,
+                        defItem: def?.Flags ?? default(Worldspace.Flag),
+                        defHasBeenSet: def?.Flags_IsSet ?? false,
+                        outRhsItem: out var rhsFlagsItem,
+                        outDefItem: out var defFlagsItem))
+                    {
+                        item.Flags = rhsFlagsItem;
+                    }
+                    else
+                    {
+                        item.Flags_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4060,9 +2757,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMin);
                 try
                 {
-                    item.ObjectBoundsMin_Property.SetToWithDefault(
-                        rhs: rhs.ObjectBoundsMin_Property,
-                        def: def?.ObjectBoundsMin_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.ObjectBoundsMin,
+                        rhsHasBeenSet: rhs.ObjectBoundsMin_IsSet,
+                        defItem: def?.ObjectBoundsMin ?? default(P2Float),
+                        defHasBeenSet: def?.ObjectBoundsMin_IsSet ?? false,
+                        outRhsItem: out var rhsObjectBoundsMinItem,
+                        outDefItem: out var defObjectBoundsMinItem))
+                    {
+                        item.ObjectBoundsMin = rhsObjectBoundsMinItem;
+                    }
+                    else
+                    {
+                        item.ObjectBoundsMin_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4079,9 +2787,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMax);
                 try
                 {
-                    item.ObjectBoundsMax_Property.SetToWithDefault(
-                        rhs: rhs.ObjectBoundsMax_Property,
-                        def: def?.ObjectBoundsMax_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.ObjectBoundsMax,
+                        rhsHasBeenSet: rhs.ObjectBoundsMax_IsSet,
+                        defItem: def?.ObjectBoundsMax ?? default(P2Float),
+                        defHasBeenSet: def?.ObjectBoundsMax_IsSet ?? false,
+                        outRhsItem: out var rhsObjectBoundsMaxItem,
+                        outDefItem: out var defObjectBoundsMaxItem))
+                    {
+                        item.ObjectBoundsMax = rhsObjectBoundsMaxItem;
+                    }
+                    else
+                    {
+                        item.ObjectBoundsMax_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4098,9 +2817,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Music);
                 try
                 {
-                    item.Music_Property.SetToWithDefault(
-                        rhs: rhs.Music_Property,
-                        def: def?.Music_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Music,
+                        rhsHasBeenSet: rhs.Music_IsSet,
+                        defItem: def?.Music ?? default(MusicType),
+                        defHasBeenSet: def?.Music_IsSet ?? false,
+                        outRhsItem: out var rhsMusicItem,
+                        outDefItem: out var defMusicItem))
+                    {
+                        item.Music = rhsMusicItem;
+                    }
+                    else
+                    {
+                        item.Music_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4117,9 +2847,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.OffsetData);
                 try
                 {
-                    item.OffsetData_Property.SetToWithDefault(
-                        rhs: rhs.OffsetData_Property,
-                        def: def?.OffsetData_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.OffsetData,
+                        rhsHasBeenSet: rhs.OffsetData_IsSet,
+                        defItem: def?.OffsetData ?? default(Byte[]),
+                        defHasBeenSet: def?.OffsetData_IsSet ?? false,
+                        outRhsItem: out var rhsOffsetDataItem,
+                        outDefItem: out var defOffsetDataItem))
+                    {
+                        item.OffsetData = rhsOffsetDataItem;
+                    }
+                    else
+                    {
+                        item.OffsetData_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4136,36 +2877,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Road);
                 try
                 {
-                    item.Road_Property.SetToWithDefault(
-                        rhs.Road_Property,
-                        def?.Road_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Road,
+                        rhsHasBeenSet: rhs.Road_IsSet,
+                        defItem: def?.Road,
+                        defHasBeenSet: def?.Road_IsSet ?? false,
+                        outRhsItem: out var rhsRoadItem,
+                        outDefItem: out var defRoadItem))
+                    {
+                        switch (copyMask?.Road.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Road.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RoadCommon.CopyFieldsFrom(
-                                        item: item.Road,
-                                        rhs: rhs.Road,
-                                        def: def?.Road,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Road.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(Road);
-                                    return Road.Copy(
-                                        r,
-                                        copyMask?.Road?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Road?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Road = rhsRoadItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RoadCommon.CopyFieldsFrom(
+                                    item: item.Road,
+                                    rhs: rhs.Road,
+                                    def: def?.Road,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Road.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Road = Road.Copy(
+                                    rhsRoadItem,
+                                    copyMask?.Road?.Specific,
+                                    def: defRoadItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Road?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Road_IsSet = false;
+                        item.Road = default(Road);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4182,36 +2930,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
                 try
                 {
-                    item.TopCell_Property.SetToWithDefault(
-                        rhs.TopCell_Property,
-                        def?.TopCell_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.TopCell,
+                        rhsHasBeenSet: rhs.TopCell_IsSet,
+                        defItem: def?.TopCell,
+                        defHasBeenSet: def?.TopCell_IsSet ?? false,
+                        outRhsItem: out var rhsTopCellItem,
+                        outDefItem: out var defTopCellItem))
+                    {
+                        switch (copyMask?.TopCell.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.TopCell.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    CellCommon.CopyFieldsFrom(
-                                        item: item.TopCell,
-                                        rhs: rhs.TopCell,
-                                        def: def?.TopCell,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.TopCell.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(Cell);
-                                    return Cell.Copy(
-                                        r,
-                                        copyMask?.TopCell?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TopCell?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.TopCell = rhsTopCellItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                CellCommon.CopyFieldsFrom(
+                                    item: item.TopCell,
+                                    rhs: rhs.TopCell,
+                                    def: def?.TopCell,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.TopCell.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.TopCell = Cell.Copy(
+                                    rhsTopCellItem,
+                                    copyMask?.TopCell?.Specific,
+                                    def: defTopCellItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.TopCell?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.TopCell_IsSet = false;
+                        item.TopCell = default(Cell);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4239,7 +2994,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(WorldspaceBlock);
                                     return WorldspaceBlock.Copy(
                                         r,
                                         copyMask?.SubCells?.Specific,
@@ -4274,7 +3028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Worldspace_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.Parent:
                     obj.Parent_Property.HasBeenSet = on;
@@ -4286,31 +3040,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Water_Property.HasBeenSet = on;
                     break;
                 case Worldspace_FieldIndex.Icon:
-                    obj.Icon_Property.HasBeenSet = on;
+                    obj.Icon_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.MapData:
-                    obj.MapData_Property.HasBeenSet = on;
+                    obj.MapData_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
+                    obj.Flags_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.ObjectBoundsMin:
-                    obj.ObjectBoundsMin_Property.HasBeenSet = on;
+                    obj.ObjectBoundsMin_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.ObjectBoundsMax:
-                    obj.ObjectBoundsMax_Property.HasBeenSet = on;
+                    obj.ObjectBoundsMax_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.Music:
-                    obj.Music_Property.HasBeenSet = on;
+                    obj.Music_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.OffsetData:
-                    obj.OffsetData_Property.HasBeenSet = on;
+                    obj.OffsetData_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.Road:
-                    obj.Road_Property.HasBeenSet = on;
+                    obj.Road_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.TopCell:
-                    obj.TopCell_Property.HasBeenSet = on;
+                    obj.TopCell_IsSet = on;
                     break;
                 case Worldspace_FieldIndex.SubCells:
                     obj.SubCells.HasBeenSet = on;
@@ -4330,43 +3084,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Worldspace_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 case Worldspace_FieldIndex.Parent:
-                    obj.Parent_Property.Unset(cmds);
+                    obj.Parent_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Worldspace_FieldIndex.Climate:
-                    obj.Climate_Property.Unset(cmds);
+                    obj.Climate_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Worldspace_FieldIndex.Water:
-                    obj.Water_Property.Unset(cmds);
+                    obj.Water_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Worldspace_FieldIndex.Icon:
-                    obj.Icon_Property.Unset(cmds);
+                    obj.Icon_Unset();
                     break;
                 case Worldspace_FieldIndex.MapData:
-                    obj.MapData_Property.Unset(cmds);
+                    obj.MapData_Unset();
                     break;
                 case Worldspace_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags_Unset();
                     break;
                 case Worldspace_FieldIndex.ObjectBoundsMin:
-                    obj.ObjectBoundsMin_Property.Unset(cmds);
+                    obj.ObjectBoundsMin_Unset();
                     break;
                 case Worldspace_FieldIndex.ObjectBoundsMax:
-                    obj.ObjectBoundsMax_Property.Unset(cmds);
+                    obj.ObjectBoundsMax_Unset();
                     break;
                 case Worldspace_FieldIndex.Music:
-                    obj.Music_Property.Unset(cmds);
+                    obj.Music_Unset();
                     break;
                 case Worldspace_FieldIndex.OffsetData:
-                    obj.OffsetData_Property.Unset(cmds);
+                    obj.OffsetData_Unset();
                     break;
                 case Worldspace_FieldIndex.Road:
-                    obj.Road_Property.Unset(cmds);
+                    obj.Road_Unset();
                     break;
                 case Worldspace_FieldIndex.TopCell:
-                    obj.TopCell_Property.Unset(cmds);
+                    obj.TopCell_Unset();
                     break;
                 case Worldspace_FieldIndex.SubCells:
                     obj.SubCells.Unset(cmds);
@@ -4385,7 +3139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Worldspace_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 case Worldspace_FieldIndex.Parent:
                     return obj.Parent_Property.HasBeenSet;
                 case Worldspace_FieldIndex.Climate:
@@ -4393,23 +3147,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Water:
                     return obj.Water_Property.HasBeenSet;
                 case Worldspace_FieldIndex.Icon:
-                    return obj.Icon_Property.HasBeenSet;
+                    return obj.Icon_IsSet;
                 case Worldspace_FieldIndex.MapData:
-                    return obj.MapData_Property.HasBeenSet;
+                    return obj.MapData_IsSet;
                 case Worldspace_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                    return obj.Flags_IsSet;
                 case Worldspace_FieldIndex.ObjectBoundsMin:
-                    return obj.ObjectBoundsMin_Property.HasBeenSet;
+                    return obj.ObjectBoundsMin_IsSet;
                 case Worldspace_FieldIndex.ObjectBoundsMax:
-                    return obj.ObjectBoundsMax_Property.HasBeenSet;
+                    return obj.ObjectBoundsMax_IsSet;
                 case Worldspace_FieldIndex.Music:
-                    return obj.Music_Property.HasBeenSet;
+                    return obj.Music_IsSet;
                 case Worldspace_FieldIndex.OffsetData:
-                    return obj.OffsetData_Property.HasBeenSet;
+                    return obj.OffsetData_IsSet;
                 case Worldspace_FieldIndex.Road:
-                    return obj.Road_Property.HasBeenSet;
+                    return obj.Road_IsSet;
                 case Worldspace_FieldIndex.TopCell:
-                    return obj.TopCell_Property.HasBeenSet;
+                    return obj.TopCell_IsSet;
                 case Worldspace_FieldIndex.SubCells:
                     return obj.SubCells.HasBeenSet;
                 default:
@@ -4461,19 +3215,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspace item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Name_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Unset();
             item.Parent_Property.Unset(cmds.ToUnsetParams());
             item.Climate_Property.Unset(cmds.ToUnsetParams());
             item.Water_Property.Unset(cmds.ToUnsetParams());
-            item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.MapData_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
-            item.ObjectBoundsMin_Property.Unset(cmds.ToUnsetParams());
-            item.ObjectBoundsMax_Property.Unset(cmds.ToUnsetParams());
-            item.Music_Property.Unset(cmds.ToUnsetParams());
-            item.OffsetData_Property.Unset(cmds.ToUnsetParams());
-            item.Road_Property.Unset(cmds.ToUnsetParams());
-            item.TopCell_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Unset();
+            item.MapData_Unset();
+            item.Flags_Unset();
+            item.ObjectBoundsMin_Unset();
+            item.ObjectBoundsMax_Unset();
+            item.Music_Unset();
+            item.OffsetData_Unset();
+            item.Road_Unset();
+            item.TopCell_Unset();
             item.SubCells.Unset(cmds.ToUnsetParams());
         }
 
@@ -4492,19 +3246,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Parent = item.Parent_Property.Equals(rhs.Parent_Property, (l, r) => l == r);
             ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
             ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
-            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.MapData = item.MapData_Property.LoquiEqualsHelper(rhs.MapData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
-            ret.ObjectBoundsMin = item.ObjectBoundsMin_Property.Equals(rhs.ObjectBoundsMin_Property, (l, r) => l == r);
-            ret.ObjectBoundsMax = item.ObjectBoundsMax_Property.Equals(rhs.ObjectBoundsMax_Property, (l, r) => l == r);
-            ret.Music = item.Music_Property.Equals(rhs.Music_Property, (l, r) => l == r);
-            ret.OffsetData = item.OffsetData_Property.Equals(rhs.OffsetData_Property, (l, r) => l.EqualsFast(r));
-            ret.Road = item.Road_Property.LoquiEqualsHelper(rhs.Road_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.TopCell = item.TopCell_Property.LoquiEqualsHelper(rhs.TopCell_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.MapData = IHasBeenSetExt.LoquiEqualsHelper(item.MapData_IsSet, rhs.MapData_IsSet, item.MapData, rhs.MapData, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.ObjectBoundsMin = item.ObjectBoundsMin_IsSet == rhs.ObjectBoundsMin_IsSet && item.ObjectBoundsMin == rhs.ObjectBoundsMin;
+            ret.ObjectBoundsMax = item.ObjectBoundsMax_IsSet == rhs.ObjectBoundsMax_IsSet && item.ObjectBoundsMax == rhs.ObjectBoundsMax;
+            ret.Music = item.Music_IsSet == rhs.Music_IsSet && item.Music == rhs.Music;
+            ret.OffsetData = item.OffsetData_IsSet == rhs.OffsetData_IsSet && item.OffsetData.EqualsFast(rhs.OffsetData);
+            ret.Road = IHasBeenSetExt.LoquiEqualsHelper(item.Road_IsSet, rhs.Road_IsSet, item.Road, rhs.Road, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.TopCell = IHasBeenSetExt.LoquiEqualsHelper(item.TopCell_IsSet, rhs.TopCell_IsSet, item.TopCell, rhs.TopCell, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.SubCells.HasBeenSet == rhs.SubCells.HasBeenSet)
             {
                 if (item.SubCells.HasBeenSet)
@@ -4638,21 +3392,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IWorldspaceGetter item,
             Worldspace_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             if (checkMask.Parent.HasValue && checkMask.Parent.Value != item.Parent_Property.HasBeenSet) return false;
             if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
             if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.MapData.Overall.HasValue && checkMask.MapData.Overall.Value != item.MapData_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.MapData.Overall.HasValue && checkMask.MapData.Overall.Value != item.MapData_IsSet) return false;
             if (checkMask.MapData.Specific != null && (item.MapData == null || !item.MapData.HasBeenSet(checkMask.MapData.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
-            if (checkMask.ObjectBoundsMin.HasValue && checkMask.ObjectBoundsMin.Value != item.ObjectBoundsMin_Property.HasBeenSet) return false;
-            if (checkMask.ObjectBoundsMax.HasValue && checkMask.ObjectBoundsMax.Value != item.ObjectBoundsMax_Property.HasBeenSet) return false;
-            if (checkMask.Music.HasValue && checkMask.Music.Value != item.Music_Property.HasBeenSet) return false;
-            if (checkMask.OffsetData.HasValue && checkMask.OffsetData.Value != item.OffsetData_Property.HasBeenSet) return false;
-            if (checkMask.Road.Overall.HasValue && checkMask.Road.Overall.Value != item.Road_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.ObjectBoundsMin.HasValue && checkMask.ObjectBoundsMin.Value != item.ObjectBoundsMin_IsSet) return false;
+            if (checkMask.ObjectBoundsMax.HasValue && checkMask.ObjectBoundsMax.Value != item.ObjectBoundsMax_IsSet) return false;
+            if (checkMask.Music.HasValue && checkMask.Music.Value != item.Music_IsSet) return false;
+            if (checkMask.OffsetData.HasValue && checkMask.OffsetData.Value != item.OffsetData_IsSet) return false;
+            if (checkMask.Road.Overall.HasValue && checkMask.Road.Overall.Value != item.Road_IsSet) return false;
             if (checkMask.Road.Specific != null && (item.Road == null || !item.Road.HasBeenSet(checkMask.Road.Specific))) return false;
-            if (checkMask.TopCell.Overall.HasValue && checkMask.TopCell.Overall.Value != item.TopCell_Property.HasBeenSet) return false;
+            if (checkMask.TopCell.Overall.HasValue && checkMask.TopCell.Overall.Value != item.TopCell_IsSet) return false;
             if (checkMask.TopCell.Specific != null && (item.TopCell == null || !item.TopCell.HasBeenSet(checkMask.TopCell.Specific))) return false;
             if (checkMask.SubCells.Overall.HasValue && checkMask.SubCells.Overall.Value != item.SubCells.HasBeenSet) return false;
             return true;
@@ -4661,19 +3415,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Worldspace_Mask<bool> GetHasBeenSetMask(IWorldspaceGetter item)
         {
             var ret = new Worldspace_Mask<bool>();
-            ret.Name = item.Name_Property.HasBeenSet;
+            ret.Name = item.Name_IsSet;
             ret.Parent = item.Parent_Property.HasBeenSet;
             ret.Climate = item.Climate_Property.HasBeenSet;
             ret.Water = item.Water_Property.HasBeenSet;
-            ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.MapData = new MaskItem<bool, MapData_Mask<bool>>(item.MapData_Property.HasBeenSet, MapDataCommon.GetHasBeenSetMask(item.MapData));
-            ret.Flags = item.Flags_Property.HasBeenSet;
-            ret.ObjectBoundsMin = item.ObjectBoundsMin_Property.HasBeenSet;
-            ret.ObjectBoundsMax = item.ObjectBoundsMax_Property.HasBeenSet;
-            ret.Music = item.Music_Property.HasBeenSet;
-            ret.OffsetData = item.OffsetData_Property.HasBeenSet;
-            ret.Road = new MaskItem<bool, Road_Mask<bool>>(item.Road_Property.HasBeenSet, RoadCommon.GetHasBeenSetMask(item.Road));
-            ret.TopCell = new MaskItem<bool, Cell_Mask<bool>>(item.TopCell_Property.HasBeenSet, CellCommon.GetHasBeenSetMask(item.TopCell));
+            ret.Icon = item.Icon_IsSet;
+            ret.MapData = new MaskItem<bool, MapData_Mask<bool>>(item.MapData_IsSet, MapDataCommon.GetHasBeenSetMask(item.MapData));
+            ret.Flags = item.Flags_IsSet;
+            ret.ObjectBoundsMin = item.ObjectBoundsMin_IsSet;
+            ret.ObjectBoundsMax = item.ObjectBoundsMax_IsSet;
+            ret.Music = item.Music_IsSet;
+            ret.OffsetData = item.OffsetData_IsSet;
+            ret.Road = new MaskItem<bool, Road_Mask<bool>>(item.Road_IsSet, RoadCommon.GetHasBeenSetMask(item.Road));
+            ret.TopCell = new MaskItem<bool, Cell_Mask<bool>>(item.TopCell_IsSet, CellCommon.GetHasBeenSetMask(item.TopCell));
             ret.SubCells = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceBlock_Mask<bool>>>>(item.SubCells.HasBeenSet, item.SubCells.Select((i) => new MaskItem<bool, WorldspaceBlock_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -4761,13 +3515,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Worldspace");
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)Worldspace_FieldIndex.Name,
                     errorMask: errorMask);
             }
@@ -4801,94 +3555,94 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Worldspace_FieldIndex.Water,
                     errorMask: errorMask);
             }
-            if (item.Icon_Property.HasBeenSet
+            if (item.Icon_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Icon),
-                    item: item.Icon_Property,
+                    item: item.Icon,
                     fieldIndex: (int)Worldspace_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.MapData_Property.HasBeenSet
+            if (item.MapData_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
                 LoquiXmlTranslation<MapData>.Instance.Write(
                     node: elem,
-                    item: item.MapData_Property,
+                    item: item.MapData,
                     name: nameof(item.MapData),
                     fieldIndex: (int)Worldspace_FieldIndex.MapData,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapData));
             }
-            if (item.Flags_Property.HasBeenSet
+            if (item.Flags_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Worldspace.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)Worldspace_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.ObjectBoundsMin_Property.HasBeenSet
+            if (item.ObjectBoundsMin_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
             {
                 P2FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ObjectBoundsMin),
-                    item: item.ObjectBoundsMin_Property,
+                    item: item.ObjectBoundsMin,
                     fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
                     errorMask: errorMask);
             }
-            if (item.ObjectBoundsMax_Property.HasBeenSet
+            if (item.ObjectBoundsMax_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
             {
                 P2FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ObjectBoundsMax),
-                    item: item.ObjectBoundsMax_Property,
+                    item: item.ObjectBoundsMax,
                     fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
                     errorMask: errorMask);
             }
-            if (item.Music_Property.HasBeenSet
+            if (item.Music_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
                 EnumXmlTranslation<MusicType>.Instance.Write(
                     node: elem,
                     name: nameof(item.Music),
-                    item: item.Music_Property,
+                    item: item.Music,
                     fieldIndex: (int)Worldspace_FieldIndex.Music,
                     errorMask: errorMask);
             }
-            if (item.OffsetData_Property.HasBeenSet
+            if (item.OffsetData_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.OffsetData),
-                    item: item.OffsetData_Property,
+                    item: item.OffsetData,
                     fieldIndex: (int)Worldspace_FieldIndex.OffsetData,
                     errorMask: errorMask);
             }
-            if (item.Road_Property.HasBeenSet
+            if (item.Road_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {
                 LoquiXmlTranslation<Road>.Instance.Write(
                     node: elem,
-                    item: item.Road_Property,
+                    item: item.Road,
                     name: nameof(item.Road),
                     fieldIndex: (int)Worldspace_FieldIndex.Road,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.Road));
             }
-            if (item.TopCell_Property.HasBeenSet
+            if (item.TopCell_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
                 LoquiXmlTranslation<Cell>.Instance.Write(
                     node: elem,
-                    item: item.TopCell_Property,
+                    item: item.TopCell,
                     name: nameof(item.TopCell),
                     fieldIndex: (int)Worldspace_FieldIndex.TopCell,
                     errorMask: errorMask,
@@ -4977,76 +3731,106 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)Worldspace_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.FULL_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Parent_Property,
-                fieldIndex: (int)Worldspace_FieldIndex.Parent,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Climate_Property,
-                fieldIndex: (int)Worldspace_FieldIndex.Climate,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.CNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Water_Property,
-                fieldIndex: (int)Worldspace_FieldIndex.Water,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM2_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Icon_Property,
-                fieldIndex: (int)Worldspace_FieldIndex.Icon,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.ICON_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<MapData>.Instance.Write(
-                writer: writer,
-                item: item.MapData_Property,
-                fieldIndex: (int)Worldspace_FieldIndex.MapData,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Write(
-                writer,
-                item.Flags_Property,
-                length: 1,
-                fieldIndex: (int)Worldspace_FieldIndex.Flags,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.DATA_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ObjectBoundsMin_Property,
-                fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM0_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ObjectBoundsMax_Property,
-                fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM9_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
-                writer,
-                item.Music_Property,
-                length: 4,
-                fieldIndex: (int)Worldspace_FieldIndex.Music,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.SNAM_HEADER),
-                nullable: false);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)Worldspace_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Parent_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Parent_Property,
+                    fieldIndex: (int)Worldspace_FieldIndex.Parent,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Climate_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Climate_Property,
+                    fieldIndex: (int)Worldspace_FieldIndex.Climate,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.CNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Water_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Water_Property,
+                    fieldIndex: (int)Worldspace_FieldIndex.Water,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM2_HEADER),
+                    nullable: false);
+            }
+            if (item.Icon_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon,
+                    fieldIndex: (int)Worldspace_FieldIndex.Icon,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.ICON_HEADER),
+                    nullable: false);
+            }
+            if (item.MapData_IsSet)
+            {
+                LoquiBinaryTranslation<MapData>.Instance.Write(
+                    writer: writer,
+                    item: item.MapData,
+                    fieldIndex: (int)Worldspace_FieldIndex.MapData,
+                    errorMask: errorMask);
+            }
+            if (item.Flags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1,
+                    fieldIndex: (int)Worldspace_FieldIndex.Flags,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.DATA_HEADER),
+                    nullable: false);
+            }
+            if (item.ObjectBoundsMin_IsSet)
+            {
+                Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ObjectBoundsMin,
+                    fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM0_HEADER),
+                    nullable: false);
+            }
+            if (item.ObjectBoundsMax_IsSet)
+            {
+                Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ObjectBoundsMax,
+                    fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM9_HEADER),
+                    nullable: false);
+            }
+            if (item.Music_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
+                    writer,
+                    item.Music,
+                    length: 4,
+                    fieldIndex: (int)Worldspace_FieldIndex.Music,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.SNAM_HEADER),
+                    nullable: false);
+            }
             Worldspace.WriteBinary_OffsetLength(
                 writer: writer,
                 item: item,

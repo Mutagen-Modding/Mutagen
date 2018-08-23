@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,11 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         IAIPackage,
         ILoquiObject<AIPackage>,
         ILoquiObjectSetter,
-        IPropertySupporter<AIPackage.Flag>,
-        IPropertySupporter<AIPackage.GeneralTypeEnum>,
-        IPropertySupporter<AIPackageLocation>,
-        IPropertySupporter<AIPackageSchedule>,
-        IPropertySupporter<AIPackageTarget>,
         IEquatable<AIPackage>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -54,244 +51,101 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        protected AIPackage.Flag _Flags;
-        protected PropertyForwarder<AIPackage, AIPackage.Flag> _FlagsForwarder;
-        public INotifyingSetItem<AIPackage.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<AIPackage, AIPackage.Flag>(this, (int)AIPackage_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AIPackage.Flag _Flags;
         public AIPackage.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            AIPackage.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackage_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackage_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_AIPackageFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _AIPackageFlag_subscriptions.FireSubscriptions(
-                    index: (int)AIPackage_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)AIPackage_FieldIndex.Flags] = false;
-            Flags = default(AIPackage.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<AIPackage.Flag> IAIPackage.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<AIPackage.Flag> IAIPackageGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region GeneralType
-        protected AIPackage.GeneralTypeEnum _GeneralType;
-        protected PropertyForwarder<AIPackage, AIPackage.GeneralTypeEnum> _GeneralTypeForwarder;
-        public INotifyingSetItem<AIPackage.GeneralTypeEnum> GeneralType_Property => _GeneralTypeForwarder ?? (_GeneralTypeForwarder = new PropertyForwarder<AIPackage, AIPackage.GeneralTypeEnum>(this, (int)AIPackage_FieldIndex.GeneralType));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AIPackage.GeneralTypeEnum _GeneralType;
         public AIPackage.GeneralTypeEnum GeneralType
         {
             get => this._GeneralType;
-            set => this.SetGeneralType(value);
+            set => this.RaiseAndSetIfChanged(ref this._GeneralType, value, nameof(GeneralType));
         }
-        protected void SetGeneralType(
-            AIPackage.GeneralTypeEnum item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackage_FieldIndex.GeneralType];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && GeneralType == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackage_FieldIndex.GeneralType] = hasBeenSet;
-            }
-            if (_AIPackageGeneralTypeEnum_subscriptions != null)
-            {
-                var tmp = GeneralType;
-                _GeneralType = item;
-                _AIPackageGeneralTypeEnum_subscriptions.FireSubscriptions(
-                    index: (int)AIPackage_FieldIndex.GeneralType,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _GeneralType = item;
-            }
-        }
-        protected void UnsetGeneralType()
-        {
-            _hasBeenSetTracker[(int)AIPackage_FieldIndex.GeneralType] = false;
-            GeneralType = default(AIPackage.GeneralTypeEnum);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<AIPackage.GeneralTypeEnum> IAIPackage.GeneralType_Property => this.GeneralType_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<AIPackage.GeneralTypeEnum> IAIPackageGetter.GeneralType_Property => this.GeneralType_Property;
         #endregion
         #region Location
-        protected AIPackageLocation _Location;
-        protected PropertyForwarder<AIPackage, AIPackageLocation> _LocationForwarder;
-        public INotifyingSetItem<AIPackageLocation> Location_Property => _LocationForwarder ?? (_LocationForwarder = new PropertyForwarder<AIPackage, AIPackageLocation>(this, (int)AIPackage_FieldIndex.Location));
+        public bool Location_IsSet
+        {
+            get => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Location];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)AIPackage_FieldIndex.Location, nameof(Location_IsSet));
+        }
+        bool IAIPackageGetter.Location_IsSet => Location_IsSet;
+        private AIPackageLocation _Location;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public AIPackageLocation Location
         {
-            get => this._Location;
-            set => this.SetLocation(value);
+            get => _Location;
+            set => Location_Set(value);
         }
-        protected void SetLocation(
-            AIPackageLocation item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Location_Set(
+            AIPackageLocation value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackage_FieldIndex.Location];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Location, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackage_FieldIndex.Location] = hasBeenSet;
-            }
-            if (_AIPackageLocation_subscriptions != null)
-            {
-                var tmp = Location;
-                _Location = item;
-                _AIPackageLocation_subscriptions.FireSubscriptions(
-                    index: (int)AIPackage_FieldIndex.Location,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Location = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Location, value, _hasBeenSetTracker, markSet, (int)AIPackage_FieldIndex.Location, nameof(Location), nameof(Location_IsSet));
         }
-        protected void UnsetLocation()
+        public void Location_Unset()
         {
-            _hasBeenSetTracker[(int)AIPackage_FieldIndex.Location] = false;
-            Location = default(AIPackageLocation);
+            this.Location_Set(default(AIPackageLocation), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<AIPackageLocation> IAIPackage.Location_Property => this.Location_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<AIPackageLocation> IAIPackageGetter.Location_Property => this.Location_Property;
+        AIPackageLocation IAIPackageGetter.Location => this.Location;
         #endregion
         #region Schedule
-        protected AIPackageSchedule _Schedule;
-        protected PropertyForwarder<AIPackage, AIPackageSchedule> _ScheduleForwarder;
-        public INotifyingSetItem<AIPackageSchedule> Schedule_Property => _ScheduleForwarder ?? (_ScheduleForwarder = new PropertyForwarder<AIPackage, AIPackageSchedule>(this, (int)AIPackage_FieldIndex.Schedule));
+        public bool Schedule_IsSet
+        {
+            get => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Schedule];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)AIPackage_FieldIndex.Schedule, nameof(Schedule_IsSet));
+        }
+        bool IAIPackageGetter.Schedule_IsSet => Schedule_IsSet;
+        private AIPackageSchedule _Schedule;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public AIPackageSchedule Schedule
         {
-            get => this._Schedule;
-            set => this.SetSchedule(value);
+            get => _Schedule;
+            set => Schedule_Set(value);
         }
-        protected void SetSchedule(
-            AIPackageSchedule item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Schedule_Set(
+            AIPackageSchedule value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackage_FieldIndex.Schedule];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Schedule, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackage_FieldIndex.Schedule] = hasBeenSet;
-            }
-            if (_AIPackageSchedule_subscriptions != null)
-            {
-                var tmp = Schedule;
-                _Schedule = item;
-                _AIPackageSchedule_subscriptions.FireSubscriptions(
-                    index: (int)AIPackage_FieldIndex.Schedule,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Schedule = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Schedule, value, _hasBeenSetTracker, markSet, (int)AIPackage_FieldIndex.Schedule, nameof(Schedule), nameof(Schedule_IsSet));
         }
-        protected void UnsetSchedule()
+        public void Schedule_Unset()
         {
-            _hasBeenSetTracker[(int)AIPackage_FieldIndex.Schedule] = false;
-            Schedule = default(AIPackageSchedule);
+            this.Schedule_Set(default(AIPackageSchedule), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<AIPackageSchedule> IAIPackage.Schedule_Property => this.Schedule_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<AIPackageSchedule> IAIPackageGetter.Schedule_Property => this.Schedule_Property;
+        AIPackageSchedule IAIPackageGetter.Schedule => this.Schedule;
         #endregion
         #region Target
-        protected AIPackageTarget _Target;
-        protected PropertyForwarder<AIPackage, AIPackageTarget> _TargetForwarder;
-        public INotifyingSetItem<AIPackageTarget> Target_Property => _TargetForwarder ?? (_TargetForwarder = new PropertyForwarder<AIPackage, AIPackageTarget>(this, (int)AIPackage_FieldIndex.Target));
+        public bool Target_IsSet
+        {
+            get => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Target];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)AIPackage_FieldIndex.Target, nameof(Target_IsSet));
+        }
+        bool IAIPackageGetter.Target_IsSet => Target_IsSet;
+        private AIPackageTarget _Target;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public AIPackageTarget Target
         {
-            get => this._Target;
-            set => this.SetTarget(value);
+            get => _Target;
+            set => Target_Set(value);
         }
-        protected void SetTarget(
-            AIPackageTarget item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Target_Set(
+            AIPackageTarget value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackage_FieldIndex.Target];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Target, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackage_FieldIndex.Target] = hasBeenSet;
-            }
-            if (_AIPackageTarget_subscriptions != null)
-            {
-                var tmp = Target;
-                _Target = item;
-                _AIPackageTarget_subscriptions.FireSubscriptions(
-                    index: (int)AIPackage_FieldIndex.Target,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Target = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Target, value, _hasBeenSetTracker, markSet, (int)AIPackage_FieldIndex.Target, nameof(Target), nameof(Target_IsSet));
         }
-        protected void UnsetTarget()
+        public void Target_Unset()
         {
-            _hasBeenSetTracker[(int)AIPackage_FieldIndex.Target] = false;
-            Target = default(AIPackageTarget);
+            this.Target_Set(default(AIPackageTarget), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<AIPackageTarget> IAIPackage.Target_Property => this.Target_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<AIPackageTarget> IAIPackageGetter.Target_Property => this.Target_Property;
+        AIPackageTarget IAIPackageGetter.Target => this.Target;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -372,18 +226,18 @@ namespace Mutagen.Bethesda.Oblivion
             if (!base.Equals(rhs)) return false;
             if (this.Flags != rhs.Flags) return false;
             if (this.GeneralType != rhs.GeneralType) return false;
-            if (Location_Property.HasBeenSet != rhs.Location_Property.HasBeenSet) return false;
-            if (Location_Property.HasBeenSet)
+            if (Location_IsSet != rhs.Location_IsSet) return false;
+            if (Location_IsSet)
             {
                 if (!object.Equals(this.Location, rhs.Location)) return false;
             }
-            if (Schedule_Property.HasBeenSet != rhs.Schedule_Property.HasBeenSet) return false;
-            if (Schedule_Property.HasBeenSet)
+            if (Schedule_IsSet != rhs.Schedule_IsSet) return false;
+            if (Schedule_IsSet)
             {
                 if (!object.Equals(this.Schedule, rhs.Schedule)) return false;
             }
-            if (Target_Property.HasBeenSet != rhs.Target_Property.HasBeenSet) return false;
-            if (Target_Property.HasBeenSet)
+            if (Target_IsSet != rhs.Target_IsSet) return false;
+            if (Target_IsSet)
             {
                 if (!object.Equals(this.Target, rhs.Target)) return false;
             }
@@ -400,15 +254,15 @@ namespace Mutagen.Bethesda.Oblivion
             int ret = 0;
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(GeneralType).CombineHashCode(ret);
-            if (Location_Property.HasBeenSet)
+            if (Location_IsSet)
             {
                 ret = HashHelper.GetHashCode(Location).CombineHashCode(ret);
             }
-            if (Schedule_Property.HasBeenSet)
+            if (Schedule_IsSet)
             {
                 ret = HashHelper.GetHashCode(Schedule).CombineHashCode(ret);
             }
-            if (Target_Property.HasBeenSet)
+            if (Target_IsSet)
             {
                 ret = HashHelper.GetHashCode(Target).CombineHashCode(ret);
             }
@@ -744,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(AIPackage.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -770,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetGeneralType();
+                            item.GeneralType = default(AIPackage.GeneralTypeEnum);
                         }
                     }
                     catch (Exception ex)
@@ -797,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLocation();
+                            item.Location = default(AIPackageLocation);
                         }
                     }
                     catch (Exception ex)
@@ -824,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSchedule();
+                            item.Schedule = default(AIPackageSchedule);
                         }
                     }
                     catch (Exception ex)
@@ -851,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetTarget();
+                            item.Target = default(AIPackageTarget);
                         }
                     }
                     catch (Exception ex)
@@ -922,676 +776,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter AIPackage.Flag
-        protected ObjectCentralizationSubscriptions<AIPackage.Flag> _AIPackageFlag_subscriptions;
-        AIPackage.Flag IPropertySupporter<AIPackage.Flag>.Get(int index)
-        {
-            return GetAIPackageFlag(index: index);
-        }
-
-        protected AIPackage.Flag GetAIPackageFlag(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackage.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<AIPackage.Flag>.Set(
-            int index,
-            AIPackage.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetAIPackageFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetAIPackageFlag(
-            int index,
-            AIPackage.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackage.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<AIPackage.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<AIPackage.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<AIPackage.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetAIPackageFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetAIPackageFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(AIPackage.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackage.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackage.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<AIPackage.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_AIPackageFlag_subscriptions == null)
-            {
-                _AIPackageFlag_subscriptions = new ObjectCentralizationSubscriptions<AIPackage.Flag>();
-            }
-            _AIPackageFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackage.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _AIPackageFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<AIPackage.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        AIPackage.Flag IPropertySupporter<AIPackage.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueAIPackageFlag(index: index);
-        }
-
-        protected AIPackage.Flag DefaultValueAIPackageFlag(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    return default(AIPackage.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackage.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter AIPackage.GeneralTypeEnum
-        protected ObjectCentralizationSubscriptions<AIPackage.GeneralTypeEnum> _AIPackageGeneralTypeEnum_subscriptions;
-        AIPackage.GeneralTypeEnum IPropertySupporter<AIPackage.GeneralTypeEnum>.Get(int index)
-        {
-            return GetAIPackageGeneralTypeEnum(index: index);
-        }
-
-        protected AIPackage.GeneralTypeEnum GetAIPackageGeneralTypeEnum(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.GeneralType:
-                    return GeneralType;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackage.GeneralTypeEnum: {index}");
-            }
-        }
-
-        void IPropertySupporter<AIPackage.GeneralTypeEnum>.Set(
-            int index,
-            AIPackage.GeneralTypeEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetAIPackageGeneralTypeEnum(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetAIPackageGeneralTypeEnum(
-            int index,
-            AIPackage.GeneralTypeEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.GeneralType:
-                    SetGeneralType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackage.GeneralTypeEnum: {index}");
-            }
-        }
-
-        bool IPropertySupporter<AIPackage.GeneralTypeEnum>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<AIPackage.GeneralTypeEnum>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<AIPackage.GeneralTypeEnum>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetAIPackageGeneralTypeEnum(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetAIPackageGeneralTypeEnum(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.GeneralType:
-                    SetGeneralType(
-                        item: default(AIPackage.GeneralTypeEnum),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackage.GeneralTypeEnum: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackage.GeneralTypeEnum>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<AIPackage.GeneralTypeEnum> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_AIPackageGeneralTypeEnum_subscriptions == null)
-            {
-                _AIPackageGeneralTypeEnum_subscriptions = new ObjectCentralizationSubscriptions<AIPackage.GeneralTypeEnum>();
-            }
-            _AIPackageGeneralTypeEnum_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackage.GeneralTypeEnum>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _AIPackageGeneralTypeEnum_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<AIPackage.GeneralTypeEnum>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        AIPackage.GeneralTypeEnum IPropertySupporter<AIPackage.GeneralTypeEnum>.DefaultValue(int index)
-        {
-            return DefaultValueAIPackageGeneralTypeEnum(index: index);
-        }
-
-        protected AIPackage.GeneralTypeEnum DefaultValueAIPackageGeneralTypeEnum(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.GeneralType:
-                    return default(AIPackage.GeneralTypeEnum);
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackage.GeneralTypeEnum: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter AIPackageLocation
-        protected ObjectCentralizationSubscriptions<AIPackageLocation> _AIPackageLocation_subscriptions;
-        AIPackageLocation IPropertySupporter<AIPackageLocation>.Get(int index)
-        {
-            return GetAIPackageLocation(index: index);
-        }
-
-        protected AIPackageLocation GetAIPackageLocation(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Location:
-                    return Location;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageLocation: {index}");
-            }
-        }
-
-        void IPropertySupporter<AIPackageLocation>.Set(
-            int index,
-            AIPackageLocation item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetAIPackageLocation(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetAIPackageLocation(
-            int index,
-            AIPackageLocation item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Location:
-                    SetLocation(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageLocation: {index}");
-            }
-        }
-
-        bool IPropertySupporter<AIPackageLocation>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<AIPackageLocation>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<AIPackageLocation>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetAIPackageLocation(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetAIPackageLocation(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Location:
-                    SetLocation(
-                        item: default(AIPackageLocation),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageLocation: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageLocation>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<AIPackageLocation> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_AIPackageLocation_subscriptions == null)
-            {
-                _AIPackageLocation_subscriptions = new ObjectCentralizationSubscriptions<AIPackageLocation>();
-            }
-            _AIPackageLocation_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageLocation>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _AIPackageLocation_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<AIPackageLocation>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        AIPackageLocation IPropertySupporter<AIPackageLocation>.DefaultValue(int index)
-        {
-            return DefaultValueAIPackageLocation(index: index);
-        }
-
-        protected AIPackageLocation DefaultValueAIPackageLocation(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Location:
-                    return default(AIPackageLocation);
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageLocation: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter AIPackageSchedule
-        protected ObjectCentralizationSubscriptions<AIPackageSchedule> _AIPackageSchedule_subscriptions;
-        AIPackageSchedule IPropertySupporter<AIPackageSchedule>.Get(int index)
-        {
-            return GetAIPackageSchedule(index: index);
-        }
-
-        protected AIPackageSchedule GetAIPackageSchedule(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Schedule:
-                    return Schedule;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageSchedule: {index}");
-            }
-        }
-
-        void IPropertySupporter<AIPackageSchedule>.Set(
-            int index,
-            AIPackageSchedule item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetAIPackageSchedule(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetAIPackageSchedule(
-            int index,
-            AIPackageSchedule item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Schedule:
-                    SetSchedule(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageSchedule: {index}");
-            }
-        }
-
-        bool IPropertySupporter<AIPackageSchedule>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<AIPackageSchedule>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<AIPackageSchedule>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetAIPackageSchedule(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetAIPackageSchedule(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Schedule:
-                    SetSchedule(
-                        item: default(AIPackageSchedule),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageSchedule: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageSchedule>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<AIPackageSchedule> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_AIPackageSchedule_subscriptions == null)
-            {
-                _AIPackageSchedule_subscriptions = new ObjectCentralizationSubscriptions<AIPackageSchedule>();
-            }
-            _AIPackageSchedule_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageSchedule>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _AIPackageSchedule_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<AIPackageSchedule>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        AIPackageSchedule IPropertySupporter<AIPackageSchedule>.DefaultValue(int index)
-        {
-            return DefaultValueAIPackageSchedule(index: index);
-        }
-
-        protected AIPackageSchedule DefaultValueAIPackageSchedule(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Schedule:
-                    return default(AIPackageSchedule);
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageSchedule: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter AIPackageTarget
-        protected ObjectCentralizationSubscriptions<AIPackageTarget> _AIPackageTarget_subscriptions;
-        AIPackageTarget IPropertySupporter<AIPackageTarget>.Get(int index)
-        {
-            return GetAIPackageTarget(index: index);
-        }
-
-        protected AIPackageTarget GetAIPackageTarget(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Target:
-                    return Target;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageTarget: {index}");
-            }
-        }
-
-        void IPropertySupporter<AIPackageTarget>.Set(
-            int index,
-            AIPackageTarget item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetAIPackageTarget(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetAIPackageTarget(
-            int index,
-            AIPackageTarget item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Target:
-                    SetTarget(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageTarget: {index}");
-            }
-        }
-
-        bool IPropertySupporter<AIPackageTarget>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<AIPackageTarget>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<AIPackageTarget>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetAIPackageTarget(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetAIPackageTarget(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Target:
-                    SetTarget(
-                        item: default(AIPackageTarget),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageTarget: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageTarget>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<AIPackageTarget> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_AIPackageTarget_subscriptions == null)
-            {
-                _AIPackageTarget_subscriptions = new ObjectCentralizationSubscriptions<AIPackageTarget>();
-            }
-            _AIPackageTarget_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageTarget>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _AIPackageTarget_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<AIPackageTarget>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        AIPackageTarget IPropertySupporter<AIPackageTarget>.DefaultValue(int index)
-        {
-            return DefaultValueAIPackageTarget(index: index);
-        }
-
-        protected AIPackageTarget DefaultValueAIPackageTarget(int index)
-        {
-            switch ((AIPackage_FieldIndex)index)
-            {
-                case AIPackage_FieldIndex.Target:
-                    return default(AIPackageTarget);
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageTarget: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AIPackage_Registration.TRIGGERING_RECORD_TYPE;
@@ -1881,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLocation();
+                            item.Location = default(AIPackageLocation);
                         }
                     }
                     catch (Exception ex)
@@ -1907,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSchedule();
+                            item.Schedule = default(AIPackageSchedule);
                         }
                     }
                     catch (Exception ex)
@@ -1933,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetTarget();
+                            item.Target = default(AIPackageTarget);
                         }
                     }
                     catch (Exception ex)
@@ -2077,29 +1261,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AIPackage_FieldIndex.Flags:
-                    this.SetFlags(
-                        (AIPackage.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (AIPackage.Flag)obj;
                     break;
                 case AIPackage_FieldIndex.GeneralType:
-                    this.SetGeneralType(
-                        (AIPackage.GeneralTypeEnum)obj,
-                        cmds: cmds);
+                    this.GeneralType = (AIPackage.GeneralTypeEnum)obj;
                     break;
                 case AIPackage_FieldIndex.Location:
-                    this.SetLocation(
-                        (AIPackageLocation)obj,
-                        cmds: cmds);
+                    this.Location = (AIPackageLocation)obj;
                     break;
                 case AIPackage_FieldIndex.Schedule:
-                    this.SetSchedule(
-                        (AIPackageSchedule)obj,
-                        cmds: cmds);
+                    this.Schedule = (AIPackageSchedule)obj;
                     break;
                 case AIPackage_FieldIndex.Target:
-                    this.SetTarget(
-                        (AIPackageTarget)obj,
-                        cmds: cmds);
+                    this.Target = (AIPackageTarget)obj;
                     break;
                 case AIPackage_FieldIndex.Conditions:
                     this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
@@ -2136,29 +1310,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AIPackage_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (AIPackage.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (AIPackage.Flag)pair.Value;
                     break;
                 case AIPackage_FieldIndex.GeneralType:
-                    obj.SetGeneralType(
-                        (AIPackage.GeneralTypeEnum)pair.Value,
-                        cmds: null);
+                    obj.GeneralType = (AIPackage.GeneralTypeEnum)pair.Value;
                     break;
                 case AIPackage_FieldIndex.Location:
-                    obj.SetLocation(
-                        (AIPackageLocation)pair.Value,
-                        cmds: null);
+                    obj.Location = (AIPackageLocation)pair.Value;
                     break;
                 case AIPackage_FieldIndex.Schedule:
-                    obj.SetSchedule(
-                        (AIPackageSchedule)pair.Value,
-                        cmds: null);
+                    obj.Schedule = (AIPackageSchedule)pair.Value;
                     break;
                 case AIPackage_FieldIndex.Target:
-                    obj.SetTarget(
-                        (AIPackageTarget)pair.Value,
-                        cmds: null);
+                    obj.Target = (AIPackageTarget)pair.Value;
                     break;
                 case AIPackage_FieldIndex.Conditions:
                     obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
@@ -2179,19 +1343,23 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackage : IAIPackageGetter, IMajorRecord, ILoquiClass<IAIPackage, IAIPackageGetter>, ILoquiClass<AIPackage, IAIPackageGetter>
     {
         new AIPackage.Flag Flags { get; set; }
-        new INotifyingItem<AIPackage.Flag> Flags_Property { get; }
 
         new AIPackage.GeneralTypeEnum GeneralType { get; set; }
-        new INotifyingItem<AIPackage.GeneralTypeEnum> GeneralType_Property { get; }
 
         new AIPackageLocation Location { get; set; }
-        new INotifyingSetItem<AIPackageLocation> Location_Property { get; }
+        new bool Location_IsSet { get; set; }
+        void Location_Set(AIPackageLocation item, bool hasBeenSet = true);
+        void Location_Unset();
 
         new AIPackageSchedule Schedule { get; set; }
-        new INotifyingSetItem<AIPackageSchedule> Schedule_Property { get; }
+        new bool Schedule_IsSet { get; set; }
+        void Schedule_Set(AIPackageSchedule item, bool hasBeenSet = true);
+        void Schedule_Unset();
 
         new AIPackageTarget Target { get; set; }
-        new INotifyingSetItem<AIPackageTarget> Target_Property { get; }
+        new bool Target_IsSet { get; set; }
+        void Target_Set(AIPackageTarget item, bool hasBeenSet = true);
+        void Target_Unset();
 
         new INotifyingList<Condition> Conditions { get; }
     }
@@ -2200,27 +1368,25 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Flags
         AIPackage.Flag Flags { get; }
-        INotifyingItemGetter<AIPackage.Flag> Flags_Property { get; }
 
         #endregion
         #region GeneralType
         AIPackage.GeneralTypeEnum GeneralType { get; }
-        INotifyingItemGetter<AIPackage.GeneralTypeEnum> GeneralType_Property { get; }
 
         #endregion
         #region Location
         AIPackageLocation Location { get; }
-        INotifyingSetItemGetter<AIPackageLocation> Location_Property { get; }
+        bool Location_IsSet { get; }
 
         #endregion
         #region Schedule
         AIPackageSchedule Schedule { get; }
-        INotifyingSetItemGetter<AIPackageSchedule> Schedule_Property { get; }
+        bool Schedule_IsSet { get; }
 
         #endregion
         #region Target
         AIPackageTarget Target { get; }
-        INotifyingSetItemGetter<AIPackageTarget> Target_Property { get; }
+        bool Target_IsSet { get; }
 
         #endregion
         #region Conditions
@@ -2508,9 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2527,9 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.GeneralType);
                 try
                 {
-                    item.GeneralType_Property.Set(
-                        value: rhs.GeneralType,
-                        cmds: cmds);
+                    item.GeneralType = rhs.GeneralType;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2546,36 +1708,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
                 try
                 {
-                    item.Location_Property.SetToWithDefault(
-                        rhs.Location_Property,
-                        def?.Location_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Location,
+                        rhsHasBeenSet: rhs.Location_IsSet,
+                        defItem: def?.Location,
+                        defHasBeenSet: def?.Location_IsSet ?? false,
+                        outRhsItem: out var rhsLocationItem,
+                        outDefItem: out var defLocationItem))
+                    {
+                        switch (copyMask?.Location.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Location.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    AIPackageLocationCommon.CopyFieldsFrom(
-                                        item: item.Location,
-                                        rhs: rhs.Location,
-                                        def: def?.Location,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Location.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(AIPackageLocation);
-                                    return AIPackageLocation.Copy(
-                                        r,
-                                        copyMask?.Location?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Location?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Location = rhsLocationItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                AIPackageLocationCommon.CopyFieldsFrom(
+                                    item: item.Location,
+                                    rhs: rhs.Location,
+                                    def: def?.Location,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Location.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Location = AIPackageLocation.Copy(
+                                    rhsLocationItem,
+                                    copyMask?.Location?.Specific,
+                                    def: defLocationItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Location?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Location_IsSet = false;
+                        item.Location = default(AIPackageLocation);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2592,36 +1761,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
                 try
                 {
-                    item.Schedule_Property.SetToWithDefault(
-                        rhs.Schedule_Property,
-                        def?.Schedule_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Schedule,
+                        rhsHasBeenSet: rhs.Schedule_IsSet,
+                        defItem: def?.Schedule,
+                        defHasBeenSet: def?.Schedule_IsSet ?? false,
+                        outRhsItem: out var rhsScheduleItem,
+                        outDefItem: out var defScheduleItem))
+                    {
+                        switch (copyMask?.Schedule.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Schedule.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    AIPackageScheduleCommon.CopyFieldsFrom(
-                                        item: item.Schedule,
-                                        rhs: rhs.Schedule,
-                                        def: def?.Schedule,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Schedule.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(AIPackageSchedule);
-                                    return AIPackageSchedule.Copy(
-                                        r,
-                                        copyMask?.Schedule?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Schedule?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Schedule = rhsScheduleItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                AIPackageScheduleCommon.CopyFieldsFrom(
+                                    item: item.Schedule,
+                                    rhs: rhs.Schedule,
+                                    def: def?.Schedule,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Schedule.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Schedule = AIPackageSchedule.Copy(
+                                    rhsScheduleItem,
+                                    copyMask?.Schedule?.Specific,
+                                    def: defScheduleItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Schedule?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Schedule_IsSet = false;
+                        item.Schedule = default(AIPackageSchedule);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2638,36 +1814,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
                 try
                 {
-                    item.Target_Property.SetToWithDefault(
-                        rhs.Target_Property,
-                        def?.Target_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Target,
+                        rhsHasBeenSet: rhs.Target_IsSet,
+                        defItem: def?.Target,
+                        defHasBeenSet: def?.Target_IsSet ?? false,
+                        outRhsItem: out var rhsTargetItem,
+                        outDefItem: out var defTargetItem))
+                    {
+                        switch (copyMask?.Target.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Target.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    AIPackageTargetCommon.CopyFieldsFrom(
-                                        item: item.Target,
-                                        rhs: rhs.Target,
-                                        def: def?.Target,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Target.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(AIPackageTarget);
-                                    return AIPackageTarget.Copy(
-                                        r,
-                                        copyMask?.Target?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Target?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Target = rhsTargetItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                AIPackageTargetCommon.CopyFieldsFrom(
+                                    item: item.Target,
+                                    rhs: rhs.Target,
+                                    def: def?.Target,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Target.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Target = AIPackageTarget.Copy(
+                                    rhsTargetItem,
+                                    copyMask?.Target?.Specific,
+                                    def: defTargetItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Target?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Target_IsSet = false;
+                        item.Target = default(AIPackageTarget);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2695,7 +1878,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Condition);
                                     return Condition.Copy(
                                         r,
                                         copyMask?.Conditions?.Specific,
@@ -2734,13 +1916,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case AIPackage_FieldIndex.Location:
-                    obj.Location_Property.HasBeenSet = on;
+                    obj.Location_IsSet = on;
                     break;
                 case AIPackage_FieldIndex.Schedule:
-                    obj.Schedule_Property.HasBeenSet = on;
+                    obj.Schedule_IsSet = on;
                     break;
                 case AIPackage_FieldIndex.Target:
-                    obj.Target_Property.HasBeenSet = on;
+                    obj.Target_IsSet = on;
                     break;
                 case AIPackage_FieldIndex.Conditions:
                     obj.Conditions.HasBeenSet = on;
@@ -2766,13 +1948,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.GeneralType = default(AIPackage.GeneralTypeEnum);
                     break;
                 case AIPackage_FieldIndex.Location:
-                    obj.Location_Property.Unset(cmds);
+                    obj.Location_Unset();
                     break;
                 case AIPackage_FieldIndex.Schedule:
-                    obj.Schedule_Property.Unset(cmds);
+                    obj.Schedule_Unset();
                     break;
                 case AIPackage_FieldIndex.Target:
-                    obj.Target_Property.Unset(cmds);
+                    obj.Target_Unset();
                     break;
                 case AIPackage_FieldIndex.Conditions:
                     obj.Conditions.Unset(cmds);
@@ -2794,11 +1976,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.GeneralType:
                     return true;
                 case AIPackage_FieldIndex.Location:
-                    return obj.Location_Property.HasBeenSet;
+                    return obj.Location_IsSet;
                 case AIPackage_FieldIndex.Schedule:
-                    return obj.Schedule_Property.HasBeenSet;
+                    return obj.Schedule_IsSet;
                 case AIPackage_FieldIndex.Target:
-                    return obj.Target_Property.HasBeenSet;
+                    return obj.Target_IsSet;
                 case AIPackage_FieldIndex.Conditions:
                     return obj.Conditions.HasBeenSet;
                 default:
@@ -2836,9 +2018,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Flags = default(AIPackage.Flag);
             item.GeneralType = default(AIPackage.GeneralTypeEnum);
-            item.Location_Property.Unset(cmds.ToUnsetParams());
-            item.Schedule_Property.Unset(cmds.ToUnsetParams());
-            item.Target_Property.Unset(cmds.ToUnsetParams());
+            item.Location_Unset();
+            item.Schedule_Unset();
+            item.Target_Unset();
             item.Conditions.Unset(cmds.ToUnsetParams());
         }
 
@@ -2859,9 +2041,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.GeneralType = item.GeneralType == rhs.GeneralType;
-            ret.Location = item.Location_Property.LoquiEqualsHelper(rhs.Location_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Schedule = item.Schedule_Property.LoquiEqualsHelper(rhs.Schedule_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Target = item.Target_Property.LoquiEqualsHelper(rhs.Target_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Location = IHasBeenSetExt.LoquiEqualsHelper(item.Location_IsSet, rhs.Location_IsSet, item.Location, rhs.Location, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Schedule = IHasBeenSetExt.LoquiEqualsHelper(item.Schedule_IsSet, rhs.Schedule_IsSet, item.Schedule, rhs.Schedule, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Target = IHasBeenSetExt.LoquiEqualsHelper(item.Target_IsSet, rhs.Target_IsSet, item.Target, rhs.Target, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Conditions.HasBeenSet == rhs.Conditions.HasBeenSet)
             {
                 if (item.Conditions.HasBeenSet)
@@ -2963,11 +2145,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IAIPackageGetter item,
             AIPackage_Mask<bool?> checkMask)
         {
-            if (checkMask.Location.Overall.HasValue && checkMask.Location.Overall.Value != item.Location_Property.HasBeenSet) return false;
+            if (checkMask.Location.Overall.HasValue && checkMask.Location.Overall.Value != item.Location_IsSet) return false;
             if (checkMask.Location.Specific != null && (item.Location == null || !item.Location.HasBeenSet(checkMask.Location.Specific))) return false;
-            if (checkMask.Schedule.Overall.HasValue && checkMask.Schedule.Overall.Value != item.Schedule_Property.HasBeenSet) return false;
+            if (checkMask.Schedule.Overall.HasValue && checkMask.Schedule.Overall.Value != item.Schedule_IsSet) return false;
             if (checkMask.Schedule.Specific != null && (item.Schedule == null || !item.Schedule.HasBeenSet(checkMask.Schedule.Specific))) return false;
-            if (checkMask.Target.Overall.HasValue && checkMask.Target.Overall.Value != item.Target_Property.HasBeenSet) return false;
+            if (checkMask.Target.Overall.HasValue && checkMask.Target.Overall.Value != item.Target_IsSet) return false;
             if (checkMask.Target.Specific != null && (item.Target == null || !item.Target.HasBeenSet(checkMask.Target.Specific))) return false;
             if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
             return true;
@@ -2978,9 +2160,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new AIPackage_Mask<bool>();
             ret.Flags = true;
             ret.GeneralType = true;
-            ret.Location = new MaskItem<bool, AIPackageLocation_Mask<bool>>(item.Location_Property.HasBeenSet, AIPackageLocationCommon.GetHasBeenSetMask(item.Location));
-            ret.Schedule = new MaskItem<bool, AIPackageSchedule_Mask<bool>>(item.Schedule_Property.HasBeenSet, AIPackageScheduleCommon.GetHasBeenSetMask(item.Schedule));
-            ret.Target = new MaskItem<bool, AIPackageTarget_Mask<bool>>(item.Target_Property.HasBeenSet, AIPackageTargetCommon.GetHasBeenSetMask(item.Target));
+            ret.Location = new MaskItem<bool, AIPackageLocation_Mask<bool>>(item.Location_IsSet, AIPackageLocationCommon.GetHasBeenSetMask(item.Location));
+            ret.Schedule = new MaskItem<bool, AIPackageSchedule_Mask<bool>>(item.Schedule_IsSet, AIPackageScheduleCommon.GetHasBeenSetMask(item.Schedule));
+            ret.Target = new MaskItem<bool, AIPackageTarget_Mask<bool>>(item.Target_IsSet, AIPackageTargetCommon.GetHasBeenSetMask(item.Target));
             ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -3048,7 +2230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<AIPackage.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)AIPackage_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -3057,38 +2239,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
                     node: elem,
                     name: nameof(item.GeneralType),
-                    item: item.GeneralType_Property,
+                    item: item.GeneralType,
                     fieldIndex: (int)AIPackage_FieldIndex.GeneralType,
                     errorMask: errorMask);
             }
-            if (item.Location_Property.HasBeenSet
+            if (item.Location_IsSet
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Location) ?? true))
             {
                 LoquiXmlTranslation<AIPackageLocation>.Instance.Write(
                     node: elem,
-                    item: item.Location_Property,
+                    item: item.Location,
                     name: nameof(item.Location),
                     fieldIndex: (int)AIPackage_FieldIndex.Location,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Location));
             }
-            if (item.Schedule_Property.HasBeenSet
+            if (item.Schedule_IsSet
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Schedule) ?? true))
             {
                 LoquiXmlTranslation<AIPackageSchedule>.Instance.Write(
                     node: elem,
-                    item: item.Schedule_Property,
+                    item: item.Schedule,
                     name: nameof(item.Schedule),
                     fieldIndex: (int)AIPackage_FieldIndex.Schedule,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Schedule));
             }
-            if (item.Target_Property.HasBeenSet
+            if (item.Target_IsSet
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Target) ?? true))
             {
                 LoquiXmlTranslation<AIPackageTarget>.Instance.Write(
                     node: elem,
-                    item: item.Target_Property,
+                    item: item.Target,
                     name: nameof(item.Target),
                     fieldIndex: (int)AIPackage_FieldIndex.Target,
                     errorMask: errorMask,
@@ -3187,27 +2369,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            LoquiBinaryTranslation<AIPackageLocation>.Instance.Write(
-                writer: writer,
-                item: item.Location_Property,
-                fieldIndex: (int)AIPackage_FieldIndex.Location,
-                errorMask: errorMask);
-            LoquiBinaryTranslation<AIPackageSchedule>.Instance.Write(
-                writer: writer,
-                item: item.Schedule_Property,
-                fieldIndex: (int)AIPackage_FieldIndex.Schedule,
-                errorMask: errorMask);
-            LoquiBinaryTranslation<AIPackageTarget>.Instance.Write(
-                writer: writer,
-                item: item.Target_Property,
-                fieldIndex: (int)AIPackage_FieldIndex.Target,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
-                writer: writer,
-                items: item.Conditions,
-                fieldIndex: (int)AIPackage_FieldIndex.Conditions,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<Condition>.Instance.Write);
+            if (item.Location_IsSet)
+            {
+                LoquiBinaryTranslation<AIPackageLocation>.Instance.Write(
+                    writer: writer,
+                    item: item.Location,
+                    fieldIndex: (int)AIPackage_FieldIndex.Location,
+                    errorMask: errorMask);
+            }
+            if (item.Schedule_IsSet)
+            {
+                LoquiBinaryTranslation<AIPackageSchedule>.Instance.Write(
+                    writer: writer,
+                    item: item.Schedule,
+                    fieldIndex: (int)AIPackage_FieldIndex.Schedule,
+                    errorMask: errorMask);
+            }
+            if (item.Target_IsSet)
+            {
+                LoquiBinaryTranslation<AIPackageTarget>.Instance.Write(
+                    writer: writer,
+                    item: item.Target,
+                    fieldIndex: (int)AIPackage_FieldIndex.Target,
+                    errorMask: errorMask);
+            }
+            if (item.Conditions.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                    writer: writer,
+                    items: item.Conditions,
+                    fieldIndex: (int)AIPackage_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<Condition>.Instance.Write);
+            }
         }
 
         #endregion

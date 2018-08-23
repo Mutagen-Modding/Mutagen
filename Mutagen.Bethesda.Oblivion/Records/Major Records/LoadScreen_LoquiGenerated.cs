@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,7 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoadScreen,
         ILoquiObject<LoadScreen>,
         ILoquiObjectSetter,
-        IPropertySupporter<String>,
         IEquatable<LoadScreen>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,100 +51,56 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        protected String _Icon;
-        protected PropertyForwarder<LoadScreen, String> _IconForwarder;
-        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<LoadScreen, String>(this, (int)LoadScreen_FieldIndex.Icon));
+        public bool Icon_IsSet
+        {
+            get => _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Icon];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LoadScreen_FieldIndex.Icon, nameof(Icon_IsSet));
+        }
+        bool ILoadScreenGetter.Icon_IsSet => Icon_IsSet;
+        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
             get => this._Icon;
-            set => this.SetIcon(value);
+            set => Icon_Set(value);
         }
-        protected void SetIcon(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String ILoadScreenGetter.Icon => this.Icon;
+        public void Icon_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Icon];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Icon] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Icon;
-                _Icon = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)LoadScreen_FieldIndex.Icon,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Icon = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)LoadScreen_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
-        protected void UnsetIcon()
+        public void Icon_Unset()
         {
-            _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Icon] = false;
-            Icon = default(String);
+            this.Icon_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> ILoadScreen.Icon_Property => this.Icon_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> ILoadScreenGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Description
-        protected String _Description;
-        protected PropertyForwarder<LoadScreen, String> _DescriptionForwarder;
-        public INotifyingSetItem<String> Description_Property => _DescriptionForwarder ?? (_DescriptionForwarder = new PropertyForwarder<LoadScreen, String>(this, (int)LoadScreen_FieldIndex.Description));
+        public bool Description_IsSet
+        {
+            get => _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Description];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LoadScreen_FieldIndex.Description, nameof(Description_IsSet));
+        }
+        bool ILoadScreenGetter.Description_IsSet => Description_IsSet;
+        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
             get => this._Description;
-            set => this.SetDescription(value);
+            set => Description_Set(value);
         }
-        protected void SetDescription(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String ILoadScreenGetter.Description => this.Description;
+        public void Description_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Description];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Description == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Description] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Description;
-                _Description = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)LoadScreen_FieldIndex.Description,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Description = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)LoadScreen_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
         }
-        protected void UnsetDescription()
+        public void Description_Unset()
         {
-            _hasBeenSetTracker[(int)LoadScreen_FieldIndex.Description] = false;
-            Description = default(String);
+            this.Description_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> ILoadScreen.Description_Property => this.Description_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> ILoadScreenGetter.Description_Property => this.Description_Property;
         #endregion
         #region Locations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -222,13 +179,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (Icon_IsSet)
             {
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
-            if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
-            if (Description_Property.HasBeenSet)
+            if (Description_IsSet != rhs.Description_IsSet) return false;
+            if (Description_IsSet)
             {
                 if (!object.Equals(this.Description, rhs.Description)) return false;
             }
@@ -243,11 +200,11 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet)
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
-            if (Description_Property.HasBeenSet)
+            if (Description_IsSet)
             {
                 ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
             }
@@ -583,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -609,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDescription();
+                            item.Description = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -676,158 +633,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((LoadScreen_FieldIndex)index)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    return Icon;
-                case LoadScreen_FieldIndex.Description:
-                    return Description;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((LoadScreen_FieldIndex)index)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    SetIcon(item, hasBeenSet, cmds);
-                    break;
-                case LoadScreen_FieldIndex.Description:
-                    SetDescription(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((LoadScreen_FieldIndex)index)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    SetIcon(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case LoadScreen_FieldIndex.Description:
-                    SetDescription(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((LoadScreen_FieldIndex)index)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                case LoadScreen_FieldIndex.Description:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LoadScreen_Registration.TRIGGERING_RECORD_TYPE;
@@ -1050,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1078,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDescription();
+                            item.Description = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1221,14 +1026,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LoadScreen_FieldIndex.Icon:
-                    this.SetIcon(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Icon = (String)obj;
                     break;
                 case LoadScreen_FieldIndex.Description:
-                    this.SetDescription(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Description = (String)obj;
                     break;
                 case LoadScreen_FieldIndex.Locations:
                     this._Locations.SetTo((IEnumerable<LoadScreenLocation>)obj, cmds);
@@ -1265,14 +1066,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LoadScreen_FieldIndex.Icon:
-                    obj.SetIcon(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Icon = (String)pair.Value;
                     break;
                 case LoadScreen_FieldIndex.Description:
-                    obj.SetDescription(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Description = (String)pair.Value;
                     break;
                 case LoadScreen_FieldIndex.Locations:
                     obj._Locations.SetTo((IEnumerable<LoadScreenLocation>)pair.Value, null);
@@ -1293,10 +1090,14 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILoadScreen : ILoadScreenGetter, IMajorRecord, ILoquiClass<ILoadScreen, ILoadScreenGetter>, ILoquiClass<LoadScreen, ILoadScreenGetter>
     {
         new String Icon { get; set; }
-        new INotifyingSetItem<String> Icon_Property { get; }
+        new bool Icon_IsSet { get; set; }
+        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Unset();
 
         new String Description { get; set; }
-        new INotifyingSetItem<String> Description_Property { get; }
+        new bool Description_IsSet { get; set; }
+        void Description_Set(String item, bool hasBeenSet = true);
+        void Description_Unset();
 
         new INotifyingList<LoadScreenLocation> Locations { get; }
     }
@@ -1305,12 +1106,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Icon
         String Icon { get; }
-        INotifyingSetItemGetter<String> Icon_Property { get; }
+        bool Icon_IsSet { get; }
 
         #endregion
         #region Description
         String Description { get; }
-        INotifyingSetItemGetter<String> Description_Property { get; }
+        bool Description_IsSet { get; }
 
         #endregion
         #region Locations
@@ -1559,9 +1360,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icon);
                 try
                 {
-                    item.Icon_Property.SetToWithDefault(
-                        rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Icon,
+                        rhsHasBeenSet: rhs.Icon_IsSet,
+                        defItem: def?.Icon ?? default(String),
+                        defHasBeenSet: def?.Icon_IsSet ?? false,
+                        outRhsItem: out var rhsIconItem,
+                        outDefItem: out var defIconItem))
+                    {
+                        item.Icon = rhsIconItem;
+                    }
+                    else
+                    {
+                        item.Icon_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1578,9 +1390,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Description);
                 try
                 {
-                    item.Description_Property.SetToWithDefault(
-                        rhs: rhs.Description_Property,
-                        def: def?.Description_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Description,
+                        rhsHasBeenSet: rhs.Description_IsSet,
+                        defItem: def?.Description ?? default(String),
+                        defHasBeenSet: def?.Description_IsSet ?? false,
+                        outRhsItem: out var rhsDescriptionItem,
+                        outDefItem: out var defDescriptionItem))
+                    {
+                        item.Description = rhsDescriptionItem;
+                    }
+                    else
+                    {
+                        item.Description_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1608,7 +1431,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(LoadScreenLocation);
                                     return LoadScreenLocation.Copy(
                                         r,
                                         copyMask?.Locations?.Specific,
@@ -1643,10 +1465,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LoadScreen_FieldIndex.Icon:
-                    obj.Icon_Property.HasBeenSet = on;
+                    obj.Icon_IsSet = on;
                     break;
                 case LoadScreen_FieldIndex.Description:
-                    obj.Description_Property.HasBeenSet = on;
+                    obj.Description_IsSet = on;
                     break;
                 case LoadScreen_FieldIndex.Locations:
                     obj.Locations.HasBeenSet = on;
@@ -1666,10 +1488,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LoadScreen_FieldIndex.Icon:
-                    obj.Icon_Property.Unset(cmds);
+                    obj.Icon_Unset();
                     break;
                 case LoadScreen_FieldIndex.Description:
-                    obj.Description_Property.Unset(cmds);
+                    obj.Description_Unset();
                     break;
                 case LoadScreen_FieldIndex.Locations:
                     obj.Locations.Unset(cmds);
@@ -1688,9 +1510,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LoadScreen_FieldIndex.Icon:
-                    return obj.Icon_Property.HasBeenSet;
+                    return obj.Icon_IsSet;
                 case LoadScreen_FieldIndex.Description:
-                    return obj.Description_Property.HasBeenSet;
+                    return obj.Description_IsSet;
                 case LoadScreen_FieldIndex.Locations:
                     return obj.Locations.HasBeenSet;
                 default:
@@ -1720,8 +1542,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreen item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.Description_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Unset();
+            item.Description_Unset();
             item.Locations.Unset(cmds.ToUnsetParams());
         }
 
@@ -1740,8 +1562,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LoadScreen_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
             if (item.Locations.HasBeenSet == rhs.Locations.HasBeenSet)
             {
                 if (item.Locations.HasBeenSet)
@@ -1831,8 +1653,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILoadScreenGetter item,
             LoadScreen_Mask<bool?> checkMask)
         {
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
             if (checkMask.Locations.Overall.HasValue && checkMask.Locations.Overall.Value != item.Locations.HasBeenSet) return false;
             return true;
         }
@@ -1840,8 +1662,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LoadScreen_Mask<bool> GetHasBeenSetMask(ILoadScreenGetter item)
         {
             var ret = new LoadScreen_Mask<bool>();
-            ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.Description = item.Description_Property.HasBeenSet;
+            ret.Icon = item.Icon_IsSet;
+            ret.Description = item.Description_IsSet;
             ret.Locations = new MaskItem<bool, IEnumerable<MaskItem<bool, LoadScreenLocation_Mask<bool>>>>(item.Locations.HasBeenSet, item.Locations.Select((i) => new MaskItem<bool, LoadScreenLocation_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -1904,23 +1726,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LoadScreen");
             }
-            if (item.Icon_Property.HasBeenSet
+            if (item.Icon_IsSet
                 && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Icon),
-                    item: item.Icon_Property,
+                    item: item.Icon,
                     fieldIndex: (int)LoadScreen_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.Description_Property.HasBeenSet
+            if (item.Description_IsSet
                 && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Description),
-                    item: item.Description_Property,
+                    item: item.Description,
                     fieldIndex: (int)LoadScreen_FieldIndex.Description,
                     errorMask: errorMask);
             }
@@ -2003,26 +1825,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Icon_Property,
-                fieldIndex: (int)LoadScreen_FieldIndex.Icon,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.ICON_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Description_Property,
-                fieldIndex: (int)LoadScreen_FieldIndex.Description,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.DESC_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<LoadScreenLocation>.Instance.Write(
-                writer: writer,
-                items: item.Locations,
-                fieldIndex: (int)LoadScreen_FieldIndex.Locations,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<LoadScreenLocation>.Instance.Write);
+            if (item.Icon_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon,
+                    fieldIndex: (int)LoadScreen_FieldIndex.Icon,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.ICON_HEADER),
+                    nullable: false);
+            }
+            if (item.Description_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Description,
+                    fieldIndex: (int)LoadScreen_FieldIndex.Description,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.DESC_HEADER),
+                    nullable: false);
+            }
+            if (item.Locations.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<LoadScreenLocation>.Instance.Write(
+                    writer: writer,
+                    items: item.Locations,
+                    fieldIndex: (int)LoadScreen_FieldIndex.Locations,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<LoadScreenLocation>.Instance.Write);
+            }
         }
 
         #endregion

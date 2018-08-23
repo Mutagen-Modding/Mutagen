@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RegionSound : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IRegionSound,
         ILoquiObject<RegionSound>,
         ILoquiObjectSetter,
-        IPropertySupporter<RegionSound.Flag>,
-        IPropertySupporter<Single>,
         IEquatable<RegionSound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,101 +57,23 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Sound> IRegionSoundGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Flags
-        protected RegionSound.Flag _Flags;
-        protected PropertyForwarder<RegionSound, RegionSound.Flag> _FlagsForwarder;
-        public INotifyingSetItem<RegionSound.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<RegionSound, RegionSound.Flag>(this, (int)RegionSound_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionSound.Flag _Flags;
         public RegionSound.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            RegionSound.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionSound_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionSound_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_RegionSoundFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _RegionSoundFlag_subscriptions.FireSubscriptions(
-                    index: (int)RegionSound_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)RegionSound_FieldIndex.Flags] = false;
-            Flags = default(RegionSound.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<RegionSound.Flag> IRegionSound.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<RegionSound.Flag> IRegionSoundGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Chance
-        protected Single _Chance;
-        protected PropertyForwarder<RegionSound, Single> _ChanceForwarder;
-        public INotifyingSetItem<Single> Chance_Property => _ChanceForwarder ?? (_ChanceForwarder = new PropertyForwarder<RegionSound, Single>(this, (int)RegionSound_FieldIndex.Chance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Chance;
         public Single Chance
         {
-            get => this._Chance;
-            set => this.SetChance(value);
-        }
-        protected void SetChance(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(Chance_Range.Min, Chance_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionSound_FieldIndex.Chance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Chance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _Chance;
+            set
             {
-                _hasBeenSetTracker[(int)RegionSound_FieldIndex.Chance] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Chance;
-                _Chance = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)RegionSound_FieldIndex.Chance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Chance = item;
+                this._Chance = value.PutInRange(Chance_Range.Min, Chance_Range.Max);
             }
         }
-        protected void UnsetChance()
-        {
-            _hasBeenSetTracker[(int)RegionSound_FieldIndex.Chance] = false;
-            Chance = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRegionSound.Chance_Property => this.Chance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRegionSoundGetter.Chance_Property => this.Chance_Property;
         public static RangeFloat Chance_Range = new RangeFloat(0f, 100f);
         #endregion
 
@@ -565,7 +487,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(RegionSound.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -591,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetChance();
+                            item.Chance = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -624,274 +546,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter RegionSound.Flag
-        protected ObjectCentralizationSubscriptions<RegionSound.Flag> _RegionSoundFlag_subscriptions;
-        RegionSound.Flag IPropertySupporter<RegionSound.Flag>.Get(int index)
-        {
-            return GetRegionSoundFlag(index: index);
-        }
-
-        protected RegionSound.Flag GetRegionSoundFlag(int index)
-        {
-            switch ((RegionSound_FieldIndex)index)
-            {
-                case RegionSound_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionSound.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<RegionSound.Flag>.Set(
-            int index,
-            RegionSound.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRegionSoundFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRegionSoundFlag(
-            int index,
-            RegionSound.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RegionSound_FieldIndex)index)
-            {
-                case RegionSound_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionSound.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RegionSound.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RegionSound.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RegionSound.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRegionSoundFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRegionSoundFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RegionSound_FieldIndex)index)
-            {
-                case RegionSound_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(RegionSound.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionSound.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionSound.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RegionSound.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RegionSoundFlag_subscriptions == null)
-            {
-                _RegionSoundFlag_subscriptions = new ObjectCentralizationSubscriptions<RegionSound.Flag>();
-            }
-            _RegionSoundFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionSound.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RegionSoundFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RegionSound.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RegionSound.Flag IPropertySupporter<RegionSound.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueRegionSoundFlag(index: index);
-        }
-
-        protected RegionSound.Flag DefaultValueRegionSoundFlag(int index)
-        {
-            switch ((RegionSound_FieldIndex)index)
-            {
-                case RegionSound_FieldIndex.Flags:
-                    return default(RegionSound.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionSound.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((RegionSound_FieldIndex)index)
-            {
-                case RegionSound_FieldIndex.Chance:
-                    return Chance;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RegionSound_FieldIndex)index)
-            {
-                case RegionSound_FieldIndex.Chance:
-                    SetChance(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RegionSound_FieldIndex)index)
-            {
-                case RegionSound_FieldIndex.Chance:
-                    SetChance(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((RegionSound_FieldIndex)index)
-            {
-                case RegionSound_FieldIndex.Chance:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public IEnumerable<ILink> Links => GetLinks();
@@ -1121,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFlags();
+                    item.Flags = default(RegionSound.Flag);
                 }
             }
             catch (Exception ex)
@@ -1145,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetChance();
+                    item.Chance = default(Single);
                 }
             }
             catch (Exception ex)
@@ -1289,14 +943,10 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case RegionSound_FieldIndex.Flags:
-                    this.SetFlags(
-                        (RegionSound.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (RegionSound.Flag)obj;
                     break;
                 case RegionSound_FieldIndex.Chance:
-                    this.SetChance(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Chance = (Single)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1341,14 +991,10 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case RegionSound_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (RegionSound.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (RegionSound.Flag)pair.Value;
                     break;
                 case RegionSound_FieldIndex.Chance:
-                    obj.SetChance(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Chance = (Single)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1367,10 +1013,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Sound Sound { get; set; }
         new RegionSound.Flag Flags { get; set; }
-        new INotifyingItem<RegionSound.Flag> Flags_Property { get; }
 
         new Single Chance { get; set; }
-        new INotifyingItem<Single> Chance_Property { get; }
 
     }
 
@@ -1383,12 +1027,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         RegionSound.Flag Flags { get; }
-        INotifyingItemGetter<RegionSound.Flag> Flags_Property { get; }
 
         #endregion
         #region Chance
         Single Chance { get; }
-        INotifyingItemGetter<Single> Chance_Property { get; }
 
         #endregion
 
@@ -1634,9 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionSound_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1653,9 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionSound_FieldIndex.Chance);
                 try
                 {
-                    item.Chance_Property.Set(
-                        value: rhs.Chance,
-                        cmds: cmds);
+                    item.Chance = rhs.Chance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1699,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionSound_FieldIndex.Sound:
-                    obj.Sound = default(FormIDLink<Sound>);
+                    obj.Sound_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case RegionSound_FieldIndex.Flags:
                     obj.Flags = default(RegionSound.Flag);
@@ -1750,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSound item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Sound = default(FormIDLink<Sound>);
+            item.Sound_Property.Unset(cmds.ToUnsetParams());
             item.Flags = default(RegionSound.Flag);
             item.Chance = default(Single);
         }
@@ -1881,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<RegionSound.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)RegionSound_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -1890,7 +1528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Chance),
-                    item: item.Chance_Property,
+                    item: item.Chance,
                     fieldIndex: (int)RegionSound_FieldIndex.Chance,
                     errorMask: errorMask);
             }
@@ -1942,13 +1580,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionSound.Flag>.Instance.Write(
                 writer,
-                item.Flags_Property,
+                item.Flags,
                 length: 4,
                 fieldIndex: (int)RegionSound_FieldIndex.Flags,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Chance_Property,
+                item: item.Chance,
                 fieldIndex: (int)RegionSound_FieldIndex.Chance,
                 errorMask: errorMask);
         }

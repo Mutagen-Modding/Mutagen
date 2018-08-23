@@ -1,6 +1,7 @@
 ﻿using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Noggog.Notifying;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,12 +26,10 @@ namespace Mutagen.Bethesda.Oblivion
         
         partial void CustomCtor()
         {
-            this.CompiledScript_Property.Subscribe(
-                (change) =>
-                {
-                    this.MetadataSummary.CompiledSizeInternal = change.New?.Length ?? 0;
-                },
-                cmds: NotifyingSubscribeParameters.NoFire);
+            this.WhenAny(x => x.CompiledScript).Subscribe((change) =>
+            {
+                this.MetadataSummary.CompiledSizeInternal = change?.Length ?? 0;
+            });
         }
 
         static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, ScriptFields item, ErrorMaskBuilder errorMask)

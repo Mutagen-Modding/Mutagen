@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -35,9 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Quest>,
         ILoquiObjectSetter,
         INamed,
-        IPropertySupporter<String>,
-        IPropertySupporter<Quest.Flag>,
-        IPropertySupporter<Byte>,
         IEquatable<Quest>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -60,196 +59,72 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> IQuestGetter.Script_Property => this.Script_Property;
         #endregion
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<Quest, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Quest, String>(this, (int)Quest_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Quest_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Quest_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool IQuestGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IQuestGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Quest_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Quest_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Quest_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Quest_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)Quest_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IQuest.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IQuestGetter.Name_Property => this.Name_Property;
         #endregion
         #region Icon
-        protected String _Icon;
-        protected PropertyForwarder<Quest, String> _IconForwarder;
-        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Quest, String>(this, (int)Quest_FieldIndex.Icon));
+        public bool Icon_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Quest_FieldIndex.Icon];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Quest_FieldIndex.Icon, nameof(Icon_IsSet));
+        }
+        bool IQuestGetter.Icon_IsSet => Icon_IsSet;
+        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
             get => this._Icon;
-            set => this.SetIcon(value);
+            set => Icon_Set(value);
         }
-        protected void SetIcon(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IQuestGetter.Icon => this.Icon;
+        public void Icon_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Quest_FieldIndex.Icon];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Quest_FieldIndex.Icon] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Icon;
-                _Icon = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Quest_FieldIndex.Icon,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Icon = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Quest_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
-        protected void UnsetIcon()
+        public void Icon_Unset()
         {
-            _hasBeenSetTracker[(int)Quest_FieldIndex.Icon] = false;
-            Icon = default(String);
+            this.Icon_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IQuest.Icon_Property => this.Icon_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IQuestGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Flags
-        protected Quest.Flag _Flags;
-        protected PropertyForwarder<Quest, Quest.Flag> _FlagsForwarder;
-        public INotifyingSetItem<Quest.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Quest, Quest.Flag>(this, (int)Quest_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Quest.Flag _Flags;
         public Quest.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            Quest.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Quest_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Quest_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_QuestFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _QuestFlag_subscriptions.FireSubscriptions(
-                    index: (int)Quest_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)Quest_FieldIndex.Flags] = false;
-            Flags = default(Quest.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Quest.Flag> IQuest.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Quest.Flag> IQuestGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Priority
-        protected Byte _Priority;
-        protected PropertyForwarder<Quest, Byte> _PriorityForwarder;
-        public INotifyingSetItem<Byte> Priority_Property => _PriorityForwarder ?? (_PriorityForwarder = new PropertyForwarder<Quest, Byte>(this, (int)Quest_FieldIndex.Priority));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Priority;
         public Byte Priority
         {
             get => this._Priority;
-            set => this.SetPriority(value);
+            set => this.RaiseAndSetIfChanged(ref this._Priority, value, nameof(Priority));
         }
-        protected void SetPriority(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Quest_FieldIndex.Priority];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Priority == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Quest_FieldIndex.Priority] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Priority;
-                _Priority = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)Quest_FieldIndex.Priority,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Priority = item;
-            }
-        }
-        protected void UnsetPriority()
-        {
-            _hasBeenSetTracker[(int)Quest_FieldIndex.Priority] = false;
-            Priority = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IQuest.Priority_Property => this.Priority_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IQuestGetter.Priority_Property => this.Priority_Property;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -369,13 +244,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Script_Property.Equals(rhs.Script_Property)) return false;
             }
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
-            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (Icon_IsSet)
             {
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
@@ -406,11 +281,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
             }
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet)
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
@@ -763,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -789,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -815,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Quest.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -841,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPriority();
+                            item.Priority = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -973,426 +848,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Name:
-                    return Name;
-                case Quest_FieldIndex.Icon:
-                    return Icon;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                case Quest_FieldIndex.Icon:
-                    SetIcon(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case Quest_FieldIndex.Icon:
-                    SetIcon(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Icon:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Quest.Flag
-        protected ObjectCentralizationSubscriptions<Quest.Flag> _QuestFlag_subscriptions;
-        Quest.Flag IPropertySupporter<Quest.Flag>.Get(int index)
-        {
-            return GetQuestFlag(index: index);
-        }
-
-        protected Quest.Flag GetQuestFlag(int index)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Quest.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<Quest.Flag>.Set(
-            int index,
-            Quest.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetQuestFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetQuestFlag(
-            int index,
-            Quest.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Quest.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Quest.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Quest.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Quest.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetQuestFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetQuestFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(Quest.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Quest.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Quest.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Quest.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_QuestFlag_subscriptions == null)
-            {
-                _QuestFlag_subscriptions = new ObjectCentralizationSubscriptions<Quest.Flag>();
-            }
-            _QuestFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Quest.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _QuestFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Quest.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Quest.Flag IPropertySupporter<Quest.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueQuestFlag(index: index);
-        }
-
-        protected Quest.Flag DefaultValueQuestFlag(int index)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Flags:
-                    return default(Quest.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Quest.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Priority:
-                    return Priority;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Priority:
-                    SetPriority(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Priority:
-                    SetPriority(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((Quest_FieldIndex)index)
-            {
-                case Quest_FieldIndex.Priority:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Quest_Registration.TRIGGERING_RECORD_TYPE;
@@ -1630,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1658,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1691,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFlags();
+                                item.Flags = default(Quest.Flag);
                             }
                         }
                         catch (Exception ex)
@@ -1715,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetPriority();
+                                item.Priority = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -1885,24 +1340,16 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Quest_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 case Quest_FieldIndex.Icon:
-                    this.SetIcon(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Icon = (String)obj;
                     break;
                 case Quest_FieldIndex.Flags:
-                    this.SetFlags(
-                        (Quest.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (Quest.Flag)obj;
                     break;
                 case Quest_FieldIndex.Priority:
-                    this.SetPriority(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Priority = (Byte)obj;
                     break;
                 case Quest_FieldIndex.Conditions:
                     this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
@@ -1950,24 +1397,16 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Quest_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 case Quest_FieldIndex.Icon:
-                    obj.SetIcon(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Icon = (String)pair.Value;
                     break;
                 case Quest_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (Quest.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (Quest.Flag)pair.Value;
                     break;
                 case Quest_FieldIndex.Priority:
-                    obj.SetPriority(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Priority = (Byte)pair.Value;
                     break;
                 case Quest_FieldIndex.Conditions:
                     obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
@@ -1995,16 +1434,18 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Script Script { get; set; }
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
         new String Icon { get; set; }
-        new INotifyingSetItem<String> Icon_Property { get; }
+        new bool Icon_IsSet { get; set; }
+        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Unset();
 
         new Quest.Flag Flags { get; set; }
-        new INotifyingItem<Quest.Flag> Flags_Property { get; }
 
         new Byte Priority { get; set; }
-        new INotifyingItem<Byte> Priority_Property { get; }
 
         new INotifyingList<Condition> Conditions { get; }
         new INotifyingList<QuestStage> Stages { get; }
@@ -2020,22 +1461,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
         #region Icon
         String Icon { get; }
-        INotifyingSetItemGetter<String> Icon_Property { get; }
+        bool Icon_IsSet { get; }
 
         #endregion
         #region Flags
         Quest.Flag Flags { get; }
-        INotifyingItemGetter<Quest.Flag> Flags_Property { get; }
 
         #endregion
         #region Priority
         Byte Priority { get; }
-        INotifyingItemGetter<Byte> Priority_Property { get; }
 
         #endregion
         #region Conditions
@@ -2375,9 +1814,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2394,9 +1844,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Icon);
                 try
                 {
-                    item.Icon_Property.SetToWithDefault(
-                        rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Icon,
+                        rhsHasBeenSet: rhs.Icon_IsSet,
+                        defItem: def?.Icon ?? default(String),
+                        defHasBeenSet: def?.Icon_IsSet ?? false,
+                        outRhsItem: out var rhsIconItem,
+                        outDefItem: out var defIconItem))
+                    {
+                        item.Icon = rhsIconItem;
+                    }
+                    else
+                    {
+                        item.Icon_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2413,9 +1874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2432,9 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Priority);
                 try
                 {
-                    item.Priority_Property.Set(
-                        value: rhs.Priority,
-                        cmds: cmds);
+                    item.Priority = rhs.Priority;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2462,7 +1919,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Condition);
                                     return Condition.Copy(
                                         r,
                                         copyMask?.Conditions?.Specific,
@@ -2499,7 +1955,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(QuestStage);
                                     return QuestStage.Copy(
                                         r,
                                         copyMask?.Stages?.Specific,
@@ -2536,7 +1991,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(QuestTarget);
                                     return QuestTarget.Copy(
                                         r,
                                         copyMask?.Targets?.Specific,
@@ -2578,10 +2032,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Script_Property.HasBeenSet = on;
                     break;
                 case Quest_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 case Quest_FieldIndex.Icon:
-                    obj.Icon_Property.HasBeenSet = on;
+                    obj.Icon_IsSet = on;
                     break;
                 case Quest_FieldIndex.Conditions:
                     obj.Conditions.HasBeenSet = on;
@@ -2607,13 +2061,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Quest_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Quest_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 case Quest_FieldIndex.Icon:
-                    obj.Icon_Property.Unset(cmds);
+                    obj.Icon_Unset();
                     break;
                 case Quest_FieldIndex.Flags:
                     obj.Flags = default(Quest.Flag);
@@ -2649,9 +2103,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Quest_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
                 case Quest_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 case Quest_FieldIndex.Icon:
-                    return obj.Icon_Property.HasBeenSet;
+                    return obj.Icon_IsSet;
                 case Quest_FieldIndex.Conditions:
                     return obj.Conditions.HasBeenSet;
                 case Quest_FieldIndex.Stages:
@@ -2696,8 +2150,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Name_Property.Unset(cmds.ToUnsetParams());
-            item.Icon_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Unset();
+            item.Icon_Unset();
             item.Flags = default(Quest.Flag);
             item.Priority = default(Byte);
             item.Conditions.Unset(cmds.ToUnsetParams());
@@ -2721,8 +2175,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
-            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Priority = item.Priority == rhs.Priority;
             if (item.Conditions.HasBeenSet == rhs.Conditions.HasBeenSet)
@@ -2913,8 +2367,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Quest_Mask<bool?> checkMask)
         {
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
             if (checkMask.Stages.Overall.HasValue && checkMask.Stages.Overall.Value != item.Stages.HasBeenSet) return false;
             if (checkMask.Targets.Overall.HasValue && checkMask.Targets.Overall.Value != item.Targets.HasBeenSet) return false;
@@ -2925,8 +2379,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new Quest_Mask<bool>();
             ret.Script = item.Script_Property.HasBeenSet;
-            ret.Name = item.Name_Property.HasBeenSet;
-            ret.Icon = item.Icon_Property.HasBeenSet;
+            ret.Name = item.Name_IsSet;
+            ret.Icon = item.Icon_IsSet;
             ret.Flags = true;
             ret.Priority = true;
             ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
@@ -3003,23 +2457,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Quest_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)Quest_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Icon_Property.HasBeenSet
+            if (item.Icon_IsSet
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Icon),
-                    item: item.Icon_Property,
+                    item: item.Icon,
                     fieldIndex: (int)Quest_FieldIndex.Icon,
                     errorMask: errorMask);
             }
@@ -3028,7 +2482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Quest.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)Quest_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -3037,7 +2491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Priority),
-                    item: item.Priority_Property,
+                    item: item.Priority,
                     fieldIndex: (int)Quest_FieldIndex.Priority,
                     errorMask: errorMask);
             }
@@ -3162,62 +2616,80 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Script_Property,
-                fieldIndex: (int)Quest_FieldIndex.Script,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.SCRI_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)Quest_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.FULL_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Icon_Property,
-                fieldIndex: (int)Quest_FieldIndex.Icon,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.ICON_HEADER),
-                nullable: false);
+            if (item.Script_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Script_Property,
+                    fieldIndex: (int)Quest_FieldIndex.Script,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Quest_Registration.SCRI_HEADER),
+                    nullable: false);
+            }
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)Quest_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Quest_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Icon_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon,
+                    fieldIndex: (int)Quest_FieldIndex.Icon,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Quest_Registration.ICON_HEADER),
+                    nullable: false);
+            }
             if (item.DATADataTypeState.HasFlag(Quest.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Quest_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.Flag>.Instance.Write(
                         writer,
-                        item.Flags_Property,
+                        item.Flags,
                         length: 1,
                         fieldIndex: (int)Quest_FieldIndex.Flags,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Priority_Property,
+                        item: item.Priority,
                         fieldIndex: (int)Quest_FieldIndex.Priority,
                         errorMask: errorMask);
                 }
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
-                writer: writer,
-                items: item.Conditions,
-                fieldIndex: (int)Quest_FieldIndex.Conditions,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<Condition>.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.Write(
-                writer: writer,
-                items: item.Stages,
-                fieldIndex: (int)Quest_FieldIndex.Stages,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<QuestStage>.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestTarget>.Instance.Write(
-                writer: writer,
-                items: item.Targets,
-                fieldIndex: (int)Quest_FieldIndex.Targets,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<QuestTarget>.Instance.Write);
+            if (item.Conditions.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                    writer: writer,
+                    items: item.Conditions,
+                    fieldIndex: (int)Quest_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<Condition>.Instance.Write);
+            }
+            if (item.Stages.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.Write(
+                    writer: writer,
+                    items: item.Stages,
+                    fieldIndex: (int)Quest_FieldIndex.Stages,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<QuestStage>.Instance.Write);
+            }
+            if (item.Targets.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestTarget>.Instance.Write(
+                    writer: writer,
+                    items: item.Targets,
+                    fieldIndex: (int)Quest_FieldIndex.Targets,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<QuestTarget>.Instance.Write);
+            }
         }
 
         #endregion

@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class BodyPart : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IBodyPart,
         ILoquiObject<BodyPart>,
         ILoquiObjectSetter,
-        IPropertySupporter<Race.BodyIndex>,
-        IPropertySupporter<String>,
         IEquatable<BodyPart>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,100 +50,56 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Index
-        protected Race.BodyIndex _Index;
-        protected PropertyForwarder<BodyPart, Race.BodyIndex> _IndexForwarder;
-        public INotifyingSetItem<Race.BodyIndex> Index_Property => _IndexForwarder ?? (_IndexForwarder = new PropertyForwarder<BodyPart, Race.BodyIndex>(this, (int)BodyPart_FieldIndex.Index));
+        public bool Index_IsSet
+        {
+            get => _hasBeenSetTracker[(int)BodyPart_FieldIndex.Index];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)BodyPart_FieldIndex.Index, nameof(Index_IsSet));
+        }
+        bool IBodyPartGetter.Index_IsSet => Index_IsSet;
+        private Race.BodyIndex _Index;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race.BodyIndex Index
         {
             get => this._Index;
-            set => this.SetIndex(value);
+            set => Index_Set(value);
         }
-        protected void SetIndex(
-            Race.BodyIndex item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Race.BodyIndex IBodyPartGetter.Index => this.Index;
+        public void Index_Set(
+            Race.BodyIndex value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)BodyPart_FieldIndex.Index];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Index == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)BodyPart_FieldIndex.Index] = hasBeenSet;
-            }
-            if (_RaceBodyIndex_subscriptions != null)
-            {
-                var tmp = Index;
-                _Index = item;
-                _RaceBodyIndex_subscriptions.FireSubscriptions(
-                    index: (int)BodyPart_FieldIndex.Index,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Index = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Index, value, _hasBeenSetTracker, markSet, (int)BodyPart_FieldIndex.Index, nameof(Index), nameof(Index_IsSet));
         }
-        protected void UnsetIndex()
+        public void Index_Unset()
         {
-            _hasBeenSetTracker[(int)BodyPart_FieldIndex.Index] = false;
-            Index = default(Race.BodyIndex);
+            this.Index_Set(default(Race.BodyIndex), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Race.BodyIndex> IBodyPart.Index_Property => this.Index_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Race.BodyIndex> IBodyPartGetter.Index_Property => this.Index_Property;
         #endregion
         #region Icon
-        protected String _Icon;
-        protected PropertyForwarder<BodyPart, String> _IconForwarder;
-        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<BodyPart, String>(this, (int)BodyPart_FieldIndex.Icon));
+        public bool Icon_IsSet
+        {
+            get => _hasBeenSetTracker[(int)BodyPart_FieldIndex.Icon];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)BodyPart_FieldIndex.Icon, nameof(Icon_IsSet));
+        }
+        bool IBodyPartGetter.Icon_IsSet => Icon_IsSet;
+        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
             get => this._Icon;
-            set => this.SetIcon(value);
+            set => Icon_Set(value);
         }
-        protected void SetIcon(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IBodyPartGetter.Icon => this.Icon;
+        public void Icon_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)BodyPart_FieldIndex.Icon];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)BodyPart_FieldIndex.Icon] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Icon;
-                _Icon = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)BodyPart_FieldIndex.Icon,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Icon = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)BodyPart_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
-        protected void UnsetIcon()
+        public void Icon_Unset()
         {
-            _hasBeenSetTracker[(int)BodyPart_FieldIndex.Icon] = false;
-            Icon = default(String);
+            this.Icon_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IBodyPart.Icon_Property => this.Icon_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IBodyPartGetter.Icon_Property => this.Icon_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -207,13 +163,13 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(BodyPart rhs)
         {
             if (rhs == null) return false;
-            if (Index_Property.HasBeenSet != rhs.Index_Property.HasBeenSet) return false;
-            if (Index_Property.HasBeenSet)
+            if (Index_IsSet != rhs.Index_IsSet) return false;
+            if (Index_IsSet)
             {
                 if (this.Index != rhs.Index) return false;
             }
-            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (Icon_IsSet)
             {
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
@@ -223,11 +179,11 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Index_Property.HasBeenSet)
+            if (Index_IsSet)
             {
                 ret = HashHelper.GetHashCode(Index).CombineHashCode(ret);
             }
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet)
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
@@ -561,7 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIndex();
+                            item.Index = default(Race.BodyIndex);
                         }
                     }
                     catch (Exception ex)
@@ -587,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -619,274 +575,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Race.BodyIndex
-        protected ObjectCentralizationSubscriptions<Race.BodyIndex> _RaceBodyIndex_subscriptions;
-        Race.BodyIndex IPropertySupporter<Race.BodyIndex>.Get(int index)
-        {
-            return GetRaceBodyIndex(index: index);
-        }
-
-        protected Race.BodyIndex GetRaceBodyIndex(int index)
-        {
-            switch ((BodyPart_FieldIndex)index)
-            {
-                case BodyPart_FieldIndex.Index:
-                    return Index;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Race.BodyIndex: {index}");
-            }
-        }
-
-        void IPropertySupporter<Race.BodyIndex>.Set(
-            int index,
-            Race.BodyIndex item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRaceBodyIndex(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRaceBodyIndex(
-            int index,
-            Race.BodyIndex item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((BodyPart_FieldIndex)index)
-            {
-                case BodyPart_FieldIndex.Index:
-                    SetIndex(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Race.BodyIndex: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Race.BodyIndex>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Race.BodyIndex>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Race.BodyIndex>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRaceBodyIndex(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRaceBodyIndex(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((BodyPart_FieldIndex)index)
-            {
-                case BodyPart_FieldIndex.Index:
-                    SetIndex(
-                        item: default(Race.BodyIndex),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Race.BodyIndex: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Race.BodyIndex>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Race.BodyIndex> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RaceBodyIndex_subscriptions == null)
-            {
-                _RaceBodyIndex_subscriptions = new ObjectCentralizationSubscriptions<Race.BodyIndex>();
-            }
-            _RaceBodyIndex_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Race.BodyIndex>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RaceBodyIndex_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Race.BodyIndex>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Race.BodyIndex IPropertySupporter<Race.BodyIndex>.DefaultValue(int index)
-        {
-            return DefaultValueRaceBodyIndex(index: index);
-        }
-
-        protected Race.BodyIndex DefaultValueRaceBodyIndex(int index)
-        {
-            switch ((BodyPart_FieldIndex)index)
-            {
-                case BodyPart_FieldIndex.Index:
-                    return default(Race.BodyIndex);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Race.BodyIndex: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected String GetString(int index)
-        {
-            switch ((BodyPart_FieldIndex)index)
-            {
-                case BodyPart_FieldIndex.Icon:
-                    return Icon;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((BodyPart_FieldIndex)index)
-            {
-                case BodyPart_FieldIndex.Icon:
-                    SetIcon(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((BodyPart_FieldIndex)index)
-            {
-                case BodyPart_FieldIndex.Icon:
-                    SetIcon(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected String DefaultValueString(int index)
-        {
-            switch ((BodyPart_FieldIndex)index)
-            {
-                case BodyPart_FieldIndex.Icon:
-                    return default(String);
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1132,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIndex();
+                            item.Index = default(Race.BodyIndex);
                         }
                     }
                     catch (Exception ex)
@@ -1161,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1304,14 +992,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case BodyPart_FieldIndex.Index:
-                    this.SetIndex(
-                        (Race.BodyIndex)obj,
-                        cmds: cmds);
+                    this.Index = (Race.BodyIndex)obj;
                     break;
                 case BodyPart_FieldIndex.Icon:
-                    this.SetIcon(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Icon = (String)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1351,14 +1035,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case BodyPart_FieldIndex.Index:
-                    obj.SetIndex(
-                        (Race.BodyIndex)pair.Value,
-                        cmds: null);
+                    obj.Index = (Race.BodyIndex)pair.Value;
                     break;
                 case BodyPart_FieldIndex.Icon:
-                    obj.SetIcon(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Icon = (String)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1376,10 +1056,14 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBodyPart : IBodyPartGetter, ILoquiClass<IBodyPart, IBodyPartGetter>, ILoquiClass<BodyPart, IBodyPartGetter>
     {
         new Race.BodyIndex Index { get; set; }
-        new INotifyingSetItem<Race.BodyIndex> Index_Property { get; }
+        new bool Index_IsSet { get; set; }
+        void Index_Set(Race.BodyIndex item, bool hasBeenSet = true);
+        void Index_Unset();
 
         new String Icon { get; set; }
-        new INotifyingSetItem<String> Icon_Property { get; }
+        new bool Icon_IsSet { get; set; }
+        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Unset();
 
     }
 
@@ -1387,12 +1071,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Index
         Race.BodyIndex Index { get; }
-        INotifyingSetItemGetter<Race.BodyIndex> Index_Property { get; }
+        bool Index_IsSet { get; }
 
         #endregion
         #region Icon
         String Icon { get; }
-        INotifyingSetItemGetter<String> Icon_Property { get; }
+        bool Icon_IsSet { get; }
 
         #endregion
 
@@ -1621,9 +1305,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)BodyPart_FieldIndex.Index);
                 try
                 {
-                    item.Index_Property.SetToWithDefault(
-                        rhs: rhs.Index_Property,
-                        def: def?.Index_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Index,
+                        rhsHasBeenSet: rhs.Index_IsSet,
+                        defItem: def?.Index ?? default(Race.BodyIndex),
+                        defHasBeenSet: def?.Index_IsSet ?? false,
+                        outRhsItem: out var rhsIndexItem,
+                        outDefItem: out var defIndexItem))
+                    {
+                        item.Index = rhsIndexItem;
+                    }
+                    else
+                    {
+                        item.Index_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1640,9 +1335,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)BodyPart_FieldIndex.Icon);
                 try
                 {
-                    item.Icon_Property.SetToWithDefault(
-                        rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Icon,
+                        rhsHasBeenSet: rhs.Icon_IsSet,
+                        defItem: def?.Icon ?? default(String),
+                        defHasBeenSet: def?.Icon_IsSet ?? false,
+                        outRhsItem: out var rhsIconItem,
+                        outDefItem: out var defIconItem))
+                    {
+                        item.Icon = rhsIconItem;
+                    }
+                    else
+                    {
+                        item.Icon_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1668,10 +1374,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BodyPart_FieldIndex.Index:
-                    obj.Index_Property.HasBeenSet = on;
+                    obj.Index_IsSet = on;
                     break;
                 case BodyPart_FieldIndex.Icon:
-                    obj.Icon_Property.HasBeenSet = on;
+                    obj.Icon_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1687,10 +1393,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BodyPart_FieldIndex.Index:
-                    obj.Index_Property.Unset(cmds);
+                    obj.Index_Unset();
                     break;
                 case BodyPart_FieldIndex.Icon:
-                    obj.Icon_Property.Unset(cmds);
+                    obj.Icon_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1705,9 +1411,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BodyPart_FieldIndex.Index:
-                    return obj.Index_Property.HasBeenSet;
+                    return obj.Index_IsSet;
                 case BodyPart_FieldIndex.Icon:
-                    return obj.Icon_Property.HasBeenSet;
+                    return obj.Icon_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1733,8 +1439,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBodyPart item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Index_Property.Unset(cmds.ToUnsetParams());
-            item.Icon_Property.Unset(cmds.ToUnsetParams());
+            item.Index_Unset();
+            item.Icon_Unset();
         }
 
         public static BodyPart_Mask<bool> GetEqualsMask(
@@ -1752,8 +1458,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BodyPart_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Index = item.Index_Property.Equals(rhs.Index_Property, (l, r) => l == r);
-            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
+            ret.Index = item.Index_IsSet == rhs.Index_IsSet && item.Index == rhs.Index;
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
         }
 
         public static string ToString(
@@ -1799,16 +1505,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IBodyPartGetter item,
             BodyPart_Mask<bool?> checkMask)
         {
-            if (checkMask.Index.HasValue && checkMask.Index.Value != item.Index_Property.HasBeenSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.Index.HasValue && checkMask.Index.Value != item.Index_IsSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             return true;
         }
 
         public static BodyPart_Mask<bool> GetHasBeenSetMask(IBodyPartGetter item)
         {
             var ret = new BodyPart_Mask<bool>();
-            ret.Index = item.Index_Property.HasBeenSet;
-            ret.Icon = item.Icon_Property.HasBeenSet;
+            ret.Index = item.Index_IsSet;
+            ret.Icon = item.Icon_IsSet;
             return ret;
         }
 
@@ -1845,23 +1551,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BodyPart");
             }
-            if (item.Index_Property.HasBeenSet
+            if (item.Index_IsSet
                 && (translationMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Index) ?? true))
             {
                 EnumXmlTranslation<Race.BodyIndex>.Instance.Write(
                     node: elem,
                     name: nameof(item.Index),
-                    item: item.Index_Property,
+                    item: item.Index,
                     fieldIndex: (int)BodyPart_FieldIndex.Index,
                     errorMask: errorMask);
             }
-            if (item.Icon_Property.HasBeenSet
+            if (item.Icon_IsSet
                 && (translationMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Icon),
-                    item: item.Icon_Property,
+                    item: item.Icon,
                     fieldIndex: (int)BodyPart_FieldIndex.Icon,
                     errorMask: errorMask);
             }
@@ -1908,21 +1614,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.BodyIndex>.Instance.Write(
-                writer,
-                item.Index_Property,
-                length: 4,
-                fieldIndex: (int)BodyPart_FieldIndex.Index,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(BodyPart_Registration.INDX_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Icon_Property,
-                fieldIndex: (int)BodyPart_FieldIndex.Icon,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(BodyPart_Registration.ICON_HEADER),
-                nullable: false);
+            if (item.Index_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.BodyIndex>.Instance.Write(
+                    writer,
+                    item.Index,
+                    length: 4,
+                    fieldIndex: (int)BodyPart_FieldIndex.Index,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(BodyPart_Registration.INDX_HEADER),
+                    nullable: false);
+            }
+            if (item.Icon_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon,
+                    fieldIndex: (int)BodyPart_FieldIndex.Icon,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(BodyPart_Registration.ICON_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

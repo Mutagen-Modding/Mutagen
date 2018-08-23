@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PointToReferenceMapping : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IPointToReferenceMapping,
         ILoquiObject<PointToReferenceMapping>,
         ILoquiObjectSetter,
@@ -1217,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
-                    obj.Reference = default(FormIDLink<Placed>);
+                    obj.Reference_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
                     obj.Points.Unset(cmds);
@@ -1262,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMapping item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Reference = default(FormIDLink<Placed>);
+            item.Reference_Property.Unset(cmds.ToUnsetParams());
             item.Points.Unset(cmds.ToUnsetParams());
         }
 

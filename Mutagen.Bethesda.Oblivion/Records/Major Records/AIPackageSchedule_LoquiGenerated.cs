@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,14 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class AIPackageSchedule : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IAIPackageSchedule,
         ILoquiObject<AIPackageSchedule>,
         ILoquiObjectSetter,
-        IPropertySupporter<Month>,
-        IPropertySupporter<Weekday>,
-        IPropertySupporter<Byte>,
-        IPropertySupporter<Int32>,
         IEquatable<AIPackageSchedule>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -52,244 +50,44 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Month
-        protected Month _Month;
-        protected PropertyForwarder<AIPackageSchedule, Month> _MonthForwarder;
-        public INotifyingSetItem<Month> Month_Property => _MonthForwarder ?? (_MonthForwarder = new PropertyForwarder<AIPackageSchedule, Month>(this, (int)AIPackageSchedule_FieldIndex.Month));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Month _Month;
         public Month Month
         {
             get => this._Month;
-            set => this.SetMonth(value);
+            set => this.RaiseAndSetIfChanged(ref this._Month, value, nameof(Month));
         }
-        protected void SetMonth(
-            Month item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Month];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Month == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Month] = hasBeenSet;
-            }
-            if (_Month_subscriptions != null)
-            {
-                var tmp = Month;
-                _Month = item;
-                _Month_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageSchedule_FieldIndex.Month,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Month = item;
-            }
-        }
-        protected void UnsetMonth()
-        {
-            _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Month] = false;
-            Month = default(Month);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Month> IAIPackageSchedule.Month_Property => this.Month_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Month> IAIPackageScheduleGetter.Month_Property => this.Month_Property;
         #endregion
         #region DayOfWeek
-        protected Weekday _DayOfWeek;
-        protected PropertyForwarder<AIPackageSchedule, Weekday> _DayOfWeekForwarder;
-        public INotifyingSetItem<Weekday> DayOfWeek_Property => _DayOfWeekForwarder ?? (_DayOfWeekForwarder = new PropertyForwarder<AIPackageSchedule, Weekday>(this, (int)AIPackageSchedule_FieldIndex.DayOfWeek));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Weekday _DayOfWeek;
         public Weekday DayOfWeek
         {
             get => this._DayOfWeek;
-            set => this.SetDayOfWeek(value);
+            set => this.RaiseAndSetIfChanged(ref this._DayOfWeek, value, nameof(DayOfWeek));
         }
-        protected void SetDayOfWeek(
-            Weekday item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.DayOfWeek];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DayOfWeek == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.DayOfWeek] = hasBeenSet;
-            }
-            if (_Weekday_subscriptions != null)
-            {
-                var tmp = DayOfWeek;
-                _DayOfWeek = item;
-                _Weekday_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageSchedule_FieldIndex.DayOfWeek,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DayOfWeek = item;
-            }
-        }
-        protected void UnsetDayOfWeek()
-        {
-            _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.DayOfWeek] = false;
-            DayOfWeek = default(Weekday);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Weekday> IAIPackageSchedule.DayOfWeek_Property => this.DayOfWeek_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Weekday> IAIPackageScheduleGetter.DayOfWeek_Property => this.DayOfWeek_Property;
         #endregion
         #region Day
-        protected Byte _Day;
-        protected PropertyForwarder<AIPackageSchedule, Byte> _DayForwarder;
-        public INotifyingSetItem<Byte> Day_Property => _DayForwarder ?? (_DayForwarder = new PropertyForwarder<AIPackageSchedule, Byte>(this, (int)AIPackageSchedule_FieldIndex.Day));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Day;
         public Byte Day
         {
             get => this._Day;
-            set => this.SetDay(value);
+            set => this.RaiseAndSetIfChanged(ref this._Day, value, nameof(Day));
         }
-        protected void SetDay(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Day];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Day == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Day] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Day;
-                _Day = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageSchedule_FieldIndex.Day,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Day = item;
-            }
-        }
-        protected void UnsetDay()
-        {
-            _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Day] = false;
-            Day = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IAIPackageSchedule.Day_Property => this.Day_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IAIPackageScheduleGetter.Day_Property => this.Day_Property;
         #endregion
         #region Time
-        protected Byte _Time;
-        protected PropertyForwarder<AIPackageSchedule, Byte> _TimeForwarder;
-        public INotifyingSetItem<Byte> Time_Property => _TimeForwarder ?? (_TimeForwarder = new PropertyForwarder<AIPackageSchedule, Byte>(this, (int)AIPackageSchedule_FieldIndex.Time));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Time;
         public Byte Time
         {
             get => this._Time;
-            set => this.SetTime(value);
+            set => this.RaiseAndSetIfChanged(ref this._Time, value, nameof(Time));
         }
-        protected void SetTime(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Time];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Time == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Time] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Time;
-                _Time = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageSchedule_FieldIndex.Time,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Time = item;
-            }
-        }
-        protected void UnsetTime()
-        {
-            _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Time] = false;
-            Time = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IAIPackageSchedule.Time_Property => this.Time_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IAIPackageScheduleGetter.Time_Property => this.Time_Property;
         #endregion
         #region Duration
-        protected Int32 _Duration;
-        protected PropertyForwarder<AIPackageSchedule, Int32> _DurationForwarder;
-        public INotifyingSetItem<Int32> Duration_Property => _DurationForwarder ?? (_DurationForwarder = new PropertyForwarder<AIPackageSchedule, Int32>(this, (int)AIPackageSchedule_FieldIndex.Duration));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _Duration;
         public Int32 Duration
         {
             get => this._Duration;
-            set => this.SetDuration(value);
+            set => this.RaiseAndSetIfChanged(ref this._Duration, value, nameof(Duration));
         }
-        protected void SetDuration(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Duration];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Duration == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Duration] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = Duration;
-                _Duration = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageSchedule_FieldIndex.Duration,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Duration = item;
-            }
-        }
-        protected void UnsetDuration()
-        {
-            _hasBeenSetTracker[(int)AIPackageSchedule_FieldIndex.Duration] = false;
-            Duration = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IAIPackageSchedule.Duration_Property => this.Duration_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IAIPackageScheduleGetter.Duration_Property => this.Duration_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -699,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMonth();
+                            item.Month = default(Month);
                         }
                     }
                     catch (Exception ex)
@@ -725,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDayOfWeek();
+                            item.DayOfWeek = default(Weekday);
                         }
                     }
                     catch (Exception ex)
@@ -751,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDay();
+                            item.Day = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -777,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetTime();
+                            item.Time = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -803,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDuration();
+                            item.Duration = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -838,553 +636,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Month
-        protected ObjectCentralizationSubscriptions<Month> _Month_subscriptions;
-        Month IPropertySupporter<Month>.Get(int index)
-        {
-            return GetMonth(index: index);
-        }
-
-        protected Month GetMonth(int index)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    return Month;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Month: {index}");
-            }
-        }
-
-        void IPropertySupporter<Month>.Set(
-            int index,
-            Month item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMonth(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMonth(
-            int index,
-            Month item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    SetMonth(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Month: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Month>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Month>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Month>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMonth(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMonth(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    SetMonth(
-                        item: default(Month),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Month: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Month>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Month> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Month_subscriptions == null)
-            {
-                _Month_subscriptions = new ObjectCentralizationSubscriptions<Month>();
-            }
-            _Month_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Month>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Month_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Month>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Month IPropertySupporter<Month>.DefaultValue(int index)
-        {
-            return DefaultValueMonth(index: index);
-        }
-
-        protected Month DefaultValueMonth(int index)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    return default(Month);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Month: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Weekday
-        protected ObjectCentralizationSubscriptions<Weekday> _Weekday_subscriptions;
-        Weekday IPropertySupporter<Weekday>.Get(int index)
-        {
-            return GetWeekday(index: index);
-        }
-
-        protected Weekday GetWeekday(int index)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    return DayOfWeek;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Weekday: {index}");
-            }
-        }
-
-        void IPropertySupporter<Weekday>.Set(
-            int index,
-            Weekday item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetWeekday(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetWeekday(
-            int index,
-            Weekday item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    SetDayOfWeek(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Weekday: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Weekday>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Weekday>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Weekday>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetWeekday(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetWeekday(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    SetDayOfWeek(
-                        item: default(Weekday),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Weekday: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Weekday>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Weekday> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Weekday_subscriptions == null)
-            {
-                _Weekday_subscriptions = new ObjectCentralizationSubscriptions<Weekday>();
-            }
-            _Weekday_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Weekday>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Weekday_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Weekday>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Weekday IPropertySupporter<Weekday>.DefaultValue(int index)
-        {
-            return DefaultValueWeekday(index: index);
-        }
-
-        protected Weekday DefaultValueWeekday(int index)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    return default(Weekday);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Weekday: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Day:
-                    return Day;
-                case AIPackageSchedule_FieldIndex.Time:
-                    return Time;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Day:
-                    SetDay(item, hasBeenSet, cmds);
-                    break;
-                case AIPackageSchedule_FieldIndex.Time:
-                    SetTime(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Day:
-                    SetDay(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case AIPackageSchedule_FieldIndex.Time:
-                    SetTime(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Day:
-                case AIPackageSchedule_FieldIndex.Time:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Duration:
-                    return Duration;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Duration:
-                    SetDuration(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Duration:
-                    SetDuration(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Duration:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AIPackageSchedule_Registration.TRIGGERING_RECORD_TYPE;
@@ -1607,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetMonth();
+                    item.Month = default(Month);
                 }
             }
             catch (Exception ex)
@@ -1631,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDayOfWeek();
+                    item.DayOfWeek = default(Weekday);
                 }
             }
             catch (Exception ex)
@@ -1655,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDay();
+                    item.Day = default(Byte);
                 }
             }
             catch (Exception ex)
@@ -1679,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetTime();
+                    item.Time = default(Byte);
                 }
             }
             catch (Exception ex)
@@ -1703,7 +954,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDuration();
+                    item.Duration = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -1842,29 +1093,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AIPackageSchedule_FieldIndex.Month:
-                    this.SetMonth(
-                        (Month)obj,
-                        cmds: cmds);
+                    this.Month = (Month)obj;
                     break;
                 case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    this.SetDayOfWeek(
-                        (Weekday)obj,
-                        cmds: cmds);
+                    this.DayOfWeek = (Weekday)obj;
                     break;
                 case AIPackageSchedule_FieldIndex.Day:
-                    this.SetDay(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Day = (Byte)obj;
                     break;
                 case AIPackageSchedule_FieldIndex.Time:
-                    this.SetTime(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Time = (Byte)obj;
                     break;
                 case AIPackageSchedule_FieldIndex.Duration:
-                    this.SetDuration(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.Duration = (Int32)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1904,29 +1145,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AIPackageSchedule_FieldIndex.Month:
-                    obj.SetMonth(
-                        (Month)pair.Value,
-                        cmds: null);
+                    obj.Month = (Month)pair.Value;
                     break;
                 case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    obj.SetDayOfWeek(
-                        (Weekday)pair.Value,
-                        cmds: null);
+                    obj.DayOfWeek = (Weekday)pair.Value;
                     break;
                 case AIPackageSchedule_FieldIndex.Day:
-                    obj.SetDay(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Day = (Byte)pair.Value;
                     break;
                 case AIPackageSchedule_FieldIndex.Time:
-                    obj.SetTime(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Time = (Byte)pair.Value;
                     break;
                 case AIPackageSchedule_FieldIndex.Duration:
-                    obj.SetDuration(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.Duration = (Int32)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1944,19 +1175,14 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackageSchedule : IAIPackageScheduleGetter, ILoquiClass<IAIPackageSchedule, IAIPackageScheduleGetter>, ILoquiClass<AIPackageSchedule, IAIPackageScheduleGetter>
     {
         new Month Month { get; set; }
-        new INotifyingItem<Month> Month_Property { get; }
 
         new Weekday DayOfWeek { get; set; }
-        new INotifyingItem<Weekday> DayOfWeek_Property { get; }
 
         new Byte Day { get; set; }
-        new INotifyingItem<Byte> Day_Property { get; }
 
         new Byte Time { get; set; }
-        new INotifyingItem<Byte> Time_Property { get; }
 
         new Int32 Duration { get; set; }
-        new INotifyingItem<Int32> Duration_Property { get; }
 
     }
 
@@ -1964,27 +1190,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Month
         Month Month { get; }
-        INotifyingItemGetter<Month> Month_Property { get; }
 
         #endregion
         #region DayOfWeek
         Weekday DayOfWeek { get; }
-        INotifyingItemGetter<Weekday> DayOfWeek_Property { get; }
 
         #endregion
         #region Day
         Byte Day { get; }
-        INotifyingItemGetter<Byte> Day_Property { get; }
 
         #endregion
         #region Time
         Byte Time { get; }
-        INotifyingItemGetter<Byte> Time_Property { get; }
 
         #endregion
         #region Duration
         Int32 Duration { get; }
-        INotifyingItemGetter<Int32> Duration_Property { get; }
 
         #endregion
 
@@ -2237,9 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
                 try
                 {
-                    item.Month_Property.Set(
-                        value: rhs.Month,
-                        cmds: cmds);
+                    item.Month = rhs.Month;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2256,9 +1475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
                 try
                 {
-                    item.DayOfWeek_Property.Set(
-                        value: rhs.DayOfWeek,
-                        cmds: cmds);
+                    item.DayOfWeek = rhs.DayOfWeek;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2275,9 +1492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
                 try
                 {
-                    item.Day_Property.Set(
-                        value: rhs.Day,
-                        cmds: cmds);
+                    item.Day = rhs.Day;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2294,9 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
                 try
                 {
-                    item.Time_Property.Set(
-                        value: rhs.Time,
-                        cmds: cmds);
+                    item.Time = rhs.Time;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2313,9 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
                 try
                 {
-                    item.Duration_Property.Set(
-                        value: rhs.Duration,
-                        cmds: cmds);
+                    item.Duration = rhs.Duration;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2560,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Month>.Instance.Write(
                     node: elem,
                     name: nameof(item.Month),
-                    item: item.Month_Property,
+                    item: item.Month,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.Month,
                     errorMask: errorMask);
             }
@@ -2569,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Weekday>.Instance.Write(
                     node: elem,
                     name: nameof(item.DayOfWeek),
-                    item: item.DayOfWeek_Property,
+                    item: item.DayOfWeek,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.DayOfWeek,
                     errorMask: errorMask);
             }
@@ -2578,7 +1789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Day),
-                    item: item.Day_Property,
+                    item: item.Day,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.Day,
                     errorMask: errorMask);
             }
@@ -2587,7 +1798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Time),
-                    item: item.Time_Property,
+                    item: item.Time,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.Time,
                     errorMask: errorMask);
             }
@@ -2596,7 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Duration),
-                    item: item.Duration_Property,
+                    item: item.Duration,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.Duration,
                     errorMask: errorMask);
             }
@@ -2649,29 +1860,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Month>.Instance.Write(
                 writer,
-                item.Month_Property,
+                item.Month,
                 length: 1,
                 fieldIndex: (int)AIPackageSchedule_FieldIndex.Month,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weekday>.Instance.Write(
                 writer,
-                item.DayOfWeek_Property,
+                item.DayOfWeek,
                 length: 1,
                 fieldIndex: (int)AIPackageSchedule_FieldIndex.DayOfWeek,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Day_Property,
+                item: item.Day,
                 fieldIndex: (int)AIPackageSchedule_FieldIndex.Day,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Time_Property,
+                item: item.Time,
                 fieldIndex: (int)AIPackageSchedule_FieldIndex.Time,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Duration_Property,
+                item: item.Duration,
                 fieldIndex: (int)AIPackageSchedule_FieldIndex.Duration,
                 errorMask: errorMask);
         }

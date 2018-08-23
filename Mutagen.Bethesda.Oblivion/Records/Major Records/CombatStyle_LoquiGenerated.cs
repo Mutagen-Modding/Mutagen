@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,10 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         ICombatStyle,
         ILoquiObject<CombatStyle>,
         ILoquiObjectSetter,
-        IPropertySupporter<Byte>,
-        IPropertySupporter<Single>,
-        IPropertySupporter<CombatStyle.Flag>,
-        IPropertySupporter<CombatStyleAdvanced>,
         IEquatable<CombatStyle>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -53,1804 +51,367 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region DodgePercentChance
-        protected Byte _DodgePercentChance;
-        protected PropertyForwarder<CombatStyle, Byte> _DodgePercentChanceForwarder;
-        public INotifyingSetItem<Byte> DodgePercentChance_Property => _DodgePercentChanceForwarder ?? (_DodgePercentChanceForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.DodgePercentChance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _DodgePercentChance;
         public Byte DodgePercentChance
         {
-            get => this._DodgePercentChance;
-            set => this.SetDodgePercentChance(value);
-        }
-        protected void SetDodgePercentChance(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(DodgePercentChance_Range.Min, DodgePercentChance_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgePercentChance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgePercentChance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _DodgePercentChance;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgePercentChance] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = DodgePercentChance;
-                _DodgePercentChance = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.DodgePercentChance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgePercentChance = item;
+                this._DodgePercentChance = value.PutInRange(DodgePercentChance_Range.Min, DodgePercentChance_Range.Max);
             }
         }
-        protected void UnsetDodgePercentChance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgePercentChance] = false;
-            DodgePercentChance = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.DodgePercentChance_Property => this.DodgePercentChance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.DodgePercentChance_Property => this.DodgePercentChance_Property;
         public static RangeUInt8 DodgePercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region LeftRightPercentChance
-        protected Byte _LeftRightPercentChance;
-        protected PropertyForwarder<CombatStyle, Byte> _LeftRightPercentChanceForwarder;
-        public INotifyingSetItem<Byte> LeftRightPercentChance_Property => _LeftRightPercentChanceForwarder ?? (_LeftRightPercentChanceForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.LeftRightPercentChance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _LeftRightPercentChance;
         public Byte LeftRightPercentChance
         {
-            get => this._LeftRightPercentChance;
-            set => this.SetLeftRightPercentChance(value);
-        }
-        protected void SetLeftRightPercentChance(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(LeftRightPercentChance_Range.Min, LeftRightPercentChance_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.LeftRightPercentChance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LeftRightPercentChance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _LeftRightPercentChance;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.LeftRightPercentChance] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = LeftRightPercentChance;
-                _LeftRightPercentChance = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.LeftRightPercentChance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _LeftRightPercentChance = item;
+                this._LeftRightPercentChance = value.PutInRange(LeftRightPercentChance_Range.Min, LeftRightPercentChance_Range.Max);
             }
         }
-        protected void UnsetLeftRightPercentChance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.LeftRightPercentChance] = false;
-            LeftRightPercentChance = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.LeftRightPercentChance_Property => this.LeftRightPercentChance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.LeftRightPercentChance_Property => this.LeftRightPercentChance_Property;
         public static RangeUInt8 LeftRightPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region DodgeLeftRightTimerMin
-        protected Single _DodgeLeftRightTimerMin;
-        protected PropertyForwarder<CombatStyle, Single> _DodgeLeftRightTimerMinForwarder;
-        public INotifyingSetItem<Single> DodgeLeftRightTimerMin_Property => _DodgeLeftRightTimerMinForwarder ?? (_DodgeLeftRightTimerMinForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeLeftRightTimerMin;
         public Single DodgeLeftRightTimerMin
         {
             get => this._DodgeLeftRightTimerMin;
-            set => this.SetDodgeLeftRightTimerMin(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeLeftRightTimerMin, value, nameof(DodgeLeftRightTimerMin));
         }
-        protected void SetDodgeLeftRightTimerMin(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeLeftRightTimerMin == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeLeftRightTimerMin;
-                _DodgeLeftRightTimerMin = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeLeftRightTimerMin = item;
-            }
-        }
-        protected void UnsetDodgeLeftRightTimerMin()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin] = false;
-            DodgeLeftRightTimerMin = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.DodgeLeftRightTimerMin_Property => this.DodgeLeftRightTimerMin_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.DodgeLeftRightTimerMin_Property => this.DodgeLeftRightTimerMin_Property;
         #endregion
         #region DodgeLeftRightTimerMax
-        protected Single _DodgeLeftRightTimerMax;
-        protected PropertyForwarder<CombatStyle, Single> _DodgeLeftRightTimerMaxForwarder;
-        public INotifyingSetItem<Single> DodgeLeftRightTimerMax_Property => _DodgeLeftRightTimerMaxForwarder ?? (_DodgeLeftRightTimerMaxForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeLeftRightTimerMax;
         public Single DodgeLeftRightTimerMax
         {
             get => this._DodgeLeftRightTimerMax;
-            set => this.SetDodgeLeftRightTimerMax(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeLeftRightTimerMax, value, nameof(DodgeLeftRightTimerMax));
         }
-        protected void SetDodgeLeftRightTimerMax(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeLeftRightTimerMax == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeLeftRightTimerMax;
-                _DodgeLeftRightTimerMax = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeLeftRightTimerMax = item;
-            }
-        }
-        protected void UnsetDodgeLeftRightTimerMax()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax] = false;
-            DodgeLeftRightTimerMax = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.DodgeLeftRightTimerMax_Property => this.DodgeLeftRightTimerMax_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.DodgeLeftRightTimerMax_Property => this.DodgeLeftRightTimerMax_Property;
         #endregion
         #region DodgeForwardTimerMin
-        protected Single _DodgeForwardTimerMin;
-        protected PropertyForwarder<CombatStyle, Single> _DodgeForwardTimerMinForwarder;
-        public INotifyingSetItem<Single> DodgeForwardTimerMin_Property => _DodgeForwardTimerMinForwarder ?? (_DodgeForwardTimerMinForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.DodgeForwardTimerMin));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeForwardTimerMin;
         public Single DodgeForwardTimerMin
         {
             get => this._DodgeForwardTimerMin;
-            set => this.SetDodgeForwardTimerMin(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeForwardTimerMin, value, nameof(DodgeForwardTimerMin));
         }
-        protected void SetDodgeForwardTimerMin(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeForwardTimerMin];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeForwardTimerMin == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeForwardTimerMin] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeForwardTimerMin;
-                _DodgeForwardTimerMin = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.DodgeForwardTimerMin,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeForwardTimerMin = item;
-            }
-        }
-        protected void UnsetDodgeForwardTimerMin()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeForwardTimerMin] = false;
-            DodgeForwardTimerMin = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.DodgeForwardTimerMin_Property => this.DodgeForwardTimerMin_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.DodgeForwardTimerMin_Property => this.DodgeForwardTimerMin_Property;
         #endregion
         #region DodgeForwardTimerMax
-        protected Single _DodgeForwardTimerMax;
-        protected PropertyForwarder<CombatStyle, Single> _DodgeForwardTimerMaxForwarder;
-        public INotifyingSetItem<Single> DodgeForwardTimerMax_Property => _DodgeForwardTimerMaxForwarder ?? (_DodgeForwardTimerMaxForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.DodgeForwardTimerMax));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeForwardTimerMax;
         public Single DodgeForwardTimerMax
         {
             get => this._DodgeForwardTimerMax;
-            set => this.SetDodgeForwardTimerMax(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeForwardTimerMax, value, nameof(DodgeForwardTimerMax));
         }
-        protected void SetDodgeForwardTimerMax(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeForwardTimerMax];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeForwardTimerMax == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeForwardTimerMax] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeForwardTimerMax;
-                _DodgeForwardTimerMax = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.DodgeForwardTimerMax,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeForwardTimerMax = item;
-            }
-        }
-        protected void UnsetDodgeForwardTimerMax()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeForwardTimerMax] = false;
-            DodgeForwardTimerMax = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.DodgeForwardTimerMax_Property => this.DodgeForwardTimerMax_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.DodgeForwardTimerMax_Property => this.DodgeForwardTimerMax_Property;
         #endregion
         #region DodgeBackTimerMin
-        protected Single _DodgeBackTimerMin;
-        protected PropertyForwarder<CombatStyle, Single> _DodgeBackTimerMinForwarder;
-        public INotifyingSetItem<Single> DodgeBackTimerMin_Property => _DodgeBackTimerMinForwarder ?? (_DodgeBackTimerMinForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.DodgeBackTimerMin));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeBackTimerMin;
         public Single DodgeBackTimerMin
         {
             get => this._DodgeBackTimerMin;
-            set => this.SetDodgeBackTimerMin(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeBackTimerMin, value, nameof(DodgeBackTimerMin));
         }
-        protected void SetDodgeBackTimerMin(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeBackTimerMin];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeBackTimerMin == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeBackTimerMin] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeBackTimerMin;
-                _DodgeBackTimerMin = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.DodgeBackTimerMin,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeBackTimerMin = item;
-            }
-        }
-        protected void UnsetDodgeBackTimerMin()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeBackTimerMin] = false;
-            DodgeBackTimerMin = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.DodgeBackTimerMin_Property => this.DodgeBackTimerMin_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.DodgeBackTimerMin_Property => this.DodgeBackTimerMin_Property;
         #endregion
         #region DodgeBackTimerMax
-        protected Single _DodgeBackTimerMax;
-        protected PropertyForwarder<CombatStyle, Single> _DodgeBackTimerMaxForwarder;
-        public INotifyingSetItem<Single> DodgeBackTimerMax_Property => _DodgeBackTimerMaxForwarder ?? (_DodgeBackTimerMaxForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.DodgeBackTimerMax));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeBackTimerMax;
         public Single DodgeBackTimerMax
         {
             get => this._DodgeBackTimerMax;
-            set => this.SetDodgeBackTimerMax(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeBackTimerMax, value, nameof(DodgeBackTimerMax));
         }
-        protected void SetDodgeBackTimerMax(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeBackTimerMax];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeBackTimerMax == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeBackTimerMax] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeBackTimerMax;
-                _DodgeBackTimerMax = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.DodgeBackTimerMax,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeBackTimerMax = item;
-            }
-        }
-        protected void UnsetDodgeBackTimerMax()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.DodgeBackTimerMax] = false;
-            DodgeBackTimerMax = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.DodgeBackTimerMax_Property => this.DodgeBackTimerMax_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.DodgeBackTimerMax_Property => this.DodgeBackTimerMax_Property;
         #endregion
         #region IdleTimerMin
-        protected Single _IdleTimerMin;
-        protected PropertyForwarder<CombatStyle, Single> _IdleTimerMinForwarder;
-        public INotifyingSetItem<Single> IdleTimerMin_Property => _IdleTimerMinForwarder ?? (_IdleTimerMinForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.IdleTimerMin));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _IdleTimerMin;
         public Single IdleTimerMin
         {
             get => this._IdleTimerMin;
-            set => this.SetIdleTimerMin(value);
+            set => this.RaiseAndSetIfChanged(ref this._IdleTimerMin, value, nameof(IdleTimerMin));
         }
-        protected void SetIdleTimerMin(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.IdleTimerMin];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && IdleTimerMin == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.IdleTimerMin] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = IdleTimerMin;
-                _IdleTimerMin = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.IdleTimerMin,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _IdleTimerMin = item;
-            }
-        }
-        protected void UnsetIdleTimerMin()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.IdleTimerMin] = false;
-            IdleTimerMin = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.IdleTimerMin_Property => this.IdleTimerMin_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.IdleTimerMin_Property => this.IdleTimerMin_Property;
         #endregion
         #region IdleTimerMax
-        protected Single _IdleTimerMax;
-        protected PropertyForwarder<CombatStyle, Single> _IdleTimerMaxForwarder;
-        public INotifyingSetItem<Single> IdleTimerMax_Property => _IdleTimerMaxForwarder ?? (_IdleTimerMaxForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.IdleTimerMax));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _IdleTimerMax;
         public Single IdleTimerMax
         {
             get => this._IdleTimerMax;
-            set => this.SetIdleTimerMax(value);
+            set => this.RaiseAndSetIfChanged(ref this._IdleTimerMax, value, nameof(IdleTimerMax));
         }
-        protected void SetIdleTimerMax(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.IdleTimerMax];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && IdleTimerMax == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.IdleTimerMax] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = IdleTimerMax;
-                _IdleTimerMax = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.IdleTimerMax,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _IdleTimerMax = item;
-            }
-        }
-        protected void UnsetIdleTimerMax()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.IdleTimerMax] = false;
-            IdleTimerMax = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.IdleTimerMax_Property => this.IdleTimerMax_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.IdleTimerMax_Property => this.IdleTimerMax_Property;
         #endregion
         #region BlockPercentChance
-        protected Byte _BlockPercentChance;
-        protected PropertyForwarder<CombatStyle, Byte> _BlockPercentChanceForwarder;
-        public INotifyingSetItem<Byte> BlockPercentChance_Property => _BlockPercentChanceForwarder ?? (_BlockPercentChanceForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.BlockPercentChance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _BlockPercentChance;
         public Byte BlockPercentChance
         {
-            get => this._BlockPercentChance;
-            set => this.SetBlockPercentChance(value);
-        }
-        protected void SetBlockPercentChance(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(BlockPercentChance_Range.Min, BlockPercentChance_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.BlockPercentChance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BlockPercentChance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _BlockPercentChance;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.BlockPercentChance] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = BlockPercentChance;
-                _BlockPercentChance = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.BlockPercentChance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _BlockPercentChance = item;
+                this._BlockPercentChance = value.PutInRange(BlockPercentChance_Range.Min, BlockPercentChance_Range.Max);
             }
         }
-        protected void UnsetBlockPercentChance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.BlockPercentChance] = false;
-            BlockPercentChance = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.BlockPercentChance_Property => this.BlockPercentChance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.BlockPercentChance_Property => this.BlockPercentChance_Property;
         public static RangeUInt8 BlockPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region AttackPercentChance
-        protected Byte _AttackPercentChance;
-        protected PropertyForwarder<CombatStyle, Byte> _AttackPercentChanceForwarder;
-        public INotifyingSetItem<Byte> AttackPercentChance_Property => _AttackPercentChanceForwarder ?? (_AttackPercentChanceForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.AttackPercentChance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _AttackPercentChance;
         public Byte AttackPercentChance
         {
-            get => this._AttackPercentChance;
-            set => this.SetAttackPercentChance(value);
-        }
-        protected void SetAttackPercentChance(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(AttackPercentChance_Range.Min, AttackPercentChance_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.AttackPercentChance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AttackPercentChance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _AttackPercentChance;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.AttackPercentChance] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = AttackPercentChance;
-                _AttackPercentChance = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.AttackPercentChance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AttackPercentChance = item;
+                this._AttackPercentChance = value.PutInRange(AttackPercentChance_Range.Min, AttackPercentChance_Range.Max);
             }
         }
-        protected void UnsetAttackPercentChance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.AttackPercentChance] = false;
-            AttackPercentChance = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.AttackPercentChance_Property => this.AttackPercentChance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.AttackPercentChance_Property => this.AttackPercentChance_Property;
         public static RangeUInt8 AttackPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RecoilStaggerBonusToAttack
-        protected Single _RecoilStaggerBonusToAttack;
-        protected PropertyForwarder<CombatStyle, Single> _RecoilStaggerBonusToAttackForwarder;
-        public INotifyingSetItem<Single> RecoilStaggerBonusToAttack_Property => _RecoilStaggerBonusToAttackForwarder ?? (_RecoilStaggerBonusToAttackForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RecoilStaggerBonusToAttack;
         public Single RecoilStaggerBonusToAttack
         {
             get => this._RecoilStaggerBonusToAttack;
-            set => this.SetRecoilStaggerBonusToAttack(value);
+            set => this.RaiseAndSetIfChanged(ref this._RecoilStaggerBonusToAttack, value, nameof(RecoilStaggerBonusToAttack));
         }
-        protected void SetRecoilStaggerBonusToAttack(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RecoilStaggerBonusToAttack == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RecoilStaggerBonusToAttack;
-                _RecoilStaggerBonusToAttack = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RecoilStaggerBonusToAttack = item;
-            }
-        }
-        protected void UnsetRecoilStaggerBonusToAttack()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack] = false;
-            RecoilStaggerBonusToAttack = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.RecoilStaggerBonusToAttack_Property => this.RecoilStaggerBonusToAttack_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.RecoilStaggerBonusToAttack_Property => this.RecoilStaggerBonusToAttack_Property;
         #endregion
         #region UnconsciousBonusToAttack
-        protected Single _UnconsciousBonusToAttack;
-        protected PropertyForwarder<CombatStyle, Single> _UnconsciousBonusToAttackForwarder;
-        public INotifyingSetItem<Single> UnconsciousBonusToAttack_Property => _UnconsciousBonusToAttackForwarder ?? (_UnconsciousBonusToAttackForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.UnconsciousBonusToAttack));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _UnconsciousBonusToAttack;
         public Single UnconsciousBonusToAttack
         {
             get => this._UnconsciousBonusToAttack;
-            set => this.SetUnconsciousBonusToAttack(value);
+            set => this.RaiseAndSetIfChanged(ref this._UnconsciousBonusToAttack, value, nameof(UnconsciousBonusToAttack));
         }
-        protected void SetUnconsciousBonusToAttack(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.UnconsciousBonusToAttack];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && UnconsciousBonusToAttack == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.UnconsciousBonusToAttack] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = UnconsciousBonusToAttack;
-                _UnconsciousBonusToAttack = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.UnconsciousBonusToAttack,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _UnconsciousBonusToAttack = item;
-            }
-        }
-        protected void UnsetUnconsciousBonusToAttack()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.UnconsciousBonusToAttack] = false;
-            UnconsciousBonusToAttack = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.UnconsciousBonusToAttack_Property => this.UnconsciousBonusToAttack_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.UnconsciousBonusToAttack_Property => this.UnconsciousBonusToAttack_Property;
         #endregion
         #region HandToHandBonusToAttack
-        protected Single _HandToHandBonusToAttack;
-        protected PropertyForwarder<CombatStyle, Single> _HandToHandBonusToAttackForwarder;
-        public INotifyingSetItem<Single> HandToHandBonusToAttack_Property => _HandToHandBonusToAttackForwarder ?? (_HandToHandBonusToAttackForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.HandToHandBonusToAttack));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _HandToHandBonusToAttack;
         public Single HandToHandBonusToAttack
         {
             get => this._HandToHandBonusToAttack;
-            set => this.SetHandToHandBonusToAttack(value);
+            set => this.RaiseAndSetIfChanged(ref this._HandToHandBonusToAttack, value, nameof(HandToHandBonusToAttack));
         }
-        protected void SetHandToHandBonusToAttack(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.HandToHandBonusToAttack];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HandToHandBonusToAttack == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.HandToHandBonusToAttack] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = HandToHandBonusToAttack;
-                _HandToHandBonusToAttack = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.HandToHandBonusToAttack,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _HandToHandBonusToAttack = item;
-            }
-        }
-        protected void UnsetHandToHandBonusToAttack()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.HandToHandBonusToAttack] = false;
-            HandToHandBonusToAttack = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.HandToHandBonusToAttack_Property => this.HandToHandBonusToAttack_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.HandToHandBonusToAttack_Property => this.HandToHandBonusToAttack_Property;
         #endregion
         #region PowerAttackPercentChance
-        protected Byte _PowerAttackPercentChance;
-        protected PropertyForwarder<CombatStyle, Byte> _PowerAttackPercentChanceForwarder;
-        public INotifyingSetItem<Byte> PowerAttackPercentChance_Property => _PowerAttackPercentChanceForwarder ?? (_PowerAttackPercentChanceForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.PowerAttackPercentChance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _PowerAttackPercentChance;
         public Byte PowerAttackPercentChance
         {
-            get => this._PowerAttackPercentChance;
-            set => this.SetPowerAttackPercentChance(value);
-        }
-        protected void SetPowerAttackPercentChance(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(PowerAttackPercentChance_Range.Min, PowerAttackPercentChance_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackPercentChance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PowerAttackPercentChance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _PowerAttackPercentChance;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackPercentChance] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = PowerAttackPercentChance;
-                _PowerAttackPercentChance = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.PowerAttackPercentChance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PowerAttackPercentChance = item;
+                this._PowerAttackPercentChance = value.PutInRange(PowerAttackPercentChance_Range.Min, PowerAttackPercentChance_Range.Max);
             }
         }
-        protected void UnsetPowerAttackPercentChance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackPercentChance] = false;
-            PowerAttackPercentChance = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.PowerAttackPercentChance_Property => this.PowerAttackPercentChance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.PowerAttackPercentChance_Property => this.PowerAttackPercentChance_Property;
         public static RangeUInt8 PowerAttackPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RecoilStaggerBonusToPowerAttack
-        protected Single _RecoilStaggerBonusToPowerAttack;
-        protected PropertyForwarder<CombatStyle, Single> _RecoilStaggerBonusToPowerAttackForwarder;
-        public INotifyingSetItem<Single> RecoilStaggerBonusToPowerAttack_Property => _RecoilStaggerBonusToPowerAttackForwarder ?? (_RecoilStaggerBonusToPowerAttackForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RecoilStaggerBonusToPowerAttack;
         public Single RecoilStaggerBonusToPowerAttack
         {
             get => this._RecoilStaggerBonusToPowerAttack;
-            set => this.SetRecoilStaggerBonusToPowerAttack(value);
+            set => this.RaiseAndSetIfChanged(ref this._RecoilStaggerBonusToPowerAttack, value, nameof(RecoilStaggerBonusToPowerAttack));
         }
-        protected void SetRecoilStaggerBonusToPowerAttack(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RecoilStaggerBonusToPowerAttack == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RecoilStaggerBonusToPowerAttack;
-                _RecoilStaggerBonusToPowerAttack = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RecoilStaggerBonusToPowerAttack = item;
-            }
-        }
-        protected void UnsetRecoilStaggerBonusToPowerAttack()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack] = false;
-            RecoilStaggerBonusToPowerAttack = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.RecoilStaggerBonusToPowerAttack_Property => this.RecoilStaggerBonusToPowerAttack_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.RecoilStaggerBonusToPowerAttack_Property => this.RecoilStaggerBonusToPowerAttack_Property;
         #endregion
         #region UnconsciousBonusToPowerAttack
-        protected Single _UnconsciousBonusToPowerAttack;
-        protected PropertyForwarder<CombatStyle, Single> _UnconsciousBonusToPowerAttackForwarder;
-        public INotifyingSetItem<Single> UnconsciousBonusToPowerAttack_Property => _UnconsciousBonusToPowerAttackForwarder ?? (_UnconsciousBonusToPowerAttackForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _UnconsciousBonusToPowerAttack;
         public Single UnconsciousBonusToPowerAttack
         {
             get => this._UnconsciousBonusToPowerAttack;
-            set => this.SetUnconsciousBonusToPowerAttack(value);
+            set => this.RaiseAndSetIfChanged(ref this._UnconsciousBonusToPowerAttack, value, nameof(UnconsciousBonusToPowerAttack));
         }
-        protected void SetUnconsciousBonusToPowerAttack(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && UnconsciousBonusToPowerAttack == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = UnconsciousBonusToPowerAttack;
-                _UnconsciousBonusToPowerAttack = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _UnconsciousBonusToPowerAttack = item;
-            }
-        }
-        protected void UnsetUnconsciousBonusToPowerAttack()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack] = false;
-            UnconsciousBonusToPowerAttack = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.UnconsciousBonusToPowerAttack_Property => this.UnconsciousBonusToPowerAttack_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.UnconsciousBonusToPowerAttack_Property => this.UnconsciousBonusToPowerAttack_Property;
         #endregion
         #region PowerAttackNormal
-        protected Byte _PowerAttackNormal;
-        protected PropertyForwarder<CombatStyle, Byte> _PowerAttackNormalForwarder;
-        public INotifyingSetItem<Byte> PowerAttackNormal_Property => _PowerAttackNormalForwarder ?? (_PowerAttackNormalForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.PowerAttackNormal));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _PowerAttackNormal;
         public Byte PowerAttackNormal
         {
-            get => this._PowerAttackNormal;
-            set => this.SetPowerAttackNormal(value);
-        }
-        protected void SetPowerAttackNormal(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(PowerAttackNormal_Range.Min, PowerAttackNormal_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackNormal];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PowerAttackNormal == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _PowerAttackNormal;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackNormal] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = PowerAttackNormal;
-                _PowerAttackNormal = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.PowerAttackNormal,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PowerAttackNormal = item;
+                this._PowerAttackNormal = value.PutInRange(PowerAttackNormal_Range.Min, PowerAttackNormal_Range.Max);
             }
         }
-        protected void UnsetPowerAttackNormal()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackNormal] = false;
-            PowerAttackNormal = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.PowerAttackNormal_Property => this.PowerAttackNormal_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.PowerAttackNormal_Property => this.PowerAttackNormal_Property;
         public static RangeUInt8 PowerAttackNormal_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackForward
-        protected Byte _PowerAttackForward;
-        protected PropertyForwarder<CombatStyle, Byte> _PowerAttackForwardForwarder;
-        public INotifyingSetItem<Byte> PowerAttackForward_Property => _PowerAttackForwardForwarder ?? (_PowerAttackForwardForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.PowerAttackForward));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _PowerAttackForward;
         public Byte PowerAttackForward
         {
-            get => this._PowerAttackForward;
-            set => this.SetPowerAttackForward(value);
-        }
-        protected void SetPowerAttackForward(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(PowerAttackForward_Range.Min, PowerAttackForward_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackForward];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PowerAttackForward == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _PowerAttackForward;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackForward] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = PowerAttackForward;
-                _PowerAttackForward = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.PowerAttackForward,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PowerAttackForward = item;
+                this._PowerAttackForward = value.PutInRange(PowerAttackForward_Range.Min, PowerAttackForward_Range.Max);
             }
         }
-        protected void UnsetPowerAttackForward()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackForward] = false;
-            PowerAttackForward = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.PowerAttackForward_Property => this.PowerAttackForward_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.PowerAttackForward_Property => this.PowerAttackForward_Property;
         public static RangeUInt8 PowerAttackForward_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackBack
-        protected Byte _PowerAttackBack;
-        protected PropertyForwarder<CombatStyle, Byte> _PowerAttackBackForwarder;
-        public INotifyingSetItem<Byte> PowerAttackBack_Property => _PowerAttackBackForwarder ?? (_PowerAttackBackForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.PowerAttackBack));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _PowerAttackBack;
         public Byte PowerAttackBack
         {
-            get => this._PowerAttackBack;
-            set => this.SetPowerAttackBack(value);
-        }
-        protected void SetPowerAttackBack(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(PowerAttackBack_Range.Min, PowerAttackBack_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackBack];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PowerAttackBack == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _PowerAttackBack;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackBack] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = PowerAttackBack;
-                _PowerAttackBack = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.PowerAttackBack,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PowerAttackBack = item;
+                this._PowerAttackBack = value.PutInRange(PowerAttackBack_Range.Min, PowerAttackBack_Range.Max);
             }
         }
-        protected void UnsetPowerAttackBack()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackBack] = false;
-            PowerAttackBack = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.PowerAttackBack_Property => this.PowerAttackBack_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.PowerAttackBack_Property => this.PowerAttackBack_Property;
         public static RangeUInt8 PowerAttackBack_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackLeft
-        protected Byte _PowerAttackLeft;
-        protected PropertyForwarder<CombatStyle, Byte> _PowerAttackLeftForwarder;
-        public INotifyingSetItem<Byte> PowerAttackLeft_Property => _PowerAttackLeftForwarder ?? (_PowerAttackLeftForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.PowerAttackLeft));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _PowerAttackLeft;
         public Byte PowerAttackLeft
         {
-            get => this._PowerAttackLeft;
-            set => this.SetPowerAttackLeft(value);
-        }
-        protected void SetPowerAttackLeft(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(PowerAttackLeft_Range.Min, PowerAttackLeft_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackLeft];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PowerAttackLeft == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _PowerAttackLeft;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackLeft] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = PowerAttackLeft;
-                _PowerAttackLeft = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.PowerAttackLeft,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PowerAttackLeft = item;
+                this._PowerAttackLeft = value.PutInRange(PowerAttackLeft_Range.Min, PowerAttackLeft_Range.Max);
             }
         }
-        protected void UnsetPowerAttackLeft()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackLeft] = false;
-            PowerAttackLeft = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.PowerAttackLeft_Property => this.PowerAttackLeft_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.PowerAttackLeft_Property => this.PowerAttackLeft_Property;
         public static RangeUInt8 PowerAttackLeft_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackRight
-        protected Byte _PowerAttackRight;
-        protected PropertyForwarder<CombatStyle, Byte> _PowerAttackRightForwarder;
-        public INotifyingSetItem<Byte> PowerAttackRight_Property => _PowerAttackRightForwarder ?? (_PowerAttackRightForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.PowerAttackRight));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _PowerAttackRight;
         public Byte PowerAttackRight
         {
-            get => this._PowerAttackRight;
-            set => this.SetPowerAttackRight(value);
-        }
-        protected void SetPowerAttackRight(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(PowerAttackRight_Range.Min, PowerAttackRight_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackRight];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PowerAttackRight == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _PowerAttackRight;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackRight] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = PowerAttackRight;
-                _PowerAttackRight = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.PowerAttackRight,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PowerAttackRight = item;
+                this._PowerAttackRight = value.PutInRange(PowerAttackRight_Range.Min, PowerAttackRight_Range.Max);
             }
         }
-        protected void UnsetPowerAttackRight()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.PowerAttackRight] = false;
-            PowerAttackRight = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.PowerAttackRight_Property => this.PowerAttackRight_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.PowerAttackRight_Property => this.PowerAttackRight_Property;
         public static RangeUInt8 PowerAttackRight_Range = new RangeUInt8(0, 100);
         #endregion
         #region HoldTimerMin
-        protected Single _HoldTimerMin;
-        protected PropertyForwarder<CombatStyle, Single> _HoldTimerMinForwarder;
-        public INotifyingSetItem<Single> HoldTimerMin_Property => _HoldTimerMinForwarder ?? (_HoldTimerMinForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.HoldTimerMin));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _HoldTimerMin;
         public Single HoldTimerMin
         {
             get => this._HoldTimerMin;
-            set => this.SetHoldTimerMin(value);
+            set => this.RaiseAndSetIfChanged(ref this._HoldTimerMin, value, nameof(HoldTimerMin));
         }
-        protected void SetHoldTimerMin(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.HoldTimerMin];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HoldTimerMin == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.HoldTimerMin] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = HoldTimerMin;
-                _HoldTimerMin = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.HoldTimerMin,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _HoldTimerMin = item;
-            }
-        }
-        protected void UnsetHoldTimerMin()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.HoldTimerMin] = false;
-            HoldTimerMin = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.HoldTimerMin_Property => this.HoldTimerMin_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.HoldTimerMin_Property => this.HoldTimerMin_Property;
         #endregion
         #region HoldTimerMax
-        protected Single _HoldTimerMax;
-        protected PropertyForwarder<CombatStyle, Single> _HoldTimerMaxForwarder;
-        public INotifyingSetItem<Single> HoldTimerMax_Property => _HoldTimerMaxForwarder ?? (_HoldTimerMaxForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.HoldTimerMax));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _HoldTimerMax;
         public Single HoldTimerMax
         {
             get => this._HoldTimerMax;
-            set => this.SetHoldTimerMax(value);
+            set => this.RaiseAndSetIfChanged(ref this._HoldTimerMax, value, nameof(HoldTimerMax));
         }
-        protected void SetHoldTimerMax(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.HoldTimerMax];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && HoldTimerMax == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.HoldTimerMax] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = HoldTimerMax;
-                _HoldTimerMax = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.HoldTimerMax,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _HoldTimerMax = item;
-            }
-        }
-        protected void UnsetHoldTimerMax()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.HoldTimerMax] = false;
-            HoldTimerMax = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.HoldTimerMax_Property => this.HoldTimerMax_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.HoldTimerMax_Property => this.HoldTimerMax_Property;
         #endregion
         #region Flags
-        protected CombatStyle.Flag _Flags;
-        protected PropertyForwarder<CombatStyle, CombatStyle.Flag> _FlagsForwarder;
-        public INotifyingSetItem<CombatStyle.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<CombatStyle, CombatStyle.Flag>(this, (int)CombatStyle_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CombatStyle.Flag _Flags;
         public CombatStyle.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            CombatStyle.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_CombatStyleFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _CombatStyleFlag_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.Flags] = false;
-            Flags = default(CombatStyle.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<CombatStyle.Flag> ICombatStyle.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<CombatStyle.Flag> ICombatStyleGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region AcrobaticDodgePercentChance
-        protected Byte _AcrobaticDodgePercentChance;
-        protected PropertyForwarder<CombatStyle, Byte> _AcrobaticDodgePercentChanceForwarder;
-        public INotifyingSetItem<Byte> AcrobaticDodgePercentChance_Property => _AcrobaticDodgePercentChanceForwarder ?? (_AcrobaticDodgePercentChanceForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _AcrobaticDodgePercentChance;
         public Byte AcrobaticDodgePercentChance
         {
-            get => this._AcrobaticDodgePercentChance;
-            set => this.SetAcrobaticDodgePercentChance(value);
-        }
-        protected void SetAcrobaticDodgePercentChance(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(AcrobaticDodgePercentChance_Range.Min, AcrobaticDodgePercentChance_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AcrobaticDodgePercentChance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _AcrobaticDodgePercentChance;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = AcrobaticDodgePercentChance;
-                _AcrobaticDodgePercentChance = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AcrobaticDodgePercentChance = item;
+                this._AcrobaticDodgePercentChance = value.PutInRange(AcrobaticDodgePercentChance_Range.Min, AcrobaticDodgePercentChance_Range.Max);
             }
         }
-        protected void UnsetAcrobaticDodgePercentChance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance] = false;
-            AcrobaticDodgePercentChance = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.AcrobaticDodgePercentChance_Property => this.AcrobaticDodgePercentChance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.AcrobaticDodgePercentChance_Property => this.AcrobaticDodgePercentChance_Property;
         public static RangeUInt8 AcrobaticDodgePercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RangeMultOptimal
-        protected Single _RangeMultOptimal;
-        protected PropertyForwarder<CombatStyle, Single> _RangeMultOptimalForwarder;
-        public INotifyingSetItem<Single> RangeMultOptimal_Property => _RangeMultOptimalForwarder ?? (_RangeMultOptimalForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.RangeMultOptimal));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RangeMultOptimal;
         public Single RangeMultOptimal
         {
             get => this._RangeMultOptimal;
-            set => this.SetRangeMultOptimal(value);
+            set => this.RaiseAndSetIfChanged(ref this._RangeMultOptimal, value, nameof(RangeMultOptimal));
         }
-        protected void SetRangeMultOptimal(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RangeMultOptimal];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RangeMultOptimal == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RangeMultOptimal] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RangeMultOptimal;
-                _RangeMultOptimal = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.RangeMultOptimal,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RangeMultOptimal = item;
-            }
-        }
-        protected void UnsetRangeMultOptimal()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RangeMultOptimal] = false;
-            RangeMultOptimal = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.RangeMultOptimal_Property => this.RangeMultOptimal_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.RangeMultOptimal_Property => this.RangeMultOptimal_Property;
         #endregion
         #region RangeMultMax
-        protected Single _RangeMultMax;
-        protected PropertyForwarder<CombatStyle, Single> _RangeMultMaxForwarder;
-        public INotifyingSetItem<Single> RangeMultMax_Property => _RangeMultMaxForwarder ?? (_RangeMultMaxForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.RangeMultMax));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RangeMultMax;
         public Single RangeMultMax
         {
             get => this._RangeMultMax;
-            set => this.SetRangeMultMax(value);
+            set => this.RaiseAndSetIfChanged(ref this._RangeMultMax, value, nameof(RangeMultMax));
         }
-        protected void SetRangeMultMax(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RangeMultMax];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RangeMultMax == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RangeMultMax] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RangeMultMax;
-                _RangeMultMax = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.RangeMultMax,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RangeMultMax = item;
-            }
-        }
-        protected void UnsetRangeMultMax()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RangeMultMax] = false;
-            RangeMultMax = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.RangeMultMax_Property => this.RangeMultMax_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.RangeMultMax_Property => this.RangeMultMax_Property;
         #endregion
         #region SwitchDistanceMelee
-        protected Single _SwitchDistanceMelee;
-        protected PropertyForwarder<CombatStyle, Single> _SwitchDistanceMeleeForwarder;
-        public INotifyingSetItem<Single> SwitchDistanceMelee_Property => _SwitchDistanceMeleeForwarder ?? (_SwitchDistanceMeleeForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.SwitchDistanceMelee));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _SwitchDistanceMelee;
         public Single SwitchDistanceMelee
         {
             get => this._SwitchDistanceMelee;
-            set => this.SetSwitchDistanceMelee(value);
+            set => this.RaiseAndSetIfChanged(ref this._SwitchDistanceMelee, value, nameof(SwitchDistanceMelee));
         }
-        protected void SetSwitchDistanceMelee(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.SwitchDistanceMelee];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SwitchDistanceMelee == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.SwitchDistanceMelee] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = SwitchDistanceMelee;
-                _SwitchDistanceMelee = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SwitchDistanceMelee = item;
-            }
-        }
-        protected void UnsetSwitchDistanceMelee()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.SwitchDistanceMelee] = false;
-            SwitchDistanceMelee = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.SwitchDistanceMelee_Property => this.SwitchDistanceMelee_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.SwitchDistanceMelee_Property => this.SwitchDistanceMelee_Property;
         #endregion
         #region SwitchDistanceRanged
-        protected Single _SwitchDistanceRanged;
-        protected PropertyForwarder<CombatStyle, Single> _SwitchDistanceRangedForwarder;
-        public INotifyingSetItem<Single> SwitchDistanceRanged_Property => _SwitchDistanceRangedForwarder ?? (_SwitchDistanceRangedForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.SwitchDistanceRanged));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _SwitchDistanceRanged;
         public Single SwitchDistanceRanged
         {
             get => this._SwitchDistanceRanged;
-            set => this.SetSwitchDistanceRanged(value);
+            set => this.RaiseAndSetIfChanged(ref this._SwitchDistanceRanged, value, nameof(SwitchDistanceRanged));
         }
-        protected void SetSwitchDistanceRanged(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.SwitchDistanceRanged];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SwitchDistanceRanged == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.SwitchDistanceRanged] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = SwitchDistanceRanged;
-                _SwitchDistanceRanged = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SwitchDistanceRanged = item;
-            }
-        }
-        protected void UnsetSwitchDistanceRanged()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.SwitchDistanceRanged] = false;
-            SwitchDistanceRanged = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.SwitchDistanceRanged_Property => this.SwitchDistanceRanged_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.SwitchDistanceRanged_Property => this.SwitchDistanceRanged_Property;
         #endregion
         #region BuffStandoffDistance
-        protected Single _BuffStandoffDistance;
-        protected PropertyForwarder<CombatStyle, Single> _BuffStandoffDistanceForwarder;
-        public INotifyingSetItem<Single> BuffStandoffDistance_Property => _BuffStandoffDistanceForwarder ?? (_BuffStandoffDistanceForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.BuffStandoffDistance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _BuffStandoffDistance;
         public Single BuffStandoffDistance
         {
             get => this._BuffStandoffDistance;
-            set => this.SetBuffStandoffDistance(value);
+            set => this.RaiseAndSetIfChanged(ref this._BuffStandoffDistance, value, nameof(BuffStandoffDistance));
         }
-        protected void SetBuffStandoffDistance(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.BuffStandoffDistance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BuffStandoffDistance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.BuffStandoffDistance] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = BuffStandoffDistance;
-                _BuffStandoffDistance = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _BuffStandoffDistance = item;
-            }
-        }
-        protected void UnsetBuffStandoffDistance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.BuffStandoffDistance] = false;
-            BuffStandoffDistance = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.BuffStandoffDistance_Property => this.BuffStandoffDistance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.BuffStandoffDistance_Property => this.BuffStandoffDistance_Property;
         #endregion
         #region RangedStandoffDistance
-        protected Single _RangedStandoffDistance;
-        protected PropertyForwarder<CombatStyle, Single> _RangedStandoffDistanceForwarder;
-        public INotifyingSetItem<Single> RangedStandoffDistance_Property => _RangedStandoffDistanceForwarder ?? (_RangedStandoffDistanceForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.RangedStandoffDistance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RangedStandoffDistance;
         public Single RangedStandoffDistance
         {
             get => this._RangedStandoffDistance;
-            set => this.SetRangedStandoffDistance(value);
+            set => this.RaiseAndSetIfChanged(ref this._RangedStandoffDistance, value, nameof(RangedStandoffDistance));
         }
-        protected void SetRangedStandoffDistance(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RangedStandoffDistance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RangedStandoffDistance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RangedStandoffDistance] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RangedStandoffDistance;
-                _RangedStandoffDistance = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RangedStandoffDistance = item;
-            }
-        }
-        protected void UnsetRangedStandoffDistance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RangedStandoffDistance] = false;
-            RangedStandoffDistance = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.RangedStandoffDistance_Property => this.RangedStandoffDistance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.RangedStandoffDistance_Property => this.RangedStandoffDistance_Property;
         #endregion
         #region GroupStandoffDistance
-        protected Single _GroupStandoffDistance;
-        protected PropertyForwarder<CombatStyle, Single> _GroupStandoffDistanceForwarder;
-        public INotifyingSetItem<Single> GroupStandoffDistance_Property => _GroupStandoffDistanceForwarder ?? (_GroupStandoffDistanceForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.GroupStandoffDistance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _GroupStandoffDistance;
         public Single GroupStandoffDistance
         {
             get => this._GroupStandoffDistance;
-            set => this.SetGroupStandoffDistance(value);
+            set => this.RaiseAndSetIfChanged(ref this._GroupStandoffDistance, value, nameof(GroupStandoffDistance));
         }
-        protected void SetGroupStandoffDistance(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.GroupStandoffDistance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && GroupStandoffDistance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.GroupStandoffDistance] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = GroupStandoffDistance;
-                _GroupStandoffDistance = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _GroupStandoffDistance = item;
-            }
-        }
-        protected void UnsetGroupStandoffDistance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.GroupStandoffDistance] = false;
-            GroupStandoffDistance = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.GroupStandoffDistance_Property => this.GroupStandoffDistance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.GroupStandoffDistance_Property => this.GroupStandoffDistance_Property;
         #endregion
         #region RushingAttackPercentChance
-        protected Byte _RushingAttackPercentChance;
-        protected PropertyForwarder<CombatStyle, Byte> _RushingAttackPercentChanceForwarder;
-        public INotifyingSetItem<Byte> RushingAttackPercentChance_Property => _RushingAttackPercentChanceForwarder ?? (_RushingAttackPercentChanceForwarder = new PropertyForwarder<CombatStyle, Byte>(this, (int)CombatStyle_FieldIndex.RushingAttackPercentChance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _RushingAttackPercentChance;
         public Byte RushingAttackPercentChance
         {
-            get => this._RushingAttackPercentChance;
-            set => this.SetRushingAttackPercentChance(value);
-        }
-        protected void SetRushingAttackPercentChance(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            item = item.PutInRange(RushingAttackPercentChance_Range.Min, RushingAttackPercentChance_Range.Max);
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RushingAttackPercentChance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RushingAttackPercentChance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
+            get => _RushingAttackPercentChance;
+            set
             {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RushingAttackPercentChance] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = RushingAttackPercentChance;
-                _RushingAttackPercentChance = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RushingAttackPercentChance = item;
+                this._RushingAttackPercentChance = value.PutInRange(RushingAttackPercentChance_Range.Min, RushingAttackPercentChance_Range.Max);
             }
         }
-        protected void UnsetRushingAttackPercentChance()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RushingAttackPercentChance] = false;
-            RushingAttackPercentChance = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> ICombatStyle.RushingAttackPercentChance_Property => this.RushingAttackPercentChance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> ICombatStyleGetter.RushingAttackPercentChance_Property => this.RushingAttackPercentChance_Property;
         public static RangeUInt8 RushingAttackPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RushingAttackDistanceMult
-        protected Single _RushingAttackDistanceMult;
-        protected PropertyForwarder<CombatStyle, Single> _RushingAttackDistanceMultForwarder;
-        public INotifyingSetItem<Single> RushingAttackDistanceMult_Property => _RushingAttackDistanceMultForwarder ?? (_RushingAttackDistanceMultForwarder = new PropertyForwarder<CombatStyle, Single>(this, (int)CombatStyle_FieldIndex.RushingAttackDistanceMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RushingAttackDistanceMult;
         public Single RushingAttackDistanceMult
         {
             get => this._RushingAttackDistanceMult;
-            set => this.SetRushingAttackDistanceMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._RushingAttackDistanceMult, value, nameof(RushingAttackDistanceMult));
         }
-        protected void SetRushingAttackDistanceMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RushingAttackDistanceMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RushingAttackDistanceMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RushingAttackDistanceMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RushingAttackDistanceMult;
-                _RushingAttackDistanceMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RushingAttackDistanceMult = item;
-            }
-        }
-        protected void UnsetRushingAttackDistanceMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.RushingAttackDistanceMult] = false;
-            RushingAttackDistanceMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyle.RushingAttackDistanceMult_Property => this.RushingAttackDistanceMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleGetter.RushingAttackDistanceMult_Property => this.RushingAttackDistanceMult_Property;
         #endregion
         #region Advanced
-        protected CombatStyleAdvanced _Advanced;
-        protected PropertyForwarder<CombatStyle, CombatStyleAdvanced> _AdvancedForwarder;
-        public INotifyingSetItem<CombatStyleAdvanced> Advanced_Property => _AdvancedForwarder ?? (_AdvancedForwarder = new PropertyForwarder<CombatStyle, CombatStyleAdvanced>(this, (int)CombatStyle_FieldIndex.Advanced));
+        public bool Advanced_IsSet
+        {
+            get => _hasBeenSetTracker[(int)CombatStyle_FieldIndex.Advanced];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)CombatStyle_FieldIndex.Advanced, nameof(Advanced_IsSet));
+        }
+        bool ICombatStyleGetter.Advanced_IsSet => Advanced_IsSet;
+        private CombatStyleAdvanced _Advanced;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public CombatStyleAdvanced Advanced
         {
-            get => this._Advanced;
-            set => this.SetAdvanced(value);
+            get => _Advanced;
+            set => Advanced_Set(value);
         }
-        protected void SetAdvanced(
-            CombatStyleAdvanced item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Advanced_Set(
+            CombatStyleAdvanced value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyle_FieldIndex.Advanced];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Advanced, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyle_FieldIndex.Advanced] = hasBeenSet;
-            }
-            if (_CombatStyleAdvanced_subscriptions != null)
-            {
-                var tmp = Advanced;
-                _Advanced = item;
-                _CombatStyleAdvanced_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyle_FieldIndex.Advanced,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Advanced = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Advanced, value, _hasBeenSetTracker, markSet, (int)CombatStyle_FieldIndex.Advanced, nameof(Advanced), nameof(Advanced_IsSet));
         }
-        protected void UnsetAdvanced()
+        public void Advanced_Unset()
         {
-            _hasBeenSetTracker[(int)CombatStyle_FieldIndex.Advanced] = false;
-            Advanced = default(CombatStyleAdvanced);
+            this.Advanced_Set(default(CombatStyleAdvanced), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<CombatStyleAdvanced> ICombatStyle.Advanced_Property => this.Advanced_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<CombatStyleAdvanced> ICombatStyleGetter.Advanced_Property => this.Advanced_Property;
+        CombatStyleAdvanced ICombatStyleGetter.Advanced => this.Advanced;
         #endregion
 
         #region Loqui Getter Interface
@@ -1947,8 +508,8 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance)) return false;
             if (this.RushingAttackPercentChance != rhs.RushingAttackPercentChance) return false;
             if (!this.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult)) return false;
-            if (Advanced_Property.HasBeenSet != rhs.Advanced_Property.HasBeenSet) return false;
-            if (Advanced_Property.HasBeenSet)
+            if (Advanced_IsSet != rhs.Advanced_IsSet) return false;
+            if (Advanced_IsSet)
             {
                 if (!object.Equals(this.Advanced, rhs.Advanced)) return false;
             }
@@ -1994,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(GroupStandoffDistance).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(RushingAttackPercentChance).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(RushingAttackDistanceMult).CombineHashCode(ret);
-            if (Advanced_Property.HasBeenSet)
+            if (Advanced_IsSet)
             {
                 ret = HashHelper.GetHashCode(Advanced).CombineHashCode(ret);
             }
@@ -2326,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgePercentChance();
+                            item.DodgePercentChance = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2352,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLeftRightPercentChance();
+                            item.LeftRightPercentChance = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2378,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeLeftRightTimerMin();
+                            item.DodgeLeftRightTimerMin = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2404,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeLeftRightTimerMax();
+                            item.DodgeLeftRightTimerMax = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2430,7 +991,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeForwardTimerMin();
+                            item.DodgeForwardTimerMin = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2456,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeForwardTimerMax();
+                            item.DodgeForwardTimerMax = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2482,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeBackTimerMin();
+                            item.DodgeBackTimerMin = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2508,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeBackTimerMax();
+                            item.DodgeBackTimerMax = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2534,7 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIdleTimerMin();
+                            item.IdleTimerMin = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2560,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIdleTimerMax();
+                            item.IdleTimerMax = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2586,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBlockPercentChance();
+                            item.BlockPercentChance = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2612,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAttackPercentChance();
+                            item.AttackPercentChance = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2638,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRecoilStaggerBonusToAttack();
+                            item.RecoilStaggerBonusToAttack = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2664,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUnconsciousBonusToAttack();
+                            item.UnconsciousBonusToAttack = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2690,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetHandToHandBonusToAttack();
+                            item.HandToHandBonusToAttack = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2716,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPowerAttackPercentChance();
+                            item.PowerAttackPercentChance = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2742,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRecoilStaggerBonusToPowerAttack();
+                            item.RecoilStaggerBonusToPowerAttack = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2768,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUnconsciousBonusToPowerAttack();
+                            item.UnconsciousBonusToPowerAttack = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2794,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPowerAttackNormal();
+                            item.PowerAttackNormal = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2820,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPowerAttackForward();
+                            item.PowerAttackForward = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2846,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPowerAttackBack();
+                            item.PowerAttackBack = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2872,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPowerAttackLeft();
+                            item.PowerAttackLeft = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2898,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPowerAttackRight();
+                            item.PowerAttackRight = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2924,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetHoldTimerMin();
+                            item.HoldTimerMin = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2950,7 +1511,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetHoldTimerMax();
+                            item.HoldTimerMax = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2976,7 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(CombatStyle.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -3002,7 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAcrobaticDodgePercentChance();
+                            item.AcrobaticDodgePercentChance = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -3028,7 +1589,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRangeMultOptimal();
+                            item.RangeMultOptimal = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -3054,7 +1615,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRangeMultMax();
+                            item.RangeMultMax = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -3080,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSwitchDistanceMelee();
+                            item.SwitchDistanceMelee = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -3106,7 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSwitchDistanceRanged();
+                            item.SwitchDistanceRanged = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -3132,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBuffStandoffDistance();
+                            item.BuffStandoffDistance = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -3158,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRangedStandoffDistance();
+                            item.RangedStandoffDistance = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -3184,7 +1745,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetGroupStandoffDistance();
+                            item.GroupStandoffDistance = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -3210,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRushingAttackPercentChance();
+                            item.RushingAttackPercentChance = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -3236,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRushingAttackDistanceMult();
+                            item.RushingAttackDistanceMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -3263,7 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAdvanced();
+                            item.Advanced = default(CombatStyleAdvanced);
                         }
                     }
                     catch (Exception ex)
@@ -3336,905 +1897,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    return DodgePercentChance;
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    return LeftRightPercentChance;
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    return BlockPercentChance;
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    return AttackPercentChance;
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    return PowerAttackPercentChance;
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    return PowerAttackNormal;
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    return PowerAttackForward;
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    return PowerAttackBack;
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    return PowerAttackLeft;
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    return PowerAttackRight;
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    return AcrobaticDodgePercentChance;
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    return RushingAttackPercentChance;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    SetDodgePercentChance(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    SetLeftRightPercentChance(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    SetBlockPercentChance(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    SetAttackPercentChance(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    SetPowerAttackPercentChance(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    SetPowerAttackNormal(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    SetPowerAttackForward(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    SetPowerAttackBack(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    SetPowerAttackLeft(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    SetPowerAttackRight(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    SetAcrobaticDodgePercentChance(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    SetRushingAttackPercentChance(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    SetDodgePercentChance(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    SetLeftRightPercentChance(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    SetBlockPercentChance(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    SetAttackPercentChance(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    SetPowerAttackPercentChance(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    SetPowerAttackNormal(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    SetPowerAttackForward(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    SetPowerAttackBack(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    SetPowerAttackLeft(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    SetPowerAttackRight(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    SetAcrobaticDodgePercentChance(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    SetRushingAttackPercentChance(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    return DodgeLeftRightTimerMin;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    return DodgeLeftRightTimerMax;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    return DodgeForwardTimerMin;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    return DodgeForwardTimerMax;
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    return DodgeBackTimerMin;
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    return DodgeBackTimerMax;
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    return IdleTimerMin;
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    return IdleTimerMax;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    return RecoilStaggerBonusToAttack;
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    return UnconsciousBonusToAttack;
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    return HandToHandBonusToAttack;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    return RecoilStaggerBonusToPowerAttack;
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    return UnconsciousBonusToPowerAttack;
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    return HoldTimerMin;
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    return HoldTimerMax;
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    return RangeMultOptimal;
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    return RangeMultMax;
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    return SwitchDistanceMelee;
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    return SwitchDistanceRanged;
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    return BuffStandoffDistance;
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    return RangedStandoffDistance;
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    return GroupStandoffDistance;
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    return RushingAttackDistanceMult;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    SetDodgeLeftRightTimerMin(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    SetDodgeLeftRightTimerMax(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    SetDodgeForwardTimerMin(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    SetDodgeForwardTimerMax(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    SetDodgeBackTimerMin(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    SetDodgeBackTimerMax(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    SetIdleTimerMin(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    SetIdleTimerMax(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    SetRecoilStaggerBonusToAttack(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    SetUnconsciousBonusToAttack(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    SetHandToHandBonusToAttack(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    SetRecoilStaggerBonusToPowerAttack(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    SetUnconsciousBonusToPowerAttack(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    SetHoldTimerMin(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    SetHoldTimerMax(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    SetRangeMultOptimal(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    SetRangeMultMax(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    SetSwitchDistanceMelee(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    SetSwitchDistanceRanged(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    SetBuffStandoffDistance(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    SetRangedStandoffDistance(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    SetGroupStandoffDistance(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    SetRushingAttackDistanceMult(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    SetDodgeLeftRightTimerMin(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    SetDodgeLeftRightTimerMax(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    SetDodgeForwardTimerMin(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    SetDodgeForwardTimerMax(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    SetDodgeBackTimerMin(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    SetDodgeBackTimerMax(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    SetIdleTimerMin(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    SetIdleTimerMax(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    SetRecoilStaggerBonusToAttack(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    SetUnconsciousBonusToAttack(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    SetHandToHandBonusToAttack(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    SetRecoilStaggerBonusToPowerAttack(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    SetUnconsciousBonusToPowerAttack(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    SetHoldTimerMin(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    SetHoldTimerMax(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    SetRangeMultOptimal(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    SetRangeMultMax(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    SetSwitchDistanceMelee(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    SetSwitchDistanceRanged(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    SetBuffStandoffDistance(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    SetRangedStandoffDistance(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    SetGroupStandoffDistance(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    SetRushingAttackDistanceMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                case CombatStyle_FieldIndex.RangeMultMax:
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter CombatStyle.Flag
-        protected ObjectCentralizationSubscriptions<CombatStyle.Flag> _CombatStyleFlag_subscriptions;
-        CombatStyle.Flag IPropertySupporter<CombatStyle.Flag>.Get(int index)
-        {
-            return GetCombatStyleFlag(index: index);
-        }
-
-        protected CombatStyle.Flag GetCombatStyleFlag(int index)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CombatStyle.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<CombatStyle.Flag>.Set(
-            int index,
-            CombatStyle.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetCombatStyleFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetCombatStyleFlag(
-            int index,
-            CombatStyle.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CombatStyle.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<CombatStyle.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<CombatStyle.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<CombatStyle.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetCombatStyleFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetCombatStyleFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(CombatStyle.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CombatStyle.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<CombatStyle.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<CombatStyle.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_CombatStyleFlag_subscriptions == null)
-            {
-                _CombatStyleFlag_subscriptions = new ObjectCentralizationSubscriptions<CombatStyle.Flag>();
-            }
-            _CombatStyleFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<CombatStyle.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _CombatStyleFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<CombatStyle.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        CombatStyle.Flag IPropertySupporter<CombatStyle.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueCombatStyleFlag(index: index);
-        }
-
-        protected CombatStyle.Flag DefaultValueCombatStyleFlag(int index)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.Flags:
-                    return default(CombatStyle.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type CombatStyle.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter CombatStyleAdvanced
-        protected ObjectCentralizationSubscriptions<CombatStyleAdvanced> _CombatStyleAdvanced_subscriptions;
-        CombatStyleAdvanced IPropertySupporter<CombatStyleAdvanced>.Get(int index)
-        {
-            return GetCombatStyleAdvanced(index: index);
-        }
-
-        protected CombatStyleAdvanced GetCombatStyleAdvanced(int index)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.Advanced:
-                    return Advanced;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CombatStyleAdvanced: {index}");
-            }
-        }
-
-        void IPropertySupporter<CombatStyleAdvanced>.Set(
-            int index,
-            CombatStyleAdvanced item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetCombatStyleAdvanced(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetCombatStyleAdvanced(
-            int index,
-            CombatStyleAdvanced item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.Advanced:
-                    SetAdvanced(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CombatStyleAdvanced: {index}");
-            }
-        }
-
-        bool IPropertySupporter<CombatStyleAdvanced>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<CombatStyleAdvanced>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<CombatStyleAdvanced>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetCombatStyleAdvanced(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetCombatStyleAdvanced(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.Advanced:
-                    SetAdvanced(
-                        item: default(CombatStyleAdvanced),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CombatStyleAdvanced: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<CombatStyleAdvanced>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<CombatStyleAdvanced> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_CombatStyleAdvanced_subscriptions == null)
-            {
-                _CombatStyleAdvanced_subscriptions = new ObjectCentralizationSubscriptions<CombatStyleAdvanced>();
-            }
-            _CombatStyleAdvanced_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<CombatStyleAdvanced>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _CombatStyleAdvanced_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<CombatStyleAdvanced>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        CombatStyleAdvanced IPropertySupporter<CombatStyleAdvanced>.DefaultValue(int index)
-        {
-            return DefaultValueCombatStyleAdvanced(index: index);
-        }
-
-        protected CombatStyleAdvanced DefaultValueCombatStyleAdvanced(int index)
-        {
-            switch ((CombatStyle_FieldIndex)index)
-            {
-                case CombatStyle_FieldIndex.Advanced:
-                    return default(CombatStyleAdvanced);
-                default:
-                    throw new ArgumentException($"Unknown index for field type CombatStyleAdvanced: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = CombatStyle_Registration.TRIGGERING_RECORD_TYPE;
@@ -4481,7 +2143,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDodgePercentChance();
+                                item.DodgePercentChance = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4505,7 +2167,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetLeftRightPercentChance();
+                                item.LeftRightPercentChance = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4530,7 +2192,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDodgeLeftRightTimerMin();
+                                item.DodgeLeftRightTimerMin = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4554,7 +2216,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDodgeLeftRightTimerMax();
+                                item.DodgeLeftRightTimerMax = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4578,7 +2240,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDodgeForwardTimerMin();
+                                item.DodgeForwardTimerMin = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4602,7 +2264,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDodgeForwardTimerMax();
+                                item.DodgeForwardTimerMax = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4626,7 +2288,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDodgeBackTimerMin();
+                                item.DodgeBackTimerMin = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4650,7 +2312,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDodgeBackTimerMax();
+                                item.DodgeBackTimerMax = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4674,7 +2336,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetIdleTimerMin();
+                                item.IdleTimerMin = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4698,7 +2360,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetIdleTimerMax();
+                                item.IdleTimerMax = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4722,7 +2384,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetBlockPercentChance();
+                                item.BlockPercentChance = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4746,7 +2408,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetAttackPercentChance();
+                                item.AttackPercentChance = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4771,7 +2433,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRecoilStaggerBonusToAttack();
+                                item.RecoilStaggerBonusToAttack = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4795,7 +2457,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetUnconsciousBonusToAttack();
+                                item.UnconsciousBonusToAttack = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4819,7 +2481,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetHandToHandBonusToAttack();
+                                item.HandToHandBonusToAttack = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4843,7 +2505,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetPowerAttackPercentChance();
+                                item.PowerAttackPercentChance = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4868,7 +2530,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRecoilStaggerBonusToPowerAttack();
+                                item.RecoilStaggerBonusToPowerAttack = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4892,7 +2554,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetUnconsciousBonusToPowerAttack();
+                                item.UnconsciousBonusToPowerAttack = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4916,7 +2578,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetPowerAttackNormal();
+                                item.PowerAttackNormal = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4940,7 +2602,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetPowerAttackForward();
+                                item.PowerAttackForward = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4964,7 +2626,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetPowerAttackBack();
+                                item.PowerAttackBack = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4988,7 +2650,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetPowerAttackLeft();
+                                item.PowerAttackLeft = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -5012,7 +2674,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetPowerAttackRight();
+                                item.PowerAttackRight = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -5037,7 +2699,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetHoldTimerMin();
+                                item.HoldTimerMin = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5061,7 +2723,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetHoldTimerMax();
+                                item.HoldTimerMax = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5085,7 +2747,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFlags();
+                                item.Flags = default(CombatStyle.Flag);
                             }
                         }
                         catch (Exception ex)
@@ -5109,7 +2771,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetAcrobaticDodgePercentChance();
+                                item.AcrobaticDodgePercentChance = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -5139,7 +2801,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRangeMultOptimal();
+                                item.RangeMultOptimal = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5163,7 +2825,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRangeMultMax();
+                                item.RangeMultMax = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5192,7 +2854,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetSwitchDistanceMelee();
+                                item.SwitchDistanceMelee = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5216,7 +2878,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetSwitchDistanceRanged();
+                                item.SwitchDistanceRanged = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5240,7 +2902,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetBuffStandoffDistance();
+                                item.BuffStandoffDistance = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5269,7 +2931,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRangedStandoffDistance();
+                                item.RangedStandoffDistance = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5293,7 +2955,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetGroupStandoffDistance();
+                                item.GroupStandoffDistance = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5322,7 +2984,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRushingAttackPercentChance();
+                                item.RushingAttackPercentChance = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -5347,7 +3009,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRushingAttackDistanceMult();
+                                item.RushingAttackDistanceMult = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5383,7 +3045,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAdvanced();
+                            item.Advanced = default(CombatStyleAdvanced);
                         }
                     }
                     catch (Exception ex)
@@ -5516,189 +3178,115 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CombatStyle_FieldIndex.DodgePercentChance:
-                    this.SetDodgePercentChance(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.DodgePercentChance = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    this.SetLeftRightPercentChance(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.LeftRightPercentChance = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    this.SetDodgeLeftRightTimerMin(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeLeftRightTimerMin = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    this.SetDodgeLeftRightTimerMax(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeLeftRightTimerMax = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    this.SetDodgeForwardTimerMin(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeForwardTimerMin = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    this.SetDodgeForwardTimerMax(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeForwardTimerMax = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    this.SetDodgeBackTimerMin(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeBackTimerMin = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    this.SetDodgeBackTimerMax(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeBackTimerMax = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.IdleTimerMin:
-                    this.SetIdleTimerMin(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.IdleTimerMin = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.IdleTimerMax:
-                    this.SetIdleTimerMax(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.IdleTimerMax = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.BlockPercentChance:
-                    this.SetBlockPercentChance(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.BlockPercentChance = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.AttackPercentChance:
-                    this.SetAttackPercentChance(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.AttackPercentChance = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    this.SetRecoilStaggerBonusToAttack(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RecoilStaggerBonusToAttack = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    this.SetUnconsciousBonusToAttack(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.UnconsciousBonusToAttack = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    this.SetHandToHandBonusToAttack(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.HandToHandBonusToAttack = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    this.SetPowerAttackPercentChance(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.PowerAttackPercentChance = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    this.SetRecoilStaggerBonusToPowerAttack(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RecoilStaggerBonusToPowerAttack = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    this.SetUnconsciousBonusToPowerAttack(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.UnconsciousBonusToPowerAttack = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackNormal:
-                    this.SetPowerAttackNormal(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.PowerAttackNormal = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackForward:
-                    this.SetPowerAttackForward(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.PowerAttackForward = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackBack:
-                    this.SetPowerAttackBack(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.PowerAttackBack = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackLeft:
-                    this.SetPowerAttackLeft(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.PowerAttackLeft = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackRight:
-                    this.SetPowerAttackRight(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.PowerAttackRight = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.HoldTimerMin:
-                    this.SetHoldTimerMin(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.HoldTimerMin = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.HoldTimerMax:
-                    this.SetHoldTimerMax(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.HoldTimerMax = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.Flags:
-                    this.SetFlags(
-                        (CombatStyle.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (CombatStyle.Flag)obj;
                     break;
                 case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    this.SetAcrobaticDodgePercentChance(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.AcrobaticDodgePercentChance = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.RangeMultOptimal:
-                    this.SetRangeMultOptimal(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RangeMultOptimal = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.RangeMultMax:
-                    this.SetRangeMultMax(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RangeMultMax = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    this.SetSwitchDistanceMelee(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.SwitchDistanceMelee = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    this.SetSwitchDistanceRanged(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.SwitchDistanceRanged = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    this.SetBuffStandoffDistance(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.BuffStandoffDistance = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    this.SetRangedStandoffDistance(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RangedStandoffDistance = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    this.SetGroupStandoffDistance(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.GroupStandoffDistance = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    this.SetRushingAttackPercentChance(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.RushingAttackPercentChance = (Byte)obj;
                     break;
                 case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    this.SetRushingAttackDistanceMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RushingAttackDistanceMult = (Single)obj;
                     break;
                 case CombatStyle_FieldIndex.Advanced:
-                    this.SetAdvanced(
-                        (CombatStyleAdvanced)obj,
-                        cmds: cmds);
+                    this.Advanced = (CombatStyleAdvanced)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -5732,189 +3320,115 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CombatStyle_FieldIndex.DodgePercentChance:
-                    obj.SetDodgePercentChance(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.DodgePercentChance = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    obj.SetLeftRightPercentChance(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.LeftRightPercentChance = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    obj.SetDodgeLeftRightTimerMin(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeLeftRightTimerMin = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    obj.SetDodgeLeftRightTimerMax(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeLeftRightTimerMax = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    obj.SetDodgeForwardTimerMin(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeForwardTimerMin = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    obj.SetDodgeForwardTimerMax(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeForwardTimerMax = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    obj.SetDodgeBackTimerMin(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeBackTimerMin = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    obj.SetDodgeBackTimerMax(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeBackTimerMax = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.IdleTimerMin:
-                    obj.SetIdleTimerMin(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.IdleTimerMin = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.IdleTimerMax:
-                    obj.SetIdleTimerMax(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.IdleTimerMax = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.BlockPercentChance:
-                    obj.SetBlockPercentChance(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.BlockPercentChance = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.AttackPercentChance:
-                    obj.SetAttackPercentChance(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.AttackPercentChance = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    obj.SetRecoilStaggerBonusToAttack(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RecoilStaggerBonusToAttack = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    obj.SetUnconsciousBonusToAttack(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.UnconsciousBonusToAttack = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    obj.SetHandToHandBonusToAttack(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.HandToHandBonusToAttack = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    obj.SetPowerAttackPercentChance(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.PowerAttackPercentChance = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    obj.SetRecoilStaggerBonusToPowerAttack(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RecoilStaggerBonusToPowerAttack = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    obj.SetUnconsciousBonusToPowerAttack(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.UnconsciousBonusToPowerAttack = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackNormal:
-                    obj.SetPowerAttackNormal(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.PowerAttackNormal = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackForward:
-                    obj.SetPowerAttackForward(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.PowerAttackForward = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackBack:
-                    obj.SetPowerAttackBack(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.PowerAttackBack = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackLeft:
-                    obj.SetPowerAttackLeft(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.PowerAttackLeft = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.PowerAttackRight:
-                    obj.SetPowerAttackRight(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.PowerAttackRight = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.HoldTimerMin:
-                    obj.SetHoldTimerMin(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.HoldTimerMin = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.HoldTimerMax:
-                    obj.SetHoldTimerMax(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.HoldTimerMax = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (CombatStyle.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (CombatStyle.Flag)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    obj.SetAcrobaticDodgePercentChance(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.AcrobaticDodgePercentChance = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.RangeMultOptimal:
-                    obj.SetRangeMultOptimal(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RangeMultOptimal = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.RangeMultMax:
-                    obj.SetRangeMultMax(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RangeMultMax = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    obj.SetSwitchDistanceMelee(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.SwitchDistanceMelee = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    obj.SetSwitchDistanceRanged(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.SwitchDistanceRanged = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    obj.SetBuffStandoffDistance(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.BuffStandoffDistance = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    obj.SetRangedStandoffDistance(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RangedStandoffDistance = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    obj.SetGroupStandoffDistance(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.GroupStandoffDistance = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    obj.SetRushingAttackPercentChance(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.RushingAttackPercentChance = (Byte)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    obj.SetRushingAttackDistanceMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RushingAttackDistanceMult = (Single)pair.Value;
                     break;
                 case CombatStyle_FieldIndex.Advanced:
-                    obj.SetAdvanced(
-                        (CombatStyleAdvanced)pair.Value,
-                        cmds: null);
+                    obj.Advanced = (CombatStyleAdvanced)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -5932,115 +3446,81 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICombatStyle : ICombatStyleGetter, IMajorRecord, ILoquiClass<ICombatStyle, ICombatStyleGetter>, ILoquiClass<CombatStyle, ICombatStyleGetter>
     {
         new Byte DodgePercentChance { get; set; }
-        new INotifyingItem<Byte> DodgePercentChance_Property { get; }
 
         new Byte LeftRightPercentChance { get; set; }
-        new INotifyingItem<Byte> LeftRightPercentChance_Property { get; }
 
         new Single DodgeLeftRightTimerMin { get; set; }
-        new INotifyingItem<Single> DodgeLeftRightTimerMin_Property { get; }
 
         new Single DodgeLeftRightTimerMax { get; set; }
-        new INotifyingItem<Single> DodgeLeftRightTimerMax_Property { get; }
 
         new Single DodgeForwardTimerMin { get; set; }
-        new INotifyingItem<Single> DodgeForwardTimerMin_Property { get; }
 
         new Single DodgeForwardTimerMax { get; set; }
-        new INotifyingItem<Single> DodgeForwardTimerMax_Property { get; }
 
         new Single DodgeBackTimerMin { get; set; }
-        new INotifyingItem<Single> DodgeBackTimerMin_Property { get; }
 
         new Single DodgeBackTimerMax { get; set; }
-        new INotifyingItem<Single> DodgeBackTimerMax_Property { get; }
 
         new Single IdleTimerMin { get; set; }
-        new INotifyingItem<Single> IdleTimerMin_Property { get; }
 
         new Single IdleTimerMax { get; set; }
-        new INotifyingItem<Single> IdleTimerMax_Property { get; }
 
         new Byte BlockPercentChance { get; set; }
-        new INotifyingItem<Byte> BlockPercentChance_Property { get; }
 
         new Byte AttackPercentChance { get; set; }
-        new INotifyingItem<Byte> AttackPercentChance_Property { get; }
 
         new Single RecoilStaggerBonusToAttack { get; set; }
-        new INotifyingItem<Single> RecoilStaggerBonusToAttack_Property { get; }
 
         new Single UnconsciousBonusToAttack { get; set; }
-        new INotifyingItem<Single> UnconsciousBonusToAttack_Property { get; }
 
         new Single HandToHandBonusToAttack { get; set; }
-        new INotifyingItem<Single> HandToHandBonusToAttack_Property { get; }
 
         new Byte PowerAttackPercentChance { get; set; }
-        new INotifyingItem<Byte> PowerAttackPercentChance_Property { get; }
 
         new Single RecoilStaggerBonusToPowerAttack { get; set; }
-        new INotifyingItem<Single> RecoilStaggerBonusToPowerAttack_Property { get; }
 
         new Single UnconsciousBonusToPowerAttack { get; set; }
-        new INotifyingItem<Single> UnconsciousBonusToPowerAttack_Property { get; }
 
         new Byte PowerAttackNormal { get; set; }
-        new INotifyingItem<Byte> PowerAttackNormal_Property { get; }
 
         new Byte PowerAttackForward { get; set; }
-        new INotifyingItem<Byte> PowerAttackForward_Property { get; }
 
         new Byte PowerAttackBack { get; set; }
-        new INotifyingItem<Byte> PowerAttackBack_Property { get; }
 
         new Byte PowerAttackLeft { get; set; }
-        new INotifyingItem<Byte> PowerAttackLeft_Property { get; }
 
         new Byte PowerAttackRight { get; set; }
-        new INotifyingItem<Byte> PowerAttackRight_Property { get; }
 
         new Single HoldTimerMin { get; set; }
-        new INotifyingItem<Single> HoldTimerMin_Property { get; }
 
         new Single HoldTimerMax { get; set; }
-        new INotifyingItem<Single> HoldTimerMax_Property { get; }
 
         new CombatStyle.Flag Flags { get; set; }
-        new INotifyingItem<CombatStyle.Flag> Flags_Property { get; }
 
         new Byte AcrobaticDodgePercentChance { get; set; }
-        new INotifyingItem<Byte> AcrobaticDodgePercentChance_Property { get; }
 
         new Single RangeMultOptimal { get; set; }
-        new INotifyingItem<Single> RangeMultOptimal_Property { get; }
 
         new Single RangeMultMax { get; set; }
-        new INotifyingItem<Single> RangeMultMax_Property { get; }
 
         new Single SwitchDistanceMelee { get; set; }
-        new INotifyingItem<Single> SwitchDistanceMelee_Property { get; }
 
         new Single SwitchDistanceRanged { get; set; }
-        new INotifyingItem<Single> SwitchDistanceRanged_Property { get; }
 
         new Single BuffStandoffDistance { get; set; }
-        new INotifyingItem<Single> BuffStandoffDistance_Property { get; }
 
         new Single RangedStandoffDistance { get; set; }
-        new INotifyingItem<Single> RangedStandoffDistance_Property { get; }
 
         new Single GroupStandoffDistance { get; set; }
-        new INotifyingItem<Single> GroupStandoffDistance_Property { get; }
 
         new Byte RushingAttackPercentChance { get; set; }
-        new INotifyingItem<Byte> RushingAttackPercentChance_Property { get; }
 
         new Single RushingAttackDistanceMult { get; set; }
-        new INotifyingItem<Single> RushingAttackDistanceMult_Property { get; }
 
         new CombatStyleAdvanced Advanced { get; set; }
-        new INotifyingSetItem<CombatStyleAdvanced> Advanced_Property { get; }
+        new bool Advanced_IsSet { get; set; }
+        void Advanced_Set(CombatStyleAdvanced item, bool hasBeenSet = true);
+        void Advanced_Unset();
 
     }
 
@@ -6048,187 +3528,151 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region DodgePercentChance
         Byte DodgePercentChance { get; }
-        INotifyingItemGetter<Byte> DodgePercentChance_Property { get; }
 
         #endregion
         #region LeftRightPercentChance
         Byte LeftRightPercentChance { get; }
-        INotifyingItemGetter<Byte> LeftRightPercentChance_Property { get; }
 
         #endregion
         #region DodgeLeftRightTimerMin
         Single DodgeLeftRightTimerMin { get; }
-        INotifyingItemGetter<Single> DodgeLeftRightTimerMin_Property { get; }
 
         #endregion
         #region DodgeLeftRightTimerMax
         Single DodgeLeftRightTimerMax { get; }
-        INotifyingItemGetter<Single> DodgeLeftRightTimerMax_Property { get; }
 
         #endregion
         #region DodgeForwardTimerMin
         Single DodgeForwardTimerMin { get; }
-        INotifyingItemGetter<Single> DodgeForwardTimerMin_Property { get; }
 
         #endregion
         #region DodgeForwardTimerMax
         Single DodgeForwardTimerMax { get; }
-        INotifyingItemGetter<Single> DodgeForwardTimerMax_Property { get; }
 
         #endregion
         #region DodgeBackTimerMin
         Single DodgeBackTimerMin { get; }
-        INotifyingItemGetter<Single> DodgeBackTimerMin_Property { get; }
 
         #endregion
         #region DodgeBackTimerMax
         Single DodgeBackTimerMax { get; }
-        INotifyingItemGetter<Single> DodgeBackTimerMax_Property { get; }
 
         #endregion
         #region IdleTimerMin
         Single IdleTimerMin { get; }
-        INotifyingItemGetter<Single> IdleTimerMin_Property { get; }
 
         #endregion
         #region IdleTimerMax
         Single IdleTimerMax { get; }
-        INotifyingItemGetter<Single> IdleTimerMax_Property { get; }
 
         #endregion
         #region BlockPercentChance
         Byte BlockPercentChance { get; }
-        INotifyingItemGetter<Byte> BlockPercentChance_Property { get; }
 
         #endregion
         #region AttackPercentChance
         Byte AttackPercentChance { get; }
-        INotifyingItemGetter<Byte> AttackPercentChance_Property { get; }
 
         #endregion
         #region RecoilStaggerBonusToAttack
         Single RecoilStaggerBonusToAttack { get; }
-        INotifyingItemGetter<Single> RecoilStaggerBonusToAttack_Property { get; }
 
         #endregion
         #region UnconsciousBonusToAttack
         Single UnconsciousBonusToAttack { get; }
-        INotifyingItemGetter<Single> UnconsciousBonusToAttack_Property { get; }
 
         #endregion
         #region HandToHandBonusToAttack
         Single HandToHandBonusToAttack { get; }
-        INotifyingItemGetter<Single> HandToHandBonusToAttack_Property { get; }
 
         #endregion
         #region PowerAttackPercentChance
         Byte PowerAttackPercentChance { get; }
-        INotifyingItemGetter<Byte> PowerAttackPercentChance_Property { get; }
 
         #endregion
         #region RecoilStaggerBonusToPowerAttack
         Single RecoilStaggerBonusToPowerAttack { get; }
-        INotifyingItemGetter<Single> RecoilStaggerBonusToPowerAttack_Property { get; }
 
         #endregion
         #region UnconsciousBonusToPowerAttack
         Single UnconsciousBonusToPowerAttack { get; }
-        INotifyingItemGetter<Single> UnconsciousBonusToPowerAttack_Property { get; }
 
         #endregion
         #region PowerAttackNormal
         Byte PowerAttackNormal { get; }
-        INotifyingItemGetter<Byte> PowerAttackNormal_Property { get; }
 
         #endregion
         #region PowerAttackForward
         Byte PowerAttackForward { get; }
-        INotifyingItemGetter<Byte> PowerAttackForward_Property { get; }
 
         #endregion
         #region PowerAttackBack
         Byte PowerAttackBack { get; }
-        INotifyingItemGetter<Byte> PowerAttackBack_Property { get; }
 
         #endregion
         #region PowerAttackLeft
         Byte PowerAttackLeft { get; }
-        INotifyingItemGetter<Byte> PowerAttackLeft_Property { get; }
 
         #endregion
         #region PowerAttackRight
         Byte PowerAttackRight { get; }
-        INotifyingItemGetter<Byte> PowerAttackRight_Property { get; }
 
         #endregion
         #region HoldTimerMin
         Single HoldTimerMin { get; }
-        INotifyingItemGetter<Single> HoldTimerMin_Property { get; }
 
         #endregion
         #region HoldTimerMax
         Single HoldTimerMax { get; }
-        INotifyingItemGetter<Single> HoldTimerMax_Property { get; }
 
         #endregion
         #region Flags
         CombatStyle.Flag Flags { get; }
-        INotifyingItemGetter<CombatStyle.Flag> Flags_Property { get; }
 
         #endregion
         #region AcrobaticDodgePercentChance
         Byte AcrobaticDodgePercentChance { get; }
-        INotifyingItemGetter<Byte> AcrobaticDodgePercentChance_Property { get; }
 
         #endregion
         #region RangeMultOptimal
         Single RangeMultOptimal { get; }
-        INotifyingItemGetter<Single> RangeMultOptimal_Property { get; }
 
         #endregion
         #region RangeMultMax
         Single RangeMultMax { get; }
-        INotifyingItemGetter<Single> RangeMultMax_Property { get; }
 
         #endregion
         #region SwitchDistanceMelee
         Single SwitchDistanceMelee { get; }
-        INotifyingItemGetter<Single> SwitchDistanceMelee_Property { get; }
 
         #endregion
         #region SwitchDistanceRanged
         Single SwitchDistanceRanged { get; }
-        INotifyingItemGetter<Single> SwitchDistanceRanged_Property { get; }
 
         #endregion
         #region BuffStandoffDistance
         Single BuffStandoffDistance { get; }
-        INotifyingItemGetter<Single> BuffStandoffDistance_Property { get; }
 
         #endregion
         #region RangedStandoffDistance
         Single RangedStandoffDistance { get; }
-        INotifyingItemGetter<Single> RangedStandoffDistance_Property { get; }
 
         #endregion
         #region GroupStandoffDistance
         Single GroupStandoffDistance { get; }
-        INotifyingItemGetter<Single> GroupStandoffDistance_Property { get; }
 
         #endregion
         #region RushingAttackPercentChance
         Byte RushingAttackPercentChance { get; }
-        INotifyingItemGetter<Byte> RushingAttackPercentChance_Property { get; }
 
         #endregion
         #region RushingAttackDistanceMult
         Single RushingAttackDistanceMult { get; }
-        INotifyingItemGetter<Single> RushingAttackDistanceMult_Property { get; }
 
         #endregion
         #region Advanced
         CombatStyleAdvanced Advanced { get; }
-        INotifyingSetItemGetter<CombatStyleAdvanced> Advanced_Property { get; }
+        bool Advanced_IsSet { get; }
 
         #endregion
 
@@ -6880,9 +4324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
                 try
                 {
-                    item.DodgePercentChance_Property.Set(
-                        value: rhs.DodgePercentChance,
-                        cmds: cmds);
+                    item.DodgePercentChance = rhs.DodgePercentChance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6899,9 +4341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
                 try
                 {
-                    item.LeftRightPercentChance_Property.Set(
-                        value: rhs.LeftRightPercentChance,
-                        cmds: cmds);
+                    item.LeftRightPercentChance = rhs.LeftRightPercentChance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6918,9 +4358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
                 try
                 {
-                    item.DodgeLeftRightTimerMin_Property.Set(
-                        value: rhs.DodgeLeftRightTimerMin,
-                        cmds: cmds);
+                    item.DodgeLeftRightTimerMin = rhs.DodgeLeftRightTimerMin;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6937,9 +4375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
                 try
                 {
-                    item.DodgeLeftRightTimerMax_Property.Set(
-                        value: rhs.DodgeLeftRightTimerMax,
-                        cmds: cmds);
+                    item.DodgeLeftRightTimerMax = rhs.DodgeLeftRightTimerMax;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6956,9 +4392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
                 try
                 {
-                    item.DodgeForwardTimerMin_Property.Set(
-                        value: rhs.DodgeForwardTimerMin,
-                        cmds: cmds);
+                    item.DodgeForwardTimerMin = rhs.DodgeForwardTimerMin;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6975,9 +4409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
                 try
                 {
-                    item.DodgeForwardTimerMax_Property.Set(
-                        value: rhs.DodgeForwardTimerMax,
-                        cmds: cmds);
+                    item.DodgeForwardTimerMax = rhs.DodgeForwardTimerMax;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6994,9 +4426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
                 try
                 {
-                    item.DodgeBackTimerMin_Property.Set(
-                        value: rhs.DodgeBackTimerMin,
-                        cmds: cmds);
+                    item.DodgeBackTimerMin = rhs.DodgeBackTimerMin;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7013,9 +4443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
                 try
                 {
-                    item.DodgeBackTimerMax_Property.Set(
-                        value: rhs.DodgeBackTimerMax,
-                        cmds: cmds);
+                    item.DodgeBackTimerMax = rhs.DodgeBackTimerMax;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7032,9 +4460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
                 try
                 {
-                    item.IdleTimerMin_Property.Set(
-                        value: rhs.IdleTimerMin,
-                        cmds: cmds);
+                    item.IdleTimerMin = rhs.IdleTimerMin;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7051,9 +4477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
                 try
                 {
-                    item.IdleTimerMax_Property.Set(
-                        value: rhs.IdleTimerMax,
-                        cmds: cmds);
+                    item.IdleTimerMax = rhs.IdleTimerMax;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7070,9 +4494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
                 try
                 {
-                    item.BlockPercentChance_Property.Set(
-                        value: rhs.BlockPercentChance,
-                        cmds: cmds);
+                    item.BlockPercentChance = rhs.BlockPercentChance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7089,9 +4511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
                 try
                 {
-                    item.AttackPercentChance_Property.Set(
-                        value: rhs.AttackPercentChance,
-                        cmds: cmds);
+                    item.AttackPercentChance = rhs.AttackPercentChance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7108,9 +4528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
                 try
                 {
-                    item.RecoilStaggerBonusToAttack_Property.Set(
-                        value: rhs.RecoilStaggerBonusToAttack,
-                        cmds: cmds);
+                    item.RecoilStaggerBonusToAttack = rhs.RecoilStaggerBonusToAttack;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7127,9 +4545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
                 try
                 {
-                    item.UnconsciousBonusToAttack_Property.Set(
-                        value: rhs.UnconsciousBonusToAttack,
-                        cmds: cmds);
+                    item.UnconsciousBonusToAttack = rhs.UnconsciousBonusToAttack;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7146,9 +4562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
                 try
                 {
-                    item.HandToHandBonusToAttack_Property.Set(
-                        value: rhs.HandToHandBonusToAttack,
-                        cmds: cmds);
+                    item.HandToHandBonusToAttack = rhs.HandToHandBonusToAttack;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7165,9 +4579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
                 try
                 {
-                    item.PowerAttackPercentChance_Property.Set(
-                        value: rhs.PowerAttackPercentChance,
-                        cmds: cmds);
+                    item.PowerAttackPercentChance = rhs.PowerAttackPercentChance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7184,9 +4596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
                 try
                 {
-                    item.RecoilStaggerBonusToPowerAttack_Property.Set(
-                        value: rhs.RecoilStaggerBonusToPowerAttack,
-                        cmds: cmds);
+                    item.RecoilStaggerBonusToPowerAttack = rhs.RecoilStaggerBonusToPowerAttack;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7203,9 +4613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
                 try
                 {
-                    item.UnconsciousBonusToPowerAttack_Property.Set(
-                        value: rhs.UnconsciousBonusToPowerAttack,
-                        cmds: cmds);
+                    item.UnconsciousBonusToPowerAttack = rhs.UnconsciousBonusToPowerAttack;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7222,9 +4630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
                 try
                 {
-                    item.PowerAttackNormal_Property.Set(
-                        value: rhs.PowerAttackNormal,
-                        cmds: cmds);
+                    item.PowerAttackNormal = rhs.PowerAttackNormal;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7241,9 +4647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
                 try
                 {
-                    item.PowerAttackForward_Property.Set(
-                        value: rhs.PowerAttackForward,
-                        cmds: cmds);
+                    item.PowerAttackForward = rhs.PowerAttackForward;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7260,9 +4664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
                 try
                 {
-                    item.PowerAttackBack_Property.Set(
-                        value: rhs.PowerAttackBack,
-                        cmds: cmds);
+                    item.PowerAttackBack = rhs.PowerAttackBack;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7279,9 +4681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
                 try
                 {
-                    item.PowerAttackLeft_Property.Set(
-                        value: rhs.PowerAttackLeft,
-                        cmds: cmds);
+                    item.PowerAttackLeft = rhs.PowerAttackLeft;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7298,9 +4698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
                 try
                 {
-                    item.PowerAttackRight_Property.Set(
-                        value: rhs.PowerAttackRight,
-                        cmds: cmds);
+                    item.PowerAttackRight = rhs.PowerAttackRight;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7317,9 +4715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
                 try
                 {
-                    item.HoldTimerMin_Property.Set(
-                        value: rhs.HoldTimerMin,
-                        cmds: cmds);
+                    item.HoldTimerMin = rhs.HoldTimerMin;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7336,9 +4732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
                 try
                 {
-                    item.HoldTimerMax_Property.Set(
-                        value: rhs.HoldTimerMax,
-                        cmds: cmds);
+                    item.HoldTimerMax = rhs.HoldTimerMax;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7355,9 +4749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7374,9 +4766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
                 try
                 {
-                    item.AcrobaticDodgePercentChance_Property.Set(
-                        value: rhs.AcrobaticDodgePercentChance,
-                        cmds: cmds);
+                    item.AcrobaticDodgePercentChance = rhs.AcrobaticDodgePercentChance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7393,9 +4783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
                 try
                 {
-                    item.RangeMultOptimal_Property.Set(
-                        value: rhs.RangeMultOptimal,
-                        cmds: cmds);
+                    item.RangeMultOptimal = rhs.RangeMultOptimal;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7412,9 +4800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
                 try
                 {
-                    item.RangeMultMax_Property.Set(
-                        value: rhs.RangeMultMax,
-                        cmds: cmds);
+                    item.RangeMultMax = rhs.RangeMultMax;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7431,9 +4817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
                 try
                 {
-                    item.SwitchDistanceMelee_Property.Set(
-                        value: rhs.SwitchDistanceMelee,
-                        cmds: cmds);
+                    item.SwitchDistanceMelee = rhs.SwitchDistanceMelee;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7450,9 +4834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
                 try
                 {
-                    item.SwitchDistanceRanged_Property.Set(
-                        value: rhs.SwitchDistanceRanged,
-                        cmds: cmds);
+                    item.SwitchDistanceRanged = rhs.SwitchDistanceRanged;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7469,9 +4851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
                 try
                 {
-                    item.BuffStandoffDistance_Property.Set(
-                        value: rhs.BuffStandoffDistance,
-                        cmds: cmds);
+                    item.BuffStandoffDistance = rhs.BuffStandoffDistance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7488,9 +4868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
                 try
                 {
-                    item.RangedStandoffDistance_Property.Set(
-                        value: rhs.RangedStandoffDistance,
-                        cmds: cmds);
+                    item.RangedStandoffDistance = rhs.RangedStandoffDistance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7507,9 +4885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
                 try
                 {
-                    item.GroupStandoffDistance_Property.Set(
-                        value: rhs.GroupStandoffDistance,
-                        cmds: cmds);
+                    item.GroupStandoffDistance = rhs.GroupStandoffDistance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7526,9 +4902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
                 try
                 {
-                    item.RushingAttackPercentChance_Property.Set(
-                        value: rhs.RushingAttackPercentChance,
-                        cmds: cmds);
+                    item.RushingAttackPercentChance = rhs.RushingAttackPercentChance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7545,9 +4919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
                 try
                 {
-                    item.RushingAttackDistanceMult_Property.Set(
-                        value: rhs.RushingAttackDistanceMult,
-                        cmds: cmds);
+                    item.RushingAttackDistanceMult = rhs.RushingAttackDistanceMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7564,36 +4936,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
                 try
                 {
-                    item.Advanced_Property.SetToWithDefault(
-                        rhs.Advanced_Property,
-                        def?.Advanced_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Advanced,
+                        rhsHasBeenSet: rhs.Advanced_IsSet,
+                        defItem: def?.Advanced,
+                        defHasBeenSet: def?.Advanced_IsSet ?? false,
+                        outRhsItem: out var rhsAdvancedItem,
+                        outDefItem: out var defAdvancedItem))
+                    {
+                        switch (copyMask?.Advanced.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Advanced.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    CombatStyleAdvancedCommon.CopyFieldsFrom(
-                                        item: item.Advanced,
-                                        rhs: rhs.Advanced,
-                                        def: def?.Advanced,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Advanced.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(CombatStyleAdvanced);
-                                    return CombatStyleAdvanced.Copy(
-                                        r,
-                                        copyMask?.Advanced?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Advanced?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Advanced = rhsAdvancedItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                CombatStyleAdvancedCommon.CopyFieldsFrom(
+                                    item: item.Advanced,
+                                    rhs: rhs.Advanced,
+                                    def: def?.Advanced,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Advanced.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Advanced = CombatStyleAdvanced.Copy(
+                                    rhsAdvancedItem,
+                                    copyMask?.Advanced?.Specific,
+                                    def: defAdvancedItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Advanced?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Advanced_IsSet = false;
+                        item.Advanced = default(CombatStyleAdvanced);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7657,7 +5036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case CombatStyle_FieldIndex.Advanced:
-                    obj.Advanced_Property.HasBeenSet = on;
+                    obj.Advanced_IsSet = on;
                     break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -7782,7 +5161,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.RushingAttackDistanceMult = default(Single);
                     break;
                 case CombatStyle_FieldIndex.Advanced:
-                    obj.Advanced_Property.Unset(cmds);
+                    obj.Advanced_Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -7835,7 +5214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CombatStyle_FieldIndex.RushingAttackDistanceMult:
                     return true;
                 case CombatStyle_FieldIndex.Advanced:
-                    return obj.Advanced_Property.HasBeenSet;
+                    return obj.Advanced_IsSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -7967,7 +5346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GroupStandoffDistance = default(Single);
             item.RushingAttackPercentChance = default(Byte);
             item.RushingAttackDistanceMult = default(Single);
-            item.Advanced_Property.Unset(cmds.ToUnsetParams());
+            item.Advanced_Unset();
         }
 
         public static CombatStyle_Mask<bool> GetEqualsMask(
@@ -8021,7 +5400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.GroupStandoffDistance = item.GroupStandoffDistance == rhs.GroupStandoffDistance;
             ret.RushingAttackPercentChance = item.RushingAttackPercentChance == rhs.RushingAttackPercentChance;
             ret.RushingAttackDistanceMult = item.RushingAttackDistanceMult == rhs.RushingAttackDistanceMult;
-            ret.Advanced = item.Advanced_Property.LoquiEqualsHelper(rhs.Advanced_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Advanced = IHasBeenSetExt.LoquiEqualsHelper(item.Advanced_IsSet, rhs.Advanced_IsSet, item.Advanced, rhs.Advanced, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -8208,7 +5587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ICombatStyleGetter item,
             CombatStyle_Mask<bool?> checkMask)
         {
-            if (checkMask.Advanced.Overall.HasValue && checkMask.Advanced.Overall.Value != item.Advanced_Property.HasBeenSet) return false;
+            if (checkMask.Advanced.Overall.HasValue && checkMask.Advanced.Overall.Value != item.Advanced_IsSet) return false;
             if (checkMask.Advanced.Specific != null && (item.Advanced == null || !item.Advanced.HasBeenSet(checkMask.Advanced.Specific))) return false;
             return true;
         }
@@ -8252,7 +5631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.GroupStandoffDistance = true;
             ret.RushingAttackPercentChance = true;
             ret.RushingAttackDistanceMult = true;
-            ret.Advanced = new MaskItem<bool, CombatStyleAdvanced_Mask<bool>>(item.Advanced_Property.HasBeenSet, CombatStyleAdvancedCommon.GetHasBeenSetMask(item.Advanced));
+            ret.Advanced = new MaskItem<bool, CombatStyleAdvanced_Mask<bool>>(item.Advanced_IsSet, CombatStyleAdvancedCommon.GetHasBeenSetMask(item.Advanced));
             return ret;
         }
 
@@ -8319,7 +5698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgePercentChance),
-                    item: item.DodgePercentChance_Property,
+                    item: item.DodgePercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgePercentChance,
                     errorMask: errorMask);
             }
@@ -8328,7 +5707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.LeftRightPercentChance),
-                    item: item.LeftRightPercentChance_Property,
+                    item: item.LeftRightPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.LeftRightPercentChance,
                     errorMask: errorMask);
             }
@@ -8337,7 +5716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeLeftRightTimerMin),
-                    item: item.DodgeLeftRightTimerMin_Property,
+                    item: item.DodgeLeftRightTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin,
                     errorMask: errorMask);
             }
@@ -8346,7 +5725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeLeftRightTimerMax),
-                    item: item.DodgeLeftRightTimerMax_Property,
+                    item: item.DodgeLeftRightTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax,
                     errorMask: errorMask);
             }
@@ -8355,7 +5734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeForwardTimerMin),
-                    item: item.DodgeForwardTimerMin_Property,
+                    item: item.DodgeForwardTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMin,
                     errorMask: errorMask);
             }
@@ -8364,7 +5743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeForwardTimerMax),
-                    item: item.DodgeForwardTimerMax_Property,
+                    item: item.DodgeForwardTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMax,
                     errorMask: errorMask);
             }
@@ -8373,7 +5752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeBackTimerMin),
-                    item: item.DodgeBackTimerMin_Property,
+                    item: item.DodgeBackTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMin,
                     errorMask: errorMask);
             }
@@ -8382,7 +5761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeBackTimerMax),
-                    item: item.DodgeBackTimerMax_Property,
+                    item: item.DodgeBackTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMax,
                     errorMask: errorMask);
             }
@@ -8391,7 +5770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.IdleTimerMin),
-                    item: item.IdleTimerMin_Property,
+                    item: item.IdleTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMin,
                     errorMask: errorMask);
             }
@@ -8400,7 +5779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.IdleTimerMax),
-                    item: item.IdleTimerMax_Property,
+                    item: item.IdleTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMax,
                     errorMask: errorMask);
             }
@@ -8409,7 +5788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BlockPercentChance),
-                    item: item.BlockPercentChance_Property,
+                    item: item.BlockPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.BlockPercentChance,
                     errorMask: errorMask);
             }
@@ -8418,7 +5797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AttackPercentChance),
-                    item: item.AttackPercentChance_Property,
+                    item: item.AttackPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.AttackPercentChance,
                     errorMask: errorMask);
             }
@@ -8427,7 +5806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RecoilStaggerBonusToAttack),
-                    item: item.RecoilStaggerBonusToAttack_Property,
+                    item: item.RecoilStaggerBonusToAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack,
                     errorMask: errorMask);
             }
@@ -8436,7 +5815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.UnconsciousBonusToAttack),
-                    item: item.UnconsciousBonusToAttack_Property,
+                    item: item.UnconsciousBonusToAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToAttack,
                     errorMask: errorMask);
             }
@@ -8445,7 +5824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.HandToHandBonusToAttack),
-                    item: item.HandToHandBonusToAttack_Property,
+                    item: item.HandToHandBonusToAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.HandToHandBonusToAttack,
                     errorMask: errorMask);
             }
@@ -8454,7 +5833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PowerAttackPercentChance),
-                    item: item.PowerAttackPercentChance_Property,
+                    item: item.PowerAttackPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackPercentChance,
                     errorMask: errorMask);
             }
@@ -8463,7 +5842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RecoilStaggerBonusToPowerAttack),
-                    item: item.RecoilStaggerBonusToPowerAttack_Property,
+                    item: item.RecoilStaggerBonusToPowerAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack,
                     errorMask: errorMask);
             }
@@ -8472,7 +5851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.UnconsciousBonusToPowerAttack),
-                    item: item.UnconsciousBonusToPowerAttack_Property,
+                    item: item.UnconsciousBonusToPowerAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack,
                     errorMask: errorMask);
             }
@@ -8481,7 +5860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PowerAttackNormal),
-                    item: item.PowerAttackNormal_Property,
+                    item: item.PowerAttackNormal,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackNormal,
                     errorMask: errorMask);
             }
@@ -8490,7 +5869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PowerAttackForward),
-                    item: item.PowerAttackForward_Property,
+                    item: item.PowerAttackForward,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackForward,
                     errorMask: errorMask);
             }
@@ -8499,7 +5878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PowerAttackBack),
-                    item: item.PowerAttackBack_Property,
+                    item: item.PowerAttackBack,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackBack,
                     errorMask: errorMask);
             }
@@ -8508,7 +5887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PowerAttackLeft),
-                    item: item.PowerAttackLeft_Property,
+                    item: item.PowerAttackLeft,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackLeft,
                     errorMask: errorMask);
             }
@@ -8517,7 +5896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PowerAttackRight),
-                    item: item.PowerAttackRight_Property,
+                    item: item.PowerAttackRight,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackRight,
                     errorMask: errorMask);
             }
@@ -8526,7 +5905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.HoldTimerMin),
-                    item: item.HoldTimerMin_Property,
+                    item: item.HoldTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMin,
                     errorMask: errorMask);
             }
@@ -8535,7 +5914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.HoldTimerMax),
-                    item: item.HoldTimerMax_Property,
+                    item: item.HoldTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMax,
                     errorMask: errorMask);
             }
@@ -8544,7 +5923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<CombatStyle.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)CombatStyle_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -8553,7 +5932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AcrobaticDodgePercentChance),
-                    item: item.AcrobaticDodgePercentChance_Property,
+                    item: item.AcrobaticDodgePercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
                     errorMask: errorMask);
             }
@@ -8562,7 +5941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RangeMultOptimal),
-                    item: item.RangeMultOptimal_Property,
+                    item: item.RangeMultOptimal,
                     fieldIndex: (int)CombatStyle_FieldIndex.RangeMultOptimal,
                     errorMask: errorMask);
             }
@@ -8571,7 +5950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RangeMultMax),
-                    item: item.RangeMultMax_Property,
+                    item: item.RangeMultMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.RangeMultMax,
                     errorMask: errorMask);
             }
@@ -8580,7 +5959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SwitchDistanceMelee),
-                    item: item.SwitchDistanceMelee_Property,
+                    item: item.SwitchDistanceMelee,
                     fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
                     errorMask: errorMask);
             }
@@ -8589,7 +5968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SwitchDistanceRanged),
-                    item: item.SwitchDistanceRanged_Property,
+                    item: item.SwitchDistanceRanged,
                     fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
                     errorMask: errorMask);
             }
@@ -8598,7 +5977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BuffStandoffDistance),
-                    item: item.BuffStandoffDistance_Property,
+                    item: item.BuffStandoffDistance,
                     fieldIndex: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
                     errorMask: errorMask);
             }
@@ -8607,7 +5986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RangedStandoffDistance),
-                    item: item.RangedStandoffDistance_Property,
+                    item: item.RangedStandoffDistance,
                     fieldIndex: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
                     errorMask: errorMask);
             }
@@ -8616,7 +5995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.GroupStandoffDistance),
-                    item: item.GroupStandoffDistance_Property,
+                    item: item.GroupStandoffDistance,
                     fieldIndex: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
                     errorMask: errorMask);
             }
@@ -8625,7 +6004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RushingAttackPercentChance),
-                    item: item.RushingAttackPercentChance_Property,
+                    item: item.RushingAttackPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
                     errorMask: errorMask);
             }
@@ -8634,16 +6013,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RushingAttackDistanceMult),
-                    item: item.RushingAttackDistanceMult_Property,
+                    item: item.RushingAttackDistanceMult,
                     fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
                     errorMask: errorMask);
             }
-            if (item.Advanced_Property.HasBeenSet
+            if (item.Advanced_IsSet
                 && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
                 LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Write(
                     node: elem,
-                    item: item.Advanced_Property,
+                    item: item.Advanced,
                     name: nameof(item.Advanced),
                     fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
                     errorMask: errorMask,
@@ -8713,142 +6092,142 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgePercentChance_Property,
+                        item: item.DodgePercentChance,
                         fieldIndex: (int)CombatStyle_FieldIndex.DodgePercentChance,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.LeftRightPercentChance_Property,
+                        item: item.LeftRightPercentChance,
                         fieldIndex: (int)CombatStyle_FieldIndex.LeftRightPercentChance,
                         errorMask: errorMask);
                     writer.WriteZeros(2);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeLeftRightTimerMin_Property,
+                        item: item.DodgeLeftRightTimerMin,
                         fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeLeftRightTimerMax_Property,
+                        item: item.DodgeLeftRightTimerMax,
                         fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeForwardTimerMin_Property,
+                        item: item.DodgeForwardTimerMin,
                         fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMin,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeForwardTimerMax_Property,
+                        item: item.DodgeForwardTimerMax,
                         fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMax,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeBackTimerMin_Property,
+                        item: item.DodgeBackTimerMin,
                         fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMin,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeBackTimerMax_Property,
+                        item: item.DodgeBackTimerMax,
                         fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMax,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.IdleTimerMin_Property,
+                        item: item.IdleTimerMin,
                         fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMin,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.IdleTimerMax_Property,
+                        item: item.IdleTimerMax,
                         fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMax,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.BlockPercentChance_Property,
+                        item: item.BlockPercentChance,
                         fieldIndex: (int)CombatStyle_FieldIndex.BlockPercentChance,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.AttackPercentChance_Property,
+                        item: item.AttackPercentChance,
                         fieldIndex: (int)CombatStyle_FieldIndex.AttackPercentChance,
                         errorMask: errorMask);
                     writer.WriteZeros(2);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.RecoilStaggerBonusToAttack_Property,
+                        item: item.RecoilStaggerBonusToAttack,
                         fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.UnconsciousBonusToAttack_Property,
+                        item: item.UnconsciousBonusToAttack,
                         fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToAttack,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HandToHandBonusToAttack_Property,
+                        item: item.HandToHandBonusToAttack,
                         fieldIndex: (int)CombatStyle_FieldIndex.HandToHandBonusToAttack,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackPercentChance_Property,
+                        item: item.PowerAttackPercentChance,
                         fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackPercentChance,
                         errorMask: errorMask);
                     writer.WriteZeros(3);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.RecoilStaggerBonusToPowerAttack_Property,
+                        item: item.RecoilStaggerBonusToPowerAttack,
                         fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.UnconsciousBonusToPowerAttack_Property,
+                        item: item.UnconsciousBonusToPowerAttack,
                         fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackNormal_Property,
+                        item: item.PowerAttackNormal,
                         fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackNormal,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackForward_Property,
+                        item: item.PowerAttackForward,
                         fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackForward,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackBack_Property,
+                        item: item.PowerAttackBack,
                         fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackBack,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackLeft_Property,
+                        item: item.PowerAttackLeft,
                         fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackLeft,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackRight_Property,
+                        item: item.PowerAttackRight,
                         fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackRight,
                         errorMask: errorMask);
                     writer.WriteZeros(3);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HoldTimerMin_Property,
+                        item: item.HoldTimerMin,
                         fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMin,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HoldTimerMax_Property,
+                        item: item.HoldTimerMax,
                         fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMax,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<CombatStyle.Flag>.Instance.Write(
                         writer,
-                        item.Flags_Property,
+                        item.Flags,
                         length: 1,
                         fieldIndex: (int)CombatStyle_FieldIndex.Flags,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.AcrobaticDodgePercentChance_Property,
+                        item: item.AcrobaticDodgePercentChance,
                         fieldIndex: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
                         errorMask: errorMask);
                     writer.WriteZeros(2);
@@ -8856,54 +6235,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.RangeMultOptimal_Property,
+                            item: item.RangeMultOptimal,
                             fieldIndex: (int)CombatStyle_FieldIndex.RangeMultOptimal,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.RangeMultMax_Property,
+                            item: item.RangeMultMax,
                             fieldIndex: (int)CombatStyle_FieldIndex.RangeMultMax,
                             errorMask: errorMask);
                         if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1))
                         {
                             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.SwitchDistanceMelee_Property,
+                                item: item.SwitchDistanceMelee,
                                 fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
                                 errorMask: errorMask);
                             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.SwitchDistanceRanged_Property,
+                                item: item.SwitchDistanceRanged,
                                 fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
                                 errorMask: errorMask);
                             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.BuffStandoffDistance_Property,
+                                item: item.BuffStandoffDistance,
                                 fieldIndex: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
                                 errorMask: errorMask);
                             if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2))
                             {
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RangedStandoffDistance_Property,
+                                    item: item.RangedStandoffDistance,
                                     fieldIndex: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
                                     errorMask: errorMask);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.GroupStandoffDistance_Property,
+                                    item: item.GroupStandoffDistance,
                                     fieldIndex: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
                                     errorMask: errorMask);
                                 if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3))
                                 {
                                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.RushingAttackPercentChance_Property,
+                                        item: item.RushingAttackPercentChance,
                                         fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
                                         errorMask: errorMask);
                                     writer.WriteZeros(3);
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.RushingAttackDistanceMult_Property,
+                                        item: item.RushingAttackDistanceMult,
                                         fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
                                         errorMask: errorMask);
                                     if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break4))
@@ -8919,11 +6298,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-            LoquiBinaryTranslation<CombatStyleAdvanced>.Instance.Write(
-                writer: writer,
-                item: item.Advanced_Property,
-                fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
-                errorMask: errorMask);
+            if (item.Advanced_IsSet)
+            {
+                LoquiBinaryTranslation<CombatStyleAdvanced>.Instance.Write(
+                    writer: writer,
+                    item: item.Advanced,
+                    fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
+                    errorMask: errorMask);
+            }
         }
 
         #endregion

@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RaceVoices : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IRaceVoices,
         ILoquiObject<RaceVoices>,
         ILoquiObjectSetter,
@@ -1188,10 +1190,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    obj.Male = default(FormIDLink<Race>);
+                    obj.Male_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case RaceVoices_FieldIndex.Female:
-                    obj.Female = default(FormIDLink<Race>);
+                    obj.Female_Property.Unset(cmds.ToUnsetParams());
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1233,8 +1235,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceVoices item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Male = default(FormIDLink<Race>);
-            item.Female = default(FormIDLink<Race>);
+            item.Male_Property.Unset(cmds.ToUnsetParams());
+            item.Female_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static RaceVoices_Mask<bool> GetEqualsMask(

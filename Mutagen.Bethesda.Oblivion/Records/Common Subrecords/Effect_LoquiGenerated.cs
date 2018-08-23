@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,14 +31,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Effect : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IEffect,
         ILoquiObject<Effect>,
         ILoquiObjectSetter,
-        IPropertySupporter<UInt32>,
-        IPropertySupporter<Effect.EffectType>,
-        IPropertySupporter<ActorValueExtended>,
-        IPropertySupporter<ScriptEffect>,
         IEquatable<Effect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -60,292 +58,71 @@ namespace Mutagen.Bethesda.Oblivion
         EDIDLink<MagicEffect> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
-        protected UInt32 _Magnitude;
-        protected PropertyForwarder<Effect, UInt32> _MagnitudeForwarder;
-        public INotifyingSetItem<UInt32> Magnitude_Property => _MagnitudeForwarder ?? (_MagnitudeForwarder = new PropertyForwarder<Effect, UInt32>(this, (int)Effect_FieldIndex.Magnitude));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _Magnitude;
         public UInt32 Magnitude
         {
             get => this._Magnitude;
-            set => this.SetMagnitude(value);
+            set => this.RaiseAndSetIfChanged(ref this._Magnitude, value, nameof(Magnitude));
         }
-        protected void SetMagnitude(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.Magnitude];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Magnitude == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Effect_FieldIndex.Magnitude] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = Magnitude;
-                _Magnitude = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)Effect_FieldIndex.Magnitude,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Magnitude = item;
-            }
-        }
-        protected void UnsetMagnitude()
-        {
-            _hasBeenSetTracker[(int)Effect_FieldIndex.Magnitude] = false;
-            Magnitude = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IEffect.Magnitude_Property => this.Magnitude_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IEffectGetter.Magnitude_Property => this.Magnitude_Property;
         #endregion
         #region Area
-        protected UInt32 _Area;
-        protected PropertyForwarder<Effect, UInt32> _AreaForwarder;
-        public INotifyingSetItem<UInt32> Area_Property => _AreaForwarder ?? (_AreaForwarder = new PropertyForwarder<Effect, UInt32>(this, (int)Effect_FieldIndex.Area));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _Area;
         public UInt32 Area
         {
             get => this._Area;
-            set => this.SetArea(value);
+            set => this.RaiseAndSetIfChanged(ref this._Area, value, nameof(Area));
         }
-        protected void SetArea(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.Area];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Area == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Effect_FieldIndex.Area] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = Area;
-                _Area = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)Effect_FieldIndex.Area,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Area = item;
-            }
-        }
-        protected void UnsetArea()
-        {
-            _hasBeenSetTracker[(int)Effect_FieldIndex.Area] = false;
-            Area = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IEffect.Area_Property => this.Area_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IEffectGetter.Area_Property => this.Area_Property;
         #endregion
         #region Duration
-        protected UInt32 _Duration;
-        protected PropertyForwarder<Effect, UInt32> _DurationForwarder;
-        public INotifyingSetItem<UInt32> Duration_Property => _DurationForwarder ?? (_DurationForwarder = new PropertyForwarder<Effect, UInt32>(this, (int)Effect_FieldIndex.Duration));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _Duration;
         public UInt32 Duration
         {
             get => this._Duration;
-            set => this.SetDuration(value);
+            set => this.RaiseAndSetIfChanged(ref this._Duration, value, nameof(Duration));
         }
-        protected void SetDuration(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.Duration];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Duration == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Effect_FieldIndex.Duration] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = Duration;
-                _Duration = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)Effect_FieldIndex.Duration,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Duration = item;
-            }
-        }
-        protected void UnsetDuration()
-        {
-            _hasBeenSetTracker[(int)Effect_FieldIndex.Duration] = false;
-            Duration = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IEffect.Duration_Property => this.Duration_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IEffectGetter.Duration_Property => this.Duration_Property;
         #endregion
         #region Type
-        protected Effect.EffectType _Type;
-        protected PropertyForwarder<Effect, Effect.EffectType> _TypeForwarder;
-        public INotifyingSetItem<Effect.EffectType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<Effect, Effect.EffectType>(this, (int)Effect_FieldIndex.Type));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Effect.EffectType _Type;
         public Effect.EffectType Type
         {
             get => this._Type;
-            set => this.SetType(value);
+            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
         }
-        protected void SetType(
-            Effect.EffectType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.Type];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Type == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Effect_FieldIndex.Type] = hasBeenSet;
-            }
-            if (_EffectEffectType_subscriptions != null)
-            {
-                var tmp = Type;
-                _Type = item;
-                _EffectEffectType_subscriptions.FireSubscriptions(
-                    index: (int)Effect_FieldIndex.Type,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Type = item;
-            }
-        }
-        protected void UnsetType()
-        {
-            _hasBeenSetTracker[(int)Effect_FieldIndex.Type] = false;
-            Type = default(Effect.EffectType);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Effect.EffectType> IEffect.Type_Property => this.Type_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Effect.EffectType> IEffectGetter.Type_Property => this.Type_Property;
         #endregion
         #region ActorValue
-        protected ActorValueExtended _ActorValue;
-        protected PropertyForwarder<Effect, ActorValueExtended> _ActorValueForwarder;
-        public INotifyingSetItem<ActorValueExtended> ActorValue_Property => _ActorValueForwarder ?? (_ActorValueForwarder = new PropertyForwarder<Effect, ActorValueExtended>(this, (int)Effect_FieldIndex.ActorValue));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ActorValueExtended _ActorValue;
         public ActorValueExtended ActorValue
         {
             get => this._ActorValue;
-            set => this.SetActorValue(value);
+            set => this.RaiseAndSetIfChanged(ref this._ActorValue, value, nameof(ActorValue));
         }
-        protected void SetActorValue(
-            ActorValueExtended item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.ActorValue];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ActorValue == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Effect_FieldIndex.ActorValue] = hasBeenSet;
-            }
-            if (_ActorValueExtended_subscriptions != null)
-            {
-                var tmp = ActorValue;
-                _ActorValue = item;
-                _ActorValueExtended_subscriptions.FireSubscriptions(
-                    index: (int)Effect_FieldIndex.ActorValue,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ActorValue = item;
-            }
-        }
-        protected void UnsetActorValue()
-        {
-            _hasBeenSetTracker[(int)Effect_FieldIndex.ActorValue] = false;
-            ActorValue = default(ActorValueExtended);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<ActorValueExtended> IEffect.ActorValue_Property => this.ActorValue_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<ActorValueExtended> IEffectGetter.ActorValue_Property => this.ActorValue_Property;
         #endregion
         #region ScriptEffect
-        protected ScriptEffect _ScriptEffect;
-        protected PropertyForwarder<Effect, ScriptEffect> _ScriptEffectForwarder;
-        public INotifyingSetItem<ScriptEffect> ScriptEffect_Property => _ScriptEffectForwarder ?? (_ScriptEffectForwarder = new PropertyForwarder<Effect, ScriptEffect>(this, (int)Effect_FieldIndex.ScriptEffect));
+        public bool ScriptEffect_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Effect_FieldIndex.ScriptEffect, nameof(ScriptEffect_IsSet));
+        }
+        bool IEffectGetter.ScriptEffect_IsSet => ScriptEffect_IsSet;
+        private ScriptEffect _ScriptEffect;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptEffect ScriptEffect
         {
-            get => this._ScriptEffect;
-            set => this.SetScriptEffect(value);
+            get => _ScriptEffect;
+            set => ScriptEffect_Set(value);
         }
-        protected void SetScriptEffect(
-            ScriptEffect item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void ScriptEffect_Set(
+            ScriptEffect value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(ScriptEffect, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect] = hasBeenSet;
-            }
-            if (_ScriptEffect_subscriptions != null)
-            {
-                var tmp = ScriptEffect;
-                _ScriptEffect = item;
-                _ScriptEffect_subscriptions.FireSubscriptions(
-                    index: (int)Effect_FieldIndex.ScriptEffect,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ScriptEffect = item;
-            }
+            this.RaiseAndSetIfChanged(ref _ScriptEffect, value, _hasBeenSetTracker, markSet, (int)Effect_FieldIndex.ScriptEffect, nameof(ScriptEffect), nameof(ScriptEffect_IsSet));
         }
-        protected void UnsetScriptEffect()
+        public void ScriptEffect_Unset()
         {
-            _hasBeenSetTracker[(int)Effect_FieldIndex.ScriptEffect] = false;
-            ScriptEffect = default(ScriptEffect);
+            this.ScriptEffect_Set(default(ScriptEffect), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<ScriptEffect> IEffect.ScriptEffect_Property => this.ScriptEffect_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<ScriptEffect> IEffectGetter.ScriptEffect_Property => this.ScriptEffect_Property;
+        ScriptEffect IEffectGetter.ScriptEffect => this.ScriptEffect;
         #endregion
 
         #region Loqui Getter Interface
@@ -415,8 +192,8 @@ namespace Mutagen.Bethesda.Oblivion
             if (this.Duration != rhs.Duration) return false;
             if (this.Type != rhs.Type) return false;
             if (this.ActorValue != rhs.ActorValue) return false;
-            if (ScriptEffect_Property.HasBeenSet != rhs.ScriptEffect_Property.HasBeenSet) return false;
-            if (ScriptEffect_Property.HasBeenSet)
+            if (ScriptEffect_IsSet != rhs.ScriptEffect_IsSet) return false;
+            if (ScriptEffect_IsSet)
             {
                 if (!object.Equals(this.ScriptEffect, rhs.ScriptEffect)) return false;
             }
@@ -432,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Duration).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(ActorValue).CombineHashCode(ret);
-            if (ScriptEffect_Property.HasBeenSet)
+            if (ScriptEffect_IsSet)
             {
                 ret = HashHelper.GetHashCode(ScriptEffect).CombineHashCode(ret);
             }
@@ -773,7 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMagnitude();
+                            item.Magnitude = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -799,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetArea();
+                            item.Area = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -825,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDuration();
+                            item.Duration = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -851,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetType();
+                            item.Type = default(Effect.EffectType);
                         }
                     }
                     catch (Exception ex)
@@ -877,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetActorValue();
+                            item.ActorValue = default(ActorValueExtended);
                         }
                     }
                     catch (Exception ex)
@@ -904,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetScriptEffect();
+                            item.ScriptEffect = default(ScriptEffect);
                         }
                     }
                     catch (Exception ex)
@@ -942,564 +719,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter UInt32
-        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
-        UInt32 IPropertySupporter<UInt32>.Get(int index)
-        {
-            return GetUInt32(index: index);
-        }
-
-        protected UInt32 GetUInt32(int index)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.Magnitude:
-                    return Magnitude;
-                case Effect_FieldIndex.Area:
-                    return Area;
-                case Effect_FieldIndex.Duration:
-                    return Duration;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        void IPropertySupporter<UInt32>.Set(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetUInt32(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.Magnitude:
-                    SetMagnitude(item, hasBeenSet, cmds);
-                    break;
-                case Effect_FieldIndex.Area:
-                    SetArea(item, hasBeenSet, cmds);
-                    break;
-                case Effect_FieldIndex.Duration:
-                    SetDuration(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetUInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.Magnitude:
-                    SetMagnitude(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                case Effect_FieldIndex.Area:
-                    SetArea(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                case Effect_FieldIndex.Duration:
-                    SetDuration(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt32_subscriptions == null)
-            {
-                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
-            }
-            _UInt32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
-        {
-            return DefaultValueUInt32(index: index);
-        }
-
-        protected UInt32 DefaultValueUInt32(int index)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.Magnitude:
-                case Effect_FieldIndex.Area:
-                case Effect_FieldIndex.Duration:
-                    return default(UInt32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Effect.EffectType
-        protected ObjectCentralizationSubscriptions<Effect.EffectType> _EffectEffectType_subscriptions;
-        Effect.EffectType IPropertySupporter<Effect.EffectType>.Get(int index)
-        {
-            return GetEffectEffectType(index: index);
-        }
-
-        protected Effect.EffectType GetEffectEffectType(int index)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.Type:
-                    return Type;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Effect.EffectType: {index}");
-            }
-        }
-
-        void IPropertySupporter<Effect.EffectType>.Set(
-            int index,
-            Effect.EffectType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetEffectEffectType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetEffectEffectType(
-            int index,
-            Effect.EffectType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.Type:
-                    SetType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Effect.EffectType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Effect.EffectType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Effect.EffectType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Effect.EffectType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetEffectEffectType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetEffectEffectType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.Type:
-                    SetType(
-                        item: default(Effect.EffectType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Effect.EffectType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Effect.EffectType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Effect.EffectType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_EffectEffectType_subscriptions == null)
-            {
-                _EffectEffectType_subscriptions = new ObjectCentralizationSubscriptions<Effect.EffectType>();
-            }
-            _EffectEffectType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Effect.EffectType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _EffectEffectType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Effect.EffectType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Effect.EffectType IPropertySupporter<Effect.EffectType>.DefaultValue(int index)
-        {
-            return DefaultValueEffectEffectType(index: index);
-        }
-
-        protected Effect.EffectType DefaultValueEffectEffectType(int index)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.Type:
-                    return default(Effect.EffectType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Effect.EffectType: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter ActorValueExtended
-        protected ObjectCentralizationSubscriptions<ActorValueExtended> _ActorValueExtended_subscriptions;
-        ActorValueExtended IPropertySupporter<ActorValueExtended>.Get(int index)
-        {
-            return GetActorValueExtended(index: index);
-        }
-
-        protected ActorValueExtended GetActorValueExtended(int index)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.ActorValue:
-                    return ActorValue;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ActorValueExtended: {index}");
-            }
-        }
-
-        void IPropertySupporter<ActorValueExtended>.Set(
-            int index,
-            ActorValueExtended item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetActorValueExtended(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetActorValueExtended(
-            int index,
-            ActorValueExtended item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.ActorValue:
-                    SetActorValue(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ActorValueExtended: {index}");
-            }
-        }
-
-        bool IPropertySupporter<ActorValueExtended>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<ActorValueExtended>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<ActorValueExtended>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetActorValueExtended(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetActorValueExtended(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.ActorValue:
-                    SetActorValue(
-                        item: default(ActorValueExtended),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ActorValueExtended: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ActorValueExtended>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<ActorValueExtended> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ActorValueExtended_subscriptions == null)
-            {
-                _ActorValueExtended_subscriptions = new ObjectCentralizationSubscriptions<ActorValueExtended>();
-            }
-            _ActorValueExtended_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ActorValueExtended>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ActorValueExtended_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<ActorValueExtended>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        ActorValueExtended IPropertySupporter<ActorValueExtended>.DefaultValue(int index)
-        {
-            return DefaultValueActorValueExtended(index: index);
-        }
-
-        protected ActorValueExtended DefaultValueActorValueExtended(int index)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.ActorValue:
-                    return default(ActorValueExtended);
-                default:
-                    throw new ArgumentException($"Unknown index for field type ActorValueExtended: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter ScriptEffect
-        protected ObjectCentralizationSubscriptions<ScriptEffect> _ScriptEffect_subscriptions;
-        ScriptEffect IPropertySupporter<ScriptEffect>.Get(int index)
-        {
-            return GetScriptEffect(index: index);
-        }
-
-        protected ScriptEffect GetScriptEffect(int index)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.ScriptEffect:
-                    return ScriptEffect;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptEffect: {index}");
-            }
-        }
-
-        void IPropertySupporter<ScriptEffect>.Set(
-            int index,
-            ScriptEffect item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetScriptEffect(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetScriptEffect(
-            int index,
-            ScriptEffect item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.ScriptEffect:
-                    SetScriptEffect(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptEffect: {index}");
-            }
-        }
-
-        bool IPropertySupporter<ScriptEffect>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<ScriptEffect>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<ScriptEffect>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetScriptEffect(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetScriptEffect(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.ScriptEffect:
-                    SetScriptEffect(
-                        item: default(ScriptEffect),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptEffect: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptEffect>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<ScriptEffect> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ScriptEffect_subscriptions == null)
-            {
-                _ScriptEffect_subscriptions = new ObjectCentralizationSubscriptions<ScriptEffect>();
-            }
-            _ScriptEffect_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptEffect>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ScriptEffect_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<ScriptEffect>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        ScriptEffect IPropertySupporter<ScriptEffect>.DefaultValue(int index)
-        {
-            return DefaultValueScriptEffect(index: index);
-        }
-
-        protected ScriptEffect DefaultValueScriptEffect(int index)
-        {
-            switch ((Effect_FieldIndex)index)
-            {
-                case Effect_FieldIndex.ScriptEffect:
-                    return default(ScriptEffect);
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptEffect: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Effect_Registration.TRIGGERING_RECORD_TYPE;
@@ -1803,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetMagnitude();
+                                item.Magnitude = default(UInt32);
                             }
                         }
                         catch (Exception ex)
@@ -1827,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetArea();
+                                item.Area = default(UInt32);
                             }
                         }
                         catch (Exception ex)
@@ -1851,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDuration();
+                                item.Duration = default(UInt32);
                             }
                         }
                         catch (Exception ex)
@@ -1875,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetType();
+                                item.Type = default(Effect.EffectType);
                             }
                         }
                         catch (Exception ex)
@@ -1899,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetActorValue();
+                                item.ActorValue = default(ActorValueExtended);
                             }
                         }
                         catch (Exception ex)
@@ -1926,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetScriptEffect();
+                            item.ScriptEffect = default(ScriptEffect);
                         }
                     }
                     catch (Exception ex)
@@ -2074,34 +1293,22 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Effect_FieldIndex.Magnitude:
-                    this.SetMagnitude(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.Magnitude = (UInt32)obj;
                     break;
                 case Effect_FieldIndex.Area:
-                    this.SetArea(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.Area = (UInt32)obj;
                     break;
                 case Effect_FieldIndex.Duration:
-                    this.SetDuration(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.Duration = (UInt32)obj;
                     break;
                 case Effect_FieldIndex.Type:
-                    this.SetType(
-                        (Effect.EffectType)obj,
-                        cmds: cmds);
+                    this.Type = (Effect.EffectType)obj;
                     break;
                 case Effect_FieldIndex.ActorValue:
-                    this.SetActorValue(
-                        (ActorValueExtended)obj,
-                        cmds: cmds);
+                    this.ActorValue = (ActorValueExtended)obj;
                     break;
                 case Effect_FieldIndex.ScriptEffect:
-                    this.SetScriptEffect(
-                        (ScriptEffect)obj,
-                        cmds: cmds);
+                    this.ScriptEffect = (ScriptEffect)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2146,34 +1353,22 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Effect_FieldIndex.Magnitude:
-                    obj.SetMagnitude(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.Magnitude = (UInt32)pair.Value;
                     break;
                 case Effect_FieldIndex.Area:
-                    obj.SetArea(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.Area = (UInt32)pair.Value;
                     break;
                 case Effect_FieldIndex.Duration:
-                    obj.SetDuration(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.Duration = (UInt32)pair.Value;
                     break;
                 case Effect_FieldIndex.Type:
-                    obj.SetType(
-                        (Effect.EffectType)pair.Value,
-                        cmds: null);
+                    obj.Type = (Effect.EffectType)pair.Value;
                     break;
                 case Effect_FieldIndex.ActorValue:
-                    obj.SetActorValue(
-                        (ActorValueExtended)pair.Value,
-                        cmds: null);
+                    obj.ActorValue = (ActorValueExtended)pair.Value;
                     break;
                 case Effect_FieldIndex.ScriptEffect:
-                    obj.SetScriptEffect(
-                        (ScriptEffect)pair.Value,
-                        cmds: null);
+                    obj.ScriptEffect = (ScriptEffect)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2192,22 +1387,19 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new MagicEffect MagicEffect { get; set; }
         new UInt32 Magnitude { get; set; }
-        new INotifyingItem<UInt32> Magnitude_Property { get; }
 
         new UInt32 Area { get; set; }
-        new INotifyingItem<UInt32> Area_Property { get; }
 
         new UInt32 Duration { get; set; }
-        new INotifyingItem<UInt32> Duration_Property { get; }
 
         new Effect.EffectType Type { get; set; }
-        new INotifyingItem<Effect.EffectType> Type_Property { get; }
 
         new ActorValueExtended ActorValue { get; set; }
-        new INotifyingItem<ActorValueExtended> ActorValue_Property { get; }
 
         new ScriptEffect ScriptEffect { get; set; }
-        new INotifyingSetItem<ScriptEffect> ScriptEffect_Property { get; }
+        new bool ScriptEffect_IsSet { get; set; }
+        void ScriptEffect_Set(ScriptEffect item, bool hasBeenSet = true);
+        void ScriptEffect_Unset();
 
     }
 
@@ -2220,32 +1412,27 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Magnitude
         UInt32 Magnitude { get; }
-        INotifyingItemGetter<UInt32> Magnitude_Property { get; }
 
         #endregion
         #region Area
         UInt32 Area { get; }
-        INotifyingItemGetter<UInt32> Area_Property { get; }
 
         #endregion
         #region Duration
         UInt32 Duration { get; }
-        INotifyingItemGetter<UInt32> Duration_Property { get; }
 
         #endregion
         #region Type
         Effect.EffectType Type { get; }
-        INotifyingItemGetter<Effect.EffectType> Type_Property { get; }
 
         #endregion
         #region ActorValue
         ActorValueExtended ActorValue { get; }
-        INotifyingItemGetter<ActorValueExtended> ActorValue_Property { get; }
 
         #endregion
         #region ScriptEffect
         ScriptEffect ScriptEffect { get; }
-        INotifyingSetItemGetter<ScriptEffect> ScriptEffect_Property { get; }
+        bool ScriptEffect_IsSet { get; }
 
         #endregion
 
@@ -2544,9 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.Magnitude);
                 try
                 {
-                    item.Magnitude_Property.Set(
-                        value: rhs.Magnitude,
-                        cmds: cmds);
+                    item.Magnitude = rhs.Magnitude;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2563,9 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.Area);
                 try
                 {
-                    item.Area_Property.Set(
-                        value: rhs.Area,
-                        cmds: cmds);
+                    item.Area = rhs.Area;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2582,9 +1765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.Duration);
                 try
                 {
-                    item.Duration_Property.Set(
-                        value: rhs.Duration,
-                        cmds: cmds);
+                    item.Duration = rhs.Duration;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2601,9 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.Type);
                 try
                 {
-                    item.Type_Property.Set(
-                        value: rhs.Type,
-                        cmds: cmds);
+                    item.Type = rhs.Type;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2620,9 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.ActorValue);
                 try
                 {
-                    item.ActorValue_Property.Set(
-                        value: rhs.ActorValue,
-                        cmds: cmds);
+                    item.ActorValue = rhs.ActorValue;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2639,36 +1816,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.ScriptEffect);
                 try
                 {
-                    item.ScriptEffect_Property.SetToWithDefault(
-                        rhs.ScriptEffect_Property,
-                        def?.ScriptEffect_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.ScriptEffect,
+                        rhsHasBeenSet: rhs.ScriptEffect_IsSet,
+                        defItem: def?.ScriptEffect,
+                        defHasBeenSet: def?.ScriptEffect_IsSet ?? false,
+                        outRhsItem: out var rhsScriptEffectItem,
+                        outDefItem: out var defScriptEffectItem))
+                    {
+                        switch (copyMask?.ScriptEffect.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.ScriptEffect.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    ScriptEffectCommon.CopyFieldsFrom(
-                                        item: item.ScriptEffect,
-                                        rhs: rhs.ScriptEffect,
-                                        def: def?.ScriptEffect,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.ScriptEffect.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(ScriptEffect);
-                                    return ScriptEffect.Copy(
-                                        r,
-                                        copyMask?.ScriptEffect?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.ScriptEffect?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.ScriptEffect = rhsScriptEffectItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                ScriptEffectCommon.CopyFieldsFrom(
+                                    item: item.ScriptEffect,
+                                    rhs: rhs.ScriptEffect,
+                                    def: def?.ScriptEffect,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.ScriptEffect.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.ScriptEffect = ScriptEffect.Copy(
+                                    rhsScriptEffectItem,
+                                    copyMask?.ScriptEffect?.Specific,
+                                    def: defScriptEffectItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.ScriptEffect?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.ScriptEffect_IsSet = false;
+                        item.ScriptEffect = default(ScriptEffect);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2702,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Effect_FieldIndex.ScriptEffect:
-                    obj.ScriptEffect_Property.HasBeenSet = on;
+                    obj.ScriptEffect_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2718,7 +1902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Effect_FieldIndex.MagicEffect:
-                    obj.MagicEffect = default(EDIDLink<MagicEffect>);
+                    obj.MagicEffect_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Effect_FieldIndex.Magnitude:
                     obj.Magnitude = default(UInt32);
@@ -2736,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.ActorValue = default(ActorValueExtended);
                     break;
                 case Effect_FieldIndex.ScriptEffect:
-                    obj.ScriptEffect_Property.Unset(cmds);
+                    obj.ScriptEffect_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2758,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Effect_FieldIndex.ActorValue:
                     return true;
                 case Effect_FieldIndex.ScriptEffect:
-                    return obj.ScriptEffect_Property.HasBeenSet;
+                    return obj.ScriptEffect_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2794,13 +1978,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffect item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.MagicEffect = default(EDIDLink<MagicEffect>);
+            item.MagicEffect_Property.Unset(cmds.ToUnsetParams());
             item.Magnitude = default(UInt32);
             item.Area = default(UInt32);
             item.Duration = default(UInt32);
             item.Type = default(Effect.EffectType);
             item.ActorValue = default(ActorValueExtended);
-            item.ScriptEffect_Property.Unset(cmds.ToUnsetParams());
+            item.ScriptEffect_Unset();
         }
 
         public static Effect_Mask<bool> GetEqualsMask(
@@ -2824,7 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = item.Duration == rhs.Duration;
             ret.Type = item.Type == rhs.Type;
             ret.ActorValue = item.ActorValue == rhs.ActorValue;
-            ret.ScriptEffect = item.ScriptEffect_Property.LoquiEqualsHelper(rhs.ScriptEffect_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.ScriptEffect = IHasBeenSetExt.LoquiEqualsHelper(item.ScriptEffect_IsSet, rhs.ScriptEffect_IsSet, item.ScriptEffect, rhs.ScriptEffect, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
         }
 
         public static string ToString(
@@ -2890,7 +2074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IEffectGetter item,
             Effect_Mask<bool?> checkMask)
         {
-            if (checkMask.ScriptEffect.Overall.HasValue && checkMask.ScriptEffect.Overall.Value != item.ScriptEffect_Property.HasBeenSet) return false;
+            if (checkMask.ScriptEffect.Overall.HasValue && checkMask.ScriptEffect.Overall.Value != item.ScriptEffect_IsSet) return false;
             if (checkMask.ScriptEffect.Specific != null && (item.ScriptEffect == null || !item.ScriptEffect.HasBeenSet(checkMask.ScriptEffect.Specific))) return false;
             return true;
         }
@@ -2904,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = true;
             ret.Type = true;
             ret.ActorValue = true;
-            ret.ScriptEffect = new MaskItem<bool, ScriptEffect_Mask<bool>>(item.ScriptEffect_Property.HasBeenSet, ScriptEffectCommon.GetHasBeenSetMask(item.ScriptEffect));
+            ret.ScriptEffect = new MaskItem<bool, ScriptEffect_Mask<bool>>(item.ScriptEffect_IsSet, ScriptEffectCommon.GetHasBeenSetMask(item.ScriptEffect));
             return ret;
         }
 
@@ -2955,7 +2139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Magnitude),
-                    item: item.Magnitude_Property,
+                    item: item.Magnitude,
                     fieldIndex: (int)Effect_FieldIndex.Magnitude,
                     errorMask: errorMask);
             }
@@ -2964,7 +2148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Area),
-                    item: item.Area_Property,
+                    item: item.Area,
                     fieldIndex: (int)Effect_FieldIndex.Area,
                     errorMask: errorMask);
             }
@@ -2973,7 +2157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Duration),
-                    item: item.Duration_Property,
+                    item: item.Duration,
                     fieldIndex: (int)Effect_FieldIndex.Duration,
                     errorMask: errorMask);
             }
@@ -2982,7 +2166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Effect.EffectType>.Instance.Write(
                     node: elem,
                     name: nameof(item.Type),
-                    item: item.Type_Property,
+                    item: item.Type,
                     fieldIndex: (int)Effect_FieldIndex.Type,
                     errorMask: errorMask);
             }
@@ -2991,16 +2175,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<ActorValueExtended>.Instance.Write(
                     node: elem,
                     name: nameof(item.ActorValue),
-                    item: item.ActorValue_Property,
+                    item: item.ActorValue,
                     fieldIndex: (int)Effect_FieldIndex.ActorValue,
                     errorMask: errorMask);
             }
-            if (item.ScriptEffect_Property.HasBeenSet
+            if (item.ScriptEffect_IsSet
                 && (translationMask?.GetShouldTranslate((int)Effect_FieldIndex.ScriptEffect) ?? true))
             {
                 LoquiXmlTranslation<ScriptEffect>.Instance.Write(
                     node: elem,
-                    item: item.ScriptEffect_Property,
+                    item: item.ScriptEffect,
                     name: nameof(item.ScriptEffect),
                     fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
                     errorMask: errorMask,
@@ -3064,38 +2248,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Magnitude_Property,
+                        item: item.Magnitude,
                         fieldIndex: (int)Effect_FieldIndex.Magnitude,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Area_Property,
+                        item: item.Area,
                         fieldIndex: (int)Effect_FieldIndex.Area,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Duration_Property,
+                        item: item.Duration,
                         fieldIndex: (int)Effect_FieldIndex.Duration,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
                         writer,
-                        item.Type_Property,
+                        item.Type,
                         length: 4,
                         fieldIndex: (int)Effect_FieldIndex.Type,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
                         writer,
-                        item.ActorValue_Property,
+                        item.ActorValue,
                         length: 4,
                         fieldIndex: (int)Effect_FieldIndex.ActorValue,
                         errorMask: errorMask);
                 }
             }
-            LoquiBinaryTranslation<ScriptEffect>.Instance.Write(
-                writer: writer,
-                item: item.ScriptEffect_Property,
-                fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
-                errorMask: errorMask);
+            if (item.ScriptEffect_IsSet)
+            {
+                LoquiBinaryTranslation<ScriptEffect>.Instance.Write(
+                    writer: writer,
+                    item: item.ScriptEffect,
+                    fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
+                    errorMask: errorMask);
+            }
         }
 
         #endregion

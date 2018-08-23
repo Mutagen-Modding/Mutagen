@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,7 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILandscape,
         ILoquiObject<Landscape>,
         ILoquiObjectSetter,
-        IPropertySupporter<Byte[]>,
         IEquatable<Landscape>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,200 +51,116 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool Unknown_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Landscape_FieldIndex.Unknown];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Landscape_FieldIndex.Unknown, nameof(Unknown_IsSet));
+        }
+        bool ILandscapeGetter.Unknown_IsSet => Unknown_IsSet;
         protected Byte[] _Unknown;
-        protected PropertyForwarder<Landscape, Byte[]> _UnknownForwarder;
-        public INotifyingSetItem<Byte[]> Unknown_Property => _UnknownForwarder ?? (_UnknownForwarder = new PropertyForwarder<Landscape, Byte[]>(this, (int)Landscape_FieldIndex.Unknown));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Unknown
         {
             get => this._Unknown;
-            set => this.SetUnknown(value);
-        }
-        protected void SetUnknown(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Landscape_FieldIndex.Unknown];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unknown, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Landscape_FieldIndex.Unknown] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Unknown;
-                _Unknown = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)Landscape_FieldIndex.Unknown,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Unknown = item;
-            }
-        }
-        protected void UnsetUnknown()
-        {
-            SetUnknown(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => Unknown_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> ILandscape.Unknown_Property => this.Unknown_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> ILandscapeGetter.Unknown_Property => this.Unknown_Property;
+        Byte[] ILandscapeGetter.Unknown => this.Unknown;
+        public void Unknown_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
+        }
+        public void Unknown_Unset()
+        {
+            this.Unknown_Set(default(Byte[]), false);
+        }
         #endregion
         #region VertexNormals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool VertexNormals_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexNormals];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Landscape_FieldIndex.VertexNormals, nameof(VertexNormals_IsSet));
+        }
+        bool ILandscapeGetter.VertexNormals_IsSet => VertexNormals_IsSet;
         protected Byte[] _VertexNormals;
-        protected PropertyForwarder<Landscape, Byte[]> _VertexNormalsForwarder;
-        public INotifyingSetItem<Byte[]> VertexNormals_Property => _VertexNormalsForwarder ?? (_VertexNormalsForwarder = new PropertyForwarder<Landscape, Byte[]>(this, (int)Landscape_FieldIndex.VertexNormals));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] VertexNormals
         {
             get => this._VertexNormals;
-            set => this.SetVertexNormals(value);
-        }
-        protected void SetVertexNormals(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexNormals];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(VertexNormals, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexNormals] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = VertexNormals;
-                _VertexNormals = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)Landscape_FieldIndex.VertexNormals,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _VertexNormals = item;
-            }
-        }
-        protected void UnsetVertexNormals()
-        {
-            SetVertexNormals(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => VertexNormals_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> ILandscape.VertexNormals_Property => this.VertexNormals_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> ILandscapeGetter.VertexNormals_Property => this.VertexNormals_Property;
+        Byte[] ILandscapeGetter.VertexNormals => this.VertexNormals;
+        public void VertexNormals_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _VertexNormals, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexNormals, nameof(VertexNormals), nameof(VertexNormals_IsSet));
+        }
+        public void VertexNormals_Unset()
+        {
+            this.VertexNormals_Set(default(Byte[]), false);
+        }
         #endregion
         #region VertexHeightMap
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool VertexHeightMap_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexHeightMap];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Landscape_FieldIndex.VertexHeightMap, nameof(VertexHeightMap_IsSet));
+        }
+        bool ILandscapeGetter.VertexHeightMap_IsSet => VertexHeightMap_IsSet;
         protected Byte[] _VertexHeightMap;
-        protected PropertyForwarder<Landscape, Byte[]> _VertexHeightMapForwarder;
-        public INotifyingSetItem<Byte[]> VertexHeightMap_Property => _VertexHeightMapForwarder ?? (_VertexHeightMapForwarder = new PropertyForwarder<Landscape, Byte[]>(this, (int)Landscape_FieldIndex.VertexHeightMap));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] VertexHeightMap
         {
             get => this._VertexHeightMap;
-            set => this.SetVertexHeightMap(value);
-        }
-        protected void SetVertexHeightMap(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexHeightMap];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(VertexHeightMap, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexHeightMap] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = VertexHeightMap;
-                _VertexHeightMap = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)Landscape_FieldIndex.VertexHeightMap,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _VertexHeightMap = item;
-            }
-        }
-        protected void UnsetVertexHeightMap()
-        {
-            SetVertexHeightMap(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => VertexHeightMap_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> ILandscape.VertexHeightMap_Property => this.VertexHeightMap_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> ILandscapeGetter.VertexHeightMap_Property => this.VertexHeightMap_Property;
+        Byte[] ILandscapeGetter.VertexHeightMap => this.VertexHeightMap;
+        public void VertexHeightMap_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _VertexHeightMap, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexHeightMap, nameof(VertexHeightMap), nameof(VertexHeightMap_IsSet));
+        }
+        public void VertexHeightMap_Unset()
+        {
+            this.VertexHeightMap_Set(default(Byte[]), false);
+        }
         #endregion
         #region VertexColors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool VertexColors_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexColors];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Landscape_FieldIndex.VertexColors, nameof(VertexColors_IsSet));
+        }
+        bool ILandscapeGetter.VertexColors_IsSet => VertexColors_IsSet;
         protected Byte[] _VertexColors;
-        protected PropertyForwarder<Landscape, Byte[]> _VertexColorsForwarder;
-        public INotifyingSetItem<Byte[]> VertexColors_Property => _VertexColorsForwarder ?? (_VertexColorsForwarder = new PropertyForwarder<Landscape, Byte[]>(this, (int)Landscape_FieldIndex.VertexColors));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] VertexColors
         {
             get => this._VertexColors;
-            set => this.SetVertexColors(value);
-        }
-        protected void SetVertexColors(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexColors];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(VertexColors, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexColors] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = VertexColors;
-                _VertexColors = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)Landscape_FieldIndex.VertexColors,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _VertexColors = item;
-            }
-        }
-        protected void UnsetVertexColors()
-        {
-            SetVertexColors(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => VertexColors_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> ILandscape.VertexColors_Property => this.VertexColors_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> ILandscapeGetter.VertexColors_Property => this.VertexColors_Property;
+        Byte[] ILandscapeGetter.VertexColors => this.VertexColors;
+        public void VertexColors_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _VertexColors, value, _hasBeenSetTracker, markSet, (int)Landscape_FieldIndex.VertexColors, nameof(VertexColors), nameof(VertexColors_IsSet));
+        }
+        public void VertexColors_Unset()
+        {
+            this.VertexColors_Set(default(Byte[]), false);
+        }
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -340,23 +257,23 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Unknown_Property.HasBeenSet != rhs.Unknown_Property.HasBeenSet) return false;
-            if (Unknown_Property.HasBeenSet)
+            if (Unknown_IsSet != rhs.Unknown_IsSet) return false;
+            if (Unknown_IsSet)
             {
                 if (!this.Unknown.EqualsFast(rhs.Unknown)) return false;
             }
-            if (VertexNormals_Property.HasBeenSet != rhs.VertexNormals_Property.HasBeenSet) return false;
-            if (VertexNormals_Property.HasBeenSet)
+            if (VertexNormals_IsSet != rhs.VertexNormals_IsSet) return false;
+            if (VertexNormals_IsSet)
             {
                 if (!this.VertexNormals.EqualsFast(rhs.VertexNormals)) return false;
             }
-            if (VertexHeightMap_Property.HasBeenSet != rhs.VertexHeightMap_Property.HasBeenSet) return false;
-            if (VertexHeightMap_Property.HasBeenSet)
+            if (VertexHeightMap_IsSet != rhs.VertexHeightMap_IsSet) return false;
+            if (VertexHeightMap_IsSet)
             {
                 if (!this.VertexHeightMap.EqualsFast(rhs.VertexHeightMap)) return false;
             }
-            if (VertexColors_Property.HasBeenSet != rhs.VertexColors_Property.HasBeenSet) return false;
-            if (VertexColors_Property.HasBeenSet)
+            if (VertexColors_IsSet != rhs.VertexColors_IsSet) return false;
+            if (VertexColors_IsSet)
             {
                 if (!this.VertexColors.EqualsFast(rhs.VertexColors)) return false;
             }
@@ -376,19 +293,19 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Unknown_Property.HasBeenSet)
+            if (Unknown_IsSet)
             {
                 ret = HashHelper.GetHashCode(Unknown).CombineHashCode(ret);
             }
-            if (VertexNormals_Property.HasBeenSet)
+            if (VertexNormals_IsSet)
             {
                 ret = HashHelper.GetHashCode(VertexNormals).CombineHashCode(ret);
             }
-            if (VertexHeightMap_Property.HasBeenSet)
+            if (VertexHeightMap_IsSet)
             {
                 ret = HashHelper.GetHashCode(VertexHeightMap).CombineHashCode(ret);
             }
-            if (VertexColors_Property.HasBeenSet)
+            if (VertexColors_IsSet)
             {
                 ret = HashHelper.GetHashCode(VertexColors).CombineHashCode(ret);
             }
@@ -760,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUnknown();
+                            item.Unknown = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -786,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVertexNormals();
+                            item.VertexNormals = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -812,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVertexHeightMap();
+                            item.VertexHeightMap = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -838,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVertexColors();
+                            item.VertexColors = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -937,173 +854,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((Landscape_FieldIndex)index)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    return Unknown;
-                case Landscape_FieldIndex.VertexNormals:
-                    return VertexNormals;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    return VertexHeightMap;
-                case Landscape_FieldIndex.VertexColors:
-                    return VertexColors;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Landscape_FieldIndex)index)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    SetUnknown(item, hasBeenSet, cmds);
-                    break;
-                case Landscape_FieldIndex.VertexNormals:
-                    SetVertexNormals(item, hasBeenSet, cmds);
-                    break;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    SetVertexHeightMap(item, hasBeenSet, cmds);
-                    break;
-                case Landscape_FieldIndex.VertexColors:
-                    SetVertexColors(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Landscape_FieldIndex)index)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    SetUnknown(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case Landscape_FieldIndex.VertexNormals:
-                    SetVertexNormals(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    SetVertexHeightMap(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case Landscape_FieldIndex.VertexColors:
-                    SetVertexColors(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((Landscape_FieldIndex)index)
-            {
-                case Landscape_FieldIndex.Unknown:
-                case Landscape_FieldIndex.VertexNormals:
-                case Landscape_FieldIndex.VertexHeightMap:
-                case Landscape_FieldIndex.VertexColors:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Landscape_Registration.TRIGGERING_RECORD_TYPE;
@@ -1338,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUnknown();
+                            item.Unknown = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1365,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVertexNormals();
+                            item.VertexNormals = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1392,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVertexHeightMap();
+                            item.VertexHeightMap = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1419,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVertexColors();
+                            item.VertexColors = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1591,24 +1341,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Landscape_FieldIndex.Unknown:
-                    this.SetUnknown(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Unknown = (Byte[])obj;
                     break;
                 case Landscape_FieldIndex.VertexNormals:
-                    this.SetVertexNormals(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.VertexNormals = (Byte[])obj;
                     break;
                 case Landscape_FieldIndex.VertexHeightMap:
-                    this.SetVertexHeightMap(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.VertexHeightMap = (Byte[])obj;
                     break;
                 case Landscape_FieldIndex.VertexColors:
-                    this.SetVertexColors(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.VertexColors = (Byte[])obj;
                     break;
                 case Landscape_FieldIndex.Layers:
                     this._Layers.SetTo((IEnumerable<BaseLayer>)obj, cmds);
@@ -1648,24 +1390,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Landscape_FieldIndex.Unknown:
-                    obj.SetUnknown(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Unknown = (Byte[])pair.Value;
                     break;
                 case Landscape_FieldIndex.VertexNormals:
-                    obj.SetVertexNormals(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.VertexNormals = (Byte[])pair.Value;
                     break;
                 case Landscape_FieldIndex.VertexHeightMap:
-                    obj.SetVertexHeightMap(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.VertexHeightMap = (Byte[])pair.Value;
                     break;
                 case Landscape_FieldIndex.VertexColors:
-                    obj.SetVertexColors(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.VertexColors = (Byte[])pair.Value;
                     break;
                 case Landscape_FieldIndex.Layers:
                     obj._Layers.SetTo((IEnumerable<BaseLayer>)pair.Value, null);
@@ -1689,16 +1423,24 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILandscape : ILandscapeGetter, IPlaced, ILoquiClass<ILandscape, ILandscapeGetter>, ILoquiClass<Landscape, ILandscapeGetter>
     {
         new Byte[] Unknown { get; set; }
-        new INotifyingSetItem<Byte[]> Unknown_Property { get; }
+        new bool Unknown_IsSet { get; set; }
+        void Unknown_Set(Byte[] item, bool hasBeenSet = true);
+        void Unknown_Unset();
 
         new Byte[] VertexNormals { get; set; }
-        new INotifyingSetItem<Byte[]> VertexNormals_Property { get; }
+        new bool VertexNormals_IsSet { get; set; }
+        void VertexNormals_Set(Byte[] item, bool hasBeenSet = true);
+        void VertexNormals_Unset();
 
         new Byte[] VertexHeightMap { get; set; }
-        new INotifyingSetItem<Byte[]> VertexHeightMap_Property { get; }
+        new bool VertexHeightMap_IsSet { get; set; }
+        void VertexHeightMap_Set(Byte[] item, bool hasBeenSet = true);
+        void VertexHeightMap_Unset();
 
         new Byte[] VertexColors { get; set; }
-        new INotifyingSetItem<Byte[]> VertexColors_Property { get; }
+        new bool VertexColors_IsSet { get; set; }
+        void VertexColors_Set(Byte[] item, bool hasBeenSet = true);
+        void VertexColors_Unset();
 
         new INotifyingList<BaseLayer> Layers { get; }
         new INotifyingList<FormIDLink<LandTexture>> Textures { get; }
@@ -1708,22 +1450,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Unknown
         Byte[] Unknown { get; }
-        INotifyingSetItemGetter<Byte[]> Unknown_Property { get; }
+        bool Unknown_IsSet { get; }
 
         #endregion
         #region VertexNormals
         Byte[] VertexNormals { get; }
-        INotifyingSetItemGetter<Byte[]> VertexNormals_Property { get; }
+        bool VertexNormals_IsSet { get; }
 
         #endregion
         #region VertexHeightMap
         Byte[] VertexHeightMap { get; }
-        INotifyingSetItemGetter<Byte[]> VertexHeightMap_Property { get; }
+        bool VertexHeightMap_IsSet { get; }
 
         #endregion
         #region VertexColors
         Byte[] VertexColors { get; }
-        INotifyingSetItemGetter<Byte[]> VertexColors_Property { get; }
+        bool VertexColors_IsSet { get; }
 
         #endregion
         #region Layers
@@ -2015,9 +1757,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
                 try
                 {
-                    item.Unknown_Property.SetToWithDefault(
-                        rhs: rhs.Unknown_Property,
-                        def: def?.Unknown_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Unknown,
+                        rhsHasBeenSet: rhs.Unknown_IsSet,
+                        defItem: def?.Unknown ?? default(Byte[]),
+                        defHasBeenSet: def?.Unknown_IsSet ?? false,
+                        outRhsItem: out var rhsUnknownItem,
+                        outDefItem: out var defUnknownItem))
+                    {
+                        item.Unknown = rhsUnknownItem;
+                    }
+                    else
+                    {
+                        item.Unknown_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2034,9 +1787,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
                 try
                 {
-                    item.VertexNormals_Property.SetToWithDefault(
-                        rhs: rhs.VertexNormals_Property,
-                        def: def?.VertexNormals_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.VertexNormals,
+                        rhsHasBeenSet: rhs.VertexNormals_IsSet,
+                        defItem: def?.VertexNormals ?? default(Byte[]),
+                        defHasBeenSet: def?.VertexNormals_IsSet ?? false,
+                        outRhsItem: out var rhsVertexNormalsItem,
+                        outDefItem: out var defVertexNormalsItem))
+                    {
+                        item.VertexNormals = rhsVertexNormalsItem;
+                    }
+                    else
+                    {
+                        item.VertexNormals_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2053,9 +1817,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
                 try
                 {
-                    item.VertexHeightMap_Property.SetToWithDefault(
-                        rhs: rhs.VertexHeightMap_Property,
-                        def: def?.VertexHeightMap_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.VertexHeightMap,
+                        rhsHasBeenSet: rhs.VertexHeightMap_IsSet,
+                        defItem: def?.VertexHeightMap ?? default(Byte[]),
+                        defHasBeenSet: def?.VertexHeightMap_IsSet ?? false,
+                        outRhsItem: out var rhsVertexHeightMapItem,
+                        outDefItem: out var defVertexHeightMapItem))
+                    {
+                        item.VertexHeightMap = rhsVertexHeightMapItem;
+                    }
+                    else
+                    {
+                        item.VertexHeightMap_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2072,9 +1847,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
                 try
                 {
-                    item.VertexColors_Property.SetToWithDefault(
-                        rhs: rhs.VertexColors_Property,
-                        def: def?.VertexColors_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.VertexColors,
+                        rhsHasBeenSet: rhs.VertexColors_IsSet,
+                        defItem: def?.VertexColors ?? default(Byte[]),
+                        defHasBeenSet: def?.VertexColors_IsSet ?? false,
+                        outRhsItem: out var rhsVertexColorsItem,
+                        outDefItem: out var defVertexColorsItem))
+                    {
+                        item.VertexColors = rhsVertexColorsItem;
+                    }
+                    else
+                    {
+                        item.VertexColors_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2102,7 +1888,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(BaseLayer);
                                     return BaseLayer.Copy(
                                         r,
                                         copyMask?.Layers?.Specific,
@@ -2157,16 +1942,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Landscape_FieldIndex.Unknown:
-                    obj.Unknown_Property.HasBeenSet = on;
+                    obj.Unknown_IsSet = on;
                     break;
                 case Landscape_FieldIndex.VertexNormals:
-                    obj.VertexNormals_Property.HasBeenSet = on;
+                    obj.VertexNormals_IsSet = on;
                     break;
                 case Landscape_FieldIndex.VertexHeightMap:
-                    obj.VertexHeightMap_Property.HasBeenSet = on;
+                    obj.VertexHeightMap_IsSet = on;
                     break;
                 case Landscape_FieldIndex.VertexColors:
-                    obj.VertexColors_Property.HasBeenSet = on;
+                    obj.VertexColors_IsSet = on;
                     break;
                 case Landscape_FieldIndex.Layers:
                     obj.Layers.HasBeenSet = on;
@@ -2189,16 +1974,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Landscape_FieldIndex.Unknown:
-                    obj.Unknown_Property.Unset(cmds);
+                    obj.Unknown_Unset();
                     break;
                 case Landscape_FieldIndex.VertexNormals:
-                    obj.VertexNormals_Property.Unset(cmds);
+                    obj.VertexNormals_Unset();
                     break;
                 case Landscape_FieldIndex.VertexHeightMap:
-                    obj.VertexHeightMap_Property.Unset(cmds);
+                    obj.VertexHeightMap_Unset();
                     break;
                 case Landscape_FieldIndex.VertexColors:
-                    obj.VertexColors_Property.Unset(cmds);
+                    obj.VertexColors_Unset();
                     break;
                 case Landscape_FieldIndex.Layers:
                     obj.Layers.Unset(cmds);
@@ -2220,13 +2005,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Landscape_FieldIndex.Unknown:
-                    return obj.Unknown_Property.HasBeenSet;
+                    return obj.Unknown_IsSet;
                 case Landscape_FieldIndex.VertexNormals:
-                    return obj.VertexNormals_Property.HasBeenSet;
+                    return obj.VertexNormals_IsSet;
                 case Landscape_FieldIndex.VertexHeightMap:
-                    return obj.VertexHeightMap_Property.HasBeenSet;
+                    return obj.VertexHeightMap_IsSet;
                 case Landscape_FieldIndex.VertexColors:
-                    return obj.VertexColors_Property.HasBeenSet;
+                    return obj.VertexColors_IsSet;
                 case Landscape_FieldIndex.Layers:
                     return obj.Layers.HasBeenSet;
                 case Landscape_FieldIndex.Textures:
@@ -2264,10 +2049,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandscape item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Unknown_Property.Unset(cmds.ToUnsetParams());
-            item.VertexNormals_Property.Unset(cmds.ToUnsetParams());
-            item.VertexHeightMap_Property.Unset(cmds.ToUnsetParams());
-            item.VertexColors_Property.Unset(cmds.ToUnsetParams());
+            item.Unknown_Unset();
+            item.VertexNormals_Unset();
+            item.VertexHeightMap_Unset();
+            item.VertexColors_Unset();
             item.Layers.Unset(cmds.ToUnsetParams());
             item.Textures.Unset(cmds.ToUnsetParams());
         }
@@ -2287,10 +2072,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Landscape_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Unknown = item.Unknown_Property.Equals(rhs.Unknown_Property, (l, r) => l.EqualsFast(r));
-            ret.VertexNormals = item.VertexNormals_Property.Equals(rhs.VertexNormals_Property, (l, r) => l.EqualsFast(r));
-            ret.VertexHeightMap = item.VertexHeightMap_Property.Equals(rhs.VertexHeightMap_Property, (l, r) => l.EqualsFast(r));
-            ret.VertexColors = item.VertexColors_Property.Equals(rhs.VertexColors_Property, (l, r) => l.EqualsFast(r));
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && item.Unknown.EqualsFast(rhs.Unknown);
+            ret.VertexNormals = item.VertexNormals_IsSet == rhs.VertexNormals_IsSet && item.VertexNormals.EqualsFast(rhs.VertexNormals);
+            ret.VertexHeightMap = item.VertexHeightMap_IsSet == rhs.VertexHeightMap_IsSet && item.VertexHeightMap.EqualsFast(rhs.VertexHeightMap);
+            ret.VertexColors = item.VertexColors_IsSet == rhs.VertexColors_IsSet && item.VertexColors.EqualsFast(rhs.VertexColors);
             if (item.Layers.HasBeenSet == rhs.Layers.HasBeenSet)
             {
                 if (item.Layers.HasBeenSet)
@@ -2425,10 +2210,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILandscapeGetter item,
             Landscape_Mask<bool?> checkMask)
         {
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_Property.HasBeenSet) return false;
-            if (checkMask.VertexNormals.HasValue && checkMask.VertexNormals.Value != item.VertexNormals_Property.HasBeenSet) return false;
-            if (checkMask.VertexHeightMap.HasValue && checkMask.VertexHeightMap.Value != item.VertexHeightMap_Property.HasBeenSet) return false;
-            if (checkMask.VertexColors.HasValue && checkMask.VertexColors.Value != item.VertexColors_Property.HasBeenSet) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
+            if (checkMask.VertexNormals.HasValue && checkMask.VertexNormals.Value != item.VertexNormals_IsSet) return false;
+            if (checkMask.VertexHeightMap.HasValue && checkMask.VertexHeightMap.Value != item.VertexHeightMap_IsSet) return false;
+            if (checkMask.VertexColors.HasValue && checkMask.VertexColors.Value != item.VertexColors_IsSet) return false;
             if (checkMask.Layers.Overall.HasValue && checkMask.Layers.Overall.Value != item.Layers.HasBeenSet) return false;
             if (checkMask.Textures.Overall.HasValue && checkMask.Textures.Overall.Value != item.Textures.HasBeenSet) return false;
             return true;
@@ -2437,10 +2222,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Landscape_Mask<bool> GetHasBeenSetMask(ILandscapeGetter item)
         {
             var ret = new Landscape_Mask<bool>();
-            ret.Unknown = item.Unknown_Property.HasBeenSet;
-            ret.VertexNormals = item.VertexNormals_Property.HasBeenSet;
-            ret.VertexHeightMap = item.VertexHeightMap_Property.HasBeenSet;
-            ret.VertexColors = item.VertexColors_Property.HasBeenSet;
+            ret.Unknown = item.Unknown_IsSet;
+            ret.VertexNormals = item.VertexNormals_IsSet;
+            ret.VertexHeightMap = item.VertexHeightMap_IsSet;
+            ret.VertexColors = item.VertexColors_IsSet;
             ret.Layers = new MaskItem<bool, IEnumerable<MaskItem<bool, BaseLayer_Mask<bool>>>>(item.Layers.HasBeenSet, item.Layers.Select((i) => new MaskItem<bool, BaseLayer_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Textures = new MaskItem<bool, IEnumerable<bool>>(item.Textures.HasBeenSet, null);
             return ret;
@@ -2529,43 +2314,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Landscape");
             }
-            if (item.Unknown_Property.HasBeenSet
+            if (item.Unknown_IsSet
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Unknown) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Unknown),
-                    item: item.Unknown_Property,
+                    item: item.Unknown,
                     fieldIndex: (int)Landscape_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if (item.VertexNormals_Property.HasBeenSet
+            if (item.VertexNormals_IsSet
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.VertexNormals),
-                    item: item.VertexNormals_Property,
+                    item: item.VertexNormals,
                     fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
                     errorMask: errorMask);
             }
-            if (item.VertexHeightMap_Property.HasBeenSet
+            if (item.VertexHeightMap_IsSet
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.VertexHeightMap),
-                    item: item.VertexHeightMap_Property,
+                    item: item.VertexHeightMap,
                     fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
                     errorMask: errorMask);
             }
-            if (item.VertexColors_Property.HasBeenSet
+            if (item.VertexColors_IsSet
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.VertexColors),
-                    item: item.VertexColors_Property,
+                    item: item.VertexColors,
                     fieldIndex: (int)Landscape_FieldIndex.VertexColors,
                     errorMask: errorMask);
             }
@@ -2668,47 +2453,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown_Property,
-                fieldIndex: (int)Landscape_FieldIndex.Unknown,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Landscape_Registration.DATA_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.VertexNormals_Property,
-                fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VNML_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.VertexHeightMap_Property,
-                fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VHGT_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.VertexColors_Property,
-                fieldIndex: (int)Landscape_FieldIndex.VertexColors,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VCLR_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Write(
-                writer: writer,
-                items: item.Layers,
-                fieldIndex: (int)Landscape_FieldIndex.Layers,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<BaseLayer>.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>>.Instance.Write(
-                writer: writer,
-                items: item.Textures,
-                fieldIndex: (int)Landscape_FieldIndex.Textures,
-                recordType: Landscape_Registration.VTEX_HEADER,
-                errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
+            if (item.Unknown_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown,
+                    fieldIndex: (int)Landscape_FieldIndex.Unknown,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.DATA_HEADER),
+                    nullable: false);
+            }
+            if (item.VertexNormals_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.VertexNormals,
+                    fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VNML_HEADER),
+                    nullable: false);
+            }
+            if (item.VertexHeightMap_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.VertexHeightMap,
+                    fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VHGT_HEADER),
+                    nullable: false);
+            }
+            if (item.VertexColors_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.VertexColors,
+                    fieldIndex: (int)Landscape_FieldIndex.VertexColors,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VCLR_HEADER),
+                    nullable: false);
+            }
+            if (item.Layers.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Write(
+                    writer: writer,
+                    items: item.Layers,
+                    fieldIndex: (int)Landscape_FieldIndex.Layers,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<BaseLayer>.Instance.Write);
+            }
+            if (item.Textures.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>>.Instance.Write(
+                    writer: writer,
+                    items: item.Textures,
+                    fieldIndex: (int)Landscape_FieldIndex.Textures,
+                    recordType: Landscape_Registration.VTEX_HEADER,
+                    errorMask: errorMask,
+                    transl: FormIDBinaryTranslation.Instance.Write);
+            }
         }
 
         #endregion

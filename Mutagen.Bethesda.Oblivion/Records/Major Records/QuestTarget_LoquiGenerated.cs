@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,11 +31,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class QuestTarget : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IQuestTarget,
         ILoquiObject<QuestTarget>,
         ILoquiObjectSetter,
-        IPropertySupporter<QuestTarget.Flag>,
         IEquatable<QuestTarget>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,52 +58,12 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Placed> IQuestTargetGetter.Target_Property => this.Target_Property;
         #endregion
         #region Flags
-        protected QuestTarget.Flag _Flags;
-        protected PropertyForwarder<QuestTarget, QuestTarget.Flag> _FlagsForwarder;
-        public INotifyingSetItem<QuestTarget.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<QuestTarget, QuestTarget.Flag>(this, (int)QuestTarget_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private QuestTarget.Flag _Flags;
         public QuestTarget.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            QuestTarget.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)QuestTarget_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)QuestTarget_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_QuestTargetFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _QuestTargetFlag_subscriptions.FireSubscriptions(
-                    index: (int)QuestTarget_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)QuestTarget_FieldIndex.Flags] = false;
-            Flags = default(QuestTarget.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<QuestTarget.Flag> IQuestTarget.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<QuestTarget.Flag> IQuestTargetGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -540,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(QuestTarget.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -602,140 +563,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter QuestTarget.Flag
-        protected ObjectCentralizationSubscriptions<QuestTarget.Flag> _QuestTargetFlag_subscriptions;
-        QuestTarget.Flag IPropertySupporter<QuestTarget.Flag>.Get(int index)
-        {
-            return GetQuestTargetFlag(index: index);
-        }
-
-        protected QuestTarget.Flag GetQuestTargetFlag(int index)
-        {
-            switch ((QuestTarget_FieldIndex)index)
-            {
-                case QuestTarget_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type QuestTarget.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<QuestTarget.Flag>.Set(
-            int index,
-            QuestTarget.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetQuestTargetFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetQuestTargetFlag(
-            int index,
-            QuestTarget.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((QuestTarget_FieldIndex)index)
-            {
-                case QuestTarget_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type QuestTarget.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<QuestTarget.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<QuestTarget.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<QuestTarget.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetQuestTargetFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetQuestTargetFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((QuestTarget_FieldIndex)index)
-            {
-                case QuestTarget_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(QuestTarget.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type QuestTarget.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<QuestTarget.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<QuestTarget.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_QuestTargetFlag_subscriptions == null)
-            {
-                _QuestTargetFlag_subscriptions = new ObjectCentralizationSubscriptions<QuestTarget.Flag>();
-            }
-            _QuestTargetFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<QuestTarget.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _QuestTargetFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<QuestTarget.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        QuestTarget.Flag IPropertySupporter<QuestTarget.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueQuestTargetFlag(index: index);
-        }
-
-        protected QuestTarget.Flag DefaultValueQuestTargetFlag(int index)
-        {
-            switch ((QuestTarget_FieldIndex)index)
-            {
-                case QuestTarget_FieldIndex.Flags:
-                    return default(QuestTarget.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type QuestTarget.Flag: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = QuestTarget_Registration.TRIGGERING_RECORD_TYPE;
@@ -1008,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFlags();
+                                item.Flags = default(QuestTarget.Flag);
                             }
                         }
                         catch (Exception ex)
@@ -1168,9 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case QuestTarget_FieldIndex.Flags:
-                    this.SetFlags(
-                        (QuestTarget.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (QuestTarget.Flag)obj;
                     break;
                 case QuestTarget_FieldIndex.Conditions:
                     this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
@@ -1218,9 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case QuestTarget_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (QuestTarget.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (QuestTarget.Flag)pair.Value;
                     break;
                 case QuestTarget_FieldIndex.Conditions:
                     obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
@@ -1242,7 +1065,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Placed Target { get; set; }
         new QuestTarget.Flag Flags { get; set; }
-        new INotifyingItem<QuestTarget.Flag> Flags_Property { get; }
 
         new INotifyingList<Condition> Conditions { get; }
     }
@@ -1256,7 +1078,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         QuestTarget.Flag Flags { get; }
-        INotifyingItemGetter<QuestTarget.Flag> Flags_Property { get; }
 
         #endregion
         #region Conditions
@@ -1511,9 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)QuestTarget_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1541,7 +1360,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Condition);
                                     return Condition.Copy(
                                         r,
                                         copyMask?.Conditions?.Specific,
@@ -1596,7 +1414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case QuestTarget_FieldIndex.Target:
-                    obj.Target = default(FormIDLink<Placed>);
+                    obj.Target_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case QuestTarget_FieldIndex.Flags:
                     obj.Flags = default(QuestTarget.Flag);
@@ -1648,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestTarget item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Target = default(FormIDLink<Placed>);
+            item.Target_Property.Unset(cmds.ToUnsetParams());
             item.Flags = default(QuestTarget.Flag);
             item.Conditions.Unset(cmds.ToUnsetParams());
         }
@@ -1818,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<QuestTarget.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)QuestTarget_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -1897,18 +1715,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestTarget.Flag>.Instance.Write(
                         writer,
-                        item.Flags_Property,
+                        item.Flags,
                         length: 4,
                         fieldIndex: (int)QuestTarget_FieldIndex.Flags,
                         errorMask: errorMask);
                 }
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
-                writer: writer,
-                items: item.Conditions,
-                fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<Condition>.Instance.Write);
+            if (item.Conditions.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                    writer: writer,
+                    items: item.Conditions,
+                    fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<Condition>.Instance.Write);
+            }
         }
 
         #endregion

@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Generation
                 $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write"))
             {
                 args.Add(writerAccessor);
-                args.Add($"{itemAccessor.PropertyOrDirectAccess}");
+                args.Add($"{itemAccessor.DirectAccess}");
                 args.Add($"length: {eType.ByteLength}");
                 if (typeGen.HasIndex)
                 {

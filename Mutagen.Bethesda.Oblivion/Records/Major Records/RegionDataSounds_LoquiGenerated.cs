@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -33,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataSounds,
         ILoquiObject<RegionDataSounds>,
         ILoquiObjectSetter,
-        IPropertySupporter<MusicType>,
         IEquatable<RegionDataSounds>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -49,52 +50,30 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MusicType
-        protected MusicType _MusicType;
-        protected PropertyForwarder<RegionDataSounds, MusicType> _MusicTypeForwarder;
-        public INotifyingSetItem<MusicType> MusicType_Property => _MusicTypeForwarder ?? (_MusicTypeForwarder = new PropertyForwarder<RegionDataSounds, MusicType>(this, (int)RegionDataSounds_FieldIndex.MusicType));
+        public bool MusicType_IsSet
+        {
+            get => _hasBeenSetTracker[(int)RegionDataSounds_FieldIndex.MusicType];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)RegionDataSounds_FieldIndex.MusicType, nameof(MusicType_IsSet));
+        }
+        bool IRegionDataSoundsGetter.MusicType_IsSet => MusicType_IsSet;
+        private MusicType _MusicType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MusicType MusicType
         {
             get => this._MusicType;
-            set => this.SetMusicType(value);
+            set => MusicType_Set(value);
         }
-        protected void SetMusicType(
-            MusicType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        MusicType IRegionDataSoundsGetter.MusicType => this.MusicType;
+        public void MusicType_Set(
+            MusicType value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataSounds_FieldIndex.MusicType];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MusicType == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataSounds_FieldIndex.MusicType] = hasBeenSet;
-            }
-            if (_MusicType_subscriptions != null)
-            {
-                var tmp = MusicType;
-                _MusicType = item;
-                _MusicType_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataSounds_FieldIndex.MusicType,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MusicType = item;
-            }
+            this.RaiseAndSetIfChanged(ref _MusicType, value, _hasBeenSetTracker, markSet, (int)RegionDataSounds_FieldIndex.MusicType, nameof(MusicType), nameof(MusicType_IsSet));
         }
-        protected void UnsetMusicType()
+        public void MusicType_Unset()
         {
-            _hasBeenSetTracker[(int)RegionDataSounds_FieldIndex.MusicType] = false;
-            MusicType = default(MusicType);
+            this.MusicType_Set(default(MusicType), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<MusicType> IRegionDataSounds.MusicType_Property => this.MusicType_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<MusicType> IRegionDataSoundsGetter.MusicType_Property => this.MusicType_Property;
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -173,8 +152,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (MusicType_Property.HasBeenSet != rhs.MusicType_Property.HasBeenSet) return false;
-            if (MusicType_Property.HasBeenSet)
+            if (MusicType_IsSet != rhs.MusicType_IsSet) return false;
+            if (MusicType_IsSet)
             {
                 if (this.MusicType != rhs.MusicType) return false;
             }
@@ -189,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (MusicType_Property.HasBeenSet)
+            if (MusicType_IsSet)
             {
                 ret = HashHelper.GetHashCode(MusicType).CombineHashCode(ret);
             }
@@ -525,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMusicType();
+                            item.MusicType = default(MusicType);
                         }
                     }
                     catch (Exception ex)
@@ -591,140 +570,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter MusicType
-        protected ObjectCentralizationSubscriptions<MusicType> _MusicType_subscriptions;
-        MusicType IPropertySupporter<MusicType>.Get(int index)
-        {
-            return GetMusicType(index: index);
-        }
-
-        protected MusicType GetMusicType(int index)
-        {
-            switch ((RegionDataSounds_FieldIndex)index)
-            {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    return MusicType;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        void IPropertySupporter<MusicType>.Set(
-            int index,
-            MusicType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMusicType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMusicType(
-            int index,
-            MusicType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RegionDataSounds_FieldIndex)index)
-            {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    SetMusicType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MusicType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MusicType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MusicType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMusicType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMusicType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RegionDataSounds_FieldIndex)index)
-            {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    SetMusicType(
-                        item: default(MusicType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MusicType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MusicType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MusicType_subscriptions == null)
-            {
-                _MusicType_subscriptions = new ObjectCentralizationSubscriptions<MusicType>();
-            }
-            _MusicType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MusicType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MusicType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MusicType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MusicType IPropertySupporter<MusicType>.DefaultValue(int index)
-        {
-            return DefaultValueMusicType(index: index);
-        }
-
-        protected MusicType DefaultValueMusicType(int index)
-        {
-            switch ((RegionDataSounds_FieldIndex)index)
-            {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    return default(MusicType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RegionDataSounds_Registration.TRIGGERING_RECORD_TYPE;
@@ -960,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMusicType();
+                            item.MusicType = default(MusicType);
                         }
                     }
                     catch (Exception ex)
@@ -1103,9 +948,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataSounds_FieldIndex.MusicType:
-                    this.SetMusicType(
-                        (MusicType)obj,
-                        cmds: cmds);
+                    this.MusicType = (MusicType)obj;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
                     this._Sounds.SetTo((IEnumerable<RegionSound>)obj, cmds);
@@ -1142,9 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataSounds_FieldIndex.MusicType:
-                    obj.SetMusicType(
-                        (MusicType)pair.Value,
-                        cmds: null);
+                    obj.MusicType = (MusicType)pair.Value;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
                     obj._Sounds.SetTo((IEnumerable<RegionSound>)pair.Value, null);
@@ -1165,7 +1006,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataSounds : IRegionDataSoundsGetter, IRegionData, ILoquiClass<IRegionDataSounds, IRegionDataSoundsGetter>, ILoquiClass<RegionDataSounds, IRegionDataSoundsGetter>
     {
         new MusicType MusicType { get; set; }
-        new INotifyingSetItem<MusicType> MusicType_Property { get; }
+        new bool MusicType_IsSet { get; set; }
+        void MusicType_Set(MusicType item, bool hasBeenSet = true);
+        void MusicType_Unset();
 
         new INotifyingList<RegionSound> Sounds { get; }
     }
@@ -1174,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MusicType
         MusicType MusicType { get; }
-        INotifyingSetItemGetter<MusicType> MusicType_Property { get; }
+        bool MusicType_IsSet { get; }
 
         #endregion
         #region Sounds
@@ -1408,9 +1251,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.MusicType);
                 try
                 {
-                    item.MusicType_Property.SetToWithDefault(
-                        rhs: rhs.MusicType_Property,
-                        def: def?.MusicType_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.MusicType,
+                        rhsHasBeenSet: rhs.MusicType_IsSet,
+                        defItem: def?.MusicType ?? default(MusicType),
+                        defHasBeenSet: def?.MusicType_IsSet ?? false,
+                        outRhsItem: out var rhsMusicTypeItem,
+                        outDefItem: out var defMusicTypeItem))
+                    {
+                        item.MusicType = rhsMusicTypeItem;
+                    }
+                    else
+                    {
+                        item.MusicType_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1438,7 +1292,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(RegionSound);
                                     return RegionSound.Copy(
                                         r,
                                         copyMask?.Sounds?.Specific,
@@ -1473,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataSounds_FieldIndex.MusicType:
-                    obj.MusicType_Property.HasBeenSet = on;
+                    obj.MusicType_IsSet = on;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
                     obj.Sounds.HasBeenSet = on;
@@ -1493,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataSounds_FieldIndex.MusicType:
-                    obj.MusicType_Property.Unset(cmds);
+                    obj.MusicType_Unset();
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
                     obj.Sounds.Unset(cmds);
@@ -1512,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataSounds_FieldIndex.MusicType:
-                    return obj.MusicType_Property.HasBeenSet;
+                    return obj.MusicType_IsSet;
                 case RegionDataSounds_FieldIndex.Sounds:
                     return obj.Sounds.HasBeenSet;
                 default:
@@ -1540,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataSounds item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.MusicType_Property.Unset(cmds.ToUnsetParams());
+            item.MusicType_Unset();
             item.Sounds.Unset(cmds.ToUnsetParams());
         }
 
@@ -1559,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionDataSounds_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.MusicType = item.MusicType_Property.Equals(rhs.MusicType_Property, (l, r) => l == r);
+            ret.MusicType = item.MusicType_IsSet == rhs.MusicType_IsSet && item.MusicType == rhs.MusicType;
             if (item.Sounds.HasBeenSet == rhs.Sounds.HasBeenSet)
             {
                 if (item.Sounds.HasBeenSet)
@@ -1647,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRegionDataSoundsGetter item,
             RegionDataSounds_Mask<bool?> checkMask)
         {
-            if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_Property.HasBeenSet) return false;
+            if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_IsSet) return false;
             if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds.HasBeenSet) return false;
             return true;
         }
@@ -1655,7 +1508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RegionDataSounds_Mask<bool> GetHasBeenSetMask(IRegionDataSoundsGetter item)
         {
             var ret = new RegionDataSounds_Mask<bool>();
-            ret.MusicType = item.MusicType_Property.HasBeenSet;
+            ret.MusicType = item.MusicType_IsSet;
             ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.Select((i) => new MaskItem<bool, RegionSound_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -1714,13 +1567,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataSounds");
             }
-            if (item.MusicType_Property.HasBeenSet
+            if (item.MusicType_IsSet
                 && (translationMask?.GetShouldTranslate((int)RegionDataSounds_FieldIndex.MusicType) ?? true))
             {
                 EnumXmlTranslation<MusicType>.Instance.Write(
                     node: elem,
                     name: nameof(item.MusicType),
-                    item: item.MusicType_Property,
+                    item: item.MusicType,
                     fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
                     errorMask: errorMask);
             }
@@ -1793,21 +1646,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
-                writer,
-                item.MusicType_Property,
-                length: 4,
-                fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(RegionDataSounds_Registration.RDMD_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Write(
-                writer: writer,
-                items: item.Sounds,
-                fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
-                recordType: RegionDataSounds_Registration.RDSD_HEADER,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<RegionSound>.Instance.Write);
+            if (item.MusicType_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
+                    writer,
+                    item.MusicType,
+                    length: 4,
+                    fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(RegionDataSounds_Registration.RDMD_HEADER),
+                    nullable: false);
+            }
+            if (item.Sounds.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Write(
+                    writer: writer,
+                    items: item.Sounds,
+                    fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
+                    recordType: RegionDataSounds_Registration.RDSD_HEADER,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<RegionSound>.Instance.Write);
+            }
         }
 
         #endregion

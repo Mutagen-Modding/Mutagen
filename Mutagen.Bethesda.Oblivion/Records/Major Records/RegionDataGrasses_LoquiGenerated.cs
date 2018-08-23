@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -1420,13 +1422,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>>.Instance.Write(
-                writer: writer,
-                items: item.Grasses,
-                fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
-                recordType: RegionDataGrasses_Registration.RDGS_HEADER,
-                errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
+            if (item.Grasses.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>>.Instance.Write(
+                    writer: writer,
+                    items: item.Grasses,
+                    fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
+                    recordType: RegionDataGrasses_Registration.RDGS_HEADER,
+                    errorMask: errorMask,
+                    transl: FormIDBinaryTranslation.Instance.Write);
+            }
         }
 
         #endregion

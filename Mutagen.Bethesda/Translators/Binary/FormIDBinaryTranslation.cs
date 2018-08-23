@@ -118,12 +118,12 @@ namespace Mutagen.Bethesda.Binary
             return false;
         }
 
-        protected override FormID ParseValue(MutagenFrame reader)
+        public override FormID ParseValue(MutagenFrame reader)
         {
             return FormID.Factory(reader.Reader.ReadUInt32());
         }
 
-        protected override void WriteValue(MutagenWriter writer, FormID item)
+        public override void WriteValue(MutagenWriter writer, FormID item)
         {
             writer.Write(item.ToBytes());
         }

@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,11 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedNPC,
         ILoquiObject<PlacedNPC>,
         ILoquiObjectSetter,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<DistantLODData>,
-        IPropertySupporter<EnableParent>,
-        IPropertySupporter<Single>,
-        IPropertySupporter<P3Float>,
         IEquatable<PlacedNPC>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -61,198 +58,114 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<NPC> IPlacedNPCGetter.Base_Property => this.Base_Property;
         #endregion
         #region XPCIFluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool XPCIFluff_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.XPCIFluff, nameof(XPCIFluff_IsSet));
+        }
+        bool IPlacedNPCGetter.XPCIFluff_IsSet => XPCIFluff_IsSet;
         protected Byte[] _XPCIFluff;
-        protected PropertyForwarder<PlacedNPC, Byte[]> _XPCIFluffForwarder;
-        public INotifyingSetItem<Byte[]> XPCIFluff_Property => _XPCIFluffForwarder ?? (_XPCIFluffForwarder = new PropertyForwarder<PlacedNPC, Byte[]>(this, (int)PlacedNPC_FieldIndex.XPCIFluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] XPCIFluff
         {
             get => this._XPCIFluff;
-            set => this.SetXPCIFluff(value);
-        }
-        protected void SetXPCIFluff(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(XPCIFluff, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.XPCIFluff] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = XPCIFluff;
-                _XPCIFluff = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)PlacedNPC_FieldIndex.XPCIFluff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _XPCIFluff = item;
-            }
-        }
-        protected void UnsetXPCIFluff()
-        {
-            SetXPCIFluff(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => XPCIFluff_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IPlacedNPC.XPCIFluff_Property => this.XPCIFluff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IPlacedNPCGetter.XPCIFluff_Property => this.XPCIFluff_Property;
+        Byte[] IPlacedNPCGetter.XPCIFluff => this.XPCIFluff;
+        public void XPCIFluff_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _XPCIFluff, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.XPCIFluff, nameof(XPCIFluff), nameof(XPCIFluff_IsSet));
+        }
+        public void XPCIFluff_Unset()
+        {
+            this.XPCIFluff_Set(default(Byte[]), false);
+        }
         #endregion
         #region FULLFluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool FULLFluff_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.FULLFluff, nameof(FULLFluff_IsSet));
+        }
+        bool IPlacedNPCGetter.FULLFluff_IsSet => FULLFluff_IsSet;
         protected Byte[] _FULLFluff;
-        protected PropertyForwarder<PlacedNPC, Byte[]> _FULLFluffForwarder;
-        public INotifyingSetItem<Byte[]> FULLFluff_Property => _FULLFluffForwarder ?? (_FULLFluffForwarder = new PropertyForwarder<PlacedNPC, Byte[]>(this, (int)PlacedNPC_FieldIndex.FULLFluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] FULLFluff
         {
             get => this._FULLFluff;
-            set => this.SetFULLFluff(value);
-        }
-        protected void SetFULLFluff(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FULLFluff, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.FULLFluff] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = FULLFluff;
-                _FULLFluff = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)PlacedNPC_FieldIndex.FULLFluff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FULLFluff = item;
-            }
-        }
-        protected void UnsetFULLFluff()
-        {
-            SetFULLFluff(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => FULLFluff_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IPlacedNPC.FULLFluff_Property => this.FULLFluff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IPlacedNPCGetter.FULLFluff_Property => this.FULLFluff_Property;
+        Byte[] IPlacedNPCGetter.FULLFluff => this.FULLFluff;
+        public void FULLFluff_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _FULLFluff, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.FULLFluff, nameof(FULLFluff), nameof(FULLFluff_IsSet));
+        }
+        public void FULLFluff_Unset()
+        {
+            this.FULLFluff_Set(default(Byte[]), false);
+        }
         #endregion
         #region DistantLODData
-        protected DistantLODData _DistantLODData;
-        protected PropertyForwarder<PlacedNPC, DistantLODData> _DistantLODDataForwarder;
-        public INotifyingSetItem<DistantLODData> DistantLODData_Property => _DistantLODDataForwarder ?? (_DistantLODDataForwarder = new PropertyForwarder<PlacedNPC, DistantLODData>(this, (int)PlacedNPC_FieldIndex.DistantLODData));
+        public bool DistantLODData_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.DistantLODData];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.DistantLODData, nameof(DistantLODData_IsSet));
+        }
+        bool IPlacedNPCGetter.DistantLODData_IsSet => DistantLODData_IsSet;
+        private DistantLODData _DistantLODData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public DistantLODData DistantLODData
         {
-            get => this._DistantLODData;
-            set => this.SetDistantLODData(value);
+            get => _DistantLODData;
+            set => DistantLODData_Set(value);
         }
-        protected void SetDistantLODData(
-            DistantLODData item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void DistantLODData_Set(
+            DistantLODData value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.DistantLODData];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(DistantLODData, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.DistantLODData] = hasBeenSet;
-            }
-            if (_DistantLODData_subscriptions != null)
-            {
-                var tmp = DistantLODData;
-                _DistantLODData = item;
-                _DistantLODData_subscriptions.FireSubscriptions(
-                    index: (int)PlacedNPC_FieldIndex.DistantLODData,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DistantLODData = item;
-            }
+            this.RaiseAndSetIfChanged(ref _DistantLODData, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.DistantLODData, nameof(DistantLODData), nameof(DistantLODData_IsSet));
         }
-        protected void UnsetDistantLODData()
+        public void DistantLODData_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.DistantLODData] = false;
-            DistantLODData = default(DistantLODData);
+            this.DistantLODData_Set(default(DistantLODData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<DistantLODData> IPlacedNPC.DistantLODData_Property => this.DistantLODData_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<DistantLODData> IPlacedNPCGetter.DistantLODData_Property => this.DistantLODData_Property;
+        DistantLODData IPlacedNPCGetter.DistantLODData => this.DistantLODData;
         #endregion
         #region EnableParent
-        protected EnableParent _EnableParent;
-        protected PropertyForwarder<PlacedNPC, EnableParent> _EnableParentForwarder;
-        public INotifyingSetItem<EnableParent> EnableParent_Property => _EnableParentForwarder ?? (_EnableParentForwarder = new PropertyForwarder<PlacedNPC, EnableParent>(this, (int)PlacedNPC_FieldIndex.EnableParent));
+        public bool EnableParent_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.EnableParent];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.EnableParent, nameof(EnableParent_IsSet));
+        }
+        bool IPlacedNPCGetter.EnableParent_IsSet => EnableParent_IsSet;
+        private EnableParent _EnableParent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public EnableParent EnableParent
         {
-            get => this._EnableParent;
-            set => this.SetEnableParent(value);
+            get => _EnableParent;
+            set => EnableParent_Set(value);
         }
-        protected void SetEnableParent(
-            EnableParent item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void EnableParent_Set(
+            EnableParent value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.EnableParent];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(EnableParent, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.EnableParent] = hasBeenSet;
-            }
-            if (_EnableParent_subscriptions != null)
-            {
-                var tmp = EnableParent;
-                _EnableParent = item;
-                _EnableParent_subscriptions.FireSubscriptions(
-                    index: (int)PlacedNPC_FieldIndex.EnableParent,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _EnableParent = item;
-            }
+            this.RaiseAndSetIfChanged(ref _EnableParent, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.EnableParent, nameof(EnableParent), nameof(EnableParent_IsSet));
         }
-        protected void UnsetEnableParent()
+        public void EnableParent_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.EnableParent] = false;
-            EnableParent = default(EnableParent);
+            this.EnableParent_Set(default(EnableParent), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<EnableParent> IPlacedNPC.EnableParent_Property => this.EnableParent_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<EnableParent> IPlacedNPCGetter.EnableParent_Property => this.EnableParent_Property;
+        EnableParent IPlacedNPCGetter.EnableParent => this.EnableParent;
         #endregion
         #region MerchantContainer
         public FormIDSetLink<PlacedObject> MerchantContainer_Property { get; } = new FormIDSetLink<PlacedObject>();
@@ -269,197 +182,74 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<PlacedCreature> IPlacedNPCGetter.Horse_Property => this.Horse_Property;
         #endregion
         #region RagdollData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool RagdollData_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.RagdollData];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.RagdollData, nameof(RagdollData_IsSet));
+        }
+        bool IPlacedNPCGetter.RagdollData_IsSet => RagdollData_IsSet;
         protected Byte[] _RagdollData;
-        protected PropertyForwarder<PlacedNPC, Byte[]> _RagdollDataForwarder;
-        public INotifyingSetItem<Byte[]> RagdollData_Property => _RagdollDataForwarder ?? (_RagdollDataForwarder = new PropertyForwarder<PlacedNPC, Byte[]>(this, (int)PlacedNPC_FieldIndex.RagdollData));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] RagdollData
         {
             get => this._RagdollData;
-            set => this.SetRagdollData(value);
-        }
-        protected void SetRagdollData(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.RagdollData];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(RagdollData, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.RagdollData] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = RagdollData;
-                _RagdollData = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)PlacedNPC_FieldIndex.RagdollData,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RagdollData = item;
-            }
-        }
-        protected void UnsetRagdollData()
-        {
-            SetRagdollData(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => RagdollData_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IPlacedNPC.RagdollData_Property => this.RagdollData_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IPlacedNPCGetter.RagdollData_Property => this.RagdollData_Property;
+        Byte[] IPlacedNPCGetter.RagdollData => this.RagdollData;
+        public void RagdollData_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _RagdollData, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.RagdollData, nameof(RagdollData), nameof(RagdollData_IsSet));
+        }
+        public void RagdollData_Unset()
+        {
+            this.RagdollData_Set(default(Byte[]), false);
+        }
         #endregion
         #region Scale
-        protected Single _Scale;
-        protected PropertyForwarder<PlacedNPC, Single> _ScaleForwarder;
-        public INotifyingSetItem<Single> Scale_Property => _ScaleForwarder ?? (_ScaleForwarder = new PropertyForwarder<PlacedNPC, Single>(this, (int)PlacedNPC_FieldIndex.Scale));
+        public bool Scale_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Scale];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedNPC_FieldIndex.Scale, nameof(Scale_IsSet));
+        }
+        bool IPlacedNPCGetter.Scale_IsSet => Scale_IsSet;
+        private Single _Scale;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Scale
         {
             get => this._Scale;
-            set => this.SetScale(value);
+            set => Scale_Set(value);
         }
-        protected void SetScale(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Single IPlacedNPCGetter.Scale => this.Scale;
+        public void Scale_Set(
+            Single value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Scale];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Scale == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Scale] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Scale;
-                _Scale = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)PlacedNPC_FieldIndex.Scale,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Scale = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Scale, value, _hasBeenSetTracker, markSet, (int)PlacedNPC_FieldIndex.Scale, nameof(Scale), nameof(Scale_IsSet));
         }
-        protected void UnsetScale()
+        public void Scale_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Scale] = false;
-            Scale = default(Single);
+            this.Scale_Set(default(Single), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Single> IPlacedNPC.Scale_Property => this.Scale_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Single> IPlacedNPCGetter.Scale_Property => this.Scale_Property;
         #endregion
         #region Position
-        protected P3Float _Position;
-        protected PropertyForwarder<PlacedNPC, P3Float> _PositionForwarder;
-        public INotifyingSetItem<P3Float> Position_Property => _PositionForwarder ?? (_PositionForwarder = new PropertyForwarder<PlacedNPC, P3Float>(this, (int)PlacedNPC_FieldIndex.Position));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3Float _Position;
         public P3Float Position
         {
             get => this._Position;
-            set => this.SetPosition(value);
+            set => this.RaiseAndSetIfChanged(ref this._Position, value, nameof(Position));
         }
-        protected void SetPosition(
-            P3Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Position];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Position == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Position] = hasBeenSet;
-            }
-            if (_P3Float_subscriptions != null)
-            {
-                var tmp = Position;
-                _Position = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)PlacedNPC_FieldIndex.Position,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Position = item;
-            }
-        }
-        protected void UnsetPosition()
-        {
-            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Position] = false;
-            Position = default(P3Float);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IPlacedNPC.Position_Property => this.Position_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IPlacedNPCGetter.Position_Property => this.Position_Property;
         #endregion
         #region Rotation
-        protected P3Float _Rotation;
-        protected PropertyForwarder<PlacedNPC, P3Float> _RotationForwarder;
-        public INotifyingSetItem<P3Float> Rotation_Property => _RotationForwarder ?? (_RotationForwarder = new PropertyForwarder<PlacedNPC, P3Float>(this, (int)PlacedNPC_FieldIndex.Rotation));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3Float _Rotation;
         public P3Float Rotation
         {
             get => this._Rotation;
-            set => this.SetRotation(value);
+            set => this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
         }
-        protected void SetRotation(
-            P3Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Rotation];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Rotation == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Rotation] = hasBeenSet;
-            }
-            if (_P3Float_subscriptions != null)
-            {
-                var tmp = Rotation;
-                _Rotation = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)PlacedNPC_FieldIndex.Rotation,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Rotation = item;
-            }
-        }
-        protected void UnsetRotation()
-        {
-            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Rotation] = false;
-            Rotation = default(P3Float);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IPlacedNPC.Rotation_Property => this.Rotation_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IPlacedNPCGetter.Rotation_Property => this.Rotation_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -525,23 +315,23 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Base_Property.Equals(rhs.Base_Property)) return false;
             }
-            if (XPCIFluff_Property.HasBeenSet != rhs.XPCIFluff_Property.HasBeenSet) return false;
-            if (XPCIFluff_Property.HasBeenSet)
+            if (XPCIFluff_IsSet != rhs.XPCIFluff_IsSet) return false;
+            if (XPCIFluff_IsSet)
             {
                 if (!this.XPCIFluff.EqualsFast(rhs.XPCIFluff)) return false;
             }
-            if (FULLFluff_Property.HasBeenSet != rhs.FULLFluff_Property.HasBeenSet) return false;
-            if (FULLFluff_Property.HasBeenSet)
+            if (FULLFluff_IsSet != rhs.FULLFluff_IsSet) return false;
+            if (FULLFluff_IsSet)
             {
                 if (!this.FULLFluff.EqualsFast(rhs.FULLFluff)) return false;
             }
-            if (DistantLODData_Property.HasBeenSet != rhs.DistantLODData_Property.HasBeenSet) return false;
-            if (DistantLODData_Property.HasBeenSet)
+            if (DistantLODData_IsSet != rhs.DistantLODData_IsSet) return false;
+            if (DistantLODData_IsSet)
             {
                 if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
             }
-            if (EnableParent_Property.HasBeenSet != rhs.EnableParent_Property.HasBeenSet) return false;
-            if (EnableParent_Property.HasBeenSet)
+            if (EnableParent_IsSet != rhs.EnableParent_IsSet) return false;
+            if (EnableParent_IsSet)
             {
                 if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
             }
@@ -555,13 +345,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Horse_Property.Equals(rhs.Horse_Property)) return false;
             }
-            if (RagdollData_Property.HasBeenSet != rhs.RagdollData_Property.HasBeenSet) return false;
-            if (RagdollData_Property.HasBeenSet)
+            if (RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
+            if (RagdollData_IsSet)
             {
                 if (!this.RagdollData.EqualsFast(rhs.RagdollData)) return false;
             }
-            if (Scale_Property.HasBeenSet != rhs.Scale_Property.HasBeenSet) return false;
-            if (Scale_Property.HasBeenSet)
+            if (Scale_IsSet != rhs.Scale_IsSet) return false;
+            if (Scale_IsSet)
             {
                 if (!this.Scale.EqualsWithin(rhs.Scale)) return false;
             }
@@ -577,19 +367,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Base).CombineHashCode(ret);
             }
-            if (XPCIFluff_Property.HasBeenSet)
+            if (XPCIFluff_IsSet)
             {
                 ret = HashHelper.GetHashCode(XPCIFluff).CombineHashCode(ret);
             }
-            if (FULLFluff_Property.HasBeenSet)
+            if (FULLFluff_IsSet)
             {
                 ret = HashHelper.GetHashCode(FULLFluff).CombineHashCode(ret);
             }
-            if (DistantLODData_Property.HasBeenSet)
+            if (DistantLODData_IsSet)
             {
                 ret = HashHelper.GetHashCode(DistantLODData).CombineHashCode(ret);
             }
-            if (EnableParent_Property.HasBeenSet)
+            if (EnableParent_IsSet)
             {
                 ret = HashHelper.GetHashCode(EnableParent).CombineHashCode(ret);
             }
@@ -601,11 +391,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Horse).CombineHashCode(ret);
             }
-            if (RagdollData_Property.HasBeenSet)
+            if (RagdollData_IsSet)
             {
                 ret = HashHelper.GetHashCode(RagdollData).CombineHashCode(ret);
             }
-            if (Scale_Property.HasBeenSet)
+            if (Scale_IsSet)
             {
                 ret = HashHelper.GetHashCode(Scale).CombineHashCode(ret);
             }
@@ -978,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetXPCIFluff();
+                            item.XPCIFluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1004,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFULLFluff();
+                            item.FULLFluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1031,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDistantLODData();
+                            item.DistantLODData = default(DistantLODData);
                         }
                     }
                     catch (Exception ex)
@@ -1058,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEnableParent();
+                            item.EnableParent = default(EnableParent);
                         }
                     }
                     catch (Exception ex)
@@ -1098,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRagdollData();
+                            item.RagdollData = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1124,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetScale();
+                            item.Scale = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1150,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPosition();
+                            item.Position = default(P3Float);
                         }
                     }
                     catch (Exception ex)
@@ -1176,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRotation();
+                            item.Rotation = default(P3Float);
                         }
                     }
                     catch (Exception ex)
@@ -1226,709 +1016,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    return XPCIFluff;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    return FULLFluff;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    return RagdollData;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    SetXPCIFluff(item, hasBeenSet, cmds);
-                    break;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    SetFULLFluff(item, hasBeenSet, cmds);
-                    break;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    SetRagdollData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    SetXPCIFluff(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    SetFULLFluff(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    SetRagdollData(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                case PlacedNPC_FieldIndex.FULLFluff:
-                case PlacedNPC_FieldIndex.RagdollData:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter DistantLODData
-        protected ObjectCentralizationSubscriptions<DistantLODData> _DistantLODData_subscriptions;
-        DistantLODData IPropertySupporter<DistantLODData>.Get(int index)
-        {
-            return GetDistantLODData(index: index);
-        }
-
-        protected DistantLODData GetDistantLODData(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    return DistantLODData;
-                default:
-                    throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
-            }
-        }
-
-        void IPropertySupporter<DistantLODData>.Set(
-            int index,
-            DistantLODData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetDistantLODData(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetDistantLODData(
-            int index,
-            DistantLODData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    SetDistantLODData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
-            }
-        }
-
-        bool IPropertySupporter<DistantLODData>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<DistantLODData>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<DistantLODData>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetDistantLODData(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetDistantLODData(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    SetDistantLODData(
-                        item: default(DistantLODData),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<DistantLODData>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<DistantLODData> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_DistantLODData_subscriptions == null)
-            {
-                _DistantLODData_subscriptions = new ObjectCentralizationSubscriptions<DistantLODData>();
-            }
-            _DistantLODData_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<DistantLODData>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _DistantLODData_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<DistantLODData>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        DistantLODData IPropertySupporter<DistantLODData>.DefaultValue(int index)
-        {
-            return DefaultValueDistantLODData(index: index);
-        }
-
-        protected DistantLODData DefaultValueDistantLODData(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    return default(DistantLODData);
-                default:
-                    throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter EnableParent
-        protected ObjectCentralizationSubscriptions<EnableParent> _EnableParent_subscriptions;
-        EnableParent IPropertySupporter<EnableParent>.Get(int index)
-        {
-            return GetEnableParent(index: index);
-        }
-
-        protected EnableParent GetEnableParent(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.EnableParent:
-                    return EnableParent;
-                default:
-                    throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
-            }
-        }
-
-        void IPropertySupporter<EnableParent>.Set(
-            int index,
-            EnableParent item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetEnableParent(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetEnableParent(
-            int index,
-            EnableParent item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.EnableParent:
-                    SetEnableParent(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
-            }
-        }
-
-        bool IPropertySupporter<EnableParent>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<EnableParent>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<EnableParent>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetEnableParent(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetEnableParent(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.EnableParent:
-                    SetEnableParent(
-                        item: default(EnableParent),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<EnableParent>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<EnableParent> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_EnableParent_subscriptions == null)
-            {
-                _EnableParent_subscriptions = new ObjectCentralizationSubscriptions<EnableParent>();
-            }
-            _EnableParent_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<EnableParent>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _EnableParent_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<EnableParent>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        EnableParent IPropertySupporter<EnableParent>.DefaultValue(int index)
-        {
-            return DefaultValueEnableParent(index: index);
-        }
-
-        protected EnableParent DefaultValueEnableParent(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.EnableParent:
-                    return default(EnableParent);
-                default:
-                    throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.Scale:
-                    return Scale;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.Scale:
-                    SetScale(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.Scale:
-                    SetScale(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.Scale:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter P3Float
-        protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
-        P3Float IPropertySupporter<P3Float>.Get(int index)
-        {
-            return GetP3Float(index: index);
-        }
-
-        protected P3Float GetP3Float(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.Position:
-                    return Position;
-                case PlacedNPC_FieldIndex.Rotation:
-                    return Rotation;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        void IPropertySupporter<P3Float>.Set(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP3Float(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP3Float(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.Position:
-                    SetPosition(item, hasBeenSet, cmds);
-                    break;
-                case PlacedNPC_FieldIndex.Rotation:
-                    SetRotation(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P3Float>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P3Float>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP3Float(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP3Float(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.Position:
-                    SetPosition(
-                        item: default(P3Float),
-                        hasBeenSet: false);
-                    break;
-                case PlacedNPC_FieldIndex.Rotation:
-                    SetRotation(
-                        item: default(P3Float),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P3Float> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P3Float_subscriptions == null)
-            {
-                _P3Float_subscriptions = new ObjectCentralizationSubscriptions<P3Float>();
-            }
-            _P3Float_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P3Float_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P3Float>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P3Float IPropertySupporter<P3Float>.DefaultValue(int index)
-        {
-            return DefaultValueP3Float(index: index);
-        }
-
-        protected P3Float DefaultValueP3Float(int index)
-        {
-            switch ((PlacedNPC_FieldIndex)index)
-            {
-                case PlacedNPC_FieldIndex.Position:
-                case PlacedNPC_FieldIndex.Rotation:
-                    return default(P3Float);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = PlacedNPC_Registration.TRIGGERING_RECORD_TYPE;
@@ -2183,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetXPCIFluff();
+                            item.XPCIFluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -2210,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFULLFluff();
+                            item.FULLFluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -2236,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDistantLODData();
+                            item.DistantLODData = default(DistantLODData);
                         }
                     }
                     catch (Exception ex)
@@ -2262,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEnableParent();
+                            item.EnableParent = default(EnableParent);
                         }
                     }
                     catch (Exception ex)
@@ -2305,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRagdollData();
+                            item.RagdollData = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -2332,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetScale();
+                            item.Scale = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2365,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetPosition();
+                                item.Position = default(P3Float);
                             }
                         }
                         catch (Exception ex)
@@ -2389,7 +1476,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRotation();
+                                item.Rotation = default(P3Float);
                             }
                         }
                         catch (Exception ex)
@@ -2528,24 +1615,16 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case PlacedNPC_FieldIndex.XPCIFluff:
-                    this.SetXPCIFluff(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.XPCIFluff = (Byte[])obj;
                     break;
                 case PlacedNPC_FieldIndex.FULLFluff:
-                    this.SetFULLFluff(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.FULLFluff = (Byte[])obj;
                     break;
                 case PlacedNPC_FieldIndex.DistantLODData:
-                    this.SetDistantLODData(
-                        (DistantLODData)obj,
-                        cmds: cmds);
+                    this.DistantLODData = (DistantLODData)obj;
                     break;
                 case PlacedNPC_FieldIndex.EnableParent:
-                    this.SetEnableParent(
-                        (EnableParent)obj,
-                        cmds: cmds);
+                    this.EnableParent = (EnableParent)obj;
                     break;
                 case PlacedNPC_FieldIndex.MerchantContainer:
                     this.MerchantContainer_Property.Set(
@@ -2558,24 +1637,16 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case PlacedNPC_FieldIndex.RagdollData:
-                    this.SetRagdollData(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.RagdollData = (Byte[])obj;
                     break;
                 case PlacedNPC_FieldIndex.Scale:
-                    this.SetScale(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Scale = (Single)obj;
                     break;
                 case PlacedNPC_FieldIndex.Position:
-                    this.SetPosition(
-                        (P3Float)obj,
-                        cmds: cmds);
+                    this.Position = (P3Float)obj;
                     break;
                 case PlacedNPC_FieldIndex.Rotation:
-                    this.SetRotation(
-                        (P3Float)obj,
-                        cmds: cmds);
+                    this.Rotation = (P3Float)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -2614,24 +1685,16 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case PlacedNPC_FieldIndex.XPCIFluff:
-                    obj.SetXPCIFluff(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.XPCIFluff = (Byte[])pair.Value;
                     break;
                 case PlacedNPC_FieldIndex.FULLFluff:
-                    obj.SetFULLFluff(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.FULLFluff = (Byte[])pair.Value;
                     break;
                 case PlacedNPC_FieldIndex.DistantLODData:
-                    obj.SetDistantLODData(
-                        (DistantLODData)pair.Value,
-                        cmds: null);
+                    obj.DistantLODData = (DistantLODData)pair.Value;
                     break;
                 case PlacedNPC_FieldIndex.EnableParent:
-                    obj.SetEnableParent(
-                        (EnableParent)pair.Value,
-                        cmds: null);
+                    obj.EnableParent = (EnableParent)pair.Value;
                     break;
                 case PlacedNPC_FieldIndex.MerchantContainer:
                     obj.MerchantContainer_Property.Set(
@@ -2644,24 +1707,16 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case PlacedNPC_FieldIndex.RagdollData:
-                    obj.SetRagdollData(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.RagdollData = (Byte[])pair.Value;
                     break;
                 case PlacedNPC_FieldIndex.Scale:
-                    obj.SetScale(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Scale = (Single)pair.Value;
                     break;
                 case PlacedNPC_FieldIndex.Position:
-                    obj.SetPosition(
-                        (P3Float)pair.Value,
-                        cmds: null);
+                    obj.Position = (P3Float)pair.Value;
                     break;
                 case PlacedNPC_FieldIndex.Rotation:
-                    obj.SetRotation(
-                        (P3Float)pair.Value,
-                        cmds: null);
+                    obj.Rotation = (P3Float)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2680,30 +1735,40 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new NPC Base { get; set; }
         new Byte[] XPCIFluff { get; set; }
-        new INotifyingSetItem<Byte[]> XPCIFluff_Property { get; }
+        new bool XPCIFluff_IsSet { get; set; }
+        void XPCIFluff_Set(Byte[] item, bool hasBeenSet = true);
+        void XPCIFluff_Unset();
 
         new Byte[] FULLFluff { get; set; }
-        new INotifyingSetItem<Byte[]> FULLFluff_Property { get; }
+        new bool FULLFluff_IsSet { get; set; }
+        void FULLFluff_Set(Byte[] item, bool hasBeenSet = true);
+        void FULLFluff_Unset();
 
         new DistantLODData DistantLODData { get; set; }
-        new INotifyingSetItem<DistantLODData> DistantLODData_Property { get; }
+        new bool DistantLODData_IsSet { get; set; }
+        void DistantLODData_Set(DistantLODData item, bool hasBeenSet = true);
+        void DistantLODData_Unset();
 
         new EnableParent EnableParent { get; set; }
-        new INotifyingSetItem<EnableParent> EnableParent_Property { get; }
+        new bool EnableParent_IsSet { get; set; }
+        void EnableParent_Set(EnableParent item, bool hasBeenSet = true);
+        void EnableParent_Unset();
 
         new PlacedObject MerchantContainer { get; set; }
         new PlacedCreature Horse { get; set; }
         new Byte[] RagdollData { get; set; }
-        new INotifyingSetItem<Byte[]> RagdollData_Property { get; }
+        new bool RagdollData_IsSet { get; set; }
+        void RagdollData_Set(Byte[] item, bool hasBeenSet = true);
+        void RagdollData_Unset();
 
         new Single Scale { get; set; }
-        new INotifyingSetItem<Single> Scale_Property { get; }
+        new bool Scale_IsSet { get; set; }
+        void Scale_Set(Single item, bool hasBeenSet = true);
+        void Scale_Unset();
 
         new P3Float Position { get; set; }
-        new INotifyingItem<P3Float> Position_Property { get; }
 
         new P3Float Rotation { get; set; }
-        new INotifyingItem<P3Float> Rotation_Property { get; }
 
     }
 
@@ -2716,22 +1781,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region XPCIFluff
         Byte[] XPCIFluff { get; }
-        INotifyingSetItemGetter<Byte[]> XPCIFluff_Property { get; }
+        bool XPCIFluff_IsSet { get; }
 
         #endregion
         #region FULLFluff
         Byte[] FULLFluff { get; }
-        INotifyingSetItemGetter<Byte[]> FULLFluff_Property { get; }
+        bool FULLFluff_IsSet { get; }
 
         #endregion
         #region DistantLODData
         DistantLODData DistantLODData { get; }
-        INotifyingSetItemGetter<DistantLODData> DistantLODData_Property { get; }
+        bool DistantLODData_IsSet { get; }
 
         #endregion
         #region EnableParent
         EnableParent EnableParent { get; }
-        INotifyingSetItemGetter<EnableParent> EnableParent_Property { get; }
+        bool EnableParent_IsSet { get; }
 
         #endregion
         #region MerchantContainer
@@ -2746,22 +1811,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RagdollData
         Byte[] RagdollData { get; }
-        INotifyingSetItemGetter<Byte[]> RagdollData_Property { get; }
+        bool RagdollData_IsSet { get; }
 
         #endregion
         #region Scale
         Single Scale { get; }
-        INotifyingSetItemGetter<Single> Scale_Property { get; }
+        bool Scale_IsSet { get; }
 
         #endregion
         #region Position
         P3Float Position { get; }
-        INotifyingItemGetter<P3Float> Position_Property { get; }
 
         #endregion
         #region Rotation
         P3Float Rotation { get; }
-        INotifyingItemGetter<P3Float> Rotation_Property { get; }
 
         #endregion
 
@@ -3129,9 +2192,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.XPCIFluff);
                 try
                 {
-                    item.XPCIFluff_Property.SetToWithDefault(
-                        rhs: rhs.XPCIFluff_Property,
-                        def: def?.XPCIFluff_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.XPCIFluff,
+                        rhsHasBeenSet: rhs.XPCIFluff_IsSet,
+                        defItem: def?.XPCIFluff ?? default(Byte[]),
+                        defHasBeenSet: def?.XPCIFluff_IsSet ?? false,
+                        outRhsItem: out var rhsXPCIFluffItem,
+                        outDefItem: out var defXPCIFluffItem))
+                    {
+                        item.XPCIFluff = rhsXPCIFluffItem;
+                    }
+                    else
+                    {
+                        item.XPCIFluff_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3148,9 +2222,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.FULLFluff);
                 try
                 {
-                    item.FULLFluff_Property.SetToWithDefault(
-                        rhs: rhs.FULLFluff_Property,
-                        def: def?.FULLFluff_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.FULLFluff,
+                        rhsHasBeenSet: rhs.FULLFluff_IsSet,
+                        defItem: def?.FULLFluff ?? default(Byte[]),
+                        defHasBeenSet: def?.FULLFluff_IsSet ?? false,
+                        outRhsItem: out var rhsFULLFluffItem,
+                        outDefItem: out var defFULLFluffItem))
+                    {
+                        item.FULLFluff = rhsFULLFluffItem;
+                    }
+                    else
+                    {
+                        item.FULLFluff_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3167,36 +2252,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DistantLODData);
                 try
                 {
-                    item.DistantLODData_Property.SetToWithDefault(
-                        rhs.DistantLODData_Property,
-                        def?.DistantLODData_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.DistantLODData,
+                        rhsHasBeenSet: rhs.DistantLODData_IsSet,
+                        defItem: def?.DistantLODData,
+                        defHasBeenSet: def?.DistantLODData_IsSet ?? false,
+                        outRhsItem: out var rhsDistantLODDataItem,
+                        outDefItem: out var defDistantLODDataItem))
+                    {
+                        switch (copyMask?.DistantLODData.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.DistantLODData.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    DistantLODDataCommon.CopyFieldsFrom(
-                                        item: item.DistantLODData,
-                                        rhs: rhs.DistantLODData,
-                                        def: def?.DistantLODData,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.DistantLODData.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(DistantLODData);
-                                    return DistantLODData.Copy(
-                                        r,
-                                        copyMask?.DistantLODData?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.DistantLODData?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.DistantLODData = rhsDistantLODDataItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                DistantLODDataCommon.CopyFieldsFrom(
+                                    item: item.DistantLODData,
+                                    rhs: rhs.DistantLODData,
+                                    def: def?.DistantLODData,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.DistantLODData.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.DistantLODData = DistantLODData.Copy(
+                                    rhsDistantLODDataItem,
+                                    copyMask?.DistantLODData?.Specific,
+                                    def: defDistantLODDataItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.DistantLODData?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.DistantLODData_IsSet = false;
+                        item.DistantLODData = default(DistantLODData);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3213,36 +2305,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.EnableParent);
                 try
                 {
-                    item.EnableParent_Property.SetToWithDefault(
-                        rhs.EnableParent_Property,
-                        def?.EnableParent_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.EnableParent,
+                        rhsHasBeenSet: rhs.EnableParent_IsSet,
+                        defItem: def?.EnableParent,
+                        defHasBeenSet: def?.EnableParent_IsSet ?? false,
+                        outRhsItem: out var rhsEnableParentItem,
+                        outDefItem: out var defEnableParentItem))
+                    {
+                        switch (copyMask?.EnableParent.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.EnableParent.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    EnableParentCommon.CopyFieldsFrom(
-                                        item: item.EnableParent,
-                                        rhs: rhs.EnableParent,
-                                        def: def?.EnableParent,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.EnableParent.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(EnableParent);
-                                    return EnableParent.Copy(
-                                        r,
-                                        copyMask?.EnableParent?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.EnableParent?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.EnableParent = rhsEnableParentItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                EnableParentCommon.CopyFieldsFrom(
+                                    item: item.EnableParent,
+                                    rhs: rhs.EnableParent,
+                                    def: def?.EnableParent,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.EnableParent.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.EnableParent = EnableParent.Copy(
+                                    rhsEnableParentItem,
+                                    copyMask?.EnableParent?.Specific,
+                                    def: defEnableParentItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.EnableParent?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.EnableParent_IsSet = false;
+                        item.EnableParent = default(EnableParent);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3299,9 +2398,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.RagdollData);
                 try
                 {
-                    item.RagdollData_Property.SetToWithDefault(
-                        rhs: rhs.RagdollData_Property,
-                        def: def?.RagdollData_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.RagdollData,
+                        rhsHasBeenSet: rhs.RagdollData_IsSet,
+                        defItem: def?.RagdollData ?? default(Byte[]),
+                        defHasBeenSet: def?.RagdollData_IsSet ?? false,
+                        outRhsItem: out var rhsRagdollDataItem,
+                        outDefItem: out var defRagdollDataItem))
+                    {
+                        item.RagdollData = rhsRagdollDataItem;
+                    }
+                    else
+                    {
+                        item.RagdollData_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3318,9 +2428,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Scale);
                 try
                 {
-                    item.Scale_Property.SetToWithDefault(
-                        rhs: rhs.Scale_Property,
-                        def: def?.Scale_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Scale,
+                        rhsHasBeenSet: rhs.Scale_IsSet,
+                        defItem: def?.Scale ?? default(Single),
+                        defHasBeenSet: def?.Scale_IsSet ?? false,
+                        outRhsItem: out var rhsScaleItem,
+                        outDefItem: out var defScaleItem))
+                    {
+                        item.Scale = rhsScaleItem;
+                    }
+                    else
+                    {
+                        item.Scale_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3337,9 +2458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Position);
                 try
                 {
-                    item.Position_Property.Set(
-                        value: rhs.Position,
-                        cmds: cmds);
+                    item.Position = rhs.Position;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3356,9 +2475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Rotation);
                 try
                 {
-                    item.Rotation_Property.Set(
-                        value: rhs.Rotation,
-                        cmds: cmds);
+                    item.Rotation = rhs.Rotation;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3391,16 +2508,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Base_Property.HasBeenSet = on;
                     break;
                 case PlacedNPC_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff_Property.HasBeenSet = on;
+                    obj.XPCIFluff_IsSet = on;
                     break;
                 case PlacedNPC_FieldIndex.FULLFluff:
-                    obj.FULLFluff_Property.HasBeenSet = on;
+                    obj.FULLFluff_IsSet = on;
                     break;
                 case PlacedNPC_FieldIndex.DistantLODData:
-                    obj.DistantLODData_Property.HasBeenSet = on;
+                    obj.DistantLODData_IsSet = on;
                     break;
                 case PlacedNPC_FieldIndex.EnableParent:
-                    obj.EnableParent_Property.HasBeenSet = on;
+                    obj.EnableParent_IsSet = on;
                     break;
                 case PlacedNPC_FieldIndex.MerchantContainer:
                     obj.MerchantContainer_Property.HasBeenSet = on;
@@ -3409,10 +2526,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Horse_Property.HasBeenSet = on;
                     break;
                 case PlacedNPC_FieldIndex.RagdollData:
-                    obj.RagdollData_Property.HasBeenSet = on;
+                    obj.RagdollData_IsSet = on;
                     break;
                 case PlacedNPC_FieldIndex.Scale:
-                    obj.Scale_Property.HasBeenSet = on;
+                    obj.Scale_IsSet = on;
                     break;
                 default:
                     PlacedCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -3429,31 +2546,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedNPC_FieldIndex.Base:
-                    obj.Base_Property.Unset(cmds);
+                    obj.Base_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PlacedNPC_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff_Property.Unset(cmds);
+                    obj.XPCIFluff_Unset();
                     break;
                 case PlacedNPC_FieldIndex.FULLFluff:
-                    obj.FULLFluff_Property.Unset(cmds);
+                    obj.FULLFluff_Unset();
                     break;
                 case PlacedNPC_FieldIndex.DistantLODData:
-                    obj.DistantLODData_Property.Unset(cmds);
+                    obj.DistantLODData_Unset();
                     break;
                 case PlacedNPC_FieldIndex.EnableParent:
-                    obj.EnableParent_Property.Unset(cmds);
+                    obj.EnableParent_Unset();
                     break;
                 case PlacedNPC_FieldIndex.MerchantContainer:
-                    obj.MerchantContainer_Property.Unset(cmds);
+                    obj.MerchantContainer_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PlacedNPC_FieldIndex.Horse:
-                    obj.Horse_Property.Unset(cmds);
+                    obj.Horse_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PlacedNPC_FieldIndex.RagdollData:
-                    obj.RagdollData_Property.Unset(cmds);
+                    obj.RagdollData_Unset();
                     break;
                 case PlacedNPC_FieldIndex.Scale:
-                    obj.Scale_Property.Unset(cmds);
+                    obj.Scale_Unset();
                     break;
                 case PlacedNPC_FieldIndex.Position:
                     obj.Position = default(P3Float);
@@ -3480,21 +2597,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNPC_FieldIndex.Base:
                     return obj.Base_Property.HasBeenSet;
                 case PlacedNPC_FieldIndex.XPCIFluff:
-                    return obj.XPCIFluff_Property.HasBeenSet;
+                    return obj.XPCIFluff_IsSet;
                 case PlacedNPC_FieldIndex.FULLFluff:
-                    return obj.FULLFluff_Property.HasBeenSet;
+                    return obj.FULLFluff_IsSet;
                 case PlacedNPC_FieldIndex.DistantLODData:
-                    return obj.DistantLODData_Property.HasBeenSet;
+                    return obj.DistantLODData_IsSet;
                 case PlacedNPC_FieldIndex.EnableParent:
-                    return obj.EnableParent_Property.HasBeenSet;
+                    return obj.EnableParent_IsSet;
                 case PlacedNPC_FieldIndex.MerchantContainer:
                     return obj.MerchantContainer_Property.HasBeenSet;
                 case PlacedNPC_FieldIndex.Horse:
                     return obj.Horse_Property.HasBeenSet;
                 case PlacedNPC_FieldIndex.RagdollData:
-                    return obj.RagdollData_Property.HasBeenSet;
+                    return obj.RagdollData_IsSet;
                 case PlacedNPC_FieldIndex.Scale:
-                    return obj.Scale_Property.HasBeenSet;
+                    return obj.Scale_IsSet;
                 default:
                     return PlacedCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -3539,14 +2656,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Base_Property.Unset(cmds.ToUnsetParams());
-            item.XPCIFluff_Property.Unset(cmds.ToUnsetParams());
-            item.FULLFluff_Property.Unset(cmds.ToUnsetParams());
-            item.DistantLODData_Property.Unset(cmds.ToUnsetParams());
-            item.EnableParent_Property.Unset(cmds.ToUnsetParams());
+            item.XPCIFluff_Unset();
+            item.FULLFluff_Unset();
+            item.DistantLODData_Unset();
+            item.EnableParent_Unset();
             item.MerchantContainer_Property.Unset(cmds.ToUnsetParams());
             item.Horse_Property.Unset(cmds.ToUnsetParams());
-            item.RagdollData_Property.Unset(cmds.ToUnsetParams());
-            item.Scale_Property.Unset(cmds.ToUnsetParams());
+            item.RagdollData_Unset();
+            item.Scale_Unset();
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
         }
@@ -3567,14 +2684,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Base = item.Base_Property.Equals(rhs.Base_Property, (l, r) => l == r);
-            ret.XPCIFluff = item.XPCIFluff_Property.Equals(rhs.XPCIFluff_Property, (l, r) => l.EqualsFast(r));
-            ret.FULLFluff = item.FULLFluff_Property.Equals(rhs.FULLFluff_Property, (l, r) => l.EqualsFast(r));
-            ret.DistantLODData = item.DistantLODData_Property.LoquiEqualsHelper(rhs.DistantLODData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.EnableParent = item.EnableParent_Property.LoquiEqualsHelper(rhs.EnableParent_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && item.XPCIFluff.EqualsFast(rhs.XPCIFluff);
+            ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && item.FULLFluff.EqualsFast(rhs.FULLFluff);
+            ret.DistantLODData = IHasBeenSetExt.LoquiEqualsHelper(item.DistantLODData_IsSet, rhs.DistantLODData_IsSet, item.DistantLODData, rhs.DistantLODData, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.EnableParent = IHasBeenSetExt.LoquiEqualsHelper(item.EnableParent_IsSet, rhs.EnableParent_IsSet, item.EnableParent, rhs.EnableParent, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.MerchantContainer = item.MerchantContainer_Property.Equals(rhs.MerchantContainer_Property, (l, r) => l == r);
             ret.Horse = item.Horse_Property.Equals(rhs.Horse_Property, (l, r) => l == r);
-            ret.RagdollData = item.RagdollData_Property.Equals(rhs.RagdollData_Property, (l, r) => l.EqualsFast(r));
-            ret.Scale = item.Scale_Property.Equals(rhs.Scale_Property, (l, r) => l == r);
+            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && item.RagdollData.EqualsFast(rhs.RagdollData);
+            ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale == rhs.Scale;
             ret.Position = item.Position == rhs.Position;
             ret.Rotation = item.Rotation == rhs.Rotation;
             PlacedCommon.FillEqualsMask(item, rhs, ret);
@@ -3660,16 +2777,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedNPC_Mask<bool?> checkMask)
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
-            if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_Property.HasBeenSet) return false;
-            if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_Property.HasBeenSet) return false;
-            if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_Property.HasBeenSet) return false;
+            if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_IsSet) return false;
+            if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_IsSet) return false;
+            if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_IsSet) return false;
             if (checkMask.DistantLODData.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
-            if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_Property.HasBeenSet) return false;
+            if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_IsSet) return false;
             if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
             if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != item.MerchantContainer_Property.HasBeenSet) return false;
             if (checkMask.Horse.HasValue && checkMask.Horse.Value != item.Horse_Property.HasBeenSet) return false;
-            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_Property.HasBeenSet) return false;
-            if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_Property.HasBeenSet) return false;
+            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
+            if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_IsSet) return false;
             return true;
         }
 
@@ -3677,14 +2794,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PlacedNPC_Mask<bool>();
             ret.Base = item.Base_Property.HasBeenSet;
-            ret.XPCIFluff = item.XPCIFluff_Property.HasBeenSet;
-            ret.FULLFluff = item.FULLFluff_Property.HasBeenSet;
-            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_Property.HasBeenSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData));
-            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_Property.HasBeenSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
+            ret.XPCIFluff = item.XPCIFluff_IsSet;
+            ret.FULLFluff = item.FULLFluff_IsSet;
+            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData));
+            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
             ret.MerchantContainer = item.MerchantContainer_Property.HasBeenSet;
             ret.Horse = item.Horse_Property.HasBeenSet;
-            ret.RagdollData = item.RagdollData_Property.HasBeenSet;
-            ret.Scale = item.Scale_Property.HasBeenSet;
+            ret.RagdollData = item.RagdollData_IsSet;
+            ret.Scale = item.Scale_IsSet;
             ret.Position = true;
             ret.Rotation = true;
             return ret;
@@ -3783,43 +2900,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                     errorMask: errorMask);
             }
-            if (item.XPCIFluff_Property.HasBeenSet
+            if (item.XPCIFluff_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.XPCIFluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.XPCIFluff),
-                    item: item.XPCIFluff_Property,
+                    item: item.XPCIFluff,
                     fieldIndex: (int)PlacedNPC_FieldIndex.XPCIFluff,
                     errorMask: errorMask);
             }
-            if (item.FULLFluff_Property.HasBeenSet
+            if (item.FULLFluff_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.FULLFluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FULLFluff),
-                    item: item.FULLFluff_Property,
+                    item: item.FULLFluff,
                     fieldIndex: (int)PlacedNPC_FieldIndex.FULLFluff,
                     errorMask: errorMask);
             }
-            if (item.DistantLODData_Property.HasBeenSet
+            if (item.DistantLODData_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.DistantLODData) ?? true))
             {
                 LoquiXmlTranslation<DistantLODData>.Instance.Write(
                     node: elem,
-                    item: item.DistantLODData_Property,
+                    item: item.DistantLODData,
                     name: nameof(item.DistantLODData),
                     fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)PlacedNPC_FieldIndex.DistantLODData));
             }
-            if (item.EnableParent_Property.HasBeenSet
+            if (item.EnableParent_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.EnableParent) ?? true))
             {
                 LoquiXmlTranslation<EnableParent>.Instance.Write(
                     node: elem,
-                    item: item.EnableParent_Property,
+                    item: item.EnableParent,
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
                     errorMask: errorMask,
@@ -3845,23 +2962,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                     errorMask: errorMask);
             }
-            if (item.RagdollData_Property.HasBeenSet
+            if (item.RagdollData_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.RagdollData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RagdollData),
-                    item: item.RagdollData_Property,
+                    item: item.RagdollData,
                     fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
                     errorMask: errorMask);
             }
-            if (item.Scale_Property.HasBeenSet
+            if (item.Scale_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Scale) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Scale),
-                    item: item.Scale_Property,
+                    item: item.Scale,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
                     errorMask: errorMask);
             }
@@ -3870,7 +2987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P3FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Position),
-                    item: item.Position_Property,
+                    item: item.Position,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Position,
                     errorMask: errorMask);
             }
@@ -3879,7 +2996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P3FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Rotation),
-                    item: item.Rotation_Property,
+                    item: item.Rotation,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
                     errorMask: errorMask);
             }
@@ -3941,77 +3058,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Base_Property,
-                fieldIndex: (int)PlacedNPC_FieldIndex.Base,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.NAME_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.XPCIFluff_Property,
-                fieldIndex: (int)PlacedNPC_FieldIndex.XPCIFluff,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XPCI_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FULLFluff_Property,
-                fieldIndex: (int)PlacedNPC_FieldIndex.FULLFluff,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.FULL_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<DistantLODData>.Instance.Write(
-                writer: writer,
-                item: item.DistantLODData_Property,
-                fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
-                errorMask: errorMask);
-            LoquiBinaryTranslation<EnableParent>.Instance.Write(
-                writer: writer,
-                item: item.EnableParent_Property,
-                fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MerchantContainer_Property,
-                fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XMRC_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Horse_Property,
-                fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XHRS_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.RagdollData_Property,
-                fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XRGD_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Scale_Property,
-                fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XSCL_HEADER),
-                nullable: false);
+            if (item.Base_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Base_Property,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.Base,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.NAME_HEADER),
+                    nullable: false);
+            }
+            if (item.XPCIFluff_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.XPCIFluff,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.XPCIFluff,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XPCI_HEADER),
+                    nullable: false);
+            }
+            if (item.FULLFluff_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FULLFluff,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.FULLFluff,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.DistantLODData_IsSet)
+            {
+                LoquiBinaryTranslation<DistantLODData>.Instance.Write(
+                    writer: writer,
+                    item: item.DistantLODData,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
+                    errorMask: errorMask);
+            }
+            if (item.EnableParent_IsSet)
+            {
+                LoquiBinaryTranslation<EnableParent>.Instance.Write(
+                    writer: writer,
+                    item: item.EnableParent,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
+                    errorMask: errorMask);
+            }
+            if (item.MerchantContainer_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MerchantContainer_Property,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XMRC_HEADER),
+                    nullable: false);
+            }
+            if (item.Horse_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Horse_Property,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XHRS_HEADER),
+                    nullable: false);
+            }
+            if (item.RagdollData_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RagdollData,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XRGD_HEADER),
+                    nullable: false);
+            }
+            if (item.Scale_IsSet)
+            {
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Scale,
+                    fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XSCL_HEADER),
+                    nullable: false);
+            }
             if (item.DATADataTypeState.HasFlag(PlacedNPC.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Position_Property,
+                        item: item.Position,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Position,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Rotation_Property,
+                        item: item.Rotation,
                         fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
                         errorMask: errorMask);
                 }

@@ -9,12 +9,12 @@ namespace Mutagen.Bethesda.Binary
         public readonly static CharBinaryTranslation Instance = new CharBinaryTranslation();
         public override int? ExpectedLength => 1;
 
-        protected override char ParseValue(MutagenFrame reader)
+        public override char ParseValue(MutagenFrame reader)
         {
             return (char)reader.Reader.ReadUInt8();
         }
 
-        protected override void WriteValue(MutagenWriter writer, char item)
+        public override void WriteValue(MutagenWriter writer, char item)
         {
             writer.Write(item);
         }

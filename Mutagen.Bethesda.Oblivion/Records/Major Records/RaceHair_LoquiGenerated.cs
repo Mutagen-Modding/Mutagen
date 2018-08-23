@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RaceHair : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IRaceHair,
         ILoquiObject<RaceHair>,
         ILoquiObjectSetter,
@@ -1188,10 +1190,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    obj.Male = default(FormIDLink<Hair>);
+                    obj.Male_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case RaceHair_FieldIndex.Female:
-                    obj.Female = default(FormIDLink<Hair>);
+                    obj.Female_Property.Unset(cmds.ToUnsetParams());
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1233,8 +1235,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceHair item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Male = default(FormIDLink<Hair>);
-            item.Female = default(FormIDLink<Hair>);
+            item.Male_Property.Unset(cmds.ToUnsetParams());
+            item.Female_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static RaceHair_Mask<bool> GetEqualsMask(

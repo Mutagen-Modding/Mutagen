@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Rank : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IRank,
         ILoquiObject<Rank>,
         ILoquiObjectSetter,
-        IPropertySupporter<Int32>,
-        IPropertySupporter<String>,
         IEquatable<Rank>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,196 +50,108 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RankNumber
-        protected Int32 _RankNumber;
-        protected PropertyForwarder<Rank, Int32> _RankNumberForwarder;
-        public INotifyingSetItem<Int32> RankNumber_Property => _RankNumberForwarder ?? (_RankNumberForwarder = new PropertyForwarder<Rank, Int32>(this, (int)Rank_FieldIndex.RankNumber));
+        public bool RankNumber_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Rank_FieldIndex.RankNumber];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Rank_FieldIndex.RankNumber, nameof(RankNumber_IsSet));
+        }
+        bool IRankGetter.RankNumber_IsSet => RankNumber_IsSet;
+        private Int32 _RankNumber;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 RankNumber
         {
             get => this._RankNumber;
-            set => this.SetRankNumber(value);
+            set => RankNumber_Set(value);
         }
-        protected void SetRankNumber(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Int32 IRankGetter.RankNumber => this.RankNumber;
+        public void RankNumber_Set(
+            Int32 value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Rank_FieldIndex.RankNumber];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RankNumber == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Rank_FieldIndex.RankNumber] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = RankNumber;
-                _RankNumber = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)Rank_FieldIndex.RankNumber,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RankNumber = item;
-            }
+            this.RaiseAndSetIfChanged(ref _RankNumber, value, _hasBeenSetTracker, markSet, (int)Rank_FieldIndex.RankNumber, nameof(RankNumber), nameof(RankNumber_IsSet));
         }
-        protected void UnsetRankNumber()
+        public void RankNumber_Unset()
         {
-            _hasBeenSetTracker[(int)Rank_FieldIndex.RankNumber] = false;
-            RankNumber = default(Int32);
+            this.RankNumber_Set(default(Int32), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Int32> IRank.RankNumber_Property => this.RankNumber_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Int32> IRankGetter.RankNumber_Property => this.RankNumber_Property;
         #endregion
         #region MaleName
-        protected String _MaleName;
-        protected PropertyForwarder<Rank, String> _MaleNameForwarder;
-        public INotifyingSetItem<String> MaleName_Property => _MaleNameForwarder ?? (_MaleNameForwarder = new PropertyForwarder<Rank, String>(this, (int)Rank_FieldIndex.MaleName));
+        public bool MaleName_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Rank_FieldIndex.MaleName];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Rank_FieldIndex.MaleName, nameof(MaleName_IsSet));
+        }
+        bool IRankGetter.MaleName_IsSet => MaleName_IsSet;
+        private String _MaleName;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String MaleName
         {
             get => this._MaleName;
-            set => this.SetMaleName(value);
+            set => MaleName_Set(value);
         }
-        protected void SetMaleName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IRankGetter.MaleName => this.MaleName;
+        public void MaleName_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Rank_FieldIndex.MaleName];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaleName == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Rank_FieldIndex.MaleName] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = MaleName;
-                _MaleName = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Rank_FieldIndex.MaleName,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MaleName = item;
-            }
+            this.RaiseAndSetIfChanged(ref _MaleName, value, _hasBeenSetTracker, markSet, (int)Rank_FieldIndex.MaleName, nameof(MaleName), nameof(MaleName_IsSet));
         }
-        protected void UnsetMaleName()
+        public void MaleName_Unset()
         {
-            _hasBeenSetTracker[(int)Rank_FieldIndex.MaleName] = false;
-            MaleName = default(String);
+            this.MaleName_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IRank.MaleName_Property => this.MaleName_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IRankGetter.MaleName_Property => this.MaleName_Property;
         #endregion
         #region FemaleName
-        protected String _FemaleName;
-        protected PropertyForwarder<Rank, String> _FemaleNameForwarder;
-        public INotifyingSetItem<String> FemaleName_Property => _FemaleNameForwarder ?? (_FemaleNameForwarder = new PropertyForwarder<Rank, String>(this, (int)Rank_FieldIndex.FemaleName));
+        public bool FemaleName_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleName];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Rank_FieldIndex.FemaleName, nameof(FemaleName_IsSet));
+        }
+        bool IRankGetter.FemaleName_IsSet => FemaleName_IsSet;
+        private String _FemaleName;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String FemaleName
         {
             get => this._FemaleName;
-            set => this.SetFemaleName(value);
+            set => FemaleName_Set(value);
         }
-        protected void SetFemaleName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IRankGetter.FemaleName => this.FemaleName;
+        public void FemaleName_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleName];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FemaleName == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleName] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = FemaleName;
-                _FemaleName = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Rank_FieldIndex.FemaleName,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FemaleName = item;
-            }
+            this.RaiseAndSetIfChanged(ref _FemaleName, value, _hasBeenSetTracker, markSet, (int)Rank_FieldIndex.FemaleName, nameof(FemaleName), nameof(FemaleName_IsSet));
         }
-        protected void UnsetFemaleName()
+        public void FemaleName_Unset()
         {
-            _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleName] = false;
-            FemaleName = default(String);
+            this.FemaleName_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IRank.FemaleName_Property => this.FemaleName_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IRankGetter.FemaleName_Property => this.FemaleName_Property;
         #endregion
         #region Insignia
-        protected String _Insignia;
-        protected PropertyForwarder<Rank, String> _InsigniaForwarder;
-        public INotifyingSetItem<String> Insignia_Property => _InsigniaForwarder ?? (_InsigniaForwarder = new PropertyForwarder<Rank, String>(this, (int)Rank_FieldIndex.Insignia));
+        public bool Insignia_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Rank_FieldIndex.Insignia];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Rank_FieldIndex.Insignia, nameof(Insignia_IsSet));
+        }
+        bool IRankGetter.Insignia_IsSet => Insignia_IsSet;
+        private String _Insignia;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Insignia
         {
             get => this._Insignia;
-            set => this.SetInsignia(value);
+            set => Insignia_Set(value);
         }
-        protected void SetInsignia(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IRankGetter.Insignia => this.Insignia;
+        public void Insignia_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Rank_FieldIndex.Insignia];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Insignia == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Rank_FieldIndex.Insignia] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Insignia;
-                _Insignia = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Rank_FieldIndex.Insignia,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Insignia = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Insignia, value, _hasBeenSetTracker, markSet, (int)Rank_FieldIndex.Insignia, nameof(Insignia), nameof(Insignia_IsSet));
         }
-        protected void UnsetInsignia()
+        public void Insignia_Unset()
         {
-            _hasBeenSetTracker[(int)Rank_FieldIndex.Insignia] = false;
-            Insignia = default(String);
+            this.Insignia_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IRank.Insignia_Property => this.Insignia_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IRankGetter.Insignia_Property => this.Insignia_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -303,23 +215,23 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Rank rhs)
         {
             if (rhs == null) return false;
-            if (RankNumber_Property.HasBeenSet != rhs.RankNumber_Property.HasBeenSet) return false;
-            if (RankNumber_Property.HasBeenSet)
+            if (RankNumber_IsSet != rhs.RankNumber_IsSet) return false;
+            if (RankNumber_IsSet)
             {
                 if (this.RankNumber != rhs.RankNumber) return false;
             }
-            if (MaleName_Property.HasBeenSet != rhs.MaleName_Property.HasBeenSet) return false;
-            if (MaleName_Property.HasBeenSet)
+            if (MaleName_IsSet != rhs.MaleName_IsSet) return false;
+            if (MaleName_IsSet)
             {
                 if (!object.Equals(this.MaleName, rhs.MaleName)) return false;
             }
-            if (FemaleName_Property.HasBeenSet != rhs.FemaleName_Property.HasBeenSet) return false;
-            if (FemaleName_Property.HasBeenSet)
+            if (FemaleName_IsSet != rhs.FemaleName_IsSet) return false;
+            if (FemaleName_IsSet)
             {
                 if (!object.Equals(this.FemaleName, rhs.FemaleName)) return false;
             }
-            if (Insignia_Property.HasBeenSet != rhs.Insignia_Property.HasBeenSet) return false;
-            if (Insignia_Property.HasBeenSet)
+            if (Insignia_IsSet != rhs.Insignia_IsSet) return false;
+            if (Insignia_IsSet)
             {
                 if (!object.Equals(this.Insignia, rhs.Insignia)) return false;
             }
@@ -329,19 +241,19 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (RankNumber_Property.HasBeenSet)
+            if (RankNumber_IsSet)
             {
                 ret = HashHelper.GetHashCode(RankNumber).CombineHashCode(ret);
             }
-            if (MaleName_Property.HasBeenSet)
+            if (MaleName_IsSet)
             {
                 ret = HashHelper.GetHashCode(MaleName).CombineHashCode(ret);
             }
-            if (FemaleName_Property.HasBeenSet)
+            if (FemaleName_IsSet)
             {
                 ret = HashHelper.GetHashCode(FemaleName).CombineHashCode(ret);
             }
-            if (Insignia_Property.HasBeenSet)
+            if (Insignia_IsSet)
             {
                 ret = HashHelper.GetHashCode(Insignia).CombineHashCode(ret);
             }
@@ -675,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRankNumber();
+                            item.RankNumber = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -701,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMaleName();
+                            item.MaleName = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -727,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFemaleName();
+                            item.FemaleName = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -753,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetInsignia();
+                            item.Insignia = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -787,296 +699,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((Rank_FieldIndex)index)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    return RankNumber;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Rank_FieldIndex)index)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    SetRankNumber(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Rank_FieldIndex)index)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    SetRankNumber(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((Rank_FieldIndex)index)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected String GetString(int index)
-        {
-            switch ((Rank_FieldIndex)index)
-            {
-                case Rank_FieldIndex.MaleName:
-                    return MaleName;
-                case Rank_FieldIndex.FemaleName:
-                    return FemaleName;
-                case Rank_FieldIndex.Insignia:
-                    return Insignia;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Rank_FieldIndex)index)
-            {
-                case Rank_FieldIndex.MaleName:
-                    SetMaleName(item, hasBeenSet, cmds);
-                    break;
-                case Rank_FieldIndex.FemaleName:
-                    SetFemaleName(item, hasBeenSet, cmds);
-                    break;
-                case Rank_FieldIndex.Insignia:
-                    SetInsignia(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Rank_FieldIndex)index)
-            {
-                case Rank_FieldIndex.MaleName:
-                    SetMaleName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case Rank_FieldIndex.FemaleName:
-                    SetFemaleName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case Rank_FieldIndex.Insignia:
-                    SetInsignia(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected String DefaultValueString(int index)
-        {
-            switch ((Rank_FieldIndex)index)
-            {
-                case Rank_FieldIndex.MaleName:
-                case Rank_FieldIndex.FemaleName:
-                case Rank_FieldIndex.Insignia:
-                    return default(String);
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1322,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRankNumber();
+                            item.RankNumber = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1351,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMaleName();
+                            item.MaleName = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1380,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFemaleName();
+                            item.FemaleName = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1409,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetInsignia();
+                            item.Insignia = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1552,24 +1174,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                    this.SetRankNumber(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.RankNumber = (Int32)obj;
                     break;
                 case Rank_FieldIndex.MaleName:
-                    this.SetMaleName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.MaleName = (String)obj;
                     break;
                 case Rank_FieldIndex.FemaleName:
-                    this.SetFemaleName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.FemaleName = (String)obj;
                     break;
                 case Rank_FieldIndex.Insignia:
-                    this.SetInsignia(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Insignia = (String)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1609,24 +1223,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                    obj.SetRankNumber(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.RankNumber = (Int32)pair.Value;
                     break;
                 case Rank_FieldIndex.MaleName:
-                    obj.SetMaleName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.MaleName = (String)pair.Value;
                     break;
                 case Rank_FieldIndex.FemaleName:
-                    obj.SetFemaleName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.FemaleName = (String)pair.Value;
                     break;
                 case Rank_FieldIndex.Insignia:
-                    obj.SetInsignia(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Insignia = (String)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1644,16 +1250,24 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRank : IRankGetter, ILoquiClass<IRank, IRankGetter>, ILoquiClass<Rank, IRankGetter>
     {
         new Int32 RankNumber { get; set; }
-        new INotifyingSetItem<Int32> RankNumber_Property { get; }
+        new bool RankNumber_IsSet { get; set; }
+        void RankNumber_Set(Int32 item, bool hasBeenSet = true);
+        void RankNumber_Unset();
 
         new String MaleName { get; set; }
-        new INotifyingSetItem<String> MaleName_Property { get; }
+        new bool MaleName_IsSet { get; set; }
+        void MaleName_Set(String item, bool hasBeenSet = true);
+        void MaleName_Unset();
 
         new String FemaleName { get; set; }
-        new INotifyingSetItem<String> FemaleName_Property { get; }
+        new bool FemaleName_IsSet { get; set; }
+        void FemaleName_Set(String item, bool hasBeenSet = true);
+        void FemaleName_Unset();
 
         new String Insignia { get; set; }
-        new INotifyingSetItem<String> Insignia_Property { get; }
+        new bool Insignia_IsSet { get; set; }
+        void Insignia_Set(String item, bool hasBeenSet = true);
+        void Insignia_Unset();
 
     }
 
@@ -1661,22 +1275,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region RankNumber
         Int32 RankNumber { get; }
-        INotifyingSetItemGetter<Int32> RankNumber_Property { get; }
+        bool RankNumber_IsSet { get; }
 
         #endregion
         #region MaleName
         String MaleName { get; }
-        INotifyingSetItemGetter<String> MaleName_Property { get; }
+        bool MaleName_IsSet { get; }
 
         #endregion
         #region FemaleName
         String FemaleName { get; }
-        INotifyingSetItemGetter<String> FemaleName_Property { get; }
+        bool FemaleName_IsSet { get; }
 
         #endregion
         #region Insignia
         String Insignia { get; }
-        INotifyingSetItemGetter<String> Insignia_Property { get; }
+        bool Insignia_IsSet { get; }
 
         #endregion
 
@@ -1933,9 +1547,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Rank_FieldIndex.RankNumber);
                 try
                 {
-                    item.RankNumber_Property.SetToWithDefault(
-                        rhs: rhs.RankNumber_Property,
-                        def: def?.RankNumber_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.RankNumber,
+                        rhsHasBeenSet: rhs.RankNumber_IsSet,
+                        defItem: def?.RankNumber ?? default(Int32),
+                        defHasBeenSet: def?.RankNumber_IsSet ?? false,
+                        outRhsItem: out var rhsRankNumberItem,
+                        outDefItem: out var defRankNumberItem))
+                    {
+                        item.RankNumber = rhsRankNumberItem;
+                    }
+                    else
+                    {
+                        item.RankNumber_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1952,9 +1577,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Rank_FieldIndex.MaleName);
                 try
                 {
-                    item.MaleName_Property.SetToWithDefault(
-                        rhs: rhs.MaleName_Property,
-                        def: def?.MaleName_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.MaleName,
+                        rhsHasBeenSet: rhs.MaleName_IsSet,
+                        defItem: def?.MaleName ?? default(String),
+                        defHasBeenSet: def?.MaleName_IsSet ?? false,
+                        outRhsItem: out var rhsMaleNameItem,
+                        outDefItem: out var defMaleNameItem))
+                    {
+                        item.MaleName = rhsMaleNameItem;
+                    }
+                    else
+                    {
+                        item.MaleName_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1971,9 +1607,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Rank_FieldIndex.FemaleName);
                 try
                 {
-                    item.FemaleName_Property.SetToWithDefault(
-                        rhs: rhs.FemaleName_Property,
-                        def: def?.FemaleName_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.FemaleName,
+                        rhsHasBeenSet: rhs.FemaleName_IsSet,
+                        defItem: def?.FemaleName ?? default(String),
+                        defHasBeenSet: def?.FemaleName_IsSet ?? false,
+                        outRhsItem: out var rhsFemaleNameItem,
+                        outDefItem: out var defFemaleNameItem))
+                    {
+                        item.FemaleName = rhsFemaleNameItem;
+                    }
+                    else
+                    {
+                        item.FemaleName_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1990,9 +1637,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Rank_FieldIndex.Insignia);
                 try
                 {
-                    item.Insignia_Property.SetToWithDefault(
-                        rhs: rhs.Insignia_Property,
-                        def: def?.Insignia_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Insignia,
+                        rhsHasBeenSet: rhs.Insignia_IsSet,
+                        defItem: def?.Insignia ?? default(String),
+                        defHasBeenSet: def?.Insignia_IsSet ?? false,
+                        outRhsItem: out var rhsInsigniaItem,
+                        outDefItem: out var defInsigniaItem))
+                    {
+                        item.Insignia = rhsInsigniaItem;
+                    }
+                    else
+                    {
+                        item.Insignia_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2018,16 +1676,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                    obj.RankNumber_Property.HasBeenSet = on;
+                    obj.RankNumber_IsSet = on;
                     break;
                 case Rank_FieldIndex.MaleName:
-                    obj.MaleName_Property.HasBeenSet = on;
+                    obj.MaleName_IsSet = on;
                     break;
                 case Rank_FieldIndex.FemaleName:
-                    obj.FemaleName_Property.HasBeenSet = on;
+                    obj.FemaleName_IsSet = on;
                     break;
                 case Rank_FieldIndex.Insignia:
-                    obj.Insignia_Property.HasBeenSet = on;
+                    obj.Insignia_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2043,16 +1701,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                    obj.RankNumber_Property.Unset(cmds);
+                    obj.RankNumber_Unset();
                     break;
                 case Rank_FieldIndex.MaleName:
-                    obj.MaleName_Property.Unset(cmds);
+                    obj.MaleName_Unset();
                     break;
                 case Rank_FieldIndex.FemaleName:
-                    obj.FemaleName_Property.Unset(cmds);
+                    obj.FemaleName_Unset();
                     break;
                 case Rank_FieldIndex.Insignia:
-                    obj.Insignia_Property.Unset(cmds);
+                    obj.Insignia_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2067,13 +1725,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                    return obj.RankNumber_Property.HasBeenSet;
+                    return obj.RankNumber_IsSet;
                 case Rank_FieldIndex.MaleName:
-                    return obj.MaleName_Property.HasBeenSet;
+                    return obj.MaleName_IsSet;
                 case Rank_FieldIndex.FemaleName:
-                    return obj.FemaleName_Property.HasBeenSet;
+                    return obj.FemaleName_IsSet;
                 case Rank_FieldIndex.Insignia:
-                    return obj.Insignia_Property.HasBeenSet;
+                    return obj.Insignia_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2103,10 +1761,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRank item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.RankNumber_Property.Unset(cmds.ToUnsetParams());
-            item.MaleName_Property.Unset(cmds.ToUnsetParams());
-            item.FemaleName_Property.Unset(cmds.ToUnsetParams());
-            item.Insignia_Property.Unset(cmds.ToUnsetParams());
+            item.RankNumber_Unset();
+            item.MaleName_Unset();
+            item.FemaleName_Unset();
+            item.Insignia_Unset();
         }
 
         public static Rank_Mask<bool> GetEqualsMask(
@@ -2124,10 +1782,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Rank_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.RankNumber = item.RankNumber_Property.Equals(rhs.RankNumber_Property, (l, r) => l == r);
-            ret.MaleName = item.MaleName_Property.Equals(rhs.MaleName_Property, (l, r) => object.Equals(l, r));
-            ret.FemaleName = item.FemaleName_Property.Equals(rhs.FemaleName_Property, (l, r) => object.Equals(l, r));
-            ret.Insignia = item.Insignia_Property.Equals(rhs.Insignia_Property, (l, r) => object.Equals(l, r));
+            ret.RankNumber = item.RankNumber_IsSet == rhs.RankNumber_IsSet && item.RankNumber == rhs.RankNumber;
+            ret.MaleName = item.MaleName_IsSet == rhs.MaleName_IsSet && object.Equals(item.MaleName, rhs.MaleName);
+            ret.FemaleName = item.FemaleName_IsSet == rhs.FemaleName_IsSet && object.Equals(item.FemaleName, rhs.FemaleName);
+            ret.Insignia = item.Insignia_IsSet == rhs.Insignia_IsSet && object.Equals(item.Insignia, rhs.Insignia);
         }
 
         public static string ToString(
@@ -2181,20 +1839,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRankGetter item,
             Rank_Mask<bool?> checkMask)
         {
-            if (checkMask.RankNumber.HasValue && checkMask.RankNumber.Value != item.RankNumber_Property.HasBeenSet) return false;
-            if (checkMask.MaleName.HasValue && checkMask.MaleName.Value != item.MaleName_Property.HasBeenSet) return false;
-            if (checkMask.FemaleName.HasValue && checkMask.FemaleName.Value != item.FemaleName_Property.HasBeenSet) return false;
-            if (checkMask.Insignia.HasValue && checkMask.Insignia.Value != item.Insignia_Property.HasBeenSet) return false;
+            if (checkMask.RankNumber.HasValue && checkMask.RankNumber.Value != item.RankNumber_IsSet) return false;
+            if (checkMask.MaleName.HasValue && checkMask.MaleName.Value != item.MaleName_IsSet) return false;
+            if (checkMask.FemaleName.HasValue && checkMask.FemaleName.Value != item.FemaleName_IsSet) return false;
+            if (checkMask.Insignia.HasValue && checkMask.Insignia.Value != item.Insignia_IsSet) return false;
             return true;
         }
 
         public static Rank_Mask<bool> GetHasBeenSetMask(IRankGetter item)
         {
             var ret = new Rank_Mask<bool>();
-            ret.RankNumber = item.RankNumber_Property.HasBeenSet;
-            ret.MaleName = item.MaleName_Property.HasBeenSet;
-            ret.FemaleName = item.FemaleName_Property.HasBeenSet;
-            ret.Insignia = item.Insignia_Property.HasBeenSet;
+            ret.RankNumber = item.RankNumber_IsSet;
+            ret.MaleName = item.MaleName_IsSet;
+            ret.FemaleName = item.FemaleName_IsSet;
+            ret.Insignia = item.Insignia_IsSet;
             return ret;
         }
 
@@ -2231,43 +1889,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Rank");
             }
-            if (item.RankNumber_Property.HasBeenSet
+            if (item.RankNumber_IsSet
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.RankNumber) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RankNumber),
-                    item: item.RankNumber_Property,
+                    item: item.RankNumber,
                     fieldIndex: (int)Rank_FieldIndex.RankNumber,
                     errorMask: errorMask);
             }
-            if (item.MaleName_Property.HasBeenSet
+            if (item.MaleName_IsSet
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.MaleName) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MaleName),
-                    item: item.MaleName_Property,
+                    item: item.MaleName,
                     fieldIndex: (int)Rank_FieldIndex.MaleName,
                     errorMask: errorMask);
             }
-            if (item.FemaleName_Property.HasBeenSet
+            if (item.FemaleName_IsSet
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.FemaleName) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FemaleName),
-                    item: item.FemaleName_Property,
+                    item: item.FemaleName,
                     fieldIndex: (int)Rank_FieldIndex.FemaleName,
                     errorMask: errorMask);
             }
-            if (item.Insignia_Property.HasBeenSet
+            if (item.Insignia_IsSet
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Insignia),
-                    item: item.Insignia_Property,
+                    item: item.Insignia,
                     fieldIndex: (int)Rank_FieldIndex.Insignia,
                     errorMask: errorMask);
             }
@@ -2314,34 +1972,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.RankNumber_Property,
-                fieldIndex: (int)Rank_FieldIndex.RankNumber,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MaleName_Property,
-                fieldIndex: (int)Rank_FieldIndex.MaleName,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FemaleName_Property,
-                fieldIndex: (int)Rank_FieldIndex.FemaleName,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Insignia_Property,
-                fieldIndex: (int)Rank_FieldIndex.Insignia,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.INAM_HEADER),
-                nullable: false);
+            if (item.RankNumber_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RankNumber,
+                    fieldIndex: (int)Rank_FieldIndex.RankNumber,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.MaleName_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MaleName,
+                    fieldIndex: (int)Rank_FieldIndex.MaleName,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.FemaleName_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FemaleName,
+                    fieldIndex: (int)Rank_FieldIndex.FemaleName,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Insignia_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Insignia,
+                    fieldIndex: (int)Rank_FieldIndex.Insignia,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.INAM_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

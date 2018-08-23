@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,16 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Condition : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         ICondition,
         ILoquiObject<Condition>,
         ILoquiObjectSetter,
-        IPropertySupporter<CompareOperator>,
-        IPropertySupporter<Condition.Flag>,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<Single>,
-        IPropertySupporter<Function>,
-        IPropertySupporter<Int32>,
         IEquatable<Condition>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -54,393 +50,75 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region CompareOperator
-        protected CompareOperator _CompareOperator;
-        protected PropertyForwarder<Condition, CompareOperator> _CompareOperatorForwarder;
-        public INotifyingSetItem<CompareOperator> CompareOperator_Property => _CompareOperatorForwarder ?? (_CompareOperatorForwarder = new PropertyForwarder<Condition, CompareOperator>(this, (int)Condition_FieldIndex.CompareOperator));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CompareOperator _CompareOperator;
         public CompareOperator CompareOperator
         {
             get => this._CompareOperator;
-            set => this.SetCompareOperator(value);
+            set => this.RaiseAndSetIfChanged(ref this._CompareOperator, value, nameof(CompareOperator));
         }
-        protected void SetCompareOperator(
-            CompareOperator item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.CompareOperator];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CompareOperator == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Condition_FieldIndex.CompareOperator] = hasBeenSet;
-            }
-            if (_CompareOperator_subscriptions != null)
-            {
-                var tmp = CompareOperator;
-                _CompareOperator = item;
-                _CompareOperator_subscriptions.FireSubscriptions(
-                    index: (int)Condition_FieldIndex.CompareOperator,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _CompareOperator = item;
-            }
-        }
-        protected void UnsetCompareOperator()
-        {
-            _hasBeenSetTracker[(int)Condition_FieldIndex.CompareOperator] = false;
-            CompareOperator = default(CompareOperator);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<CompareOperator> ICondition.CompareOperator_Property => this.CompareOperator_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<CompareOperator> IConditionGetter.CompareOperator_Property => this.CompareOperator_Property;
         #endregion
         #region Flags
-        protected Condition.Flag _Flags;
-        protected PropertyForwarder<Condition, Condition.Flag> _FlagsForwarder;
-        public INotifyingSetItem<Condition.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Condition, Condition.Flag>(this, (int)Condition_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Condition.Flag _Flags;
         public Condition.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            Condition.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Condition_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_ConditionFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _ConditionFlag_subscriptions.FireSubscriptions(
-                    index: (int)Condition_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)Condition_FieldIndex.Flags] = false;
-            Flags = default(Condition.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Condition.Flag> ICondition.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Condition.Flag> IConditionGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Fluff
-        protected Byte[] _Fluff = new byte[4];
-        protected PropertyForwarder<Condition, Byte[]> _FluffForwarder;
-        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<Condition, Byte[]>(this, (int)Condition_FieldIndex.Fluff));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Fluff = new byte[4];
         public Byte[] Fluff
         {
-            get => this._Fluff;
-            set => this.SetFluff(value);
-        }
-        protected void SetFluff(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Fluff;
+            set
             {
-                item = new byte[4];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.Fluff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Condition_FieldIndex.Fluff] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Fluff;
-                _Fluff = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)Condition_FieldIndex.Fluff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Fluff = item;
+                this._Fluff = value;
+                if (value == null)
+                {
+                    this._Fluff = new byte[4];
+                }
             }
         }
-        protected void UnsetFluff()
-        {
-            SetFluff(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> ICondition.Fluff_Property => this.Fluff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IConditionGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region ComparisonValue
-        protected Single _ComparisonValue;
-        protected PropertyForwarder<Condition, Single> _ComparisonValueForwarder;
-        public INotifyingSetItem<Single> ComparisonValue_Property => _ComparisonValueForwarder ?? (_ComparisonValueForwarder = new PropertyForwarder<Condition, Single>(this, (int)Condition_FieldIndex.ComparisonValue));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _ComparisonValue;
         public Single ComparisonValue
         {
             get => this._ComparisonValue;
-            set => this.SetComparisonValue(value);
+            set => this.RaiseAndSetIfChanged(ref this._ComparisonValue, value, nameof(ComparisonValue));
         }
-        protected void SetComparisonValue(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.ComparisonValue];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ComparisonValue == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Condition_FieldIndex.ComparisonValue] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = ComparisonValue;
-                _ComparisonValue = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Condition_FieldIndex.ComparisonValue,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ComparisonValue = item;
-            }
-        }
-        protected void UnsetComparisonValue()
-        {
-            _hasBeenSetTracker[(int)Condition_FieldIndex.ComparisonValue] = false;
-            ComparisonValue = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICondition.ComparisonValue_Property => this.ComparisonValue_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IConditionGetter.ComparisonValue_Property => this.ComparisonValue_Property;
         #endregion
         #region Function
-        protected Function _Function;
-        protected PropertyForwarder<Condition, Function> _FunctionForwarder;
-        public INotifyingSetItem<Function> Function_Property => _FunctionForwarder ?? (_FunctionForwarder = new PropertyForwarder<Condition, Function>(this, (int)Condition_FieldIndex.Function));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Function _Function;
         public Function Function
         {
             get => this._Function;
-            set => this.SetFunction(value);
+            set => this.RaiseAndSetIfChanged(ref this._Function, value, nameof(Function));
         }
-        protected void SetFunction(
-            Function item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.Function];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Function == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Condition_FieldIndex.Function] = hasBeenSet;
-            }
-            if (_Function_subscriptions != null)
-            {
-                var tmp = Function;
-                _Function = item;
-                _Function_subscriptions.FireSubscriptions(
-                    index: (int)Condition_FieldIndex.Function,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Function = item;
-            }
-        }
-        protected void UnsetFunction()
-        {
-            _hasBeenSetTracker[(int)Condition_FieldIndex.Function] = false;
-            Function = default(Function);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Function> ICondition.Function_Property => this.Function_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Function> IConditionGetter.Function_Property => this.Function_Property;
         #endregion
         #region FirstParameter
-        protected Int32 _FirstParameter;
-        protected PropertyForwarder<Condition, Int32> _FirstParameterForwarder;
-        public INotifyingSetItem<Int32> FirstParameter_Property => _FirstParameterForwarder ?? (_FirstParameterForwarder = new PropertyForwarder<Condition, Int32>(this, (int)Condition_FieldIndex.FirstParameter));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _FirstParameter;
         public Int32 FirstParameter
         {
             get => this._FirstParameter;
-            set => this.SetFirstParameter(value);
+            set => this.RaiseAndSetIfChanged(ref this._FirstParameter, value, nameof(FirstParameter));
         }
-        protected void SetFirstParameter(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.FirstParameter];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FirstParameter == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Condition_FieldIndex.FirstParameter] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = FirstParameter;
-                _FirstParameter = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)Condition_FieldIndex.FirstParameter,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FirstParameter = item;
-            }
-        }
-        protected void UnsetFirstParameter()
-        {
-            _hasBeenSetTracker[(int)Condition_FieldIndex.FirstParameter] = false;
-            FirstParameter = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> ICondition.FirstParameter_Property => this.FirstParameter_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IConditionGetter.FirstParameter_Property => this.FirstParameter_Property;
         #endregion
         #region SecondParameter
-        protected Int32 _SecondParameter;
-        protected PropertyForwarder<Condition, Int32> _SecondParameterForwarder;
-        public INotifyingSetItem<Int32> SecondParameter_Property => _SecondParameterForwarder ?? (_SecondParameterForwarder = new PropertyForwarder<Condition, Int32>(this, (int)Condition_FieldIndex.SecondParameter));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _SecondParameter;
         public Int32 SecondParameter
         {
             get => this._SecondParameter;
-            set => this.SetSecondParameter(value);
+            set => this.RaiseAndSetIfChanged(ref this._SecondParameter, value, nameof(SecondParameter));
         }
-        protected void SetSecondParameter(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.SecondParameter];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SecondParameter == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Condition_FieldIndex.SecondParameter] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = SecondParameter;
-                _SecondParameter = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)Condition_FieldIndex.SecondParameter,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SecondParameter = item;
-            }
-        }
-        protected void UnsetSecondParameter()
-        {
-            _hasBeenSetTracker[(int)Condition_FieldIndex.SecondParameter] = false;
-            SecondParameter = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> ICondition.SecondParameter_Property => this.SecondParameter_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IConditionGetter.SecondParameter_Property => this.SecondParameter_Property;
         #endregion
         #region ThirdParameter
-        protected Int32 _ThirdParameter;
-        protected PropertyForwarder<Condition, Int32> _ThirdParameterForwarder;
-        public INotifyingSetItem<Int32> ThirdParameter_Property => _ThirdParameterForwarder ?? (_ThirdParameterForwarder = new PropertyForwarder<Condition, Int32>(this, (int)Condition_FieldIndex.ThirdParameter));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _ThirdParameter;
         public Int32 ThirdParameter
         {
             get => this._ThirdParameter;
-            set => this.SetThirdParameter(value);
+            set => this.RaiseAndSetIfChanged(ref this._ThirdParameter, value, nameof(ThirdParameter));
         }
-        protected void SetThirdParameter(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Condition_FieldIndex.ThirdParameter];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ThirdParameter == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Condition_FieldIndex.ThirdParameter] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = ThirdParameter;
-                _ThirdParameter = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)Condition_FieldIndex.ThirdParameter,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ThirdParameter = item;
-            }
-        }
-        protected void UnsetThirdParameter()
-        {
-            _hasBeenSetTracker[(int)Condition_FieldIndex.ThirdParameter] = false;
-            ThirdParameter = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> ICondition.ThirdParameter_Property => this.ThirdParameter_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IConditionGetter.ThirdParameter_Property => this.ThirdParameter_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -856,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCompareOperator();
+                            item.CompareOperator = default(CompareOperator);
                         }
                     }
                     catch (Exception ex)
@@ -882,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Condition.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -908,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFluff();
+                            item.Fluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -934,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetComparisonValue();
+                            item.ComparisonValue = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -960,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFunction();
+                            item.Function = default(Function);
                         }
                     }
                     catch (Exception ex)
@@ -986,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFirstParameter();
+                            item.FirstParameter = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1012,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSecondParameter();
+                            item.SecondParameter = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1038,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetThirdParameter();
+                            item.ThirdParameter = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1076,832 +754,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter CompareOperator
-        protected ObjectCentralizationSubscriptions<CompareOperator> _CompareOperator_subscriptions;
-        CompareOperator IPropertySupporter<CompareOperator>.Get(int index)
-        {
-            return GetCompareOperator(index: index);
-        }
-
-        protected CompareOperator GetCompareOperator(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    return CompareOperator;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CompareOperator: {index}");
-            }
-        }
-
-        void IPropertySupporter<CompareOperator>.Set(
-            int index,
-            CompareOperator item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetCompareOperator(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetCompareOperator(
-            int index,
-            CompareOperator item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    SetCompareOperator(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CompareOperator: {index}");
-            }
-        }
-
-        bool IPropertySupporter<CompareOperator>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<CompareOperator>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<CompareOperator>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetCompareOperator(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetCompareOperator(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    SetCompareOperator(
-                        item: default(CompareOperator),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CompareOperator: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<CompareOperator>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<CompareOperator> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_CompareOperator_subscriptions == null)
-            {
-                _CompareOperator_subscriptions = new ObjectCentralizationSubscriptions<CompareOperator>();
-            }
-            _CompareOperator_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<CompareOperator>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _CompareOperator_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<CompareOperator>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        CompareOperator IPropertySupporter<CompareOperator>.DefaultValue(int index)
-        {
-            return DefaultValueCompareOperator(index: index);
-        }
-
-        protected CompareOperator DefaultValueCompareOperator(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    return default(CompareOperator);
-                default:
-                    throw new ArgumentException($"Unknown index for field type CompareOperator: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Condition.Flag
-        protected ObjectCentralizationSubscriptions<Condition.Flag> _ConditionFlag_subscriptions;
-        Condition.Flag IPropertySupporter<Condition.Flag>.Get(int index)
-        {
-            return GetConditionFlag(index: index);
-        }
-
-        protected Condition.Flag GetConditionFlag(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Condition.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<Condition.Flag>.Set(
-            int index,
-            Condition.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetConditionFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetConditionFlag(
-            int index,
-            Condition.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Condition.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Condition.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Condition.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Condition.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetConditionFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetConditionFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(Condition.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Condition.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Condition.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Condition.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ConditionFlag_subscriptions == null)
-            {
-                _ConditionFlag_subscriptions = new ObjectCentralizationSubscriptions<Condition.Flag>();
-            }
-            _ConditionFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Condition.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ConditionFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Condition.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Condition.Flag IPropertySupporter<Condition.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueConditionFlag(index: index);
-        }
-
-        protected Condition.Flag DefaultValueConditionFlag(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Flags:
-                    return default(Condition.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Condition.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Fluff:
-                    return Fluff;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Fluff:
-                    SetFluff(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Fluff:
-                    SetFluff(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Fluff:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.ComparisonValue:
-                    return ComparisonValue;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.ComparisonValue:
-                    SetComparisonValue(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.ComparisonValue:
-                    SetComparisonValue(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.ComparisonValue:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Function
-        protected ObjectCentralizationSubscriptions<Function> _Function_subscriptions;
-        Function IPropertySupporter<Function>.Get(int index)
-        {
-            return GetFunction(index: index);
-        }
-
-        protected Function GetFunction(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Function:
-                    return Function;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Function: {index}");
-            }
-        }
-
-        void IPropertySupporter<Function>.Set(
-            int index,
-            Function item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetFunction(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetFunction(
-            int index,
-            Function item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Function:
-                    SetFunction(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Function: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Function>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Function>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Function>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetFunction(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetFunction(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Function:
-                    SetFunction(
-                        item: default(Function),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Function: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Function>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Function> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Function_subscriptions == null)
-            {
-                _Function_subscriptions = new ObjectCentralizationSubscriptions<Function>();
-            }
-            _Function_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Function>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Function_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Function>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Function IPropertySupporter<Function>.DefaultValue(int index)
-        {
-            return DefaultValueFunction(index: index);
-        }
-
-        protected Function DefaultValueFunction(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.Function:
-                    return default(Function);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Function: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.FirstParameter:
-                    return FirstParameter;
-                case Condition_FieldIndex.SecondParameter:
-                    return SecondParameter;
-                case Condition_FieldIndex.ThirdParameter:
-                    return ThirdParameter;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.FirstParameter:
-                    SetFirstParameter(item, hasBeenSet, cmds);
-                    break;
-                case Condition_FieldIndex.SecondParameter:
-                    SetSecondParameter(item, hasBeenSet, cmds);
-                    break;
-                case Condition_FieldIndex.ThirdParameter:
-                    SetThirdParameter(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.FirstParameter:
-                    SetFirstParameter(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                case Condition_FieldIndex.SecondParameter:
-                    SetSecondParameter(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                case Condition_FieldIndex.ThirdParameter:
-                    SetThirdParameter(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.FirstParameter:
-                case Condition_FieldIndex.SecondParameter:
-                case Condition_FieldIndex.ThirdParameter:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -2189,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFluff();
+                    item.Fluff = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -2213,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetComparisonValue();
+                    item.ComparisonValue = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2237,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFunction();
+                    item.Function = default(Function);
                 }
             }
             catch (Exception ex)
@@ -2261,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFirstParameter();
+                    item.FirstParameter = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -2285,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetSecondParameter();
+                    item.SecondParameter = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -2309,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetThirdParameter();
+                    item.ThirdParameter = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -2448,44 +1300,28 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Condition_FieldIndex.CompareOperator:
-                    this.SetCompareOperator(
-                        (CompareOperator)obj,
-                        cmds: cmds);
+                    this.CompareOperator = (CompareOperator)obj;
                     break;
                 case Condition_FieldIndex.Flags:
-                    this.SetFlags(
-                        (Condition.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (Condition.Flag)obj;
                     break;
                 case Condition_FieldIndex.Fluff:
-                    this.SetFluff(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Fluff = (Byte[])obj;
                     break;
                 case Condition_FieldIndex.ComparisonValue:
-                    this.SetComparisonValue(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.ComparisonValue = (Single)obj;
                     break;
                 case Condition_FieldIndex.Function:
-                    this.SetFunction(
-                        (Function)obj,
-                        cmds: cmds);
+                    this.Function = (Function)obj;
                     break;
                 case Condition_FieldIndex.FirstParameter:
-                    this.SetFirstParameter(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.FirstParameter = (Int32)obj;
                     break;
                 case Condition_FieldIndex.SecondParameter:
-                    this.SetSecondParameter(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.SecondParameter = (Int32)obj;
                     break;
                 case Condition_FieldIndex.ThirdParameter:
-                    this.SetThirdParameter(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.ThirdParameter = (Int32)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2525,44 +1361,28 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Condition_FieldIndex.CompareOperator:
-                    obj.SetCompareOperator(
-                        (CompareOperator)pair.Value,
-                        cmds: null);
+                    obj.CompareOperator = (CompareOperator)pair.Value;
                     break;
                 case Condition_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (Condition.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (Condition.Flag)pair.Value;
                     break;
                 case Condition_FieldIndex.Fluff:
-                    obj.SetFluff(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Fluff = (Byte[])pair.Value;
                     break;
                 case Condition_FieldIndex.ComparisonValue:
-                    obj.SetComparisonValue(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.ComparisonValue = (Single)pair.Value;
                     break;
                 case Condition_FieldIndex.Function:
-                    obj.SetFunction(
-                        (Function)pair.Value,
-                        cmds: null);
+                    obj.Function = (Function)pair.Value;
                     break;
                 case Condition_FieldIndex.FirstParameter:
-                    obj.SetFirstParameter(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.FirstParameter = (Int32)pair.Value;
                     break;
                 case Condition_FieldIndex.SecondParameter:
-                    obj.SetSecondParameter(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.SecondParameter = (Int32)pair.Value;
                     break;
                 case Condition_FieldIndex.ThirdParameter:
-                    obj.SetThirdParameter(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.ThirdParameter = (Int32)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2580,28 +1400,20 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICondition : IConditionGetter, ILoquiClass<ICondition, IConditionGetter>, ILoquiClass<Condition, IConditionGetter>
     {
         new CompareOperator CompareOperator { get; set; }
-        new INotifyingItem<CompareOperator> CompareOperator_Property { get; }
 
         new Condition.Flag Flags { get; set; }
-        new INotifyingItem<Condition.Flag> Flags_Property { get; }
 
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
 
         new Single ComparisonValue { get; set; }
-        new INotifyingItem<Single> ComparisonValue_Property { get; }
 
         new Function Function { get; set; }
-        new INotifyingItem<Function> Function_Property { get; }
 
         new Int32 FirstParameter { get; set; }
-        new INotifyingItem<Int32> FirstParameter_Property { get; }
 
         new Int32 SecondParameter { get; set; }
-        new INotifyingItem<Int32> SecondParameter_Property { get; }
 
         new Int32 ThirdParameter { get; set; }
-        new INotifyingItem<Int32> ThirdParameter_Property { get; }
 
     }
 
@@ -2609,42 +1421,34 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region CompareOperator
         CompareOperator CompareOperator { get; }
-        INotifyingItemGetter<CompareOperator> CompareOperator_Property { get; }
 
         #endregion
         #region Flags
         Condition.Flag Flags { get; }
-        INotifyingItemGetter<Condition.Flag> Flags_Property { get; }
 
         #endregion
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region ComparisonValue
         Single ComparisonValue { get; }
-        INotifyingItemGetter<Single> ComparisonValue_Property { get; }
 
         #endregion
         #region Function
         Function Function { get; }
-        INotifyingItemGetter<Function> Function_Property { get; }
 
         #endregion
         #region FirstParameter
         Int32 FirstParameter { get; }
-        INotifyingItemGetter<Int32> FirstParameter_Property { get; }
 
         #endregion
         #region SecondParameter
         Int32 SecondParameter { get; }
-        INotifyingItemGetter<Int32> SecondParameter_Property { get; }
 
         #endregion
         #region ThirdParameter
         Int32 ThirdParameter { get; }
-        INotifyingItemGetter<Int32> ThirdParameter_Property { get; }
 
         #endregion
 
@@ -2945,9 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
                 try
                 {
-                    item.CompareOperator_Property.Set(
-                        value: rhs.CompareOperator,
-                        cmds: cmds);
+                    item.CompareOperator = rhs.CompareOperator;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2964,9 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2983,9 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
                 try
                 {
-                    item.Fluff_Property.Set(
-                        value: rhs.Fluff,
-                        cmds: cmds);
+                    item.Fluff = rhs.Fluff;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3002,9 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
                 try
                 {
-                    item.ComparisonValue_Property.Set(
-                        value: rhs.ComparisonValue,
-                        cmds: cmds);
+                    item.ComparisonValue = rhs.ComparisonValue;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3021,9 +1817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Condition_FieldIndex.Function);
                 try
                 {
-                    item.Function_Property.Set(
-                        value: rhs.Function,
-                        cmds: cmds);
+                    item.Function = rhs.Function;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3040,9 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
                 try
                 {
-                    item.FirstParameter_Property.Set(
-                        value: rhs.FirstParameter,
-                        cmds: cmds);
+                    item.FirstParameter = rhs.FirstParameter;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3059,9 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
                 try
                 {
-                    item.SecondParameter_Property.Set(
-                        value: rhs.SecondParameter,
-                        cmds: cmds);
+                    item.SecondParameter = rhs.SecondParameter;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3078,9 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
                 try
                 {
-                    item.ThirdParameter_Property.Set(
-                        value: rhs.ThirdParameter,
-                        cmds: cmds);
+                    item.ThirdParameter = rhs.ThirdParameter;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3367,7 +2155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<CompareOperator>.Instance.Write(
                     node: elem,
                     name: nameof(item.CompareOperator),
-                    item: item.CompareOperator_Property,
+                    item: item.CompareOperator,
                     fieldIndex: (int)Condition_FieldIndex.CompareOperator,
                     errorMask: errorMask);
             }
@@ -3376,7 +2164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Condition.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)Condition_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -3385,7 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Fluff),
-                    item: item.Fluff_Property,
+                    item: item.Fluff,
                     fieldIndex: (int)Condition_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
@@ -3394,7 +2182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ComparisonValue),
-                    item: item.ComparisonValue_Property,
+                    item: item.ComparisonValue,
                     fieldIndex: (int)Condition_FieldIndex.ComparisonValue,
                     errorMask: errorMask);
             }
@@ -3403,7 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Function>.Instance.Write(
                     node: elem,
                     name: nameof(item.Function),
-                    item: item.Function_Property,
+                    item: item.Function,
                     fieldIndex: (int)Condition_FieldIndex.Function,
                     errorMask: errorMask);
             }
@@ -3412,7 +2200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FirstParameter),
-                    item: item.FirstParameter_Property,
+                    item: item.FirstParameter,
                     fieldIndex: (int)Condition_FieldIndex.FirstParameter,
                     errorMask: errorMask);
             }
@@ -3421,7 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SecondParameter),
-                    item: item.SecondParameter_Property,
+                    item: item.SecondParameter,
                     fieldIndex: (int)Condition_FieldIndex.SecondParameter,
                     errorMask: errorMask);
             }
@@ -3430,7 +2218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ThirdParameter),
-                    item: item.ThirdParameter_Property,
+                    item: item.ThirdParameter,
                     fieldIndex: (int)Condition_FieldIndex.ThirdParameter,
                     errorMask: errorMask);
             }
@@ -3491,33 +2279,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff_Property,
+                item: item.Fluff,
                 fieldIndex: (int)Condition_FieldIndex.Fluff,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ComparisonValue_Property,
+                item: item.ComparisonValue,
                 fieldIndex: (int)Condition_FieldIndex.ComparisonValue,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Function>.Instance.Write(
                 writer,
-                item.Function_Property,
+                item.Function,
                 length: 4,
                 fieldIndex: (int)Condition_FieldIndex.Function,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FirstParameter_Property,
+                item: item.FirstParameter,
                 fieldIndex: (int)Condition_FieldIndex.FirstParameter,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.SecondParameter_Property,
+                item: item.SecondParameter,
                 fieldIndex: (int)Condition_FieldIndex.SecondParameter,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ThirdParameter_Property,
+                item: item.ThirdParameter,
                 fieldIndex: (int)Condition_FieldIndex.ThirdParameter,
                 errorMask: errorMask);
         }

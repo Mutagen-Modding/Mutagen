@@ -1,5 +1,6 @@
 ﻿using Noggog;
 using Noggog.Notifying;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Mutagen.Bethesda
        where T : MajorRecord
     {
         public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
+        private IDisposable edidSub;
         public RecordType EDID { get; private set; } = UNLINKED;
 
         public EDIDLink()
@@ -39,13 +41,14 @@ namespace Mutagen.Bethesda
         private void HandleItemChange(Change<T> change)
         {
             this.EDID = EDIDLink<T>.UNLINKED;
-            change.Old?.EditorID_Property.Unsubscribe(this);
-            change.New?.EditorID_Property.Subscribe(this, UpdateUnlinked);
+            this.edidSub?.Dispose();
+            this.edidSub = change.New?.WhenAny(x => x.EditorID)
+                .Subscribe(UpdateUnlinked);
         }
 
-        private void UpdateUnlinked(Change<string> change)
+        private void UpdateUnlinked(string change)
         {
-            this.EDID = new RecordType(change.New);
+            this.EDID = new RecordType(change);
         }
 
         public void SetIfSucceeded(TryGet<RecordType> item)

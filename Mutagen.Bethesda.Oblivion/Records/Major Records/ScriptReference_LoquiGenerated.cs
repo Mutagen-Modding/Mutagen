@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public abstract partial class ScriptReference : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IScriptReference,
         ILoquiObject<ScriptReference>,
         ILoquiObjectSetter,

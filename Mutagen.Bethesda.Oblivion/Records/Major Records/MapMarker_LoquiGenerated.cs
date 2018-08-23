@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,13 +30,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MapMarker : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IMapMarker,
         ILoquiObject<MapMarker>,
         ILoquiObjectSetter,
         INamed,
-        IPropertySupporter<MapMarker.Flag>,
-        IPropertySupporter<String>,
         IEquatable<MapMarker>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -51,100 +51,56 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        protected MapMarker.Flag _Flags;
-        protected PropertyForwarder<MapMarker, MapMarker.Flag> _FlagsForwarder;
-        public INotifyingSetItem<MapMarker.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<MapMarker, MapMarker.Flag>(this, (int)MapMarker_FieldIndex.Flags));
+        public bool Flags_IsSet
+        {
+            get => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Flags];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MapMarker_FieldIndex.Flags, nameof(Flags_IsSet));
+        }
+        bool IMapMarkerGetter.Flags_IsSet => Flags_IsSet;
+        private MapMarker.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MapMarker.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => Flags_Set(value);
         }
-        protected void SetFlags(
-            MapMarker.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        MapMarker.Flag IMapMarkerGetter.Flags => this.Flags;
+        public void Flags_Set(
+            MapMarker.Flag value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MapMarker_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MapMarker_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_MapMarkerFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _MapMarkerFlag_subscriptions.FireSubscriptions(
-                    index: (int)MapMarker_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)MapMarker_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
         }
-        protected void UnsetFlags()
+        public void Flags_Unset()
         {
-            _hasBeenSetTracker[(int)MapMarker_FieldIndex.Flags] = false;
-            Flags = default(MapMarker.Flag);
+            this.Flags_Set(default(MapMarker.Flag), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<MapMarker.Flag> IMapMarker.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<MapMarker.Flag> IMapMarkerGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<MapMarker, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<MapMarker, String>(this, (int)MapMarker_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MapMarker_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool IMapMarkerGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IMapMarkerGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MapMarker_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MapMarker_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)MapMarker_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)MapMarker_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)MapMarker_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IMapMarker.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IMapMarkerGetter.Name_Property => this.Name_Property;
         #endregion
         #region Types
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -226,13 +182,13 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(MapMarker rhs)
         {
             if (rhs == null) return false;
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (Flags_IsSet)
             {
                 if (this.Flags != rhs.Flags) return false;
             }
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
@@ -247,11 +203,11 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet)
             {
                 ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             }
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
@@ -589,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(MapMarker.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -615,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -677,274 +633,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter MapMarker.Flag
-        protected ObjectCentralizationSubscriptions<MapMarker.Flag> _MapMarkerFlag_subscriptions;
-        MapMarker.Flag IPropertySupporter<MapMarker.Flag>.Get(int index)
-        {
-            return GetMapMarkerFlag(index: index);
-        }
-
-        protected MapMarker.Flag GetMapMarkerFlag(int index)
-        {
-            switch ((MapMarker_FieldIndex)index)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapMarker.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<MapMarker.Flag>.Set(
-            int index,
-            MapMarker.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMapMarkerFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMapMarkerFlag(
-            int index,
-            MapMarker.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MapMarker_FieldIndex)index)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapMarker.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MapMarker.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MapMarker.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MapMarker.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMapMarkerFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMapMarkerFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MapMarker_FieldIndex)index)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(MapMarker.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapMarker.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MapMarker.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MapMarker.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MapMarkerFlag_subscriptions == null)
-            {
-                _MapMarkerFlag_subscriptions = new ObjectCentralizationSubscriptions<MapMarker.Flag>();
-            }
-            _MapMarkerFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MapMarker.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MapMarkerFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MapMarker.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MapMarker.Flag IPropertySupporter<MapMarker.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueMapMarkerFlag(index: index);
-        }
-
-        protected MapMarker.Flag DefaultValueMapMarkerFlag(int index)
-        {
-            switch ((MapMarker_FieldIndex)index)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    return default(MapMarker.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapMarker.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected String GetString(int index)
-        {
-            switch ((MapMarker_FieldIndex)index)
-            {
-                case MapMarker_FieldIndex.Name:
-                    return Name;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MapMarker_FieldIndex)index)
-            {
-                case MapMarker_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MapMarker_FieldIndex)index)
-            {
-                case MapMarker_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected String DefaultValueString(int index)
-        {
-            switch ((MapMarker_FieldIndex)index)
-            {
-                case MapMarker_FieldIndex.Name:
-                    return default(String);
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1190,7 +878,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(MapMarker.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -1219,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1380,14 +1068,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MapMarker_FieldIndex.Flags:
-                    this.SetFlags(
-                        (MapMarker.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (MapMarker.Flag)obj;
                     break;
                 case MapMarker_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 case MapMarker_FieldIndex.Types:
                     this._Types.SetTo((IEnumerable<MapMarker.Type>)obj, cmds);
@@ -1430,14 +1114,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MapMarker_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (MapMarker.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (MapMarker.Flag)pair.Value;
                     break;
                 case MapMarker_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 case MapMarker_FieldIndex.Types:
                     obj._Types.SetTo((IEnumerable<MapMarker.Type>)pair.Value, null);
@@ -1458,10 +1138,14 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMapMarker : IMapMarkerGetter, ILoquiClass<IMapMarker, IMapMarkerGetter>, ILoquiClass<MapMarker, IMapMarkerGetter>
     {
         new MapMarker.Flag Flags { get; set; }
-        new INotifyingSetItem<MapMarker.Flag> Flags_Property { get; }
+        new bool Flags_IsSet { get; set; }
+        void Flags_Set(MapMarker.Flag item, bool hasBeenSet = true);
+        void Flags_Unset();
 
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
         new INotifyingList<MapMarker.Type> Types { get; }
     }
@@ -1470,12 +1154,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Flags
         MapMarker.Flag Flags { get; }
-        INotifyingSetItemGetter<MapMarker.Flag> Flags_Property { get; }
+        bool Flags_IsSet { get; }
 
         #endregion
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
         #region Types
@@ -1722,9 +1406,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Flags,
+                        rhsHasBeenSet: rhs.Flags_IsSet,
+                        defItem: def?.Flags ?? default(MapMarker.Flag),
+                        defHasBeenSet: def?.Flags_IsSet ?? false,
+                        outRhsItem: out var rhsFlagsItem,
+                        outDefItem: out var defFlagsItem))
+                    {
+                        item.Flags = rhsFlagsItem;
+                    }
+                    else
+                    {
+                        item.Flags_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1741,9 +1436,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1789,10 +1495,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MapMarker_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
+                    obj.Flags_IsSet = on;
                     break;
                 case MapMarker_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 case MapMarker_FieldIndex.Types:
                     obj.Types.HasBeenSet = on;
@@ -1811,10 +1517,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MapMarker_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags_Unset();
                     break;
                 case MapMarker_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 case MapMarker_FieldIndex.Types:
                     obj.Types.Unset(cmds);
@@ -1832,9 +1538,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MapMarker_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                    return obj.Flags_IsSet;
                 case MapMarker_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 case MapMarker_FieldIndex.Types:
                     return obj.Types.HasBeenSet;
                 default:
@@ -1864,8 +1570,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapMarker item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
-            item.Name_Property.Unset(cmds.ToUnsetParams());
+            item.Flags_Unset();
+            item.Name_Unset();
             item.Types.Unset(cmds.ToUnsetParams());
         }
 
@@ -1884,8 +1590,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MapMarker_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             if (item.Types.HasBeenSet == rhs.Types.HasBeenSet)
             {
                 if (item.Types.HasBeenSet)
@@ -1968,8 +1674,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IMapMarkerGetter item,
             MapMarker_Mask<bool?> checkMask)
         {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             if (checkMask.Types.Overall.HasValue && checkMask.Types.Overall.Value != item.Types.HasBeenSet) return false;
             return true;
         }
@@ -1977,8 +1683,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static MapMarker_Mask<bool> GetHasBeenSetMask(IMapMarkerGetter item)
         {
             var ret = new MapMarker_Mask<bool>();
-            ret.Flags = item.Flags_Property.HasBeenSet;
-            ret.Name = item.Name_Property.HasBeenSet;
+            ret.Flags = item.Flags_IsSet;
+            ret.Name = item.Name_IsSet;
             ret.Types = new MaskItem<bool, IEnumerable<bool>>(item.Types.HasBeenSet, null);
             return ret;
         }
@@ -2016,23 +1722,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapMarker");
             }
-            if (item.Flags_Property.HasBeenSet
+            if (item.Flags_IsSet
                 && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<MapMarker.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)MapMarker_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)MapMarker_FieldIndex.Name,
                     errorMask: errorMask);
             }
@@ -2099,36 +1805,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Write(
-                writer,
-                item.Flags_Property,
-                length: 1,
-                fieldIndex: (int)MapMarker_FieldIndex.Flags,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)MapMarker_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FULL_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Write(
-                writer: writer,
-                items: item.Types,
-                fieldIndex: (int)MapMarker_FieldIndex.Types,
-                recordType: MapMarker_Registration.TNAM_HEADER,
-                errorMask: errorMask,
-                transl: (MutagenWriter subWriter, MapMarker.Type subItem, ErrorMaskBuilder listErrorMask) =>
-                {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
-                        subWriter,
-                        subItem,
-                        length: 2,
-                        errorMask: listErrorMask);
-                }
-                );
+            if (item.Flags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1,
+                    fieldIndex: (int)MapMarker_FieldIndex.Flags,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)MapMarker_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Types.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Write(
+                    writer: writer,
+                    items: item.Types,
+                    fieldIndex: (int)MapMarker_FieldIndex.Types,
+                    recordType: MapMarker_Registration.TNAM_HEADER,
+                    errorMask: errorMask,
+                    transl: (MutagenWriter subWriter, MapMarker.Type subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
+                            subWriter,
+                            subItem,
+                            length: 2,
+                            errorMask: listErrorMask);
+                    }
+                    );
+            }
         }
 
         #endregion

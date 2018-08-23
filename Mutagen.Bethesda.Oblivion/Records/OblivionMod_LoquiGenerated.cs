@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -31,11 +33,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class OblivionMod : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IOblivionMod,
         ILoquiObject<OblivionMod>,
         ILoquiObjectSetter,
-        IPropertySupporter<TES4>,
         IEquatable<OblivionMod>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -108,35 +109,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TES4
-        protected readonly TES4 _TES4 = new TES4();
-        protected PropertyForwarder<OblivionMod, TES4> _TES4Forwarder;
-        public INotifyingSetItemGetter<TES4> TES4_Property => _TES4Forwarder ?? (_TES4Forwarder = new PropertyForwarder<OblivionMod, TES4>(this, (int)OblivionMod_FieldIndex.TES4));
+        private TES4 _TES4_Object = new TES4();
+        public bool TES4_IsSet => true;
+        bool IOblivionModGetter.TES4_IsSet => TES4_IsSet;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public TES4 TES4
-        {
-            get => this._TES4;
-            protected set => this.SetTES4(value);
-        }
-        protected void SetTES4(
-            TES4 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            this._TES4.CopyFieldsFrom(
-                rhs: item,
-                def: null,
-                cmds: null,
-                copyMask: null,
-                doMasks: false,
-                errorMask: out var errMask);
-        }
-        protected void UnsetTES4()
-        {
-            _hasBeenSetTracker[(int)OblivionMod_FieldIndex.TES4] = false;
-            TES4 = default(TES4);
-        }
+        public TES4 TES4 => _TES4_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<TES4> IOblivionModGetter.TES4_Property => this.TES4_Property;
+        TES4 IOblivionModGetter.TES4 => this.TES4;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -480,8 +459,8 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(OblivionMod rhs)
         {
             if (rhs == null) return false;
-            if (TES4_Property.HasBeenSet != rhs.TES4_Property.HasBeenSet) return false;
-            if (TES4_Property.HasBeenSet)
+            if (TES4_IsSet != rhs.TES4_IsSet) return false;
+            if (TES4_IsSet)
             {
                 if (!object.Equals(this.TES4, rhs.TES4)) return false;
             }
@@ -547,7 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (TES4_Property.HasBeenSet)
+            if (TES4_IsSet)
             {
                 ret = HashHelper.GetHashCode(TES4).CombineHashCode(ret);
             }
@@ -2424,140 +2403,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter TES4
-        protected ObjectCentralizationSubscriptions<TES4> _TES4_subscriptions;
-        TES4 IPropertySupporter<TES4>.Get(int index)
-        {
-            return GetTES4(index: index);
-        }
-
-        protected TES4 GetTES4(int index)
-        {
-            switch ((OblivionMod_FieldIndex)index)
-            {
-                case OblivionMod_FieldIndex.TES4:
-                    return TES4;
-                default:
-                    throw new ArgumentException($"Unknown index for field type TES4: {index}");
-            }
-        }
-
-        void IPropertySupporter<TES4>.Set(
-            int index,
-            TES4 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetTES4(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetTES4(
-            int index,
-            TES4 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((OblivionMod_FieldIndex)index)
-            {
-                case OblivionMod_FieldIndex.TES4:
-                    SetTES4(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type TES4: {index}");
-            }
-        }
-
-        bool IPropertySupporter<TES4>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<TES4>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<TES4>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetTES4(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetTES4(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((OblivionMod_FieldIndex)index)
-            {
-                case OblivionMod_FieldIndex.TES4:
-                    SetTES4(
-                        item: default(TES4),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type TES4: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<TES4>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<TES4> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_TES4_subscriptions == null)
-            {
-                _TES4_subscriptions = new ObjectCentralizationSubscriptions<TES4>();
-            }
-            _TES4_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<TES4>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _TES4_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<TES4>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        TES4 IPropertySupporter<TES4>.DefaultValue(int index)
-        {
-            return DefaultValueTES4(index: index);
-        }
-
-        protected TES4 DefaultValueTES4(int index)
-        {
-            switch ((OblivionMod_FieldIndex)index)
-            {
-                case OblivionMod_FieldIndex.TES4:
-                    return default(TES4);
-                default:
-                    throw new ArgumentException($"Unknown index for field type TES4: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         private NotifyingDictionary<FormID, MajorRecord> _majorRecords = new NotifyingDictionary<FormID, MajorRecord>();
@@ -5475,7 +5320,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region TES4
         TES4 TES4 { get; }
-        INotifyingSetItemGetter<TES4> TES4_Property { get; }
+        bool TES4_IsSet { get; }
 
         #endregion
         #region GameSettings
@@ -8219,7 +8064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.EffectShaders:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
-                    return obj.TES4_Property.HasBeenSet;
+                    return obj.TES4_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -8372,7 +8217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.TES4 = item.TES4_Property.LoquiEqualsHelper(rhs.TES4_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.TES4 = IHasBeenSetExt.LoquiEqualsHelper(item.TES4_IsSet, rhs.TES4_IsSet, item.TES4, rhs.TES4, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>();
             ret.GameSettings.Specific = GroupCommon.GetEqualsMask(item.GameSettings, rhs.GameSettings);
             ret.GameSettings.Overall = ret.GameSettings.Specific.AllEqual((b) => b);
@@ -8806,7 +8651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IOblivionModGetter item,
             OblivionMod_Mask<bool?> checkMask)
         {
-            if (checkMask.TES4.Overall.HasValue && checkMask.TES4.Overall.Value != item.TES4_Property.HasBeenSet) return false;
+            if (checkMask.TES4.Overall.HasValue && checkMask.TES4.Overall.Value != item.TES4_IsSet) return false;
             if (checkMask.TES4.Specific != null && (item.TES4 == null || !item.TES4.HasBeenSet(checkMask.TES4.Specific))) return false;
             return true;
         }
@@ -8814,7 +8659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static OblivionMod_Mask<bool> GetHasBeenSetMask(IOblivionModGetter item)
         {
             var ret = new OblivionMod_Mask<bool>();
-            ret.TES4 = new MaskItem<bool, TES4_Mask<bool>>(item.TES4_Property.HasBeenSet, TES4Common.GetHasBeenSetMask(item.TES4));
+            ret.TES4 = new MaskItem<bool, TES4_Mask<bool>>(item.TES4_IsSet, TES4Common.GetHasBeenSetMask(item.TES4));
             ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.GameSettings));
             ret.Globals = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Globals));
             ret.Classes = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Classes));
@@ -8907,12 +8752,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.OblivionMod");
             }
-            if (item.TES4_Property.HasBeenSet
+            if (item.TES4_IsSet
                 && (translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.TES4) ?? true))
             {
                 LoquiXmlTranslation<TES4>.Instance.Write(
                     node: elem,
-                    item: item.TES4_Property,
+                    item: item.TES4,
                     name: nameof(item.TES4),
                     fieldIndex: (int)OblivionMod_FieldIndex.TES4,
                     errorMask: errorMask,
@@ -9526,11 +9371,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            LoquiBinaryTranslation<TES4>.Instance.Write(
-                writer: writer,
-                item: item.TES4_Property,
-                fieldIndex: (int)OblivionMod_FieldIndex.TES4,
-                errorMask: errorMask);
+            if (item.TES4_IsSet)
+            {
+                LoquiBinaryTranslation<TES4>.Instance.Write(
+                    writer: writer,
+                    item: item.TES4,
+                    fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                    errorMask: errorMask);
+            }
             if (importMask?.GameSettings ?? true)
             {
                 if (item.GameSettings.Items.Count > 0)

@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void WriteBinary_OffsetLength_Custom(MutagenWriter writer, Worldspace item, ErrorMaskBuilder errorMask)
         {
-            if (!item.OffsetData_Property.HasBeenSet) return;
+            if (!item.OffsetData_IsSet) return;
             if (!item.usingOffsetLength) return;
             using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.XXXX_HEADER))
             {
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void WriteBinary_OffsetData_Custom(MutagenWriter writer, Worldspace item, ErrorMaskBuilder errorMask)
         {
             if (item.usingOffsetLength) return;
-            if (!item.OffsetData_Property.HasBeenSet) return;
+            if (!item.OffsetData_IsSet) return;
             using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.OFST_HEADER))
             {
                 ByteArrayBinaryTranslation.Instance.Write(writer, item.OffsetData);
@@ -110,18 +110,43 @@ namespace Mutagen.Bethesda.Oblivion
                     switch (subType.TypeInt)
                     {
                         case 0x44414F52: // "ROAD":
-                            LoquiBinaryTranslation<Road>.Instance.ParseInto(
-                                frame: subFrame,
-                                item: obj.Road_Property,
-                                fieldIndex: (int)Worldspace_FieldIndex.Road,
-                                errorMask: errorMask);
+                            ErrorMask.WrapAction(
+                                errorMask,
+                                (int)Worldspace_FieldIndex.Road,
+                                () =>
+                                {
+                                    errorMask.PushIndex((int)Worldspace_FieldIndex.Road);
+                                    if (LoquiBinaryTranslation<Road>.Instance.Parse(
+                                        frame: subFrame,
+                                        item: out var roadItem,
+                                        errorMask: errorMask))
+                                    {
+                                        obj.Road = roadItem;
+                                    }
+                                    else
+                                    {
+                                        obj.Road_Unset();
+                                    }
+                                });
                             break;
                         case 0x4C4C4543: // "CELL":
-                            LoquiBinaryTranslation<Cell>.Instance.ParseInto(
-                                frame: subFrame,
-                                item: obj.TopCell_Property,
-                                fieldIndex: (int)Worldspace_FieldIndex.TopCell,
-                                errorMask: errorMask);
+                            ErrorMask.WrapAction(
+                                errorMask,
+                                (int)Worldspace_FieldIndex.TopCell,
+                                () =>
+                                {
+                                    if (LoquiBinaryTranslation<Cell>.Instance.Parse(
+                                        frame: subFrame,
+                                        item: out var cellItem,
+                                        errorMask: errorMask))
+                                    {
+                                        obj.TopCell = cellItem;
+                                    }
+                                    else
+                                    {
+                                        obj.TopCell_Unset();
+                                    }
+                                });
                             break;
                         case 0x50555247: // "GRUP":
                             Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
@@ -149,8 +174,8 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void CustomBinaryEnd_Export(MutagenWriter writer, Worldspace obj, ErrorMaskBuilder errorMask)
         {
             if (obj._SubCells.Count == 0
-                && !obj.Road_Property.HasBeenSet
-                && !obj.TopCell_Property.HasBeenSet) return;
+                && !obj.Road_IsSet
+                && !obj.TopCell_IsSet) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
                 FormIDBinaryTranslation.Instance.Write(
@@ -167,7 +192,7 @@ namespace Mutagen.Bethesda.Oblivion
                     writer.WriteZeros(4);
                 }
                 
-                if (obj.Road_Property.HasBeenSet)
+                if (obj.Road_IsSet)
                 {
                     LoquiBinaryTranslation<Road>.Instance.Write(
                         writer,
@@ -175,7 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
                         (int)Worldspace_FieldIndex.Road,
                         errorMask);
                 }
-                if (obj.TopCell_Property.HasBeenSet)
+                if (obj.TopCell_IsSet)
                 {
                     LoquiBinaryTranslation<Cell>.Instance.Write(
                         writer,

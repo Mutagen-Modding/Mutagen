@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class InterCellPoint : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IInterCellPoint,
         ILoquiObject<InterCellPoint>,
         ILoquiObjectSetter,
-        IPropertySupporter<Int32>,
-        IPropertySupporter<P3Float>,
         IEquatable<InterCellPoint>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,100 +50,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region PointID
-        protected Int32 _PointID;
-        protected PropertyForwarder<InterCellPoint, Int32> _PointIDForwarder;
-        public INotifyingSetItem<Int32> PointID_Property => _PointIDForwarder ?? (_PointIDForwarder = new PropertyForwarder<InterCellPoint, Int32>(this, (int)InterCellPoint_FieldIndex.PointID));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _PointID;
         public Int32 PointID
         {
             get => this._PointID;
-            set => this.SetPointID(value);
+            set => this.RaiseAndSetIfChanged(ref this._PointID, value, nameof(PointID));
         }
-        protected void SetPointID(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)InterCellPoint_FieldIndex.PointID];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PointID == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)InterCellPoint_FieldIndex.PointID] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = PointID;
-                _PointID = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)InterCellPoint_FieldIndex.PointID,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PointID = item;
-            }
-        }
-        protected void UnsetPointID()
-        {
-            _hasBeenSetTracker[(int)InterCellPoint_FieldIndex.PointID] = false;
-            PointID = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IInterCellPoint.PointID_Property => this.PointID_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IInterCellPointGetter.PointID_Property => this.PointID_Property;
         #endregion
         #region Point
-        protected P3Float _Point;
-        protected PropertyForwarder<InterCellPoint, P3Float> _PointForwarder;
-        public INotifyingSetItem<P3Float> Point_Property => _PointForwarder ?? (_PointForwarder = new PropertyForwarder<InterCellPoint, P3Float>(this, (int)InterCellPoint_FieldIndex.Point));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3Float _Point;
         public P3Float Point
         {
             get => this._Point;
-            set => this.SetPoint(value);
+            set => this.RaiseAndSetIfChanged(ref this._Point, value, nameof(Point));
         }
-        protected void SetPoint(
-            P3Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)InterCellPoint_FieldIndex.Point];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Point == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)InterCellPoint_FieldIndex.Point] = hasBeenSet;
-            }
-            if (_P3Float_subscriptions != null)
-            {
-                var tmp = Point;
-                _Point = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)InterCellPoint_FieldIndex.Point,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Point = item;
-            }
-        }
-        protected void UnsetPoint()
-        {
-            _hasBeenSetTracker[(int)InterCellPoint_FieldIndex.Point] = false;
-            Point = default(P3Float);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IInterCellPoint.Point_Property => this.Point_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IInterCellPointGetter.Point_Property => this.Point_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -547,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPointID();
+                            item.PointID = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -573,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPoint();
+                            item.Point = default(P3Float);
                         }
                     }
                     catch (Exception ex)
@@ -605,274 +525,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((InterCellPoint_FieldIndex)index)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    return PointID;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((InterCellPoint_FieldIndex)index)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    SetPointID(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((InterCellPoint_FieldIndex)index)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    SetPointID(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((InterCellPoint_FieldIndex)index)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter P3Float
-        protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
-        P3Float IPropertySupporter<P3Float>.Get(int index)
-        {
-            return GetP3Float(index: index);
-        }
-
-        protected P3Float GetP3Float(int index)
-        {
-            switch ((InterCellPoint_FieldIndex)index)
-            {
-                case InterCellPoint_FieldIndex.Point:
-                    return Point;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        void IPropertySupporter<P3Float>.Set(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP3Float(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP3Float(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((InterCellPoint_FieldIndex)index)
-            {
-                case InterCellPoint_FieldIndex.Point:
-                    SetPoint(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P3Float>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P3Float>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP3Float(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP3Float(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((InterCellPoint_FieldIndex)index)
-            {
-                case InterCellPoint_FieldIndex.Point:
-                    SetPoint(
-                        item: default(P3Float),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P3Float> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P3Float_subscriptions == null)
-            {
-                _P3Float_subscriptions = new ObjectCentralizationSubscriptions<P3Float>();
-            }
-            _P3Float_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P3Float_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P3Float>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P3Float IPropertySupporter<P3Float>.DefaultValue(int index)
-        {
-            return DefaultValueP3Float(index: index);
-        }
-
-        protected P3Float DefaultValueP3Float(int index)
-        {
-            switch ((InterCellPoint_FieldIndex)index)
-            {
-                case InterCellPoint_FieldIndex.Point:
-                    return default(P3Float);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1088,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetPointID();
+                    item.PointID = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -1112,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetPoint();
+                    item.Point = default(P3Float);
                 }
             }
             catch (Exception ex)
@@ -1251,14 +903,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case InterCellPoint_FieldIndex.PointID:
-                    this.SetPointID(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.PointID = (Int32)obj;
                     break;
                 case InterCellPoint_FieldIndex.Point:
-                    this.SetPoint(
-                        (P3Float)obj,
-                        cmds: cmds);
+                    this.Point = (P3Float)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1298,14 +946,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case InterCellPoint_FieldIndex.PointID:
-                    obj.SetPointID(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.PointID = (Int32)pair.Value;
                     break;
                 case InterCellPoint_FieldIndex.Point:
-                    obj.SetPoint(
-                        (P3Float)pair.Value,
-                        cmds: null);
+                    obj.Point = (P3Float)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1323,10 +967,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IInterCellPoint : IInterCellPointGetter, ILoquiClass<IInterCellPoint, IInterCellPointGetter>, ILoquiClass<InterCellPoint, IInterCellPointGetter>
     {
         new Int32 PointID { get; set; }
-        new INotifyingItem<Int32> PointID_Property { get; }
 
         new P3Float Point { get; set; }
-        new INotifyingItem<P3Float> Point_Property { get; }
 
     }
 
@@ -1334,12 +976,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region PointID
         Int32 PointID { get; }
-        INotifyingItemGetter<Int32> PointID_Property { get; }
 
         #endregion
         #region Point
         P3Float Point { get; }
-        INotifyingItemGetter<P3Float> Point_Property { get; }
 
         #endregion
 
@@ -1554,9 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)InterCellPoint_FieldIndex.PointID);
                 try
                 {
-                    item.PointID_Property.Set(
-                        value: rhs.PointID,
-                        cmds: cmds);
+                    item.PointID = rhs.PointID;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1573,9 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)InterCellPoint_FieldIndex.Point);
                 try
                 {
-                    item.Point_Property.Set(
-                        value: rhs.Point,
-                        cmds: cmds);
+                    item.Point = rhs.Point;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1778,7 +1414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PointID),
-                    item: item.PointID_Property,
+                    item: item.PointID,
                     fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                     errorMask: errorMask);
             }
@@ -1787,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P3FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Point),
-                    item: item.Point_Property,
+                    item: item.Point,
                     fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                     errorMask: errorMask);
             }
@@ -1834,12 +1470,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.PointID_Property,
+                item: item.PointID,
                 fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Point_Property,
+                item: item.Point,
                 fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                 errorMask: errorMask);
         }

@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -27,13 +29,10 @@ namespace Mutagen.Bethesda
 {
     #region Class
     public abstract partial class MajorRecord : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IMajorRecord,
         ILoquiObject<MajorRecord>,
         ILoquiObjectSetter,
-        IPropertySupporter<MajorRecord.MajorRecordFlag>,
-        IPropertySupporter<UInt32>,
-        IPropertySupporter<String>,
         IEquatable<MajorRecord>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,156 +49,62 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region MajorRecordFlags
-        protected MajorRecord.MajorRecordFlag _MajorRecordFlags;
-        protected PropertyForwarder<MajorRecord, MajorRecord.MajorRecordFlag> _MajorRecordFlagsForwarder;
-        public INotifyingSetItem<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property => _MajorRecordFlagsForwarder ?? (_MajorRecordFlagsForwarder = new PropertyForwarder<MajorRecord, MajorRecord.MajorRecordFlag>(this, (int)MajorRecord_FieldIndex.MajorRecordFlags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MajorRecord.MajorRecordFlag _MajorRecordFlags;
         public MajorRecord.MajorRecordFlag MajorRecordFlags
         {
             get => this._MajorRecordFlags;
-            set => this.SetMajorRecordFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._MajorRecordFlags, value, nameof(MajorRecordFlags));
         }
-        protected void SetMajorRecordFlags(
-            MajorRecord.MajorRecordFlag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MajorRecord_FieldIndex.MajorRecordFlags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MajorRecordFlags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MajorRecord_FieldIndex.MajorRecordFlags] = hasBeenSet;
-            }
-            if (_MajorRecordMajorRecordFlag_subscriptions != null)
-            {
-                var tmp = MajorRecordFlags;
-                _MajorRecordFlags = item;
-                _MajorRecordMajorRecordFlag_subscriptions.FireSubscriptions(
-                    index: (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MajorRecordFlags = item;
-            }
-        }
-        protected void UnsetMajorRecordFlags()
-        {
-            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.MajorRecordFlags] = false;
-            MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<MajorRecord.MajorRecordFlag> IMajorRecord.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<MajorRecord.MajorRecordFlag> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
         #endregion
         #region FormID
-        private FormID _FormID;
-        public FormID FormID { get => _FormID; protected set => _FormID = value; }
+        public FormID FormID { get; protected set; }
+        protected void UnsetFormID()
+        {
+            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.FormID] = false;
+            FormID = default(FormID);
+        }
         #endregion
         #region Version
-        protected UInt32 _Version;
-        protected PropertyForwarder<MajorRecord, UInt32> _VersionForwarder;
-        public INotifyingSetItem<UInt32> Version_Property => _VersionForwarder ?? (_VersionForwarder = new PropertyForwarder<MajorRecord, UInt32>(this, (int)MajorRecord_FieldIndex.Version));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _Version;
         public UInt32 Version
         {
             get => this._Version;
-            set => this.SetVersion(value);
+            set => this.RaiseAndSetIfChanged(ref this._Version, value, nameof(Version));
         }
-        protected void SetVersion(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MajorRecord_FieldIndex.Version];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Version == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MajorRecord_FieldIndex.Version] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = Version;
-                _Version = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)MajorRecord_FieldIndex.Version,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Version = item;
-            }
-        }
-        protected void UnsetVersion()
-        {
-            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.Version] = false;
-            Version = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IMajorRecord.Version_Property => this.Version_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IMajorRecordGetter.Version_Property => this.Version_Property;
         #endregion
         #region EditorID
-        protected String _EditorID;
-        protected PropertyForwarder<MajorRecord, String> _EditorIDForwarder;
-        public INotifyingSetItem<String> EditorID_Property => _EditorIDForwarder ?? (_EditorIDForwarder = new PropertyForwarder<MajorRecord, String>(this, (int)MajorRecord_FieldIndex.EditorID));
+        public bool EditorID_IsSet
+        {
+            get => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MajorRecord_FieldIndex.EditorID, nameof(EditorID_IsSet));
+        }
+        bool IMajorRecordGetter.EditorID_IsSet => EditorID_IsSet;
+        private String _EditorID;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String EditorID
         {
             get => this._EditorID;
-            set => this.SetEditorID(value);
+            set => EditorID_Set(value);
         }
-        protected void SetEditorID(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IMajorRecordGetter.EditorID => this.EditorID;
+        public void EditorID_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EditorID == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = EditorID;
-                _EditorID = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)MajorRecord_FieldIndex.EditorID,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _EditorID = item;
-            }
+            this.RaiseAndSetIfChanged(ref _EditorID, value, _hasBeenSetTracker, markSet, (int)MajorRecord_FieldIndex.EditorID, nameof(EditorID), nameof(EditorID_IsSet));
         }
-        protected void UnsetEditorID()
+        public void EditorID_Unset()
         {
-            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = false;
-            EditorID = default(String);
+            this.EditorID_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IMajorRecord.EditorID_Property => this.EditorID_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
         #endregion
         #region RecordType
-        private RecordType _RecordType;
-        public RecordType RecordType { get => _RecordType; protected set => _RecordType = value; }
+        public RecordType RecordType { get; protected set; }
+        protected void UnsetRecordType()
+        {
+            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.RecordType] = false;
+            RecordType = default(RecordType);
+        }
         #endregion
 
         #region Loqui Getter Interface
@@ -266,8 +171,8 @@ namespace Mutagen.Bethesda
             if (this.MajorRecordFlags != rhs.MajorRecordFlags) return false;
             if (this.FormID != rhs.FormID) return false;
             if (this.Version != rhs.Version) return false;
-            if (EditorID_Property.HasBeenSet != rhs.EditorID_Property.HasBeenSet) return false;
-            if (EditorID_Property.HasBeenSet)
+            if (EditorID_IsSet != rhs.EditorID_IsSet) return false;
+            if (EditorID_IsSet)
             {
                 if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
             }
@@ -281,7 +186,7 @@ namespace Mutagen.Bethesda
             ret = HashHelper.GetHashCode(MajorRecordFlags).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(FormID).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
-            if (EditorID_Property.HasBeenSet)
+            if (EditorID_IsSet)
             {
                 ret = HashHelper.GetHashCode(EditorID).CombineHashCode(ret);
             }
@@ -516,7 +421,7 @@ namespace Mutagen.Bethesda
                         }
                         else
                         {
-                            item.UnsetMajorRecordFlags();
+                            item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
                         }
                     }
                     catch (Exception ex)
@@ -568,7 +473,7 @@ namespace Mutagen.Bethesda
                         }
                         else
                         {
-                            item.UnsetVersion();
+                            item.Version = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -594,7 +499,7 @@ namespace Mutagen.Bethesda
                         }
                         else
                         {
-                            item.UnsetEditorID();
+                            item.EditorID = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -630,408 +535,6 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter MajorRecord.MajorRecordFlag
-        protected ObjectCentralizationSubscriptions<MajorRecord.MajorRecordFlag> _MajorRecordMajorRecordFlag_subscriptions;
-        MajorRecord.MajorRecordFlag IPropertySupporter<MajorRecord.MajorRecordFlag>.Get(int index)
-        {
-            return GetMajorRecordMajorRecordFlag(index: index);
-        }
-
-        protected MajorRecord.MajorRecordFlag GetMajorRecordMajorRecordFlag(int index)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return MajorRecordFlags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MajorRecord.MajorRecordFlag: {index}");
-            }
-        }
-
-        void IPropertySupporter<MajorRecord.MajorRecordFlag>.Set(
-            int index,
-            MajorRecord.MajorRecordFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMajorRecordMajorRecordFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMajorRecordMajorRecordFlag(
-            int index,
-            MajorRecord.MajorRecordFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    SetMajorRecordFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MajorRecord.MajorRecordFlag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MajorRecord.MajorRecordFlag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MajorRecord.MajorRecordFlag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MajorRecord.MajorRecordFlag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMajorRecordMajorRecordFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMajorRecordMajorRecordFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    SetMajorRecordFlags(
-                        item: default(MajorRecord.MajorRecordFlag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MajorRecord.MajorRecordFlag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MajorRecord.MajorRecordFlag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MajorRecord.MajorRecordFlag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MajorRecordMajorRecordFlag_subscriptions == null)
-            {
-                _MajorRecordMajorRecordFlag_subscriptions = new ObjectCentralizationSubscriptions<MajorRecord.MajorRecordFlag>();
-            }
-            _MajorRecordMajorRecordFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MajorRecord.MajorRecordFlag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MajorRecordMajorRecordFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MajorRecord.MajorRecordFlag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MajorRecord.MajorRecordFlag IPropertySupporter<MajorRecord.MajorRecordFlag>.DefaultValue(int index)
-        {
-            return DefaultValueMajorRecordMajorRecordFlag(index: index);
-        }
-
-        protected MajorRecord.MajorRecordFlag DefaultValueMajorRecordMajorRecordFlag(int index)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return default(MajorRecord.MajorRecordFlag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MajorRecord.MajorRecordFlag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter UInt32
-        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
-        UInt32 IPropertySupporter<UInt32>.Get(int index)
-        {
-            return GetUInt32(index: index);
-        }
-
-        protected virtual UInt32 GetUInt32(int index)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.Version:
-                    return Version;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        void IPropertySupporter<UInt32>.Set(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected virtual void SetUInt32(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.Version:
-                    SetVersion(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected virtual void UnsetUInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.Version:
-                    SetVersion(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt32_subscriptions == null)
-            {
-                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
-            }
-            _UInt32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
-        {
-            return DefaultValueUInt32(index: index);
-        }
-
-        protected virtual UInt32 DefaultValueUInt32(int index)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.Version:
-                    return default(UInt32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected virtual String GetString(int index)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.EditorID:
-                    return EditorID;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected virtual void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.EditorID:
-                    SetEditorID(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected virtual void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.EditorID:
-                    SetEditorID(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected virtual String DefaultValueString(int index)
-        {
-            switch ((MajorRecord_FieldIndex)index)
-            {
-                case MajorRecord_FieldIndex.EditorID:
-                    return default(String);
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public virtual IEnumerable<ILink> Links => GetLinks();
@@ -1170,7 +673,7 @@ namespace Mutagen.Bethesda
                 }
                 else
                 {
-                    item.UnsetMajorRecordFlags();
+                    item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
                 }
             }
             catch (Exception ex)
@@ -1218,7 +721,7 @@ namespace Mutagen.Bethesda
                 }
                 else
                 {
-                    item.UnsetVersion();
+                    item.Version = default(UInt32);
                 }
             }
             catch (Exception ex)
@@ -1259,7 +762,7 @@ namespace Mutagen.Bethesda
                         }
                         else
                         {
-                            item.UnsetEditorID();
+                            item.EditorID = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1390,22 +893,16 @@ namespace Mutagen.Bethesda
                 case MajorRecord_FieldIndex.RecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    this.SetMajorRecordFlags(
-                        (MajorRecord.MajorRecordFlag)obj,
-                        cmds: cmds);
+                    this.MajorRecordFlags = (MajorRecord.MajorRecordFlag)obj;
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     this.FormID = (FormID)obj;
                     break;
                 case MajorRecord_FieldIndex.Version:
-                    this.SetVersion(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.Version = (UInt32)obj;
                     break;
                 case MajorRecord_FieldIndex.EditorID:
-                    this.SetEditorID(
-                        (String)obj,
-                        cmds: cmds);
+                    this.EditorID = (String)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1435,22 +932,16 @@ namespace Mutagen.Bethesda
             switch (enu)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    obj.SetMajorRecordFlags(
-                        (MajorRecord.MajorRecordFlag)pair.Value,
-                        cmds: null);
+                    obj.MajorRecordFlags = (MajorRecord.MajorRecordFlag)pair.Value;
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     obj.FormID = (FormID)pair.Value;
                     break;
                 case MajorRecord_FieldIndex.Version:
-                    obj.SetVersion(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.Version = (UInt32)pair.Value;
                     break;
                 case MajorRecord_FieldIndex.EditorID:
-                    obj.SetEditorID(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.EditorID = (String)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1468,13 +959,13 @@ namespace Mutagen.Bethesda
     public partial interface IMajorRecord : IMajorRecordGetter, ILoquiClass<IMajorRecord, IMajorRecordGetter>, ILoquiClass<MajorRecord, IMajorRecordGetter>
     {
         new MajorRecord.MajorRecordFlag MajorRecordFlags { get; set; }
-        new INotifyingItem<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property { get; }
 
         new UInt32 Version { get; set; }
-        new INotifyingItem<UInt32> Version_Property { get; }
 
         new String EditorID { get; set; }
-        new INotifyingSetItem<String> EditorID_Property { get; }
+        new bool EditorID_IsSet { get; set; }
+        void EditorID_Set(String item, bool hasBeenSet = true);
+        void EditorID_Unset();
 
     }
 
@@ -1482,7 +973,6 @@ namespace Mutagen.Bethesda
     {
         #region MajorRecordFlags
         MajorRecord.MajorRecordFlag MajorRecordFlags { get; }
-        INotifyingItemGetter<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property { get; }
 
         #endregion
         #region FormID
@@ -1491,12 +981,11 @@ namespace Mutagen.Bethesda
         #endregion
         #region Version
         UInt32 Version { get; }
-        INotifyingItemGetter<UInt32> Version_Property { get; }
 
         #endregion
         #region EditorID
         String EditorID { get; }
-        INotifyingSetItemGetter<String> EditorID_Property { get; }
+        bool EditorID_IsSet { get; }
 
         #endregion
         #region RecordType
@@ -1900,9 +1389,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
                 try
                 {
-                    item.MajorRecordFlags_Property.Set(
-                        value: rhs.MajorRecordFlags,
-                        cmds: cmds);
+                    item.MajorRecordFlags = rhs.MajorRecordFlags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1919,9 +1406,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
                 try
                 {
-                    item.Version_Property.Set(
-                        value: rhs.Version,
-                        cmds: cmds);
+                    item.Version = rhs.Version;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1938,9 +1423,20 @@ namespace Mutagen.Bethesda.Internals
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
                 try
                 {
-                    item.EditorID_Property.SetToWithDefault(
-                        rhs: rhs.EditorID_Property,
-                        def: def?.EditorID_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.EditorID,
+                        rhsHasBeenSet: rhs.EditorID_IsSet,
+                        defItem: def?.EditorID ?? default(String),
+                        defHasBeenSet: def?.EditorID_IsSet ?? false,
+                        outRhsItem: out var rhsEditorIDItem,
+                        outDefItem: out var defEditorIDItem))
+                    {
+                        item.EditorID = rhsEditorIDItem;
+                    }
+                    else
+                    {
+                        item.EditorID_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1973,7 +1469,7 @@ namespace Mutagen.Bethesda.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case MajorRecord_FieldIndex.EditorID:
-                    obj.EditorID_Property.HasBeenSet = on;
+                    obj.EditorID_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1999,7 +1495,7 @@ namespace Mutagen.Bethesda.Internals
                     obj.Version = default(UInt32);
                     break;
                 case MajorRecord_FieldIndex.EditorID:
-                    obj.EditorID_Property.Unset(cmds);
+                    obj.EditorID_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2019,7 +1515,7 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
                 case MajorRecord_FieldIndex.EditorID:
-                    return obj.EditorID_Property.HasBeenSet;
+                    return obj.EditorID_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2053,7 +1549,7 @@ namespace Mutagen.Bethesda.Internals
         {
             item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
             item.Version = default(UInt32);
-            item.EditorID_Property.Unset(cmds.ToUnsetParams());
+            item.EditorID_Unset();
         }
 
         public static MajorRecord_Mask<bool> GetEqualsMask(
@@ -2074,7 +1570,7 @@ namespace Mutagen.Bethesda.Internals
             ret.MajorRecordFlags = item.MajorRecordFlags == rhs.MajorRecordFlags;
             ret.FormID = item.FormID == rhs.FormID;
             ret.Version = item.Version == rhs.Version;
-            ret.EditorID = item.EditorID_Property.Equals(rhs.EditorID_Property, (l, r) => object.Equals(l, r));
+            ret.EditorID = item.EditorID_IsSet == rhs.EditorID_IsSet && object.Equals(item.EditorID, rhs.EditorID);
             ret.RecordType = object.Equals(item.RecordType, rhs.RecordType);
         }
 
@@ -2133,7 +1629,7 @@ namespace Mutagen.Bethesda.Internals
             this IMajorRecordGetter item,
             MajorRecord_Mask<bool?> checkMask)
         {
-            if (checkMask.EditorID.HasValue && checkMask.EditorID.Value != item.EditorID_Property.HasBeenSet) return false;
+            if (checkMask.EditorID.HasValue && checkMask.EditorID.Value != item.EditorID_IsSet) return false;
             return true;
         }
 
@@ -2143,7 +1639,7 @@ namespace Mutagen.Bethesda.Internals
             ret.MajorRecordFlags = true;
             ret.FormID = true;
             ret.Version = true;
-            ret.EditorID = item.EditorID_Property.HasBeenSet;
+            ret.EditorID = item.EditorID_IsSet;
             ret.RecordType = true;
             return ret;
         }
@@ -2186,7 +1682,7 @@ namespace Mutagen.Bethesda.Internals
                 EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
                     node: elem,
                     name: nameof(item.MajorRecordFlags),
-                    item: item.MajorRecordFlags_Property,
+                    item: item.MajorRecordFlags,
                     fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                     errorMask: errorMask);
             }
@@ -2204,17 +1700,17 @@ namespace Mutagen.Bethesda.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Version),
-                    item: item.Version_Property,
+                    item: item.Version,
                     fieldIndex: (int)MajorRecord_FieldIndex.Version,
                     errorMask: errorMask);
             }
-            if (item.EditorID_Property.HasBeenSet
+            if (item.EditorID_IsSet
                 && (translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.EditorID) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.EditorID),
-                    item: item.EditorID_Property,
+                    item: item.EditorID,
                     fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                     errorMask: errorMask);
             }
@@ -2266,7 +1762,7 @@ namespace Mutagen.Bethesda.Internals
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
                 writer,
-                item.MajorRecordFlags_Property,
+                item.MajorRecordFlags,
                 length: 4,
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask);
@@ -2277,7 +1773,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Version_Property,
+                item: item.Version,
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
                 errorMask: errorMask);
         }
@@ -2288,13 +1784,16 @@ namespace Mutagen.Bethesda.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.EditorID_Property,
-                fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(MajorRecord_Registration.EDID_HEADER),
-                nullable: false);
+            if (item.EditorID_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EditorID,
+                    fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(MajorRecord_Registration.EDID_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

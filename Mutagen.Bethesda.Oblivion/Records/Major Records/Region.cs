@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     else
                     {
-                        item.Icon_Property.Unset();
+                        item.Icon_Unset();
                     }
                     break;
                 default:
@@ -146,23 +146,23 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void WriteBinary_RegionAreaLogic_Custom(MutagenWriter writer, Region item, ErrorMaskBuilder errorMask)
         {
-            if (item.Objects_Property.HasBeenSet)
+            if (item.Objects_IsSet)
             {
                 item.Objects.Write_Binary(writer);
             }
-            if (item.Weather_Property.HasBeenSet)
+            if (item.Weather_IsSet)
             {
                 item.Weather.Write_Binary(writer);
             }
-            if (item.MapName_Property.HasBeenSet)
+            if (item.MapName_IsSet)
             {
                 item.MapName.Write_Binary(writer);
             }
-            if (item.Grasses_Property.HasBeenSet)
+            if (item.Grasses_IsSet)
             {
                 item.Grasses.Write_Binary(writer);
             }
-            if (item.Sounds_Property.HasBeenSet)
+            if (item.Sounds_IsSet)
             {
                 item.Sounds.Write_Binary(writer);
             }

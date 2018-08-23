@@ -63,12 +63,12 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        protected override RecordType ParseValue(MutagenFrame reader)
+        public override RecordType ParseValue(MutagenFrame reader)
         {
             return HeaderTranslation.ReadNextRecordType(reader.Reader);
         }
 
-        protected override void WriteValue(MutagenWriter writer, RecordType item)
+        public override void WriteValue(MutagenWriter writer, RecordType item)
         {
             writer.Write(item.TypeInt);
         }

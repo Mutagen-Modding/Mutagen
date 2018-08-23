@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,11 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LoadScreenLocation : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         ILoadScreenLocation,
         ILoquiObject<LoadScreenLocation>,
         ILoquiObjectSetter,
-        IPropertySupporter<P2Int16>,
         IEquatable<LoadScreenLocation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -63,52 +64,12 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Worldspace> ILoadScreenLocationGetter.Indirect_Property => this.Indirect_Property;
         #endregion
         #region GridPoint
-        protected P2Int16 _GridPoint;
-        protected PropertyForwarder<LoadScreenLocation, P2Int16> _GridPointForwarder;
-        public INotifyingSetItem<P2Int16> GridPoint_Property => _GridPointForwarder ?? (_GridPointForwarder = new PropertyForwarder<LoadScreenLocation, P2Int16>(this, (int)LoadScreenLocation_FieldIndex.GridPoint));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P2Int16 _GridPoint;
         public P2Int16 GridPoint
         {
             get => this._GridPoint;
-            set => this.SetGridPoint(value);
+            set => this.RaiseAndSetIfChanged(ref this._GridPoint, value, nameof(GridPoint));
         }
-        protected void SetGridPoint(
-            P2Int16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LoadScreenLocation_FieldIndex.GridPoint];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && GridPoint == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LoadScreenLocation_FieldIndex.GridPoint] = hasBeenSet;
-            }
-            if (_P2Int16_subscriptions != null)
-            {
-                var tmp = GridPoint;
-                _GridPoint = item;
-                _P2Int16_subscriptions.FireSubscriptions(
-                    index: (int)LoadScreenLocation_FieldIndex.GridPoint,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _GridPoint = item;
-            }
-        }
-        protected void UnsetGridPoint()
-        {
-            _hasBeenSetTracker[(int)LoadScreenLocation_FieldIndex.GridPoint] = false;
-            GridPoint = default(P2Int16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P2Int16> ILoadScreenLocation.GridPoint_Property => this.GridPoint_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P2Int16> ILoadScreenLocationGetter.GridPoint_Property => this.GridPoint_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -528,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetGridPoint();
+                            item.GridPoint = default(P2Int16);
                         }
                     }
                     catch (Exception ex)
@@ -561,140 +522,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter P2Int16
-        protected ObjectCentralizationSubscriptions<P2Int16> _P2Int16_subscriptions;
-        P2Int16 IPropertySupporter<P2Int16>.Get(int index)
-        {
-            return GetP2Int16(index: index);
-        }
-
-        protected P2Int16 GetP2Int16(int index)
-        {
-            switch ((LoadScreenLocation_FieldIndex)index)
-            {
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return GridPoint;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        void IPropertySupporter<P2Int16>.Set(
-            int index,
-            P2Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP2Int16(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP2Int16(
-            int index,
-            P2Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((LoadScreenLocation_FieldIndex)index)
-            {
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    SetGridPoint(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P2Int16>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P2Int16>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P2Int16>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP2Int16(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP2Int16(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((LoadScreenLocation_FieldIndex)index)
-            {
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    SetGridPoint(
-                        item: default(P2Int16),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int16>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P2Int16> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P2Int16_subscriptions == null)
-            {
-                _P2Int16_subscriptions = new ObjectCentralizationSubscriptions<P2Int16>();
-            }
-            _P2Int16_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int16>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P2Int16_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P2Int16>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P2Int16 IPropertySupporter<P2Int16>.DefaultValue(int index)
-        {
-            return DefaultValueP2Int16(index: index);
-        }
-
-        protected P2Int16 DefaultValueP2Int16(int index)
-        {
-            switch ((LoadScreenLocation_FieldIndex)index)
-            {
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return default(P2Int16);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LoadScreenLocation_Registration.TRIGGERING_RECORD_TYPE;
@@ -934,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetGridPoint();
+                    item.GridPoint = default(P2Int16);
                 }
             }
             catch (Exception ex)
@@ -1083,9 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case LoadScreenLocation_FieldIndex.GridPoint:
-                    this.SetGridPoint(
-                        (P2Int16)obj,
-                        cmds: cmds);
+                    this.GridPoint = (P2Int16)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1135,9 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case LoadScreenLocation_FieldIndex.GridPoint:
-                    obj.SetGridPoint(
-                        (P2Int16)pair.Value,
-                        cmds: null);
+                    obj.GridPoint = (P2Int16)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1157,7 +980,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Place Direct { get; set; }
         new Worldspace Indirect { get; set; }
         new P2Int16 GridPoint { get; set; }
-        new INotifyingItem<P2Int16> GridPoint_Property { get; }
 
     }
 
@@ -1175,7 +997,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GridPoint
         P2Int16 GridPoint { get; }
-        INotifyingItemGetter<P2Int16> GridPoint_Property { get; }
 
         #endregion
 
@@ -1442,9 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.GridPoint);
                 try
                 {
-                    item.GridPoint_Property.Set(
-                        value: rhs.GridPoint,
-                        cmds: cmds);
+                    item.GridPoint = rhs.GridPoint;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1488,10 +1307,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LoadScreenLocation_FieldIndex.Direct:
-                    obj.Direct = default(FormIDLink<Place>);
+                    obj.Direct_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case LoadScreenLocation_FieldIndex.Indirect:
-                    obj.Indirect = default(FormIDLink<Worldspace>);
+                    obj.Indirect_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case LoadScreenLocation_FieldIndex.GridPoint:
                     obj.GridPoint = default(P2Int16);
@@ -1539,8 +1358,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocation item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Direct = default(FormIDLink<Place>);
-            item.Indirect = default(FormIDLink<Worldspace>);
+            item.Direct_Property.Unset(cmds.ToUnsetParams());
+            item.Indirect_Property.Unset(cmds.ToUnsetParams());
             item.GridPoint = default(P2Int16);
         }
 
@@ -1679,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P2Int16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.GridPoint),
-                    item: item.GridPoint_Property,
+                    item: item.GridPoint,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.GridPoint,
                     errorMask: errorMask);
             }
@@ -1742,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.GridPoint_Property,
+                item: item.GridPoint,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.GridPoint,
                 errorMask: errorMask);
         }

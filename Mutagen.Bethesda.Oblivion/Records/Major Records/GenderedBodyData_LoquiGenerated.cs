@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,11 +31,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class GenderedBodyData : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IGenderedBodyData,
         ILoquiObject<GenderedBodyData>,
         ILoquiObjectSetter,
-        IPropertySupporter<BodyData>,
         IEquatable<GenderedBodyData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,100 +51,58 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        protected BodyData _Male;
-        protected PropertyForwarder<GenderedBodyData, BodyData> _MaleForwarder;
-        public INotifyingSetItem<BodyData> Male_Property => _MaleForwarder ?? (_MaleForwarder = new PropertyForwarder<GenderedBodyData, BodyData>(this, (int)GenderedBodyData_FieldIndex.Male));
+        public bool Male_IsSet
+        {
+            get => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Male];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GenderedBodyData_FieldIndex.Male, nameof(Male_IsSet));
+        }
+        bool IGenderedBodyDataGetter.Male_IsSet => Male_IsSet;
+        private BodyData _Male;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public BodyData Male
         {
-            get => this._Male;
-            set => this.SetMale(value);
+            get => _Male;
+            set => Male_Set(value);
         }
-        protected void SetMale(
-            BodyData item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Male_Set(
+            BodyData value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Male];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Male, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Male] = hasBeenSet;
-            }
-            if (_BodyData_subscriptions != null)
-            {
-                var tmp = Male;
-                _Male = item;
-                _BodyData_subscriptions.FireSubscriptions(
-                    index: (int)GenderedBodyData_FieldIndex.Male,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Male = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Male, value, _hasBeenSetTracker, markSet, (int)GenderedBodyData_FieldIndex.Male, nameof(Male), nameof(Male_IsSet));
         }
-        protected void UnsetMale()
+        public void Male_Unset()
         {
-            _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Male] = false;
-            Male = default(BodyData);
+            this.Male_Set(default(BodyData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<BodyData> IGenderedBodyData.Male_Property => this.Male_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<BodyData> IGenderedBodyDataGetter.Male_Property => this.Male_Property;
+        BodyData IGenderedBodyDataGetter.Male => this.Male;
         #endregion
         #region Female
-        protected BodyData _Female;
-        protected PropertyForwarder<GenderedBodyData, BodyData> _FemaleForwarder;
-        public INotifyingSetItem<BodyData> Female_Property => _FemaleForwarder ?? (_FemaleForwarder = new PropertyForwarder<GenderedBodyData, BodyData>(this, (int)GenderedBodyData_FieldIndex.Female));
+        public bool Female_IsSet
+        {
+            get => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Female];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GenderedBodyData_FieldIndex.Female, nameof(Female_IsSet));
+        }
+        bool IGenderedBodyDataGetter.Female_IsSet => Female_IsSet;
+        private BodyData _Female;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public BodyData Female
         {
-            get => this._Female;
-            set => this.SetFemale(value);
+            get => _Female;
+            set => Female_Set(value);
         }
-        protected void SetFemale(
-            BodyData item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Female_Set(
+            BodyData value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Female];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Female, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Female] = hasBeenSet;
-            }
-            if (_BodyData_subscriptions != null)
-            {
-                var tmp = Female;
-                _Female = item;
-                _BodyData_subscriptions.FireSubscriptions(
-                    index: (int)GenderedBodyData_FieldIndex.Female,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Female = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Female, value, _hasBeenSetTracker, markSet, (int)GenderedBodyData_FieldIndex.Female, nameof(Female), nameof(Female_IsSet));
         }
-        protected void UnsetFemale()
+        public void Female_Unset()
         {
-            _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Female] = false;
-            Female = default(BodyData);
+            this.Female_Set(default(BodyData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<BodyData> IGenderedBodyData.Female_Property => this.Female_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<BodyData> IGenderedBodyDataGetter.Female_Property => this.Female_Property;
+        BodyData IGenderedBodyDataGetter.Female => this.Female;
         #endregion
 
         #region Loqui Getter Interface
@@ -207,13 +166,13 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(GenderedBodyData rhs)
         {
             if (rhs == null) return false;
-            if (Male_Property.HasBeenSet != rhs.Male_Property.HasBeenSet) return false;
-            if (Male_Property.HasBeenSet)
+            if (Male_IsSet != rhs.Male_IsSet) return false;
+            if (Male_IsSet)
             {
                 if (!object.Equals(this.Male, rhs.Male)) return false;
             }
-            if (Female_Property.HasBeenSet != rhs.Female_Property.HasBeenSet) return false;
-            if (Female_Property.HasBeenSet)
+            if (Female_IsSet != rhs.Female_IsSet) return false;
+            if (Female_IsSet)
             {
                 if (!object.Equals(this.Female, rhs.Female)) return false;
             }
@@ -223,11 +182,11 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Male_Property.HasBeenSet)
+            if (Male_IsSet)
             {
                 ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
             }
-            if (Female_Property.HasBeenSet)
+            if (Female_IsSet)
             {
                 ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
             }
@@ -562,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMale();
+                            item.Male = default(BodyData);
                         }
                     }
                     catch (Exception ex)
@@ -589,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFemale();
+                            item.Female = default(BodyData);
                         }
                     }
                     catch (Exception ex)
@@ -621,151 +580,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter BodyData
-        protected ObjectCentralizationSubscriptions<BodyData> _BodyData_subscriptions;
-        BodyData IPropertySupporter<BodyData>.Get(int index)
-        {
-            return GetBodyData(index: index);
-        }
-
-        protected BodyData GetBodyData(int index)
-        {
-            switch ((GenderedBodyData_FieldIndex)index)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    return Male;
-                case GenderedBodyData_FieldIndex.Female:
-                    return Female;
-                default:
-                    throw new ArgumentException($"Unknown index for field type BodyData: {index}");
-            }
-        }
-
-        void IPropertySupporter<BodyData>.Set(
-            int index,
-            BodyData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetBodyData(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetBodyData(
-            int index,
-            BodyData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((GenderedBodyData_FieldIndex)index)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    SetMale(item, hasBeenSet, cmds);
-                    break;
-                case GenderedBodyData_FieldIndex.Female:
-                    SetFemale(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type BodyData: {index}");
-            }
-        }
-
-        bool IPropertySupporter<BodyData>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<BodyData>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<BodyData>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetBodyData(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetBodyData(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((GenderedBodyData_FieldIndex)index)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    SetMale(
-                        item: default(BodyData),
-                        hasBeenSet: false);
-                    break;
-                case GenderedBodyData_FieldIndex.Female:
-                    SetFemale(
-                        item: default(BodyData),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type BodyData: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<BodyData>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<BodyData> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_BodyData_subscriptions == null)
-            {
-                _BodyData_subscriptions = new ObjectCentralizationSubscriptions<BodyData>();
-            }
-            _BodyData_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<BodyData>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _BodyData_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<BodyData>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        BodyData IPropertySupporter<BodyData>.DefaultValue(int index)
-        {
-            return DefaultValueBodyData(index: index);
-        }
-
-        protected BodyData DefaultValueBodyData(int index)
-        {
-            switch ((GenderedBodyData_FieldIndex)index)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                case GenderedBodyData_FieldIndex.Female:
-                    return default(BodyData);
-                default:
-                    throw new ArgumentException($"Unknown index for field type BodyData: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1011,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMale();
+                            item.Male = default(BodyData);
                         }
                     }
                     catch (Exception ex)
@@ -1039,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFemale();
+                            item.Female = default(BodyData);
                         }
                     }
                     catch (Exception ex)
@@ -1182,14 +996,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case GenderedBodyData_FieldIndex.Male:
-                    this.SetMale(
-                        (BodyData)obj,
-                        cmds: cmds);
+                    this.Male = (BodyData)obj;
                     break;
                 case GenderedBodyData_FieldIndex.Female:
-                    this.SetFemale(
-                        (BodyData)obj,
-                        cmds: cmds);
+                    this.Female = (BodyData)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1229,14 +1039,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case GenderedBodyData_FieldIndex.Male:
-                    obj.SetMale(
-                        (BodyData)pair.Value,
-                        cmds: null);
+                    obj.Male = (BodyData)pair.Value;
                     break;
                 case GenderedBodyData_FieldIndex.Female:
-                    obj.SetFemale(
-                        (BodyData)pair.Value,
-                        cmds: null);
+                    obj.Female = (BodyData)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1254,10 +1060,14 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IGenderedBodyData : IGenderedBodyDataGetter, ILoquiClass<IGenderedBodyData, IGenderedBodyDataGetter>, ILoquiClass<GenderedBodyData, IGenderedBodyDataGetter>
     {
         new BodyData Male { get; set; }
-        new INotifyingSetItem<BodyData> Male_Property { get; }
+        new bool Male_IsSet { get; set; }
+        void Male_Set(BodyData item, bool hasBeenSet = true);
+        void Male_Unset();
 
         new BodyData Female { get; set; }
-        new INotifyingSetItem<BodyData> Female_Property { get; }
+        new bool Female_IsSet { get; set; }
+        void Female_Set(BodyData item, bool hasBeenSet = true);
+        void Female_Unset();
 
     }
 
@@ -1265,12 +1075,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         BodyData Male { get; }
-        INotifyingSetItemGetter<BodyData> Male_Property { get; }
+        bool Male_IsSet { get; }
 
         #endregion
         #region Female
         BodyData Female { get; }
-        INotifyingSetItemGetter<BodyData> Female_Property { get; }
+        bool Female_IsSet { get; }
 
         #endregion
 
@@ -1499,36 +1309,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Male);
                 try
                 {
-                    item.Male_Property.SetToWithDefault(
-                        rhs.Male_Property,
-                        def?.Male_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Male,
+                        rhsHasBeenSet: rhs.Male_IsSet,
+                        defItem: def?.Male,
+                        defHasBeenSet: def?.Male_IsSet ?? false,
+                        outRhsItem: out var rhsMaleItem,
+                        outDefItem: out var defMaleItem))
+                    {
+                        switch (copyMask?.Male.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Male.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    BodyDataCommon.CopyFieldsFrom(
-                                        item: item.Male,
-                                        rhs: rhs.Male,
-                                        def: def?.Male,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Male.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(BodyData);
-                                    return BodyData.Copy(
-                                        r,
-                                        copyMask?.Male?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Male?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Male = rhsMaleItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                BodyDataCommon.CopyFieldsFrom(
+                                    item: item.Male,
+                                    rhs: rhs.Male,
+                                    def: def?.Male,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Male.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Male = BodyData.Copy(
+                                    rhsMaleItem,
+                                    copyMask?.Male?.Specific,
+                                    def: defMaleItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Male?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Male_IsSet = false;
+                        item.Male = default(BodyData);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1545,36 +1362,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Female);
                 try
                 {
-                    item.Female_Property.SetToWithDefault(
-                        rhs.Female_Property,
-                        def?.Female_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Female,
+                        rhsHasBeenSet: rhs.Female_IsSet,
+                        defItem: def?.Female,
+                        defHasBeenSet: def?.Female_IsSet ?? false,
+                        outRhsItem: out var rhsFemaleItem,
+                        outDefItem: out var defFemaleItem))
+                    {
+                        switch (copyMask?.Female.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Female.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    BodyDataCommon.CopyFieldsFrom(
-                                        item: item.Female,
-                                        rhs: rhs.Female,
-                                        def: def?.Female,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Female.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(BodyData);
-                                    return BodyData.Copy(
-                                        r,
-                                        copyMask?.Female?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Female?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Female = rhsFemaleItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                BodyDataCommon.CopyFieldsFrom(
+                                    item: item.Female,
+                                    rhs: rhs.Female,
+                                    def: def?.Female,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Female.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Female = BodyData.Copy(
+                                    rhsFemaleItem,
+                                    copyMask?.Female?.Specific,
+                                    def: defFemaleItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Female?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Female_IsSet = false;
+                        item.Female = default(BodyData);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1600,10 +1424,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GenderedBodyData_FieldIndex.Male:
-                    obj.Male_Property.HasBeenSet = on;
+                    obj.Male_IsSet = on;
                     break;
                 case GenderedBodyData_FieldIndex.Female:
-                    obj.Female_Property.HasBeenSet = on;
+                    obj.Female_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1619,10 +1443,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GenderedBodyData_FieldIndex.Male:
-                    obj.Male_Property.Unset(cmds);
+                    obj.Male_Unset();
                     break;
                 case GenderedBodyData_FieldIndex.Female:
-                    obj.Female_Property.Unset(cmds);
+                    obj.Female_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1637,9 +1461,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GenderedBodyData_FieldIndex.Male:
-                    return obj.Male_Property.HasBeenSet;
+                    return obj.Male_IsSet;
                 case GenderedBodyData_FieldIndex.Female:
-                    return obj.Female_Property.HasBeenSet;
+                    return obj.Female_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1665,8 +1489,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGenderedBodyData item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Male_Property.Unset(cmds.ToUnsetParams());
-            item.Female_Property.Unset(cmds.ToUnsetParams());
+            item.Male_Unset();
+            item.Female_Unset();
         }
 
         public static GenderedBodyData_Mask<bool> GetEqualsMask(
@@ -1684,8 +1508,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GenderedBodyData_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Male = item.Male_Property.LoquiEqualsHelper(rhs.Male_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Female = item.Female_Property.LoquiEqualsHelper(rhs.Female_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Male = IHasBeenSetExt.LoquiEqualsHelper(item.Male_IsSet, rhs.Male_IsSet, item.Male, rhs.Male, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Female = IHasBeenSetExt.LoquiEqualsHelper(item.Female_IsSet, rhs.Female_IsSet, item.Female, rhs.Female, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
         }
 
         public static string ToString(
@@ -1731,9 +1555,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IGenderedBodyDataGetter item,
             GenderedBodyData_Mask<bool?> checkMask)
         {
-            if (checkMask.Male.Overall.HasValue && checkMask.Male.Overall.Value != item.Male_Property.HasBeenSet) return false;
+            if (checkMask.Male.Overall.HasValue && checkMask.Male.Overall.Value != item.Male_IsSet) return false;
             if (checkMask.Male.Specific != null && (item.Male == null || !item.Male.HasBeenSet(checkMask.Male.Specific))) return false;
-            if (checkMask.Female.Overall.HasValue && checkMask.Female.Overall.Value != item.Female_Property.HasBeenSet) return false;
+            if (checkMask.Female.Overall.HasValue && checkMask.Female.Overall.Value != item.Female_IsSet) return false;
             if (checkMask.Female.Specific != null && (item.Female == null || !item.Female.HasBeenSet(checkMask.Female.Specific))) return false;
             return true;
         }
@@ -1741,8 +1565,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static GenderedBodyData_Mask<bool> GetHasBeenSetMask(IGenderedBodyDataGetter item)
         {
             var ret = new GenderedBodyData_Mask<bool>();
-            ret.Male = new MaskItem<bool, BodyData_Mask<bool>>(item.Male_Property.HasBeenSet, BodyDataCommon.GetHasBeenSetMask(item.Male));
-            ret.Female = new MaskItem<bool, BodyData_Mask<bool>>(item.Female_Property.HasBeenSet, BodyDataCommon.GetHasBeenSetMask(item.Female));
+            ret.Male = new MaskItem<bool, BodyData_Mask<bool>>(item.Male_IsSet, BodyDataCommon.GetHasBeenSetMask(item.Male));
+            ret.Female = new MaskItem<bool, BodyData_Mask<bool>>(item.Female_IsSet, BodyDataCommon.GetHasBeenSetMask(item.Female));
             return ret;
         }
 
@@ -1779,23 +1603,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GenderedBodyData");
             }
-            if (item.Male_Property.HasBeenSet
+            if (item.Male_IsSet
                 && (translationMask?.GetShouldTranslate((int)GenderedBodyData_FieldIndex.Male) ?? true))
             {
                 LoquiXmlTranslation<BodyData>.Instance.Write(
                     node: elem,
-                    item: item.Male_Property,
+                    item: item.Male,
                     name: nameof(item.Male),
                     fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Male));
             }
-            if (item.Female_Property.HasBeenSet
+            if (item.Female_IsSet
                 && (translationMask?.GetShouldTranslate((int)GenderedBodyData_FieldIndex.Female) ?? true))
             {
                 LoquiXmlTranslation<BodyData>.Instance.Write(
                     node: elem,
-                    item: item.Female_Property,
+                    item: item.Female,
                     name: nameof(item.Female),
                     fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
                     errorMask: errorMask,
@@ -1844,24 +1668,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            if (item.Male_Property.HasBeenSet)
+            if (item.Male_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.MNAM_HEADER, ObjectType.Subrecord)) { }
+                LoquiBinaryTranslation<BodyData>.Instance.Write(
+                    writer: writer,
+                    item: item.Male,
+                    fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
+                    errorMask: errorMask);
             }
-            LoquiBinaryTranslation<BodyData>.Instance.Write(
-                writer: writer,
-                item: item.Male_Property,
-                fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                errorMask: errorMask);
-            if (item.Female_Property.HasBeenSet)
+            if (item.Female_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.FNAM_HEADER, ObjectType.Subrecord)) { }
+                LoquiBinaryTranslation<BodyData>.Instance.Write(
+                    writer: writer,
+                    item: item.Female,
+                    fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
+                    errorMask: errorMask);
             }
-            LoquiBinaryTranslation<BodyData>.Instance.Write(
-                writer: writer,
-                item: item.Female_Property,
-                fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
-                errorMask: errorMask);
         }
 
         #endregion

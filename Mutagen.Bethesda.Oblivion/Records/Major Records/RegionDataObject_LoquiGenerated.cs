@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,16 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RegionDataObject : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IRegionDataObject,
         ILoquiObject<RegionDataObject>,
         ILoquiObjectSetter,
-        IPropertySupporter<UInt16>,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<Single>,
-        IPropertySupporter<Byte>,
-        IPropertySupporter<RegionDataObject.Flag>,
-        IPropertySupporter<P3UInt16>,
         IEquatable<RegionDataObject>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -61,782 +57,146 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<MajorRecord> IRegionDataObjectGetter.Object_Property => this.Object_Property;
         #endregion
         #region ParentIndex
-        protected UInt16 _ParentIndex;
-        protected PropertyForwarder<RegionDataObject, UInt16> _ParentIndexForwarder;
-        public INotifyingSetItem<UInt16> ParentIndex_Property => _ParentIndexForwarder ?? (_ParentIndexForwarder = new PropertyForwarder<RegionDataObject, UInt16>(this, (int)RegionDataObject_FieldIndex.ParentIndex));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _ParentIndex;
         public UInt16 ParentIndex
         {
             get => this._ParentIndex;
-            set => this.SetParentIndex(value);
+            set => this.RaiseAndSetIfChanged(ref this._ParentIndex, value, nameof(ParentIndex));
         }
-        protected void SetParentIndex(
-            UInt16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.ParentIndex];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ParentIndex == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.ParentIndex] = hasBeenSet;
-            }
-            if (_UInt16_subscriptions != null)
-            {
-                var tmp = ParentIndex;
-                _ParentIndex = item;
-                _UInt16_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.ParentIndex,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ParentIndex = item;
-            }
-        }
-        protected void UnsetParentIndex()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.ParentIndex] = false;
-            ParentIndex = default(UInt16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt16> IRegionDataObject.ParentIndex_Property => this.ParentIndex_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt16> IRegionDataObjectGetter.ParentIndex_Property => this.ParentIndex_Property;
         #endregion
         #region Unknown1
-        protected Byte[] _Unknown1 = new byte[2];
-        protected PropertyForwarder<RegionDataObject, Byte[]> _Unknown1Forwarder;
-        public INotifyingSetItem<Byte[]> Unknown1_Property => _Unknown1Forwarder ?? (_Unknown1Forwarder = new PropertyForwarder<RegionDataObject, Byte[]>(this, (int)RegionDataObject_FieldIndex.Unknown1));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Unknown1 = new byte[2];
         public Byte[] Unknown1
         {
-            get => this._Unknown1;
-            set => this.SetUnknown1(value);
-        }
-        protected void SetUnknown1(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Unknown1;
+            set
             {
-                item = new byte[2];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Unknown1];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unknown1, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Unknown1] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Unknown1;
-                _Unknown1 = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.Unknown1,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Unknown1 = item;
+                this._Unknown1 = value;
+                if (value == null)
+                {
+                    this._Unknown1 = new byte[2];
+                }
             }
         }
-        protected void UnsetUnknown1()
-        {
-            SetUnknown1(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IRegionDataObject.Unknown1_Property => this.Unknown1_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IRegionDataObjectGetter.Unknown1_Property => this.Unknown1_Property;
         #endregion
         #region Density
-        protected Single _Density;
-        protected PropertyForwarder<RegionDataObject, Single> _DensityForwarder;
-        public INotifyingSetItem<Single> Density_Property => _DensityForwarder ?? (_DensityForwarder = new PropertyForwarder<RegionDataObject, Single>(this, (int)RegionDataObject_FieldIndex.Density));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Density;
         public Single Density
         {
             get => this._Density;
-            set => this.SetDensity(value);
+            set => this.RaiseAndSetIfChanged(ref this._Density, value, nameof(Density));
         }
-        protected void SetDensity(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Density];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Density == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Density] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Density;
-                _Density = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.Density,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Density = item;
-            }
-        }
-        protected void UnsetDensity()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Density] = false;
-            Density = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRegionDataObject.Density_Property => this.Density_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRegionDataObjectGetter.Density_Property => this.Density_Property;
         #endregion
         #region Clustering
-        protected Byte _Clustering;
-        protected PropertyForwarder<RegionDataObject, Byte> _ClusteringForwarder;
-        public INotifyingSetItem<Byte> Clustering_Property => _ClusteringForwarder ?? (_ClusteringForwarder = new PropertyForwarder<RegionDataObject, Byte>(this, (int)RegionDataObject_FieldIndex.Clustering));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Clustering;
         public Byte Clustering
         {
             get => this._Clustering;
-            set => this.SetClustering(value);
+            set => this.RaiseAndSetIfChanged(ref this._Clustering, value, nameof(Clustering));
         }
-        protected void SetClustering(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Clustering];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Clustering == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Clustering] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Clustering;
-                _Clustering = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.Clustering,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Clustering = item;
-            }
-        }
-        protected void UnsetClustering()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Clustering] = false;
-            Clustering = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IRegionDataObject.Clustering_Property => this.Clustering_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IRegionDataObjectGetter.Clustering_Property => this.Clustering_Property;
         #endregion
         #region MinSlope
-        protected Byte _MinSlope;
-        protected PropertyForwarder<RegionDataObject, Byte> _MinSlopeForwarder;
-        public INotifyingSetItem<Byte> MinSlope_Property => _MinSlopeForwarder ?? (_MinSlopeForwarder = new PropertyForwarder<RegionDataObject, Byte>(this, (int)RegionDataObject_FieldIndex.MinSlope));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _MinSlope;
         public Byte MinSlope
         {
             get => this._MinSlope;
-            set => this.SetMinSlope(value);
+            set => this.RaiseAndSetIfChanged(ref this._MinSlope, value, nameof(MinSlope));
         }
-        protected void SetMinSlope(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MinSlope];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MinSlope == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MinSlope] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = MinSlope;
-                _MinSlope = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.MinSlope,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MinSlope = item;
-            }
-        }
-        protected void UnsetMinSlope()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MinSlope] = false;
-            MinSlope = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IRegionDataObject.MinSlope_Property => this.MinSlope_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IRegionDataObjectGetter.MinSlope_Property => this.MinSlope_Property;
         #endregion
         #region MaxSlope
-        protected Byte _MaxSlope;
-        protected PropertyForwarder<RegionDataObject, Byte> _MaxSlopeForwarder;
-        public INotifyingSetItem<Byte> MaxSlope_Property => _MaxSlopeForwarder ?? (_MaxSlopeForwarder = new PropertyForwarder<RegionDataObject, Byte>(this, (int)RegionDataObject_FieldIndex.MaxSlope));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _MaxSlope;
         public Byte MaxSlope
         {
             get => this._MaxSlope;
-            set => this.SetMaxSlope(value);
+            set => this.RaiseAndSetIfChanged(ref this._MaxSlope, value, nameof(MaxSlope));
         }
-        protected void SetMaxSlope(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MaxSlope];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaxSlope == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MaxSlope] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = MaxSlope;
-                _MaxSlope = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.MaxSlope,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MaxSlope = item;
-            }
-        }
-        protected void UnsetMaxSlope()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MaxSlope] = false;
-            MaxSlope = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IRegionDataObject.MaxSlope_Property => this.MaxSlope_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IRegionDataObjectGetter.MaxSlope_Property => this.MaxSlope_Property;
         #endregion
         #region Flags
-        protected RegionDataObject.Flag _Flags;
-        protected PropertyForwarder<RegionDataObject, RegionDataObject.Flag> _FlagsForwarder;
-        public INotifyingSetItem<RegionDataObject.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<RegionDataObject, RegionDataObject.Flag>(this, (int)RegionDataObject_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionDataObject.Flag _Flags;
         public RegionDataObject.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            RegionDataObject.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_RegionDataObjectFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _RegionDataObjectFlag_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Flags] = false;
-            Flags = default(RegionDataObject.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<RegionDataObject.Flag> IRegionDataObject.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<RegionDataObject.Flag> IRegionDataObjectGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region RadiusWrtPercent
-        protected UInt16 _RadiusWrtPercent;
-        protected PropertyForwarder<RegionDataObject, UInt16> _RadiusWrtPercentForwarder;
-        public INotifyingSetItem<UInt16> RadiusWrtPercent_Property => _RadiusWrtPercentForwarder ?? (_RadiusWrtPercentForwarder = new PropertyForwarder<RegionDataObject, UInt16>(this, (int)RegionDataObject_FieldIndex.RadiusWrtPercent));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _RadiusWrtPercent;
         public UInt16 RadiusWrtPercent
         {
             get => this._RadiusWrtPercent;
-            set => this.SetRadiusWrtPercent(value);
+            set => this.RaiseAndSetIfChanged(ref this._RadiusWrtPercent, value, nameof(RadiusWrtPercent));
         }
-        protected void SetRadiusWrtPercent(
-            UInt16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.RadiusWrtPercent];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RadiusWrtPercent == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.RadiusWrtPercent] = hasBeenSet;
-            }
-            if (_UInt16_subscriptions != null)
-            {
-                var tmp = RadiusWrtPercent;
-                _RadiusWrtPercent = item;
-                _UInt16_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RadiusWrtPercent = item;
-            }
-        }
-        protected void UnsetRadiusWrtPercent()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.RadiusWrtPercent] = false;
-            RadiusWrtPercent = default(UInt16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt16> IRegionDataObject.RadiusWrtPercent_Property => this.RadiusWrtPercent_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt16> IRegionDataObjectGetter.RadiusWrtPercent_Property => this.RadiusWrtPercent_Property;
         #endregion
         #region Radius
-        protected UInt16 _Radius;
-        protected PropertyForwarder<RegionDataObject, UInt16> _RadiusForwarder;
-        public INotifyingSetItem<UInt16> Radius_Property => _RadiusForwarder ?? (_RadiusForwarder = new PropertyForwarder<RegionDataObject, UInt16>(this, (int)RegionDataObject_FieldIndex.Radius));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _Radius;
         public UInt16 Radius
         {
             get => this._Radius;
-            set => this.SetRadius(value);
+            set => this.RaiseAndSetIfChanged(ref this._Radius, value, nameof(Radius));
         }
-        protected void SetRadius(
-            UInt16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Radius];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Radius == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Radius] = hasBeenSet;
-            }
-            if (_UInt16_subscriptions != null)
-            {
-                var tmp = Radius;
-                _Radius = item;
-                _UInt16_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.Radius,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Radius = item;
-            }
-        }
-        protected void UnsetRadius()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Radius] = false;
-            Radius = default(UInt16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt16> IRegionDataObject.Radius_Property => this.Radius_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt16> IRegionDataObjectGetter.Radius_Property => this.Radius_Property;
         #endregion
         #region MinHeight
-        protected Single _MinHeight;
-        protected PropertyForwarder<RegionDataObject, Single> _MinHeightForwarder;
-        public INotifyingSetItem<Single> MinHeight_Property => _MinHeightForwarder ?? (_MinHeightForwarder = new PropertyForwarder<RegionDataObject, Single>(this, (int)RegionDataObject_FieldIndex.MinHeight));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _MinHeight;
         public Single MinHeight
         {
             get => this._MinHeight;
-            set => this.SetMinHeight(value);
+            set => this.RaiseAndSetIfChanged(ref this._MinHeight, value, nameof(MinHeight));
         }
-        protected void SetMinHeight(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MinHeight];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MinHeight == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MinHeight] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = MinHeight;
-                _MinHeight = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.MinHeight,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MinHeight = item;
-            }
-        }
-        protected void UnsetMinHeight()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MinHeight] = false;
-            MinHeight = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRegionDataObject.MinHeight_Property => this.MinHeight_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRegionDataObjectGetter.MinHeight_Property => this.MinHeight_Property;
         #endregion
         #region MaxHeight
-        protected Single _MaxHeight;
-        protected PropertyForwarder<RegionDataObject, Single> _MaxHeightForwarder;
-        public INotifyingSetItem<Single> MaxHeight_Property => _MaxHeightForwarder ?? (_MaxHeightForwarder = new PropertyForwarder<RegionDataObject, Single>(this, (int)RegionDataObject_FieldIndex.MaxHeight));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _MaxHeight;
         public Single MaxHeight
         {
             get => this._MaxHeight;
-            set => this.SetMaxHeight(value);
+            set => this.RaiseAndSetIfChanged(ref this._MaxHeight, value, nameof(MaxHeight));
         }
-        protected void SetMaxHeight(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MaxHeight];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaxHeight == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MaxHeight] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = MaxHeight;
-                _MaxHeight = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.MaxHeight,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MaxHeight = item;
-            }
-        }
-        protected void UnsetMaxHeight()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.MaxHeight] = false;
-            MaxHeight = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRegionDataObject.MaxHeight_Property => this.MaxHeight_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRegionDataObjectGetter.MaxHeight_Property => this.MaxHeight_Property;
         #endregion
         #region Sink
-        protected Single _Sink;
-        protected PropertyForwarder<RegionDataObject, Single> _SinkForwarder;
-        public INotifyingSetItem<Single> Sink_Property => _SinkForwarder ?? (_SinkForwarder = new PropertyForwarder<RegionDataObject, Single>(this, (int)RegionDataObject_FieldIndex.Sink));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Sink;
         public Single Sink
         {
             get => this._Sink;
-            set => this.SetSink(value);
+            set => this.RaiseAndSetIfChanged(ref this._Sink, value, nameof(Sink));
         }
-        protected void SetSink(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Sink];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Sink == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Sink] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Sink;
-                _Sink = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.Sink,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Sink = item;
-            }
-        }
-        protected void UnsetSink()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Sink] = false;
-            Sink = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRegionDataObject.Sink_Property => this.Sink_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRegionDataObjectGetter.Sink_Property => this.Sink_Property;
         #endregion
         #region SinkVariance
-        protected Single _SinkVariance;
-        protected PropertyForwarder<RegionDataObject, Single> _SinkVarianceForwarder;
-        public INotifyingSetItem<Single> SinkVariance_Property => _SinkVarianceForwarder ?? (_SinkVarianceForwarder = new PropertyForwarder<RegionDataObject, Single>(this, (int)RegionDataObject_FieldIndex.SinkVariance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _SinkVariance;
         public Single SinkVariance
         {
             get => this._SinkVariance;
-            set => this.SetSinkVariance(value);
+            set => this.RaiseAndSetIfChanged(ref this._SinkVariance, value, nameof(SinkVariance));
         }
-        protected void SetSinkVariance(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.SinkVariance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SinkVariance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.SinkVariance] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = SinkVariance;
-                _SinkVariance = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.SinkVariance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SinkVariance = item;
-            }
-        }
-        protected void UnsetSinkVariance()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.SinkVariance] = false;
-            SinkVariance = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRegionDataObject.SinkVariance_Property => this.SinkVariance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRegionDataObjectGetter.SinkVariance_Property => this.SinkVariance_Property;
         #endregion
         #region SizeVariance
-        protected Single _SizeVariance;
-        protected PropertyForwarder<RegionDataObject, Single> _SizeVarianceForwarder;
-        public INotifyingSetItem<Single> SizeVariance_Property => _SizeVarianceForwarder ?? (_SizeVarianceForwarder = new PropertyForwarder<RegionDataObject, Single>(this, (int)RegionDataObject_FieldIndex.SizeVariance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _SizeVariance;
         public Single SizeVariance
         {
             get => this._SizeVariance;
-            set => this.SetSizeVariance(value);
+            set => this.RaiseAndSetIfChanged(ref this._SizeVariance, value, nameof(SizeVariance));
         }
-        protected void SetSizeVariance(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.SizeVariance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SizeVariance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.SizeVariance] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = SizeVariance;
-                _SizeVariance = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.SizeVariance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SizeVariance = item;
-            }
-        }
-        protected void UnsetSizeVariance()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.SizeVariance] = false;
-            SizeVariance = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRegionDataObject.SizeVariance_Property => this.SizeVariance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRegionDataObjectGetter.SizeVariance_Property => this.SizeVariance_Property;
         #endregion
         #region AngleVariance
-        protected P3UInt16 _AngleVariance;
-        protected PropertyForwarder<RegionDataObject, P3UInt16> _AngleVarianceForwarder;
-        public INotifyingSetItem<P3UInt16> AngleVariance_Property => _AngleVarianceForwarder ?? (_AngleVarianceForwarder = new PropertyForwarder<RegionDataObject, P3UInt16>(this, (int)RegionDataObject_FieldIndex.AngleVariance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3UInt16 _AngleVariance;
         public P3UInt16 AngleVariance
         {
             get => this._AngleVariance;
-            set => this.SetAngleVariance(value);
+            set => this.RaiseAndSetIfChanged(ref this._AngleVariance, value, nameof(AngleVariance));
         }
-        protected void SetAngleVariance(
-            P3UInt16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.AngleVariance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AngleVariance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.AngleVariance] = hasBeenSet;
-            }
-            if (_P3UInt16_subscriptions != null)
-            {
-                var tmp = AngleVariance;
-                _AngleVariance = item;
-                _P3UInt16_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.AngleVariance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AngleVariance = item;
-            }
-        }
-        protected void UnsetAngleVariance()
-        {
-            _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.AngleVariance] = false;
-            AngleVariance = default(P3UInt16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3UInt16> IRegionDataObject.AngleVariance_Property => this.AngleVariance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3UInt16> IRegionDataObjectGetter.AngleVariance_Property => this.AngleVariance_Property;
         #endregion
         #region Unknow2n
-        protected Byte[] _Unknow2n = new byte[6];
-        protected PropertyForwarder<RegionDataObject, Byte[]> _Unknow2nForwarder;
-        public INotifyingSetItem<Byte[]> Unknow2n_Property => _Unknow2nForwarder ?? (_Unknow2nForwarder = new PropertyForwarder<RegionDataObject, Byte[]>(this, (int)RegionDataObject_FieldIndex.Unknow2n));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Unknow2n = new byte[6];
         public Byte[] Unknow2n
         {
-            get => this._Unknow2n;
-            set => this.SetUnknow2n(value);
-        }
-        protected void SetUnknow2n(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Unknow2n;
+            set
             {
-                item = new byte[6];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Unknow2n];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unknow2n, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RegionDataObject_FieldIndex.Unknow2n] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Unknow2n;
-                _Unknow2n = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)RegionDataObject_FieldIndex.Unknow2n,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Unknow2n = item;
+                this._Unknow2n = value;
+                if (value == null)
+                {
+                    this._Unknow2n = new byte[6];
+                }
             }
         }
-        protected void UnsetUnknow2n()
-        {
-            SetUnknow2n(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IRegionDataObject.Unknow2n_Property => this.Unknow2n_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IRegionDataObjectGetter.Unknow2n_Property => this.Unknow2n_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1277,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetParentIndex();
+                            item.ParentIndex = default(UInt16);
                         }
                     }
                     catch (Exception ex)
@@ -1303,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUnknown1();
+                            item.Unknown1 = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1329,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDensity();
+                            item.Density = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1355,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetClustering();
+                            item.Clustering = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -1381,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMinSlope();
+                            item.MinSlope = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -1407,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMaxSlope();
+                            item.MaxSlope = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -1433,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(RegionDataObject.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -1459,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRadiusWrtPercent();
+                            item.RadiusWrtPercent = default(UInt16);
                         }
                     }
                     catch (Exception ex)
@@ -1485,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRadius();
+                            item.Radius = default(UInt16);
                         }
                     }
                     catch (Exception ex)
@@ -1511,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMinHeight();
+                            item.MinHeight = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1537,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMaxHeight();
+                            item.MaxHeight = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1563,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSink();
+                            item.Sink = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1589,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSinkVariance();
+                            item.SinkVariance = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1615,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSizeVariance();
+                            item.SizeVariance = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1641,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAngleVariance();
+                            item.AngleVariance = default(P3UInt16);
                         }
                     }
                     catch (Exception ex)
@@ -1667,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUnknow2n();
+                            item.Unknow2n = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1714,920 +1074,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter UInt16
-        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
-        UInt16 IPropertySupporter<UInt16>.Get(int index)
-        {
-            return GetUInt16(index: index);
-        }
-
-        protected UInt16 GetUInt16(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    return ParentIndex;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    return RadiusWrtPercent;
-                case RegionDataObject_FieldIndex.Radius:
-                    return Radius;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        void IPropertySupporter<UInt16>.Set(
-            int index,
-            UInt16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt16(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetUInt16(
-            int index,
-            UInt16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    SetParentIndex(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    SetRadiusWrtPercent(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.Radius:
-                    SetRadius(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt16>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt16>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt16(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetUInt16(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    SetParentIndex(
-                        item: default(UInt16),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    SetRadiusWrtPercent(
-                        item: default(UInt16),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.Radius:
-                    SetRadius(
-                        item: default(UInt16),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt16>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt16> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt16_subscriptions == null)
-            {
-                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
-            }
-            _UInt16_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt16>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt16_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
-        {
-            return DefaultValueUInt16(index: index);
-        }
-
-        protected UInt16 DefaultValueUInt16(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.ParentIndex:
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                case RegionDataObject_FieldIndex.Radius:
-                    return default(UInt16);
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Unknown1:
-                    return Unknown1;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    return Unknow2n;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Unknown1:
-                    SetUnknown1(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    SetUnknow2n(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Unknown1:
-                    SetUnknown1(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    SetUnknow2n(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Unknown1:
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Density:
-                    return Density;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    return MinHeight;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    return MaxHeight;
-                case RegionDataObject_FieldIndex.Sink:
-                    return Sink;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    return SinkVariance;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    return SizeVariance;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Density:
-                    SetDensity(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    SetMinHeight(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    SetMaxHeight(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.Sink:
-                    SetSink(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    SetSinkVariance(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    SetSizeVariance(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Density:
-                    SetDensity(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    SetMinHeight(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    SetMaxHeight(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.Sink:
-                    SetSink(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    SetSinkVariance(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    SetSizeVariance(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Density:
-                case RegionDataObject_FieldIndex.MinHeight:
-                case RegionDataObject_FieldIndex.MaxHeight:
-                case RegionDataObject_FieldIndex.Sink:
-                case RegionDataObject_FieldIndex.SinkVariance:
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Clustering:
-                    return Clustering;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    return MinSlope;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    return MaxSlope;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Clustering:
-                    SetClustering(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    SetMinSlope(item, hasBeenSet, cmds);
-                    break;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    SetMaxSlope(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Clustering:
-                    SetClustering(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    SetMinSlope(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    SetMaxSlope(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Clustering:
-                case RegionDataObject_FieldIndex.MinSlope:
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RegionDataObject.Flag
-        protected ObjectCentralizationSubscriptions<RegionDataObject.Flag> _RegionDataObjectFlag_subscriptions;
-        RegionDataObject.Flag IPropertySupporter<RegionDataObject.Flag>.Get(int index)
-        {
-            return GetRegionDataObjectFlag(index: index);
-        }
-
-        protected RegionDataObject.Flag GetRegionDataObjectFlag(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataObject.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<RegionDataObject.Flag>.Set(
-            int index,
-            RegionDataObject.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRegionDataObjectFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRegionDataObjectFlag(
-            int index,
-            RegionDataObject.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataObject.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RegionDataObject.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RegionDataObject.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RegionDataObject.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRegionDataObjectFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRegionDataObjectFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(RegionDataObject.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataObject.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataObject.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RegionDataObject.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RegionDataObjectFlag_subscriptions == null)
-            {
-                _RegionDataObjectFlag_subscriptions = new ObjectCentralizationSubscriptions<RegionDataObject.Flag>();
-            }
-            _RegionDataObjectFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataObject.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RegionDataObjectFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RegionDataObject.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RegionDataObject.Flag IPropertySupporter<RegionDataObject.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueRegionDataObjectFlag(index: index);
-        }
-
-        protected RegionDataObject.Flag DefaultValueRegionDataObjectFlag(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.Flags:
-                    return default(RegionDataObject.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataObject.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter P3UInt16
-        protected ObjectCentralizationSubscriptions<P3UInt16> _P3UInt16_subscriptions;
-        P3UInt16 IPropertySupporter<P3UInt16>.Get(int index)
-        {
-            return GetP3UInt16(index: index);
-        }
-
-        protected P3UInt16 GetP3UInt16(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    return AngleVariance;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3UInt16: {index}");
-            }
-        }
-
-        void IPropertySupporter<P3UInt16>.Set(
-            int index,
-            P3UInt16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP3UInt16(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP3UInt16(
-            int index,
-            P3UInt16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    SetAngleVariance(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3UInt16: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P3UInt16>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P3UInt16>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P3UInt16>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP3UInt16(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP3UInt16(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    SetAngleVariance(
-                        item: default(P3UInt16),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3UInt16: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3UInt16>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P3UInt16> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P3UInt16_subscriptions == null)
-            {
-                _P3UInt16_subscriptions = new ObjectCentralizationSubscriptions<P3UInt16>();
-            }
-            _P3UInt16_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3UInt16>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P3UInt16_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P3UInt16>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P3UInt16 IPropertySupporter<P3UInt16>.DefaultValue(int index)
-        {
-            return DefaultValueP3UInt16(index: index);
-        }
-
-        protected P3UInt16 DefaultValueP3UInt16(int index)
-        {
-            switch ((RegionDataObject_FieldIndex)index)
-            {
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    return default(P3UInt16);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3UInt16: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public IEnumerable<ILink> Links => GetLinks();
@@ -2857,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetParentIndex();
+                    item.ParentIndex = default(UInt16);
                 }
             }
             catch (Exception ex)
@@ -2881,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetUnknown1();
+                    item.Unknown1 = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -2905,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDensity();
+                    item.Density = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2929,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetClustering();
+                    item.Clustering = default(Byte);
                 }
             }
             catch (Exception ex)
@@ -2953,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetMinSlope();
+                    item.MinSlope = default(Byte);
                 }
             }
             catch (Exception ex)
@@ -2977,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetMaxSlope();
+                    item.MaxSlope = default(Byte);
                 }
             }
             catch (Exception ex)
@@ -3001,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFlags();
+                    item.Flags = default(RegionDataObject.Flag);
                 }
             }
             catch (Exception ex)
@@ -3025,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetRadiusWrtPercent();
+                    item.RadiusWrtPercent = default(UInt16);
                 }
             }
             catch (Exception ex)
@@ -3049,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetRadius();
+                    item.Radius = default(UInt16);
                 }
             }
             catch (Exception ex)
@@ -3073,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetMinHeight();
+                    item.MinHeight = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3097,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetMaxHeight();
+                    item.MaxHeight = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3121,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetSink();
+                    item.Sink = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3145,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetSinkVariance();
+                    item.SinkVariance = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3169,7 +1615,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetSizeVariance();
+                    item.SizeVariance = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3193,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetAngleVariance();
+                    item.AngleVariance = default(P3UInt16);
                 }
             }
             catch (Exception ex)
@@ -3217,7 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetUnknow2n();
+                    item.Unknow2n = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -3361,84 +1807,52 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
-                    this.SetParentIndex(
-                        (UInt16)obj,
-                        cmds: cmds);
+                    this.ParentIndex = (UInt16)obj;
                     break;
                 case RegionDataObject_FieldIndex.Unknown1:
-                    this.SetUnknown1(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Unknown1 = (Byte[])obj;
                     break;
                 case RegionDataObject_FieldIndex.Density:
-                    this.SetDensity(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Density = (Single)obj;
                     break;
                 case RegionDataObject_FieldIndex.Clustering:
-                    this.SetClustering(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Clustering = (Byte)obj;
                     break;
                 case RegionDataObject_FieldIndex.MinSlope:
-                    this.SetMinSlope(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.MinSlope = (Byte)obj;
                     break;
                 case RegionDataObject_FieldIndex.MaxSlope:
-                    this.SetMaxSlope(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.MaxSlope = (Byte)obj;
                     break;
                 case RegionDataObject_FieldIndex.Flags:
-                    this.SetFlags(
-                        (RegionDataObject.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (RegionDataObject.Flag)obj;
                     break;
                 case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    this.SetRadiusWrtPercent(
-                        (UInt16)obj,
-                        cmds: cmds);
+                    this.RadiusWrtPercent = (UInt16)obj;
                     break;
                 case RegionDataObject_FieldIndex.Radius:
-                    this.SetRadius(
-                        (UInt16)obj,
-                        cmds: cmds);
+                    this.Radius = (UInt16)obj;
                     break;
                 case RegionDataObject_FieldIndex.MinHeight:
-                    this.SetMinHeight(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.MinHeight = (Single)obj;
                     break;
                 case RegionDataObject_FieldIndex.MaxHeight:
-                    this.SetMaxHeight(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.MaxHeight = (Single)obj;
                     break;
                 case RegionDataObject_FieldIndex.Sink:
-                    this.SetSink(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Sink = (Single)obj;
                     break;
                 case RegionDataObject_FieldIndex.SinkVariance:
-                    this.SetSinkVariance(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.SinkVariance = (Single)obj;
                     break;
                 case RegionDataObject_FieldIndex.SizeVariance:
-                    this.SetSizeVariance(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.SizeVariance = (Single)obj;
                     break;
                 case RegionDataObject_FieldIndex.AngleVariance:
-                    this.SetAngleVariance(
-                        (P3UInt16)obj,
-                        cmds: cmds);
+                    this.AngleVariance = (P3UInt16)obj;
                     break;
                 case RegionDataObject_FieldIndex.Unknow2n:
-                    this.SetUnknow2n(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Unknow2n = (Byte[])obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3483,84 +1897,52 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
-                    obj.SetParentIndex(
-                        (UInt16)pair.Value,
-                        cmds: null);
+                    obj.ParentIndex = (UInt16)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.Unknown1:
-                    obj.SetUnknown1(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Unknown1 = (Byte[])pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.Density:
-                    obj.SetDensity(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Density = (Single)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.Clustering:
-                    obj.SetClustering(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Clustering = (Byte)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.MinSlope:
-                    obj.SetMinSlope(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.MinSlope = (Byte)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.MaxSlope:
-                    obj.SetMaxSlope(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.MaxSlope = (Byte)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (RegionDataObject.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (RegionDataObject.Flag)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    obj.SetRadiusWrtPercent(
-                        (UInt16)pair.Value,
-                        cmds: null);
+                    obj.RadiusWrtPercent = (UInt16)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.Radius:
-                    obj.SetRadius(
-                        (UInt16)pair.Value,
-                        cmds: null);
+                    obj.Radius = (UInt16)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.MinHeight:
-                    obj.SetMinHeight(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.MinHeight = (Single)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.MaxHeight:
-                    obj.SetMaxHeight(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.MaxHeight = (Single)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.Sink:
-                    obj.SetSink(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Sink = (Single)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.SinkVariance:
-                    obj.SetSinkVariance(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.SinkVariance = (Single)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.SizeVariance:
-                    obj.SetSizeVariance(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.SizeVariance = (Single)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.AngleVariance:
-                    obj.SetAngleVariance(
-                        (P3UInt16)pair.Value,
-                        cmds: null);
+                    obj.AngleVariance = (P3UInt16)pair.Value;
                     break;
                 case RegionDataObject_FieldIndex.Unknow2n:
-                    obj.SetUnknow2n(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Unknow2n = (Byte[])pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -3579,52 +1961,36 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new MajorRecord Object { get; set; }
         new UInt16 ParentIndex { get; set; }
-        new INotifyingItem<UInt16> ParentIndex_Property { get; }
 
         new Byte[] Unknown1 { get; set; }
-        new INotifyingItem<Byte[]> Unknown1_Property { get; }
 
         new Single Density { get; set; }
-        new INotifyingItem<Single> Density_Property { get; }
 
         new Byte Clustering { get; set; }
-        new INotifyingItem<Byte> Clustering_Property { get; }
 
         new Byte MinSlope { get; set; }
-        new INotifyingItem<Byte> MinSlope_Property { get; }
 
         new Byte MaxSlope { get; set; }
-        new INotifyingItem<Byte> MaxSlope_Property { get; }
 
         new RegionDataObject.Flag Flags { get; set; }
-        new INotifyingItem<RegionDataObject.Flag> Flags_Property { get; }
 
         new UInt16 RadiusWrtPercent { get; set; }
-        new INotifyingItem<UInt16> RadiusWrtPercent_Property { get; }
 
         new UInt16 Radius { get; set; }
-        new INotifyingItem<UInt16> Radius_Property { get; }
 
         new Single MinHeight { get; set; }
-        new INotifyingItem<Single> MinHeight_Property { get; }
 
         new Single MaxHeight { get; set; }
-        new INotifyingItem<Single> MaxHeight_Property { get; }
 
         new Single Sink { get; set; }
-        new INotifyingItem<Single> Sink_Property { get; }
 
         new Single SinkVariance { get; set; }
-        new INotifyingItem<Single> SinkVariance_Property { get; }
 
         new Single SizeVariance { get; set; }
-        new INotifyingItem<Single> SizeVariance_Property { get; }
 
         new P3UInt16 AngleVariance { get; set; }
-        new INotifyingItem<P3UInt16> AngleVariance_Property { get; }
 
         new Byte[] Unknow2n { get; set; }
-        new INotifyingItem<Byte[]> Unknow2n_Property { get; }
 
     }
 
@@ -3637,82 +2003,66 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ParentIndex
         UInt16 ParentIndex { get; }
-        INotifyingItemGetter<UInt16> ParentIndex_Property { get; }
 
         #endregion
         #region Unknown1
         Byte[] Unknown1 { get; }
-        INotifyingItemGetter<Byte[]> Unknown1_Property { get; }
 
         #endregion
         #region Density
         Single Density { get; }
-        INotifyingItemGetter<Single> Density_Property { get; }
 
         #endregion
         #region Clustering
         Byte Clustering { get; }
-        INotifyingItemGetter<Byte> Clustering_Property { get; }
 
         #endregion
         #region MinSlope
         Byte MinSlope { get; }
-        INotifyingItemGetter<Byte> MinSlope_Property { get; }
 
         #endregion
         #region MaxSlope
         Byte MaxSlope { get; }
-        INotifyingItemGetter<Byte> MaxSlope_Property { get; }
 
         #endregion
         #region Flags
         RegionDataObject.Flag Flags { get; }
-        INotifyingItemGetter<RegionDataObject.Flag> Flags_Property { get; }
 
         #endregion
         #region RadiusWrtPercent
         UInt16 RadiusWrtPercent { get; }
-        INotifyingItemGetter<UInt16> RadiusWrtPercent_Property { get; }
 
         #endregion
         #region Radius
         UInt16 Radius { get; }
-        INotifyingItemGetter<UInt16> Radius_Property { get; }
 
         #endregion
         #region MinHeight
         Single MinHeight { get; }
-        INotifyingItemGetter<Single> MinHeight_Property { get; }
 
         #endregion
         #region MaxHeight
         Single MaxHeight { get; }
-        INotifyingItemGetter<Single> MaxHeight_Property { get; }
 
         #endregion
         #region Sink
         Single Sink { get; }
-        INotifyingItemGetter<Single> Sink_Property { get; }
 
         #endregion
         #region SinkVariance
         Single SinkVariance { get; }
-        INotifyingItemGetter<Single> SinkVariance_Property { get; }
 
         #endregion
         #region SizeVariance
         Single SizeVariance { get; }
-        INotifyingItemGetter<Single> SizeVariance_Property { get; }
 
         #endregion
         #region AngleVariance
         P3UInt16 AngleVariance { get; }
-        INotifyingItemGetter<P3UInt16> AngleVariance_Property { get; }
 
         #endregion
         #region Unknow2n
         Byte[] Unknow2n { get; }
-        INotifyingItemGetter<Byte[]> Unknow2n_Property { get; }
 
         #endregion
 
@@ -4126,9 +2476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
                 try
                 {
-                    item.ParentIndex_Property.Set(
-                        value: rhs.ParentIndex,
-                        cmds: cmds);
+                    item.ParentIndex = rhs.ParentIndex;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4145,9 +2493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
                 try
                 {
-                    item.Unknown1_Property.Set(
-                        value: rhs.Unknown1,
-                        cmds: cmds);
+                    item.Unknown1 = rhs.Unknown1;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4164,9 +2510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
                 try
                 {
-                    item.Density_Property.Set(
-                        value: rhs.Density,
-                        cmds: cmds);
+                    item.Density = rhs.Density;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4183,9 +2527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
                 try
                 {
-                    item.Clustering_Property.Set(
-                        value: rhs.Clustering,
-                        cmds: cmds);
+                    item.Clustering = rhs.Clustering;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4202,9 +2544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
                 try
                 {
-                    item.MinSlope_Property.Set(
-                        value: rhs.MinSlope,
-                        cmds: cmds);
+                    item.MinSlope = rhs.MinSlope;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4221,9 +2561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
                 try
                 {
-                    item.MaxSlope_Property.Set(
-                        value: rhs.MaxSlope,
-                        cmds: cmds);
+                    item.MaxSlope = rhs.MaxSlope;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4240,9 +2578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4259,9 +2595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
                 try
                 {
-                    item.RadiusWrtPercent_Property.Set(
-                        value: rhs.RadiusWrtPercent,
-                        cmds: cmds);
+                    item.RadiusWrtPercent = rhs.RadiusWrtPercent;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4278,9 +2612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
                 try
                 {
-                    item.Radius_Property.Set(
-                        value: rhs.Radius,
-                        cmds: cmds);
+                    item.Radius = rhs.Radius;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4297,9 +2629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
                 try
                 {
-                    item.MinHeight_Property.Set(
-                        value: rhs.MinHeight,
-                        cmds: cmds);
+                    item.MinHeight = rhs.MinHeight;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4316,9 +2646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
                 try
                 {
-                    item.MaxHeight_Property.Set(
-                        value: rhs.MaxHeight,
-                        cmds: cmds);
+                    item.MaxHeight = rhs.MaxHeight;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4335,9 +2663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
                 try
                 {
-                    item.Sink_Property.Set(
-                        value: rhs.Sink,
-                        cmds: cmds);
+                    item.Sink = rhs.Sink;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4354,9 +2680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
                 try
                 {
-                    item.SinkVariance_Property.Set(
-                        value: rhs.SinkVariance,
-                        cmds: cmds);
+                    item.SinkVariance = rhs.SinkVariance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4373,9 +2697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
                 try
                 {
-                    item.SizeVariance_Property.Set(
-                        value: rhs.SizeVariance,
-                        cmds: cmds);
+                    item.SizeVariance = rhs.SizeVariance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4392,9 +2714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
                 try
                 {
-                    item.AngleVariance_Property.Set(
-                        value: rhs.AngleVariance,
-                        cmds: cmds);
+                    item.AngleVariance = rhs.AngleVariance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4411,9 +2731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
                 try
                 {
-                    item.Unknow2n_Property.Set(
-                        value: rhs.Unknow2n,
-                        cmds: cmds);
+                    item.Unknow2n = rhs.Unknow2n;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4471,7 +2789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObject_FieldIndex.Object:
-                    obj.Object = default(FormIDLink<MajorRecord>);
+                    obj.Object_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
                     obj.ParentIndex = default(UInt16);
@@ -4606,7 +2924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObject item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Object = default(FormIDLink<MajorRecord>);
+            item.Object_Property.Unset(cmds.ToUnsetParams());
             item.ParentIndex = default(UInt16);
             item.Unknown1 = default(Byte[]);
             item.Density = default(Single);
@@ -4835,7 +3153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ParentIndex),
-                    item: item.ParentIndex_Property,
+                    item: item.ParentIndex,
                     fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
                     errorMask: errorMask);
             }
@@ -4844,7 +3162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Unknown1),
-                    item: item.Unknown1_Property,
+                    item: item.Unknown1,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
                     errorMask: errorMask);
             }
@@ -4853,7 +3171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Density),
-                    item: item.Density_Property,
+                    item: item.Density,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Density,
                     errorMask: errorMask);
             }
@@ -4862,7 +3180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Clustering),
-                    item: item.Clustering_Property,
+                    item: item.Clustering,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
                     errorMask: errorMask);
             }
@@ -4871,7 +3189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MinSlope),
-                    item: item.MinSlope_Property,
+                    item: item.MinSlope,
                     fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
                     errorMask: errorMask);
             }
@@ -4880,7 +3198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MaxSlope),
-                    item: item.MaxSlope_Property,
+                    item: item.MaxSlope,
                     fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
                     errorMask: errorMask);
             }
@@ -4889,7 +3207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<RegionDataObject.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -4898,7 +3216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RadiusWrtPercent),
-                    item: item.RadiusWrtPercent_Property,
+                    item: item.RadiusWrtPercent,
                     fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
                     errorMask: errorMask);
             }
@@ -4907,7 +3225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Radius),
-                    item: item.Radius_Property,
+                    item: item.Radius,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
                     errorMask: errorMask);
             }
@@ -4916,7 +3234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MinHeight),
-                    item: item.MinHeight_Property,
+                    item: item.MinHeight,
                     fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
                     errorMask: errorMask);
             }
@@ -4925,7 +3243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MaxHeight),
-                    item: item.MaxHeight_Property,
+                    item: item.MaxHeight,
                     fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
                     errorMask: errorMask);
             }
@@ -4934,7 +3252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Sink),
-                    item: item.Sink_Property,
+                    item: item.Sink,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
                     errorMask: errorMask);
             }
@@ -4943,7 +3261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SinkVariance),
-                    item: item.SinkVariance_Property,
+                    item: item.SinkVariance,
                     fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
                     errorMask: errorMask);
             }
@@ -4952,7 +3270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SizeVariance),
-                    item: item.SizeVariance_Property,
+                    item: item.SizeVariance,
                     fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
                     errorMask: errorMask);
             }
@@ -4961,7 +3279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P3UInt16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AngleVariance),
-                    item: item.AngleVariance_Property,
+                    item: item.AngleVariance,
                     fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
                     errorMask: errorMask);
             }
@@ -4970,7 +3288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Unknow2n),
-                    item: item.Unknow2n_Property,
+                    item: item.Unknow2n,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
                     errorMask: errorMask);
             }
@@ -5022,83 +3340,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ParentIndex_Property,
+                item: item.ParentIndex,
                 fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown1_Property,
+                item: item.Unknown1,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Density_Property,
+                item: item.Density,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Density,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Clustering_Property,
+                item: item.Clustering,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MinSlope_Property,
+                item: item.MinSlope,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MaxSlope_Property,
+                item: item.MaxSlope,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Write(
                 writer,
-                item.Flags_Property,
+                item.Flags,
                 length: 1,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RadiusWrtPercent_Property,
+                item: item.RadiusWrtPercent,
                 fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Radius_Property,
+                item: item.Radius,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MinHeight_Property,
+                item: item.MinHeight,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MaxHeight_Property,
+                item: item.MaxHeight,
                 fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Sink_Property,
+                item: item.Sink,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.SinkVariance_Property,
+                item: item.SinkVariance,
                 fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.SizeVariance_Property,
+                item: item.SizeVariance,
                 fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AngleVariance_Property,
+                item: item.AngleVariance,
                 fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknow2n_Property,
+                item: item.Unknow2n,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
                 errorMask: errorMask);
         }

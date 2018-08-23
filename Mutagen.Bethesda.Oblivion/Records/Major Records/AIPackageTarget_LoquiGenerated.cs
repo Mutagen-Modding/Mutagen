@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class AIPackageTarget : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IAIPackageTarget,
         ILoquiObject<AIPackageTarget>,
         ILoquiObjectSetter,
-        IPropertySupporter<AIPackageTarget.ObjectTypeEnum>,
-        IPropertySupporter<Int32>,
         IEquatable<AIPackageTarget>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,148 +50,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ObjectType
-        protected AIPackageTarget.ObjectTypeEnum _ObjectType;
-        protected PropertyForwarder<AIPackageTarget, AIPackageTarget.ObjectTypeEnum> _ObjectTypeForwarder;
-        public INotifyingSetItem<AIPackageTarget.ObjectTypeEnum> ObjectType_Property => _ObjectTypeForwarder ?? (_ObjectTypeForwarder = new PropertyForwarder<AIPackageTarget, AIPackageTarget.ObjectTypeEnum>(this, (int)AIPackageTarget_FieldIndex.ObjectType));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AIPackageTarget.ObjectTypeEnum _ObjectType;
         public AIPackageTarget.ObjectTypeEnum ObjectType
         {
             get => this._ObjectType;
-            set => this.SetObjectType(value);
+            set => this.RaiseAndSetIfChanged(ref this._ObjectType, value, nameof(ObjectType));
         }
-        protected void SetObjectType(
-            AIPackageTarget.ObjectTypeEnum item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageTarget_FieldIndex.ObjectType];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ObjectType == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageTarget_FieldIndex.ObjectType] = hasBeenSet;
-            }
-            if (_AIPackageTargetObjectTypeEnum_subscriptions != null)
-            {
-                var tmp = ObjectType;
-                _ObjectType = item;
-                _AIPackageTargetObjectTypeEnum_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageTarget_FieldIndex.ObjectType,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ObjectType = item;
-            }
-        }
-        protected void UnsetObjectType()
-        {
-            _hasBeenSetTracker[(int)AIPackageTarget_FieldIndex.ObjectType] = false;
-            ObjectType = default(AIPackageTarget.ObjectTypeEnum);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<AIPackageTarget.ObjectTypeEnum> IAIPackageTarget.ObjectType_Property => this.ObjectType_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<AIPackageTarget.ObjectTypeEnum> IAIPackageTargetGetter.ObjectType_Property => this.ObjectType_Property;
         #endregion
         #region Object
-        protected Int32 _Object;
-        protected PropertyForwarder<AIPackageTarget, Int32> _ObjectForwarder;
-        public INotifyingSetItem<Int32> Object_Property => _ObjectForwarder ?? (_ObjectForwarder = new PropertyForwarder<AIPackageTarget, Int32>(this, (int)AIPackageTarget_FieldIndex.Object));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _Object;
         public Int32 Object
         {
             get => this._Object;
-            set => this.SetObject(value);
+            set => this.RaiseAndSetIfChanged(ref this._Object, value, nameof(Object));
         }
-        protected void SetObject(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageTarget_FieldIndex.Object];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Object == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageTarget_FieldIndex.Object] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = Object;
-                _Object = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageTarget_FieldIndex.Object,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Object = item;
-            }
-        }
-        protected void UnsetObject()
-        {
-            _hasBeenSetTracker[(int)AIPackageTarget_FieldIndex.Object] = false;
-            Object = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IAIPackageTarget.Object_Property => this.Object_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IAIPackageTargetGetter.Object_Property => this.Object_Property;
         #endregion
         #region Count
-        protected Int32 _Count;
-        protected PropertyForwarder<AIPackageTarget, Int32> _CountForwarder;
-        public INotifyingSetItem<Int32> Count_Property => _CountForwarder ?? (_CountForwarder = new PropertyForwarder<AIPackageTarget, Int32>(this, (int)AIPackageTarget_FieldIndex.Count));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _Count;
         public Int32 Count
         {
             get => this._Count;
-            set => this.SetCount(value);
+            set => this.RaiseAndSetIfChanged(ref this._Count, value, nameof(Count));
         }
-        protected void SetCount(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageTarget_FieldIndex.Count];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Count == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageTarget_FieldIndex.Count] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = Count;
-                _Count = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageTarget_FieldIndex.Count,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Count = item;
-            }
-        }
-        protected void UnsetCount()
-        {
-            _hasBeenSetTracker[(int)AIPackageTarget_FieldIndex.Count] = false;
-            Count = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IAIPackageTarget.Count_Property => this.Count_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IAIPackageTargetGetter.Count_Property => this.Count_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -597,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetObjectType();
+                            item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
                         }
                     }
                     catch (Exception ex)
@@ -623,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetObject();
+                            item.Object = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -649,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCount();
+                            item.Count = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -682,285 +562,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter AIPackageTarget.ObjectTypeEnum
-        protected ObjectCentralizationSubscriptions<AIPackageTarget.ObjectTypeEnum> _AIPackageTargetObjectTypeEnum_subscriptions;
-        AIPackageTarget.ObjectTypeEnum IPropertySupporter<AIPackageTarget.ObjectTypeEnum>.Get(int index)
-        {
-            return GetAIPackageTargetObjectTypeEnum(index: index);
-        }
-
-        protected AIPackageTarget.ObjectTypeEnum GetAIPackageTargetObjectTypeEnum(int index)
-        {
-            switch ((AIPackageTarget_FieldIndex)index)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    return ObjectType;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageTarget.ObjectTypeEnum: {index}");
-            }
-        }
-
-        void IPropertySupporter<AIPackageTarget.ObjectTypeEnum>.Set(
-            int index,
-            AIPackageTarget.ObjectTypeEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetAIPackageTargetObjectTypeEnum(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetAIPackageTargetObjectTypeEnum(
-            int index,
-            AIPackageTarget.ObjectTypeEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackageTarget_FieldIndex)index)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    SetObjectType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageTarget.ObjectTypeEnum: {index}");
-            }
-        }
-
-        bool IPropertySupporter<AIPackageTarget.ObjectTypeEnum>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<AIPackageTarget.ObjectTypeEnum>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<AIPackageTarget.ObjectTypeEnum>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetAIPackageTargetObjectTypeEnum(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetAIPackageTargetObjectTypeEnum(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackageTarget_FieldIndex)index)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    SetObjectType(
-                        item: default(AIPackageTarget.ObjectTypeEnum),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageTarget.ObjectTypeEnum: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageTarget.ObjectTypeEnum>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<AIPackageTarget.ObjectTypeEnum> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_AIPackageTargetObjectTypeEnum_subscriptions == null)
-            {
-                _AIPackageTargetObjectTypeEnum_subscriptions = new ObjectCentralizationSubscriptions<AIPackageTarget.ObjectTypeEnum>();
-            }
-            _AIPackageTargetObjectTypeEnum_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageTarget.ObjectTypeEnum>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _AIPackageTargetObjectTypeEnum_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<AIPackageTarget.ObjectTypeEnum>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        AIPackageTarget.ObjectTypeEnum IPropertySupporter<AIPackageTarget.ObjectTypeEnum>.DefaultValue(int index)
-        {
-            return DefaultValueAIPackageTargetObjectTypeEnum(index: index);
-        }
-
-        protected AIPackageTarget.ObjectTypeEnum DefaultValueAIPackageTargetObjectTypeEnum(int index)
-        {
-            switch ((AIPackageTarget_FieldIndex)index)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    return default(AIPackageTarget.ObjectTypeEnum);
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageTarget.ObjectTypeEnum: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((AIPackageTarget_FieldIndex)index)
-            {
-                case AIPackageTarget_FieldIndex.Object:
-                    return Object;
-                case AIPackageTarget_FieldIndex.Count:
-                    return Count;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackageTarget_FieldIndex)index)
-            {
-                case AIPackageTarget_FieldIndex.Object:
-                    SetObject(item, hasBeenSet, cmds);
-                    break;
-                case AIPackageTarget_FieldIndex.Count:
-                    SetCount(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackageTarget_FieldIndex)index)
-            {
-                case AIPackageTarget_FieldIndex.Object:
-                    SetObject(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                case AIPackageTarget_FieldIndex.Count:
-                    SetCount(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((AIPackageTarget_FieldIndex)index)
-            {
-                case AIPackageTarget_FieldIndex.Object:
-                case AIPackageTarget_FieldIndex.Count:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AIPackageTarget_Registration.TRIGGERING_RECORD_TYPE;
@@ -1183,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetObjectType();
+                    item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
                 }
             }
             catch (Exception ex)
@@ -1207,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetObject();
+                    item.Object = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -1231,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetCount();
+                    item.Count = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -1370,19 +971,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AIPackageTarget_FieldIndex.ObjectType:
-                    this.SetObjectType(
-                        (AIPackageTarget.ObjectTypeEnum)obj,
-                        cmds: cmds);
+                    this.ObjectType = (AIPackageTarget.ObjectTypeEnum)obj;
                     break;
                 case AIPackageTarget_FieldIndex.Object:
-                    this.SetObject(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.Object = (Int32)obj;
                     break;
                 case AIPackageTarget_FieldIndex.Count:
-                    this.SetCount(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.Count = (Int32)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1422,19 +1017,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AIPackageTarget_FieldIndex.ObjectType:
-                    obj.SetObjectType(
-                        (AIPackageTarget.ObjectTypeEnum)pair.Value,
-                        cmds: null);
+                    obj.ObjectType = (AIPackageTarget.ObjectTypeEnum)pair.Value;
                     break;
                 case AIPackageTarget_FieldIndex.Object:
-                    obj.SetObject(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.Object = (Int32)pair.Value;
                     break;
                 case AIPackageTarget_FieldIndex.Count:
-                    obj.SetCount(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.Count = (Int32)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1452,13 +1041,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackageTarget : IAIPackageTargetGetter, ILoquiClass<IAIPackageTarget, IAIPackageTargetGetter>, ILoquiClass<AIPackageTarget, IAIPackageTargetGetter>
     {
         new AIPackageTarget.ObjectTypeEnum ObjectType { get; set; }
-        new INotifyingItem<AIPackageTarget.ObjectTypeEnum> ObjectType_Property { get; }
 
         new Int32 Object { get; set; }
-        new INotifyingItem<Int32> Object_Property { get; }
 
         new Int32 Count { get; set; }
-        new INotifyingItem<Int32> Count_Property { get; }
 
     }
 
@@ -1466,17 +1052,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region ObjectType
         AIPackageTarget.ObjectTypeEnum ObjectType { get; }
-        INotifyingItemGetter<AIPackageTarget.ObjectTypeEnum> ObjectType_Property { get; }
 
         #endregion
         #region Object
         Int32 Object { get; }
-        INotifyingItemGetter<Int32> Object_Property { get; }
 
         #endregion
         #region Count
         Int32 Count { get; }
-        INotifyingItemGetter<Int32> Count_Property { get; }
 
         #endregion
 
@@ -1705,9 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
                 try
                 {
-                    item.ObjectType_Property.Set(
-                        value: rhs.ObjectType,
-                        cmds: cmds);
+                    item.ObjectType = rhs.ObjectType;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1724,9 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Object);
                 try
                 {
-                    item.Object_Property.Set(
-                        value: rhs.Object,
-                        cmds: cmds);
+                    item.Object = rhs.Object;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1743,9 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Count);
                 try
                 {
-                    item.Count_Property.Set(
-                        value: rhs.Count,
-                        cmds: cmds);
+                    item.Count = rhs.Count;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1962,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Write(
                     node: elem,
                     name: nameof(item.ObjectType),
-                    item: item.ObjectType_Property,
+                    item: item.ObjectType,
                     fieldIndex: (int)AIPackageTarget_FieldIndex.ObjectType,
                     errorMask: errorMask);
             }
@@ -1971,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Object),
-                    item: item.Object_Property,
+                    item: item.Object,
                     fieldIndex: (int)AIPackageTarget_FieldIndex.Object,
                     errorMask: errorMask);
             }
@@ -1980,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Count),
-                    item: item.Count_Property,
+                    item: item.Count,
                     fieldIndex: (int)AIPackageTarget_FieldIndex.Count,
                     errorMask: errorMask);
             }
@@ -2033,18 +1610,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Write(
                 writer,
-                item.ObjectType_Property,
+                item.ObjectType,
                 length: 4,
                 fieldIndex: (int)AIPackageTarget_FieldIndex.ObjectType,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Object_Property,
+                item: item.Object,
                 fieldIndex: (int)AIPackageTarget_FieldIndex.Object,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Count_Property,
+                item: item.Count,
                 fieldIndex: (int)AIPackageTarget_FieldIndex.Count,
                 errorMask: errorMask);
         }

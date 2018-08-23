@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,7 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         IScript,
         ILoquiObject<Script>,
         ILoquiObjectSetter,
-        IPropertySupporter<ScriptFields>,
         IEquatable<Script>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -51,35 +52,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fields
-        protected readonly ScriptFields _Fields = new ScriptFields();
-        protected PropertyForwarder<Script, ScriptFields> _FieldsForwarder;
-        public INotifyingSetItemGetter<ScriptFields> Fields_Property => _FieldsForwarder ?? (_FieldsForwarder = new PropertyForwarder<Script, ScriptFields>(this, (int)Script_FieldIndex.Fields));
+        private ScriptFields _Fields_Object = new ScriptFields();
+        public bool Fields_IsSet => true;
+        bool IScriptGetter.Fields_IsSet => Fields_IsSet;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ScriptFields Fields
-        {
-            get => this._Fields;
-            protected set => this.SetFields(value);
-        }
-        protected void SetFields(
-            ScriptFields item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            this._Fields.CopyFieldsFrom(
-                rhs: item,
-                def: null,
-                cmds: null,
-                copyMask: null,
-                doMasks: false,
-                errorMask: out var errMask);
-        }
-        protected void UnsetFields()
-        {
-            _hasBeenSetTracker[(int)Script_FieldIndex.Fields] = false;
-            Fields = default(ScriptFields);
-        }
+        public ScriptFields Fields => _Fields_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<ScriptFields> IScriptGetter.Fields_Property => this.Fields_Property;
+        ScriptFields IScriptGetter.Fields => this.Fields;
         #endregion
 
         #region Loqui Getter Interface
@@ -140,8 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Fields_Property.HasBeenSet != rhs.Fields_Property.HasBeenSet) return false;
-            if (Fields_Property.HasBeenSet)
+            if (Fields_IsSet != rhs.Fields_IsSet) return false;
+            if (Fields_IsSet)
             {
                 if (!object.Equals(this.Fields, rhs.Fields)) return false;
             }
@@ -151,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Fields_Property.HasBeenSet)
+            if (Fields_IsSet)
             {
                 ret = HashHelper.GetHashCode(Fields).CombineHashCode(ret);
             }
@@ -518,140 +497,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter ScriptFields
-        protected ObjectCentralizationSubscriptions<ScriptFields> _ScriptFields_subscriptions;
-        ScriptFields IPropertySupporter<ScriptFields>.Get(int index)
-        {
-            return GetScriptFields(index: index);
-        }
-
-        protected ScriptFields GetScriptFields(int index)
-        {
-            switch ((Script_FieldIndex)index)
-            {
-                case Script_FieldIndex.Fields:
-                    return Fields;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
-            }
-        }
-
-        void IPropertySupporter<ScriptFields>.Set(
-            int index,
-            ScriptFields item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetScriptFields(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetScriptFields(
-            int index,
-            ScriptFields item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Script_FieldIndex)index)
-            {
-                case Script_FieldIndex.Fields:
-                    SetFields(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
-            }
-        }
-
-        bool IPropertySupporter<ScriptFields>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<ScriptFields>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<ScriptFields>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetScriptFields(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetScriptFields(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Script_FieldIndex)index)
-            {
-                case Script_FieldIndex.Fields:
-                    SetFields(
-                        item: default(ScriptFields),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptFields>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<ScriptFields> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ScriptFields_subscriptions == null)
-            {
-                _ScriptFields_subscriptions = new ObjectCentralizationSubscriptions<ScriptFields>();
-            }
-            _ScriptFields_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptFields>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ScriptFields_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<ScriptFields>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        ScriptFields IPropertySupporter<ScriptFields>.DefaultValue(int index)
-        {
-            return DefaultValueScriptFields(index: index);
-        }
-
-        protected ScriptFields DefaultValueScriptFields(int index)
-        {
-            switch ((Script_FieldIndex)index)
-            {
-                case Script_FieldIndex.Fields:
-                    return default(ScriptFields);
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Script_Registration.TRIGGERING_RECORD_TYPE;
@@ -1044,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Fields
         ScriptFields Fields { get; }
-        INotifyingSetItemGetter<ScriptFields> Fields_Property { get; }
+        bool Fields_IsSet { get; }
 
         #endregion
 
@@ -1331,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Script_FieldIndex.Fields:
-                    return obj.Fields_Property.HasBeenSet;
+                    return obj.Fields_IsSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1372,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Script_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Fields = item.Fields_Property.LoquiEqualsHelper(rhs.Fields_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Fields = IHasBeenSetExt.LoquiEqualsHelper(item.Fields_IsSet, rhs.Fields_IsSet, item.Fields, rhs.Fields, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1415,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptGetter item,
             Script_Mask<bool?> checkMask)
         {
-            if (checkMask.Fields.Overall.HasValue && checkMask.Fields.Overall.Value != item.Fields_Property.HasBeenSet) return false;
+            if (checkMask.Fields.Overall.HasValue && checkMask.Fields.Overall.Value != item.Fields_IsSet) return false;
             if (checkMask.Fields.Specific != null && (item.Fields == null || !item.Fields.HasBeenSet(checkMask.Fields.Specific))) return false;
             return true;
         }
@@ -1423,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Script_Mask<bool> GetHasBeenSetMask(IScriptGetter item)
         {
             var ret = new Script_Mask<bool>();
-            ret.Fields = new MaskItem<bool, ScriptFields_Mask<bool>>(item.Fields_Property.HasBeenSet, ScriptFieldsCommon.GetHasBeenSetMask(item.Fields));
+            ret.Fields = new MaskItem<bool, ScriptFields_Mask<bool>>(item.Fields_IsSet, ScriptFieldsCommon.GetHasBeenSetMask(item.Fields));
             return ret;
         }
 
@@ -1485,12 +1330,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Script");
             }
-            if (item.Fields_Property.HasBeenSet
+            if (item.Fields_IsSet
                 && (translationMask?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
             {
                 LoquiXmlTranslation<ScriptFields>.Instance.Write(
                     node: elem,
-                    item: item.Fields_Property,
+                    item: item.Fields,
                     name: nameof(item.Fields),
                     fieldIndex: (int)Script_FieldIndex.Fields,
                     errorMask: errorMask,
@@ -1554,11 +1399,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<ScriptFields>.Instance.Write(
-                writer: writer,
-                item: item.Fields_Property,
-                fieldIndex: (int)Script_FieldIndex.Fields,
-                errorMask: errorMask);
+            if (item.Fields_IsSet)
+            {
+                LoquiBinaryTranslation<ScriptFields>.Instance.Write(
+                    writer: writer,
+                    item: item.Fields,
+                    fieldIndex: (int)Script_FieldIndex.Fields,
+                    errorMask: errorMask);
+            }
         }
 
         #endregion

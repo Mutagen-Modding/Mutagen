@@ -1,4 +1,5 @@
 ﻿using Noggog.Notifying;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,8 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor()
         {
             this.TypeChar = TRIGGER_CHAR;
-            this.RawFloat_Property.Subscribe((change) => this.Data = (int)Math.Round(change.New));
-            this.Data_Property.Subscribe((change) => this.RawFloat = change.New, cmds: NotifyingSubscribeParameters.NoFire);
+            this.WhenAny(x => x.RawFloat).Subscribe((change) => this.Data = (int)Math.Round(change));
+            this.WhenAny(x => x.Data).Subscribe((change) => this.RawFloat = change);
         }
     }
 }

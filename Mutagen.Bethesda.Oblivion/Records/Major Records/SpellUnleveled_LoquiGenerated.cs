@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,10 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         ISpellUnleveled,
         ILoquiObject<SpellUnleveled>,
         ILoquiObjectSetter,
-        IPropertySupporter<Spell.SpellType>,
-        IPropertySupporter<UInt32>,
-        IPropertySupporter<Spell.SpellLevel>,
-        IPropertySupporter<Spell.SpellFlag>,
         IEquatable<SpellUnleveled>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -53,196 +51,36 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        protected Spell.SpellType _Type;
-        protected PropertyForwarder<SpellUnleveled, Spell.SpellType> _TypeForwarder;
-        public INotifyingSetItem<Spell.SpellType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<SpellUnleveled, Spell.SpellType>(this, (int)SpellUnleveled_FieldIndex.Type));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Spell.SpellType _Type;
         public Spell.SpellType Type
         {
             get => this._Type;
-            set => this.SetType(value);
+            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
         }
-        protected void SetType(
-            Spell.SpellType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Type];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Type == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Type] = hasBeenSet;
-            }
-            if (_SpellSpellType_subscriptions != null)
-            {
-                var tmp = Type;
-                _Type = item;
-                _SpellSpellType_subscriptions.FireSubscriptions(
-                    index: (int)SpellUnleveled_FieldIndex.Type,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Type = item;
-            }
-        }
-        protected void UnsetType()
-        {
-            _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Type] = false;
-            Type = default(Spell.SpellType);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Spell.SpellType> ISpellUnleveled.Type_Property => this.Type_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Spell.SpellType> ISpellUnleveledGetter.Type_Property => this.Type_Property;
         #endregion
         #region Cost
-        protected UInt32 _Cost;
-        protected PropertyForwarder<SpellUnleveled, UInt32> _CostForwarder;
-        public INotifyingSetItem<UInt32> Cost_Property => _CostForwarder ?? (_CostForwarder = new PropertyForwarder<SpellUnleveled, UInt32>(this, (int)SpellUnleveled_FieldIndex.Cost));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _Cost;
         public UInt32 Cost
         {
             get => this._Cost;
-            set => this.SetCost(value);
+            set => this.RaiseAndSetIfChanged(ref this._Cost, value, nameof(Cost));
         }
-        protected void SetCost(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Cost];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Cost == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Cost] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = Cost;
-                _Cost = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)SpellUnleveled_FieldIndex.Cost,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Cost = item;
-            }
-        }
-        protected void UnsetCost()
-        {
-            _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Cost] = false;
-            Cost = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> ISpellUnleveled.Cost_Property => this.Cost_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> ISpellUnleveledGetter.Cost_Property => this.Cost_Property;
         #endregion
         #region Level
-        protected Spell.SpellLevel _Level;
-        protected PropertyForwarder<SpellUnleveled, Spell.SpellLevel> _LevelForwarder;
-        public INotifyingSetItem<Spell.SpellLevel> Level_Property => _LevelForwarder ?? (_LevelForwarder = new PropertyForwarder<SpellUnleveled, Spell.SpellLevel>(this, (int)SpellUnleveled_FieldIndex.Level));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Spell.SpellLevel _Level;
         public Spell.SpellLevel Level
         {
             get => this._Level;
-            set => this.SetLevel(value);
+            set => this.RaiseAndSetIfChanged(ref this._Level, value, nameof(Level));
         }
-        protected void SetLevel(
-            Spell.SpellLevel item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Level];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Level == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Level] = hasBeenSet;
-            }
-            if (_SpellSpellLevel_subscriptions != null)
-            {
-                var tmp = Level;
-                _Level = item;
-                _SpellSpellLevel_subscriptions.FireSubscriptions(
-                    index: (int)SpellUnleveled_FieldIndex.Level,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Level = item;
-            }
-        }
-        protected void UnsetLevel()
-        {
-            _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Level] = false;
-            Level = default(Spell.SpellLevel);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Spell.SpellLevel> ISpellUnleveled.Level_Property => this.Level_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Spell.SpellLevel> ISpellUnleveledGetter.Level_Property => this.Level_Property;
         #endregion
         #region Flag
-        protected Spell.SpellFlag _Flag;
-        protected PropertyForwarder<SpellUnleveled, Spell.SpellFlag> _FlagForwarder;
-        public INotifyingSetItem<Spell.SpellFlag> Flag_Property => _FlagForwarder ?? (_FlagForwarder = new PropertyForwarder<SpellUnleveled, Spell.SpellFlag>(this, (int)SpellUnleveled_FieldIndex.Flag));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Spell.SpellFlag _Flag;
         public Spell.SpellFlag Flag
         {
             get => this._Flag;
-            set => this.SetFlag(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flag, value, nameof(Flag));
         }
-        protected void SetFlag(
-            Spell.SpellFlag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Flag];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flag == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Flag] = hasBeenSet;
-            }
-            if (_SpellSpellFlag_subscriptions != null)
-            {
-                var tmp = Flag;
-                _Flag = item;
-                _SpellSpellFlag_subscriptions.FireSubscriptions(
-                    index: (int)SpellUnleveled_FieldIndex.Flag,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flag = item;
-            }
-        }
-        protected void UnsetFlag()
-        {
-            _hasBeenSetTracker[(int)SpellUnleveled_FieldIndex.Flag] = false;
-            Flag = default(Spell.SpellFlag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Spell.SpellFlag> ISpellUnleveled.Flag_Property => this.Flag_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Spell.SpellFlag> ISpellUnleveledGetter.Flag_Property => this.Flag_Property;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -704,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetType();
+                            item.Type = default(Spell.SpellType);
                         }
                     }
                     catch (Exception ex)
@@ -730,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCost();
+                            item.Cost = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -756,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLevel();
+                            item.Level = default(Spell.SpellLevel);
                         }
                     }
                     catch (Exception ex)
@@ -782,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlag();
+                            item.Flag = default(Spell.SpellFlag);
                         }
                     }
                     catch (Exception ex)
@@ -851,549 +689,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter Spell.SpellType
-        protected ObjectCentralizationSubscriptions<Spell.SpellType> _SpellSpellType_subscriptions;
-        Spell.SpellType IPropertySupporter<Spell.SpellType>.Get(int index)
-        {
-            return GetSpellSpellType(index: index);
-        }
-
-        protected Spell.SpellType GetSpellSpellType(int index)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    return Type;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellType: {index}");
-            }
-        }
-
-        void IPropertySupporter<Spell.SpellType>.Set(
-            int index,
-            Spell.SpellType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSpellSpellType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSpellSpellType(
-            int index,
-            Spell.SpellType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    SetType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Spell.SpellType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Spell.SpellType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Spell.SpellType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSpellSpellType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSpellSpellType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    SetType(
-                        item: default(Spell.SpellType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Spell.SpellType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Spell.SpellType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_SpellSpellType_subscriptions == null)
-            {
-                _SpellSpellType_subscriptions = new ObjectCentralizationSubscriptions<Spell.SpellType>();
-            }
-            _SpellSpellType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Spell.SpellType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _SpellSpellType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Spell.SpellType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Spell.SpellType IPropertySupporter<Spell.SpellType>.DefaultValue(int index)
-        {
-            return DefaultValueSpellSpellType(index: index);
-        }
-
-        protected Spell.SpellType DefaultValueSpellSpellType(int index)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    return default(Spell.SpellType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellType: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter UInt32
-        UInt32 IPropertySupporter<UInt32>.Get(int index)
-        {
-            return GetUInt32(index: index);
-        }
-
-        protected override UInt32 GetUInt32(int index)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Cost:
-                    return Cost;
-                default:
-                    return base.GetUInt32(index: index);
-            }
-        }
-
-        void IPropertySupporter<UInt32>.Set(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetUInt32(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Cost:
-                    SetCost(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetUInt32(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetUInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Cost:
-                    SetCost(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetUInt32(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt32_subscriptions == null)
-            {
-                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
-            }
-            _UInt32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
-        {
-            return DefaultValueUInt32(index: index);
-        }
-
-        protected override UInt32 DefaultValueUInt32(int index)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Cost:
-                    return default(UInt32);
-                default:
-                    return base.DefaultValueUInt32(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Spell.SpellLevel
-        protected ObjectCentralizationSubscriptions<Spell.SpellLevel> _SpellSpellLevel_subscriptions;
-        Spell.SpellLevel IPropertySupporter<Spell.SpellLevel>.Get(int index)
-        {
-            return GetSpellSpellLevel(index: index);
-        }
-
-        protected Spell.SpellLevel GetSpellSpellLevel(int index)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Level:
-                    return Level;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellLevel: {index}");
-            }
-        }
-
-        void IPropertySupporter<Spell.SpellLevel>.Set(
-            int index,
-            Spell.SpellLevel item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSpellSpellLevel(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSpellSpellLevel(
-            int index,
-            Spell.SpellLevel item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Level:
-                    SetLevel(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellLevel: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Spell.SpellLevel>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Spell.SpellLevel>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Spell.SpellLevel>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSpellSpellLevel(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSpellSpellLevel(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Level:
-                    SetLevel(
-                        item: default(Spell.SpellLevel),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellLevel: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Spell.SpellLevel>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Spell.SpellLevel> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_SpellSpellLevel_subscriptions == null)
-            {
-                _SpellSpellLevel_subscriptions = new ObjectCentralizationSubscriptions<Spell.SpellLevel>();
-            }
-            _SpellSpellLevel_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Spell.SpellLevel>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _SpellSpellLevel_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Spell.SpellLevel>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Spell.SpellLevel IPropertySupporter<Spell.SpellLevel>.DefaultValue(int index)
-        {
-            return DefaultValueSpellSpellLevel(index: index);
-        }
-
-        protected Spell.SpellLevel DefaultValueSpellSpellLevel(int index)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Level:
-                    return default(Spell.SpellLevel);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellLevel: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Spell.SpellFlag
-        protected ObjectCentralizationSubscriptions<Spell.SpellFlag> _SpellSpellFlag_subscriptions;
-        Spell.SpellFlag IPropertySupporter<Spell.SpellFlag>.Get(int index)
-        {
-            return GetSpellSpellFlag(index: index);
-        }
-
-        protected Spell.SpellFlag GetSpellSpellFlag(int index)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Flag:
-                    return Flag;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellFlag: {index}");
-            }
-        }
-
-        void IPropertySupporter<Spell.SpellFlag>.Set(
-            int index,
-            Spell.SpellFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSpellSpellFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSpellSpellFlag(
-            int index,
-            Spell.SpellFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Flag:
-                    SetFlag(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellFlag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Spell.SpellFlag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Spell.SpellFlag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Spell.SpellFlag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSpellSpellFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSpellSpellFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Flag:
-                    SetFlag(
-                        item: default(Spell.SpellFlag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellFlag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Spell.SpellFlag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Spell.SpellFlag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_SpellSpellFlag_subscriptions == null)
-            {
-                _SpellSpellFlag_subscriptions = new ObjectCentralizationSubscriptions<Spell.SpellFlag>();
-            }
-            _SpellSpellFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Spell.SpellFlag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _SpellSpellFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Spell.SpellFlag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Spell.SpellFlag IPropertySupporter<Spell.SpellFlag>.DefaultValue(int index)
-        {
-            return DefaultValueSpellSpellFlag(index: index);
-        }
-
-        protected Spell.SpellFlag DefaultValueSpellSpellFlag(int index)
-        {
-            switch ((SpellUnleveled_FieldIndex)index)
-            {
-                case SpellUnleveled_FieldIndex.Flag:
-                    return default(Spell.SpellFlag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Spell.SpellFlag: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = SpellUnleveled_Registration.TRIGGERING_RECORD_TYPE;
@@ -1640,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetType();
+                                item.Type = default(Spell.SpellType);
                             }
                         }
                         catch (Exception ex)
@@ -1664,7 +959,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetCost();
+                                item.Cost = default(UInt32);
                             }
                         }
                         catch (Exception ex)
@@ -1688,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetLevel();
+                                item.Level = default(Spell.SpellLevel);
                             }
                         }
                         catch (Exception ex)
@@ -1712,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFlag();
+                                item.Flag = default(Spell.SpellFlag);
                             }
                         }
                         catch (Exception ex)
@@ -1856,24 +1151,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SpellUnleveled_FieldIndex.Type:
-                    this.SetType(
-                        (Spell.SpellType)obj,
-                        cmds: cmds);
+                    this.Type = (Spell.SpellType)obj;
                     break;
                 case SpellUnleveled_FieldIndex.Cost:
-                    this.SetCost(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.Cost = (UInt32)obj;
                     break;
                 case SpellUnleveled_FieldIndex.Level:
-                    this.SetLevel(
-                        (Spell.SpellLevel)obj,
-                        cmds: cmds);
+                    this.Level = (Spell.SpellLevel)obj;
                     break;
                 case SpellUnleveled_FieldIndex.Flag:
-                    this.SetFlag(
-                        (Spell.SpellFlag)obj,
-                        cmds: cmds);
+                    this.Flag = (Spell.SpellFlag)obj;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
                     this._Effects.SetTo((IEnumerable<Effect>)obj, cmds);
@@ -1910,24 +1197,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SpellUnleveled_FieldIndex.Type:
-                    obj.SetType(
-                        (Spell.SpellType)pair.Value,
-                        cmds: null);
+                    obj.Type = (Spell.SpellType)pair.Value;
                     break;
                 case SpellUnleveled_FieldIndex.Cost:
-                    obj.SetCost(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.Cost = (UInt32)pair.Value;
                     break;
                 case SpellUnleveled_FieldIndex.Level:
-                    obj.SetLevel(
-                        (Spell.SpellLevel)pair.Value,
-                        cmds: null);
+                    obj.Level = (Spell.SpellLevel)pair.Value;
                     break;
                 case SpellUnleveled_FieldIndex.Flag:
-                    obj.SetFlag(
-                        (Spell.SpellFlag)pair.Value,
-                        cmds: null);
+                    obj.Flag = (Spell.SpellFlag)pair.Value;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
                     obj._Effects.SetTo((IEnumerable<Effect>)pair.Value, null);
@@ -1948,16 +1227,12 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpellUnleveled : ISpellUnleveledGetter, ISpell, ILoquiClass<ISpellUnleveled, ISpellUnleveledGetter>, ILoquiClass<SpellUnleveled, ISpellUnleveledGetter>
     {
         new Spell.SpellType Type { get; set; }
-        new INotifyingItem<Spell.SpellType> Type_Property { get; }
 
         new UInt32 Cost { get; set; }
-        new INotifyingItem<UInt32> Cost_Property { get; }
 
         new Spell.SpellLevel Level { get; set; }
-        new INotifyingItem<Spell.SpellLevel> Level_Property { get; }
 
         new Spell.SpellFlag Flag { get; set; }
-        new INotifyingItem<Spell.SpellFlag> Flag_Property { get; }
 
         new INotifyingList<Effect> Effects { get; }
     }
@@ -1966,22 +1241,18 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Type
         Spell.SpellType Type { get; }
-        INotifyingItemGetter<Spell.SpellType> Type_Property { get; }
 
         #endregion
         #region Cost
         UInt32 Cost { get; }
-        INotifyingItemGetter<UInt32> Cost_Property { get; }
 
         #endregion
         #region Level
         Spell.SpellLevel Level { get; }
-        INotifyingItemGetter<Spell.SpellLevel> Level_Property { get; }
 
         #endregion
         #region Flag
         Spell.SpellFlag Flag { get; }
-        INotifyingItemGetter<Spell.SpellFlag> Flag_Property { get; }
 
         #endregion
         #region Effects
@@ -2254,9 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
                 try
                 {
-                    item.Type_Property.Set(
-                        value: rhs.Type,
-                        cmds: cmds);
+                    item.Type = rhs.Type;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2273,9 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
                 try
                 {
-                    item.Cost_Property.Set(
-                        value: rhs.Cost,
-                        cmds: cmds);
+                    item.Cost = rhs.Cost;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2292,9 +1559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
                 try
                 {
-                    item.Level_Property.Set(
-                        value: rhs.Level,
-                        cmds: cmds);
+                    item.Level = rhs.Level;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2311,9 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
                 try
                 {
-                    item.Flag_Property.Set(
-                        value: rhs.Flag,
-                        cmds: cmds);
+                    item.Flag = rhs.Flag;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2341,7 +1604,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Effect);
                                     return Effect.Copy(
                                         r,
                                         copyMask?.Effects?.Specific,
@@ -2692,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Spell.SpellType>.Instance.Write(
                     node: elem,
                     name: nameof(item.Type),
-                    item: item.Type_Property,
+                    item: item.Type,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
                     errorMask: errorMask);
             }
@@ -2701,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Cost),
-                    item: item.Cost_Property,
+                    item: item.Cost,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
                     errorMask: errorMask);
             }
@@ -2710,7 +1972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Spell.SpellLevel>.Instance.Write(
                     node: elem,
                     name: nameof(item.Level),
-                    item: item.Level_Property,
+                    item: item.Level,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
                     errorMask: errorMask);
             }
@@ -2719,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Spell.SpellFlag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flag),
-                    item: item.Flag_Property,
+                    item: item.Flag,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
                     errorMask: errorMask);
             }
@@ -2808,35 +2070,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Write(
                         writer,
-                        item.Type_Property,
+                        item.Type,
                         length: 4,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Cost_Property,
+                        item: item.Cost,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Write(
                         writer,
-                        item.Level_Property,
+                        item.Level,
                         length: 4,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Write(
                         writer,
-                        item.Flag_Property,
+                        item.Flag,
                         length: 4,
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
                         errorMask: errorMask);
                 }
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
-                writer: writer,
-                items: item.Effects,
-                fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<Effect>.Instance.Write);
+            if (item.Effects.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
+                    writer: writer,
+                    items: item.Effects,
+                    fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<Effect>.Instance.Write);
+            }
         }
 
         #endregion

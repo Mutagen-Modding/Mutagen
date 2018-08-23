@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -33,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptVariableReference,
         ILoquiObject<ScriptVariableReference>,
         ILoquiObjectSetter,
-        IPropertySupporter<Int32>,
         IEquatable<ScriptVariableReference>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,52 +51,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region VariableIndex
-        protected Int32 _VariableIndex;
-        protected PropertyForwarder<ScriptVariableReference, Int32> _VariableIndexForwarder;
-        public INotifyingSetItem<Int32> VariableIndex_Property => _VariableIndexForwarder ?? (_VariableIndexForwarder = new PropertyForwarder<ScriptVariableReference, Int32>(this, (int)ScriptVariableReference_FieldIndex.VariableIndex));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _VariableIndex;
         public Int32 VariableIndex
         {
             get => this._VariableIndex;
-            set => this.SetVariableIndex(value);
+            set => this.RaiseAndSetIfChanged(ref this._VariableIndex, value, nameof(VariableIndex));
         }
-        protected void SetVariableIndex(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptVariableReference_FieldIndex.VariableIndex];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && VariableIndex == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptVariableReference_FieldIndex.VariableIndex] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = VariableIndex;
-                _VariableIndex = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)ScriptVariableReference_FieldIndex.VariableIndex,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _VariableIndex = item;
-            }
-        }
-        protected void UnsetVariableIndex()
-        {
-            _hasBeenSetTracker[(int)ScriptVariableReference_FieldIndex.VariableIndex] = false;
-            VariableIndex = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IScriptVariableReference.VariableIndex_Property => this.VariableIndex_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IScriptVariableReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -492,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVariableIndex();
+                            item.VariableIndex = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -529,140 +490,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((ScriptVariableReference_FieldIndex)index)
-            {
-                case ScriptVariableReference_FieldIndex.VariableIndex:
-                    return VariableIndex;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptVariableReference_FieldIndex)index)
-            {
-                case ScriptVariableReference_FieldIndex.VariableIndex:
-                    SetVariableIndex(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptVariableReference_FieldIndex)index)
-            {
-                case ScriptVariableReference_FieldIndex.VariableIndex:
-                    SetVariableIndex(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((ScriptVariableReference_FieldIndex)index)
-            {
-                case ScriptVariableReference_FieldIndex.VariableIndex:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ScriptVariableReference_Registration.TRIGGERING_RECORD_TYPE;
@@ -890,7 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVariableIndex();
+                            item.VariableIndex = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1019,9 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ScriptVariableReference_FieldIndex.VariableIndex:
-                    this.SetVariableIndex(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.VariableIndex = (Int32)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1055,9 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ScriptVariableReference_FieldIndex.VariableIndex:
-                    obj.SetVariableIndex(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.VariableIndex = (Int32)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1075,7 +898,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptVariableReference : IScriptVariableReferenceGetter, IScriptReference, ILoquiClass<IScriptVariableReference, IScriptVariableReferenceGetter>, ILoquiClass<ScriptVariableReference, IScriptVariableReferenceGetter>
     {
         new Int32 VariableIndex { get; set; }
-        new INotifyingItem<Int32> VariableIndex_Property { get; }
 
     }
 
@@ -1083,7 +905,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region VariableIndex
         Int32 VariableIndex { get; }
-        INotifyingItemGetter<Int32> VariableIndex_Property { get; }
 
         #endregion
 
@@ -1295,9 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);
                 try
                 {
-                    item.VariableIndex_Property.Set(
-                        value: rhs.VariableIndex,
-                        cmds: cmds);
+                    item.VariableIndex = rhs.VariableIndex;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1504,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.VariableIndex),
-                    item: item.VariableIndex_Property,
+                    item: item.VariableIndex,
                     fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
                     errorMask: errorMask);
             }
@@ -1553,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.VariableIndex_Property,
+                item: item.VariableIndex,
                 fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(ScriptVariableReference_Registration.SCRV_HEADER),

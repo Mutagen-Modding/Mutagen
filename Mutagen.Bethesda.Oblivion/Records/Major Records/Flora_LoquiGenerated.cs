@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -35,9 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Flora>,
         ILoquiObjectSetter,
         INamed,
-        IPropertySupporter<String>,
-        IPropertySupporter<Model>,
-        IPropertySupporter<Byte>,
         IEquatable<Flora>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -53,100 +52,57 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<Flora, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Flora, String>(this, (int)Flora_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Flora_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Flora_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool IFloraGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IFloraGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Flora_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Flora_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Flora_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Flora_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IFlora.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IFloraGetter.Name_Property => this.Name_Property;
         #endregion
         #region Model
-        protected Model _Model;
-        protected PropertyForwarder<Flora, Model> _ModelForwarder;
-        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<Flora, Model>(this, (int)Flora_FieldIndex.Model));
+        public bool Model_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Flora_FieldIndex.Model];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Flora_FieldIndex.Model, nameof(Model_IsSet));
+        }
+        bool IFloraGetter.Model_IsSet => Model_IsSet;
+        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model
         {
-            get => this._Model;
-            set => this.SetModel(value);
+            get => _Model;
+            set => Model_Set(value);
         }
-        protected void SetModel(
-            Model item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Model_Set(
+            Model value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Flora_FieldIndex.Model];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Flora_FieldIndex.Model] = hasBeenSet;
-            }
-            if (_Model_subscriptions != null)
-            {
-                var tmp = Model;
-                _Model = item;
-                _Model_subscriptions.FireSubscriptions(
-                    index: (int)Flora_FieldIndex.Model,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Model = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Flora_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
-        protected void UnsetModel()
+        public void Model_Unset()
         {
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Model] = false;
-            Model = default(Model);
+            this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Model> IFlora.Model_Property => this.Model_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Model> IFloraGetter.Model_Property => this.Model_Property;
+        Model IFloraGetter.Model => this.Model;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
@@ -163,196 +119,36 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Ingredient> IFloraGetter.Ingredient_Property => this.Ingredient_Property;
         #endregion
         #region Spring
-        protected Byte _Spring;
-        protected PropertyForwarder<Flora, Byte> _SpringForwarder;
-        public INotifyingSetItem<Byte> Spring_Property => _SpringForwarder ?? (_SpringForwarder = new PropertyForwarder<Flora, Byte>(this, (int)Flora_FieldIndex.Spring));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Spring;
         public Byte Spring
         {
             get => this._Spring;
-            set => this.SetSpring(value);
+            set => this.RaiseAndSetIfChanged(ref this._Spring, value, nameof(Spring));
         }
-        protected void SetSpring(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Flora_FieldIndex.Spring];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Spring == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Flora_FieldIndex.Spring] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Spring;
-                _Spring = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)Flora_FieldIndex.Spring,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Spring = item;
-            }
-        }
-        protected void UnsetSpring()
-        {
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Spring] = false;
-            Spring = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IFlora.Spring_Property => this.Spring_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IFloraGetter.Spring_Property => this.Spring_Property;
         #endregion
         #region Summer
-        protected Byte _Summer;
-        protected PropertyForwarder<Flora, Byte> _SummerForwarder;
-        public INotifyingSetItem<Byte> Summer_Property => _SummerForwarder ?? (_SummerForwarder = new PropertyForwarder<Flora, Byte>(this, (int)Flora_FieldIndex.Summer));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Summer;
         public Byte Summer
         {
             get => this._Summer;
-            set => this.SetSummer(value);
+            set => this.RaiseAndSetIfChanged(ref this._Summer, value, nameof(Summer));
         }
-        protected void SetSummer(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Flora_FieldIndex.Summer];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Summer == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Flora_FieldIndex.Summer] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Summer;
-                _Summer = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)Flora_FieldIndex.Summer,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Summer = item;
-            }
-        }
-        protected void UnsetSummer()
-        {
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Summer] = false;
-            Summer = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IFlora.Summer_Property => this.Summer_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IFloraGetter.Summer_Property => this.Summer_Property;
         #endregion
         #region Fall
-        protected Byte _Fall;
-        protected PropertyForwarder<Flora, Byte> _FallForwarder;
-        public INotifyingSetItem<Byte> Fall_Property => _FallForwarder ?? (_FallForwarder = new PropertyForwarder<Flora, Byte>(this, (int)Flora_FieldIndex.Fall));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Fall;
         public Byte Fall
         {
             get => this._Fall;
-            set => this.SetFall(value);
+            set => this.RaiseAndSetIfChanged(ref this._Fall, value, nameof(Fall));
         }
-        protected void SetFall(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Flora_FieldIndex.Fall];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Fall == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Flora_FieldIndex.Fall] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Fall;
-                _Fall = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)Flora_FieldIndex.Fall,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Fall = item;
-            }
-        }
-        protected void UnsetFall()
-        {
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Fall] = false;
-            Fall = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IFlora.Fall_Property => this.Fall_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IFloraGetter.Fall_Property => this.Fall_Property;
         #endregion
         #region Winter
-        protected Byte _Winter;
-        protected PropertyForwarder<Flora, Byte> _WinterForwarder;
-        public INotifyingSetItem<Byte> Winter_Property => _WinterForwarder ?? (_WinterForwarder = new PropertyForwarder<Flora, Byte>(this, (int)Flora_FieldIndex.Winter));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Winter;
         public Byte Winter
         {
             get => this._Winter;
-            set => this.SetWinter(value);
+            set => this.RaiseAndSetIfChanged(ref this._Winter, value, nameof(Winter));
         }
-        protected void SetWinter(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Flora_FieldIndex.Winter];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Winter == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Flora_FieldIndex.Winter] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Winter;
-                _Winter = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)Flora_FieldIndex.Winter,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Winter = item;
-            }
-        }
-        protected void UnsetWinter()
-        {
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Winter] = false;
-            Winter = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IFlora.Winter_Property => this.Winter_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IFloraGetter.Winter_Property => this.Winter_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -413,13 +209,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
-            if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
-            if (Model_Property.HasBeenSet)
+            if (Model_IsSet != rhs.Model_IsSet) return false;
+            if (Model_IsSet)
             {
                 if (!object.Equals(this.Model, rhs.Model)) return false;
             }
@@ -443,11 +239,11 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
-            if (Model_Property.HasBeenSet)
+            if (Model_IsSet)
             {
                 ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
             }
@@ -791,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -818,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetModel();
+                            item.Model = default(Model);
                         }
                     }
                     catch (Exception ex)
@@ -858,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSpring();
+                            item.Spring = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -884,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSummer();
+                            item.Summer = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -910,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFall();
+                            item.Fall = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -936,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetWinter();
+                            item.Winter = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -982,448 +778,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Name:
-                    return Name;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Name:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Model
-        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
-        Model IPropertySupporter<Model>.Get(int index)
-        {
-            return GetModel(index: index);
-        }
-
-        protected Model GetModel(int index)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Model:
-                    return Model;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        void IPropertySupporter<Model>.Set(
-            int index,
-            Model item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetModel(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetModel(
-            int index,
-            Model item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Model:
-                    SetModel(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Model>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Model>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetModel(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetModel(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Model:
-                    SetModel(
-                        item: default(Model),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Model>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Model> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Model_subscriptions == null)
-            {
-                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
-            }
-            _Model_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Model>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Model_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Model IPropertySupporter<Model>.DefaultValue(int index)
-        {
-            return DefaultValueModel(index: index);
-        }
-
-        protected Model DefaultValueModel(int index)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Model:
-                    return default(Model);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Spring:
-                    return Spring;
-                case Flora_FieldIndex.Summer:
-                    return Summer;
-                case Flora_FieldIndex.Fall:
-                    return Fall;
-                case Flora_FieldIndex.Winter:
-                    return Winter;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Spring:
-                    SetSpring(item, hasBeenSet, cmds);
-                    break;
-                case Flora_FieldIndex.Summer:
-                    SetSummer(item, hasBeenSet, cmds);
-                    break;
-                case Flora_FieldIndex.Fall:
-                    SetFall(item, hasBeenSet, cmds);
-                    break;
-                case Flora_FieldIndex.Winter:
-                    SetWinter(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Spring:
-                    SetSpring(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case Flora_FieldIndex.Summer:
-                    SetSummer(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case Flora_FieldIndex.Fall:
-                    SetFall(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case Flora_FieldIndex.Winter:
-                    SetWinter(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Flora_Registration.TRIGGERING_RECORD_TYPE;
@@ -1650,7 +1004,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1676,7 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetModel();
+                            item.Model = default(Model);
                         }
                     }
                     catch (Exception ex)
@@ -1725,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetSpring();
+                                item.Spring = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -1749,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetSummer();
+                                item.Summer = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -1773,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFall();
+                                item.Fall = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -1797,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetWinter();
+                                item.Winter = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -1931,14 +1285,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Flora_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 case Flora_FieldIndex.Model:
-                    this.SetModel(
-                        (Model)obj,
-                        cmds: cmds);
+                    this.Model = (Model)obj;
                     break;
                 case Flora_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -1951,24 +1301,16 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Flora_FieldIndex.Spring:
-                    this.SetSpring(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Spring = (Byte)obj;
                     break;
                 case Flora_FieldIndex.Summer:
-                    this.SetSummer(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Summer = (Byte)obj;
                     break;
                 case Flora_FieldIndex.Fall:
-                    this.SetFall(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Fall = (Byte)obj;
                     break;
                 case Flora_FieldIndex.Winter:
-                    this.SetWinter(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Winter = (Byte)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -2002,14 +1344,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Flora_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 case Flora_FieldIndex.Model:
-                    obj.SetModel(
-                        (Model)pair.Value,
-                        cmds: null);
+                    obj.Model = (Model)pair.Value;
                     break;
                 case Flora_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -2022,24 +1360,16 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Flora_FieldIndex.Spring:
-                    obj.SetSpring(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Spring = (Byte)pair.Value;
                     break;
                 case Flora_FieldIndex.Summer:
-                    obj.SetSummer(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Summer = (Byte)pair.Value;
                     break;
                 case Flora_FieldIndex.Fall:
-                    obj.SetFall(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Fall = (Byte)pair.Value;
                     break;
                 case Flora_FieldIndex.Winter:
-                    obj.SetWinter(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Winter = (Byte)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2057,24 +1387,24 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFlora : IFloraGetter, IMajorRecord, ILoquiClass<IFlora, IFloraGetter>, ILoquiClass<Flora, IFloraGetter>
     {
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
         new Model Model { get; set; }
-        new INotifyingSetItem<Model> Model_Property { get; }
+        new bool Model_IsSet { get; set; }
+        void Model_Set(Model item, bool hasBeenSet = true);
+        void Model_Unset();
 
         new Script Script { get; set; }
         new Ingredient Ingredient { get; set; }
         new Byte Spring { get; set; }
-        new INotifyingItem<Byte> Spring_Property { get; }
 
         new Byte Summer { get; set; }
-        new INotifyingItem<Byte> Summer_Property { get; }
 
         new Byte Fall { get; set; }
-        new INotifyingItem<Byte> Fall_Property { get; }
 
         new Byte Winter { get; set; }
-        new INotifyingItem<Byte> Winter_Property { get; }
 
     }
 
@@ -2082,12 +1412,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
         #region Model
         Model Model { get; }
-        INotifyingSetItemGetter<Model> Model_Property { get; }
+        bool Model_IsSet { get; }
 
         #endregion
         #region Script
@@ -2102,22 +1432,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spring
         Byte Spring { get; }
-        INotifyingItemGetter<Byte> Spring_Property { get; }
 
         #endregion
         #region Summer
         Byte Summer { get; }
-        INotifyingItemGetter<Byte> Summer_Property { get; }
 
         #endregion
         #region Fall
         Byte Fall { get; }
-        INotifyingItemGetter<Byte> Fall_Property { get; }
 
         #endregion
         #region Winter
         Byte Winter { get; }
-        INotifyingItemGetter<Byte> Winter_Property { get; }
 
         #endregion
 
@@ -2424,9 +1750,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2443,36 +1780,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Model);
                 try
                 {
-                    item.Model_Property.SetToWithDefault(
-                        rhs.Model_Property,
-                        def?.Model_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Model,
+                        rhsHasBeenSet: rhs.Model_IsSet,
+                        defItem: def?.Model,
+                        defHasBeenSet: def?.Model_IsSet ?? false,
+                        outRhsItem: out var rhsModelItem,
+                        outDefItem: out var defModelItem))
+                    {
+                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    ModelCommon.CopyFieldsFrom(
-                                        item: item.Model,
-                                        rhs: rhs.Model,
-                                        def: def?.Model,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Model.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(Model);
-                                    return Model.Copy(
-                                        r,
-                                        copyMask?.Model?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Model = rhsModelItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                ModelCommon.CopyFieldsFrom(
+                                    item: item.Model,
+                                    rhs: rhs.Model,
+                                    def: def?.Model,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Model.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Model = Model.Copy(
+                                    rhsModelItem,
+                                    copyMask?.Model?.Specific,
+                                    def: defModelItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Model_IsSet = false;
+                        item.Model = default(Model);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2529,9 +1873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Spring);
                 try
                 {
-                    item.Spring_Property.Set(
-                        value: rhs.Spring,
-                        cmds: cmds);
+                    item.Spring = rhs.Spring;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2548,9 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Summer);
                 try
                 {
-                    item.Summer_Property.Set(
-                        value: rhs.Summer,
-                        cmds: cmds);
+                    item.Summer = rhs.Summer;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2567,9 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Fall);
                 try
                 {
-                    item.Fall_Property.Set(
-                        value: rhs.Fall,
-                        cmds: cmds);
+                    item.Fall = rhs.Fall;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2586,9 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Winter);
                 try
                 {
-                    item.Winter_Property.Set(
-                        value: rhs.Winter,
-                        cmds: cmds);
+                    item.Winter = rhs.Winter;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2620,10 +1956,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Flora_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 case Flora_FieldIndex.Model:
-                    obj.Model_Property.HasBeenSet = on;
+                    obj.Model_IsSet = on;
                     break;
                 case Flora_FieldIndex.Script:
                     obj.Script_Property.HasBeenSet = on;
@@ -2646,16 +1982,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Flora_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 case Flora_FieldIndex.Model:
-                    obj.Model_Property.Unset(cmds);
+                    obj.Model_Unset();
                     break;
                 case Flora_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Flora_FieldIndex.Ingredient:
-                    obj.Ingredient_Property.Unset(cmds);
+                    obj.Ingredient_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Flora_FieldIndex.Spring:
                     obj.Spring = default(Byte);
@@ -2688,9 +2024,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Winter:
                     return true;
                 case Flora_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 case Flora_FieldIndex.Model:
-                    return obj.Model_Property.HasBeenSet;
+                    return obj.Model_IsSet;
                 case Flora_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
                 case Flora_FieldIndex.Ingredient:
@@ -2732,8 +2068,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFlora item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Name_Property.Unset(cmds.ToUnsetParams());
-            item.Model_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Unset();
+            item.Model_Unset();
             item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Ingredient_Property.Unset(cmds.ToUnsetParams());
             item.Spring = default(Byte);
@@ -2757,8 +2093,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Flora_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Ingredient = item.Ingredient_Property.Equals(rhs.Ingredient_Property, (l, r) => l == r);
             ret.Spring = item.Spring == rhs.Spring;
@@ -2835,8 +2171,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IFloraGetter item,
             Flora_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != item.Ingredient_Property.HasBeenSet) return false;
@@ -2846,8 +2182,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Flora_Mask<bool> GetHasBeenSetMask(IFloraGetter item)
         {
             var ret = new Flora_Mask<bool>();
-            ret.Name = item.Name_Property.HasBeenSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
+            ret.Name = item.Name_IsSet;
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.Script = item.Script_Property.HasBeenSet;
             ret.Ingredient = item.Ingredient_Property.HasBeenSet;
             ret.Spring = true;
@@ -2915,22 +2251,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Flora");
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)Flora_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Model_Property.HasBeenSet
+            if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
                     node: elem,
-                    item: item.Model_Property,
+                    item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)Flora_FieldIndex.Model,
                     errorMask: errorMask,
@@ -2961,7 +2297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Spring),
-                    item: item.Spring_Property,
+                    item: item.Spring,
                     fieldIndex: (int)Flora_FieldIndex.Spring,
                     errorMask: errorMask);
             }
@@ -2970,7 +2306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Summer),
-                    item: item.Summer_Property,
+                    item: item.Summer,
                     fieldIndex: (int)Flora_FieldIndex.Summer,
                     errorMask: errorMask);
             }
@@ -2979,7 +2315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Fall),
-                    item: item.Fall_Property,
+                    item: item.Fall,
                     fieldIndex: (int)Flora_FieldIndex.Fall,
                     errorMask: errorMask);
             }
@@ -2988,7 +2324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Winter),
-                    item: item.Winter_Property,
+                    item: item.Winter,
                     fieldIndex: (int)Flora_FieldIndex.Winter,
                     errorMask: errorMask);
             }
@@ -3050,54 +2386,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)Flora_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Flora_Registration.FULL_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<Model>.Instance.Write(
-                writer: writer,
-                item: item.Model_Property,
-                fieldIndex: (int)Flora_FieldIndex.Model,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Script_Property,
-                fieldIndex: (int)Flora_FieldIndex.Script,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Flora_Registration.SCRI_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Ingredient_Property,
-                fieldIndex: (int)Flora_FieldIndex.Ingredient,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER),
-                nullable: false);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)Flora_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Model_IsSet)
+            {
+                LoquiBinaryTranslation<Model>.Instance.Write(
+                    writer: writer,
+                    item: item.Model,
+                    fieldIndex: (int)Flora_FieldIndex.Model,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Script_Property,
+                    fieldIndex: (int)Flora_FieldIndex.Script,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.SCRI_HEADER),
+                    nullable: false);
+            }
+            if (item.Ingredient_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Ingredient_Property,
+                    fieldIndex: (int)Flora_FieldIndex.Ingredient,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER),
+                    nullable: false);
+            }
             if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Spring_Property,
+                        item: item.Spring,
                         fieldIndex: (int)Flora_FieldIndex.Spring,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Summer_Property,
+                        item: item.Summer,
                         fieldIndex: (int)Flora_FieldIndex.Summer,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Fall_Property,
+                        item: item.Fall,
                         fieldIndex: (int)Flora_FieldIndex.Fall,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Winter_Property,
+                        item: item.Winter,
                         fieldIndex: (int)Flora_FieldIndex.Winter,
                         errorMask: errorMask);
                 }

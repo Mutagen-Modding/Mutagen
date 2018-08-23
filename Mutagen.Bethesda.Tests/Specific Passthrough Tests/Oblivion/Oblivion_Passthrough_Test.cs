@@ -191,11 +191,13 @@ namespace Mutagen.Bethesda.Tests
             RecordLocator.FileLocations fileLocs,
             Dictionary<long, uint> lengthTracker)
         {
-            ProcessNPC_Mismatch(stream, recType, instr, loc);
-            ProcessCreature_Mismatch(stream, recType, instr, loc);
+            ProcessNPC(stream, recType, instr, loc);
+            ProcessCreature(stream, recType, instr, loc);
             ProcessLeveledItemDataFields(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessRegions(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
-            ProcessPlacedObject_Mismatch(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessPlacedObject(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessPlacedCreature(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessPlacedNPC(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessCells(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessDialogTopics(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessDialogItems(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
@@ -203,6 +205,9 @@ namespace Mutagen.Bethesda.Tests
             ProcessAIPackages(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessCombatStyle(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessWater(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessGameSettings(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessBooks(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessLights(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
         }
 
         private void ProcessLengths(
@@ -235,7 +240,7 @@ namespace Mutagen.Bethesda.Tests
                 sub: lenData);
         }
 
-        private void ProcessNPC_Mismatch(
+        private void ProcessNPC(
             BinaryReadStream stream,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -264,7 +269,7 @@ namespace Mutagen.Bethesda.Tests
                 });
         }
 
-        private void ProcessCreature_Mismatch(
+        private void ProcessCreature(
             BinaryReadStream stream,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -457,7 +462,7 @@ namespace Mutagen.Bethesda.Tests
 
         private static byte[] ZeroFloat = new byte[] { 0, 0, 0, 0x80 };
 
-        private void ProcessPlacedObject_Mismatch(
+        private void ProcessPlacedObject(
             BinaryReadStream stream,
             FormID formID,
             RecordType recType,
@@ -467,6 +472,7 @@ namespace Mutagen.Bethesda.Tests
             Dictionary<long, uint> lengthTracker)
         {
             if (!PlacedObject_Registration.REFR_HEADER.Equals(recType)) return;
+
             int amount = 0;
             stream.Position = loc.Min;
             var str = stream.ReadString((int)loc.Width);
@@ -509,6 +515,104 @@ namespace Mutagen.Bethesda.Tests
                             removeStart + 2));
                     amount -= 3;
                 }
+            }
+
+            datIndex = str.IndexOf("DATA");
+            if (datIndex != -1)
+            {
+                stream.Position = loc.Min + datIndex + 6;
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+            }
+
+            datIndex = str.IndexOf("XTEL");
+            if (datIndex != -1)
+            {
+                stream.Position = loc.Min + datIndex + 6 + 4;
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+            }
+
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker);
+        }
+
+        private void ProcessPlacedCreature(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!PlacedCreature_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+
+            int amount = 0;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width);
+
+            var datIndex = str.IndexOf("DATA");
+            if (datIndex != -1)
+            {
+                stream.Position = loc.Min + datIndex + 6;
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+            }
+
+            ProcessLengths(
+                stream,
+                amount,
+                loc,
+                formID,
+                instr,
+                fileLocs,
+                lengthTracker);
+        }
+
+        private void ProcessPlacedNPC(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!PlacedNPC_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+
+            int amount = 0;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width);
+
+            var datIndex = str.IndexOf("DATA");
+            if (datIndex != -1)
+            {
+                stream.Position = loc.Min + datIndex + 6;
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
             }
 
             ProcessLengths(
@@ -917,6 +1021,98 @@ namespace Mutagen.Bethesda.Tests
                 instr,
                 fileLocs,
                 lengthTracker);
+        }
+
+        private void ProcessGameSettings(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!GameSetting_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+
+            var edidIndex = str.IndexOf("EDID");
+            stream.Position = loc.Min + edidIndex + 6;
+            if ((char)stream.ReadUInt8() != 'f') return;
+
+            var dataIndex = str.IndexOf("DATA");
+            if (dataIndex != -1)
+            {
+                stream.Position = loc.Min + dataIndex + 6;
+                ProcessZeroFloat(stream, instr);
+            }
+        }
+
+        private void ProcessBooks(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!Book_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+
+            var dataIndex = str.IndexOf("DATA");
+            if (dataIndex != -1)
+            {
+                stream.Position = loc.Min + dataIndex + 8;
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+            }
+        }
+
+        private void ProcessLights(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!Light_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+
+            var dataIndex = str.IndexOf("DATA");
+            if (dataIndex != -1)
+            {
+                stream.Position = loc.Min + dataIndex + 6 + 16;
+                ProcessZeroFloat(stream, instr);
+                ProcessZeroFloat(stream, instr);
+                stream.Position += 4;
+                ProcessZeroFloat(stream, instr);
+            }
+        }
+
+        private static void ProcessZeroFloat(BinaryReadStream stream, BinaryFileProcessor.Config instr)
+        {
+            var f = stream.ReadFloat();
+            if (f == float.Epsilon)
+            {
+                instr.SetSubstitution(
+                    stream.Position - 4,
+                    new byte[4]);
+                return;
+            }
+            stream.Position -= 4;
+            uint floatInt = stream.ReadUInt32();
+            if (floatInt == 0x80000000)
+            {
+                instr.SetSubstitution(
+                    stream.Position - 4,
+                    new byte[4]);
+                return;
+            }
         }
 
         private bool DynamicMove(

@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,13 +31,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptFields : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IScriptFields,
         ILoquiObject<ScriptFields>,
         ILoquiObjectSetter,
-        IPropertySupporter<ScriptMetaSummary>,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<String>,
         IEquatable<ScriptFields>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -53,132 +52,67 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MetadataSummary
-        protected readonly ScriptMetaSummary _MetadataSummary = new ScriptMetaSummary();
-        protected PropertyForwarder<ScriptFields, ScriptMetaSummary> _MetadataSummaryForwarder;
-        public INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property => _MetadataSummaryForwarder ?? (_MetadataSummaryForwarder = new PropertyForwarder<ScriptFields, ScriptMetaSummary>(this, (int)ScriptFields_FieldIndex.MetadataSummary));
+        private ScriptMetaSummary _MetadataSummary_Object = new ScriptMetaSummary();
+        public bool MetadataSummary_IsSet => true;
+        bool IScriptFieldsGetter.MetadataSummary_IsSet => MetadataSummary_IsSet;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ScriptMetaSummary MetadataSummary
-        {
-            get => this._MetadataSummary;
-            protected set => this.SetMetadataSummary(value);
-        }
-        protected void SetMetadataSummary(
-            ScriptMetaSummary item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            this._MetadataSummary.CopyFieldsFrom(
-                rhs: item,
-                def: null,
-                cmds: null,
-                copyMask: null,
-                doMasks: false,
-                errorMask: out var errMask);
-        }
-        protected void UnsetMetadataSummary()
-        {
-            _hasBeenSetTracker[(int)ScriptFields_FieldIndex.MetadataSummary] = false;
-            MetadataSummary = default(ScriptMetaSummary);
-        }
+        public ScriptMetaSummary MetadataSummary => _MetadataSummary_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<ScriptMetaSummary> IScriptFieldsGetter.MetadataSummary_Property => this.MetadataSummary_Property;
+        ScriptMetaSummary IScriptFieldsGetter.MetadataSummary => this.MetadataSummary;
         #endregion
         #region CompiledScript
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool CompiledScript_IsSet
+        {
+            get => _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript_IsSet));
+        }
+        bool IScriptFieldsGetter.CompiledScript_IsSet => CompiledScript_IsSet;
         protected Byte[] _CompiledScript;
-        protected PropertyForwarder<ScriptFields, Byte[]> _CompiledScriptForwarder;
-        public INotifyingSetItem<Byte[]> CompiledScript_Property => _CompiledScriptForwarder ?? (_CompiledScriptForwarder = new PropertyForwarder<ScriptFields, Byte[]>(this, (int)ScriptFields_FieldIndex.CompiledScript));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] CompiledScript
         {
             get => this._CompiledScript;
-            set => this.SetCompiledScript(value);
-        }
-        protected void SetCompiledScript(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(CompiledScript, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = CompiledScript;
-                _CompiledScript = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)ScriptFields_FieldIndex.CompiledScript,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _CompiledScript = item;
-            }
-        }
-        protected void UnsetCompiledScript()
-        {
-            SetCompiledScript(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => CompiledScript_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IScriptFields.CompiledScript_Property => this.CompiledScript_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IScriptFieldsGetter.CompiledScript_Property => this.CompiledScript_Property;
+        Byte[] IScriptFieldsGetter.CompiledScript => this.CompiledScript;
+        public void CompiledScript_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _CompiledScript, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript), nameof(CompiledScript_IsSet));
+        }
+        public void CompiledScript_Unset()
+        {
+            this.CompiledScript_Set(default(Byte[]), false);
+        }
         #endregion
         #region SourceCode
-        protected String _SourceCode;
-        protected PropertyForwarder<ScriptFields, String> _SourceCodeForwarder;
-        public INotifyingSetItem<String> SourceCode_Property => _SourceCodeForwarder ?? (_SourceCodeForwarder = new PropertyForwarder<ScriptFields, String>(this, (int)ScriptFields_FieldIndex.SourceCode));
+        public bool SourceCode_IsSet
+        {
+            get => _hasBeenSetTracker[(int)ScriptFields_FieldIndex.SourceCode];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ScriptFields_FieldIndex.SourceCode, nameof(SourceCode_IsSet));
+        }
+        bool IScriptFieldsGetter.SourceCode_IsSet => SourceCode_IsSet;
+        private String _SourceCode;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String SourceCode
         {
             get => this._SourceCode;
-            set => this.SetSourceCode(value);
+            set => SourceCode_Set(value);
         }
-        protected void SetSourceCode(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IScriptFieldsGetter.SourceCode => this.SourceCode;
+        public void SourceCode_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptFields_FieldIndex.SourceCode];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SourceCode == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptFields_FieldIndex.SourceCode] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = SourceCode;
-                _SourceCode = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)ScriptFields_FieldIndex.SourceCode,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SourceCode = item;
-            }
+            this.RaiseAndSetIfChanged(ref _SourceCode, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.SourceCode, nameof(SourceCode), nameof(SourceCode_IsSet));
         }
-        protected void UnsetSourceCode()
+        public void SourceCode_Unset()
         {
-            _hasBeenSetTracker[(int)ScriptFields_FieldIndex.SourceCode] = false;
-            SourceCode = default(String);
+            this.SourceCode_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IScriptFields.SourceCode_Property => this.SourceCode_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IScriptFieldsGetter.SourceCode_Property => this.SourceCode_Property;
         #endregion
         #region LocalVariables
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -278,18 +212,18 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ScriptFields rhs)
         {
             if (rhs == null) return false;
-            if (MetadataSummary_Property.HasBeenSet != rhs.MetadataSummary_Property.HasBeenSet) return false;
-            if (MetadataSummary_Property.HasBeenSet)
+            if (MetadataSummary_IsSet != rhs.MetadataSummary_IsSet) return false;
+            if (MetadataSummary_IsSet)
             {
                 if (!object.Equals(this.MetadataSummary, rhs.MetadataSummary)) return false;
             }
-            if (CompiledScript_Property.HasBeenSet != rhs.CompiledScript_Property.HasBeenSet) return false;
-            if (CompiledScript_Property.HasBeenSet)
+            if (CompiledScript_IsSet != rhs.CompiledScript_IsSet) return false;
+            if (CompiledScript_IsSet)
             {
                 if (!this.CompiledScript.EqualsFast(rhs.CompiledScript)) return false;
             }
-            if (SourceCode_Property.HasBeenSet != rhs.SourceCode_Property.HasBeenSet) return false;
-            if (SourceCode_Property.HasBeenSet)
+            if (SourceCode_IsSet != rhs.SourceCode_IsSet) return false;
+            if (SourceCode_IsSet)
             {
                 if (!object.Equals(this.SourceCode, rhs.SourceCode)) return false;
             }
@@ -309,15 +243,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (MetadataSummary_Property.HasBeenSet)
+            if (MetadataSummary_IsSet)
             {
                 ret = HashHelper.GetHashCode(MetadataSummary).CombineHashCode(ret);
             }
-            if (CompiledScript_Property.HasBeenSet)
+            if (CompiledScript_IsSet)
             {
                 ret = HashHelper.GetHashCode(CompiledScript).CombineHashCode(ret);
             }
-            if (SourceCode_Property.HasBeenSet)
+            if (SourceCode_IsSet)
             {
                 ret = HashHelper.GetHashCode(SourceCode).CombineHashCode(ret);
             }
@@ -684,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCompiledScript();
+                            item.CompiledScript = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -710,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSourceCode();
+                            item.SourceCode = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -803,408 +737,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter ScriptMetaSummary
-        protected ObjectCentralizationSubscriptions<ScriptMetaSummary> _ScriptMetaSummary_subscriptions;
-        ScriptMetaSummary IPropertySupporter<ScriptMetaSummary>.Get(int index)
-        {
-            return GetScriptMetaSummary(index: index);
-        }
-
-        protected ScriptMetaSummary GetScriptMetaSummary(int index)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    return MetadataSummary;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
-            }
-        }
-
-        void IPropertySupporter<ScriptMetaSummary>.Set(
-            int index,
-            ScriptMetaSummary item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetScriptMetaSummary(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetScriptMetaSummary(
-            int index,
-            ScriptMetaSummary item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    SetMetadataSummary(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
-            }
-        }
-
-        bool IPropertySupporter<ScriptMetaSummary>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<ScriptMetaSummary>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<ScriptMetaSummary>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetScriptMetaSummary(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetScriptMetaSummary(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    SetMetadataSummary(
-                        item: default(ScriptMetaSummary),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptMetaSummary>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<ScriptMetaSummary> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ScriptMetaSummary_subscriptions == null)
-            {
-                _ScriptMetaSummary_subscriptions = new ObjectCentralizationSubscriptions<ScriptMetaSummary>();
-            }
-            _ScriptMetaSummary_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptMetaSummary>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ScriptMetaSummary_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<ScriptMetaSummary>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        ScriptMetaSummary IPropertySupporter<ScriptMetaSummary>.DefaultValue(int index)
-        {
-            return DefaultValueScriptMetaSummary(index: index);
-        }
-
-        protected ScriptMetaSummary DefaultValueScriptMetaSummary(int index)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    return default(ScriptMetaSummary);
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptMetaSummary: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.CompiledScript:
-                    return CompiledScript;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.CompiledScript:
-                    SetCompiledScript(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.CompiledScript:
-                    SetCompiledScript(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.CompiledScript:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected String GetString(int index)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.SourceCode:
-                    return SourceCode;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.SourceCode:
-                    SetSourceCode(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.SourceCode:
-                    SetSourceCode(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected String DefaultValueString(int index)
-        {
-            switch ((ScriptFields_FieldIndex)index)
-            {
-                case ScriptFields_FieldIndex.SourceCode:
-                    return default(String);
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1496,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCompiledScript();
+                            item.CompiledScript = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1525,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSourceCode();
+                            item.SourceCode = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1713,14 +1245,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MetadataSummary.CopyFieldsFrom(rhs: (ScriptMetaSummary)obj);
                     break;
                 case ScriptFields_FieldIndex.CompiledScript:
-                    this.SetCompiledScript(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.CompiledScript = (Byte[])obj;
                     break;
                 case ScriptFields_FieldIndex.SourceCode:
-                    this.SetSourceCode(
-                        (String)obj,
-                        cmds: cmds);
+                    this.SourceCode = (String)obj;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
                     this._LocalVariables.SetTo((IEnumerable<LocalVariable>)obj, cmds);
@@ -1769,14 +1297,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MetadataSummary.CopyFieldsFrom(rhs: (ScriptMetaSummary)pair.Value);
                     break;
                 case ScriptFields_FieldIndex.CompiledScript:
-                    obj.SetCompiledScript(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.CompiledScript = (Byte[])pair.Value;
                     break;
                 case ScriptFields_FieldIndex.SourceCode:
-                    obj.SetSourceCode(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.SourceCode = (String)pair.Value;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
                     obj._LocalVariables.SetTo((IEnumerable<LocalVariable>)pair.Value, null);
@@ -1800,10 +1324,14 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptFields : IScriptFieldsGetter, ILoquiClass<IScriptFields, IScriptFieldsGetter>, ILoquiClass<ScriptFields, IScriptFieldsGetter>
     {
         new Byte[] CompiledScript { get; set; }
-        new INotifyingSetItem<Byte[]> CompiledScript_Property { get; }
+        new bool CompiledScript_IsSet { get; set; }
+        void CompiledScript_Set(Byte[] item, bool hasBeenSet = true);
+        void CompiledScript_Unset();
 
         new String SourceCode { get; set; }
-        new INotifyingSetItem<String> SourceCode_Property { get; }
+        new bool SourceCode_IsSet { get; set; }
+        void SourceCode_Set(String item, bool hasBeenSet = true);
+        void SourceCode_Unset();
 
         new INotifyingList<LocalVariable> LocalVariables { get; }
         new INotifyingList<ScriptReference> References { get; }
@@ -1813,17 +1341,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MetadataSummary
         ScriptMetaSummary MetadataSummary { get; }
-        INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property { get; }
+        bool MetadataSummary_IsSet { get; }
 
         #endregion
         #region CompiledScript
         Byte[] CompiledScript { get; }
-        INotifyingSetItemGetter<Byte[]> CompiledScript_Property { get; }
+        bool CompiledScript_IsSet { get; }
 
         #endregion
         #region SourceCode
         String SourceCode { get; }
-        INotifyingSetItemGetter<String> SourceCode_Property { get; }
+        bool SourceCode_IsSet { get; }
 
         #endregion
         #region LocalVariables
@@ -2132,9 +1660,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.CompiledScript);
                 try
                 {
-                    item.CompiledScript_Property.SetToWithDefault(
-                        rhs: rhs.CompiledScript_Property,
-                        def: def?.CompiledScript_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.CompiledScript,
+                        rhsHasBeenSet: rhs.CompiledScript_IsSet,
+                        defItem: def?.CompiledScript ?? default(Byte[]),
+                        defHasBeenSet: def?.CompiledScript_IsSet ?? false,
+                        outRhsItem: out var rhsCompiledScriptItem,
+                        outDefItem: out var defCompiledScriptItem))
+                    {
+                        item.CompiledScript = rhsCompiledScriptItem;
+                    }
+                    else
+                    {
+                        item.CompiledScript_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2151,9 +1690,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.SourceCode);
                 try
                 {
-                    item.SourceCode_Property.SetToWithDefault(
-                        rhs: rhs.SourceCode_Property,
-                        def: def?.SourceCode_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.SourceCode,
+                        rhsHasBeenSet: rhs.SourceCode_IsSet,
+                        defItem: def?.SourceCode ?? default(String),
+                        defHasBeenSet: def?.SourceCode_IsSet ?? false,
+                        outRhsItem: out var rhsSourceCodeItem,
+                        outDefItem: out var defSourceCodeItem))
+                    {
+                        item.SourceCode = rhsSourceCodeItem;
+                    }
+                    else
+                    {
+                        item.SourceCode_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2181,7 +1731,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(LocalVariable);
                                     return LocalVariable.Copy(
                                         r,
                                         copyMask?.LocalVariables?.Specific,
@@ -2218,7 +1767,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(ScriptReference);
                                     return ScriptReference.Copy(
                                         r,
                                         copyMask?.References?.Specific,
@@ -2255,10 +1803,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptFields_FieldIndex.MetadataSummary:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
                 case ScriptFields_FieldIndex.CompiledScript:
-                    obj.CompiledScript_Property.HasBeenSet = on;
+                    obj.CompiledScript_IsSet = on;
                     break;
                 case ScriptFields_FieldIndex.SourceCode:
-                    obj.SourceCode_Property.HasBeenSet = on;
+                    obj.SourceCode_IsSet = on;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
                     obj.LocalVariables.HasBeenSet = on;
@@ -2282,10 +1830,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptFields_FieldIndex.MetadataSummary:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
                 case ScriptFields_FieldIndex.CompiledScript:
-                    obj.CompiledScript_Property.Unset(cmds);
+                    obj.CompiledScript_Unset();
                     break;
                 case ScriptFields_FieldIndex.SourceCode:
-                    obj.SourceCode_Property.Unset(cmds);
+                    obj.SourceCode_Unset();
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
                     obj.LocalVariables.Unset(cmds);
@@ -2306,11 +1854,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptFields_FieldIndex.MetadataSummary:
-                    return obj.MetadataSummary_Property.HasBeenSet;
+                    return obj.MetadataSummary_IsSet;
                 case ScriptFields_FieldIndex.CompiledScript:
-                    return obj.CompiledScript_Property.HasBeenSet;
+                    return obj.CompiledScript_IsSet;
                 case ScriptFields_FieldIndex.SourceCode:
-                    return obj.SourceCode_Property.HasBeenSet;
+                    return obj.SourceCode_IsSet;
                 case ScriptFields_FieldIndex.LocalVariables:
                     return obj.LocalVariables.HasBeenSet;
                 case ScriptFields_FieldIndex.References:
@@ -2346,8 +1894,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptFields item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.CompiledScript_Property.Unset(cmds.ToUnsetParams());
-            item.SourceCode_Property.Unset(cmds.ToUnsetParams());
+            item.CompiledScript_Unset();
+            item.SourceCode_Unset();
             item.LocalVariables.Unset(cmds.ToUnsetParams());
             item.References.Unset(cmds.ToUnsetParams());
         }
@@ -2367,9 +1915,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptFields_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.MetadataSummary = item.MetadataSummary_Property.LoquiEqualsHelper(rhs.MetadataSummary_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.CompiledScript = item.CompiledScript_Property.Equals(rhs.CompiledScript_Property, (l, r) => l.EqualsFast(r));
-            ret.SourceCode = item.SourceCode_Property.Equals(rhs.SourceCode_Property, (l, r) => object.Equals(l, r));
+            ret.MetadataSummary = IHasBeenSetExt.LoquiEqualsHelper(item.MetadataSummary_IsSet, rhs.MetadataSummary_IsSet, item.MetadataSummary, rhs.MetadataSummary, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.CompiledScript = item.CompiledScript_IsSet == rhs.CompiledScript_IsSet && item.CompiledScript.EqualsFast(rhs.CompiledScript);
+            ret.SourceCode = item.SourceCode_IsSet == rhs.SourceCode_IsSet && object.Equals(item.SourceCode, rhs.SourceCode);
             if (item.LocalVariables.HasBeenSet == rhs.LocalVariables.HasBeenSet)
             {
                 if (item.LocalVariables.HasBeenSet)
@@ -2505,10 +2053,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptFieldsGetter item,
             ScriptFields_Mask<bool?> checkMask)
         {
-            if (checkMask.MetadataSummary.Overall.HasValue && checkMask.MetadataSummary.Overall.Value != item.MetadataSummary_Property.HasBeenSet) return false;
+            if (checkMask.MetadataSummary.Overall.HasValue && checkMask.MetadataSummary.Overall.Value != item.MetadataSummary_IsSet) return false;
             if (checkMask.MetadataSummary.Specific != null && (item.MetadataSummary == null || !item.MetadataSummary.HasBeenSet(checkMask.MetadataSummary.Specific))) return false;
-            if (checkMask.CompiledScript.HasValue && checkMask.CompiledScript.Value != item.CompiledScript_Property.HasBeenSet) return false;
-            if (checkMask.SourceCode.HasValue && checkMask.SourceCode.Value != item.SourceCode_Property.HasBeenSet) return false;
+            if (checkMask.CompiledScript.HasValue && checkMask.CompiledScript.Value != item.CompiledScript_IsSet) return false;
+            if (checkMask.SourceCode.HasValue && checkMask.SourceCode.Value != item.SourceCode_IsSet) return false;
             if (checkMask.LocalVariables.Overall.HasValue && checkMask.LocalVariables.Overall.Value != item.LocalVariables.HasBeenSet) return false;
             if (checkMask.References.Overall.HasValue && checkMask.References.Overall.Value != item.References.HasBeenSet) return false;
             return true;
@@ -2517,9 +2065,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ScriptFields_Mask<bool> GetHasBeenSetMask(IScriptFieldsGetter item)
         {
             var ret = new ScriptFields_Mask<bool>();
-            ret.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(item.MetadataSummary_Property.HasBeenSet, ScriptMetaSummaryCommon.GetHasBeenSetMask(item.MetadataSummary));
-            ret.CompiledScript = item.CompiledScript_Property.HasBeenSet;
-            ret.SourceCode = item.SourceCode_Property.HasBeenSet;
+            ret.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(item.MetadataSummary_IsSet, ScriptMetaSummaryCommon.GetHasBeenSetMask(item.MetadataSummary));
+            ret.CompiledScript = item.CompiledScript_IsSet;
+            ret.SourceCode = item.SourceCode_IsSet;
             ret.LocalVariables = new MaskItem<bool, IEnumerable<MaskItem<bool, LocalVariable_Mask<bool>>>>(item.LocalVariables.HasBeenSet, item.LocalVariables.Select((i) => new MaskItem<bool, LocalVariable_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptReference_Mask<bool>>>>(item.References.HasBeenSet, item.References.Select((i) => new MaskItem<bool, ScriptReference_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
@@ -2558,34 +2106,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptFields");
             }
-            if (item.MetadataSummary_Property.HasBeenSet
+            if (item.MetadataSummary_IsSet
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
             {
                 LoquiXmlTranslation<ScriptMetaSummary>.Instance.Write(
                     node: elem,
-                    item: item.MetadataSummary_Property,
+                    item: item.MetadataSummary,
                     name: nameof(item.MetadataSummary),
                     fieldIndex: (int)ScriptFields_FieldIndex.MetadataSummary,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.MetadataSummary));
             }
-            if (item.CompiledScript_Property.HasBeenSet
+            if (item.CompiledScript_IsSet
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.CompiledScript),
-                    item: item.CompiledScript_Property,
+                    item: item.CompiledScript,
                     fieldIndex: (int)ScriptFields_FieldIndex.CompiledScript,
                     errorMask: errorMask);
             }
-            if (item.SourceCode_Property.HasBeenSet
+            if (item.SourceCode_IsSet
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.SourceCode) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SourceCode),
-                    item: item.SourceCode_Property,
+                    item: item.SourceCode,
                     fieldIndex: (int)ScriptFields_FieldIndex.SourceCode,
                     errorMask: errorMask);
             }
@@ -2674,42 +2222,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            LoquiBinaryTranslation<ScriptMetaSummary>.Instance.Write(
-                writer: writer,
-                item: item.MetadataSummary_Property,
-                fieldIndex: (int)ScriptFields_FieldIndex.MetadataSummary,
-                errorMask: errorMask);
+            if (item.MetadataSummary_IsSet)
+            {
+                LoquiBinaryTranslation<ScriptMetaSummary>.Instance.Write(
+                    writer: writer,
+                    item: item.MetadataSummary,
+                    fieldIndex: (int)ScriptFields_FieldIndex.MetadataSummary,
+                    errorMask: errorMask);
+            }
             ScriptFields.WriteBinary_MetadataSummaryOld(
                 writer: writer,
                 item: item,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.CompiledScript_Property,
-                fieldIndex: (int)ScriptFields_FieldIndex.CompiledScript,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(ScriptFields_Registration.SCDA_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SourceCode_Property,
-                fieldIndex: (int)ScriptFields_FieldIndex.SourceCode,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(ScriptFields_Registration.SCTX_HEADER),
-                nullable: false,
-                nullTerminate: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Write(
-                writer: writer,
-                items: item.LocalVariables,
-                fieldIndex: (int)ScriptFields_FieldIndex.LocalVariables,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<LocalVariable>.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Write(
-                writer: writer,
-                items: item.References,
-                fieldIndex: (int)ScriptFields_FieldIndex.References,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<ScriptReference>.Instance.Write);
+            if (item.CompiledScript_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CompiledScript,
+                    fieldIndex: (int)ScriptFields_FieldIndex.CompiledScript,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(ScriptFields_Registration.SCDA_HEADER),
+                    nullable: false);
+            }
+            if (item.SourceCode_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SourceCode,
+                    fieldIndex: (int)ScriptFields_FieldIndex.SourceCode,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(ScriptFields_Registration.SCTX_HEADER),
+                    nullable: false,
+                    nullTerminate: false);
+            }
+            if (item.LocalVariables.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Write(
+                    writer: writer,
+                    items: item.LocalVariables,
+                    fieldIndex: (int)ScriptFields_FieldIndex.LocalVariables,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<LocalVariable>.Instance.Write);
+            }
+            if (item.References.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Write(
+                    writer: writer,
+                    items: item.References,
+                    fieldIndex: (int)ScriptFields_FieldIndex.References,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<ScriptReference>.Instance.Write);
+            }
         }
 
         #endregion

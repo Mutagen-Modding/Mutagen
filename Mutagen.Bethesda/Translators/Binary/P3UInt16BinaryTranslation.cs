@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Binary
         public readonly static P3UInt16BinaryTranslation Instance = new P3UInt16BinaryTranslation();
         public override int? ExpectedLength => 1;
 
-        protected override P3UInt16 ParseValue(MutagenFrame reader)
+        public override P3UInt16 ParseValue(MutagenFrame reader)
         {
             return new P3UInt16(
                 reader.Reader.ReadUInt16(),
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Binary
                 reader.Reader.ReadUInt16());
         }
 
-        protected override void WriteValue(MutagenWriter writer, P3UInt16 item)
+        public override void WriteValue(MutagenWriter writer, P3UInt16 item)
         {
             writer.Write(item.X);
             writer.Write(item.Y);

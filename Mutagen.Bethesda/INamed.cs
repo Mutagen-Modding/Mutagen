@@ -10,6 +10,5 @@ namespace Mutagen.Bethesda
     public interface INamed
     {
         String Name { get; set; }
-        INotifyingSetItem<String> Name_Property { get; }
     }
 }

@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,12 +31,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class CellBlock : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         ICellBlock,
         ILoquiObject<CellBlock>,
         ILoquiObjectSetter,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<GroupTypeEnum>,
         IEquatable<CellBlock>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -51,158 +51,42 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region BlockNumber
-        protected Byte[] _BlockNumber = new byte[4];
-        protected PropertyForwarder<CellBlock, Byte[]> _BlockNumberForwarder;
-        public INotifyingSetItem<Byte[]> BlockNumber_Property => _BlockNumberForwarder ?? (_BlockNumberForwarder = new PropertyForwarder<CellBlock, Byte[]>(this, (int)CellBlock_FieldIndex.BlockNumber));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _BlockNumber = new byte[4];
         public Byte[] BlockNumber
         {
-            get => this._BlockNumber;
-            set => this.SetBlockNumber(value);
-        }
-        protected void SetBlockNumber(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _BlockNumber;
+            set
             {
-                item = new byte[4];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CellBlock_FieldIndex.BlockNumber];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(BlockNumber, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CellBlock_FieldIndex.BlockNumber] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = BlockNumber;
-                _BlockNumber = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)CellBlock_FieldIndex.BlockNumber,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _BlockNumber = item;
+                this._BlockNumber = value;
+                if (value == null)
+                {
+                    this._BlockNumber = new byte[4];
+                }
             }
         }
-        protected void UnsetBlockNumber()
-        {
-            SetBlockNumber(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> ICellBlock.BlockNumber_Property => this.BlockNumber_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> ICellBlockGetter.BlockNumber_Property => this.BlockNumber_Property;
         #endregion
         #region GroupType
-        protected GroupTypeEnum _GroupType;
-        protected PropertyForwarder<CellBlock, GroupTypeEnum> _GroupTypeForwarder;
-        public INotifyingSetItem<GroupTypeEnum> GroupType_Property => _GroupTypeForwarder ?? (_GroupTypeForwarder = new PropertyForwarder<CellBlock, GroupTypeEnum>(this, (int)CellBlock_FieldIndex.GroupType));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private GroupTypeEnum _GroupType;
         public GroupTypeEnum GroupType
         {
             get => this._GroupType;
-            set => this.SetGroupType(value);
+            set => this.RaiseAndSetIfChanged(ref this._GroupType, value, nameof(GroupType));
         }
-        protected void SetGroupType(
-            GroupTypeEnum item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CellBlock_FieldIndex.GroupType];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && GroupType == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CellBlock_FieldIndex.GroupType] = hasBeenSet;
-            }
-            if (_GroupTypeEnum_subscriptions != null)
-            {
-                var tmp = GroupType;
-                _GroupType = item;
-                _GroupTypeEnum_subscriptions.FireSubscriptions(
-                    index: (int)CellBlock_FieldIndex.GroupType,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _GroupType = item;
-            }
-        }
-        protected void UnsetGroupType()
-        {
-            _hasBeenSetTracker[(int)CellBlock_FieldIndex.GroupType] = false;
-            GroupType = default(GroupTypeEnum);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<GroupTypeEnum> ICellBlock.GroupType_Property => this.GroupType_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<GroupTypeEnum> ICellBlockGetter.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        protected Byte[] _LastModified = new byte[4];
-        protected PropertyForwarder<CellBlock, Byte[]> _LastModifiedForwarder;
-        public INotifyingSetItem<Byte[]> LastModified_Property => _LastModifiedForwarder ?? (_LastModifiedForwarder = new PropertyForwarder<CellBlock, Byte[]>(this, (int)CellBlock_FieldIndex.LastModified));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _LastModified = new byte[4];
         public Byte[] LastModified
         {
-            get => this._LastModified;
-            set => this.SetLastModified(value);
-        }
-        protected void SetLastModified(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _LastModified;
+            set
             {
-                item = new byte[4];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CellBlock_FieldIndex.LastModified];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(LastModified, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CellBlock_FieldIndex.LastModified] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = LastModified;
-                _LastModified = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)CellBlock_FieldIndex.LastModified,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _LastModified = item;
+                this._LastModified = value;
+                if (value == null)
+                {
+                    this._LastModified = new byte[4];
+                }
             }
         }
-        protected void UnsetLastModified()
-        {
-            SetLastModified(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> ICellBlock.LastModified_Property => this.LastModified_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> ICellBlockGetter.LastModified_Property => this.LastModified_Property;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -635,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBlockNumber();
+                            item.BlockNumber = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -661,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetGroupType();
+                            item.GroupType = default(GroupTypeEnum);
                         }
                     }
                     catch (Exception ex)
@@ -687,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLastModified();
+                            item.LastModified = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -750,285 +634,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((CellBlock_FieldIndex)index)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                    return BlockNumber;
-                case CellBlock_FieldIndex.LastModified:
-                    return LastModified;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((CellBlock_FieldIndex)index)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                    SetBlockNumber(item, hasBeenSet, cmds);
-                    break;
-                case CellBlock_FieldIndex.LastModified:
-                    SetLastModified(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((CellBlock_FieldIndex)index)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                    SetBlockNumber(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case CellBlock_FieldIndex.LastModified:
-                    SetLastModified(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((CellBlock_FieldIndex)index)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                case CellBlock_FieldIndex.LastModified:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter GroupTypeEnum
-        protected ObjectCentralizationSubscriptions<GroupTypeEnum> _GroupTypeEnum_subscriptions;
-        GroupTypeEnum IPropertySupporter<GroupTypeEnum>.Get(int index)
-        {
-            return GetGroupTypeEnum(index: index);
-        }
-
-        protected GroupTypeEnum GetGroupTypeEnum(int index)
-        {
-            switch ((CellBlock_FieldIndex)index)
-            {
-                case CellBlock_FieldIndex.GroupType:
-                    return GroupType;
-                default:
-                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
-            }
-        }
-
-        void IPropertySupporter<GroupTypeEnum>.Set(
-            int index,
-            GroupTypeEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetGroupTypeEnum(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetGroupTypeEnum(
-            int index,
-            GroupTypeEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((CellBlock_FieldIndex)index)
-            {
-                case CellBlock_FieldIndex.GroupType:
-                    SetGroupType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
-            }
-        }
-
-        bool IPropertySupporter<GroupTypeEnum>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<GroupTypeEnum>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<GroupTypeEnum>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetGroupTypeEnum(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetGroupTypeEnum(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((CellBlock_FieldIndex)index)
-            {
-                case CellBlock_FieldIndex.GroupType:
-                    SetGroupType(
-                        item: default(GroupTypeEnum),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<GroupTypeEnum>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<GroupTypeEnum> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_GroupTypeEnum_subscriptions == null)
-            {
-                _GroupTypeEnum_subscriptions = new ObjectCentralizationSubscriptions<GroupTypeEnum>();
-            }
-            _GroupTypeEnum_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<GroupTypeEnum>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _GroupTypeEnum_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<GroupTypeEnum>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        GroupTypeEnum IPropertySupporter<GroupTypeEnum>.DefaultValue(int index)
-        {
-            return DefaultValueGroupTypeEnum(index: index);
-        }
-
-        protected GroupTypeEnum DefaultValueGroupTypeEnum(int index)
-        {
-            switch ((CellBlock_FieldIndex)index)
-            {
-                case CellBlock_FieldIndex.GroupType:
-                    return default(GroupTypeEnum);
-                default:
-                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)CellSubBlock.GRUP_RECORD_TYPE;
@@ -1267,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetBlockNumber();
+                    item.BlockNumber = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -1291,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetGroupType();
+                    item.GroupType = default(GroupTypeEnum);
                 }
             }
             catch (Exception ex)
@@ -1315,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetLastModified();
+                    item.LastModified = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -1483,19 +1088,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CellBlock_FieldIndex.BlockNumber:
-                    this.SetBlockNumber(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.BlockNumber = (Byte[])obj;
                     break;
                 case CellBlock_FieldIndex.GroupType:
-                    this.SetGroupType(
-                        (GroupTypeEnum)obj,
-                        cmds: cmds);
+                    this.GroupType = (GroupTypeEnum)obj;
                     break;
                 case CellBlock_FieldIndex.LastModified:
-                    this.SetLastModified(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.LastModified = (Byte[])obj;
                     break;
                 case CellBlock_FieldIndex.Items:
                     this._Items.SetTo((IEnumerable<CellSubBlock>)obj, cmds);
@@ -1538,19 +1137,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CellBlock_FieldIndex.BlockNumber:
-                    obj.SetBlockNumber(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.BlockNumber = (Byte[])pair.Value;
                     break;
                 case CellBlock_FieldIndex.GroupType:
-                    obj.SetGroupType(
-                        (GroupTypeEnum)pair.Value,
-                        cmds: null);
+                    obj.GroupType = (GroupTypeEnum)pair.Value;
                     break;
                 case CellBlock_FieldIndex.LastModified:
-                    obj.SetLastModified(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.LastModified = (Byte[])pair.Value;
                     break;
                 case CellBlock_FieldIndex.Items:
                     obj._Items.SetTo((IEnumerable<CellSubBlock>)pair.Value, null);
@@ -1571,13 +1164,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICellBlock : ICellBlockGetter, ILoquiClass<ICellBlock, ICellBlockGetter>, ILoquiClass<CellBlock, ICellBlockGetter>
     {
         new Byte[] BlockNumber { get; set; }
-        new INotifyingItem<Byte[]> BlockNumber_Property { get; }
 
         new GroupTypeEnum GroupType { get; set; }
-        new INotifyingItem<GroupTypeEnum> GroupType_Property { get; }
 
         new Byte[] LastModified { get; set; }
-        new INotifyingItem<Byte[]> LastModified_Property { get; }
 
         new INotifyingList<CellSubBlock> Items { get; }
     }
@@ -1586,17 +1176,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region BlockNumber
         Byte[] BlockNumber { get; }
-        INotifyingItemGetter<Byte[]> BlockNumber_Property { get; }
 
         #endregion
         #region GroupType
         GroupTypeEnum GroupType { get; }
-        INotifyingItemGetter<GroupTypeEnum> GroupType_Property { get; }
 
         #endregion
         #region LastModified
         Byte[] LastModified { get; }
-        INotifyingItemGetter<Byte[]> LastModified_Property { get; }
 
         #endregion
         #region Items
@@ -1842,9 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CellBlock_FieldIndex.BlockNumber);
                 try
                 {
-                    item.BlockNumber_Property.Set(
-                        value: rhs.BlockNumber,
-                        cmds: cmds);
+                    item.BlockNumber = rhs.BlockNumber;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1861,9 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CellBlock_FieldIndex.GroupType);
                 try
                 {
-                    item.GroupType_Property.Set(
-                        value: rhs.GroupType,
-                        cmds: cmds);
+                    item.GroupType = rhs.GroupType;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1880,9 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CellBlock_FieldIndex.LastModified);
                 try
                 {
-                    item.LastModified_Property.Set(
-                        value: rhs.LastModified,
-                        cmds: cmds);
+                    item.LastModified = rhs.LastModified;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1910,7 +1491,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(CellSubBlock);
                                     return CellSubBlock.Copy(
                                         r,
                                         copyMask?.Items?.Specific,
@@ -2192,7 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BlockNumber),
-                    item: item.BlockNumber_Property,
+                    item: item.BlockNumber,
                     fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
                     errorMask: errorMask);
             }
@@ -2201,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
                     node: elem,
                     name: nameof(item.GroupType),
-                    item: item.GroupType_Property,
+                    item: item.GroupType,
                     fieldIndex: (int)CellBlock_FieldIndex.GroupType,
                     errorMask: errorMask);
             }
@@ -2210,7 +1790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.LastModified),
-                    item: item.LastModified_Property,
+                    item: item.LastModified,
                     fieldIndex: (int)CellBlock_FieldIndex.LastModified,
                     errorMask: errorMask);
             }
@@ -2289,18 +1869,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockNumber_Property,
+                item: item.BlockNumber,
                 fieldIndex: (int)CellBlock_FieldIndex.BlockNumber,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
-                item.GroupType_Property,
+                item.GroupType,
                 length: 4,
                 fieldIndex: (int)CellBlock_FieldIndex.GroupType,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LastModified_Property,
+                item: item.LastModified,
                 fieldIndex: (int)CellBlock_FieldIndex.LastModified,
                 errorMask: errorMask);
         }
@@ -2311,12 +1891,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.Write(
-                writer: writer,
-                items: item.Items,
-                fieldIndex: (int)CellBlock_FieldIndex.Items,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<CellSubBlock>.Instance.Write);
+            if (item.Items.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.Write(
+                    writer: writer,
+                    items: item.Items,
+                    fieldIndex: (int)CellBlock_FieldIndex.Items,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<CellSubBlock>.Instance.Write);
+            }
         }
 
         #endregion

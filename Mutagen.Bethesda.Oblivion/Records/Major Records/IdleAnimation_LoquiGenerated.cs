@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,8 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         IIdleAnimation,
         ILoquiObject<IdleAnimation>,
         ILoquiObjectSetter,
-        IPropertySupporter<Model>,
-        IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>,
         IEquatable<IdleAnimation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -51,52 +51,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
-        protected Model _Model;
-        protected PropertyForwarder<IdleAnimation, Model> _ModelForwarder;
-        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<IdleAnimation, Model>(this, (int)IdleAnimation_FieldIndex.Model));
+        public bool Model_IsSet
+        {
+            get => _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.Model];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)IdleAnimation_FieldIndex.Model, nameof(Model_IsSet));
+        }
+        bool IIdleAnimationGetter.Model_IsSet => Model_IsSet;
+        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model
         {
-            get => this._Model;
-            set => this.SetModel(value);
+            get => _Model;
+            set => Model_Set(value);
         }
-        protected void SetModel(
-            Model item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Model_Set(
+            Model value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.Model];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.Model] = hasBeenSet;
-            }
-            if (_Model_subscriptions != null)
-            {
-                var tmp = Model;
-                _Model = item;
-                _Model_subscriptions.FireSubscriptions(
-                    index: (int)IdleAnimation_FieldIndex.Model,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Model = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)IdleAnimation_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
-        protected void UnsetModel()
+        public void Model_Unset()
         {
-            _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.Model] = false;
-            Model = default(Model);
+            this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Model> IIdleAnimation.Model_Property => this.Model_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Model> IIdleAnimationGetter.Model_Property => this.Model_Property;
+        Model IIdleAnimationGetter.Model => this.Model;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -117,52 +96,30 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region AnimationGroupSection
-        protected IdleAnimation.AnimationGroupSectionEnum _AnimationGroupSection;
-        protected PropertyForwarder<IdleAnimation, IdleAnimation.AnimationGroupSectionEnum> _AnimationGroupSectionForwarder;
-        public INotifyingSetItem<IdleAnimation.AnimationGroupSectionEnum> AnimationGroupSection_Property => _AnimationGroupSectionForwarder ?? (_AnimationGroupSectionForwarder = new PropertyForwarder<IdleAnimation, IdleAnimation.AnimationGroupSectionEnum>(this, (int)IdleAnimation_FieldIndex.AnimationGroupSection));
+        public bool AnimationGroupSection_IsSet
+        {
+            get => _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.AnimationGroupSection];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)IdleAnimation_FieldIndex.AnimationGroupSection, nameof(AnimationGroupSection_IsSet));
+        }
+        bool IIdleAnimationGetter.AnimationGroupSection_IsSet => AnimationGroupSection_IsSet;
+        private IdleAnimation.AnimationGroupSectionEnum _AnimationGroupSection;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection
         {
             get => this._AnimationGroupSection;
-            set => this.SetAnimationGroupSection(value);
+            set => AnimationGroupSection_Set(value);
         }
-        protected void SetAnimationGroupSection(
-            IdleAnimation.AnimationGroupSectionEnum item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        IdleAnimation.AnimationGroupSectionEnum IIdleAnimationGetter.AnimationGroupSection => this.AnimationGroupSection;
+        public void AnimationGroupSection_Set(
+            IdleAnimation.AnimationGroupSectionEnum value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.AnimationGroupSection];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AnimationGroupSection == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.AnimationGroupSection] = hasBeenSet;
-            }
-            if (_IdleAnimationAnimationGroupSectionEnum_subscriptions != null)
-            {
-                var tmp = AnimationGroupSection;
-                _AnimationGroupSection = item;
-                _IdleAnimationAnimationGroupSectionEnum_subscriptions.FireSubscriptions(
-                    index: (int)IdleAnimation_FieldIndex.AnimationGroupSection,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AnimationGroupSection = item;
-            }
+            this.RaiseAndSetIfChanged(ref _AnimationGroupSection, value, _hasBeenSetTracker, markSet, (int)IdleAnimation_FieldIndex.AnimationGroupSection, nameof(AnimationGroupSection), nameof(AnimationGroupSection_IsSet));
         }
-        protected void UnsetAnimationGroupSection()
+        public void AnimationGroupSection_Unset()
         {
-            _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.AnimationGroupSection] = false;
-            AnimationGroupSection = default(IdleAnimation.AnimationGroupSectionEnum);
+            this.AnimationGroupSection_Set(default(IdleAnimation.AnimationGroupSectionEnum), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<IdleAnimation.AnimationGroupSectionEnum> IIdleAnimation.AnimationGroupSection_Property => this.AnimationGroupSection_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<IdleAnimation.AnimationGroupSectionEnum> IIdleAnimationGetter.AnimationGroupSection_Property => this.AnimationGroupSection_Property;
         #endregion
         #region RelatedIdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -241,8 +198,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
-            if (Model_Property.HasBeenSet)
+            if (Model_IsSet != rhs.Model_IsSet) return false;
+            if (Model_IsSet)
             {
                 if (!object.Equals(this.Model, rhs.Model)) return false;
             }
@@ -251,8 +208,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Conditions.SequenceEqual(rhs.Conditions)) return false;
             }
-            if (AnimationGroupSection_Property.HasBeenSet != rhs.AnimationGroupSection_Property.HasBeenSet) return false;
-            if (AnimationGroupSection_Property.HasBeenSet)
+            if (AnimationGroupSection_IsSet != rhs.AnimationGroupSection_IsSet) return false;
+            if (AnimationGroupSection_IsSet)
             {
                 if (this.AnimationGroupSection != rhs.AnimationGroupSection) return false;
             }
@@ -267,7 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Model_Property.HasBeenSet)
+            if (Model_IsSet)
             {
                 ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
             }
@@ -275,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Conditions).CombineHashCode(ret);
             }
-            if (AnimationGroupSection_Property.HasBeenSet)
+            if (AnimationGroupSection_IsSet)
             {
                 ret = HashHelper.GetHashCode(AnimationGroupSection).CombineHashCode(ret);
             }
@@ -612,7 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetModel();
+                            item.Model = default(Model);
                         }
                     }
                     catch (Exception ex)
@@ -666,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAnimationGroupSection();
+                            item.AnimationGroupSection = default(IdleAnimation.AnimationGroupSectionEnum);
                         }
                     }
                     catch (Exception ex)
@@ -735,274 +692,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter Model
-        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
-        Model IPropertySupporter<Model>.Get(int index)
-        {
-            return GetModel(index: index);
-        }
-
-        protected Model GetModel(int index)
-        {
-            switch ((IdleAnimation_FieldIndex)index)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    return Model;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        void IPropertySupporter<Model>.Set(
-            int index,
-            Model item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetModel(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetModel(
-            int index,
-            Model item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((IdleAnimation_FieldIndex)index)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    SetModel(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Model>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Model>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetModel(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetModel(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((IdleAnimation_FieldIndex)index)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    SetModel(
-                        item: default(Model),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Model>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Model> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Model_subscriptions == null)
-            {
-                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
-            }
-            _Model_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Model>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Model_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Model IPropertySupporter<Model>.DefaultValue(int index)
-        {
-            return DefaultValueModel(index: index);
-        }
-
-        protected Model DefaultValueModel(int index)
-        {
-            switch ((IdleAnimation_FieldIndex)index)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    return default(Model);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter IdleAnimation.AnimationGroupSectionEnum
-        protected ObjectCentralizationSubscriptions<IdleAnimation.AnimationGroupSectionEnum> _IdleAnimationAnimationGroupSectionEnum_subscriptions;
-        IdleAnimation.AnimationGroupSectionEnum IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>.Get(int index)
-        {
-            return GetIdleAnimationAnimationGroupSectionEnum(index: index);
-        }
-
-        protected IdleAnimation.AnimationGroupSectionEnum GetIdleAnimationAnimationGroupSectionEnum(int index)
-        {
-            switch ((IdleAnimation_FieldIndex)index)
-            {
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return AnimationGroupSection;
-                default:
-                    throw new ArgumentException($"Unknown index for field type IdleAnimation.AnimationGroupSectionEnum: {index}");
-            }
-        }
-
-        void IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>.Set(
-            int index,
-            IdleAnimation.AnimationGroupSectionEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetIdleAnimationAnimationGroupSectionEnum(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetIdleAnimationAnimationGroupSectionEnum(
-            int index,
-            IdleAnimation.AnimationGroupSectionEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((IdleAnimation_FieldIndex)index)
-            {
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    SetAnimationGroupSection(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type IdleAnimation.AnimationGroupSectionEnum: {index}");
-            }
-        }
-
-        bool IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetIdleAnimationAnimationGroupSectionEnum(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetIdleAnimationAnimationGroupSectionEnum(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((IdleAnimation_FieldIndex)index)
-            {
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    SetAnimationGroupSection(
-                        item: default(IdleAnimation.AnimationGroupSectionEnum),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type IdleAnimation.AnimationGroupSectionEnum: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<IdleAnimation.AnimationGroupSectionEnum> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_IdleAnimationAnimationGroupSectionEnum_subscriptions == null)
-            {
-                _IdleAnimationAnimationGroupSectionEnum_subscriptions = new ObjectCentralizationSubscriptions<IdleAnimation.AnimationGroupSectionEnum>();
-            }
-            _IdleAnimationAnimationGroupSectionEnum_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _IdleAnimationAnimationGroupSectionEnum_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        IdleAnimation.AnimationGroupSectionEnum IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>.DefaultValue(int index)
-        {
-            return DefaultValueIdleAnimationAnimationGroupSectionEnum(index: index);
-        }
-
-        protected IdleAnimation.AnimationGroupSectionEnum DefaultValueIdleAnimationAnimationGroupSectionEnum(int index)
-        {
-            switch ((IdleAnimation_FieldIndex)index)
-            {
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return default(IdleAnimation.AnimationGroupSectionEnum);
-                default:
-                    throw new ArgumentException($"Unknown index for field type IdleAnimation.AnimationGroupSectionEnum: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = IdleAnimation_Registration.TRIGGERING_RECORD_TYPE;
@@ -1210,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetModel();
+                            item.Model = default(Model);
                         }
                     }
                     catch (Exception ex)
@@ -1248,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAnimationGroupSection();
+                            item.AnimationGroupSection = default(IdleAnimation.AnimationGroupSectionEnum);
                         }
                     }
                     catch (Exception ex)
@@ -1391,17 +1080,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case IdleAnimation_FieldIndex.Model:
-                    this.SetModel(
-                        (Model)obj,
-                        cmds: cmds);
+                    this.Model = (Model)obj;
                     break;
                 case IdleAnimation_FieldIndex.Conditions:
                     this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
                     break;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    this.SetAnimationGroupSection(
-                        (IdleAnimation.AnimationGroupSectionEnum)obj,
-                        cmds: cmds);
+                    this.AnimationGroupSection = (IdleAnimation.AnimationGroupSectionEnum)obj;
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     this._RelatedIdleAnimations.SetTo((IEnumerable<FormIDLink<IdleAnimation>>)obj, cmds);
@@ -1438,17 +1123,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case IdleAnimation_FieldIndex.Model:
-                    obj.SetModel(
-                        (Model)pair.Value,
-                        cmds: null);
+                    obj.Model = (Model)pair.Value;
                     break;
                 case IdleAnimation_FieldIndex.Conditions:
                     obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
                     break;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    obj.SetAnimationGroupSection(
-                        (IdleAnimation.AnimationGroupSectionEnum)pair.Value,
-                        cmds: null);
+                    obj.AnimationGroupSection = (IdleAnimation.AnimationGroupSectionEnum)pair.Value;
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     obj._RelatedIdleAnimations.SetTo((IEnumerable<FormIDLink<IdleAnimation>>)pair.Value, null);
@@ -1469,11 +1150,15 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IIdleAnimation : IIdleAnimationGetter, IMajorRecord, ILoquiClass<IIdleAnimation, IIdleAnimationGetter>, ILoquiClass<IdleAnimation, IIdleAnimationGetter>
     {
         new Model Model { get; set; }
-        new INotifyingSetItem<Model> Model_Property { get; }
+        new bool Model_IsSet { get; set; }
+        void Model_Set(Model item, bool hasBeenSet = true);
+        void Model_Unset();
 
         new INotifyingList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection { get; set; }
-        new INotifyingSetItem<IdleAnimation.AnimationGroupSectionEnum> AnimationGroupSection_Property { get; }
+        new bool AnimationGroupSection_IsSet { get; set; }
+        void AnimationGroupSection_Set(IdleAnimation.AnimationGroupSectionEnum item, bool hasBeenSet = true);
+        void AnimationGroupSection_Unset();
 
         new INotifyingList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
     }
@@ -1482,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Model
         Model Model { get; }
-        INotifyingSetItemGetter<Model> Model_Property { get; }
+        bool Model_IsSet { get; }
 
         #endregion
         #region Conditions
@@ -1490,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AnimationGroupSection
         IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection { get; }
-        INotifyingSetItemGetter<IdleAnimation.AnimationGroupSectionEnum> AnimationGroupSection_Property { get; }
+        bool AnimationGroupSection_IsSet { get; }
 
         #endregion
         #region RelatedIdleAnimations
@@ -1753,36 +1438,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
                 try
                 {
-                    item.Model_Property.SetToWithDefault(
-                        rhs.Model_Property,
-                        def?.Model_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Model,
+                        rhsHasBeenSet: rhs.Model_IsSet,
+                        defItem: def?.Model,
+                        defHasBeenSet: def?.Model_IsSet ?? false,
+                        outRhsItem: out var rhsModelItem,
+                        outDefItem: out var defModelItem))
+                    {
+                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    ModelCommon.CopyFieldsFrom(
-                                        item: item.Model,
-                                        rhs: rhs.Model,
-                                        def: def?.Model,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Model.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(Model);
-                                    return Model.Copy(
-                                        r,
-                                        copyMask?.Model?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Model = rhsModelItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                ModelCommon.CopyFieldsFrom(
+                                    item: item.Model,
+                                    rhs: rhs.Model,
+                                    def: def?.Model,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Model.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Model = Model.Copy(
+                                    rhsModelItem,
+                                    copyMask?.Model?.Specific,
+                                    def: defModelItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Model_IsSet = false;
+                        item.Model = default(Model);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1810,7 +1502,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Condition);
                                     return Condition.Copy(
                                         r,
                                         copyMask?.Conditions?.Specific,
@@ -1836,9 +1527,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 try
                 {
-                    item.AnimationGroupSection_Property.SetToWithDefault(
-                        rhs: rhs.AnimationGroupSection_Property,
-                        def: def?.AnimationGroupSection_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.AnimationGroupSection,
+                        rhsHasBeenSet: rhs.AnimationGroupSection_IsSet,
+                        defItem: def?.AnimationGroupSection ?? default(IdleAnimation.AnimationGroupSectionEnum),
+                        defHasBeenSet: def?.AnimationGroupSection_IsSet ?? false,
+                        outRhsItem: out var rhsAnimationGroupSectionItem,
+                        outDefItem: out var defAnimationGroupSectionItem))
+                    {
+                        item.AnimationGroupSection = rhsAnimationGroupSectionItem;
+                    }
+                    else
+                    {
+                        item.AnimationGroupSection_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1884,13 +1586,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case IdleAnimation_FieldIndex.Model:
-                    obj.Model_Property.HasBeenSet = on;
+                    obj.Model_IsSet = on;
                     break;
                 case IdleAnimation_FieldIndex.Conditions:
                     obj.Conditions.HasBeenSet = on;
                     break;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    obj.AnimationGroupSection_Property.HasBeenSet = on;
+                    obj.AnimationGroupSection_IsSet = on;
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     obj.RelatedIdleAnimations.HasBeenSet = on;
@@ -1910,13 +1612,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case IdleAnimation_FieldIndex.Model:
-                    obj.Model_Property.Unset(cmds);
+                    obj.Model_Unset();
                     break;
                 case IdleAnimation_FieldIndex.Conditions:
                     obj.Conditions.Unset(cmds);
                     break;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    obj.AnimationGroupSection_Property.Unset(cmds);
+                    obj.AnimationGroupSection_Unset();
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     obj.RelatedIdleAnimations.Unset(cmds);
@@ -1935,11 +1637,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case IdleAnimation_FieldIndex.Model:
-                    return obj.Model_Property.HasBeenSet;
+                    return obj.Model_IsSet;
                 case IdleAnimation_FieldIndex.Conditions:
                     return obj.Conditions.HasBeenSet;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return obj.AnimationGroupSection_Property.HasBeenSet;
+                    return obj.AnimationGroupSection_IsSet;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return obj.RelatedIdleAnimations.HasBeenSet;
                 default:
@@ -1971,9 +1673,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IIdleAnimation item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Model_Property.Unset(cmds.ToUnsetParams());
+            item.Model_Unset();
             item.Conditions.Unset(cmds.ToUnsetParams());
-            item.AnimationGroupSection_Property.Unset(cmds.ToUnsetParams());
+            item.AnimationGroupSection_Unset();
             item.RelatedIdleAnimations.Unset(cmds.ToUnsetParams());
         }
 
@@ -1992,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IdleAnimation_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Conditions.HasBeenSet == rhs.Conditions.HasBeenSet)
             {
                 if (item.Conditions.HasBeenSet)
@@ -2018,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
                 ret.Conditions.Overall = false;
             }
-            ret.AnimationGroupSection = item.AnimationGroupSection_Property.Equals(rhs.AnimationGroupSection_Property, (l, r) => l == r);
+            ret.AnimationGroupSection = item.AnimationGroupSection_IsSet == rhs.AnimationGroupSection_IsSet && item.AnimationGroupSection == rhs.AnimationGroupSection;
             if (item.RelatedIdleAnimations.HasBeenSet == rhs.RelatedIdleAnimations.HasBeenSet)
             {
                 if (item.RelatedIdleAnimations.HasBeenSet)
@@ -2120,10 +1822,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IIdleAnimationGetter item,
             IdleAnimation_Mask<bool?> checkMask)
         {
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
-            if (checkMask.AnimationGroupSection.HasValue && checkMask.AnimationGroupSection.Value != item.AnimationGroupSection_Property.HasBeenSet) return false;
+            if (checkMask.AnimationGroupSection.HasValue && checkMask.AnimationGroupSection.Value != item.AnimationGroupSection_IsSet) return false;
             if (checkMask.RelatedIdleAnimations.Overall.HasValue && checkMask.RelatedIdleAnimations.Overall.Value != item.RelatedIdleAnimations.HasBeenSet) return false;
             return true;
         }
@@ -2131,9 +1833,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static IdleAnimation_Mask<bool> GetHasBeenSetMask(IIdleAnimationGetter item)
         {
             var ret = new IdleAnimation_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.AnimationGroupSection = item.AnimationGroupSection_Property.HasBeenSet;
+            ret.AnimationGroupSection = item.AnimationGroupSection_IsSet;
             ret.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<bool>>(item.RelatedIdleAnimations.HasBeenSet, null);
             return ret;
         }
@@ -2196,12 +1898,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.IdleAnimation");
             }
-            if (item.Model_Property.HasBeenSet
+            if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
                     node: elem,
-                    item: item.Model_Property,
+                    item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)IdleAnimation_FieldIndex.Model,
                     errorMask: errorMask,
@@ -2228,13 +1930,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if (item.AnimationGroupSection_Property.HasBeenSet
+            if (item.AnimationGroupSection_IsSet
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationGroupSection) ?? true))
             {
                 EnumXmlTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Write(
                     node: elem,
                     name: nameof(item.AnimationGroupSection),
-                    item: item.AnimationGroupSection_Property,
+                    item: item.AnimationGroupSection,
                     fieldIndex: (int)IdleAnimation_FieldIndex.AnimationGroupSection,
                     errorMask: errorMask);
             }
@@ -2316,32 +2018,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Model>.Instance.Write(
-                writer: writer,
-                item: item.Model_Property,
-                fieldIndex: (int)IdleAnimation_FieldIndex.Model,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
-                writer: writer,
-                items: item.Conditions,
-                fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<Condition>.Instance.Write);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Write(
-                writer,
-                item.AnimationGroupSection_Property,
-                length: 1,
-                fieldIndex: (int)IdleAnimation_FieldIndex.AnimationGroupSection,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.ANAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<IdleAnimation>>.Instance.Write(
-                writer: writer,
-                items: item.RelatedIdleAnimations,
-                fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdleAnimations,
-                recordType: IdleAnimation_Registration.DATA_HEADER,
-                errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
+            if (item.Model_IsSet)
+            {
+                LoquiBinaryTranslation<Model>.Instance.Write(
+                    writer: writer,
+                    item: item.Model,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.Model,
+                    errorMask: errorMask);
+            }
+            if (item.Conditions.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                    writer: writer,
+                    items: item.Conditions,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<Condition>.Instance.Write);
+            }
+            if (item.AnimationGroupSection_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Write(
+                    writer,
+                    item.AnimationGroupSection,
+                    length: 1,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.AnimationGroupSection,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.ANAM_HEADER),
+                    nullable: false);
+            }
+            if (item.RelatedIdleAnimations.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<IdleAnimation>>.Instance.Write(
+                    writer: writer,
+                    items: item.RelatedIdleAnimations,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdleAnimations,
+                    recordType: IdleAnimation_Registration.DATA_HEADER,
+                    errorMask: errorMask,
+                    transl: FormIDBinaryTranslation.Instance.Write);
+            }
         }
 
         #endregion

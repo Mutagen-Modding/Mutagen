@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -1117,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    obj.Reference = default(FormIDLink<MajorRecord>);
+                    obj.Reference_Property.Unset(cmds.ToUnsetParams());
                     break;
                 default:
                     ScriptReferenceCommon.UnsetNthObject(index, obj);
@@ -1157,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptObjectReference item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Reference = default(FormIDLink<MajorRecord>);
+            item.Reference_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static ScriptObjectReference_Mask<bool> GetEqualsMask(

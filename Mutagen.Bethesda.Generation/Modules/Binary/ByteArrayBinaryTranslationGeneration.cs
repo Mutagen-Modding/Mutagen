@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Generation
                 $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
+                args.Add($"item: {itemAccessor.DirectAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"errorMask: {maskAccessor}");
                 if (data.RecordType.HasValue)

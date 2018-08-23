@@ -9,12 +9,12 @@ namespace Mutagen.Bethesda.Binary
         public readonly static UInt64BinaryTranslation Instance = new UInt64BinaryTranslation();
         public override int? ExpectedLength => 8;
 
-        protected override ulong ParseValue(MutagenFrame reader)
+        public override ulong ParseValue(MutagenFrame reader)
         {
             return reader.Reader.ReadUInt64();
         }
 
-        protected override void WriteValue(MutagenWriter writer, ulong item)
+        public override void WriteValue(MutagenWriter writer, ulong item)
         {
             writer.Write(item);
         }

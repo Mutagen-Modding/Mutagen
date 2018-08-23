@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SoundData : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         ISoundData,
         ILoquiObject<SoundData>,
         ILoquiObjectSetter,
-        IPropertySupporter<SByte>,
-        IPropertySupporter<SoundData.Flag>,
         IEquatable<SoundData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,130 +50,36 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MinimumAttenuationDistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _MinimumAttenuationDistance = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> MinimumAttenuationDistance_Property => _MinimumAttenuationDistance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _MinimumAttenuationDistance;
         public UInt16 MinimumAttenuationDistance
         {
-            get => this._MinimumAttenuationDistance.Item;
-            set => this._MinimumAttenuationDistance.Set(value);
+            get => this._MinimumAttenuationDistance;
+            set => this.RaiseAndSetIfChanged(ref this._MinimumAttenuationDistance, value, nameof(MinimumAttenuationDistance));
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt16> ISoundData.MinimumAttenuationDistance_Property => this.MinimumAttenuationDistance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt16> ISoundDataGetter.MinimumAttenuationDistance_Property => this.MinimumAttenuationDistance_Property;
         #endregion
         #region MaximumAttenuationDistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingItem<UInt16> _MaximumAttenuationDistance = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> MaximumAttenuationDistance_Property => _MaximumAttenuationDistance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _MaximumAttenuationDistance;
         public UInt16 MaximumAttenuationDistance
         {
-            get => this._MaximumAttenuationDistance.Item;
-            set => this._MaximumAttenuationDistance.Set(value);
+            get => this._MaximumAttenuationDistance;
+            set => this.RaiseAndSetIfChanged(ref this._MaximumAttenuationDistance, value, nameof(MaximumAttenuationDistance));
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt16> ISoundData.MaximumAttenuationDistance_Property => this.MaximumAttenuationDistance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt16> ISoundDataGetter.MaximumAttenuationDistance_Property => this.MaximumAttenuationDistance_Property;
         #endregion
         #region FrequencyAdjustment
-        protected SByte _FrequencyAdjustment;
-        protected PropertyForwarder<SoundData, SByte> _FrequencyAdjustmentForwarder;
-        public INotifyingSetItem<SByte> FrequencyAdjustment_Property => _FrequencyAdjustmentForwarder ?? (_FrequencyAdjustmentForwarder = new PropertyForwarder<SoundData, SByte>(this, (int)SoundData_FieldIndex.FrequencyAdjustment));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SByte _FrequencyAdjustment;
         public SByte FrequencyAdjustment
         {
             get => this._FrequencyAdjustment;
-            set => this.SetFrequencyAdjustment(value);
+            set => this.RaiseAndSetIfChanged(ref this._FrequencyAdjustment, value, nameof(FrequencyAdjustment));
         }
-        protected void SetFrequencyAdjustment(
-            SByte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)SoundData_FieldIndex.FrequencyAdjustment];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FrequencyAdjustment == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)SoundData_FieldIndex.FrequencyAdjustment] = hasBeenSet;
-            }
-            if (_SByte_subscriptions != null)
-            {
-                var tmp = FrequencyAdjustment;
-                _FrequencyAdjustment = item;
-                _SByte_subscriptions.FireSubscriptions(
-                    index: (int)SoundData_FieldIndex.FrequencyAdjustment,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FrequencyAdjustment = item;
-            }
-        }
-        protected void UnsetFrequencyAdjustment()
-        {
-            _hasBeenSetTracker[(int)SoundData_FieldIndex.FrequencyAdjustment] = false;
-            FrequencyAdjustment = default(SByte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<SByte> ISoundData.FrequencyAdjustment_Property => this.FrequencyAdjustment_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<SByte> ISoundDataGetter.FrequencyAdjustment_Property => this.FrequencyAdjustment_Property;
         #endregion
         #region Flags
-        protected SoundData.Flag _Flags;
-        protected PropertyForwarder<SoundData, SoundData.Flag> _FlagsForwarder;
-        public INotifyingSetItem<SoundData.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<SoundData, SoundData.Flag>(this, (int)SoundData_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundData.Flag _Flags;
         public SoundData.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            SoundData.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)SoundData_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)SoundData_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_SoundDataFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _SoundDataFlag_subscriptions.FireSubscriptions(
-                    index: (int)SoundData_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)SoundData_FieldIndex.Flags] = false;
-            Flags = default(SoundData.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<SoundData.Flag> ISoundData.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<SoundData.Flag> ISoundDataGetter.Flags_Property => this.Flags_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -569,18 +475,56 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MinimumAttenuationDistance":
-                    UInt16XmlTranslation.Instance.ParseInto(
-                        root: root,
-                        item: item.MinimumAttenuationDistance_Property,
-                        fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out UInt16 MinimumAttenuationDistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.MinimumAttenuationDistance = MinimumAttenuationDistanceParse;
+                        }
+                        else
+                        {
+                            item.MinimumAttenuationDistance = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "MaximumAttenuationDistance":
-                    UInt16XmlTranslation.Instance.ParseInto(
-                        root: root,
-                        item: item.MaximumAttenuationDistance_Property,
-                        fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out UInt16 MaximumAttenuationDistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaximumAttenuationDistance = MaximumAttenuationDistanceParse;
+                        }
+                        else
+                        {
+                            item.MaximumAttenuationDistance = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "FrequencyAdjustment":
                     try
@@ -595,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFrequencyAdjustment();
+                            item.FrequencyAdjustment = default(SByte);
                         }
                     }
                     catch (Exception ex)
@@ -621,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(SoundData.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -655,274 +599,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter SByte
-        protected ObjectCentralizationSubscriptions<SByte> _SByte_subscriptions;
-        SByte IPropertySupporter<SByte>.Get(int index)
-        {
-            return GetSByte(index: index);
-        }
-
-        protected SByte GetSByte(int index)
-        {
-            switch ((SoundData_FieldIndex)index)
-            {
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    return FrequencyAdjustment;
-                default:
-                    throw new ArgumentException($"Unknown index for field type SByte: {index}");
-            }
-        }
-
-        void IPropertySupporter<SByte>.Set(
-            int index,
-            SByte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSByte(
-            int index,
-            SByte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((SoundData_FieldIndex)index)
-            {
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    SetFrequencyAdjustment(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type SByte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<SByte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<SByte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<SByte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((SoundData_FieldIndex)index)
-            {
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    SetFrequencyAdjustment(
-                        item: default(SByte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type SByte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<SByte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<SByte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_SByte_subscriptions == null)
-            {
-                _SByte_subscriptions = new ObjectCentralizationSubscriptions<SByte>();
-            }
-            _SByte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<SByte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _SByte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<SByte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        SByte IPropertySupporter<SByte>.DefaultValue(int index)
-        {
-            return DefaultValueSByte(index: index);
-        }
-
-        protected SByte DefaultValueSByte(int index)
-        {
-            switch ((SoundData_FieldIndex)index)
-            {
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    return default(SByte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type SByte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter SoundData.Flag
-        protected ObjectCentralizationSubscriptions<SoundData.Flag> _SoundDataFlag_subscriptions;
-        SoundData.Flag IPropertySupporter<SoundData.Flag>.Get(int index)
-        {
-            return GetSoundDataFlag(index: index);
-        }
-
-        protected SoundData.Flag GetSoundDataFlag(int index)
-        {
-            switch ((SoundData_FieldIndex)index)
-            {
-                case SoundData_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type SoundData.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<SoundData.Flag>.Set(
-            int index,
-            SoundData.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSoundDataFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSoundDataFlag(
-            int index,
-            SoundData.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((SoundData_FieldIndex)index)
-            {
-                case SoundData_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type SoundData.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<SoundData.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<SoundData.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<SoundData.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSoundDataFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSoundDataFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((SoundData_FieldIndex)index)
-            {
-                case SoundData_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(SoundData.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type SoundData.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<SoundData.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<SoundData.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_SoundDataFlag_subscriptions == null)
-            {
-                _SoundDataFlag_subscriptions = new ObjectCentralizationSubscriptions<SoundData.Flag>();
-            }
-            _SoundDataFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<SoundData.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _SoundDataFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<SoundData.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        SoundData.Flag IPropertySupporter<SoundData.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueSoundDataFlag(index: index);
-        }
-
-        protected SoundData.Flag DefaultValueSoundDataFlag(int index)
-        {
-            switch ((SoundData_FieldIndex)index)
-            {
-                case SoundData_FieldIndex.Flags:
-                    return default(SoundData.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type SoundData.Flag: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1191,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFrequencyAdjustment();
+                    item.FrequencyAdjustment = default(SByte);
                 }
             }
             catch (Exception ex)
@@ -1216,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFlags();
+                    item.Flags = default(SoundData.Flag);
                 }
             }
             catch (Exception ex)
@@ -1355,24 +1031,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    this._MinimumAttenuationDistance.Set(
-                        (UInt16)obj,
-                        cmds);
+                    this.MinimumAttenuationDistance = (UInt16)obj;
                     break;
                 case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    this._MaximumAttenuationDistance.Set(
-                        (UInt16)obj,
-                        cmds);
+                    this.MaximumAttenuationDistance = (UInt16)obj;
                     break;
                 case SoundData_FieldIndex.FrequencyAdjustment:
-                    this.SetFrequencyAdjustment(
-                        (SByte)obj,
-                        cmds: cmds);
+                    this.FrequencyAdjustment = (SByte)obj;
                     break;
                 case SoundData_FieldIndex.Flags:
-                    this.SetFlags(
-                        (SoundData.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (SoundData.Flag)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1412,24 +1080,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    obj._MinimumAttenuationDistance.Set(
-                        (UInt16)pair.Value,
-                        null);
+                    obj.MinimumAttenuationDistance = (UInt16)pair.Value;
                     break;
                 case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    obj._MaximumAttenuationDistance.Set(
-                        (UInt16)pair.Value,
-                        null);
+                    obj.MaximumAttenuationDistance = (UInt16)pair.Value;
                     break;
                 case SoundData_FieldIndex.FrequencyAdjustment:
-                    obj.SetFrequencyAdjustment(
-                        (SByte)pair.Value,
-                        cmds: null);
+                    obj.FrequencyAdjustment = (SByte)pair.Value;
                     break;
                 case SoundData_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (SoundData.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (SoundData.Flag)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1447,16 +1107,12 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISoundData : ISoundDataGetter, ILoquiClass<ISoundData, ISoundDataGetter>, ILoquiClass<SoundData, ISoundDataGetter>
     {
         new UInt16 MinimumAttenuationDistance { get; set; }
-        new INotifyingItem<UInt16> MinimumAttenuationDistance_Property { get; }
 
         new UInt16 MaximumAttenuationDistance { get; set; }
-        new INotifyingItem<UInt16> MaximumAttenuationDistance_Property { get; }
 
         new SByte FrequencyAdjustment { get; set; }
-        new INotifyingItem<SByte> FrequencyAdjustment_Property { get; }
 
         new SoundData.Flag Flags { get; set; }
-        new INotifyingItem<SoundData.Flag> Flags_Property { get; }
 
     }
 
@@ -1464,22 +1120,18 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MinimumAttenuationDistance
         UInt16 MinimumAttenuationDistance { get; }
-        INotifyingItemGetter<UInt16> MinimumAttenuationDistance_Property { get; }
 
         #endregion
         #region MaximumAttenuationDistance
         UInt16 MaximumAttenuationDistance { get; }
-        INotifyingItemGetter<UInt16> MaximumAttenuationDistance_Property { get; }
 
         #endregion
         #region FrequencyAdjustment
         SByte FrequencyAdjustment { get; }
-        INotifyingItemGetter<SByte> FrequencyAdjustment_Property { get; }
 
         #endregion
         #region Flags
         SoundData.Flag Flags { get; }
-        INotifyingItemGetter<SoundData.Flag> Flags_Property { get; }
 
         #endregion
 
@@ -1732,9 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
                 try
                 {
-                    item.MinimumAttenuationDistance_Property.Set(
-                        value: rhs.MinimumAttenuationDistance,
-                        cmds: cmds);
+                    item.MinimumAttenuationDistance = rhs.MinimumAttenuationDistance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1751,9 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
                 try
                 {
-                    item.MaximumAttenuationDistance_Property.Set(
-                        value: rhs.MaximumAttenuationDistance,
-                        cmds: cmds);
+                    item.MaximumAttenuationDistance = rhs.MaximumAttenuationDistance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1770,9 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
                 try
                 {
-                    item.FrequencyAdjustment_Property.Set(
-                        value: rhs.FrequencyAdjustment,
-                        cmds: cmds);
+                    item.FrequencyAdjustment = rhs.FrequencyAdjustment;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1789,9 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2022,7 +1666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MinimumAttenuationDistance),
-                    item: item.MinimumAttenuationDistance_Property,
+                    item: item.MinimumAttenuationDistance,
                     fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
                     errorMask: errorMask);
             }
@@ -2031,7 +1675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MaximumAttenuationDistance),
-                    item: item.MaximumAttenuationDistance_Property,
+                    item: item.MaximumAttenuationDistance,
                     fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                     errorMask: errorMask);
             }
@@ -2040,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int8XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FrequencyAdjustment),
-                    item: item.FrequencyAdjustment_Property,
+                    item: item.FrequencyAdjustment,
                     fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                     errorMask: errorMask);
             }
@@ -2049,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<SoundData.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)SoundData_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -2110,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FrequencyAdjustment_Property,
+                item: item.FrequencyAdjustment,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
@@ -2118,7 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Marker);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Write(
                 writer,
-                item.Flags_Property,
+                item.Flags,
                 length: 4,
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
                 errorMask: errorMask);

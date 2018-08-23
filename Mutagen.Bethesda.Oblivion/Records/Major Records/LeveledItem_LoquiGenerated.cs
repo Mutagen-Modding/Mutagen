@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,8 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILeveledItem,
         ILoquiObject<LeveledItem>,
         ILoquiObjectSetter,
-        IPropertySupporter<Byte>,
-        IPropertySupporter<LeveledFlag>,
         IEquatable<LeveledItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -51,100 +51,56 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ChanceNone
-        protected Byte _ChanceNone;
-        protected PropertyForwarder<LeveledItem, Byte> _ChanceNoneForwarder;
-        public INotifyingSetItem<Byte> ChanceNone_Property => _ChanceNoneForwarder ?? (_ChanceNoneForwarder = new PropertyForwarder<LeveledItem, Byte>(this, (int)LeveledItem_FieldIndex.ChanceNone));
+        public bool ChanceNone_IsSet
+        {
+            get => _hasBeenSetTracker[(int)LeveledItem_FieldIndex.ChanceNone];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LeveledItem_FieldIndex.ChanceNone, nameof(ChanceNone_IsSet));
+        }
+        bool ILeveledItemGetter.ChanceNone_IsSet => ChanceNone_IsSet;
+        private Byte _ChanceNone;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ChanceNone
         {
             get => this._ChanceNone;
-            set => this.SetChanceNone(value);
+            set => ChanceNone_Set(value);
         }
-        protected void SetChanceNone(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Byte ILeveledItemGetter.ChanceNone => this.ChanceNone;
+        public void ChanceNone_Set(
+            Byte value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledItem_FieldIndex.ChanceNone];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ChanceNone == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LeveledItem_FieldIndex.ChanceNone] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = ChanceNone;
-                _ChanceNone = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)LeveledItem_FieldIndex.ChanceNone,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ChanceNone = item;
-            }
+            this.RaiseAndSetIfChanged(ref _ChanceNone, value, _hasBeenSetTracker, markSet, (int)LeveledItem_FieldIndex.ChanceNone, nameof(ChanceNone), nameof(ChanceNone_IsSet));
         }
-        protected void UnsetChanceNone()
+        public void ChanceNone_Unset()
         {
-            _hasBeenSetTracker[(int)LeveledItem_FieldIndex.ChanceNone] = false;
-            ChanceNone = default(Byte);
+            this.ChanceNone_Set(default(Byte), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte> ILeveledItem.ChanceNone_Property => this.ChanceNone_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte> ILeveledItemGetter.ChanceNone_Property => this.ChanceNone_Property;
         #endregion
         #region Flags
-        protected LeveledFlag _Flags;
-        protected PropertyForwarder<LeveledItem, LeveledFlag> _FlagsForwarder;
-        public INotifyingSetItem<LeveledFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<LeveledItem, LeveledFlag>(this, (int)LeveledItem_FieldIndex.Flags));
+        public bool Flags_IsSet
+        {
+            get => _hasBeenSetTracker[(int)LeveledItem_FieldIndex.Flags];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LeveledItem_FieldIndex.Flags, nameof(Flags_IsSet));
+        }
+        bool ILeveledItemGetter.Flags_IsSet => Flags_IsSet;
+        private LeveledFlag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public LeveledFlag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => Flags_Set(value);
         }
-        protected void SetFlags(
-            LeveledFlag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        LeveledFlag ILeveledItemGetter.Flags => this.Flags;
+        public void Flags_Set(
+            LeveledFlag value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledItem_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LeveledItem_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_LeveledFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _LeveledFlag_subscriptions.FireSubscriptions(
-                    index: (int)LeveledItem_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)LeveledItem_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
         }
-        protected void UnsetFlags()
+        public void Flags_Unset()
         {
-            _hasBeenSetTracker[(int)LeveledItem_FieldIndex.Flags] = false;
-            Flags = default(LeveledFlag);
+            this.Flags_Set(default(LeveledFlag), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<LeveledFlag> ILeveledItem.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<LeveledFlag> ILeveledItemGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -223,13 +179,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (ChanceNone_Property.HasBeenSet != rhs.ChanceNone_Property.HasBeenSet) return false;
-            if (ChanceNone_Property.HasBeenSet)
+            if (ChanceNone_IsSet != rhs.ChanceNone_IsSet) return false;
+            if (ChanceNone_IsSet)
             {
                 if (this.ChanceNone != rhs.ChanceNone) return false;
             }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (Flags_IsSet)
             {
                 if (this.Flags != rhs.Flags) return false;
             }
@@ -244,11 +200,11 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (ChanceNone_Property.HasBeenSet)
+            if (ChanceNone_IsSet)
             {
                 ret = HashHelper.GetHashCode(ChanceNone).CombineHashCode(ret);
             }
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet)
             {
                 ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             }
@@ -584,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetChanceNone();
+                            item.ChanceNone = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -610,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(LeveledFlag);
                         }
                     }
                     catch (Exception ex)
@@ -677,274 +633,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((LeveledItem_FieldIndex)index)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    return ChanceNone;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((LeveledItem_FieldIndex)index)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    SetChanceNone(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((LeveledItem_FieldIndex)index)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    SetChanceNone(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((LeveledItem_FieldIndex)index)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter LeveledFlag
-        protected ObjectCentralizationSubscriptions<LeveledFlag> _LeveledFlag_subscriptions;
-        LeveledFlag IPropertySupporter<LeveledFlag>.Get(int index)
-        {
-            return GetLeveledFlag(index: index);
-        }
-
-        protected LeveledFlag GetLeveledFlag(int index)
-        {
-            switch ((LeveledItem_FieldIndex)index)
-            {
-                case LeveledItem_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type LeveledFlag: {index}");
-            }
-        }
-
-        void IPropertySupporter<LeveledFlag>.Set(
-            int index,
-            LeveledFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetLeveledFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetLeveledFlag(
-            int index,
-            LeveledFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((LeveledItem_FieldIndex)index)
-            {
-                case LeveledItem_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type LeveledFlag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<LeveledFlag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<LeveledFlag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<LeveledFlag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetLeveledFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetLeveledFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((LeveledItem_FieldIndex)index)
-            {
-                case LeveledItem_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(LeveledFlag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type LeveledFlag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<LeveledFlag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<LeveledFlag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_LeveledFlag_subscriptions == null)
-            {
-                _LeveledFlag_subscriptions = new ObjectCentralizationSubscriptions<LeveledFlag>();
-            }
-            _LeveledFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<LeveledFlag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _LeveledFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<LeveledFlag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        LeveledFlag IPropertySupporter<LeveledFlag>.DefaultValue(int index)
-        {
-            return DefaultValueLeveledFlag(index: index);
-        }
-
-        protected LeveledFlag DefaultValueLeveledFlag(int index)
-        {
-            switch ((LeveledItem_FieldIndex)index)
-            {
-                case LeveledItem_FieldIndex.Flags:
-                    return default(LeveledFlag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type LeveledFlag: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LeveledItem_Registration.TRIGGERING_RECORD_TYPE;
@@ -1184,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetChanceNone();
+                            item.ChanceNone = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -1211,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(LeveledFlag);
                         }
                     }
                     catch (Exception ex)
@@ -1360,14 +1048,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LeveledItem_FieldIndex.ChanceNone:
-                    this.SetChanceNone(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.ChanceNone = (Byte)obj;
                     break;
                 case LeveledItem_FieldIndex.Flags:
-                    this.SetFlags(
-                        (LeveledFlag)obj,
-                        cmds: cmds);
+                    this.Flags = (LeveledFlag)obj;
                     break;
                 case LeveledItem_FieldIndex.Entries:
                     this._Entries.SetTo((IEnumerable<LeveledEntry<ItemAbstract>>)obj, cmds);
@@ -1404,14 +1088,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LeveledItem_FieldIndex.ChanceNone:
-                    obj.SetChanceNone(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.ChanceNone = (Byte)pair.Value;
                     break;
                 case LeveledItem_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (LeveledFlag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (LeveledFlag)pair.Value;
                     break;
                 case LeveledItem_FieldIndex.Entries:
                     obj._Entries.SetTo((IEnumerable<LeveledEntry<ItemAbstract>>)pair.Value, null);
@@ -1432,10 +1112,14 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledItem : ILeveledItemGetter, IMajorRecord, ILoquiClass<ILeveledItem, ILeveledItemGetter>, ILoquiClass<LeveledItem, ILeveledItemGetter>
     {
         new Byte ChanceNone { get; set; }
-        new INotifyingSetItem<Byte> ChanceNone_Property { get; }
+        new bool ChanceNone_IsSet { get; set; }
+        void ChanceNone_Set(Byte item, bool hasBeenSet = true);
+        void ChanceNone_Unset();
 
         new LeveledFlag Flags { get; set; }
-        new INotifyingSetItem<LeveledFlag> Flags_Property { get; }
+        new bool Flags_IsSet { get; set; }
+        void Flags_Set(LeveledFlag item, bool hasBeenSet = true);
+        void Flags_Unset();
 
         new INotifyingList<LeveledEntry<ItemAbstract>> Entries { get; }
     }
@@ -1444,12 +1128,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region ChanceNone
         Byte ChanceNone { get; }
-        INotifyingSetItemGetter<Byte> ChanceNone_Property { get; }
+        bool ChanceNone_IsSet { get; }
 
         #endregion
         #region Flags
         LeveledFlag Flags { get; }
-        INotifyingSetItemGetter<LeveledFlag> Flags_Property { get; }
+        bool Flags_IsSet { get; }
 
         #endregion
         #region Entries
@@ -1699,9 +1383,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
                 try
                 {
-                    item.ChanceNone_Property.SetToWithDefault(
-                        rhs: rhs.ChanceNone_Property,
-                        def: def?.ChanceNone_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.ChanceNone,
+                        rhsHasBeenSet: rhs.ChanceNone_IsSet,
+                        defItem: def?.ChanceNone ?? default(Byte),
+                        defHasBeenSet: def?.ChanceNone_IsSet ?? false,
+                        outRhsItem: out var rhsChanceNoneItem,
+                        outDefItem: out var defChanceNoneItem))
+                    {
+                        item.ChanceNone = rhsChanceNoneItem;
+                    }
+                    else
+                    {
+                        item.ChanceNone_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1718,9 +1413,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledItem_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Flags,
+                        rhsHasBeenSet: rhs.Flags_IsSet,
+                        defItem: def?.Flags ?? default(LeveledFlag),
+                        defHasBeenSet: def?.Flags_IsSet ?? false,
+                        outRhsItem: out var rhsFlagsItem,
+                        outDefItem: out var defFlagsItem))
+                    {
+                        item.Flags = rhsFlagsItem;
+                    }
+                    else
+                    {
+                        item.Flags_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1748,7 +1454,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(LeveledEntry<ItemAbstract>);
                                     return LeveledEntry<ItemAbstract>.Copy(
                                         r,
                                         copyMask?.Entries?.Specific,
@@ -1783,10 +1488,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LeveledItem_FieldIndex.ChanceNone:
-                    obj.ChanceNone_Property.HasBeenSet = on;
+                    obj.ChanceNone_IsSet = on;
                     break;
                 case LeveledItem_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
+                    obj.Flags_IsSet = on;
                     break;
                 case LeveledItem_FieldIndex.Entries:
                     obj.Entries.HasBeenSet = on;
@@ -1806,10 +1511,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LeveledItem_FieldIndex.ChanceNone:
-                    obj.ChanceNone_Property.Unset(cmds);
+                    obj.ChanceNone_Unset();
                     break;
                 case LeveledItem_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags_Unset();
                     break;
                 case LeveledItem_FieldIndex.Entries:
                     obj.Entries.Unset(cmds);
@@ -1828,9 +1533,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LeveledItem_FieldIndex.ChanceNone:
-                    return obj.ChanceNone_Property.HasBeenSet;
+                    return obj.ChanceNone_IsSet;
                 case LeveledItem_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                    return obj.Flags_IsSet;
                 case LeveledItem_FieldIndex.Entries:
                     return obj.Entries.HasBeenSet;
                 default:
@@ -1860,8 +1565,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledItem item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.ChanceNone_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.ChanceNone_Unset();
+            item.Flags_Unset();
             item.Entries.Unset(cmds.ToUnsetParams());
         }
 
@@ -1880,8 +1585,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LeveledItem_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.ChanceNone = item.ChanceNone_Property.Equals(rhs.ChanceNone_Property, (l, r) => l == r);
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.ChanceNone = item.ChanceNone_IsSet == rhs.ChanceNone_IsSet && item.ChanceNone == rhs.ChanceNone;
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
             if (item.Entries.HasBeenSet == rhs.Entries.HasBeenSet)
             {
                 if (item.Entries.HasBeenSet)
@@ -1971,8 +1676,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILeveledItemGetter item,
             LeveledItem_Mask<bool?> checkMask)
         {
-            if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != item.ChanceNone_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
+            if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != item.ChanceNone_IsSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
             if (checkMask.Entries.Overall.HasValue && checkMask.Entries.Overall.Value != item.Entries.HasBeenSet) return false;
             return true;
         }
@@ -1980,8 +1685,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LeveledItem_Mask<bool> GetHasBeenSetMask(ILeveledItemGetter item)
         {
             var ret = new LeveledItem_Mask<bool>();
-            ret.ChanceNone = item.ChanceNone_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.ChanceNone = item.ChanceNone_IsSet;
+            ret.Flags = item.Flags_IsSet;
             ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.Select((i) => new MaskItem<bool, LeveledEntry_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -2044,23 +1749,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledItem");
             }
-            if (item.ChanceNone_Property.HasBeenSet
+            if (item.ChanceNone_IsSet
                 && (translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ChanceNone),
-                    item: item.ChanceNone_Property,
+                    item: item.ChanceNone,
                     fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
                     errorMask: errorMask);
             }
-            if (item.Flags_Property.HasBeenSet
+            if (item.Flags_IsSet
                 && (translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<LeveledFlag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)LeveledItem_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -2143,27 +1848,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ChanceNone_Property,
-                fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(LeveledItem_Registration.LVLD_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Write(
-                writer,
-                item.Flags_Property,
-                length: 1,
-                fieldIndex: (int)LeveledItem_FieldIndex.Flags,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(LeveledItem_Registration.LVLF_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Write(
-                writer: writer,
-                items: item.Entries,
-                fieldIndex: (int)LeveledItem_FieldIndex.Entries,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Write);
+            if (item.ChanceNone_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ChanceNone,
+                    fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(LeveledItem_Registration.LVLD_HEADER),
+                    nullable: false);
+            }
+            if (item.Flags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1,
+                    fieldIndex: (int)LeveledItem_FieldIndex.Flags,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(LeveledItem_Registration.LVLF_HEADER),
+                    nullable: false);
+            }
+            if (item.Entries.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Write(
+                    writer: writer,
+                    items: item.Entries,
+                    fieldIndex: (int)LeveledItem_FieldIndex.Entries,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<LeveledEntry<ItemAbstract>>.Instance.Write);
+            }
             LeveledItem.SpecialWrite_Vestigial_Internal(
                 item: item,
                 writer: writer,

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
+using ReactiveUI;
 using Noggog;
 using Noggog.Notifying;
 
@@ -25,20 +26,20 @@ namespace Mutagen.Bethesda.Oblivion
         #region Cell Subscription
         protected void SubscribeToCells()
         {
-            _Cells_Object.Items.Subscribe_Enumerable_Single((change) =>
-            {
-                switch (change.AddRem)
-                {
-                    case AddRemove.Add:
-                        SubscribeToCellBlock(change.Item);
-                        break;
-                    case AddRemove.Remove:
-                        UnsubscribeFromCellBlock(change.Item);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            });
+            //_Cells_Object.Items.Subscribe_Enumerable_Single((change) =>
+            //{
+            //    switch (change.AddRem)
+            //    {
+            //        case AddRemove.Add:
+            //            SubscribeToCellBlock(change.Item);
+            //            break;
+            //        case AddRemove.Remove:
+            //            UnsubscribeFromCellBlock(change.Item);
+            //            break;
+            //        default:
+            //            throw new NotImplementedException();
+            //    }
+            //});
         }
 
         protected void SubscribeToCellBlock(CellBlock block)
@@ -83,19 +84,22 @@ namespace Mutagen.Bethesda.Oblivion
             cell.Persistent.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
             cell.Temporary.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
             cell.VisibleWhenDistant.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
-            cell.PathGrid_Property.Subscribe(_subscribeObject, (r) =>
+
+            // ToDo
+            // Unsubscribe mechanics, add back in remove
+            cell.WhenAny(x => x.PathGrid).Subscribe((r) =>
             {
-                if (r.Old != null)
+                //if (r.Old != null)
+                //{
+                //    _majorRecords.Remove(r.Old.FormID);
+                //}
+                if (r != null)
                 {
-                    _majorRecords.Remove(r.Old.FormID);
-                }
-                if (r.New != null)
-                {
-                    if (_majorRecords.ContainsKey(r.New.FormID))
+                    if (_majorRecords.ContainsKey(r.FormID))
                     {
-                        throw new ArgumentException($"Cannot add a pathgrid {r.New.FormID} that exists elsewhere in the same mod.");
+                        throw new ArgumentException($"Cannot add a pathgrid {r.FormID} that exists elsewhere in the same mod.");
                     }
-                    _majorRecords[r.New.FormID] = r.New;
+                    _majorRecords[r.FormID] = r;
                 }
             });
         }
@@ -118,57 +122,63 @@ namespace Mutagen.Bethesda.Oblivion
             cell.Persistent.Unsubscribe(_subscribeObject);
             cell.Temporary.Unsubscribe(_subscribeObject);
             cell.VisibleWhenDistant.Unsubscribe(_subscribeObject);
-            cell.PathGrid_Property.Subscribe(_subscribeObject, (r) => Utility.Modify(_majorRecords, r));
+            _majorRecords.Remove(cell.PathGrid.FormID);
+            // ToDo
+            // Unsubscribe mechanics for pathgrid
         }
         #endregion
 
         #region Worldspace Subscription
         protected void SubscribeToWorldspaces()
         {
-            _Worldspaces_Object.Items.Subscribe_Enumerable_Single((change) =>
-            {
-                switch (change.AddRem)
-                {
-                    case AddRemove.Add:
-                        SubscribeToWorldspace(change.Item.Value);
-                        break;
-                    case AddRemove.Remove:
-                        UnsubscribeFromWorldspace(change.Item.Value);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            });
+            //_Worldspaces_Object.Items.Subscribe_Enumerable_Single((change) =>
+            //{
+            //    switch (change.AddRem)
+            //    {
+            //        case AddRemove.Add:
+            //            SubscribeToWorldspace(change.Item.Value);
+            //            break;
+            //        case AddRemove.Remove:
+            //            UnsubscribeFromWorldspace(change.Item.Value);
+            //            break;
+            //        default:
+            //            throw new NotImplementedException();
+            //    }
+            //});
         }
 
         protected void SubscribeToWorldspace(Worldspace worldspace)
         {
-            worldspace.Road_Property.Subscribe(_subscribeObject, (r) =>
+            // ToDo
+            // Unsubscribe mechanics, add back in remove
+            worldspace.WhenAny(x => x.Road).Subscribe((r) =>
             {
-                if (r.Old != null)
+                //if (r.Old != null)
+                //{
+                //    _majorRecords.Remove(r.Old.FormID);
+                //}
+                if (r != null)
                 {
-                    _majorRecords.Remove(r.Old.FormID);
-                }
-                if (r.New != null)
-                {
-                    if (_majorRecords.ContainsKey(r.New.FormID))
+                    if (_majorRecords.ContainsKey(r.FormID))
                     {
                         throw new ArgumentException("Cannot add a road that exists elsewhere in the same mod.");
                     }
-                    _majorRecords[r.New.FormID] = r.New;
+                    _majorRecords[r.FormID] = r;
                 }
             });
-            worldspace.TopCell_Property.Subscribe(_subscribeObject, (r) =>
+            // ToDo
+            // Unsubscribe mechanics, add back in remove
+            worldspace.WhenAny(x => x.TopCell).Subscribe((r) =>
             {
-                if (r.Old != null)
+                //if (r.Old != null)
+                //{
+                //    _majorRecords.Remove(r.Old.FormID);
+                //    UnsubscribeFromCell(r.Old);
+                //}
+                if (r != null)
                 {
-                    _majorRecords.Remove(r.Old.FormID);
-                    UnsubscribeFromCell(r.Old);
-                }
-                if (r.New != null)
-                {
-                    SubscribeToCell(r.New);
-                    _majorRecords[r.New.FormID] = r.New;
+                    SubscribeToCell(r);
+                    _majorRecords[r.FormID] = r;
                 }
             });
             worldspace.SubCells.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
@@ -227,34 +237,36 @@ namespace Mutagen.Bethesda.Oblivion
         protected void UnsubscribeFromWorldspace(Worldspace worldspace)
         {
             worldspace.SubCells.Unsubscribe(_subscribeObject);
-            worldspace.TopCell_Property.Unsubscribe(_subscribeObject);
-            worldspace.Road_Property.Unsubscribe(_subscribeObject);
+            // ToDo
+            // Unsubscribe mechanics
+            //worldspace.TopCell_Property.Unsubscribe(_subscribeObject);
+            //worldspace.Road_Property.Unsubscribe(_subscribeObject);
         }
         #endregion
 
         #region Dialog Subscription
         protected void SubscribeToDialogs()
         {
-            _DialogTopics_Object.Items.Subscribe_Enumerable_Single((change) =>
-            {
-                switch (change.AddRem)
-                {
-                    case AddRemove.Add:
-                        change.Item.Value.Items.Subscribe_Enumerable_Single(
-                            _subscribeObject, 
-                            (r) => Utility.ModifyButThrow(_majorRecords, r));
-                        break;
-                    case AddRemove.Remove:
-                        foreach (var item in change.Item.Value.Items)
-                        {
-                            _majorRecords.Remove(item.FormID);
-                        }
-                        change.Item.Value.Items.Unsubscribe(_subscribeObject);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            });
+            //_DialogTopics_Object.Items.Subscribe_Enumerable_Single((change) =>
+            //{
+            //    switch (change.AddRem)
+            //    {
+            //        case AddRemove.Add:
+            //            change.Item.Value.Items.Subscribe_Enumerable_Single(
+            //                _subscribeObject, 
+            //                (r) => Utility.ModifyButThrow(_majorRecords, r));
+            //            break;
+            //        case AddRemove.Remove:
+            //            foreach (var item in change.Item.Value.Items)
+            //            {
+            //                _majorRecords.Remove(item.FormID);
+            //            }
+            //            change.Item.Value.Items.Unsubscribe(_subscribeObject);
+            //            break;
+            //        default:
+            //            throw new NotImplementedException();
+            //    }
+            //});
         }
         #endregion
     }

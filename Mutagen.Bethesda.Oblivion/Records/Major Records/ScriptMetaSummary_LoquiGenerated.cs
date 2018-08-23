@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,14 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptMetaSummary : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IScriptMetaSummary,
         ILoquiObject<ScriptMetaSummary>,
         ILoquiObjectSetter,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<UInt32>,
-        IPropertySupporter<Int32>,
-        IPropertySupporter<ScriptFields.ScriptType>,
         IEquatable<ScriptMetaSummary>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -52,247 +50,51 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
-        protected Byte[] _Fluff = new byte[4];
-        protected PropertyForwarder<ScriptMetaSummary, Byte[]> _FluffForwarder;
-        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<ScriptMetaSummary, Byte[]>(this, (int)ScriptMetaSummary_FieldIndex.Fluff));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Fluff = new byte[4];
         public Byte[] Fluff
         {
-            get => this._Fluff;
-            set => this.SetFluff(value);
-        }
-        protected void SetFluff(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Fluff;
+            set
             {
-                item = new byte[4];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.Fluff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.Fluff] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Fluff;
-                _Fluff = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)ScriptMetaSummary_FieldIndex.Fluff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Fluff = item;
+                this._Fluff = value;
+                if (value == null)
+                {
+                    this._Fluff = new byte[4];
+                }
             }
         }
-        protected void UnsetFluff()
-        {
-            SetFluff(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IScriptMetaSummary.Fluff_Property => this.Fluff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IScriptMetaSummaryGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region RefCount
-        protected UInt32 _RefCount;
-        protected PropertyForwarder<ScriptMetaSummary, UInt32> _RefCountForwarder;
-        public INotifyingSetItem<UInt32> RefCount_Property => _RefCountForwarder ?? (_RefCountForwarder = new PropertyForwarder<ScriptMetaSummary, UInt32>(this, (int)ScriptMetaSummary_FieldIndex.RefCount));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _RefCount;
         public UInt32 RefCount
         {
             get => this._RefCount;
-            set => this.SetRefCount(value);
+            set => this.RaiseAndSetIfChanged(ref this._RefCount, value, nameof(RefCount));
         }
-        protected void SetRefCount(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.RefCount];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RefCount == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.RefCount] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = RefCount;
-                _RefCount = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)ScriptMetaSummary_FieldIndex.RefCount,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RefCount = item;
-            }
-        }
-        protected void UnsetRefCount()
-        {
-            _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.RefCount] = false;
-            RefCount = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IScriptMetaSummary.RefCount_Property => this.RefCount_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.RefCount_Property => this.RefCount_Property;
         #endregion
         #region CompiledSize
-        protected Int32 _CompiledSize;
-        protected PropertyForwarder<ScriptMetaSummary, Int32> _CompiledSizeForwarder;
-        public INotifyingSetItemGetter<Int32> CompiledSize_Property => _CompiledSizeForwarder ?? (_CompiledSizeForwarder = new PropertyForwarder<ScriptMetaSummary, Int32>(this, (int)ScriptMetaSummary_FieldIndex.CompiledSize));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _CompiledSize;
         public Int32 CompiledSize
         {
             get => this._CompiledSize;
-            protected set => this.SetCompiledSize(value);
+            protected set => this.RaiseAndSetIfChanged(ref this._CompiledSize, value, nameof(CompiledSize));
         }
-        protected void SetCompiledSize(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.CompiledSize];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CompiledSize == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.CompiledSize] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = CompiledSize;
-                _CompiledSize = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _CompiledSize = item;
-            }
-        }
-        protected void UnsetCompiledSize()
-        {
-            _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.CompiledSize] = false;
-            CompiledSize = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IScriptMetaSummaryGetter.CompiledSize_Property => this.CompiledSize_Property;
         #endregion
         #region VariableCount
-        protected UInt32 _VariableCount;
-        protected PropertyForwarder<ScriptMetaSummary, UInt32> _VariableCountForwarder;
-        public INotifyingSetItem<UInt32> VariableCount_Property => _VariableCountForwarder ?? (_VariableCountForwarder = new PropertyForwarder<ScriptMetaSummary, UInt32>(this, (int)ScriptMetaSummary_FieldIndex.VariableCount));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _VariableCount;
         public UInt32 VariableCount
         {
             get => this._VariableCount;
-            set => this.SetVariableCount(value);
+            set => this.RaiseAndSetIfChanged(ref this._VariableCount, value, nameof(VariableCount));
         }
-        protected void SetVariableCount(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.VariableCount];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && VariableCount == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.VariableCount] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = VariableCount;
-                _VariableCount = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)ScriptMetaSummary_FieldIndex.VariableCount,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _VariableCount = item;
-            }
-        }
-        protected void UnsetVariableCount()
-        {
-            _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.VariableCount] = false;
-            VariableCount = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IScriptMetaSummary.VariableCount_Property => this.VariableCount_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.VariableCount_Property => this.VariableCount_Property;
         #endregion
         #region Type
-        protected ScriptFields.ScriptType _Type;
-        protected PropertyForwarder<ScriptMetaSummary, ScriptFields.ScriptType> _TypeForwarder;
-        public INotifyingSetItem<ScriptFields.ScriptType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<ScriptMetaSummary, ScriptFields.ScriptType>(this, (int)ScriptMetaSummary_FieldIndex.Type));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ScriptFields.ScriptType _Type;
         public ScriptFields.ScriptType Type
         {
             get => this._Type;
-            set => this.SetType(value);
+            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
         }
-        protected void SetType(
-            ScriptFields.ScriptType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.Type];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Type == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.Type] = hasBeenSet;
-            }
-            if (_ScriptFieldsScriptType_subscriptions != null)
-            {
-                var tmp = Type;
-                _Type = item;
-                _ScriptFieldsScriptType_subscriptions.FireSubscriptions(
-                    index: (int)ScriptMetaSummary_FieldIndex.Type,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Type = item;
-            }
-        }
-        protected void UnsetType()
-        {
-            _hasBeenSetTracker[(int)ScriptMetaSummary_FieldIndex.Type] = false;
-            Type = default(ScriptFields.ScriptType);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<ScriptFields.ScriptType> IScriptMetaSummary.Type_Property => this.Type_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<ScriptFields.ScriptType> IScriptMetaSummaryGetter.Type_Property => this.Type_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -702,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFluff();
+                            item.Fluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -728,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRefCount();
+                            item.RefCount = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -754,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVariableCount();
+                            item.VariableCount = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -780,7 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetType();
+                            item.Type = default(ScriptFields.ScriptType);
                         }
                     }
                     catch (Exception ex)
@@ -815,553 +617,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    return Fluff;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    SetFluff(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    SetFluff(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter UInt32
-        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
-        UInt32 IPropertySupporter<UInt32>.Get(int index)
-        {
-            return GetUInt32(index: index);
-        }
-
-        protected UInt32 GetUInt32(int index)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                    return RefCount;
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    return VariableCount;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        void IPropertySupporter<UInt32>.Set(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetUInt32(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                    SetRefCount(item, hasBeenSet, cmds);
-                    break;
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    SetVariableCount(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetUInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                    SetRefCount(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    SetVariableCount(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt32_subscriptions == null)
-            {
-                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
-            }
-            _UInt32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
-        {
-            return DefaultValueUInt32(index: index);
-        }
-
-        protected UInt32 DefaultValueUInt32(int index)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    return default(UInt32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    return CompiledSize;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    SetCompiledSize(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    SetCompiledSize(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter ScriptFields.ScriptType
-        protected ObjectCentralizationSubscriptions<ScriptFields.ScriptType> _ScriptFieldsScriptType_subscriptions;
-        ScriptFields.ScriptType IPropertySupporter<ScriptFields.ScriptType>.Get(int index)
-        {
-            return GetScriptFieldsScriptType(index: index);
-        }
-
-        protected ScriptFields.ScriptType GetScriptFieldsScriptType(int index)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.Type:
-                    return Type;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields.ScriptType: {index}");
-            }
-        }
-
-        void IPropertySupporter<ScriptFields.ScriptType>.Set(
-            int index,
-            ScriptFields.ScriptType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetScriptFieldsScriptType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetScriptFieldsScriptType(
-            int index,
-            ScriptFields.ScriptType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.Type:
-                    SetType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields.ScriptType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<ScriptFields.ScriptType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<ScriptFields.ScriptType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<ScriptFields.ScriptType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetScriptFieldsScriptType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetScriptFieldsScriptType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.Type:
-                    SetType(
-                        item: default(ScriptFields.ScriptType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields.ScriptType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptFields.ScriptType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<ScriptFields.ScriptType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ScriptFieldsScriptType_subscriptions == null)
-            {
-                _ScriptFieldsScriptType_subscriptions = new ObjectCentralizationSubscriptions<ScriptFields.ScriptType>();
-            }
-            _ScriptFieldsScriptType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptFields.ScriptType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ScriptFieldsScriptType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<ScriptFields.ScriptType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        ScriptFields.ScriptType IPropertySupporter<ScriptFields.ScriptType>.DefaultValue(int index)
-        {
-            return DefaultValueScriptFieldsScriptType(index: index);
-        }
-
-        protected ScriptFields.ScriptType DefaultValueScriptFieldsScriptType(int index)
-        {
-            switch ((ScriptMetaSummary_FieldIndex)index)
-            {
-                case ScriptMetaSummary_FieldIndex.Type:
-                    return default(ScriptFields.ScriptType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields.ScriptType: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ScriptMetaSummary_Registration.TRIGGERING_RECORD_TYPE;
@@ -1605,7 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFluff();
+                    item.Fluff = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -1629,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetRefCount();
+                    item.RefCount = default(UInt32);
                 }
             }
             catch (Exception ex)
@@ -1657,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetVariableCount();
+                    item.VariableCount = default(UInt32);
                 }
             }
             catch (Exception ex)
@@ -1681,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetType();
+                    item.Type = default(ScriptFields.ScriptType);
                 }
             }
             catch (Exception ex)
@@ -1822,24 +1077,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case ScriptMetaSummary_FieldIndex.Fluff:
-                    this.SetFluff(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Fluff = (Byte[])obj;
                     break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
-                    this.SetRefCount(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.RefCount = (UInt32)obj;
                     break;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
-                    this.SetVariableCount(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.VariableCount = (UInt32)obj;
                     break;
                 case ScriptMetaSummary_FieldIndex.Type:
-                    this.SetType(
-                        (ScriptFields.ScriptType)obj,
-                        cmds: cmds);
+                    this.Type = (ScriptFields.ScriptType)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1879,24 +1126,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ScriptMetaSummary_FieldIndex.Fluff:
-                    obj.SetFluff(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Fluff = (Byte[])pair.Value;
                     break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
-                    obj.SetRefCount(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.RefCount = (UInt32)pair.Value;
                     break;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
-                    obj.SetVariableCount(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.VariableCount = (UInt32)pair.Value;
                     break;
                 case ScriptMetaSummary_FieldIndex.Type:
-                    obj.SetType(
-                        (ScriptFields.ScriptType)pair.Value,
-                        cmds: null);
+                    obj.Type = (ScriptFields.ScriptType)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1914,16 +1153,12 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptMetaSummary : IScriptMetaSummaryGetter, ILoquiClass<IScriptMetaSummary, IScriptMetaSummaryGetter>, ILoquiClass<ScriptMetaSummary, IScriptMetaSummaryGetter>
     {
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
 
         new UInt32 RefCount { get; set; }
-        new INotifyingItem<UInt32> RefCount_Property { get; }
 
         new UInt32 VariableCount { get; set; }
-        new INotifyingItem<UInt32> VariableCount_Property { get; }
 
         new ScriptFields.ScriptType Type { get; set; }
-        new INotifyingItem<ScriptFields.ScriptType> Type_Property { get; }
 
     }
 
@@ -1931,27 +1166,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region RefCount
         UInt32 RefCount { get; }
-        INotifyingItemGetter<UInt32> RefCount_Property { get; }
 
         #endregion
         #region CompiledSize
         Int32 CompiledSize { get; }
-        INotifyingItemGetter<Int32> CompiledSize_Property { get; }
 
         #endregion
         #region VariableCount
         UInt32 VariableCount { get; }
-        INotifyingItemGetter<UInt32> VariableCount_Property { get; }
 
         #endregion
         #region Type
         ScriptFields.ScriptType Type { get; }
-        INotifyingItemGetter<ScriptFields.ScriptType> Type_Property { get; }
 
         #endregion
 
@@ -2206,9 +1436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Fluff);
                 try
                 {
-                    item.Fluff_Property.Set(
-                        value: rhs.Fluff,
-                        cmds: cmds);
+                    item.Fluff = rhs.Fluff;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2225,9 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.RefCount);
                 try
                 {
-                    item.RefCount_Property.Set(
-                        value: rhs.RefCount,
-                        cmds: cmds);
+                    item.RefCount = rhs.RefCount;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2244,9 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.VariableCount);
                 try
                 {
-                    item.VariableCount_Property.Set(
-                        value: rhs.VariableCount,
-                        cmds: cmds);
+                    item.VariableCount = rhs.VariableCount;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2263,9 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Type);
                 try
                 {
-                    item.Type_Property.Set(
-                        value: rhs.Type,
-                        cmds: cmds);
+                    item.Type = rhs.Type;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2509,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Fluff),
-                    item: item.Fluff_Property,
+                    item: item.Fluff,
                     fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
@@ -2518,7 +1740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RefCount),
-                    item: item.RefCount_Property,
+                    item: item.RefCount,
                     fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                     errorMask: errorMask);
             }
@@ -2527,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.VariableCount),
-                    item: item.VariableCount_Property,
+                    item: item.VariableCount,
                     fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                     errorMask: errorMask);
             }
@@ -2536,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Write(
                     node: elem,
                     name: nameof(item.Type),
-                    item: item.Type_Property,
+                    item: item.Type,
                     fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
                     errorMask: errorMask);
             }
@@ -2589,12 +1811,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff_Property,
+                item: item.Fluff,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RefCount_Property,
+                item: item.RefCount,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                 errorMask: errorMask);
             ScriptMetaSummary.WriteBinary_CompiledSize(
@@ -2603,12 +1825,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.VariableCount_Property,
+                item: item.VariableCount,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Write(
                 writer,
-                item.Type_Property,
+                item.Type,
                 length: 4,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
                 errorMask: errorMask);

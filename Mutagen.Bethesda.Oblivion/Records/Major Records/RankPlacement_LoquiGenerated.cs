@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RankPlacement : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IRankPlacement,
         ILoquiObject<RankPlacement>,
         ILoquiObjectSetter,
-        IPropertySupporter<Byte>,
-        IPropertySupporter<Byte[]>,
         IEquatable<RankPlacement>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,105 +57,27 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Faction> IRankPlacementGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Rank
-        protected Byte _Rank;
-        protected PropertyForwarder<RankPlacement, Byte> _RankForwarder;
-        public INotifyingSetItem<Byte> Rank_Property => _RankForwarder ?? (_RankForwarder = new PropertyForwarder<RankPlacement, Byte>(this, (int)RankPlacement_FieldIndex.Rank));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Rank;
         public Byte Rank
         {
             get => this._Rank;
-            set => this.SetRank(value);
+            set => this.RaiseAndSetIfChanged(ref this._Rank, value, nameof(Rank));
         }
-        protected void SetRank(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RankPlacement_FieldIndex.Rank];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Rank == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RankPlacement_FieldIndex.Rank] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Rank;
-                _Rank = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)RankPlacement_FieldIndex.Rank,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Rank = item;
-            }
-        }
-        protected void UnsetRank()
-        {
-            _hasBeenSetTracker[(int)RankPlacement_FieldIndex.Rank] = false;
-            Rank = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IRankPlacement.Rank_Property => this.Rank_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IRankPlacementGetter.Rank_Property => this.Rank_Property;
         #endregion
         #region Fluff
-        protected Byte[] _Fluff = new byte[3];
-        protected PropertyForwarder<RankPlacement, Byte[]> _FluffForwarder;
-        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<RankPlacement, Byte[]>(this, (int)RankPlacement_FieldIndex.Fluff));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Fluff = new byte[3];
         public Byte[] Fluff
         {
-            get => this._Fluff;
-            set => this.SetFluff(value);
-        }
-        protected void SetFluff(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Fluff;
+            set
             {
-                item = new byte[3];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RankPlacement_FieldIndex.Fluff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RankPlacement_FieldIndex.Fluff] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Fluff;
-                _Fluff = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)RankPlacement_FieldIndex.Fluff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Fluff = item;
+                this._Fluff = value;
+                if (value == null)
+                {
+                    this._Fluff = new byte[3];
+                }
             }
         }
-        protected void UnsetFluff()
-        {
-            SetFluff(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IRankPlacement.Fluff_Property => this.Fluff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IRankPlacementGetter.Fluff_Property => this.Fluff_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -568,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRank();
+                            item.Rank = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -594,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFluff();
+                            item.Fluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -627,274 +549,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((RankPlacement_FieldIndex)index)
-            {
-                case RankPlacement_FieldIndex.Rank:
-                    return Rank;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RankPlacement_FieldIndex)index)
-            {
-                case RankPlacement_FieldIndex.Rank:
-                    SetRank(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RankPlacement_FieldIndex)index)
-            {
-                case RankPlacement_FieldIndex.Rank:
-                    SetRank(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((RankPlacement_FieldIndex)index)
-            {
-                case RankPlacement_FieldIndex.Rank:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((RankPlacement_FieldIndex)index)
-            {
-                case RankPlacement_FieldIndex.Fluff:
-                    return Fluff;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RankPlacement_FieldIndex)index)
-            {
-                case RankPlacement_FieldIndex.Fluff:
-                    SetFluff(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RankPlacement_FieldIndex)index)
-            {
-                case RankPlacement_FieldIndex.Fluff:
-                    SetFluff(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((RankPlacement_FieldIndex)index)
-            {
-                case RankPlacement_FieldIndex.Fluff:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RankPlacement_Registration.TRIGGERING_RECORD_TYPE;
@@ -1128,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetRank();
+                    item.Rank = default(Byte);
                 }
             }
             catch (Exception ex)
@@ -1152,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFluff();
+                    item.Fluff = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -1296,14 +950,10 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case RankPlacement_FieldIndex.Rank:
-                    this.SetRank(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Rank = (Byte)obj;
                     break;
                 case RankPlacement_FieldIndex.Fluff:
-                    this.SetFluff(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Fluff = (Byte[])obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1348,14 +998,10 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case RankPlacement_FieldIndex.Rank:
-                    obj.SetRank(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Rank = (Byte)pair.Value;
                     break;
                 case RankPlacement_FieldIndex.Fluff:
-                    obj.SetFluff(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Fluff = (Byte[])pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1374,10 +1020,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Faction Faction { get; set; }
         new Byte Rank { get; set; }
-        new INotifyingItem<Byte> Rank_Property { get; }
 
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
 
     }
 
@@ -1390,12 +1034,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Rank
         Byte Rank { get; }
-        INotifyingItemGetter<Byte> Rank_Property { get; }
 
         #endregion
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
 
@@ -1643,9 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
                 try
                 {
-                    item.Rank_Property.Set(
-                        value: rhs.Rank,
-                        cmds: cmds);
+                    item.Rank = rhs.Rank;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1662,9 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
                 try
                 {
-                    item.Fluff_Property.Set(
-                        value: rhs.Fluff,
-                        cmds: cmds);
+                    item.Fluff = rhs.Fluff;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1708,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    obj.Faction = default(FormIDLink<Faction>);
+                    obj.Faction_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case RankPlacement_FieldIndex.Rank:
                     obj.Rank = default(Byte);
@@ -1759,7 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankPlacement item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Faction = default(FormIDLink<Faction>);
+            item.Faction_Property.Unset(cmds.ToUnsetParams());
             item.Rank = default(Byte);
             item.Fluff = default(Byte[]);
         }
@@ -1890,7 +1528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Rank),
-                    item: item.Rank_Property,
+                    item: item.Rank,
                     fieldIndex: (int)RankPlacement_FieldIndex.Rank,
                     errorMask: errorMask);
             }
@@ -1899,7 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Fluff),
-                    item: item.Fluff_Property,
+                    item: item.Fluff,
                     fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
@@ -1957,12 +1595,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Rank_Property,
+                item: item.Rank,
                 fieldIndex: (int)RankPlacement_FieldIndex.Rank,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff_Property,
+                item: item.Fluff,
                 fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
                 errorMask: errorMask);
         }

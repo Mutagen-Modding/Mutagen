@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MapData : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IMapData,
         ILoquiObject<MapData>,
         ILoquiObjectSetter,
-        IPropertySupporter<P2Int>,
-        IPropertySupporter<P2Int16>,
         IEquatable<MapData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,148 +50,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region UsableDimensions
-        protected P2Int _UsableDimensions;
-        protected PropertyForwarder<MapData, P2Int> _UsableDimensionsForwarder;
-        public INotifyingSetItem<P2Int> UsableDimensions_Property => _UsableDimensionsForwarder ?? (_UsableDimensionsForwarder = new PropertyForwarder<MapData, P2Int>(this, (int)MapData_FieldIndex.UsableDimensions));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P2Int _UsableDimensions;
         public P2Int UsableDimensions
         {
             get => this._UsableDimensions;
-            set => this.SetUsableDimensions(value);
+            set => this.RaiseAndSetIfChanged(ref this._UsableDimensions, value, nameof(UsableDimensions));
         }
-        protected void SetUsableDimensions(
-            P2Int item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MapData_FieldIndex.UsableDimensions];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && UsableDimensions == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MapData_FieldIndex.UsableDimensions] = hasBeenSet;
-            }
-            if (_P2Int_subscriptions != null)
-            {
-                var tmp = UsableDimensions;
-                _UsableDimensions = item;
-                _P2Int_subscriptions.FireSubscriptions(
-                    index: (int)MapData_FieldIndex.UsableDimensions,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _UsableDimensions = item;
-            }
-        }
-        protected void UnsetUsableDimensions()
-        {
-            _hasBeenSetTracker[(int)MapData_FieldIndex.UsableDimensions] = false;
-            UsableDimensions = default(P2Int);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P2Int> IMapData.UsableDimensions_Property => this.UsableDimensions_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P2Int> IMapDataGetter.UsableDimensions_Property => this.UsableDimensions_Property;
         #endregion
         #region CellCoordinatesNWCell
-        protected P2Int16 _CellCoordinatesNWCell;
-        protected PropertyForwarder<MapData, P2Int16> _CellCoordinatesNWCellForwarder;
-        public INotifyingSetItem<P2Int16> CellCoordinatesNWCell_Property => _CellCoordinatesNWCellForwarder ?? (_CellCoordinatesNWCellForwarder = new PropertyForwarder<MapData, P2Int16>(this, (int)MapData_FieldIndex.CellCoordinatesNWCell));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P2Int16 _CellCoordinatesNWCell;
         public P2Int16 CellCoordinatesNWCell
         {
             get => this._CellCoordinatesNWCell;
-            set => this.SetCellCoordinatesNWCell(value);
+            set => this.RaiseAndSetIfChanged(ref this._CellCoordinatesNWCell, value, nameof(CellCoordinatesNWCell));
         }
-        protected void SetCellCoordinatesNWCell(
-            P2Int16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MapData_FieldIndex.CellCoordinatesNWCell];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CellCoordinatesNWCell == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MapData_FieldIndex.CellCoordinatesNWCell] = hasBeenSet;
-            }
-            if (_P2Int16_subscriptions != null)
-            {
-                var tmp = CellCoordinatesNWCell;
-                _CellCoordinatesNWCell = item;
-                _P2Int16_subscriptions.FireSubscriptions(
-                    index: (int)MapData_FieldIndex.CellCoordinatesNWCell,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _CellCoordinatesNWCell = item;
-            }
-        }
-        protected void UnsetCellCoordinatesNWCell()
-        {
-            _hasBeenSetTracker[(int)MapData_FieldIndex.CellCoordinatesNWCell] = false;
-            CellCoordinatesNWCell = default(P2Int16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P2Int16> IMapData.CellCoordinatesNWCell_Property => this.CellCoordinatesNWCell_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P2Int16> IMapDataGetter.CellCoordinatesNWCell_Property => this.CellCoordinatesNWCell_Property;
         #endregion
         #region CellCoordinatesSECell
-        protected P2Int16 _CellCoordinatesSECell;
-        protected PropertyForwarder<MapData, P2Int16> _CellCoordinatesSECellForwarder;
-        public INotifyingSetItem<P2Int16> CellCoordinatesSECell_Property => _CellCoordinatesSECellForwarder ?? (_CellCoordinatesSECellForwarder = new PropertyForwarder<MapData, P2Int16>(this, (int)MapData_FieldIndex.CellCoordinatesSECell));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P2Int16 _CellCoordinatesSECell;
         public P2Int16 CellCoordinatesSECell
         {
             get => this._CellCoordinatesSECell;
-            set => this.SetCellCoordinatesSECell(value);
+            set => this.RaiseAndSetIfChanged(ref this._CellCoordinatesSECell, value, nameof(CellCoordinatesSECell));
         }
-        protected void SetCellCoordinatesSECell(
-            P2Int16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MapData_FieldIndex.CellCoordinatesSECell];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CellCoordinatesSECell == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MapData_FieldIndex.CellCoordinatesSECell] = hasBeenSet;
-            }
-            if (_P2Int16_subscriptions != null)
-            {
-                var tmp = CellCoordinatesSECell;
-                _CellCoordinatesSECell = item;
-                _P2Int16_subscriptions.FireSubscriptions(
-                    index: (int)MapData_FieldIndex.CellCoordinatesSECell,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _CellCoordinatesSECell = item;
-            }
-        }
-        protected void UnsetCellCoordinatesSECell()
-        {
-            _hasBeenSetTracker[(int)MapData_FieldIndex.CellCoordinatesSECell] = false;
-            CellCoordinatesSECell = default(P2Int16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P2Int16> IMapData.CellCoordinatesSECell_Property => this.CellCoordinatesSECell_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P2Int16> IMapDataGetter.CellCoordinatesSECell_Property => this.CellCoordinatesSECell_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -597,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUsableDimensions();
+                            item.UsableDimensions = default(P2Int);
                         }
                     }
                     catch (Exception ex)
@@ -623,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCellCoordinatesNWCell();
+                            item.CellCoordinatesNWCell = default(P2Int16);
                         }
                     }
                     catch (Exception ex)
@@ -649,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCellCoordinatesSECell();
+                            item.CellCoordinatesSECell = default(P2Int16);
                         }
                     }
                     catch (Exception ex)
@@ -682,285 +562,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter P2Int
-        protected ObjectCentralizationSubscriptions<P2Int> _P2Int_subscriptions;
-        P2Int IPropertySupporter<P2Int>.Get(int index)
-        {
-            return GetP2Int(index: index);
-        }
-
-        protected P2Int GetP2Int(int index)
-        {
-            switch ((MapData_FieldIndex)index)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    return UsableDimensions;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
-            }
-        }
-
-        void IPropertySupporter<P2Int>.Set(
-            int index,
-            P2Int item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP2Int(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP2Int(
-            int index,
-            P2Int item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MapData_FieldIndex)index)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    SetUsableDimensions(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P2Int>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P2Int>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P2Int>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP2Int(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP2Int(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MapData_FieldIndex)index)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    SetUsableDimensions(
-                        item: default(P2Int),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P2Int> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P2Int_subscriptions == null)
-            {
-                _P2Int_subscriptions = new ObjectCentralizationSubscriptions<P2Int>();
-            }
-            _P2Int_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P2Int_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P2Int>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P2Int IPropertySupporter<P2Int>.DefaultValue(int index)
-        {
-            return DefaultValueP2Int(index: index);
-        }
-
-        protected P2Int DefaultValueP2Int(int index)
-        {
-            switch ((MapData_FieldIndex)index)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    return default(P2Int);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter P2Int16
-        protected ObjectCentralizationSubscriptions<P2Int16> _P2Int16_subscriptions;
-        P2Int16 IPropertySupporter<P2Int16>.Get(int index)
-        {
-            return GetP2Int16(index: index);
-        }
-
-        protected P2Int16 GetP2Int16(int index)
-        {
-            switch ((MapData_FieldIndex)index)
-            {
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    return CellCoordinatesNWCell;
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return CellCoordinatesSECell;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        void IPropertySupporter<P2Int16>.Set(
-            int index,
-            P2Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP2Int16(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP2Int16(
-            int index,
-            P2Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MapData_FieldIndex)index)
-            {
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    SetCellCoordinatesNWCell(item, hasBeenSet, cmds);
-                    break;
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    SetCellCoordinatesSECell(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P2Int16>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P2Int16>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P2Int16>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP2Int16(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP2Int16(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MapData_FieldIndex)index)
-            {
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    SetCellCoordinatesNWCell(
-                        item: default(P2Int16),
-                        hasBeenSet: false);
-                    break;
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    SetCellCoordinatesSECell(
-                        item: default(P2Int16),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int16>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P2Int16> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P2Int16_subscriptions == null)
-            {
-                _P2Int16_subscriptions = new ObjectCentralizationSubscriptions<P2Int16>();
-            }
-            _P2Int16_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int16>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P2Int16_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P2Int16>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P2Int16 IPropertySupporter<P2Int16>.DefaultValue(int index)
-        {
-            return DefaultValueP2Int16(index: index);
-        }
-
-        protected P2Int16 DefaultValueP2Int16(int index)
-        {
-            switch ((MapData_FieldIndex)index)
-            {
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return default(P2Int16);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int16: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = MapData_Registration.TRIGGERING_RECORD_TYPE;
@@ -1183,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetUsableDimensions();
+                    item.UsableDimensions = default(P2Int);
                 }
             }
             catch (Exception ex)
@@ -1207,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetCellCoordinatesNWCell();
+                    item.CellCoordinatesNWCell = default(P2Int16);
                 }
             }
             catch (Exception ex)
@@ -1231,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetCellCoordinatesSECell();
+                    item.CellCoordinatesSECell = default(P2Int16);
                 }
             }
             catch (Exception ex)
@@ -1370,19 +971,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MapData_FieldIndex.UsableDimensions:
-                    this.SetUsableDimensions(
-                        (P2Int)obj,
-                        cmds: cmds);
+                    this.UsableDimensions = (P2Int)obj;
                     break;
                 case MapData_FieldIndex.CellCoordinatesNWCell:
-                    this.SetCellCoordinatesNWCell(
-                        (P2Int16)obj,
-                        cmds: cmds);
+                    this.CellCoordinatesNWCell = (P2Int16)obj;
                     break;
                 case MapData_FieldIndex.CellCoordinatesSECell:
-                    this.SetCellCoordinatesSECell(
-                        (P2Int16)obj,
-                        cmds: cmds);
+                    this.CellCoordinatesSECell = (P2Int16)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1422,19 +1017,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MapData_FieldIndex.UsableDimensions:
-                    obj.SetUsableDimensions(
-                        (P2Int)pair.Value,
-                        cmds: null);
+                    obj.UsableDimensions = (P2Int)pair.Value;
                     break;
                 case MapData_FieldIndex.CellCoordinatesNWCell:
-                    obj.SetCellCoordinatesNWCell(
-                        (P2Int16)pair.Value,
-                        cmds: null);
+                    obj.CellCoordinatesNWCell = (P2Int16)pair.Value;
                     break;
                 case MapData_FieldIndex.CellCoordinatesSECell:
-                    obj.SetCellCoordinatesSECell(
-                        (P2Int16)pair.Value,
-                        cmds: null);
+                    obj.CellCoordinatesSECell = (P2Int16)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1452,13 +1041,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMapData : IMapDataGetter, ILoquiClass<IMapData, IMapDataGetter>, ILoquiClass<MapData, IMapDataGetter>
     {
         new P2Int UsableDimensions { get; set; }
-        new INotifyingItem<P2Int> UsableDimensions_Property { get; }
 
         new P2Int16 CellCoordinatesNWCell { get; set; }
-        new INotifyingItem<P2Int16> CellCoordinatesNWCell_Property { get; }
 
         new P2Int16 CellCoordinatesSECell { get; set; }
-        new INotifyingItem<P2Int16> CellCoordinatesSECell_Property { get; }
 
     }
 
@@ -1466,17 +1052,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region UsableDimensions
         P2Int UsableDimensions { get; }
-        INotifyingItemGetter<P2Int> UsableDimensions_Property { get; }
 
         #endregion
         #region CellCoordinatesNWCell
         P2Int16 CellCoordinatesNWCell { get; }
-        INotifyingItemGetter<P2Int16> CellCoordinatesNWCell_Property { get; }
 
         #endregion
         #region CellCoordinatesSECell
         P2Int16 CellCoordinatesSECell { get; }
-        INotifyingItemGetter<P2Int16> CellCoordinatesSECell_Property { get; }
 
         #endregion
 
@@ -1705,9 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
                 try
                 {
-                    item.UsableDimensions_Property.Set(
-                        value: rhs.UsableDimensions,
-                        cmds: cmds);
+                    item.UsableDimensions = rhs.UsableDimensions;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1724,9 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
                 try
                 {
-                    item.CellCoordinatesNWCell_Property.Set(
-                        value: rhs.CellCoordinatesNWCell,
-                        cmds: cmds);
+                    item.CellCoordinatesNWCell = rhs.CellCoordinatesNWCell;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1743,9 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
                 try
                 {
-                    item.CellCoordinatesSECell_Property.Set(
-                        value: rhs.CellCoordinatesSECell,
-                        cmds: cmds);
+                    item.CellCoordinatesSECell = rhs.CellCoordinatesSECell;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1962,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P2IntXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.UsableDimensions),
-                    item: item.UsableDimensions_Property,
+                    item: item.UsableDimensions,
                     fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
                     errorMask: errorMask);
             }
@@ -1971,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P2Int16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.CellCoordinatesNWCell),
-                    item: item.CellCoordinatesNWCell_Property,
+                    item: item.CellCoordinatesNWCell,
                     fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
                     errorMask: errorMask);
             }
@@ -1980,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P2Int16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.CellCoordinatesSECell),
-                    item: item.CellCoordinatesSECell_Property,
+                    item: item.CellCoordinatesSECell,
                     fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
                     errorMask: errorMask);
             }
@@ -2033,17 +1610,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.UsableDimensions_Property,
+                item: item.UsableDimensions,
                 fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.CellCoordinatesNWCell_Property,
+                item: item.CellCoordinatesNWCell,
                 fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.CellCoordinatesSECell_Property,
+                item: item.CellCoordinatesSECell,
                 fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
                 errorMask: errorMask);
         }

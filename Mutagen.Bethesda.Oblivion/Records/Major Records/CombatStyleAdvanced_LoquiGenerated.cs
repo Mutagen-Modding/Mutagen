@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,11 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class CombatStyleAdvanced : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         ICombatStyleAdvanced,
         ILoquiObject<CombatStyleAdvanced>,
         ILoquiObjectSetter,
-        IPropertySupporter<Single>,
         IEquatable<CombatStyleAdvanced>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -49,1012 +50,172 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region DodgeFatigueModMult
-        protected Single _DodgeFatigueModMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _DodgeFatigueModMultForwarder;
-        public INotifyingSetItem<Single> DodgeFatigueModMult_Property => _DodgeFatigueModMultForwarder ?? (_DodgeFatigueModMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeFatigueModMult;
         public Single DodgeFatigueModMult
         {
             get => this._DodgeFatigueModMult;
-            set => this.SetDodgeFatigueModMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeFatigueModMult, value, nameof(DodgeFatigueModMult));
         }
-        protected void SetDodgeFatigueModMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeFatigueModMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeFatigueModMult;
-                _DodgeFatigueModMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeFatigueModMult = item;
-            }
-        }
-        protected void UnsetDodgeFatigueModMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult] = false;
-            DodgeFatigueModMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.DodgeFatigueModMult_Property => this.DodgeFatigueModMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.DodgeFatigueModMult_Property => this.DodgeFatigueModMult_Property;
         #endregion
         #region DodgeFatigueModBase
-        protected Single _DodgeFatigueModBase;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _DodgeFatigueModBaseForwarder;
-        public INotifyingSetItem<Single> DodgeFatigueModBase_Property => _DodgeFatigueModBaseForwarder ?? (_DodgeFatigueModBaseForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeFatigueModBase;
         public Single DodgeFatigueModBase
         {
             get => this._DodgeFatigueModBase;
-            set => this.SetDodgeFatigueModBase(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeFatigueModBase, value, nameof(DodgeFatigueModBase));
         }
-        protected void SetDodgeFatigueModBase(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeFatigueModBase == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeFatigueModBase;
-                _DodgeFatigueModBase = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeFatigueModBase = item;
-            }
-        }
-        protected void UnsetDodgeFatigueModBase()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase] = false;
-            DodgeFatigueModBase = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.DodgeFatigueModBase_Property => this.DodgeFatigueModBase_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.DodgeFatigueModBase_Property => this.DodgeFatigueModBase_Property;
         #endregion
         #region EncumbSpeedModBase
-        protected Single _EncumbSpeedModBase;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _EncumbSpeedModBaseForwarder;
-        public INotifyingSetItem<Single> EncumbSpeedModBase_Property => _EncumbSpeedModBaseForwarder ?? (_EncumbSpeedModBaseForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _EncumbSpeedModBase;
         public Single EncumbSpeedModBase
         {
             get => this._EncumbSpeedModBase;
-            set => this.SetEncumbSpeedModBase(value);
+            set => this.RaiseAndSetIfChanged(ref this._EncumbSpeedModBase, value, nameof(EncumbSpeedModBase));
         }
-        protected void SetEncumbSpeedModBase(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EncumbSpeedModBase == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = EncumbSpeedModBase;
-                _EncumbSpeedModBase = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _EncumbSpeedModBase = item;
-            }
-        }
-        protected void UnsetEncumbSpeedModBase()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase] = false;
-            EncumbSpeedModBase = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.EncumbSpeedModBase_Property => this.EncumbSpeedModBase_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.EncumbSpeedModBase_Property => this.EncumbSpeedModBase_Property;
         #endregion
         #region EncumbSpeedModMult
-        protected Single _EncumbSpeedModMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _EncumbSpeedModMultForwarder;
-        public INotifyingSetItem<Single> EncumbSpeedModMult_Property => _EncumbSpeedModMultForwarder ?? (_EncumbSpeedModMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _EncumbSpeedModMult;
         public Single EncumbSpeedModMult
         {
             get => this._EncumbSpeedModMult;
-            set => this.SetEncumbSpeedModMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._EncumbSpeedModMult, value, nameof(EncumbSpeedModMult));
         }
-        protected void SetEncumbSpeedModMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EncumbSpeedModMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = EncumbSpeedModMult;
-                _EncumbSpeedModMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _EncumbSpeedModMult = item;
-            }
-        }
-        protected void UnsetEncumbSpeedModMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult] = false;
-            EncumbSpeedModMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.EncumbSpeedModMult_Property => this.EncumbSpeedModMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.EncumbSpeedModMult_Property => this.EncumbSpeedModMult_Property;
         #endregion
         #region DodgeWhileUnderAttackMult
-        protected Single _DodgeWhileUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _DodgeWhileUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> DodgeWhileUnderAttackMult_Property => _DodgeWhileUnderAttackMultForwarder ?? (_DodgeWhileUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeWhileUnderAttackMult;
         public Single DodgeWhileUnderAttackMult
         {
             get => this._DodgeWhileUnderAttackMult;
-            set => this.SetDodgeWhileUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeWhileUnderAttackMult, value, nameof(DodgeWhileUnderAttackMult));
         }
-        protected void SetDodgeWhileUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeWhileUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeWhileUnderAttackMult;
-                _DodgeWhileUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeWhileUnderAttackMult = item;
-            }
-        }
-        protected void UnsetDodgeWhileUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult] = false;
-            DodgeWhileUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.DodgeWhileUnderAttackMult_Property => this.DodgeWhileUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.DodgeWhileUnderAttackMult_Property => this.DodgeWhileUnderAttackMult_Property;
         #endregion
         #region DodgeNotUnderAttackMult
-        protected Single _DodgeNotUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _DodgeNotUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> DodgeNotUnderAttackMult_Property => _DodgeNotUnderAttackMultForwarder ?? (_DodgeNotUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeNotUnderAttackMult;
         public Single DodgeNotUnderAttackMult
         {
             get => this._DodgeNotUnderAttackMult;
-            set => this.SetDodgeNotUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeNotUnderAttackMult, value, nameof(DodgeNotUnderAttackMult));
         }
-        protected void SetDodgeNotUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeNotUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeNotUnderAttackMult;
-                _DodgeNotUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeNotUnderAttackMult = item;
-            }
-        }
-        protected void UnsetDodgeNotUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult] = false;
-            DodgeNotUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.DodgeNotUnderAttackMult_Property => this.DodgeNotUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.DodgeNotUnderAttackMult_Property => this.DodgeNotUnderAttackMult_Property;
         #endregion
         #region DodgeBackWhileUnderAttackMult
-        protected Single _DodgeBackWhileUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _DodgeBackWhileUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> DodgeBackWhileUnderAttackMult_Property => _DodgeBackWhileUnderAttackMultForwarder ?? (_DodgeBackWhileUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeBackWhileUnderAttackMult;
         public Single DodgeBackWhileUnderAttackMult
         {
             get => this._DodgeBackWhileUnderAttackMult;
-            set => this.SetDodgeBackWhileUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeBackWhileUnderAttackMult, value, nameof(DodgeBackWhileUnderAttackMult));
         }
-        protected void SetDodgeBackWhileUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeBackWhileUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeBackWhileUnderAttackMult;
-                _DodgeBackWhileUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeBackWhileUnderAttackMult = item;
-            }
-        }
-        protected void UnsetDodgeBackWhileUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult] = false;
-            DodgeBackWhileUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.DodgeBackWhileUnderAttackMult_Property => this.DodgeBackWhileUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.DodgeBackWhileUnderAttackMult_Property => this.DodgeBackWhileUnderAttackMult_Property;
         #endregion
         #region DodgeBackNotUnderAttackMult
-        protected Single _DodgeBackNotUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _DodgeBackNotUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> DodgeBackNotUnderAttackMult_Property => _DodgeBackNotUnderAttackMultForwarder ?? (_DodgeBackNotUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeBackNotUnderAttackMult;
         public Single DodgeBackNotUnderAttackMult
         {
             get => this._DodgeBackNotUnderAttackMult;
-            set => this.SetDodgeBackNotUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeBackNotUnderAttackMult, value, nameof(DodgeBackNotUnderAttackMult));
         }
-        protected void SetDodgeBackNotUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeBackNotUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeBackNotUnderAttackMult;
-                _DodgeBackNotUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeBackNotUnderAttackMult = item;
-            }
-        }
-        protected void UnsetDodgeBackNotUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult] = false;
-            DodgeBackNotUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.DodgeBackNotUnderAttackMult_Property => this.DodgeBackNotUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.DodgeBackNotUnderAttackMult_Property => this.DodgeBackNotUnderAttackMult_Property;
         #endregion
         #region DodgeForwardWhileUnderAttackMult
-        protected Single _DodgeForwardWhileUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _DodgeForwardWhileUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> DodgeForwardWhileUnderAttackMult_Property => _DodgeForwardWhileUnderAttackMultForwarder ?? (_DodgeForwardWhileUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeForwardWhileUnderAttackMult;
         public Single DodgeForwardWhileUnderAttackMult
         {
             get => this._DodgeForwardWhileUnderAttackMult;
-            set => this.SetDodgeForwardWhileUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeForwardWhileUnderAttackMult, value, nameof(DodgeForwardWhileUnderAttackMult));
         }
-        protected void SetDodgeForwardWhileUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeForwardWhileUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeForwardWhileUnderAttackMult;
-                _DodgeForwardWhileUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeForwardWhileUnderAttackMult = item;
-            }
-        }
-        protected void UnsetDodgeForwardWhileUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult] = false;
-            DodgeForwardWhileUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.DodgeForwardWhileUnderAttackMult_Property => this.DodgeForwardWhileUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.DodgeForwardWhileUnderAttackMult_Property => this.DodgeForwardWhileUnderAttackMult_Property;
         #endregion
         #region DodgeForwardNotUnderAttackMult
-        protected Single _DodgeForwardNotUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _DodgeForwardNotUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> DodgeForwardNotUnderAttackMult_Property => _DodgeForwardNotUnderAttackMultForwarder ?? (_DodgeForwardNotUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DodgeForwardNotUnderAttackMult;
         public Single DodgeForwardNotUnderAttackMult
         {
             get => this._DodgeForwardNotUnderAttackMult;
-            set => this.SetDodgeForwardNotUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._DodgeForwardNotUnderAttackMult, value, nameof(DodgeForwardNotUnderAttackMult));
         }
-        protected void SetDodgeForwardNotUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DodgeForwardNotUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DodgeForwardNotUnderAttackMult;
-                _DodgeForwardNotUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DodgeForwardNotUnderAttackMult = item;
-            }
-        }
-        protected void UnsetDodgeForwardNotUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult] = false;
-            DodgeForwardNotUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.DodgeForwardNotUnderAttackMult_Property => this.DodgeForwardNotUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.DodgeForwardNotUnderAttackMult_Property => this.DodgeForwardNotUnderAttackMult_Property;
         #endregion
         #region BlockSkillModifierMult
-        protected Single _BlockSkillModifierMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _BlockSkillModifierMultForwarder;
-        public INotifyingSetItem<Single> BlockSkillModifierMult_Property => _BlockSkillModifierMultForwarder ?? (_BlockSkillModifierMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _BlockSkillModifierMult;
         public Single BlockSkillModifierMult
         {
             get => this._BlockSkillModifierMult;
-            set => this.SetBlockSkillModifierMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._BlockSkillModifierMult, value, nameof(BlockSkillModifierMult));
         }
-        protected void SetBlockSkillModifierMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BlockSkillModifierMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = BlockSkillModifierMult;
-                _BlockSkillModifierMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _BlockSkillModifierMult = item;
-            }
-        }
-        protected void UnsetBlockSkillModifierMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult] = false;
-            BlockSkillModifierMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.BlockSkillModifierMult_Property => this.BlockSkillModifierMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.BlockSkillModifierMult_Property => this.BlockSkillModifierMult_Property;
         #endregion
         #region BlockSkillModifierBase
-        protected Single _BlockSkillModifierBase;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _BlockSkillModifierBaseForwarder;
-        public INotifyingSetItem<Single> BlockSkillModifierBase_Property => _BlockSkillModifierBaseForwarder ?? (_BlockSkillModifierBaseForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _BlockSkillModifierBase;
         public Single BlockSkillModifierBase
         {
             get => this._BlockSkillModifierBase;
-            set => this.SetBlockSkillModifierBase(value);
+            set => this.RaiseAndSetIfChanged(ref this._BlockSkillModifierBase, value, nameof(BlockSkillModifierBase));
         }
-        protected void SetBlockSkillModifierBase(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BlockSkillModifierBase == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = BlockSkillModifierBase;
-                _BlockSkillModifierBase = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _BlockSkillModifierBase = item;
-            }
-        }
-        protected void UnsetBlockSkillModifierBase()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase] = false;
-            BlockSkillModifierBase = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.BlockSkillModifierBase_Property => this.BlockSkillModifierBase_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.BlockSkillModifierBase_Property => this.BlockSkillModifierBase_Property;
         #endregion
         #region BlockWhileUnderAttackMult
-        protected Single _BlockWhileUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _BlockWhileUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> BlockWhileUnderAttackMult_Property => _BlockWhileUnderAttackMultForwarder ?? (_BlockWhileUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _BlockWhileUnderAttackMult;
         public Single BlockWhileUnderAttackMult
         {
             get => this._BlockWhileUnderAttackMult;
-            set => this.SetBlockWhileUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._BlockWhileUnderAttackMult, value, nameof(BlockWhileUnderAttackMult));
         }
-        protected void SetBlockWhileUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BlockWhileUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = BlockWhileUnderAttackMult;
-                _BlockWhileUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _BlockWhileUnderAttackMult = item;
-            }
-        }
-        protected void UnsetBlockWhileUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult] = false;
-            BlockWhileUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.BlockWhileUnderAttackMult_Property => this.BlockWhileUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.BlockWhileUnderAttackMult_Property => this.BlockWhileUnderAttackMult_Property;
         #endregion
         #region BlockNotUnderAttackMult
-        protected Single _BlockNotUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _BlockNotUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> BlockNotUnderAttackMult_Property => _BlockNotUnderAttackMultForwarder ?? (_BlockNotUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _BlockNotUnderAttackMult;
         public Single BlockNotUnderAttackMult
         {
             get => this._BlockNotUnderAttackMult;
-            set => this.SetBlockNotUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._BlockNotUnderAttackMult, value, nameof(BlockNotUnderAttackMult));
         }
-        protected void SetBlockNotUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BlockNotUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = BlockNotUnderAttackMult;
-                _BlockNotUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _BlockNotUnderAttackMult = item;
-            }
-        }
-        protected void UnsetBlockNotUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult] = false;
-            BlockNotUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.BlockNotUnderAttackMult_Property => this.BlockNotUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.BlockNotUnderAttackMult_Property => this.BlockNotUnderAttackMult_Property;
         #endregion
         #region AttackSkillModifierMult
-        protected Single _AttackSkillModifierMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _AttackSkillModifierMultForwarder;
-        public INotifyingSetItem<Single> AttackSkillModifierMult_Property => _AttackSkillModifierMultForwarder ?? (_AttackSkillModifierMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _AttackSkillModifierMult;
         public Single AttackSkillModifierMult
         {
             get => this._AttackSkillModifierMult;
-            set => this.SetAttackSkillModifierMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._AttackSkillModifierMult, value, nameof(AttackSkillModifierMult));
         }
-        protected void SetAttackSkillModifierMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AttackSkillModifierMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = AttackSkillModifierMult;
-                _AttackSkillModifierMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AttackSkillModifierMult = item;
-            }
-        }
-        protected void UnsetAttackSkillModifierMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult] = false;
-            AttackSkillModifierMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.AttackSkillModifierMult_Property => this.AttackSkillModifierMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.AttackSkillModifierMult_Property => this.AttackSkillModifierMult_Property;
         #endregion
         #region AttackSkillModifierBase
-        protected Single _AttackSkillModifierBase;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _AttackSkillModifierBaseForwarder;
-        public INotifyingSetItem<Single> AttackSkillModifierBase_Property => _AttackSkillModifierBaseForwarder ?? (_AttackSkillModifierBaseForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _AttackSkillModifierBase;
         public Single AttackSkillModifierBase
         {
             get => this._AttackSkillModifierBase;
-            set => this.SetAttackSkillModifierBase(value);
+            set => this.RaiseAndSetIfChanged(ref this._AttackSkillModifierBase, value, nameof(AttackSkillModifierBase));
         }
-        protected void SetAttackSkillModifierBase(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AttackSkillModifierBase == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = AttackSkillModifierBase;
-                _AttackSkillModifierBase = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AttackSkillModifierBase = item;
-            }
-        }
-        protected void UnsetAttackSkillModifierBase()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase] = false;
-            AttackSkillModifierBase = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.AttackSkillModifierBase_Property => this.AttackSkillModifierBase_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.AttackSkillModifierBase_Property => this.AttackSkillModifierBase_Property;
         #endregion
         #region AttackWhileUnderAttackMult
-        protected Single _AttackWhileUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _AttackWhileUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> AttackWhileUnderAttackMult_Property => _AttackWhileUnderAttackMultForwarder ?? (_AttackWhileUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _AttackWhileUnderAttackMult;
         public Single AttackWhileUnderAttackMult
         {
             get => this._AttackWhileUnderAttackMult;
-            set => this.SetAttackWhileUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._AttackWhileUnderAttackMult, value, nameof(AttackWhileUnderAttackMult));
         }
-        protected void SetAttackWhileUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AttackWhileUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = AttackWhileUnderAttackMult;
-                _AttackWhileUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AttackWhileUnderAttackMult = item;
-            }
-        }
-        protected void UnsetAttackWhileUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult] = false;
-            AttackWhileUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.AttackWhileUnderAttackMult_Property => this.AttackWhileUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.AttackWhileUnderAttackMult_Property => this.AttackWhileUnderAttackMult_Property;
         #endregion
         #region AttackNotUnderAttackMult
-        protected Single _AttackNotUnderAttackMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _AttackNotUnderAttackMultForwarder;
-        public INotifyingSetItem<Single> AttackNotUnderAttackMult_Property => _AttackNotUnderAttackMultForwarder ?? (_AttackNotUnderAttackMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _AttackNotUnderAttackMult;
         public Single AttackNotUnderAttackMult
         {
             get => this._AttackNotUnderAttackMult;
-            set => this.SetAttackNotUnderAttackMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._AttackNotUnderAttackMult, value, nameof(AttackNotUnderAttackMult));
         }
-        protected void SetAttackNotUnderAttackMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AttackNotUnderAttackMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = AttackNotUnderAttackMult;
-                _AttackNotUnderAttackMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AttackNotUnderAttackMult = item;
-            }
-        }
-        protected void UnsetAttackNotUnderAttackMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult] = false;
-            AttackNotUnderAttackMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.AttackNotUnderAttackMult_Property => this.AttackNotUnderAttackMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.AttackNotUnderAttackMult_Property => this.AttackNotUnderAttackMult_Property;
         #endregion
         #region AttackDuringBlockMult
-        protected Single _AttackDuringBlockMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _AttackDuringBlockMultForwarder;
-        public INotifyingSetItem<Single> AttackDuringBlockMult_Property => _AttackDuringBlockMultForwarder ?? (_AttackDuringBlockMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _AttackDuringBlockMult;
         public Single AttackDuringBlockMult
         {
             get => this._AttackDuringBlockMult;
-            set => this.SetAttackDuringBlockMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._AttackDuringBlockMult, value, nameof(AttackDuringBlockMult));
         }
-        protected void SetAttackDuringBlockMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && AttackDuringBlockMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = AttackDuringBlockMult;
-                _AttackDuringBlockMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _AttackDuringBlockMult = item;
-            }
-        }
-        protected void UnsetAttackDuringBlockMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult] = false;
-            AttackDuringBlockMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.AttackDuringBlockMult_Property => this.AttackDuringBlockMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.AttackDuringBlockMult_Property => this.AttackDuringBlockMult_Property;
         #endregion
         #region PowerAttackFatigueModBase
-        protected Single _PowerAttackFatigueModBase;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _PowerAttackFatigueModBaseForwarder;
-        public INotifyingSetItem<Single> PowerAttackFatigueModBase_Property => _PowerAttackFatigueModBaseForwarder ?? (_PowerAttackFatigueModBaseForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _PowerAttackFatigueModBase;
         public Single PowerAttackFatigueModBase
         {
             get => this._PowerAttackFatigueModBase;
-            set => this.SetPowerAttackFatigueModBase(value);
+            set => this.RaiseAndSetIfChanged(ref this._PowerAttackFatigueModBase, value, nameof(PowerAttackFatigueModBase));
         }
-        protected void SetPowerAttackFatigueModBase(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PowerAttackFatigueModBase == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = PowerAttackFatigueModBase;
-                _PowerAttackFatigueModBase = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PowerAttackFatigueModBase = item;
-            }
-        }
-        protected void UnsetPowerAttackFatigueModBase()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase] = false;
-            PowerAttackFatigueModBase = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.PowerAttackFatigueModBase_Property => this.PowerAttackFatigueModBase_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.PowerAttackFatigueModBase_Property => this.PowerAttackFatigueModBase_Property;
         #endregion
         #region PowerAttackFatigueModMult
-        protected Single _PowerAttackFatigueModMult;
-        protected PropertyForwarder<CombatStyleAdvanced, Single> _PowerAttackFatigueModMultForwarder;
-        public INotifyingSetItem<Single> PowerAttackFatigueModMult_Property => _PowerAttackFatigueModMultForwarder ?? (_PowerAttackFatigueModMultForwarder = new PropertyForwarder<CombatStyleAdvanced, Single>(this, (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _PowerAttackFatigueModMult;
         public Single PowerAttackFatigueModMult
         {
             get => this._PowerAttackFatigueModMult;
-            set => this.SetPowerAttackFatigueModMult(value);
+            set => this.RaiseAndSetIfChanged(ref this._PowerAttackFatigueModMult, value, nameof(PowerAttackFatigueModMult));
         }
-        protected void SetPowerAttackFatigueModMult(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && PowerAttackFatigueModMult == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = PowerAttackFatigueModMult;
-                _PowerAttackFatigueModMult = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PowerAttackFatigueModMult = item;
-            }
-        }
-        protected void UnsetPowerAttackFatigueModMult()
-        {
-            _hasBeenSetTracker[(int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult] = false;
-            PowerAttackFatigueModMult = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ICombatStyleAdvanced.PowerAttackFatigueModMult_Property => this.PowerAttackFatigueModMult_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ICombatStyleAdvancedGetter.PowerAttackFatigueModMult_Property => this.PowerAttackFatigueModMult_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1496,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeFatigueModMult();
+                            item.DodgeFatigueModMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1522,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeFatigueModBase();
+                            item.DodgeFatigueModBase = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1548,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEncumbSpeedModBase();
+                            item.EncumbSpeedModBase = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1574,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEncumbSpeedModMult();
+                            item.EncumbSpeedModMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1600,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeWhileUnderAttackMult();
+                            item.DodgeWhileUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1626,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeNotUnderAttackMult();
+                            item.DodgeNotUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1652,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeBackWhileUnderAttackMult();
+                            item.DodgeBackWhileUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1678,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeBackNotUnderAttackMult();
+                            item.DodgeBackNotUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1704,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeForwardWhileUnderAttackMult();
+                            item.DodgeForwardWhileUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1730,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDodgeForwardNotUnderAttackMult();
+                            item.DodgeForwardNotUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1756,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBlockSkillModifierMult();
+                            item.BlockSkillModifierMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1782,7 +943,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBlockSkillModifierBase();
+                            item.BlockSkillModifierBase = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1808,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBlockWhileUnderAttackMult();
+                            item.BlockWhileUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1834,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBlockNotUnderAttackMult();
+                            item.BlockNotUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1860,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAttackSkillModifierMult();
+                            item.AttackSkillModifierMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1886,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAttackSkillModifierBase();
+                            item.AttackSkillModifierBase = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1912,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAttackWhileUnderAttackMult();
+                            item.AttackWhileUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1938,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAttackNotUnderAttackMult();
+                            item.AttackNotUnderAttackMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1964,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetAttackDuringBlockMult();
+                            item.AttackDuringBlockMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1990,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPowerAttackFatigueModBase();
+                            item.PowerAttackFatigueModBase = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2016,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPowerAttackFatigueModMult();
+                            item.PowerAttackFatigueModMult = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2067,360 +1228,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((CombatStyleAdvanced_FieldIndex)index)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    return DodgeFatigueModMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    return DodgeFatigueModBase;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    return EncumbSpeedModBase;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    return EncumbSpeedModMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    return DodgeWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    return DodgeNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    return DodgeBackWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    return DodgeBackNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    return DodgeForwardWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    return DodgeForwardNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    return BlockSkillModifierMult;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    return BlockSkillModifierBase;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    return BlockWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    return BlockNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    return AttackSkillModifierMult;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    return AttackSkillModifierBase;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    return AttackWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    return AttackNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    return AttackDuringBlockMult;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    return PowerAttackFatigueModBase;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    return PowerAttackFatigueModMult;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((CombatStyleAdvanced_FieldIndex)index)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    SetDodgeFatigueModMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    SetDodgeFatigueModBase(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    SetEncumbSpeedModBase(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    SetEncumbSpeedModMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    SetDodgeWhileUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    SetDodgeNotUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    SetDodgeBackWhileUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    SetDodgeBackNotUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    SetDodgeForwardWhileUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    SetDodgeForwardNotUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    SetBlockSkillModifierMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    SetBlockSkillModifierBase(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    SetBlockWhileUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    SetBlockNotUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    SetAttackSkillModifierMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    SetAttackSkillModifierBase(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    SetAttackWhileUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    SetAttackNotUnderAttackMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    SetAttackDuringBlockMult(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    SetPowerAttackFatigueModBase(item, hasBeenSet, cmds);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    SetPowerAttackFatigueModMult(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((CombatStyleAdvanced_FieldIndex)index)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    SetDodgeFatigueModMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    SetDodgeFatigueModBase(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    SetEncumbSpeedModBase(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    SetEncumbSpeedModMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    SetDodgeWhileUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    SetDodgeNotUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    SetDodgeBackWhileUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    SetDodgeBackNotUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    SetDodgeForwardWhileUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    SetDodgeForwardNotUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    SetBlockSkillModifierMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    SetBlockSkillModifierBase(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    SetBlockWhileUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    SetBlockNotUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    SetAttackSkillModifierMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    SetAttackSkillModifierBase(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    SetAttackWhileUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    SetAttackNotUnderAttackMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    SetAttackDuringBlockMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    SetPowerAttackFatigueModBase(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    SetPowerAttackFatigueModMult(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((CombatStyleAdvanced_FieldIndex)index)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = CombatStyleAdvanced_Registration.TRIGGERING_RECORD_TYPE;
@@ -2643,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDodgeFatigueModMult();
+                    item.DodgeFatigueModMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2667,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDodgeFatigueModBase();
+                    item.DodgeFatigueModBase = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2691,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetEncumbSpeedModBase();
+                    item.EncumbSpeedModBase = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2715,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetEncumbSpeedModMult();
+                    item.EncumbSpeedModMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2739,7 +1546,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDodgeWhileUnderAttackMult();
+                    item.DodgeWhileUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2763,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDodgeNotUnderAttackMult();
+                    item.DodgeNotUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2787,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDodgeBackWhileUnderAttackMult();
+                    item.DodgeBackWhileUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2811,7 +1618,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDodgeBackNotUnderAttackMult();
+                    item.DodgeBackNotUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2835,7 +1642,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDodgeForwardWhileUnderAttackMult();
+                    item.DodgeForwardWhileUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2859,7 +1666,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetDodgeForwardNotUnderAttackMult();
+                    item.DodgeForwardNotUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2883,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetBlockSkillModifierMult();
+                    item.BlockSkillModifierMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2907,7 +1714,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetBlockSkillModifierBase();
+                    item.BlockSkillModifierBase = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2931,7 +1738,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetBlockWhileUnderAttackMult();
+                    item.BlockWhileUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2955,7 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetBlockNotUnderAttackMult();
+                    item.BlockNotUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -2979,7 +1786,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetAttackSkillModifierMult();
+                    item.AttackSkillModifierMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3003,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetAttackSkillModifierBase();
+                    item.AttackSkillModifierBase = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3027,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetAttackWhileUnderAttackMult();
+                    item.AttackWhileUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3051,7 +1858,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetAttackNotUnderAttackMult();
+                    item.AttackNotUnderAttackMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3075,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetAttackDuringBlockMult();
+                    item.AttackDuringBlockMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3099,7 +1906,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetPowerAttackFatigueModBase();
+                    item.PowerAttackFatigueModBase = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3123,7 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetPowerAttackFatigueModMult();
+                    item.PowerAttackFatigueModMult = default(Single);
                 }
             }
             catch (Exception ex)
@@ -3262,109 +2069,67 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    this.SetDodgeFatigueModMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeFatigueModMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    this.SetDodgeFatigueModBase(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeFatigueModBase = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    this.SetEncumbSpeedModBase(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.EncumbSpeedModBase = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    this.SetEncumbSpeedModMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.EncumbSpeedModMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    this.SetDodgeWhileUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeWhileUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    this.SetDodgeNotUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeNotUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    this.SetDodgeBackWhileUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeBackWhileUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    this.SetDodgeBackNotUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeBackNotUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    this.SetDodgeForwardWhileUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeForwardWhileUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    this.SetDodgeForwardNotUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DodgeForwardNotUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    this.SetBlockSkillModifierMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.BlockSkillModifierMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    this.SetBlockSkillModifierBase(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.BlockSkillModifierBase = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    this.SetBlockWhileUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.BlockWhileUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    this.SetBlockNotUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.BlockNotUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    this.SetAttackSkillModifierMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.AttackSkillModifierMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    this.SetAttackSkillModifierBase(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.AttackSkillModifierBase = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    this.SetAttackWhileUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.AttackWhileUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    this.SetAttackNotUnderAttackMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.AttackNotUnderAttackMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    this.SetAttackDuringBlockMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.AttackDuringBlockMult = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    this.SetPowerAttackFatigueModBase(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.PowerAttackFatigueModBase = (Single)obj;
                     break;
                 case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    this.SetPowerAttackFatigueModMult(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.PowerAttackFatigueModMult = (Single)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3404,109 +2169,67 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    obj.SetDodgeFatigueModMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeFatigueModMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    obj.SetDodgeFatigueModBase(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeFatigueModBase = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    obj.SetEncumbSpeedModBase(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.EncumbSpeedModBase = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    obj.SetEncumbSpeedModMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.EncumbSpeedModMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    obj.SetDodgeWhileUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeWhileUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    obj.SetDodgeNotUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeNotUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    obj.SetDodgeBackWhileUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeBackWhileUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    obj.SetDodgeBackNotUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeBackNotUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    obj.SetDodgeForwardWhileUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeForwardWhileUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    obj.SetDodgeForwardNotUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DodgeForwardNotUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    obj.SetBlockSkillModifierMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.BlockSkillModifierMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    obj.SetBlockSkillModifierBase(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.BlockSkillModifierBase = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    obj.SetBlockWhileUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.BlockWhileUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    obj.SetBlockNotUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.BlockNotUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    obj.SetAttackSkillModifierMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.AttackSkillModifierMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    obj.SetAttackSkillModifierBase(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.AttackSkillModifierBase = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    obj.SetAttackWhileUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.AttackWhileUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    obj.SetAttackNotUnderAttackMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.AttackNotUnderAttackMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    obj.SetAttackDuringBlockMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.AttackDuringBlockMult = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    obj.SetPowerAttackFatigueModBase(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.PowerAttackFatigueModBase = (Single)pair.Value;
                     break;
                 case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    obj.SetPowerAttackFatigueModMult(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.PowerAttackFatigueModMult = (Single)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -3524,67 +2247,46 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICombatStyleAdvanced : ICombatStyleAdvancedGetter, ILoquiClass<ICombatStyleAdvanced, ICombatStyleAdvancedGetter>, ILoquiClass<CombatStyleAdvanced, ICombatStyleAdvancedGetter>
     {
         new Single DodgeFatigueModMult { get; set; }
-        new INotifyingItem<Single> DodgeFatigueModMult_Property { get; }
 
         new Single DodgeFatigueModBase { get; set; }
-        new INotifyingItem<Single> DodgeFatigueModBase_Property { get; }
 
         new Single EncumbSpeedModBase { get; set; }
-        new INotifyingItem<Single> EncumbSpeedModBase_Property { get; }
 
         new Single EncumbSpeedModMult { get; set; }
-        new INotifyingItem<Single> EncumbSpeedModMult_Property { get; }
 
         new Single DodgeWhileUnderAttackMult { get; set; }
-        new INotifyingItem<Single> DodgeWhileUnderAttackMult_Property { get; }
 
         new Single DodgeNotUnderAttackMult { get; set; }
-        new INotifyingItem<Single> DodgeNotUnderAttackMult_Property { get; }
 
         new Single DodgeBackWhileUnderAttackMult { get; set; }
-        new INotifyingItem<Single> DodgeBackWhileUnderAttackMult_Property { get; }
 
         new Single DodgeBackNotUnderAttackMult { get; set; }
-        new INotifyingItem<Single> DodgeBackNotUnderAttackMult_Property { get; }
 
         new Single DodgeForwardWhileUnderAttackMult { get; set; }
-        new INotifyingItem<Single> DodgeForwardWhileUnderAttackMult_Property { get; }
 
         new Single DodgeForwardNotUnderAttackMult { get; set; }
-        new INotifyingItem<Single> DodgeForwardNotUnderAttackMult_Property { get; }
 
         new Single BlockSkillModifierMult { get; set; }
-        new INotifyingItem<Single> BlockSkillModifierMult_Property { get; }
 
         new Single BlockSkillModifierBase { get; set; }
-        new INotifyingItem<Single> BlockSkillModifierBase_Property { get; }
 
         new Single BlockWhileUnderAttackMult { get; set; }
-        new INotifyingItem<Single> BlockWhileUnderAttackMult_Property { get; }
 
         new Single BlockNotUnderAttackMult { get; set; }
-        new INotifyingItem<Single> BlockNotUnderAttackMult_Property { get; }
 
         new Single AttackSkillModifierMult { get; set; }
-        new INotifyingItem<Single> AttackSkillModifierMult_Property { get; }
 
         new Single AttackSkillModifierBase { get; set; }
-        new INotifyingItem<Single> AttackSkillModifierBase_Property { get; }
 
         new Single AttackWhileUnderAttackMult { get; set; }
-        new INotifyingItem<Single> AttackWhileUnderAttackMult_Property { get; }
 
         new Single AttackNotUnderAttackMult { get; set; }
-        new INotifyingItem<Single> AttackNotUnderAttackMult_Property { get; }
 
         new Single AttackDuringBlockMult { get; set; }
-        new INotifyingItem<Single> AttackDuringBlockMult_Property { get; }
 
         new Single PowerAttackFatigueModBase { get; set; }
-        new INotifyingItem<Single> PowerAttackFatigueModBase_Property { get; }
 
         new Single PowerAttackFatigueModMult { get; set; }
-        new INotifyingItem<Single> PowerAttackFatigueModMult_Property { get; }
 
     }
 
@@ -3592,107 +2294,86 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region DodgeFatigueModMult
         Single DodgeFatigueModMult { get; }
-        INotifyingItemGetter<Single> DodgeFatigueModMult_Property { get; }
 
         #endregion
         #region DodgeFatigueModBase
         Single DodgeFatigueModBase { get; }
-        INotifyingItemGetter<Single> DodgeFatigueModBase_Property { get; }
 
         #endregion
         #region EncumbSpeedModBase
         Single EncumbSpeedModBase { get; }
-        INotifyingItemGetter<Single> EncumbSpeedModBase_Property { get; }
 
         #endregion
         #region EncumbSpeedModMult
         Single EncumbSpeedModMult { get; }
-        INotifyingItemGetter<Single> EncumbSpeedModMult_Property { get; }
 
         #endregion
         #region DodgeWhileUnderAttackMult
         Single DodgeWhileUnderAttackMult { get; }
-        INotifyingItemGetter<Single> DodgeWhileUnderAttackMult_Property { get; }
 
         #endregion
         #region DodgeNotUnderAttackMult
         Single DodgeNotUnderAttackMult { get; }
-        INotifyingItemGetter<Single> DodgeNotUnderAttackMult_Property { get; }
 
         #endregion
         #region DodgeBackWhileUnderAttackMult
         Single DodgeBackWhileUnderAttackMult { get; }
-        INotifyingItemGetter<Single> DodgeBackWhileUnderAttackMult_Property { get; }
 
         #endregion
         #region DodgeBackNotUnderAttackMult
         Single DodgeBackNotUnderAttackMult { get; }
-        INotifyingItemGetter<Single> DodgeBackNotUnderAttackMult_Property { get; }
 
         #endregion
         #region DodgeForwardWhileUnderAttackMult
         Single DodgeForwardWhileUnderAttackMult { get; }
-        INotifyingItemGetter<Single> DodgeForwardWhileUnderAttackMult_Property { get; }
 
         #endregion
         #region DodgeForwardNotUnderAttackMult
         Single DodgeForwardNotUnderAttackMult { get; }
-        INotifyingItemGetter<Single> DodgeForwardNotUnderAttackMult_Property { get; }
 
         #endregion
         #region BlockSkillModifierMult
         Single BlockSkillModifierMult { get; }
-        INotifyingItemGetter<Single> BlockSkillModifierMult_Property { get; }
 
         #endregion
         #region BlockSkillModifierBase
         Single BlockSkillModifierBase { get; }
-        INotifyingItemGetter<Single> BlockSkillModifierBase_Property { get; }
 
         #endregion
         #region BlockWhileUnderAttackMult
         Single BlockWhileUnderAttackMult { get; }
-        INotifyingItemGetter<Single> BlockWhileUnderAttackMult_Property { get; }
 
         #endregion
         #region BlockNotUnderAttackMult
         Single BlockNotUnderAttackMult { get; }
-        INotifyingItemGetter<Single> BlockNotUnderAttackMult_Property { get; }
 
         #endregion
         #region AttackSkillModifierMult
         Single AttackSkillModifierMult { get; }
-        INotifyingItemGetter<Single> AttackSkillModifierMult_Property { get; }
 
         #endregion
         #region AttackSkillModifierBase
         Single AttackSkillModifierBase { get; }
-        INotifyingItemGetter<Single> AttackSkillModifierBase_Property { get; }
 
         #endregion
         #region AttackWhileUnderAttackMult
         Single AttackWhileUnderAttackMult { get; }
-        INotifyingItemGetter<Single> AttackWhileUnderAttackMult_Property { get; }
 
         #endregion
         #region AttackNotUnderAttackMult
         Single AttackNotUnderAttackMult { get; }
-        INotifyingItemGetter<Single> AttackNotUnderAttackMult_Property { get; }
 
         #endregion
         #region AttackDuringBlockMult
         Single AttackDuringBlockMult { get; }
-        INotifyingItemGetter<Single> AttackDuringBlockMult_Property { get; }
 
         #endregion
         #region PowerAttackFatigueModBase
         Single PowerAttackFatigueModBase { get; }
-        INotifyingItemGetter<Single> PowerAttackFatigueModBase_Property { get; }
 
         #endregion
         #region PowerAttackFatigueModMult
         Single PowerAttackFatigueModMult { get; }
-        INotifyingItemGetter<Single> PowerAttackFatigueModMult_Property { get; }
 
         #endregion
 
@@ -4137,9 +2818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
                 try
                 {
-                    item.DodgeFatigueModMult_Property.Set(
-                        value: rhs.DodgeFatigueModMult,
-                        cmds: cmds);
+                    item.DodgeFatigueModMult = rhs.DodgeFatigueModMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4156,9 +2835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
                 try
                 {
-                    item.DodgeFatigueModBase_Property.Set(
-                        value: rhs.DodgeFatigueModBase,
-                        cmds: cmds);
+                    item.DodgeFatigueModBase = rhs.DodgeFatigueModBase;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4175,9 +2852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
                 try
                 {
-                    item.EncumbSpeedModBase_Property.Set(
-                        value: rhs.EncumbSpeedModBase,
-                        cmds: cmds);
+                    item.EncumbSpeedModBase = rhs.EncumbSpeedModBase;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4194,9 +2869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
                 try
                 {
-                    item.EncumbSpeedModMult_Property.Set(
-                        value: rhs.EncumbSpeedModMult,
-                        cmds: cmds);
+                    item.EncumbSpeedModMult = rhs.EncumbSpeedModMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4213,9 +2886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
                 try
                 {
-                    item.DodgeWhileUnderAttackMult_Property.Set(
-                        value: rhs.DodgeWhileUnderAttackMult,
-                        cmds: cmds);
+                    item.DodgeWhileUnderAttackMult = rhs.DodgeWhileUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4232,9 +2903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
                 try
                 {
-                    item.DodgeNotUnderAttackMult_Property.Set(
-                        value: rhs.DodgeNotUnderAttackMult,
-                        cmds: cmds);
+                    item.DodgeNotUnderAttackMult = rhs.DodgeNotUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4251,9 +2920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
                 try
                 {
-                    item.DodgeBackWhileUnderAttackMult_Property.Set(
-                        value: rhs.DodgeBackWhileUnderAttackMult,
-                        cmds: cmds);
+                    item.DodgeBackWhileUnderAttackMult = rhs.DodgeBackWhileUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4270,9 +2937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
                 try
                 {
-                    item.DodgeBackNotUnderAttackMult_Property.Set(
-                        value: rhs.DodgeBackNotUnderAttackMult,
-                        cmds: cmds);
+                    item.DodgeBackNotUnderAttackMult = rhs.DodgeBackNotUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4289,9 +2954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
                 try
                 {
-                    item.DodgeForwardWhileUnderAttackMult_Property.Set(
-                        value: rhs.DodgeForwardWhileUnderAttackMult,
-                        cmds: cmds);
+                    item.DodgeForwardWhileUnderAttackMult = rhs.DodgeForwardWhileUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4308,9 +2971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
                 try
                 {
-                    item.DodgeForwardNotUnderAttackMult_Property.Set(
-                        value: rhs.DodgeForwardNotUnderAttackMult,
-                        cmds: cmds);
+                    item.DodgeForwardNotUnderAttackMult = rhs.DodgeForwardNotUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4327,9 +2988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
                 try
                 {
-                    item.BlockSkillModifierMult_Property.Set(
-                        value: rhs.BlockSkillModifierMult,
-                        cmds: cmds);
+                    item.BlockSkillModifierMult = rhs.BlockSkillModifierMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4346,9 +3005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
                 try
                 {
-                    item.BlockSkillModifierBase_Property.Set(
-                        value: rhs.BlockSkillModifierBase,
-                        cmds: cmds);
+                    item.BlockSkillModifierBase = rhs.BlockSkillModifierBase;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4365,9 +3022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
                 try
                 {
-                    item.BlockWhileUnderAttackMult_Property.Set(
-                        value: rhs.BlockWhileUnderAttackMult,
-                        cmds: cmds);
+                    item.BlockWhileUnderAttackMult = rhs.BlockWhileUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4384,9 +3039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
                 try
                 {
-                    item.BlockNotUnderAttackMult_Property.Set(
-                        value: rhs.BlockNotUnderAttackMult,
-                        cmds: cmds);
+                    item.BlockNotUnderAttackMult = rhs.BlockNotUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4403,9 +3056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
                 try
                 {
-                    item.AttackSkillModifierMult_Property.Set(
-                        value: rhs.AttackSkillModifierMult,
-                        cmds: cmds);
+                    item.AttackSkillModifierMult = rhs.AttackSkillModifierMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4422,9 +3073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
                 try
                 {
-                    item.AttackSkillModifierBase_Property.Set(
-                        value: rhs.AttackSkillModifierBase,
-                        cmds: cmds);
+                    item.AttackSkillModifierBase = rhs.AttackSkillModifierBase;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4441,9 +3090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
                 try
                 {
-                    item.AttackWhileUnderAttackMult_Property.Set(
-                        value: rhs.AttackWhileUnderAttackMult,
-                        cmds: cmds);
+                    item.AttackWhileUnderAttackMult = rhs.AttackWhileUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4460,9 +3107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
                 try
                 {
-                    item.AttackNotUnderAttackMult_Property.Set(
-                        value: rhs.AttackNotUnderAttackMult,
-                        cmds: cmds);
+                    item.AttackNotUnderAttackMult = rhs.AttackNotUnderAttackMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4479,9 +3124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
                 try
                 {
-                    item.AttackDuringBlockMult_Property.Set(
-                        value: rhs.AttackDuringBlockMult,
-                        cmds: cmds);
+                    item.AttackDuringBlockMult = rhs.AttackDuringBlockMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4498,9 +3141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
                 try
                 {
-                    item.PowerAttackFatigueModBase_Property.Set(
-                        value: rhs.PowerAttackFatigueModBase,
-                        cmds: cmds);
+                    item.PowerAttackFatigueModBase = rhs.PowerAttackFatigueModBase;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4517,9 +3158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
                 try
                 {
-                    item.PowerAttackFatigueModMult_Property.Set(
-                        value: rhs.PowerAttackFatigueModMult,
-                        cmds: cmds);
+                    item.PowerAttackFatigueModMult = rhs.PowerAttackFatigueModMult;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4988,7 +3627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeFatigueModMult),
-                    item: item.DodgeFatigueModMult_Property,
+                    item: item.DodgeFatigueModMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult,
                     errorMask: errorMask);
             }
@@ -4997,7 +3636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeFatigueModBase),
-                    item: item.DodgeFatigueModBase_Property,
+                    item: item.DodgeFatigueModBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase,
                     errorMask: errorMask);
             }
@@ -5006,7 +3645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.EncumbSpeedModBase),
-                    item: item.EncumbSpeedModBase_Property,
+                    item: item.EncumbSpeedModBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase,
                     errorMask: errorMask);
             }
@@ -5015,7 +3654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.EncumbSpeedModMult),
-                    item: item.EncumbSpeedModMult_Property,
+                    item: item.EncumbSpeedModMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult,
                     errorMask: errorMask);
             }
@@ -5024,7 +3663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeWhileUnderAttackMult),
-                    item: item.DodgeWhileUnderAttackMult_Property,
+                    item: item.DodgeWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5033,7 +3672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeNotUnderAttackMult),
-                    item: item.DodgeNotUnderAttackMult_Property,
+                    item: item.DodgeNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5042,7 +3681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeBackWhileUnderAttackMult),
-                    item: item.DodgeBackWhileUnderAttackMult_Property,
+                    item: item.DodgeBackWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5051,7 +3690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeBackNotUnderAttackMult),
-                    item: item.DodgeBackNotUnderAttackMult_Property,
+                    item: item.DodgeBackNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5060,7 +3699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeForwardWhileUnderAttackMult),
-                    item: item.DodgeForwardWhileUnderAttackMult_Property,
+                    item: item.DodgeForwardWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5069,7 +3708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DodgeForwardNotUnderAttackMult),
-                    item: item.DodgeForwardNotUnderAttackMult_Property,
+                    item: item.DodgeForwardNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5078,7 +3717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BlockSkillModifierMult),
-                    item: item.BlockSkillModifierMult_Property,
+                    item: item.BlockSkillModifierMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult,
                     errorMask: errorMask);
             }
@@ -5087,7 +3726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BlockSkillModifierBase),
-                    item: item.BlockSkillModifierBase_Property,
+                    item: item.BlockSkillModifierBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase,
                     errorMask: errorMask);
             }
@@ -5096,7 +3735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BlockWhileUnderAttackMult),
-                    item: item.BlockWhileUnderAttackMult_Property,
+                    item: item.BlockWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5105,7 +3744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BlockNotUnderAttackMult),
-                    item: item.BlockNotUnderAttackMult_Property,
+                    item: item.BlockNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5114,7 +3753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AttackSkillModifierMult),
-                    item: item.AttackSkillModifierMult_Property,
+                    item: item.AttackSkillModifierMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult,
                     errorMask: errorMask);
             }
@@ -5123,7 +3762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AttackSkillModifierBase),
-                    item: item.AttackSkillModifierBase_Property,
+                    item: item.AttackSkillModifierBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase,
                     errorMask: errorMask);
             }
@@ -5132,7 +3771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AttackWhileUnderAttackMult),
-                    item: item.AttackWhileUnderAttackMult_Property,
+                    item: item.AttackWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5141,7 +3780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AttackNotUnderAttackMult),
-                    item: item.AttackNotUnderAttackMult_Property,
+                    item: item.AttackNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult,
                     errorMask: errorMask);
             }
@@ -5150,7 +3789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.AttackDuringBlockMult),
-                    item: item.AttackDuringBlockMult_Property,
+                    item: item.AttackDuringBlockMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult,
                     errorMask: errorMask);
             }
@@ -5159,7 +3798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PowerAttackFatigueModBase),
-                    item: item.PowerAttackFatigueModBase_Property,
+                    item: item.PowerAttackFatigueModBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase,
                     errorMask: errorMask);
             }
@@ -5168,7 +3807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.PowerAttackFatigueModMult),
-                    item: item.PowerAttackFatigueModMult_Property,
+                    item: item.PowerAttackFatigueModMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult,
                     errorMask: errorMask);
             }
@@ -5221,107 +3860,107 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeFatigueModMult_Property,
+                item: item.DodgeFatigueModMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeFatigueModBase_Property,
+                item: item.DodgeFatigueModBase,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.EncumbSpeedModBase_Property,
+                item: item.EncumbSpeedModBase,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.EncumbSpeedModMult_Property,
+                item: item.EncumbSpeedModMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeWhileUnderAttackMult_Property,
+                item: item.DodgeWhileUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeNotUnderAttackMult_Property,
+                item: item.DodgeNotUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeBackWhileUnderAttackMult_Property,
+                item: item.DodgeBackWhileUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeBackNotUnderAttackMult_Property,
+                item: item.DodgeBackNotUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeForwardWhileUnderAttackMult_Property,
+                item: item.DodgeForwardWhileUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeForwardNotUnderAttackMult_Property,
+                item: item.DodgeForwardNotUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockSkillModifierMult_Property,
+                item: item.BlockSkillModifierMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockSkillModifierBase_Property,
+                item: item.BlockSkillModifierBase,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockWhileUnderAttackMult_Property,
+                item: item.BlockWhileUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockNotUnderAttackMult_Property,
+                item: item.BlockNotUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackSkillModifierMult_Property,
+                item: item.AttackSkillModifierMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackSkillModifierBase_Property,
+                item: item.AttackSkillModifierBase,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackWhileUnderAttackMult_Property,
+                item: item.AttackWhileUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackNotUnderAttackMult_Property,
+                item: item.AttackNotUnderAttackMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackDuringBlockMult_Property,
+                item: item.AttackDuringBlockMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.PowerAttackFatigueModBase_Property,
+                item: item.PowerAttackFatigueModBase,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.PowerAttackFatigueModMult_Property,
+                item: item.PowerAttackFatigueModMult,
                 fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult,
                 errorMask: errorMask);
         }

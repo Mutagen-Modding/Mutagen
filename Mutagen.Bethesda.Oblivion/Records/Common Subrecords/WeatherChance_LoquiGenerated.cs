@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,11 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WeatherChance : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IWeatherChance,
         ILoquiObject<WeatherChance>,
         ILoquiObjectSetter,
-        IPropertySupporter<Int32>,
         IEquatable<WeatherChance>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -56,52 +57,12 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Weather> IWeatherChanceGetter.Weather_Property => this.Weather_Property;
         #endregion
         #region Chance
-        protected Int32 _Chance;
-        protected PropertyForwarder<WeatherChance, Int32> _ChanceForwarder;
-        public INotifyingSetItem<Int32> Chance_Property => _ChanceForwarder ?? (_ChanceForwarder = new PropertyForwarder<WeatherChance, Int32>(this, (int)WeatherChance_FieldIndex.Chance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _Chance;
         public Int32 Chance
         {
             get => this._Chance;
-            set => this.SetChance(value);
+            set => this.RaiseAndSetIfChanged(ref this._Chance, value, nameof(Chance));
         }
-        protected void SetChance(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)WeatherChance_FieldIndex.Chance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Chance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)WeatherChance_FieldIndex.Chance] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = Chance;
-                _Chance = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)WeatherChance_FieldIndex.Chance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Chance = item;
-            }
-        }
-        protected void UnsetChance()
-        {
-            _hasBeenSetTracker[(int)WeatherChance_FieldIndex.Chance] = false;
-            Chance = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IWeatherChance.Chance_Property => this.Chance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IWeatherChanceGetter.Chance_Property => this.Chance_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -512,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetChance();
+                            item.Chance = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -544,140 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((WeatherChance_FieldIndex)index)
-            {
-                case WeatherChance_FieldIndex.Chance:
-                    return Chance;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((WeatherChance_FieldIndex)index)
-            {
-                case WeatherChance_FieldIndex.Chance:
-                    SetChance(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((WeatherChance_FieldIndex)index)
-            {
-                case WeatherChance_FieldIndex.Chance:
-                    SetChance(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((WeatherChance_FieldIndex)index)
-            {
-                case WeatherChance_FieldIndex.Chance:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public IEnumerable<ILink> Links => GetLinks();
@@ -907,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetChance();
+                    item.Chance = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -1051,9 +878,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case WeatherChance_FieldIndex.Chance:
-                    this.SetChance(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.Chance = (Int32)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1098,9 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case WeatherChance_FieldIndex.Chance:
-                    obj.SetChance(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.Chance = (Int32)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1119,7 +942,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Weather Weather { get; set; }
         new Int32 Chance { get; set; }
-        new INotifyingItem<Int32> Chance_Property { get; }
 
     }
 
@@ -1132,7 +954,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Chance
         Int32 Chance { get; }
-        INotifyingItemGetter<Int32> Chance_Property { get; }
 
         #endregion
 
@@ -1366,9 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)WeatherChance_FieldIndex.Chance);
                 try
                 {
-                    item.Chance_Property.Set(
-                        value: rhs.Chance,
-                        cmds: cmds);
+                    item.Chance = rhs.Chance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1411,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherChance_FieldIndex.Weather:
-                    obj.Weather = default(FormIDLink<Weather>);
+                    obj.Weather_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case WeatherChance_FieldIndex.Chance:
                     obj.Chance = default(Int32);
@@ -1456,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherChance item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Weather = default(FormIDLink<Weather>);
+            item.Weather_Property.Unset(cmds.ToUnsetParams());
             item.Chance = default(Int32);
         }
 
@@ -1580,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Chance),
-                    item: item.Chance_Property,
+                    item: item.Chance,
                     fieldIndex: (int)WeatherChance_FieldIndex.Chance,
                     errorMask: errorMask);
             }
@@ -1632,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Chance_Property,
+                item: item.Chance,
                 fieldIndex: (int)WeatherChance_FieldIndex.Chance,
                 errorMask: errorMask);
         }

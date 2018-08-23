@@ -276,8 +276,8 @@ namespace Mutagen.Bethesda.Oblivion
             if (obj.Persistent.Count == 0
                 && obj.Temporary.Count == 0
                 && obj.VisibleWhenDistant.Count == 0
-                && !obj.PathGrid_Property.HasBeenSet
-                && !obj.Landscape_Property.HasBeenSet) return;
+                && !obj.PathGrid_IsSet
+                && !obj.Landscape_IsSet) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
                 FormIDBinaryTranslation.Instance.Write(
@@ -319,8 +319,8 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 if (obj.Temporary.Count > 0
-                    || obj.PathGrid_Property.HasBeenSet
-                    || obj.Landscape_Property.HasBeenSet)
+                    || obj.PathGrid_IsSet
+                    || obj.Landscape_IsSet)
                 {
                     using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             writer.WriteZeros(4);
                         }
-                        if (obj.Landscape_Property.HasBeenSet)
+                        if (obj.Landscape_IsSet)
                         {
                             LoquiBinaryTranslation<Landscape>.Instance.Write(
                                 writer,
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 (int)Cell_FieldIndex.Landscape,
                                 errorMask);
                         }
-                        if (obj.PathGrid_Property.HasBeenSet)
+                        if (obj.PathGrid_IsSet)
                         {
                             LoquiBinaryTranslation<PathGrid>.Instance.Write(
                                 writer,

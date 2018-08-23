@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FormIDLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormID>
     {
-        protected override string ItemWriteAccess(Accessor itemAccessor)
+        protected override string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
         {
             return $"{itemAccessor.PropertyOrDirectAccess}?.FormID";
         }

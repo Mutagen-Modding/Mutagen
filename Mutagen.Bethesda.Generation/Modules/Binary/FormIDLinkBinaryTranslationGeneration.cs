@@ -10,6 +10,11 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FormIDLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FormID>
     {
+        protected override string ItemWriteAccess(Accessor itemAccessor)
+        {
+            return itemAccessor.PropertyOrDirectAccess;
+        }
+
         public override string Typename(TypeGeneration typeGen)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;

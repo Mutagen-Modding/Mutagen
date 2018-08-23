@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows.Media;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
@@ -35,13 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRegion,
         ILoquiObject<Region>,
         ILoquiObjectSetter,
-        IPropertySupporter<String>,
-        IPropertySupporter<Color>,
-        IPropertySupporter<RegionDataObjects>,
-        IPropertySupporter<RegionDataWeather>,
-        IPropertySupporter<RegionDataMapName>,
-        IPropertySupporter<RegionDataGrasses>,
-        IPropertySupporter<RegionDataSounds>,
         IEquatable<Region>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,100 +52,56 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        protected String _Icon;
-        protected PropertyForwarder<Region, String> _IconForwarder;
-        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<Region, String>(this, (int)Region_FieldIndex.Icon));
+        public bool Icon_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Region_FieldIndex.Icon];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Icon, nameof(Icon_IsSet));
+        }
+        bool IRegionGetter.Icon_IsSet => Icon_IsSet;
+        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
             get => this._Icon;
-            set => this.SetIcon(value);
+            set => Icon_Set(value);
         }
-        protected void SetIcon(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IRegionGetter.Icon => this.Icon;
+        public void Icon_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Icon];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Region_FieldIndex.Icon] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Icon;
-                _Icon = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Region_FieldIndex.Icon,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Icon = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
-        protected void UnsetIcon()
+        public void Icon_Unset()
         {
-            _hasBeenSetTracker[(int)Region_FieldIndex.Icon] = false;
-            Icon = default(String);
+            this.Icon_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IRegion.Icon_Property => this.Icon_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IRegionGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region MapColor
-        protected Color _MapColor;
-        protected PropertyForwarder<Region, Color> _MapColorForwarder;
-        public INotifyingSetItem<Color> MapColor_Property => _MapColorForwarder ?? (_MapColorForwarder = new PropertyForwarder<Region, Color>(this, (int)Region_FieldIndex.MapColor));
+        public bool MapColor_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Region_FieldIndex.MapColor];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.MapColor, nameof(MapColor_IsSet));
+        }
+        bool IRegionGetter.MapColor_IsSet => MapColor_IsSet;
+        private Color _MapColor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color MapColor
         {
             get => this._MapColor;
-            set => this.SetMapColor(value);
+            set => MapColor_Set(value);
         }
-        protected void SetMapColor(
-            Color item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Color IRegionGetter.MapColor => this.MapColor;
+        public void MapColor_Set(
+            Color value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.MapColor];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MapColor == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Region_FieldIndex.MapColor] = hasBeenSet;
-            }
-            if (_Color_subscriptions != null)
-            {
-                var tmp = MapColor;
-                _MapColor = item;
-                _Color_subscriptions.FireSubscriptions(
-                    index: (int)Region_FieldIndex.MapColor,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MapColor = item;
-            }
+            this.RaiseAndSetIfChanged(ref _MapColor, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.MapColor, nameof(MapColor), nameof(MapColor_IsSet));
         }
-        protected void UnsetMapColor()
+        public void MapColor_Unset()
         {
-            _hasBeenSetTracker[(int)Region_FieldIndex.MapColor] = false;
-            MapColor = default(Color);
+            this.MapColor_Set(default(Color), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Color> IRegion.MapColor_Property => this.MapColor_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Color> IRegionGetter.MapColor_Property => this.MapColor_Property;
         #endregion
         #region Worldspace
         public FormIDSetLink<Worldspace> Worldspace_Property { get; } = new FormIDSetLink<Worldspace>();
@@ -178,244 +129,139 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Objects
-        protected RegionDataObjects _Objects;
-        protected PropertyForwarder<Region, RegionDataObjects> _ObjectsForwarder;
-        public INotifyingSetItem<RegionDataObjects> Objects_Property => _ObjectsForwarder ?? (_ObjectsForwarder = new PropertyForwarder<Region, RegionDataObjects>(this, (int)Region_FieldIndex.Objects));
+        public bool Objects_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Region_FieldIndex.Objects];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Objects, nameof(Objects_IsSet));
+        }
+        bool IRegionGetter.Objects_IsSet => Objects_IsSet;
+        private RegionDataObjects _Objects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RegionDataObjects Objects
         {
-            get => this._Objects;
-            set => this.SetObjects(value);
+            get => _Objects;
+            set => Objects_Set(value);
         }
-        protected void SetObjects(
-            RegionDataObjects item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Objects_Set(
+            RegionDataObjects value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Objects];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Objects, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Region_FieldIndex.Objects] = hasBeenSet;
-            }
-            if (_RegionDataObjects_subscriptions != null)
-            {
-                var tmp = Objects;
-                _Objects = item;
-                _RegionDataObjects_subscriptions.FireSubscriptions(
-                    index: (int)Region_FieldIndex.Objects,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Objects = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Objects, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Objects, nameof(Objects), nameof(Objects_IsSet));
         }
-        protected void UnsetObjects()
+        public void Objects_Unset()
         {
-            _hasBeenSetTracker[(int)Region_FieldIndex.Objects] = false;
-            Objects = default(RegionDataObjects);
+            this.Objects_Set(default(RegionDataObjects), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<RegionDataObjects> IRegion.Objects_Property => this.Objects_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<RegionDataObjects> IRegionGetter.Objects_Property => this.Objects_Property;
+        RegionDataObjects IRegionGetter.Objects => this.Objects;
         #endregion
         #region Weather
-        protected RegionDataWeather _Weather;
-        protected PropertyForwarder<Region, RegionDataWeather> _WeatherForwarder;
-        public INotifyingSetItem<RegionDataWeather> Weather_Property => _WeatherForwarder ?? (_WeatherForwarder = new PropertyForwarder<Region, RegionDataWeather>(this, (int)Region_FieldIndex.Weather));
+        public bool Weather_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Region_FieldIndex.Weather];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Weather, nameof(Weather_IsSet));
+        }
+        bool IRegionGetter.Weather_IsSet => Weather_IsSet;
+        private RegionDataWeather _Weather;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RegionDataWeather Weather
         {
-            get => this._Weather;
-            set => this.SetWeather(value);
+            get => _Weather;
+            set => Weather_Set(value);
         }
-        protected void SetWeather(
-            RegionDataWeather item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Weather_Set(
+            RegionDataWeather value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Weather];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Weather, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Region_FieldIndex.Weather] = hasBeenSet;
-            }
-            if (_RegionDataWeather_subscriptions != null)
-            {
-                var tmp = Weather;
-                _Weather = item;
-                _RegionDataWeather_subscriptions.FireSubscriptions(
-                    index: (int)Region_FieldIndex.Weather,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Weather = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Weather, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Weather, nameof(Weather), nameof(Weather_IsSet));
         }
-        protected void UnsetWeather()
+        public void Weather_Unset()
         {
-            _hasBeenSetTracker[(int)Region_FieldIndex.Weather] = false;
-            Weather = default(RegionDataWeather);
+            this.Weather_Set(default(RegionDataWeather), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<RegionDataWeather> IRegion.Weather_Property => this.Weather_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<RegionDataWeather> IRegionGetter.Weather_Property => this.Weather_Property;
+        RegionDataWeather IRegionGetter.Weather => this.Weather;
         #endregion
         #region MapName
-        protected RegionDataMapName _MapName;
-        protected PropertyForwarder<Region, RegionDataMapName> _MapNameForwarder;
-        public INotifyingSetItem<RegionDataMapName> MapName_Property => _MapNameForwarder ?? (_MapNameForwarder = new PropertyForwarder<Region, RegionDataMapName>(this, (int)Region_FieldIndex.MapName));
+        public bool MapName_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Region_FieldIndex.MapName];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.MapName, nameof(MapName_IsSet));
+        }
+        bool IRegionGetter.MapName_IsSet => MapName_IsSet;
+        private RegionDataMapName _MapName;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RegionDataMapName MapName
         {
-            get => this._MapName;
-            set => this.SetMapName(value);
+            get => _MapName;
+            set => MapName_Set(value);
         }
-        protected void SetMapName(
-            RegionDataMapName item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void MapName_Set(
+            RegionDataMapName value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.MapName];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(MapName, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Region_FieldIndex.MapName] = hasBeenSet;
-            }
-            if (_RegionDataMapName_subscriptions != null)
-            {
-                var tmp = MapName;
-                _MapName = item;
-                _RegionDataMapName_subscriptions.FireSubscriptions(
-                    index: (int)Region_FieldIndex.MapName,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MapName = item;
-            }
+            this.RaiseAndSetIfChanged(ref _MapName, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.MapName, nameof(MapName), nameof(MapName_IsSet));
         }
-        protected void UnsetMapName()
+        public void MapName_Unset()
         {
-            _hasBeenSetTracker[(int)Region_FieldIndex.MapName] = false;
-            MapName = default(RegionDataMapName);
+            this.MapName_Set(default(RegionDataMapName), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<RegionDataMapName> IRegion.MapName_Property => this.MapName_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<RegionDataMapName> IRegionGetter.MapName_Property => this.MapName_Property;
+        RegionDataMapName IRegionGetter.MapName => this.MapName;
         #endregion
         #region Grasses
-        protected RegionDataGrasses _Grasses;
-        protected PropertyForwarder<Region, RegionDataGrasses> _GrassesForwarder;
-        public INotifyingSetItem<RegionDataGrasses> Grasses_Property => _GrassesForwarder ?? (_GrassesForwarder = new PropertyForwarder<Region, RegionDataGrasses>(this, (int)Region_FieldIndex.Grasses));
+        public bool Grasses_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Region_FieldIndex.Grasses];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Grasses, nameof(Grasses_IsSet));
+        }
+        bool IRegionGetter.Grasses_IsSet => Grasses_IsSet;
+        private RegionDataGrasses _Grasses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RegionDataGrasses Grasses
         {
-            get => this._Grasses;
-            set => this.SetGrasses(value);
+            get => _Grasses;
+            set => Grasses_Set(value);
         }
-        protected void SetGrasses(
-            RegionDataGrasses item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Grasses_Set(
+            RegionDataGrasses value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Grasses];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Grasses, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Region_FieldIndex.Grasses] = hasBeenSet;
-            }
-            if (_RegionDataGrasses_subscriptions != null)
-            {
-                var tmp = Grasses;
-                _Grasses = item;
-                _RegionDataGrasses_subscriptions.FireSubscriptions(
-                    index: (int)Region_FieldIndex.Grasses,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Grasses = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Grasses, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Grasses, nameof(Grasses), nameof(Grasses_IsSet));
         }
-        protected void UnsetGrasses()
+        public void Grasses_Unset()
         {
-            _hasBeenSetTracker[(int)Region_FieldIndex.Grasses] = false;
-            Grasses = default(RegionDataGrasses);
+            this.Grasses_Set(default(RegionDataGrasses), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<RegionDataGrasses> IRegion.Grasses_Property => this.Grasses_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<RegionDataGrasses> IRegionGetter.Grasses_Property => this.Grasses_Property;
+        RegionDataGrasses IRegionGetter.Grasses => this.Grasses;
         #endregion
         #region Sounds
-        protected RegionDataSounds _Sounds;
-        protected PropertyForwarder<Region, RegionDataSounds> _SoundsForwarder;
-        public INotifyingSetItem<RegionDataSounds> Sounds_Property => _SoundsForwarder ?? (_SoundsForwarder = new PropertyForwarder<Region, RegionDataSounds>(this, (int)Region_FieldIndex.Sounds));
+        public bool Sounds_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Region_FieldIndex.Sounds];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Region_FieldIndex.Sounds, nameof(Sounds_IsSet));
+        }
+        bool IRegionGetter.Sounds_IsSet => Sounds_IsSet;
+        private RegionDataSounds _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RegionDataSounds Sounds
         {
-            get => this._Sounds;
-            set => this.SetSounds(value);
+            get => _Sounds;
+            set => Sounds_Set(value);
         }
-        protected void SetSounds(
-            RegionDataSounds item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Sounds_Set(
+            RegionDataSounds value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Region_FieldIndex.Sounds];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Sounds, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Region_FieldIndex.Sounds] = hasBeenSet;
-            }
-            if (_RegionDataSounds_subscriptions != null)
-            {
-                var tmp = Sounds;
-                _Sounds = item;
-                _RegionDataSounds_subscriptions.FireSubscriptions(
-                    index: (int)Region_FieldIndex.Sounds,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Sounds = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Sounds, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Sounds, nameof(Sounds), nameof(Sounds_IsSet));
         }
-        protected void UnsetSounds()
+        public void Sounds_Unset()
         {
-            _hasBeenSetTracker[(int)Region_FieldIndex.Sounds] = false;
-            Sounds = default(RegionDataSounds);
+            this.Sounds_Set(default(RegionDataSounds), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<RegionDataSounds> IRegion.Sounds_Property => this.Sounds_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<RegionDataSounds> IRegionGetter.Sounds_Property => this.Sounds_Property;
+        RegionDataSounds IRegionGetter.Sounds => this.Sounds;
         #endregion
 
         #region Loqui Getter Interface
@@ -476,13 +322,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (Icon_IsSet)
             {
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
-            if (MapColor_Property.HasBeenSet != rhs.MapColor_Property.HasBeenSet) return false;
-            if (MapColor_Property.HasBeenSet)
+            if (MapColor_IsSet != rhs.MapColor_IsSet) return false;
+            if (MapColor_IsSet)
             {
                 if (this.MapColor != rhs.MapColor) return false;
             }
@@ -496,28 +342,28 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Areas.SequenceEqual(rhs.Areas)) return false;
             }
-            if (Objects_Property.HasBeenSet != rhs.Objects_Property.HasBeenSet) return false;
-            if (Objects_Property.HasBeenSet)
+            if (Objects_IsSet != rhs.Objects_IsSet) return false;
+            if (Objects_IsSet)
             {
                 if (!object.Equals(this.Objects, rhs.Objects)) return false;
             }
-            if (Weather_Property.HasBeenSet != rhs.Weather_Property.HasBeenSet) return false;
-            if (Weather_Property.HasBeenSet)
+            if (Weather_IsSet != rhs.Weather_IsSet) return false;
+            if (Weather_IsSet)
             {
                 if (!object.Equals(this.Weather, rhs.Weather)) return false;
             }
-            if (MapName_Property.HasBeenSet != rhs.MapName_Property.HasBeenSet) return false;
-            if (MapName_Property.HasBeenSet)
+            if (MapName_IsSet != rhs.MapName_IsSet) return false;
+            if (MapName_IsSet)
             {
                 if (!object.Equals(this.MapName, rhs.MapName)) return false;
             }
-            if (Grasses_Property.HasBeenSet != rhs.Grasses_Property.HasBeenSet) return false;
-            if (Grasses_Property.HasBeenSet)
+            if (Grasses_IsSet != rhs.Grasses_IsSet) return false;
+            if (Grasses_IsSet)
             {
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
             }
-            if (Sounds_Property.HasBeenSet != rhs.Sounds_Property.HasBeenSet) return false;
-            if (Sounds_Property.HasBeenSet)
+            if (Sounds_IsSet != rhs.Sounds_IsSet) return false;
+            if (Sounds_IsSet)
             {
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
             }
@@ -527,11 +373,11 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet)
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
-            if (MapColor_Property.HasBeenSet)
+            if (MapColor_IsSet)
             {
                 ret = HashHelper.GetHashCode(MapColor).CombineHashCode(ret);
             }
@@ -543,23 +389,23 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Areas).CombineHashCode(ret);
             }
-            if (Objects_Property.HasBeenSet)
+            if (Objects_IsSet)
             {
                 ret = HashHelper.GetHashCode(Objects).CombineHashCode(ret);
             }
-            if (Weather_Property.HasBeenSet)
+            if (Weather_IsSet)
             {
                 ret = HashHelper.GetHashCode(Weather).CombineHashCode(ret);
             }
-            if (MapName_Property.HasBeenSet)
+            if (MapName_IsSet)
             {
                 ret = HashHelper.GetHashCode(MapName).CombineHashCode(ret);
             }
-            if (Grasses_Property.HasBeenSet)
+            if (Grasses_IsSet)
             {
                 ret = HashHelper.GetHashCode(Grasses).CombineHashCode(ret);
             }
-            if (Sounds_Property.HasBeenSet)
+            if (Sounds_IsSet)
             {
                 ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
             }
@@ -891,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -917,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMapColor();
+                            item.MapColor = default(Color);
                         }
                     }
                     catch (Exception ex)
@@ -979,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetObjects();
+                            item.Objects = default(RegionDataObjects);
                         }
                     }
                     catch (Exception ex)
@@ -1006,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetWeather();
+                            item.Weather = default(RegionDataWeather);
                         }
                     }
                     catch (Exception ex)
@@ -1033,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMapName();
+                            item.MapName = default(RegionDataMapName);
                         }
                     }
                     catch (Exception ex)
@@ -1060,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetGrasses();
+                            item.Grasses = default(RegionDataGrasses);
                         }
                     }
                     catch (Exception ex)
@@ -1087,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSounds();
+                            item.Sounds = default(RegionDataSounds);
                         }
                     }
                     catch (Exception ex)
@@ -1133,951 +979,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Icon:
-                    return Icon;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Icon:
-                    SetIcon(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Icon:
-                    SetIcon(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Icon:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Color
-        protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
-        Color IPropertySupporter<Color>.Get(int index)
-        {
-            return GetColor(index: index);
-        }
-
-        protected Color GetColor(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.MapColor:
-                    return MapColor;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Color: {index}");
-            }
-        }
-
-        void IPropertySupporter<Color>.Set(
-            int index,
-            Color item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetColor(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetColor(
-            int index,
-            Color item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.MapColor:
-                    SetMapColor(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Color: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Color>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Color>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Color>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetColor(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetColor(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.MapColor:
-                    SetMapColor(
-                        item: default(Color),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Color: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Color>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Color> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Color_subscriptions == null)
-            {
-                _Color_subscriptions = new ObjectCentralizationSubscriptions<Color>();
-            }
-            _Color_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Color>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Color_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Color>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Color IPropertySupporter<Color>.DefaultValue(int index)
-        {
-            return DefaultValueColor(index: index);
-        }
-
-        protected Color DefaultValueColor(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.MapColor:
-                    return default(Color);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Color: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RegionDataObjects
-        protected ObjectCentralizationSubscriptions<RegionDataObjects> _RegionDataObjects_subscriptions;
-        RegionDataObjects IPropertySupporter<RegionDataObjects>.Get(int index)
-        {
-            return GetRegionDataObjects(index: index);
-        }
-
-        protected RegionDataObjects GetRegionDataObjects(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Objects:
-                    return Objects;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataObjects: {index}");
-            }
-        }
-
-        void IPropertySupporter<RegionDataObjects>.Set(
-            int index,
-            RegionDataObjects item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRegionDataObjects(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRegionDataObjects(
-            int index,
-            RegionDataObjects item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Objects:
-                    SetObjects(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataObjects: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RegionDataObjects>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RegionDataObjects>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RegionDataObjects>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRegionDataObjects(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRegionDataObjects(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Objects:
-                    SetObjects(
-                        item: default(RegionDataObjects),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataObjects: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataObjects>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RegionDataObjects> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RegionDataObjects_subscriptions == null)
-            {
-                _RegionDataObjects_subscriptions = new ObjectCentralizationSubscriptions<RegionDataObjects>();
-            }
-            _RegionDataObjects_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataObjects>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RegionDataObjects_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RegionDataObjects>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RegionDataObjects IPropertySupporter<RegionDataObjects>.DefaultValue(int index)
-        {
-            return DefaultValueRegionDataObjects(index: index);
-        }
-
-        protected RegionDataObjects DefaultValueRegionDataObjects(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Objects:
-                    return default(RegionDataObjects);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataObjects: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RegionDataWeather
-        protected ObjectCentralizationSubscriptions<RegionDataWeather> _RegionDataWeather_subscriptions;
-        RegionDataWeather IPropertySupporter<RegionDataWeather>.Get(int index)
-        {
-            return GetRegionDataWeather(index: index);
-        }
-
-        protected RegionDataWeather GetRegionDataWeather(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Weather:
-                    return Weather;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataWeather: {index}");
-            }
-        }
-
-        void IPropertySupporter<RegionDataWeather>.Set(
-            int index,
-            RegionDataWeather item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRegionDataWeather(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRegionDataWeather(
-            int index,
-            RegionDataWeather item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Weather:
-                    SetWeather(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataWeather: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RegionDataWeather>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RegionDataWeather>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RegionDataWeather>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRegionDataWeather(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRegionDataWeather(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Weather:
-                    SetWeather(
-                        item: default(RegionDataWeather),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataWeather: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataWeather>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RegionDataWeather> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RegionDataWeather_subscriptions == null)
-            {
-                _RegionDataWeather_subscriptions = new ObjectCentralizationSubscriptions<RegionDataWeather>();
-            }
-            _RegionDataWeather_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataWeather>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RegionDataWeather_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RegionDataWeather>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RegionDataWeather IPropertySupporter<RegionDataWeather>.DefaultValue(int index)
-        {
-            return DefaultValueRegionDataWeather(index: index);
-        }
-
-        protected RegionDataWeather DefaultValueRegionDataWeather(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Weather:
-                    return default(RegionDataWeather);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataWeather: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RegionDataMapName
-        protected ObjectCentralizationSubscriptions<RegionDataMapName> _RegionDataMapName_subscriptions;
-        RegionDataMapName IPropertySupporter<RegionDataMapName>.Get(int index)
-        {
-            return GetRegionDataMapName(index: index);
-        }
-
-        protected RegionDataMapName GetRegionDataMapName(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.MapName:
-                    return MapName;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataMapName: {index}");
-            }
-        }
-
-        void IPropertySupporter<RegionDataMapName>.Set(
-            int index,
-            RegionDataMapName item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRegionDataMapName(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRegionDataMapName(
-            int index,
-            RegionDataMapName item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.MapName:
-                    SetMapName(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataMapName: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RegionDataMapName>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RegionDataMapName>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RegionDataMapName>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRegionDataMapName(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRegionDataMapName(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.MapName:
-                    SetMapName(
-                        item: default(RegionDataMapName),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataMapName: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataMapName>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RegionDataMapName> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RegionDataMapName_subscriptions == null)
-            {
-                _RegionDataMapName_subscriptions = new ObjectCentralizationSubscriptions<RegionDataMapName>();
-            }
-            _RegionDataMapName_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataMapName>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RegionDataMapName_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RegionDataMapName>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RegionDataMapName IPropertySupporter<RegionDataMapName>.DefaultValue(int index)
-        {
-            return DefaultValueRegionDataMapName(index: index);
-        }
-
-        protected RegionDataMapName DefaultValueRegionDataMapName(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.MapName:
-                    return default(RegionDataMapName);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataMapName: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RegionDataGrasses
-        protected ObjectCentralizationSubscriptions<RegionDataGrasses> _RegionDataGrasses_subscriptions;
-        RegionDataGrasses IPropertySupporter<RegionDataGrasses>.Get(int index)
-        {
-            return GetRegionDataGrasses(index: index);
-        }
-
-        protected RegionDataGrasses GetRegionDataGrasses(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Grasses:
-                    return Grasses;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataGrasses: {index}");
-            }
-        }
-
-        void IPropertySupporter<RegionDataGrasses>.Set(
-            int index,
-            RegionDataGrasses item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRegionDataGrasses(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRegionDataGrasses(
-            int index,
-            RegionDataGrasses item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Grasses:
-                    SetGrasses(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataGrasses: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RegionDataGrasses>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RegionDataGrasses>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RegionDataGrasses>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRegionDataGrasses(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRegionDataGrasses(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Grasses:
-                    SetGrasses(
-                        item: default(RegionDataGrasses),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataGrasses: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataGrasses>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RegionDataGrasses> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RegionDataGrasses_subscriptions == null)
-            {
-                _RegionDataGrasses_subscriptions = new ObjectCentralizationSubscriptions<RegionDataGrasses>();
-            }
-            _RegionDataGrasses_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataGrasses>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RegionDataGrasses_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RegionDataGrasses>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RegionDataGrasses IPropertySupporter<RegionDataGrasses>.DefaultValue(int index)
-        {
-            return DefaultValueRegionDataGrasses(index: index);
-        }
-
-        protected RegionDataGrasses DefaultValueRegionDataGrasses(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Grasses:
-                    return default(RegionDataGrasses);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataGrasses: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RegionDataSounds
-        protected ObjectCentralizationSubscriptions<RegionDataSounds> _RegionDataSounds_subscriptions;
-        RegionDataSounds IPropertySupporter<RegionDataSounds>.Get(int index)
-        {
-            return GetRegionDataSounds(index: index);
-        }
-
-        protected RegionDataSounds GetRegionDataSounds(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Sounds:
-                    return Sounds;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataSounds: {index}");
-            }
-        }
-
-        void IPropertySupporter<RegionDataSounds>.Set(
-            int index,
-            RegionDataSounds item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRegionDataSounds(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRegionDataSounds(
-            int index,
-            RegionDataSounds item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Sounds:
-                    SetSounds(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataSounds: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RegionDataSounds>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RegionDataSounds>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RegionDataSounds>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRegionDataSounds(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRegionDataSounds(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Sounds:
-                    SetSounds(
-                        item: default(RegionDataSounds),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataSounds: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataSounds>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RegionDataSounds> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RegionDataSounds_subscriptions == null)
-            {
-                _RegionDataSounds_subscriptions = new ObjectCentralizationSubscriptions<RegionDataSounds>();
-            }
-            _RegionDataSounds_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RegionDataSounds>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RegionDataSounds_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RegionDataSounds>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RegionDataSounds IPropertySupporter<RegionDataSounds>.DefaultValue(int index)
-        {
-            return DefaultValueRegionDataSounds(index: index);
-        }
-
-        protected RegionDataSounds DefaultValueRegionDataSounds(int index)
-        {
-            switch ((Region_FieldIndex)index)
-            {
-                case Region_FieldIndex.Sounds:
-                    return default(RegionDataSounds);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RegionDataSounds: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Region_Registration.TRIGGERING_RECORD_TYPE;
@@ -2339,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -2367,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMapColor();
+                            item.MapColor = default(Color);
                         }
                     }
                     catch (Exception ex)
@@ -2528,14 +1429,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Region_FieldIndex.Icon:
-                    this.SetIcon(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Icon = (String)obj;
                     break;
                 case Region_FieldIndex.MapColor:
-                    this.SetMapColor(
-                        (Color)obj,
-                        cmds: cmds);
+                    this.MapColor = (Color)obj;
                     break;
                 case Region_FieldIndex.Worldspace:
                     this.Worldspace_Property.Set(
@@ -2546,29 +1443,19 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Areas.SetTo((IEnumerable<RegionArea>)obj, cmds);
                     break;
                 case Region_FieldIndex.Objects:
-                    this.SetObjects(
-                        (RegionDataObjects)obj,
-                        cmds: cmds);
+                    this.Objects = (RegionDataObjects)obj;
                     break;
                 case Region_FieldIndex.Weather:
-                    this.SetWeather(
-                        (RegionDataWeather)obj,
-                        cmds: cmds);
+                    this.Weather = (RegionDataWeather)obj;
                     break;
                 case Region_FieldIndex.MapName:
-                    this.SetMapName(
-                        (RegionDataMapName)obj,
-                        cmds: cmds);
+                    this.MapName = (RegionDataMapName)obj;
                     break;
                 case Region_FieldIndex.Grasses:
-                    this.SetGrasses(
-                        (RegionDataGrasses)obj,
-                        cmds: cmds);
+                    this.Grasses = (RegionDataGrasses)obj;
                     break;
                 case Region_FieldIndex.Sounds:
-                    this.SetSounds(
-                        (RegionDataSounds)obj,
-                        cmds: cmds);
+                    this.Sounds = (RegionDataSounds)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -2602,14 +1489,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Region_FieldIndex.Icon:
-                    obj.SetIcon(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Icon = (String)pair.Value;
                     break;
                 case Region_FieldIndex.MapColor:
-                    obj.SetMapColor(
-                        (Color)pair.Value,
-                        cmds: null);
+                    obj.MapColor = (Color)pair.Value;
                     break;
                 case Region_FieldIndex.Worldspace:
                     obj.Worldspace_Property.Set(
@@ -2620,29 +1503,19 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Areas.SetTo((IEnumerable<RegionArea>)pair.Value, null);
                     break;
                 case Region_FieldIndex.Objects:
-                    obj.SetObjects(
-                        (RegionDataObjects)pair.Value,
-                        cmds: null);
+                    obj.Objects = (RegionDataObjects)pair.Value;
                     break;
                 case Region_FieldIndex.Weather:
-                    obj.SetWeather(
-                        (RegionDataWeather)pair.Value,
-                        cmds: null);
+                    obj.Weather = (RegionDataWeather)pair.Value;
                     break;
                 case Region_FieldIndex.MapName:
-                    obj.SetMapName(
-                        (RegionDataMapName)pair.Value,
-                        cmds: null);
+                    obj.MapName = (RegionDataMapName)pair.Value;
                     break;
                 case Region_FieldIndex.Grasses:
-                    obj.SetGrasses(
-                        (RegionDataGrasses)pair.Value,
-                        cmds: null);
+                    obj.Grasses = (RegionDataGrasses)pair.Value;
                     break;
                 case Region_FieldIndex.Sounds:
-                    obj.SetSounds(
-                        (RegionDataSounds)pair.Value,
-                        cmds: null);
+                    obj.Sounds = (RegionDataSounds)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2660,27 +1533,41 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegion : IRegionGetter, IMajorRecord, ILoquiClass<IRegion, IRegionGetter>, ILoquiClass<Region, IRegionGetter>
     {
         new String Icon { get; set; }
-        new INotifyingSetItem<String> Icon_Property { get; }
+        new bool Icon_IsSet { get; set; }
+        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Unset();
 
         new Color MapColor { get; set; }
-        new INotifyingSetItem<Color> MapColor_Property { get; }
+        new bool MapColor_IsSet { get; set; }
+        void MapColor_Set(Color item, bool hasBeenSet = true);
+        void MapColor_Unset();
 
         new Worldspace Worldspace { get; set; }
         new INotifyingList<RegionArea> Areas { get; }
         new RegionDataObjects Objects { get; set; }
-        new INotifyingSetItem<RegionDataObjects> Objects_Property { get; }
+        new bool Objects_IsSet { get; set; }
+        void Objects_Set(RegionDataObjects item, bool hasBeenSet = true);
+        void Objects_Unset();
 
         new RegionDataWeather Weather { get; set; }
-        new INotifyingSetItem<RegionDataWeather> Weather_Property { get; }
+        new bool Weather_IsSet { get; set; }
+        void Weather_Set(RegionDataWeather item, bool hasBeenSet = true);
+        void Weather_Unset();
 
         new RegionDataMapName MapName { get; set; }
-        new INotifyingSetItem<RegionDataMapName> MapName_Property { get; }
+        new bool MapName_IsSet { get; set; }
+        void MapName_Set(RegionDataMapName item, bool hasBeenSet = true);
+        void MapName_Unset();
 
         new RegionDataGrasses Grasses { get; set; }
-        new INotifyingSetItem<RegionDataGrasses> Grasses_Property { get; }
+        new bool Grasses_IsSet { get; set; }
+        void Grasses_Set(RegionDataGrasses item, bool hasBeenSet = true);
+        void Grasses_Unset();
 
         new RegionDataSounds Sounds { get; set; }
-        new INotifyingSetItem<RegionDataSounds> Sounds_Property { get; }
+        new bool Sounds_IsSet { get; set; }
+        void Sounds_Set(RegionDataSounds item, bool hasBeenSet = true);
+        void Sounds_Unset();
 
     }
 
@@ -2688,12 +1575,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Icon
         String Icon { get; }
-        INotifyingSetItemGetter<String> Icon_Property { get; }
+        bool Icon_IsSet { get; }
 
         #endregion
         #region MapColor
         Color MapColor { get; }
-        INotifyingSetItemGetter<Color> MapColor_Property { get; }
+        bool MapColor_IsSet { get; }
 
         #endregion
         #region Worldspace
@@ -2706,27 +1593,27 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Objects
         RegionDataObjects Objects { get; }
-        INotifyingSetItemGetter<RegionDataObjects> Objects_Property { get; }
+        bool Objects_IsSet { get; }
 
         #endregion
         #region Weather
         RegionDataWeather Weather { get; }
-        INotifyingSetItemGetter<RegionDataWeather> Weather_Property { get; }
+        bool Weather_IsSet { get; }
 
         #endregion
         #region MapName
         RegionDataMapName MapName { get; }
-        INotifyingSetItemGetter<RegionDataMapName> MapName_Property { get; }
+        bool MapName_IsSet { get; }
 
         #endregion
         #region Grasses
         RegionDataGrasses Grasses { get; }
-        INotifyingSetItemGetter<RegionDataGrasses> Grasses_Property { get; }
+        bool Grasses_IsSet { get; }
 
         #endregion
         #region Sounds
         RegionDataSounds Sounds { get; }
-        INotifyingSetItemGetter<RegionDataSounds> Sounds_Property { get; }
+        bool Sounds_IsSet { get; }
 
         #endregion
 
@@ -3047,9 +1934,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Icon);
                 try
                 {
-                    item.Icon_Property.SetToWithDefault(
-                        rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Icon,
+                        rhsHasBeenSet: rhs.Icon_IsSet,
+                        defItem: def?.Icon ?? default(String),
+                        defHasBeenSet: def?.Icon_IsSet ?? false,
+                        outRhsItem: out var rhsIconItem,
+                        outDefItem: out var defIconItem))
+                    {
+                        item.Icon = rhsIconItem;
+                    }
+                    else
+                    {
+                        item.Icon_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3066,9 +1964,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
                 try
                 {
-                    item.MapColor_Property.SetToWithDefault(
-                        rhs: rhs.MapColor_Property,
-                        def: def?.MapColor_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.MapColor,
+                        rhsHasBeenSet: rhs.MapColor_IsSet,
+                        defItem: def?.MapColor ?? default(Color),
+                        defHasBeenSet: def?.MapColor_IsSet ?? false,
+                        outRhsItem: out var rhsMapColorItem,
+                        outDefItem: out var defMapColorItem))
+                    {
+                        item.MapColor = rhsMapColorItem;
+                    }
+                    else
+                    {
+                        item.MapColor_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3116,7 +2025,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(RegionArea);
                                     return RegionArea.Copy(
                                         r,
                                         copyMask?.Areas?.Specific,
@@ -3142,36 +2050,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Objects);
                 try
                 {
-                    item.Objects_Property.SetToWithDefault(
-                        rhs.Objects_Property,
-                        def?.Objects_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Objects,
+                        rhsHasBeenSet: rhs.Objects_IsSet,
+                        defItem: def?.Objects,
+                        defHasBeenSet: def?.Objects_IsSet ?? false,
+                        outRhsItem: out var rhsObjectsItem,
+                        outDefItem: out var defObjectsItem))
+                    {
+                        switch (copyMask?.Objects.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Objects.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RegionDataObjectsCommon.CopyFieldsFrom(
-                                        item: item.Objects,
-                                        rhs: rhs.Objects,
-                                        def: def?.Objects,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Objects.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(RegionDataObjects);
-                                    return RegionDataObjects.Copy(
-                                        r,
-                                        copyMask?.Objects?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Objects?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Objects = rhsObjectsItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RegionDataObjectsCommon.CopyFieldsFrom(
+                                    item: item.Objects,
+                                    rhs: rhs.Objects,
+                                    def: def?.Objects,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Objects.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Objects = RegionDataObjects.Copy(
+                                    rhsObjectsItem,
+                                    copyMask?.Objects?.Specific,
+                                    def: defObjectsItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Objects?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Objects_IsSet = false;
+                        item.Objects = default(RegionDataObjects);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3188,36 +2103,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Weather);
                 try
                 {
-                    item.Weather_Property.SetToWithDefault(
-                        rhs.Weather_Property,
-                        def?.Weather_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Weather,
+                        rhsHasBeenSet: rhs.Weather_IsSet,
+                        defItem: def?.Weather,
+                        defHasBeenSet: def?.Weather_IsSet ?? false,
+                        outRhsItem: out var rhsWeatherItem,
+                        outDefItem: out var defWeatherItem))
+                    {
+                        switch (copyMask?.Weather.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Weather.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RegionDataWeatherCommon.CopyFieldsFrom(
-                                        item: item.Weather,
-                                        rhs: rhs.Weather,
-                                        def: def?.Weather,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Weather.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(RegionDataWeather);
-                                    return RegionDataWeather.Copy(
-                                        r,
-                                        copyMask?.Weather?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Weather?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Weather = rhsWeatherItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RegionDataWeatherCommon.CopyFieldsFrom(
+                                    item: item.Weather,
+                                    rhs: rhs.Weather,
+                                    def: def?.Weather,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Weather.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Weather = RegionDataWeather.Copy(
+                                    rhsWeatherItem,
+                                    copyMask?.Weather?.Specific,
+                                    def: defWeatherItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Weather?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Weather_IsSet = false;
+                        item.Weather = default(RegionDataWeather);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3234,36 +2156,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.MapName);
                 try
                 {
-                    item.MapName_Property.SetToWithDefault(
-                        rhs.MapName_Property,
-                        def?.MapName_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.MapName,
+                        rhsHasBeenSet: rhs.MapName_IsSet,
+                        defItem: def?.MapName,
+                        defHasBeenSet: def?.MapName_IsSet ?? false,
+                        outRhsItem: out var rhsMapNameItem,
+                        outDefItem: out var defMapNameItem))
+                    {
+                        switch (copyMask?.MapName.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.MapName.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RegionDataMapNameCommon.CopyFieldsFrom(
-                                        item: item.MapName,
-                                        rhs: rhs.MapName,
-                                        def: def?.MapName,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.MapName.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(RegionDataMapName);
-                                    return RegionDataMapName.Copy(
-                                        r,
-                                        copyMask?.MapName?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.MapName?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.MapName = rhsMapNameItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RegionDataMapNameCommon.CopyFieldsFrom(
+                                    item: item.MapName,
+                                    rhs: rhs.MapName,
+                                    def: def?.MapName,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.MapName.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.MapName = RegionDataMapName.Copy(
+                                    rhsMapNameItem,
+                                    copyMask?.MapName?.Specific,
+                                    def: defMapNameItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.MapName?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.MapName_IsSet = false;
+                        item.MapName = default(RegionDataMapName);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3280,36 +2209,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
                 try
                 {
-                    item.Grasses_Property.SetToWithDefault(
-                        rhs.Grasses_Property,
-                        def?.Grasses_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Grasses,
+                        rhsHasBeenSet: rhs.Grasses_IsSet,
+                        defItem: def?.Grasses,
+                        defHasBeenSet: def?.Grasses_IsSet ?? false,
+                        outRhsItem: out var rhsGrassesItem,
+                        outDefItem: out var defGrassesItem))
+                    {
+                        switch (copyMask?.Grasses.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Grasses.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RegionDataGrassesCommon.CopyFieldsFrom(
-                                        item: item.Grasses,
-                                        rhs: rhs.Grasses,
-                                        def: def?.Grasses,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Grasses.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(RegionDataGrasses);
-                                    return RegionDataGrasses.Copy(
-                                        r,
-                                        copyMask?.Grasses?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Grasses?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Grasses = rhsGrassesItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RegionDataGrassesCommon.CopyFieldsFrom(
+                                    item: item.Grasses,
+                                    rhs: rhs.Grasses,
+                                    def: def?.Grasses,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Grasses.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Grasses = RegionDataGrasses.Copy(
+                                    rhsGrassesItem,
+                                    copyMask?.Grasses?.Specific,
+                                    def: defGrassesItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Grasses?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Grasses_IsSet = false;
+                        item.Grasses = default(RegionDataGrasses);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3326,36 +2262,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
                 try
                 {
-                    item.Sounds_Property.SetToWithDefault(
-                        rhs.Sounds_Property,
-                        def?.Sounds_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Sounds,
+                        rhsHasBeenSet: rhs.Sounds_IsSet,
+                        defItem: def?.Sounds,
+                        defHasBeenSet: def?.Sounds_IsSet ?? false,
+                        outRhsItem: out var rhsSoundsItem,
+                        outDefItem: out var defSoundsItem))
+                    {
+                        switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RegionDataSoundsCommon.CopyFieldsFrom(
-                                        item: item.Sounds,
-                                        rhs: rhs.Sounds,
-                                        def: def?.Sounds,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Sounds.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(RegionDataSounds);
-                                    return RegionDataSounds.Copy(
-                                        r,
-                                        copyMask?.Sounds?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Sounds?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Sounds = rhsSoundsItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RegionDataSoundsCommon.CopyFieldsFrom(
+                                    item: item.Sounds,
+                                    rhs: rhs.Sounds,
+                                    def: def?.Sounds,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Sounds.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Sounds = RegionDataSounds.Copy(
+                                    rhsSoundsItem,
+                                    copyMask?.Sounds?.Specific,
+                                    def: defSoundsItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Sounds?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Sounds_IsSet = false;
+                        item.Sounds = default(RegionDataSounds);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3381,10 +2324,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Region_FieldIndex.Icon:
-                    obj.Icon_Property.HasBeenSet = on;
+                    obj.Icon_IsSet = on;
                     break;
                 case Region_FieldIndex.MapColor:
-                    obj.MapColor_Property.HasBeenSet = on;
+                    obj.MapColor_IsSet = on;
                     break;
                 case Region_FieldIndex.Worldspace:
                     obj.Worldspace_Property.HasBeenSet = on;
@@ -3393,19 +2336,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Areas.HasBeenSet = on;
                     break;
                 case Region_FieldIndex.Objects:
-                    obj.Objects_Property.HasBeenSet = on;
+                    obj.Objects_IsSet = on;
                     break;
                 case Region_FieldIndex.Weather:
-                    obj.Weather_Property.HasBeenSet = on;
+                    obj.Weather_IsSet = on;
                     break;
                 case Region_FieldIndex.MapName:
-                    obj.MapName_Property.HasBeenSet = on;
+                    obj.MapName_IsSet = on;
                     break;
                 case Region_FieldIndex.Grasses:
-                    obj.Grasses_Property.HasBeenSet = on;
+                    obj.Grasses_IsSet = on;
                     break;
                 case Region_FieldIndex.Sounds:
-                    obj.Sounds_Property.HasBeenSet = on;
+                    obj.Sounds_IsSet = on;
                     break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -3422,31 +2365,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Region_FieldIndex.Icon:
-                    obj.Icon_Property.Unset(cmds);
+                    obj.Icon_Unset();
                     break;
                 case Region_FieldIndex.MapColor:
-                    obj.MapColor_Property.Unset(cmds);
+                    obj.MapColor_Unset();
                     break;
                 case Region_FieldIndex.Worldspace:
-                    obj.Worldspace_Property.Unset(cmds);
+                    obj.Worldspace_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Region_FieldIndex.Areas:
                     obj.Areas.Unset(cmds);
                     break;
                 case Region_FieldIndex.Objects:
-                    obj.Objects_Property.Unset(cmds);
+                    obj.Objects_Unset();
                     break;
                 case Region_FieldIndex.Weather:
-                    obj.Weather_Property.Unset(cmds);
+                    obj.Weather_Unset();
                     break;
                 case Region_FieldIndex.MapName:
-                    obj.MapName_Property.Unset(cmds);
+                    obj.MapName_Unset();
                     break;
                 case Region_FieldIndex.Grasses:
-                    obj.Grasses_Property.Unset(cmds);
+                    obj.Grasses_Unset();
                     break;
                 case Region_FieldIndex.Sounds:
-                    obj.Sounds_Property.Unset(cmds);
+                    obj.Sounds_Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -3462,23 +2405,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Region_FieldIndex.Icon:
-                    return obj.Icon_Property.HasBeenSet;
+                    return obj.Icon_IsSet;
                 case Region_FieldIndex.MapColor:
-                    return obj.MapColor_Property.HasBeenSet;
+                    return obj.MapColor_IsSet;
                 case Region_FieldIndex.Worldspace:
                     return obj.Worldspace_Property.HasBeenSet;
                 case Region_FieldIndex.Areas:
                     return obj.Areas.HasBeenSet;
                 case Region_FieldIndex.Objects:
-                    return obj.Objects_Property.HasBeenSet;
+                    return obj.Objects_IsSet;
                 case Region_FieldIndex.Weather:
-                    return obj.Weather_Property.HasBeenSet;
+                    return obj.Weather_IsSet;
                 case Region_FieldIndex.MapName:
-                    return obj.MapName_Property.HasBeenSet;
+                    return obj.MapName_IsSet;
                 case Region_FieldIndex.Grasses:
-                    return obj.Grasses_Property.HasBeenSet;
+                    return obj.Grasses_IsSet;
                 case Region_FieldIndex.Sounds:
-                    return obj.Sounds_Property.HasBeenSet;
+                    return obj.Sounds_IsSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -3518,15 +2461,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegion item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.MapColor_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Unset();
+            item.MapColor_Unset();
             item.Worldspace_Property.Unset(cmds.ToUnsetParams());
             item.Areas.Unset(cmds.ToUnsetParams());
-            item.Objects_Property.Unset(cmds.ToUnsetParams());
-            item.Weather_Property.Unset(cmds.ToUnsetParams());
-            item.MapName_Property.Unset(cmds.ToUnsetParams());
-            item.Grasses_Property.Unset(cmds.ToUnsetParams());
-            item.Sounds_Property.Unset(cmds.ToUnsetParams());
+            item.Objects_Unset();
+            item.Weather_Unset();
+            item.MapName_Unset();
+            item.Grasses_Unset();
+            item.Sounds_Unset();
         }
 
         public static Region_Mask<bool> GetEqualsMask(
@@ -3544,8 +2487,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Region_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.MapColor = item.MapColor_Property.Equals(rhs.MapColor_Property, (l, r) => l == r);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.MapColor = item.MapColor_IsSet == rhs.MapColor_IsSet && item.MapColor == rhs.MapColor;
             ret.Worldspace = item.Worldspace_Property.Equals(rhs.Worldspace_Property, (l, r) => l == r);
             if (item.Areas.HasBeenSet == rhs.Areas.HasBeenSet)
             {
@@ -3572,11 +2515,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Areas = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionArea_Mask<bool>>>>();
                 ret.Areas.Overall = false;
             }
-            ret.Objects = item.Objects_Property.LoquiEqualsHelper(rhs.Objects_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Weather = item.Weather_Property.LoquiEqualsHelper(rhs.Weather_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.MapName = item.MapName_Property.LoquiEqualsHelper(rhs.MapName_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Grasses = item.Grasses_Property.LoquiEqualsHelper(rhs.Grasses_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Sounds = item.Sounds_Property.LoquiEqualsHelper(rhs.Sounds_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Objects = IHasBeenSetExt.LoquiEqualsHelper(item.Objects_IsSet, rhs.Objects_IsSet, item.Objects, rhs.Objects, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Weather = IHasBeenSetExt.LoquiEqualsHelper(item.Weather_IsSet, rhs.Weather_IsSet, item.Weather, rhs.Weather, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.MapName = IHasBeenSetExt.LoquiEqualsHelper(item.MapName_IsSet, rhs.MapName_IsSet, item.MapName, rhs.MapName, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Grasses = IHasBeenSetExt.LoquiEqualsHelper(item.Grasses_IsSet, rhs.Grasses_IsSet, item.Grasses, rhs.Grasses, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Sounds = IHasBeenSetExt.LoquiEqualsHelper(item.Sounds_IsSet, rhs.Sounds_IsSet, item.Sounds, rhs.Sounds, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -3665,19 +2608,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRegionGetter item,
             Region_Mask<bool?> checkMask)
         {
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != item.MapColor_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != item.MapColor_IsSet) return false;
             if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != item.Worldspace_Property.HasBeenSet) return false;
             if (checkMask.Areas.Overall.HasValue && checkMask.Areas.Overall.Value != item.Areas.HasBeenSet) return false;
-            if (checkMask.Objects.Overall.HasValue && checkMask.Objects.Overall.Value != item.Objects_Property.HasBeenSet) return false;
+            if (checkMask.Objects.Overall.HasValue && checkMask.Objects.Overall.Value != item.Objects_IsSet) return false;
             if (checkMask.Objects.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
-            if (checkMask.Weather.Overall.HasValue && checkMask.Weather.Overall.Value != item.Weather_Property.HasBeenSet) return false;
+            if (checkMask.Weather.Overall.HasValue && checkMask.Weather.Overall.Value != item.Weather_IsSet) return false;
             if (checkMask.Weather.Specific != null && (item.Weather == null || !item.Weather.HasBeenSet(checkMask.Weather.Specific))) return false;
-            if (checkMask.MapName.Overall.HasValue && checkMask.MapName.Overall.Value != item.MapName_Property.HasBeenSet) return false;
+            if (checkMask.MapName.Overall.HasValue && checkMask.MapName.Overall.Value != item.MapName_IsSet) return false;
             if (checkMask.MapName.Specific != null && (item.MapName == null || !item.MapName.HasBeenSet(checkMask.MapName.Specific))) return false;
-            if (checkMask.Grasses.Overall.HasValue && checkMask.Grasses.Overall.Value != item.Grasses_Property.HasBeenSet) return false;
+            if (checkMask.Grasses.Overall.HasValue && checkMask.Grasses.Overall.Value != item.Grasses_IsSet) return false;
             if (checkMask.Grasses.Specific != null && (item.Grasses == null || !item.Grasses.HasBeenSet(checkMask.Grasses.Specific))) return false;
-            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds_Property.HasBeenSet) return false;
+            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds_IsSet) return false;
             if (checkMask.Sounds.Specific != null && (item.Sounds == null || !item.Sounds.HasBeenSet(checkMask.Sounds.Specific))) return false;
             return true;
         }
@@ -3685,15 +2628,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Region_Mask<bool> GetHasBeenSetMask(IRegionGetter item)
         {
             var ret = new Region_Mask<bool>();
-            ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.MapColor = item.MapColor_Property.HasBeenSet;
+            ret.Icon = item.Icon_IsSet;
+            ret.MapColor = item.MapColor_IsSet;
             ret.Worldspace = item.Worldspace_Property.HasBeenSet;
             ret.Areas = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionArea_Mask<bool>>>>(item.Areas.HasBeenSet, item.Areas.Select((i) => new MaskItem<bool, RegionArea_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Objects = new MaskItem<bool, RegionDataObjects_Mask<bool>>(item.Objects_Property.HasBeenSet, RegionDataObjectsCommon.GetHasBeenSetMask(item.Objects));
-            ret.Weather = new MaskItem<bool, RegionDataWeather_Mask<bool>>(item.Weather_Property.HasBeenSet, RegionDataWeatherCommon.GetHasBeenSetMask(item.Weather));
-            ret.MapName = new MaskItem<bool, RegionDataMapName_Mask<bool>>(item.MapName_Property.HasBeenSet, RegionDataMapNameCommon.GetHasBeenSetMask(item.MapName));
-            ret.Grasses = new MaskItem<bool, RegionDataGrasses_Mask<bool>>(item.Grasses_Property.HasBeenSet, RegionDataGrassesCommon.GetHasBeenSetMask(item.Grasses));
-            ret.Sounds = new MaskItem<bool, RegionDataSounds_Mask<bool>>(item.Sounds_Property.HasBeenSet, RegionDataSoundsCommon.GetHasBeenSetMask(item.Sounds));
+            ret.Objects = new MaskItem<bool, RegionDataObjects_Mask<bool>>(item.Objects_IsSet, RegionDataObjectsCommon.GetHasBeenSetMask(item.Objects));
+            ret.Weather = new MaskItem<bool, RegionDataWeather_Mask<bool>>(item.Weather_IsSet, RegionDataWeatherCommon.GetHasBeenSetMask(item.Weather));
+            ret.MapName = new MaskItem<bool, RegionDataMapName_Mask<bool>>(item.MapName_IsSet, RegionDataMapNameCommon.GetHasBeenSetMask(item.MapName));
+            ret.Grasses = new MaskItem<bool, RegionDataGrasses_Mask<bool>>(item.Grasses_IsSet, RegionDataGrassesCommon.GetHasBeenSetMask(item.Grasses));
+            ret.Sounds = new MaskItem<bool, RegionDataSounds_Mask<bool>>(item.Sounds_IsSet, RegionDataSoundsCommon.GetHasBeenSetMask(item.Sounds));
             return ret;
         }
 
@@ -3755,23 +2698,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Region");
             }
-            if (item.Icon_Property.HasBeenSet
+            if (item.Icon_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Icon),
-                    item: item.Icon_Property,
+                    item: item.Icon,
                     fieldIndex: (int)Region_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.MapColor_Property.HasBeenSet
+            if (item.MapColor_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MapColor),
-                    item: item.MapColor_Property,
+                    item: item.MapColor,
                     fieldIndex: (int)Region_FieldIndex.MapColor,
                     errorMask: errorMask);
             }
@@ -3806,56 +2749,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if (item.Objects_Property.HasBeenSet
+            if (item.Objects_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {
                 LoquiXmlTranslation<RegionDataObjects>.Instance.Write(
                     node: elem,
-                    item: item.Objects_Property,
+                    item: item.Objects,
                     name: nameof(item.Objects),
                     fieldIndex: (int)Region_FieldIndex.Objects,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
             }
-            if (item.Weather_Property.HasBeenSet
+            if (item.Weather_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
             {
                 LoquiXmlTranslation<RegionDataWeather>.Instance.Write(
                     node: elem,
-                    item: item.Weather_Property,
+                    item: item.Weather,
                     name: nameof(item.Weather),
                     fieldIndex: (int)Region_FieldIndex.Weather,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
             }
-            if (item.MapName_Property.HasBeenSet
+            if (item.MapName_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapName) ?? true))
             {
                 LoquiXmlTranslation<RegionDataMapName>.Instance.Write(
                     node: elem,
-                    item: item.MapName_Property,
+                    item: item.MapName,
                     name: nameof(item.MapName),
                     fieldIndex: (int)Region_FieldIndex.MapName,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName));
             }
-            if (item.Grasses_Property.HasBeenSet
+            if (item.Grasses_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
             {
                 LoquiXmlTranslation<RegionDataGrasses>.Instance.Write(
                     node: elem,
-                    item: item.Grasses_Property,
+                    item: item.Grasses,
                     name: nameof(item.Grasses),
                     fieldIndex: (int)Region_FieldIndex.Grasses,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
             }
-            if (item.Sounds_Property.HasBeenSet
+            if (item.Sounds_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
             {
                 LoquiXmlTranslation<RegionDataSounds>.Instance.Write(
                     node: elem,
-                    item: item.Sounds_Property,
+                    item: item.Sounds,
                     name: nameof(item.Sounds),
                     fieldIndex: (int)Region_FieldIndex.Sounds,
                     errorMask: errorMask,
@@ -3919,34 +2862,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Icon_Property,
-                fieldIndex: (int)Region_FieldIndex.Icon,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Region_Registration.ICON_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MapColor_Property,
-                fieldIndex: (int)Region_FieldIndex.MapColor,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Region_Registration.RCLR_HEADER),
-                nullable: false,
-                extraByte: true);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Worldspace_Property,
-                fieldIndex: (int)Region_FieldIndex.Worldspace,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Region_Registration.WNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Write(
-                writer: writer,
-                items: item.Areas,
-                fieldIndex: (int)Region_FieldIndex.Areas,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<RegionArea>.Instance.Write);
+            if (item.Icon_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon,
+                    fieldIndex: (int)Region_FieldIndex.Icon,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Region_Registration.ICON_HEADER),
+                    nullable: false);
+            }
+            if (item.MapColor_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MapColor,
+                    fieldIndex: (int)Region_FieldIndex.MapColor,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Region_Registration.RCLR_HEADER),
+                    nullable: false,
+                    extraByte: true);
+            }
+            if (item.Worldspace_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Worldspace_Property,
+                    fieldIndex: (int)Region_FieldIndex.Worldspace,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Region_Registration.WNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Areas.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Write(
+                    writer: writer,
+                    items: item.Areas,
+                    fieldIndex: (int)Region_FieldIndex.Areas,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<RegionArea>.Instance.Write);
+            }
             Region.WriteBinary_RegionAreaLogic(
                 writer: writer,
                 item: item,

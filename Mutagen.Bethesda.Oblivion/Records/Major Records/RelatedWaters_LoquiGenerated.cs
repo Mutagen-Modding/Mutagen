@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RelatedWaters : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IRelatedWaters,
         ILoquiObject<RelatedWaters>,
         ILoquiObjectSetter,
@@ -1258,13 +1260,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    obj.RelatedWaterDaytime = default(FormIDLink<Water>);
+                    obj.RelatedWaterDaytime_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    obj.RelatedWaterNighttime = default(FormIDLink<Water>);
+                    obj.RelatedWaterNighttime_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    obj.RelatedWaterUnderwater = default(FormIDLink<Water>);
+                    obj.RelatedWaterUnderwater_Property.Unset(cmds.ToUnsetParams());
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1309,9 +1311,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWaters item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.RelatedWaterDaytime = default(FormIDLink<Water>);
-            item.RelatedWaterNighttime = default(FormIDLink<Water>);
-            item.RelatedWaterUnderwater = default(FormIDLink<Water>);
+            item.RelatedWaterDaytime_Property.Unset(cmds.ToUnsetParams());
+            item.RelatedWaterNighttime_Property.Unset(cmds.ToUnsetParams());
+            item.RelatedWaterUnderwater_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static RelatedWaters_Mask<bool> GetEqualsMask(

@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,11 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MagicEffectSubData : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IMagicEffectSubData,
         ILoquiObject<MagicEffectSubData>,
         ILoquiObjectSetter,
-        IPropertySupporter<Single>,
         IEquatable<MagicEffectSubData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -84,100 +85,20 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Sound> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
         #endregion
         #region ConstantEffectEnchantmentFactor
-        protected Single _ConstantEffectEnchantmentFactor;
-        protected PropertyForwarder<MagicEffectSubData, Single> _ConstantEffectEnchantmentFactorForwarder;
-        public INotifyingSetItem<Single> ConstantEffectEnchantmentFactor_Property => _ConstantEffectEnchantmentFactorForwarder ?? (_ConstantEffectEnchantmentFactorForwarder = new PropertyForwarder<MagicEffectSubData, Single>(this, (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _ConstantEffectEnchantmentFactor;
         public Single ConstantEffectEnchantmentFactor
         {
             get => this._ConstantEffectEnchantmentFactor;
-            set => this.SetConstantEffectEnchantmentFactor(value);
+            set => this.RaiseAndSetIfChanged(ref this._ConstantEffectEnchantmentFactor, value, nameof(ConstantEffectEnchantmentFactor));
         }
-        protected void SetConstantEffectEnchantmentFactor(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ConstantEffectEnchantmentFactor == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = ConstantEffectEnchantmentFactor;
-                _ConstantEffectEnchantmentFactor = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ConstantEffectEnchantmentFactor = item;
-            }
-        }
-        protected void UnsetConstantEffectEnchantmentFactor()
-        {
-            _hasBeenSetTracker[(int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor] = false;
-            ConstantEffectEnchantmentFactor = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IMagicEffectSubData.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IMagicEffectSubDataGetter.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
         #endregion
         #region ConstantEffectBarterFactor
-        protected Single _ConstantEffectBarterFactor;
-        protected PropertyForwarder<MagicEffectSubData, Single> _ConstantEffectBarterFactorForwarder;
-        public INotifyingSetItem<Single> ConstantEffectBarterFactor_Property => _ConstantEffectBarterFactorForwarder ?? (_ConstantEffectBarterFactorForwarder = new PropertyForwarder<MagicEffectSubData, Single>(this, (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _ConstantEffectBarterFactor;
         public Single ConstantEffectBarterFactor
         {
             get => this._ConstantEffectBarterFactor;
-            set => this.SetConstantEffectBarterFactor(value);
+            set => this.RaiseAndSetIfChanged(ref this._ConstantEffectBarterFactor, value, nameof(ConstantEffectBarterFactor));
         }
-        protected void SetConstantEffectBarterFactor(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ConstantEffectBarterFactor == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = ConstantEffectBarterFactor;
-                _ConstantEffectBarterFactor = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ConstantEffectBarterFactor = item;
-            }
-        }
-        protected void UnsetConstantEffectBarterFactor()
-        {
-            _hasBeenSetTracker[(int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor] = false;
-            ConstantEffectBarterFactor = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IMagicEffectSubData.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IMagicEffectSubDataGetter.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -626,7 +547,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetConstantEffectEnchantmentFactor();
+                            item.ConstantEffectEnchantmentFactor = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -652,7 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetConstantEffectBarterFactor();
+                            item.ConstantEffectBarterFactor = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -689,151 +610,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((MagicEffectSubData_FieldIndex)index)
-            {
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    return ConstantEffectEnchantmentFactor;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return ConstantEffectBarterFactor;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffectSubData_FieldIndex)index)
-            {
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    SetConstantEffectEnchantmentFactor(item, hasBeenSet, cmds);
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    SetConstantEffectBarterFactor(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffectSubData_FieldIndex)index)
-            {
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    SetConstantEffectEnchantmentFactor(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    SetConstantEffectBarterFactor(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((MagicEffectSubData_FieldIndex)index)
-            {
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public IEnumerable<ILink> Links => GetLinks();
@@ -1087,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetConstantEffectEnchantmentFactor();
+                    item.ConstantEffectEnchantmentFactor = default(Single);
                 }
             }
             catch (Exception ex)
@@ -1111,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetConstantEffectBarterFactor();
+                    item.ConstantEffectBarterFactor = default(Single);
                 }
             }
             catch (Exception ex)
@@ -1275,14 +1051,10 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    this.SetConstantEffectEnchantmentFactor(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.ConstantEffectEnchantmentFactor = (Single)obj;
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    this.SetConstantEffectBarterFactor(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.ConstantEffectBarterFactor = (Single)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1347,14 +1119,10 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    obj.SetConstantEffectEnchantmentFactor(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.ConstantEffectEnchantmentFactor = (Single)pair.Value;
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    obj.SetConstantEffectBarterFactor(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.ConstantEffectBarterFactor = (Single)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1377,10 +1145,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Sound HitSound { get; set; }
         new Sound AreaSound { get; set; }
         new Single ConstantEffectEnchantmentFactor { get; set; }
-        new INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property { get; }
 
         new Single ConstantEffectBarterFactor { get; set; }
-        new INotifyingItem<Single> ConstantEffectBarterFactor_Property { get; }
 
     }
 
@@ -1413,12 +1179,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ConstantEffectEnchantmentFactor
         Single ConstantEffectEnchantmentFactor { get; }
-        INotifyingItemGetter<Single> ConstantEffectEnchantmentFactor_Property { get; }
 
         #endregion
         #region ConstantEffectBarterFactor
         Single ConstantEffectBarterFactor { get; }
-        INotifyingItemGetter<Single> ConstantEffectBarterFactor_Property { get; }
 
         #endregion
 
@@ -1788,9 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
                 try
                 {
-                    item.ConstantEffectEnchantmentFactor_Property.Set(
-                        value: rhs.ConstantEffectEnchantmentFactor,
-                        cmds: cmds);
+                    item.ConstantEffectEnchantmentFactor = rhs.ConstantEffectEnchantmentFactor;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1807,9 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
                 try
                 {
-                    item.ConstantEffectBarterFactor_Property.Set(
-                        value: rhs.ConstantEffectBarterFactor,
-                        cmds: cmds);
+                    item.ConstantEffectBarterFactor = rhs.ConstantEffectBarterFactor;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1857,19 +1617,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect = default(FormIDLink<EffectShader>);
+                    obj.EnchantEffect_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case MagicEffectSubData_FieldIndex.CastingSound:
-                    obj.CastingSound = default(FormIDLink<Sound>);
+                    obj.CastingSound_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case MagicEffectSubData_FieldIndex.BoltSound:
-                    obj.BoltSound = default(FormIDLink<Sound>);
+                    obj.BoltSound_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case MagicEffectSubData_FieldIndex.HitSound:
-                    obj.HitSound = default(FormIDLink<Sound>);
+                    obj.HitSound_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case MagicEffectSubData_FieldIndex.AreaSound:
-                    obj.AreaSound = default(FormIDLink<Sound>);
+                    obj.AreaSound_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
                     obj.ConstantEffectEnchantmentFactor = default(Single);
@@ -1932,11 +1692,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectSubData item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.EnchantEffect = default(FormIDLink<EffectShader>);
-            item.CastingSound = default(FormIDLink<Sound>);
-            item.BoltSound = default(FormIDLink<Sound>);
-            item.HitSound = default(FormIDLink<Sound>);
-            item.AreaSound = default(FormIDLink<Sound>);
+            item.EnchantEffect_Property.Unset(cmds.ToUnsetParams());
+            item.CastingSound_Property.Unset(cmds.ToUnsetParams());
+            item.BoltSound_Property.Unset(cmds.ToUnsetParams());
+            item.HitSound_Property.Unset(cmds.ToUnsetParams());
+            item.AreaSound_Property.Unset(cmds.ToUnsetParams());
             item.ConstantEffectEnchantmentFactor = default(Single);
             item.ConstantEffectBarterFactor = default(Single);
         }
@@ -2127,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ConstantEffectEnchantmentFactor),
-                    item: item.ConstantEffectEnchantmentFactor_Property,
+                    item: item.ConstantEffectEnchantmentFactor,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
                     errorMask: errorMask);
             }
@@ -2136,7 +1896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ConstantEffectBarterFactor),
-                    item: item.ConstantEffectBarterFactor_Property,
+                    item: item.ConstantEffectBarterFactor,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
                     errorMask: errorMask);
             }
@@ -2208,12 +1968,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ConstantEffectEnchantmentFactor_Property,
+                item: item.ConstantEffectEnchantmentFactor,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ConstantEffectBarterFactor_Property,
+                item: item.ConstantEffectBarterFactor,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
                 errorMask: errorMask);
         }

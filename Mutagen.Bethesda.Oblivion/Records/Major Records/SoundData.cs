@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using Loqui;
 using Noggog.Notifying;
 using Loqui.Internal;
+using ReactiveUI;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -34,16 +35,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor()
         {
-            this.MinimumAttenuationDistance_Property.Subscribe((change) =>
+            this.WhenAny(x => x.MinimumAttenuationDistance).Subscribe((change) =>
             {
-                if (change.New % MinAttenuationDistanceMultiplier != 0)
+                if (change % MinAttenuationDistanceMultiplier != 0)
                 {
                     throw new ArgumentException($"{nameof(MinimumAttenuationDistance)} must be divisible by {MinAttenuationDistanceMultiplier}");
                 }
             });
-            this.MaximumAttenuationDistance_Property.Subscribe((change) =>
+            this.WhenAny(x => x.MaximumAttenuationDistance).Subscribe((change) =>
             {
-                if (change.New % MaxAttenuationDistanceMultiplier != 0)
+                if (change % MaxAttenuationDistanceMultiplier != 0)
                 {
                     throw new ArgumentException($"{nameof(MaximumAttenuationDistance)} must be divisible by {MaxAttenuationDistanceMultiplier}");
                 }

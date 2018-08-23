@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (!obj.HasLoquiBaseObject)
             {
-                obj.NonLoquiBaseClass = "ReactiveObject";
+                obj.NonLoquiBaseClass = "LoquiNotifyingObject";
             }
             obj.RequiredNamespaces.Add("ReactiveUI");
             return base.PostLoad(obj);

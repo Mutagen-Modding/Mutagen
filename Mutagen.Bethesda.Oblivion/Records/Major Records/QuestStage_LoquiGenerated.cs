@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,11 +31,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class QuestStage : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IQuestStage,
         ILoquiObject<QuestStage>,
         ILoquiObjectSetter,
-        IPropertySupporter<UInt16>,
         IEquatable<QuestStage>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,52 +51,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Stage
-        protected UInt16 _Stage;
-        protected PropertyForwarder<QuestStage, UInt16> _StageForwarder;
-        public INotifyingSetItem<UInt16> Stage_Property => _StageForwarder ?? (_StageForwarder = new PropertyForwarder<QuestStage, UInt16>(this, (int)QuestStage_FieldIndex.Stage));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _Stage;
         public UInt16 Stage
         {
             get => this._Stage;
-            set => this.SetStage(value);
+            set => this.RaiseAndSetIfChanged(ref this._Stage, value, nameof(Stage));
         }
-        protected void SetStage(
-            UInt16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)QuestStage_FieldIndex.Stage];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Stage == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)QuestStage_FieldIndex.Stage] = hasBeenSet;
-            }
-            if (_UInt16_subscriptions != null)
-            {
-                var tmp = Stage;
-                _Stage = item;
-                _UInt16_subscriptions.FireSubscriptions(
-                    index: (int)QuestStage_FieldIndex.Stage,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Stage = item;
-            }
-        }
-        protected void UnsetStage()
-        {
-            _hasBeenSetTracker[(int)QuestStage_FieldIndex.Stage] = false;
-            Stage = default(UInt16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt16> IQuestStage.Stage_Property => this.Stage_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt16> IQuestStageGetter.Stage_Property => this.Stage_Property;
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -524,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetStage();
+                            item.Stage = default(UInt16);
                         }
                     }
                     catch (Exception ex)
@@ -585,140 +546,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter UInt16
-        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
-        UInt16 IPropertySupporter<UInt16>.Get(int index)
-        {
-            return GetUInt16(index: index);
-        }
-
-        protected UInt16 GetUInt16(int index)
-        {
-            switch ((QuestStage_FieldIndex)index)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    return Stage;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        void IPropertySupporter<UInt16>.Set(
-            int index,
-            UInt16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt16(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetUInt16(
-            int index,
-            UInt16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((QuestStage_FieldIndex)index)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    SetStage(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt16>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt16>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt16(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetUInt16(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((QuestStage_FieldIndex)index)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    SetStage(
-                        item: default(UInt16),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt16>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt16> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt16_subscriptions == null)
-            {
-                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
-            }
-            _UInt16_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt16>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt16_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
-        {
-            return DefaultValueUInt16(index: index);
-        }
-
-        protected UInt16 DefaultValueUInt16(int index)
-        {
-            switch ((QuestStage_FieldIndex)index)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    return default(UInt16);
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = QuestStage_Registration.TRIGGERING_RECORD_TYPE;
@@ -968,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetStage();
+                            item.Stage = default(UInt16);
                         }
                     }
                     catch (Exception ex)
@@ -1131,9 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case QuestStage_FieldIndex.Stage:
-                    this.SetStage(
-                        (UInt16)obj,
-                        cmds: cmds);
+                    this.Stage = (UInt16)obj;
                     break;
                 case QuestStage_FieldIndex.LogEntries:
                     this._LogEntries.SetTo((IEnumerable<LogEntry>)obj, cmds);
@@ -1176,9 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case QuestStage_FieldIndex.Stage:
-                    obj.SetStage(
-                        (UInt16)pair.Value,
-                        cmds: null);
+                    obj.Stage = (UInt16)pair.Value;
                     break;
                 case QuestStage_FieldIndex.LogEntries:
                     obj._LogEntries.SetTo((IEnumerable<LogEntry>)pair.Value, null);
@@ -1199,7 +1022,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IQuestStage : IQuestStageGetter, ILoquiClass<IQuestStage, IQuestStageGetter>, ILoquiClass<QuestStage, IQuestStageGetter>
     {
         new UInt16 Stage { get; set; }
-        new INotifyingItem<UInt16> Stage_Property { get; }
 
         new INotifyingList<LogEntry> LogEntries { get; }
     }
@@ -1208,7 +1030,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Stage
         UInt16 Stage { get; }
-        INotifyingItemGetter<UInt16> Stage_Property { get; }
 
         #endregion
         #region LogEntries
@@ -1441,9 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
                 try
                 {
-                    item.Stage_Property.Set(
-                        value: rhs.Stage,
-                        cmds: cmds);
+                    item.Stage = rhs.Stage;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1471,7 +1290,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(LogEntry);
                                     return LogEntry.Copy(
                                         r,
                                         copyMask?.LogEntries?.Specific,
@@ -1725,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Stage),
-                    item: item.Stage_Property,
+                    item: item.Stage,
                     fieldIndex: (int)QuestStage_FieldIndex.Stage,
                     errorMask: errorMask);
             }
@@ -1795,17 +1613,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Stage_Property,
+                item: item.Stage,
                 fieldIndex: (int)QuestStage_FieldIndex.Stage,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(QuestStage_Registration.INDX_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.Write(
-                writer: writer,
-                items: item.LogEntries,
-                fieldIndex: (int)QuestStage_FieldIndex.LogEntries,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<LogEntry>.Instance.Write);
+            if (item.LogEntries.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.Write(
+                    writer: writer,
+                    items: item.LogEntries,
+                    fieldIndex: (int)QuestStage_FieldIndex.LogEntries,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<LogEntry>.Instance.Write);
+            }
         }
 
         #endregion

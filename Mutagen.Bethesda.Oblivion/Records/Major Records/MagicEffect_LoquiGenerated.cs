@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -35,15 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<MagicEffect>,
         ILoquiObjectSetter,
         INamed,
-        IPropertySupporter<String>,
-        IPropertySupporter<Model>,
-        IPropertySupporter<MagicEffect.MagicFlag>,
-        IPropertySupporter<Single>,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<MagicSchool>,
-        IPropertySupporter<Resistance>,
-        IPropertySupporter<UInt32>,
-        IPropertySupporter<MagicEffectSubData>,
         IEquatable<MagicEffect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -59,489 +52,164 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<MagicEffect, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<MagicEffect, String>(this, (int)MagicEffect_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MagicEffect_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool IMagicEffectGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IMagicEffectGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IMagicEffect.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IMagicEffectGetter.Name_Property => this.Name_Property;
         #endregion
         #region Description
-        protected String _Description;
-        protected PropertyForwarder<MagicEffect, String> _DescriptionForwarder;
-        public INotifyingSetItem<String> Description_Property => _DescriptionForwarder ?? (_DescriptionForwarder = new PropertyForwarder<MagicEffect, String>(this, (int)MagicEffect_FieldIndex.Description));
+        public bool Description_IsSet
+        {
+            get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Description];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MagicEffect_FieldIndex.Description, nameof(Description_IsSet));
+        }
+        bool IMagicEffectGetter.Description_IsSet => Description_IsSet;
+        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
             get => this._Description;
-            set => this.SetDescription(value);
+            set => Description_Set(value);
         }
-        protected void SetDescription(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IMagicEffectGetter.Description => this.Description;
+        public void Description_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Description];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Description == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Description] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Description;
-                _Description = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.Description,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Description = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
         }
-        protected void UnsetDescription()
+        public void Description_Unset()
         {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Description] = false;
-            Description = default(String);
+            this.Description_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IMagicEffect.Description_Property => this.Description_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IMagicEffectGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
-        protected String _Icon;
-        protected PropertyForwarder<MagicEffect, String> _IconForwarder;
-        public INotifyingSetItem<String> Icon_Property => _IconForwarder ?? (_IconForwarder = new PropertyForwarder<MagicEffect, String>(this, (int)MagicEffect_FieldIndex.Icon));
+        public bool Icon_IsSet
+        {
+            get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Icon];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MagicEffect_FieldIndex.Icon, nameof(Icon_IsSet));
+        }
+        bool IMagicEffectGetter.Icon_IsSet => Icon_IsSet;
+        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Icon
         {
             get => this._Icon;
-            set => this.SetIcon(value);
+            set => Icon_Set(value);
         }
-        protected void SetIcon(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IMagicEffectGetter.Icon => this.Icon;
+        public void Icon_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Icon];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Icon == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Icon] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Icon;
-                _Icon = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.Icon,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Icon = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
-        protected void UnsetIcon()
+        public void Icon_Unset()
         {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Icon] = false;
-            Icon = default(String);
+            this.Icon_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IMagicEffect.Icon_Property => this.Icon_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IMagicEffectGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Model
-        protected Model _Model;
-        protected PropertyForwarder<MagicEffect, Model> _ModelForwarder;
-        public INotifyingSetItem<Model> Model_Property => _ModelForwarder ?? (_ModelForwarder = new PropertyForwarder<MagicEffect, Model>(this, (int)MagicEffect_FieldIndex.Model));
+        public bool Model_IsSet
+        {
+            get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Model];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MagicEffect_FieldIndex.Model, nameof(Model_IsSet));
+        }
+        bool IMagicEffectGetter.Model_IsSet => Model_IsSet;
+        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model
         {
-            get => this._Model;
-            set => this.SetModel(value);
+            get => _Model;
+            set => Model_Set(value);
         }
-        protected void SetModel(
-            Model item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Model_Set(
+            Model value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Model];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Model, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Model] = hasBeenSet;
-            }
-            if (_Model_subscriptions != null)
-            {
-                var tmp = Model;
-                _Model = item;
-                _Model_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.Model,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Model = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
-        protected void UnsetModel()
+        public void Model_Unset()
         {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Model] = false;
-            Model = default(Model);
+            this.Model_Set(default(Model), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Model> IMagicEffect.Model_Property => this.Model_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Model> IMagicEffectGetter.Model_Property => this.Model_Property;
+        Model IMagicEffectGetter.Model => this.Model;
         #endregion
         #region Flags
-        protected MagicEffect.MagicFlag _Flags;
-        protected PropertyForwarder<MagicEffect, MagicEffect.MagicFlag> _FlagsForwarder;
-        public INotifyingSetItem<MagicEffect.MagicFlag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<MagicEffect, MagicEffect.MagicFlag>(this, (int)MagicEffect_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MagicEffect.MagicFlag _Flags;
         public MagicEffect.MagicFlag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            MagicEffect.MagicFlag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_MagicEffectMagicFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _MagicEffectMagicFlag_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Flags] = false;
-            Flags = default(MagicEffect.MagicFlag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<MagicEffect.MagicFlag> IMagicEffect.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<MagicEffect.MagicFlag> IMagicEffectGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region BaseCost
-        protected Single _BaseCost;
-        protected PropertyForwarder<MagicEffect, Single> _BaseCostForwarder;
-        public INotifyingSetItem<Single> BaseCost_Property => _BaseCostForwarder ?? (_BaseCostForwarder = new PropertyForwarder<MagicEffect, Single>(this, (int)MagicEffect_FieldIndex.BaseCost));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _BaseCost;
         public Single BaseCost
         {
             get => this._BaseCost;
-            set => this.SetBaseCost(value);
+            set => this.RaiseAndSetIfChanged(ref this._BaseCost, value, nameof(BaseCost));
         }
-        protected void SetBaseCost(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.BaseCost];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && BaseCost == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.BaseCost] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = BaseCost;
-                _BaseCost = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.BaseCost,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _BaseCost = item;
-            }
-        }
-        protected void UnsetBaseCost()
-        {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.BaseCost] = false;
-            BaseCost = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IMagicEffect.BaseCost_Property => this.BaseCost_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IMagicEffectGetter.BaseCost_Property => this.BaseCost_Property;
         #endregion
         #region Unused
-        protected Byte[] _Unused = new byte[4];
-        protected PropertyForwarder<MagicEffect, Byte[]> _UnusedForwarder;
-        public INotifyingSetItem<Byte[]> Unused_Property => _UnusedForwarder ?? (_UnusedForwarder = new PropertyForwarder<MagicEffect, Byte[]>(this, (int)MagicEffect_FieldIndex.Unused));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Unused = new byte[4];
         public Byte[] Unused
         {
-            get => this._Unused;
-            set => this.SetUnused(value);
-        }
-        protected void SetUnused(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Unused;
+            set
             {
-                item = new byte[4];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Unused];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unused, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Unused] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Unused;
-                _Unused = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.Unused,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Unused = item;
+                this._Unused = value;
+                if (value == null)
+                {
+                    this._Unused = new byte[4];
+                }
             }
         }
-        protected void UnsetUnused()
-        {
-            SetUnused(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IMagicEffect.Unused_Property => this.Unused_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IMagicEffectGetter.Unused_Property => this.Unused_Property;
         #endregion
         #region MagicSchool
-        protected MagicSchool _MagicSchool;
-        protected PropertyForwarder<MagicEffect, MagicSchool> _MagicSchoolForwarder;
-        public INotifyingSetItem<MagicSchool> MagicSchool_Property => _MagicSchoolForwarder ?? (_MagicSchoolForwarder = new PropertyForwarder<MagicEffect, MagicSchool>(this, (int)MagicEffect_FieldIndex.MagicSchool));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MagicSchool _MagicSchool;
         public MagicSchool MagicSchool
         {
             get => this._MagicSchool;
-            set => this.SetMagicSchool(value);
+            set => this.RaiseAndSetIfChanged(ref this._MagicSchool, value, nameof(MagicSchool));
         }
-        protected void SetMagicSchool(
-            MagicSchool item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.MagicSchool];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MagicSchool == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.MagicSchool] = hasBeenSet;
-            }
-            if (_MagicSchool_subscriptions != null)
-            {
-                var tmp = MagicSchool;
-                _MagicSchool = item;
-                _MagicSchool_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.MagicSchool,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MagicSchool = item;
-            }
-        }
-        protected void UnsetMagicSchool()
-        {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.MagicSchool] = false;
-            MagicSchool = default(MagicSchool);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<MagicSchool> IMagicEffect.MagicSchool_Property => this.MagicSchool_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<MagicSchool> IMagicEffectGetter.MagicSchool_Property => this.MagicSchool_Property;
         #endregion
         #region Resistance
-        protected Resistance _Resistance;
-        protected PropertyForwarder<MagicEffect, Resistance> _ResistanceForwarder;
-        public INotifyingSetItem<Resistance> Resistance_Property => _ResistanceForwarder ?? (_ResistanceForwarder = new PropertyForwarder<MagicEffect, Resistance>(this, (int)MagicEffect_FieldIndex.Resistance));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Resistance _Resistance;
         public Resistance Resistance
         {
             get => this._Resistance;
-            set => this.SetResistance(value);
+            set => this.RaiseAndSetIfChanged(ref this._Resistance, value, nameof(Resistance));
         }
-        protected void SetResistance(
-            Resistance item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Resistance];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Resistance == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Resistance] = hasBeenSet;
-            }
-            if (_Resistance_subscriptions != null)
-            {
-                var tmp = Resistance;
-                _Resistance = item;
-                _Resistance_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.Resistance,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Resistance = item;
-            }
-        }
-        protected void UnsetResistance()
-        {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Resistance] = false;
-            Resistance = default(Resistance);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Resistance> IMagicEffect.Resistance_Property => this.Resistance_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Resistance> IMagicEffectGetter.Resistance_Property => this.Resistance_Property;
         #endregion
         #region CounterEffectCount
-        protected UInt32 _CounterEffectCount;
-        protected PropertyForwarder<MagicEffect, UInt32> _CounterEffectCountForwarder;
-        public INotifyingSetItem<UInt32> CounterEffectCount_Property => _CounterEffectCountForwarder ?? (_CounterEffectCountForwarder = new PropertyForwarder<MagicEffect, UInt32>(this, (int)MagicEffect_FieldIndex.CounterEffectCount));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _CounterEffectCount;
         public UInt32 CounterEffectCount
         {
             get => this._CounterEffectCount;
-            set => this.SetCounterEffectCount(value);
+            set => this.RaiseAndSetIfChanged(ref this._CounterEffectCount, value, nameof(CounterEffectCount));
         }
-        protected void SetCounterEffectCount(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.CounterEffectCount];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && CounterEffectCount == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.CounterEffectCount] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = CounterEffectCount;
-                _CounterEffectCount = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.CounterEffectCount,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _CounterEffectCount = item;
-            }
-        }
-        protected void UnsetCounterEffectCount()
-        {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.CounterEffectCount] = false;
-            CounterEffectCount = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IMagicEffect.CounterEffectCount_Property => this.CounterEffectCount_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IMagicEffectGetter.CounterEffectCount_Property => this.CounterEffectCount_Property;
         #endregion
         #region Light
         public FormIDLink<Light> Light_Property { get; } = new FormIDLink<Light>();
@@ -551,52 +219,12 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Light> IMagicEffectGetter.Light_Property => this.Light_Property;
         #endregion
         #region ProjectileSpeed
-        protected Single _ProjectileSpeed;
-        protected PropertyForwarder<MagicEffect, Single> _ProjectileSpeedForwarder;
-        public INotifyingSetItem<Single> ProjectileSpeed_Property => _ProjectileSpeedForwarder ?? (_ProjectileSpeedForwarder = new PropertyForwarder<MagicEffect, Single>(this, (int)MagicEffect_FieldIndex.ProjectileSpeed));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _ProjectileSpeed;
         public Single ProjectileSpeed
         {
             get => this._ProjectileSpeed;
-            set => this.SetProjectileSpeed(value);
+            set => this.RaiseAndSetIfChanged(ref this._ProjectileSpeed, value, nameof(ProjectileSpeed));
         }
-        protected void SetProjectileSpeed(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.ProjectileSpeed];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ProjectileSpeed == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.ProjectileSpeed] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = ProjectileSpeed;
-                _ProjectileSpeed = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.ProjectileSpeed,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ProjectileSpeed = item;
-            }
-        }
-        protected void UnsetProjectileSpeed()
-        {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.ProjectileSpeed] = false;
-            ProjectileSpeed = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IMagicEffect.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IMagicEffectGetter.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
         #endregion
         #region EffectShader
         public FormIDLink<EffectShader> EffectShader_Property { get; } = new FormIDLink<EffectShader>();
@@ -606,56 +234,13 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<EffectShader> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
         #endregion
         #region SubData
-        protected MagicEffectSubData _SubData;
-        protected PropertyForwarder<MagicEffect, MagicEffectSubData> _SubDataForwarder;
-        public INotifyingSetItem<MagicEffectSubData> SubData_Property => _SubDataForwarder ?? (_SubDataForwarder = new PropertyForwarder<MagicEffect, MagicEffectSubData>(this, (int)MagicEffect_FieldIndex.SubData));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MagicEffectSubData _SubData = new MagicEffectSubData();
         public MagicEffectSubData SubData
         {
-            get => this._SubData;
-            set => this.SetSubData(value);
+            get => _SubData;
+            set => _SubData = value ?? new MagicEffectSubData();
         }
-        protected void SetSubData(
-            MagicEffectSubData item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)MagicEffect_FieldIndex.SubData];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(SubData, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)MagicEffect_FieldIndex.SubData] = hasBeenSet;
-            }
-            if (_MagicEffectSubData_subscriptions != null)
-            {
-                var tmp = SubData;
-                if (item == null)
-                {
-                    item = new MagicEffectSubData();
-                }
-                _SubData = item;
-                _MagicEffectSubData_subscriptions.FireSubscriptions(
-                    index: (int)MagicEffect_FieldIndex.SubData,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SubData = item;
-            }
-        }
-        protected void UnsetSubData()
-        {
-            _hasBeenSetTracker[(int)MagicEffect_FieldIndex.SubData] = false;
-            SubData = default(MagicEffectSubData);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<MagicEffectSubData> IMagicEffect.SubData_Property => this.SubData_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<MagicEffectSubData> IMagicEffectGetter.SubData_Property => this.SubData_Property;
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -734,23 +319,23 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
-            if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
-            if (Description_Property.HasBeenSet)
+            if (Description_IsSet != rhs.Description_IsSet) return false;
+            if (Description_IsSet)
             {
                 if (!object.Equals(this.Description, rhs.Description)) return false;
             }
-            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet != rhs.Icon_IsSet) return false;
+            if (Icon_IsSet)
             {
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
             }
-            if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
-            if (Model_Property.HasBeenSet)
+            if (Model_IsSet != rhs.Model_IsSet) return false;
+            if (Model_IsSet)
             {
                 if (!object.Equals(this.Model, rhs.Model)) return false;
             }
@@ -775,19 +360,19 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
-            if (Description_Property.HasBeenSet)
+            if (Description_IsSet)
             {
                 ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
             }
-            if (Icon_Property.HasBeenSet)
+            if (Icon_IsSet)
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
-            if (Model_Property.HasBeenSet)
+            if (Model_IsSet)
             {
                 ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
             }
@@ -1133,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1159,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDescription();
+                            item.Description = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1185,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1212,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetModel();
+                            item.Model = default(Model);
                         }
                     }
                     catch (Exception ex)
@@ -1238,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(MagicEffect.MagicFlag);
                         }
                     }
                     catch (Exception ex)
@@ -1264,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBaseCost();
+                            item.BaseCost = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1290,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUnused();
+                            item.Unused = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1316,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMagicSchool();
+                            item.MagicSchool = default(MagicSchool);
                         }
                     }
                     catch (Exception ex)
@@ -1342,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetResistance();
+                            item.Resistance = default(Resistance);
                         }
                     }
                     catch (Exception ex)
@@ -1368,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCounterEffectCount();
+                            item.CounterEffectCount = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -1401,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetProjectileSpeed();
+                            item.ProjectileSpeed = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1435,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSubData();
+                            item.SubData = default(MagicEffectSubData);
                         }
                     }
                     catch (Exception ex)
@@ -1515,1259 +1100,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    return Name;
-                case MagicEffect_FieldIndex.Description:
-                    return Description;
-                case MagicEffect_FieldIndex.Icon:
-                    return Icon;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                case MagicEffect_FieldIndex.Description:
-                    SetDescription(item, hasBeenSet, cmds);
-                    break;
-                case MagicEffect_FieldIndex.Icon:
-                    SetIcon(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case MagicEffect_FieldIndex.Description:
-                    SetDescription(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case MagicEffect_FieldIndex.Icon:
-                    SetIcon(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Icon:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Model
-        protected ObjectCentralizationSubscriptions<Model> _Model_subscriptions;
-        Model IPropertySupporter<Model>.Get(int index)
-        {
-            return GetModel(index: index);
-        }
-
-        protected Model GetModel(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Model:
-                    return Model;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        void IPropertySupporter<Model>.Set(
-            int index,
-            Model item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetModel(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetModel(
-            int index,
-            Model item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Model:
-                    SetModel(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Model>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Model>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Model>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetModel(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetModel(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Model:
-                    SetModel(
-                        item: default(Model),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Model>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Model> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Model_subscriptions == null)
-            {
-                _Model_subscriptions = new ObjectCentralizationSubscriptions<Model>();
-            }
-            _Model_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Model>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Model_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Model>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Model IPropertySupporter<Model>.DefaultValue(int index)
-        {
-            return DefaultValueModel(index: index);
-        }
-
-        protected Model DefaultValueModel(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Model:
-                    return default(Model);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Model: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter MagicEffect.MagicFlag
-        protected ObjectCentralizationSubscriptions<MagicEffect.MagicFlag> _MagicEffectMagicFlag_subscriptions;
-        MagicEffect.MagicFlag IPropertySupporter<MagicEffect.MagicFlag>.Get(int index)
-        {
-            return GetMagicEffectMagicFlag(index: index);
-        }
-
-        protected MagicEffect.MagicFlag GetMagicEffectMagicFlag(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicEffect.MagicFlag: {index}");
-            }
-        }
-
-        void IPropertySupporter<MagicEffect.MagicFlag>.Set(
-            int index,
-            MagicEffect.MagicFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMagicEffectMagicFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMagicEffectMagicFlag(
-            int index,
-            MagicEffect.MagicFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicEffect.MagicFlag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MagicEffect.MagicFlag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MagicEffect.MagicFlag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MagicEffect.MagicFlag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMagicEffectMagicFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMagicEffectMagicFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(MagicEffect.MagicFlag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicEffect.MagicFlag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MagicEffect.MagicFlag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MagicEffect.MagicFlag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MagicEffectMagicFlag_subscriptions == null)
-            {
-                _MagicEffectMagicFlag_subscriptions = new ObjectCentralizationSubscriptions<MagicEffect.MagicFlag>();
-            }
-            _MagicEffectMagicFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MagicEffect.MagicFlag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MagicEffectMagicFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MagicEffect.MagicFlag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MagicEffect.MagicFlag IPropertySupporter<MagicEffect.MagicFlag>.DefaultValue(int index)
-        {
-            return DefaultValueMagicEffectMagicFlag(index: index);
-        }
-
-        protected MagicEffect.MagicFlag DefaultValueMagicEffectMagicFlag(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Flags:
-                    return default(MagicEffect.MagicFlag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicEffect.MagicFlag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.BaseCost:
-                    return BaseCost;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    return ProjectileSpeed;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.BaseCost:
-                    SetBaseCost(item, hasBeenSet, cmds);
-                    break;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    SetProjectileSpeed(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.BaseCost:
-                    SetBaseCost(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    SetProjectileSpeed(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.BaseCost:
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Unused:
-                    return Unused;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Unused:
-                    SetUnused(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Unused:
-                    SetUnused(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Unused:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter MagicSchool
-        protected ObjectCentralizationSubscriptions<MagicSchool> _MagicSchool_subscriptions;
-        MagicSchool IPropertySupporter<MagicSchool>.Get(int index)
-        {
-            return GetMagicSchool(index: index);
-        }
-
-        protected MagicSchool GetMagicSchool(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.MagicSchool:
-                    return MagicSchool;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
-            }
-        }
-
-        void IPropertySupporter<MagicSchool>.Set(
-            int index,
-            MagicSchool item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMagicSchool(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMagicSchool(
-            int index,
-            MagicSchool item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.MagicSchool:
-                    SetMagicSchool(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MagicSchool>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MagicSchool>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MagicSchool>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMagicSchool(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMagicSchool(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.MagicSchool:
-                    SetMagicSchool(
-                        item: default(MagicSchool),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MagicSchool>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MagicSchool> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MagicSchool_subscriptions == null)
-            {
-                _MagicSchool_subscriptions = new ObjectCentralizationSubscriptions<MagicSchool>();
-            }
-            _MagicSchool_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MagicSchool>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MagicSchool_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MagicSchool>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MagicSchool IPropertySupporter<MagicSchool>.DefaultValue(int index)
-        {
-            return DefaultValueMagicSchool(index: index);
-        }
-
-        protected MagicSchool DefaultValueMagicSchool(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.MagicSchool:
-                    return default(MagicSchool);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Resistance
-        protected ObjectCentralizationSubscriptions<Resistance> _Resistance_subscriptions;
-        Resistance IPropertySupporter<Resistance>.Get(int index)
-        {
-            return GetResistance(index: index);
-        }
-
-        protected Resistance GetResistance(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Resistance:
-                    return Resistance;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Resistance: {index}");
-            }
-        }
-
-        void IPropertySupporter<Resistance>.Set(
-            int index,
-            Resistance item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetResistance(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetResistance(
-            int index,
-            Resistance item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Resistance:
-                    SetResistance(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Resistance: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Resistance>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Resistance>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Resistance>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetResistance(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetResistance(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Resistance:
-                    SetResistance(
-                        item: default(Resistance),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Resistance: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Resistance>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Resistance> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Resistance_subscriptions == null)
-            {
-                _Resistance_subscriptions = new ObjectCentralizationSubscriptions<Resistance>();
-            }
-            _Resistance_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Resistance>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Resistance_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Resistance>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Resistance IPropertySupporter<Resistance>.DefaultValue(int index)
-        {
-            return DefaultValueResistance(index: index);
-        }
-
-        protected Resistance DefaultValueResistance(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.Resistance:
-                    return default(Resistance);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Resistance: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter UInt32
-        UInt32 IPropertySupporter<UInt32>.Get(int index)
-        {
-            return GetUInt32(index: index);
-        }
-
-        protected override UInt32 GetUInt32(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    return CounterEffectCount;
-                default:
-                    return base.GetUInt32(index: index);
-            }
-        }
-
-        void IPropertySupporter<UInt32>.Set(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetUInt32(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    SetCounterEffectCount(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetUInt32(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetUInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    SetCounterEffectCount(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetUInt32(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt32_subscriptions == null)
-            {
-                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
-            }
-            _UInt32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
-        {
-            return DefaultValueUInt32(index: index);
-        }
-
-        protected override UInt32 DefaultValueUInt32(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    return default(UInt32);
-                default:
-                    return base.DefaultValueUInt32(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter MagicEffectSubData
-        protected ObjectCentralizationSubscriptions<MagicEffectSubData> _MagicEffectSubData_subscriptions;
-        MagicEffectSubData IPropertySupporter<MagicEffectSubData>.Get(int index)
-        {
-            return GetMagicEffectSubData(index: index);
-        }
-
-        protected MagicEffectSubData GetMagicEffectSubData(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.SubData:
-                    return SubData;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicEffectSubData: {index}");
-            }
-        }
-
-        void IPropertySupporter<MagicEffectSubData>.Set(
-            int index,
-            MagicEffectSubData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMagicEffectSubData(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMagicEffectSubData(
-            int index,
-            MagicEffectSubData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.SubData:
-                    SetSubData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicEffectSubData: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MagicEffectSubData>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MagicEffectSubData>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MagicEffectSubData>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMagicEffectSubData(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMagicEffectSubData(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.SubData:
-                    SetSubData(
-                        item: default(MagicEffectSubData),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicEffectSubData: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MagicEffectSubData>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MagicEffectSubData> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MagicEffectSubData_subscriptions == null)
-            {
-                _MagicEffectSubData_subscriptions = new ObjectCentralizationSubscriptions<MagicEffectSubData>();
-            }
-            _MagicEffectSubData_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MagicEffectSubData>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MagicEffectSubData_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MagicEffectSubData>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MagicEffectSubData IPropertySupporter<MagicEffectSubData>.DefaultValue(int index)
-        {
-            return DefaultValueMagicEffectSubData(index: index);
-        }
-
-        protected MagicEffectSubData DefaultValueMagicEffectSubData(int index)
-        {
-            switch ((MagicEffect_FieldIndex)index)
-            {
-                case MagicEffect_FieldIndex.SubData:
-                    return default(MagicEffectSubData);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicEffectSubData: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = MagicEffect_Registration.TRIGGERING_RECORD_TYPE;
@@ -2999,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -3027,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDescription();
+                            item.Description = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -3055,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetIcon();
+                            item.Icon = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -3081,7 +1413,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetModel();
+                            item.Model = default(Model);
                         }
                     }
                     catch (Exception ex)
@@ -3114,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFlags();
+                                item.Flags = default(MagicEffect.MagicFlag);
                             }
                         }
                         catch (Exception ex)
@@ -3138,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetBaseCost();
+                                item.BaseCost = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -3162,7 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetUnused();
+                                item.Unused = default(Byte[]);
                             }
                         }
                         catch (Exception ex)
@@ -3186,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetMagicSchool();
+                                item.MagicSchool = default(MagicSchool);
                             }
                         }
                         catch (Exception ex)
@@ -3210,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetResistance();
+                                item.Resistance = default(Resistance);
                             }
                         }
                         catch (Exception ex)
@@ -3234,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetCounterEffectCount();
+                                item.CounterEffectCount = default(UInt32);
                             }
                         }
                         catch (Exception ex)
@@ -3263,7 +1595,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetProjectileSpeed();
+                                item.ProjectileSpeed = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -3297,7 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetSubData();
+                                item.SubData = default(MagicEffectSubData);
                             }
                         }
                         catch (Exception ex)
@@ -3441,54 +1773,34 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MagicEffect_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 case MagicEffect_FieldIndex.Description:
-                    this.SetDescription(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Description = (String)obj;
                     break;
                 case MagicEffect_FieldIndex.Icon:
-                    this.SetIcon(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Icon = (String)obj;
                     break;
                 case MagicEffect_FieldIndex.Model:
-                    this.SetModel(
-                        (Model)obj,
-                        cmds: cmds);
+                    this.Model = (Model)obj;
                     break;
                 case MagicEffect_FieldIndex.Flags:
-                    this.SetFlags(
-                        (MagicEffect.MagicFlag)obj,
-                        cmds: cmds);
+                    this.Flags = (MagicEffect.MagicFlag)obj;
                     break;
                 case MagicEffect_FieldIndex.BaseCost:
-                    this.SetBaseCost(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.BaseCost = (Single)obj;
                     break;
                 case MagicEffect_FieldIndex.Unused:
-                    this.SetUnused(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Unused = (Byte[])obj;
                     break;
                 case MagicEffect_FieldIndex.MagicSchool:
-                    this.SetMagicSchool(
-                        (MagicSchool)obj,
-                        cmds: cmds);
+                    this.MagicSchool = (MagicSchool)obj;
                     break;
                 case MagicEffect_FieldIndex.Resistance:
-                    this.SetResistance(
-                        (Resistance)obj,
-                        cmds: cmds);
+                    this.Resistance = (Resistance)obj;
                     break;
                 case MagicEffect_FieldIndex.CounterEffectCount:
-                    this.SetCounterEffectCount(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.CounterEffectCount = (UInt32)obj;
                     break;
                 case MagicEffect_FieldIndex.Light:
                     this.Light_Property.Set(
@@ -3496,9 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
-                    this.SetProjectileSpeed(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.ProjectileSpeed = (Single)obj;
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
                     this.EffectShader_Property.Set(
@@ -3506,9 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case MagicEffect_FieldIndex.SubData:
-                    this.SetSubData(
-                        (MagicEffectSubData)obj,
-                        cmds: cmds);
+                    this.SubData = (MagicEffectSubData)obj;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
                     this._CounterEffects.SetTo((IEnumerable<EDIDLink<MagicEffect>>)obj, cmds);
@@ -3545,54 +1853,34 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MagicEffect_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.Description:
-                    obj.SetDescription(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Description = (String)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.Icon:
-                    obj.SetIcon(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Icon = (String)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.Model:
-                    obj.SetModel(
-                        (Model)pair.Value,
-                        cmds: null);
+                    obj.Model = (Model)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (MagicEffect.MagicFlag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (MagicEffect.MagicFlag)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.BaseCost:
-                    obj.SetBaseCost(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.BaseCost = (Single)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.Unused:
-                    obj.SetUnused(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Unused = (Byte[])pair.Value;
                     break;
                 case MagicEffect_FieldIndex.MagicSchool:
-                    obj.SetMagicSchool(
-                        (MagicSchool)pair.Value,
-                        cmds: null);
+                    obj.MagicSchool = (MagicSchool)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.Resistance:
-                    obj.SetResistance(
-                        (Resistance)pair.Value,
-                        cmds: null);
+                    obj.Resistance = (Resistance)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.CounterEffectCount:
-                    obj.SetCounterEffectCount(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.CounterEffectCount = (UInt32)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.Light:
                     obj.Light_Property.Set(
@@ -3600,9 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
-                    obj.SetProjectileSpeed(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.ProjectileSpeed = (Single)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
                     obj.EffectShader_Property.Set(
@@ -3610,9 +1896,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case MagicEffect_FieldIndex.SubData:
-                    obj.SetSubData(
-                        (MagicEffectSubData)pair.Value,
-                        cmds: null);
+                    obj.SubData = (MagicEffectSubData)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
                     obj._CounterEffects.SetTo((IEnumerable<EDIDLink<MagicEffect>>)pair.Value, null);
@@ -3633,42 +1917,42 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMagicEffect : IMagicEffectGetter, IMajorRecord, ILoquiClass<IMagicEffect, IMagicEffectGetter>, ILoquiClass<MagicEffect, IMagicEffectGetter>
     {
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
         new String Description { get; set; }
-        new INotifyingSetItem<String> Description_Property { get; }
+        new bool Description_IsSet { get; set; }
+        void Description_Set(String item, bool hasBeenSet = true);
+        void Description_Unset();
 
         new String Icon { get; set; }
-        new INotifyingSetItem<String> Icon_Property { get; }
+        new bool Icon_IsSet { get; set; }
+        void Icon_Set(String item, bool hasBeenSet = true);
+        void Icon_Unset();
 
         new Model Model { get; set; }
-        new INotifyingSetItem<Model> Model_Property { get; }
+        new bool Model_IsSet { get; set; }
+        void Model_Set(Model item, bool hasBeenSet = true);
+        void Model_Unset();
 
         new MagicEffect.MagicFlag Flags { get; set; }
-        new INotifyingItem<MagicEffect.MagicFlag> Flags_Property { get; }
 
         new Single BaseCost { get; set; }
-        new INotifyingItem<Single> BaseCost_Property { get; }
 
         new Byte[] Unused { get; set; }
-        new INotifyingItem<Byte[]> Unused_Property { get; }
 
         new MagicSchool MagicSchool { get; set; }
-        new INotifyingItem<MagicSchool> MagicSchool_Property { get; }
 
         new Resistance Resistance { get; set; }
-        new INotifyingItem<Resistance> Resistance_Property { get; }
 
         new UInt32 CounterEffectCount { get; set; }
-        new INotifyingItem<UInt32> CounterEffectCount_Property { get; }
 
         new Light Light { get; set; }
         new Single ProjectileSpeed { get; set; }
-        new INotifyingItem<Single> ProjectileSpeed_Property { get; }
 
         new EffectShader EffectShader { get; set; }
         new MagicEffectSubData SubData { get; set; }
-        new INotifyingItem<MagicEffectSubData> SubData_Property { get; }
 
         new INotifyingList<EDIDLink<MagicEffect>> CounterEffects { get; }
     }
@@ -3677,52 +1961,46 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
         #region Description
         String Description { get; }
-        INotifyingSetItemGetter<String> Description_Property { get; }
+        bool Description_IsSet { get; }
 
         #endregion
         #region Icon
         String Icon { get; }
-        INotifyingSetItemGetter<String> Icon_Property { get; }
+        bool Icon_IsSet { get; }
 
         #endregion
         #region Model
         Model Model { get; }
-        INotifyingSetItemGetter<Model> Model_Property { get; }
+        bool Model_IsSet { get; }
 
         #endregion
         #region Flags
         MagicEffect.MagicFlag Flags { get; }
-        INotifyingItemGetter<MagicEffect.MagicFlag> Flags_Property { get; }
 
         #endregion
         #region BaseCost
         Single BaseCost { get; }
-        INotifyingItemGetter<Single> BaseCost_Property { get; }
 
         #endregion
         #region Unused
         Byte[] Unused { get; }
-        INotifyingItemGetter<Byte[]> Unused_Property { get; }
 
         #endregion
         #region MagicSchool
         MagicSchool MagicSchool { get; }
-        INotifyingItemGetter<MagicSchool> MagicSchool_Property { get; }
 
         #endregion
         #region Resistance
         Resistance Resistance { get; }
-        INotifyingItemGetter<Resistance> Resistance_Property { get; }
 
         #endregion
         #region CounterEffectCount
         UInt32 CounterEffectCount { get; }
-        INotifyingItemGetter<UInt32> CounterEffectCount_Property { get; }
 
         #endregion
         #region Light
@@ -3732,7 +2010,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ProjectileSpeed
         Single ProjectileSpeed { get; }
-        INotifyingItemGetter<Single> ProjectileSpeed_Property { get; }
 
         #endregion
         #region EffectShader
@@ -3742,7 +2019,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SubData
         MagicEffectSubData SubData { get; }
-        INotifyingItemGetter<MagicEffectSubData> SubData_Property { get; }
 
         #endregion
         #region CounterEffects
@@ -4138,9 +2414,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4157,9 +2444,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Description);
                 try
                 {
-                    item.Description_Property.SetToWithDefault(
-                        rhs: rhs.Description_Property,
-                        def: def?.Description_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Description,
+                        rhsHasBeenSet: rhs.Description_IsSet,
+                        defItem: def?.Description ?? default(String),
+                        defHasBeenSet: def?.Description_IsSet ?? false,
+                        outRhsItem: out var rhsDescriptionItem,
+                        outDefItem: out var defDescriptionItem))
+                    {
+                        item.Description = rhsDescriptionItem;
+                    }
+                    else
+                    {
+                        item.Description_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4176,9 +2474,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Icon);
                 try
                 {
-                    item.Icon_Property.SetToWithDefault(
-                        rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Icon,
+                        rhsHasBeenSet: rhs.Icon_IsSet,
+                        defItem: def?.Icon ?? default(String),
+                        defHasBeenSet: def?.Icon_IsSet ?? false,
+                        outRhsItem: out var rhsIconItem,
+                        outDefItem: out var defIconItem))
+                    {
+                        item.Icon = rhsIconItem;
+                    }
+                    else
+                    {
+                        item.Icon_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4195,36 +2504,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
                 try
                 {
-                    item.Model_Property.SetToWithDefault(
-                        rhs.Model_Property,
-                        def?.Model_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Model,
+                        rhsHasBeenSet: rhs.Model_IsSet,
+                        defItem: def?.Model,
+                        defHasBeenSet: def?.Model_IsSet ?? false,
+                        outRhsItem: out var rhsModelItem,
+                        outDefItem: out var defModelItem))
+                    {
+                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    ModelCommon.CopyFieldsFrom(
-                                        item: item.Model,
-                                        rhs: rhs.Model,
-                                        def: def?.Model,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Model.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(Model);
-                                    return Model.Copy(
-                                        r,
-                                        copyMask?.Model?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Model = rhsModelItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                ModelCommon.CopyFieldsFrom(
+                                    item: item.Model,
+                                    rhs: rhs.Model,
+                                    def: def?.Model,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Model.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Model = Model.Copy(
+                                    rhsModelItem,
+                                    copyMask?.Model?.Specific,
+                                    def: defModelItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Model_IsSet = false;
+                        item.Model = default(Model);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4241,9 +2557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4260,9 +2574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
                 try
                 {
-                    item.BaseCost_Property.Set(
-                        value: rhs.BaseCost,
-                        cmds: cmds);
+                    item.BaseCost = rhs.BaseCost;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4279,9 +2591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unused);
                 try
                 {
-                    item.Unused_Property.Set(
-                        value: rhs.Unused,
-                        cmds: cmds);
+                    item.Unused = rhs.Unused;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4298,9 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.MagicSchool);
                 try
                 {
-                    item.MagicSchool_Property.Set(
-                        value: rhs.MagicSchool,
-                        cmds: cmds);
+                    item.MagicSchool = rhs.MagicSchool;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4317,9 +2625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Resistance);
                 try
                 {
-                    item.Resistance_Property.Set(
-                        value: rhs.Resistance,
-                        cmds: cmds);
+                    item.Resistance = rhs.Resistance;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4336,9 +2642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
                 try
                 {
-                    item.CounterEffectCount_Property.Set(
-                        value: rhs.CounterEffectCount,
-                        cmds: cmds);
+                    item.CounterEffectCount = rhs.CounterEffectCount;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4374,9 +2678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.ProjectileSpeed);
                 try
                 {
-                    item.ProjectileSpeed_Property.Set(
-                        value: rhs.ProjectileSpeed,
-                        cmds: cmds);
+                    item.ProjectileSpeed = rhs.ProjectileSpeed;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4499,16 +2801,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case MagicEffect_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 case MagicEffect_FieldIndex.Description:
-                    obj.Description_Property.HasBeenSet = on;
+                    obj.Description_IsSet = on;
                     break;
                 case MagicEffect_FieldIndex.Icon:
-                    obj.Icon_Property.HasBeenSet = on;
+                    obj.Icon_IsSet = on;
                     break;
                 case MagicEffect_FieldIndex.Model:
-                    obj.Model_Property.HasBeenSet = on;
+                    obj.Model_IsSet = on;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
                     obj.CounterEffects.HasBeenSet = on;
@@ -4528,16 +2830,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffect_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 case MagicEffect_FieldIndex.Description:
-                    obj.Description_Property.Unset(cmds);
+                    obj.Description_Unset();
                     break;
                 case MagicEffect_FieldIndex.Icon:
-                    obj.Icon_Property.Unset(cmds);
+                    obj.Icon_Unset();
                     break;
                 case MagicEffect_FieldIndex.Model:
-                    obj.Model_Property.Unset(cmds);
+                    obj.Model_Unset();
                     break;
                 case MagicEffect_FieldIndex.Flags:
                     obj.Flags = default(MagicEffect.MagicFlag);
@@ -4558,13 +2860,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.CounterEffectCount = default(UInt32);
                     break;
                 case MagicEffect_FieldIndex.Light:
-                    obj.Light = default(FormIDLink<Light>);
+                    obj.Light_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                     obj.ProjectileSpeed = default(Single);
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
-                    obj.EffectShader = default(FormIDLink<EffectShader>);
+                    obj.EffectShader_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case MagicEffect_FieldIndex.SubData:
                     obj.SubData = default(MagicEffectSubData);
@@ -4597,13 +2899,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.SubData:
                     return true;
                 case MagicEffect_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 case MagicEffect_FieldIndex.Description:
-                    return obj.Description_Property.HasBeenSet;
+                    return obj.Description_IsSet;
                 case MagicEffect_FieldIndex.Icon:
-                    return obj.Icon_Property.HasBeenSet;
+                    return obj.Icon_IsSet;
                 case MagicEffect_FieldIndex.Model:
-                    return obj.Model_Property.HasBeenSet;
+                    return obj.Model_IsSet;
                 case MagicEffect_FieldIndex.CounterEffects:
                     return obj.CounterEffects.HasBeenSet;
                 default:
@@ -4657,19 +2959,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffect item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Name_Property.Unset(cmds.ToUnsetParams());
-            item.Description_Property.Unset(cmds.ToUnsetParams());
-            item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.Model_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Unset();
+            item.Description_Unset();
+            item.Icon_Unset();
+            item.Model_Unset();
             item.Flags = default(MagicEffect.MagicFlag);
             item.BaseCost = default(Single);
             item.Unused = default(Byte[]);
             item.MagicSchool = default(MagicSchool);
             item.Resistance = default(Resistance);
             item.CounterEffectCount = default(UInt32);
-            item.Light = default(FormIDLink<Light>);
+            item.Light_Property.Unset(cmds.ToUnsetParams());
             item.ProjectileSpeed = default(Single);
-            item.EffectShader = default(FormIDLink<EffectShader>);
+            item.EffectShader_Property.Unset(cmds.ToUnsetParams());
             item.SubData = default(MagicEffectSubData);
             item.CounterEffects.Unset(cmds.ToUnsetParams());
         }
@@ -4689,10 +2991,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffect_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
-            ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
-            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseCost = item.BaseCost == rhs.BaseCost;
             ret.Unused = item.Unused.EqualsFast(rhs.Unused);
@@ -4836,10 +3138,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IMagicEffectGetter item,
             MagicEffect_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.CounterEffects.Overall.HasValue && checkMask.CounterEffects.Overall.Value != item.CounterEffects.HasBeenSet) return false;
             return true;
@@ -4848,10 +3150,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static MagicEffect_Mask<bool> GetHasBeenSetMask(IMagicEffectGetter item)
         {
             var ret = new MagicEffect_Mask<bool>();
-            ret.Name = item.Name_Property.HasBeenSet;
-            ret.Description = item.Description_Property.HasBeenSet;
-            ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model));
+            ret.Name = item.Name_IsSet;
+            ret.Description = item.Description_IsSet;
+            ret.Icon = item.Icon_IsSet;
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
             ret.Flags = true;
             ret.BaseCost = true;
             ret.Unused = true;
@@ -4924,42 +3226,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MagicEffect");
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)MagicEffect_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Description_Property.HasBeenSet
+            if (item.Description_IsSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Description),
-                    item: item.Description_Property,
+                    item: item.Description,
                     fieldIndex: (int)MagicEffect_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if (item.Icon_Property.HasBeenSet
+            if (item.Icon_IsSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Icon),
-                    item: item.Icon_Property,
+                    item: item.Icon,
                     fieldIndex: (int)MagicEffect_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.Model_Property.HasBeenSet
+            if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
                     node: elem,
-                    item: item.Model_Property,
+                    item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)MagicEffect_FieldIndex.Model,
                     errorMask: errorMask,
@@ -4970,7 +3272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)MagicEffect_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -4979,7 +3281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BaseCost),
-                    item: item.BaseCost_Property,
+                    item: item.BaseCost,
                     fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
                     errorMask: errorMask);
             }
@@ -4988,7 +3290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Unused),
-                    item: item.Unused_Property,
+                    item: item.Unused,
                     fieldIndex: (int)MagicEffect_FieldIndex.Unused,
                     errorMask: errorMask);
             }
@@ -4997,7 +3299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<MagicSchool>.Instance.Write(
                     node: elem,
                     name: nameof(item.MagicSchool),
-                    item: item.MagicSchool_Property,
+                    item: item.MagicSchool,
                     fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
                     errorMask: errorMask);
             }
@@ -5006,7 +3308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Resistance>.Instance.Write(
                     node: elem,
                     name: nameof(item.Resistance),
-                    item: item.Resistance_Property,
+                    item: item.Resistance,
                     fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
                     errorMask: errorMask);
             }
@@ -5015,7 +3317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.CounterEffectCount),
-                    item: item.CounterEffectCount_Property,
+                    item: item.CounterEffectCount,
                     fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
                     errorMask: errorMask);
             }
@@ -5033,7 +3335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ProjectileSpeed),
-                    item: item.ProjectileSpeed_Property,
+                    item: item.ProjectileSpeed,
                     fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
                     errorMask: errorMask);
             }
@@ -5050,7 +3352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 LoquiXmlTranslation<MagicEffectSubData>.Instance.Write(
                     node: elem,
-                    item: item.SubData_Property,
+                    item: item.SubData,
                     name: nameof(item.SubData),
                     fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                     errorMask: errorMask,
@@ -5134,67 +3436,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)MagicEffect_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.FULL_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Description_Property,
-                fieldIndex: (int)MagicEffect_FieldIndex.Description,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DESC_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Icon_Property,
-                fieldIndex: (int)MagicEffect_FieldIndex.Icon,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.ICON_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<Model>.Instance.Write(
-                writer: writer,
-                item: item.Model_Property,
-                fieldIndex: (int)MagicEffect_FieldIndex.Model,
-                errorMask: errorMask);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Description_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Description,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Description,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DESC_HEADER),
+                    nullable: false);
+            }
+            if (item.Icon_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Icon,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.ICON_HEADER),
+                    nullable: false);
+            }
+            if (item.Model_IsSet)
+            {
+                LoquiBinaryTranslation<Model>.Instance.Write(
+                    writer: writer,
+                    item: item.Model,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Model,
+                    errorMask: errorMask);
+            }
             if (item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Write(
                         writer,
-                        item.Flags_Property,
+                        item.Flags,
                         length: 4,
                         fieldIndex: (int)MagicEffect_FieldIndex.Flags,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.BaseCost_Property,
+                        item: item.BaseCost,
                         fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Unused_Property,
+                        item: item.Unused,
                         fieldIndex: (int)MagicEffect_FieldIndex.Unused,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
                         writer,
-                        item.MagicSchool_Property,
+                        item.MagicSchool,
                         length: 4,
                         fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Write(
                         writer,
-                        item.Resistance_Property,
+                        item.Resistance,
                         length: 4,
                         fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.CounterEffectCount_Property,
+                        item: item.CounterEffectCount,
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
@@ -5204,7 +3518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ProjectileSpeed_Property,
+                        item: item.ProjectileSpeed,
                         fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
@@ -5216,19 +3530,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         LoquiBinaryTranslation<MagicEffectSubData>.Instance.Write(
                             writer: writer,
-                            item: item.SubData_Property,
+                            item: item.SubData,
                             fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                             errorMask: errorMask);
                     }
                 }
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>>.Instance.Write(
-                writer: writer,
-                items: item.CounterEffects,
-                fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
-                recordType: MagicEffect_Registration.ESCE_HEADER,
-                errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
+            if (item.CounterEffects.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>>.Instance.Write(
+                    writer: writer,
+                    items: item.CounterEffects,
+                    fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
+                    recordType: MagicEffect_Registration.ESCE_HEADER,
+                    errorMask: errorMask,
+                    transl: FormIDBinaryTranslation.Instance.Write);
+            }
         }
 
         #endregion

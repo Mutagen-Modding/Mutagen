@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,7 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         IGlobalFloat,
         ILoquiObject<GlobalFloat>,
         ILoquiObjectSetter,
-        IPropertySupporter<Single>,
         IEquatable<GlobalFloat>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,50 +51,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        protected Single _Data;
-        protected PropertyForwarder<GlobalFloat, Single> _DataForwarder;
-        public INotifyingSetItemGetter<Single> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<GlobalFloat, Single>(this, (int)GlobalFloat_FieldIndex.Data));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Data;
         public Single Data
         {
             get => this._Data;
-            protected set => this.SetData(value);
+            protected set => this.RaiseAndSetIfChanged(ref this._Data, value, nameof(Data));
         }
-        protected void SetData(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)GlobalFloat_FieldIndex.Data];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Data == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)GlobalFloat_FieldIndex.Data] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Data;
-                _Data = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)GlobalFloat_FieldIndex.Data,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Data = item;
-            }
-        }
-        protected void UnsetData()
-        {
-            _hasBeenSetTracker[(int)GlobalFloat_FieldIndex.Data] = false;
-            Data = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IGlobalFloatGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -533,147 +496,6 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        #region IPropertySupporter Single
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected override Single GetSingle(int index)
-        {
-            switch ((GlobalFloat_FieldIndex)index)
-            {
-                case GlobalFloat_FieldIndex.Data:
-                    return Data;
-                default:
-                    return base.GetSingle(index: index);
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((GlobalFloat_FieldIndex)index)
-            {
-                case GlobalFloat_FieldIndex.Data:
-                    SetData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetSingle(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((GlobalFloat_FieldIndex)index)
-            {
-                case GlobalFloat_FieldIndex.Data:
-                    SetData(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetSingle(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected override Single DefaultValueSingle(int index)
-        {
-            switch ((GlobalFloat_FieldIndex)index)
-            {
-                case GlobalFloat_FieldIndex.Data:
-                    return default(Single);
-                default:
-                    return base.DefaultValueSingle(index: index);
-            }
-        }
-
-        #endregion
-
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = GlobalFloat_Registration.TRIGGERING_RECORD_TYPE;
         #endregion
@@ -1032,7 +854,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         Single Data { get; }
-        INotifyingItemGetter<Single> Data_Property { get; }
 
         #endregion
 

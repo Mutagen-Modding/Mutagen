@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PathGridPoint : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IPathGridPoint,
         ILoquiObject<PathGridPoint>,
         ILoquiObjectSetter,
-        IPropertySupporter<P3Float>,
-        IPropertySupporter<Byte[]>,
         IEquatable<PathGridPoint>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,105 +50,27 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Point
-        protected P3Float _Point;
-        protected PropertyForwarder<PathGridPoint, P3Float> _PointForwarder;
-        public INotifyingSetItem<P3Float> Point_Property => _PointForwarder ?? (_PointForwarder = new PropertyForwarder<PathGridPoint, P3Float>(this, (int)PathGridPoint_FieldIndex.Point));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3Float _Point;
         public P3Float Point
         {
             get => this._Point;
-            set => this.SetPoint(value);
+            set => this.RaiseAndSetIfChanged(ref this._Point, value, nameof(Point));
         }
-        protected void SetPoint(
-            P3Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PathGridPoint_FieldIndex.Point];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Point == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PathGridPoint_FieldIndex.Point] = hasBeenSet;
-            }
-            if (_P3Float_subscriptions != null)
-            {
-                var tmp = Point;
-                _Point = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)PathGridPoint_FieldIndex.Point,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Point = item;
-            }
-        }
-        protected void UnsetPoint()
-        {
-            _hasBeenSetTracker[(int)PathGridPoint_FieldIndex.Point] = false;
-            Point = default(P3Float);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IPathGridPoint.Point_Property => this.Point_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IPathGridPointGetter.Point_Property => this.Point_Property;
         #endregion
         #region NumConnectionsFluffBytes
-        protected Byte[] _NumConnectionsFluffBytes = new byte[3];
-        protected PropertyForwarder<PathGridPoint, Byte[]> _NumConnectionsFluffBytesForwarder;
-        public INotifyingSetItem<Byte[]> NumConnectionsFluffBytes_Property => _NumConnectionsFluffBytesForwarder ?? (_NumConnectionsFluffBytesForwarder = new PropertyForwarder<PathGridPoint, Byte[]>(this, (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _NumConnectionsFluffBytes = new byte[3];
         public Byte[] NumConnectionsFluffBytes
         {
-            get => this._NumConnectionsFluffBytes;
-            set => this.SetNumConnectionsFluffBytes(value);
-        }
-        protected void SetNumConnectionsFluffBytes(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _NumConnectionsFluffBytes;
+            set
             {
-                item = new byte[3];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(NumConnectionsFluffBytes, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = NumConnectionsFluffBytes;
-                _NumConnectionsFluffBytes = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _NumConnectionsFluffBytes = item;
+                this._NumConnectionsFluffBytes = value;
+                if (value == null)
+                {
+                    this._NumConnectionsFluffBytes = new byte[3];
+                }
             }
         }
-        protected void UnsetNumConnectionsFluffBytes()
-        {
-            SetNumConnectionsFluffBytes(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IPathGridPoint.NumConnectionsFluffBytes_Property => this.NumConnectionsFluffBytes_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IPathGridPointGetter.NumConnectionsFluffBytes_Property => this.NumConnectionsFluffBytes_Property;
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -572,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPoint();
+                            item.Point = default(P3Float);
                         }
                     }
                     catch (Exception ex)
@@ -598,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetNumConnectionsFluffBytes();
+                            item.NumConnectionsFluffBytes = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -659,274 +581,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter P3Float
-        protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
-        P3Float IPropertySupporter<P3Float>.Get(int index)
-        {
-            return GetP3Float(index: index);
-        }
-
-        protected P3Float GetP3Float(int index)
-        {
-            switch ((PathGridPoint_FieldIndex)index)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    return Point;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        void IPropertySupporter<P3Float>.Set(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP3Float(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP3Float(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PathGridPoint_FieldIndex)index)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    SetPoint(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P3Float>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P3Float>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP3Float(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP3Float(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PathGridPoint_FieldIndex)index)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    SetPoint(
-                        item: default(P3Float),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P3Float> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P3Float_subscriptions == null)
-            {
-                _P3Float_subscriptions = new ObjectCentralizationSubscriptions<P3Float>();
-            }
-            _P3Float_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P3Float_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P3Float>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P3Float IPropertySupporter<P3Float>.DefaultValue(int index)
-        {
-            return DefaultValueP3Float(index: index);
-        }
-
-        protected P3Float DefaultValueP3Float(int index)
-        {
-            switch ((PathGridPoint_FieldIndex)index)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    return default(P3Float);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((PathGridPoint_FieldIndex)index)
-            {
-                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                    return NumConnectionsFluffBytes;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PathGridPoint_FieldIndex)index)
-            {
-                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                    SetNumConnectionsFluffBytes(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PathGridPoint_FieldIndex)index)
-            {
-                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                    SetNumConnectionsFluffBytes(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((PathGridPoint_FieldIndex)index)
-            {
-                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1142,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetPoint();
+                    item.Point = default(P3Float);
                 }
             }
             catch (Exception ex)
@@ -1166,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetNumConnectionsFluffBytes();
+                    item.NumConnectionsFluffBytes = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -1312,14 +966,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PathGridPoint_FieldIndex.Point:
-                    this.SetPoint(
-                        (P3Float)obj,
-                        cmds: cmds);
+                    this.Point = (P3Float)obj;
                     break;
                 case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                    this.SetNumConnectionsFluffBytes(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.NumConnectionsFluffBytes = (Byte[])obj;
                     break;
                 case PathGridPoint_FieldIndex.Connections:
                     this._Connections.SetTo((IEnumerable<Int16>)obj, cmds);
@@ -1362,14 +1012,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PathGridPoint_FieldIndex.Point:
-                    obj.SetPoint(
-                        (P3Float)pair.Value,
-                        cmds: null);
+                    obj.Point = (P3Float)pair.Value;
                     break;
                 case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                    obj.SetNumConnectionsFluffBytes(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.NumConnectionsFluffBytes = (Byte[])pair.Value;
                     break;
                 case PathGridPoint_FieldIndex.Connections:
                     obj._Connections.SetTo((IEnumerable<Int16>)pair.Value, null);
@@ -1390,10 +1036,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPathGridPoint : IPathGridPointGetter, ILoquiClass<IPathGridPoint, IPathGridPointGetter>, ILoquiClass<PathGridPoint, IPathGridPointGetter>
     {
         new P3Float Point { get; set; }
-        new INotifyingItem<P3Float> Point_Property { get; }
 
         new Byte[] NumConnectionsFluffBytes { get; set; }
-        new INotifyingItem<Byte[]> NumConnectionsFluffBytes_Property { get; }
 
         new INotifyingList<Int16> Connections { get; }
     }
@@ -1402,12 +1046,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Point
         P3Float Point { get; }
-        INotifyingItemGetter<P3Float> Point_Property { get; }
 
         #endregion
         #region NumConnectionsFluffBytes
         Byte[] NumConnectionsFluffBytes { get; }
-        INotifyingItemGetter<Byte[]> NumConnectionsFluffBytes_Property { get; }
 
         #endregion
         #region Connections
@@ -1638,9 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGridPoint_FieldIndex.Point);
                 try
                 {
-                    item.Point_Property.Set(
-                        value: rhs.Point,
-                        cmds: cmds);
+                    item.Point = rhs.Point;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1657,9 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes);
                 try
                 {
-                    item.NumConnectionsFluffBytes_Property.Set(
-                        value: rhs.NumConnectionsFluffBytes,
-                        cmds: cmds);
+                    item.NumConnectionsFluffBytes = rhs.NumConnectionsFluffBytes;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1913,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P3FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Point),
-                    item: item.Point_Property,
+                    item: item.Point,
                     fieldIndex: (int)PathGridPoint_FieldIndex.Point,
                     errorMask: errorMask);
             }
@@ -1922,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.NumConnectionsFluffBytes),
-                    item: item.NumConnectionsFluffBytes_Property,
+                    item: item.NumConnectionsFluffBytes,
                     fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
                     errorMask: errorMask);
             }
@@ -1988,12 +1626,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Point_Property,
+                item: item.Point,
                 fieldIndex: (int)PathGridPoint_FieldIndex.Point,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.NumConnectionsFluffBytes_Property,
+                item: item.NumConnectionsFluffBytes,
                 fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Write(

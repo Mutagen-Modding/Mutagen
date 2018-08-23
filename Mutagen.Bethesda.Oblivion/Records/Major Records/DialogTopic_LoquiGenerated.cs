@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -35,8 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<DialogTopic>,
         ILoquiObjectSetter,
         INamed,
-        IPropertySupporter<String>,
-        IPropertySupporter<DialogType>,
         IEquatable<DialogTopic>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -70,100 +70,56 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<DialogTopic, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<DialogTopic, String>(this, (int)DialogTopic_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)DialogTopic_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool IDialogTopicGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IDialogTopicGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogTopic_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogTopic_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)DialogTopic_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)DialogTopic_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)DialogTopic_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IDialogTopic.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IDialogTopicGetter.Name_Property => this.Name_Property;
         #endregion
         #region DialogType
-        protected DialogType _DialogType;
-        protected PropertyForwarder<DialogTopic, DialogType> _DialogTypeForwarder;
-        public INotifyingSetItem<DialogType> DialogType_Property => _DialogTypeForwarder ?? (_DialogTypeForwarder = new PropertyForwarder<DialogTopic, DialogType>(this, (int)DialogTopic_FieldIndex.DialogType));
+        public bool DialogType_IsSet
+        {
+            get => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.DialogType];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)DialogTopic_FieldIndex.DialogType, nameof(DialogType_IsSet));
+        }
+        bool IDialogTopicGetter.DialogType_IsSet => DialogType_IsSet;
+        private DialogType _DialogType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public DialogType DialogType
         {
             get => this._DialogType;
-            set => this.SetDialogType(value);
+            set => DialogType_Set(value);
         }
-        protected void SetDialogType(
-            DialogType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        DialogType IDialogTopicGetter.DialogType => this.DialogType;
+        public void DialogType_Set(
+            DialogType value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogTopic_FieldIndex.DialogType];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DialogType == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogTopic_FieldIndex.DialogType] = hasBeenSet;
-            }
-            if (_DialogType_subscriptions != null)
-            {
-                var tmp = DialogType;
-                _DialogType = item;
-                _DialogType_subscriptions.FireSubscriptions(
-                    index: (int)DialogTopic_FieldIndex.DialogType,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DialogType = item;
-            }
+            this.RaiseAndSetIfChanged(ref _DialogType, value, _hasBeenSetTracker, markSet, (int)DialogTopic_FieldIndex.DialogType, nameof(DialogType), nameof(DialogType_IsSet));
         }
-        protected void UnsetDialogType()
+        public void DialogType_Unset()
         {
-            _hasBeenSetTracker[(int)DialogTopic_FieldIndex.DialogType] = false;
-            DialogType = default(DialogType);
+            this.DialogType_Set(default(DialogType), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<DialogType> IDialogTopic.DialogType_Property => this.DialogType_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<DialogType> IDialogTopicGetter.DialogType_Property => this.DialogType_Property;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -247,13 +203,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Quests.SequenceEqual(rhs.Quests)) return false;
             }
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
-            if (DialogType_Property.HasBeenSet != rhs.DialogType_Property.HasBeenSet) return false;
-            if (DialogType_Property.HasBeenSet)
+            if (DialogType_IsSet != rhs.DialogType_IsSet) return false;
+            if (DialogType_IsSet)
             {
                 if (this.DialogType != rhs.DialogType) return false;
             }
@@ -272,11 +228,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Quests).CombineHashCode(ret);
             }
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
-            if (DialogType_Property.HasBeenSet)
+            if (DialogType_IsSet)
             {
                 ret = HashHelper.GetHashCode(DialogType).CombineHashCode(ret);
             }
@@ -640,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -666,7 +622,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDialogType();
+                            item.DialogType = default(DialogType);
                         }
                     }
                     catch (Exception ex)
@@ -735,281 +691,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((DialogTopic_FieldIndex)index)
-            {
-                case DialogTopic_FieldIndex.Name:
-                    return Name;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((DialogTopic_FieldIndex)index)
-            {
-                case DialogTopic_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((DialogTopic_FieldIndex)index)
-            {
-                case DialogTopic_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((DialogTopic_FieldIndex)index)
-            {
-                case DialogTopic_FieldIndex.Name:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter DialogType
-        protected ObjectCentralizationSubscriptions<DialogType> _DialogType_subscriptions;
-        DialogType IPropertySupporter<DialogType>.Get(int index)
-        {
-            return GetDialogType(index: index);
-        }
-
-        protected DialogType GetDialogType(int index)
-        {
-            switch ((DialogTopic_FieldIndex)index)
-            {
-                case DialogTopic_FieldIndex.DialogType:
-                    return DialogType;
-                default:
-                    throw new ArgumentException($"Unknown index for field type DialogType: {index}");
-            }
-        }
-
-        void IPropertySupporter<DialogType>.Set(
-            int index,
-            DialogType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetDialogType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetDialogType(
-            int index,
-            DialogType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((DialogTopic_FieldIndex)index)
-            {
-                case DialogTopic_FieldIndex.DialogType:
-                    SetDialogType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type DialogType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<DialogType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<DialogType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<DialogType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetDialogType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetDialogType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((DialogTopic_FieldIndex)index)
-            {
-                case DialogTopic_FieldIndex.DialogType:
-                    SetDialogType(
-                        item: default(DialogType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type DialogType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<DialogType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<DialogType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_DialogType_subscriptions == null)
-            {
-                _DialogType_subscriptions = new ObjectCentralizationSubscriptions<DialogType>();
-            }
-            _DialogType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<DialogType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _DialogType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<DialogType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        DialogType IPropertySupporter<DialogType>.DefaultValue(int index)
-        {
-            return DefaultValueDialogType(index: index);
-        }
-
-        protected DialogType DefaultValueDialogType(int index)
-        {
-            switch ((DialogTopic_FieldIndex)index)
-            {
-                case DialogTopic_FieldIndex.DialogType:
-                    return default(DialogType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type DialogType: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = DialogTopic_Registration.TRIGGERING_RECORD_TYPE;
@@ -1255,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1282,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDialogType();
+                            item.DialogType = default(DialogType);
                         }
                     }
                     catch (Exception ex)
@@ -1436,14 +1117,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Quests.SetTo((IEnumerable<FormIDSetLink<Quest>>)obj, cmds);
                     break;
                 case DialogTopic_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 case DialogTopic_FieldIndex.DialogType:
-                    this.SetDialogType(
-                        (DialogType)obj,
-                        cmds: cmds);
+                    this.DialogType = (DialogType)obj;
                     break;
                 case DialogTopic_FieldIndex.Items:
                     this._Items.SetTo((IEnumerable<DialogItem>)obj, cmds);
@@ -1483,14 +1160,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Quests.SetTo((IEnumerable<FormIDSetLink<Quest>>)pair.Value, null);
                     break;
                 case DialogTopic_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 case DialogTopic_FieldIndex.DialogType:
-                    obj.SetDialogType(
-                        (DialogType)pair.Value,
-                        cmds: null);
+                    obj.DialogType = (DialogType)pair.Value;
                     break;
                 case DialogTopic_FieldIndex.Items:
                     obj._Items.SetTo((IEnumerable<DialogItem>)pair.Value, null);
@@ -1512,10 +1185,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new INotifyingList<FormIDSetLink<Quest>> Quests { get; }
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
         new DialogType DialogType { get; set; }
-        new INotifyingSetItem<DialogType> DialogType_Property { get; }
+        new bool DialogType_IsSet { get; set; }
+        void DialogType_Set(DialogType item, bool hasBeenSet = true);
+        void DialogType_Unset();
 
         new INotifyingList<DialogItem> Items { get; }
     }
@@ -1527,12 +1204,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
         #region DialogType
         DialogType DialogType { get; }
-        INotifyingSetItemGetter<DialogType> DialogType_Property { get; }
+        bool DialogType_IsSet { get; }
 
         #endregion
         #region Items
@@ -1814,9 +1491,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1833,9 +1521,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.DialogType);
                 try
                 {
-                    item.DialogType_Property.SetToWithDefault(
-                        rhs: rhs.DialogType_Property,
-                        def: def?.DialogType_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.DialogType,
+                        rhsHasBeenSet: rhs.DialogType_IsSet,
+                        defItem: def?.DialogType ?? default(DialogType),
+                        defHasBeenSet: def?.DialogType_IsSet ?? false,
+                        outRhsItem: out var rhsDialogTypeItem,
+                        outDefItem: out var defDialogTypeItem))
+                    {
+                        item.DialogType = rhsDialogTypeItem;
+                    }
+                    else
+                    {
+                        item.DialogType_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1863,7 +1562,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(DialogItem);
                                     return DialogItem.Copy(
                                         r,
                                         copyMask?.Items?.Specific,
@@ -1901,10 +1599,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Quests.HasBeenSet = on;
                     break;
                 case DialogTopic_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 case DialogTopic_FieldIndex.DialogType:
-                    obj.DialogType_Property.HasBeenSet = on;
+                    obj.DialogType_IsSet = on;
                     break;
                 case DialogTopic_FieldIndex.Items:
                     obj.Items.HasBeenSet = on;
@@ -1927,10 +1625,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Quests.Unset(cmds);
                     break;
                 case DialogTopic_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 case DialogTopic_FieldIndex.DialogType:
-                    obj.DialogType_Property.Unset(cmds);
+                    obj.DialogType_Unset();
                     break;
                 case DialogTopic_FieldIndex.Items:
                     obj.Items.Unset(cmds);
@@ -1951,9 +1649,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.Quests:
                     return obj.Quests.HasBeenSet;
                 case DialogTopic_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 case DialogTopic_FieldIndex.DialogType:
-                    return obj.DialogType_Property.HasBeenSet;
+                    return obj.DialogType_IsSet;
                 case DialogTopic_FieldIndex.Items:
                     return obj.Items.HasBeenSet;
                 default:
@@ -1986,8 +1684,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Quests.Unset(cmds.ToUnsetParams());
-            item.Name_Property.Unset(cmds.ToUnsetParams());
-            item.DialogType_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Unset();
+            item.DialogType_Unset();
             item.Items.Unset(cmds.ToUnsetParams());
         }
 
@@ -2025,8 +1723,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Quests = new MaskItem<bool, IEnumerable<bool>>();
                 ret.Quests.Overall = false;
             }
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
-            ret.DialogType = item.DialogType_Property.Equals(rhs.DialogType_Property, (l, r) => l == r);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.DialogType = item.DialogType_IsSet == rhs.DialogType_IsSet && item.DialogType == rhs.DialogType;
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
             {
                 if (item.Items.HasBeenSet)
@@ -2135,8 +1833,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogTopic_Mask<bool?> checkMask)
         {
             if (checkMask.Quests.Overall.HasValue && checkMask.Quests.Overall.Value != item.Quests.HasBeenSet) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
-            if (checkMask.DialogType.HasValue && checkMask.DialogType.Value != item.DialogType_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.DialogType.HasValue && checkMask.DialogType.Value != item.DialogType_IsSet) return false;
             if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             return true;
         }
@@ -2145,8 +1843,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new DialogTopic_Mask<bool>();
             ret.Quests = new MaskItem<bool, IEnumerable<bool>>(item.Quests.HasBeenSet, null);
-            ret.Name = item.Name_Property.HasBeenSet;
-            ret.DialogType = item.DialogType_Property.HasBeenSet;
+            ret.Name = item.Name_IsSet;
+            ret.DialogType = item.DialogType_IsSet;
             ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogItem_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, DialogItem_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -2229,23 +1927,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)DialogTopic_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.DialogType_Property.HasBeenSet
+            if (item.DialogType_IsSet
                 && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.DialogType) ?? true))
             {
                 EnumXmlTranslation<DialogType>.Instance.Write(
                     node: elem,
                     name: nameof(item.DialogType),
-                    item: item.DialogType_Property,
+                    item: item.DialogType,
                     fieldIndex: (int)DialogTopic_FieldIndex.DialogType,
                     errorMask: errorMask);
             }
@@ -2332,28 +2030,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Quest>>.Instance.WriteListOfRecords(
-                writer: writer,
-                items: item.Quests,
-                fieldIndex: (int)DialogTopic_FieldIndex.Quests,
-                recordType: DialogTopic_Registration.QSTI_HEADER,
-                errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)DialogTopic_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.FULL_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogType>.Instance.Write(
-                writer,
-                item.DialogType_Property,
-                length: 1,
-                fieldIndex: (int)DialogTopic_FieldIndex.DialogType,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DATA_HEADER),
-                nullable: false);
+            if (item.Quests.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Quest>>.Instance.WriteListOfRecords(
+                    writer: writer,
+                    items: item.Quests,
+                    fieldIndex: (int)DialogTopic_FieldIndex.Quests,
+                    recordType: DialogTopic_Registration.QSTI_HEADER,
+                    errorMask: errorMask,
+                    transl: FormIDBinaryTranslation.Instance.Write);
+            }
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)DialogTopic_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.DialogType_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogType>.Instance.Write(
+                    writer,
+                    item.DialogType,
+                    length: 1,
+                    fieldIndex: (int)DialogTopic_FieldIndex.DialogType,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DATA_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

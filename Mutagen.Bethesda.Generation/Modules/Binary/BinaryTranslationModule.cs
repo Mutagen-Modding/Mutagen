@@ -127,6 +127,9 @@ namespace Mutagen.Bethesda.Generation
                 gen.Module = this;
                 gen.MaskModule = this.Gen.MaskModule;
             }
+            obj.RequiredNamespaces.Add("ReactiveUI");
+            obj.RequiredNamespaces.Add("System.Reactive.Disposables");
+            obj.RequiredNamespaces.Add("System.Reactive.Linq");
         }
 
         public override IEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
@@ -540,24 +543,21 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"if (ret.{dataType.StateName} != default({dataType.EnumName}))");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine("object dataTypeStateSubber = new object();");
+                    fg.AppendLine("CompositeDisposable structUnsubber = new CompositeDisposable();");
                     fg.AppendLine("Action unsubAction = () =>");
                     using (new BraceWrapper(fg) { AppendSemicolon = true })
                     {
-                        foreach (var subField in affectedFields)
-                        {
-                            fg.AppendLine($"ret.{subField.Property}.Unsubscribe(dataTypeStateSubber);");
-                        }
+                        fg.AppendLine("structUnsubber.Dispose();");
                         fg.AppendLine($"ret.{dataType.StateName} = default({dataType.EnumName});");
                     }
                     foreach (var subField in affectedFields)
                     {
-                        using (var args = new ArgsWrapper(fg,
-                            $"ret.{subField.Property}.Subscribe"))
+                        fg.AppendLine($"structUnsubber.Add(");
+                        using (new DepthWrapper(fg))
                         {
-                            args.Add($"owner: dataTypeStateSubber");
-                            args.Add("callback: unsubAction");
-                            args.Add("cmds: NotifyingSubscribeParameters.NoFire");
+                            fg.AppendLine($"ret.WhenAny(x => x.{subField.Name})");
+                            fg.AppendLine($".Skip(1)");
+                            fg.AppendLine($".Subscribe(unsubAction));");
                         }
                     }
                 }
@@ -582,24 +582,21 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if (ret.StructCustom)");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("object structUnsubber = new object();");
+                fg.AppendLine("CompositeDisposable structUnsubber = new CompositeDisposable();");
                 fg.AppendLine("Action unsubAction = () =>");
                 using (new BraceWrapper(fg) { AppendSemicolon = true })
                 {
-                    foreach (var subField in affectedFields)
-                    {
-                        fg.AppendLine($"ret.{subField.Property}.Unsubscribe(structUnsubber);");
-                    }
+                    fg.AppendLine("structUnsubber.Dispose();");
                     fg.AppendLine($"ret.StructCustom = false;");
                 }
                 foreach (var subField in affectedFields)
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        $"ret.{subField.Property}.Subscribe"))
+                    fg.AppendLine($"structUnsubber.Add(");
+                    using (new DepthWrapper(fg))
                     {
-                        args.Add($"owner: structUnsubber");
-                        args.Add("callback: unsubAction");
-                        args.Add("cmds: NotifyingSubscribeParameters.NoFire");
+                        fg.AppendLine($"ret.WhenAny(x => x.{subField.Name})");
+                        fg.AppendLine($".Skip(1)");
+                        fg.AppendLine($".Subscribe(unsubAction));");
                     }
                 }
             }
@@ -1063,28 +1060,46 @@ namespace Mutagen.Bethesda.Generation
                         if (field.TryGetFieldData(out var fieldData)
                             && fieldData.HasTrigger) continue;
                         if (field.Derivative && !fieldData.CustomBinary) continue;
-                        var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
-                        if (fieldData.CustomBinary)
+                        List<string> conditions = new List<string>();
+                        if (field.HasBeenSet)
                         {
-                            CustomLogicTranslationGeneration.GenerateWrite(
+                            conditions.Add($"{field.HasBeenSetAccessor(new Accessor(field, "item."))}");
+                        }
+                        if (conditions.Count > 0)
+                        {
+                            using (var args = new IfWrapper(fg, ANDs: true))
+                            {
+                                foreach (var item in conditions)
+                                {
+                                    args.Add(item);
+                                }
+                            }
+                        }
+                        using (new BraceWrapper(fg, doIt: conditions.Count > 0))
+                        {
+                            var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
+                            if (fieldData.CustomBinary)
+                            {
+                                CustomLogicTranslationGeneration.GenerateWrite(
+                                    fg: fg,
+                                    obj: obj,
+                                    field: field,
+                                    writerAccessor: "writer");
+                                continue;
+                            }
+                            if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                            {
+                                throw new ArgumentException("Unsupported type generator: " + field);
+                            }
+                            generator.GenerateWrite(
                                 fg: fg,
-                                obj: obj,
-                                field: field,
-                                writerAccessor: "writer");
-                            continue;
+                                objGen: obj,
+                                typeGen: field,
+                                writerAccessor: "writer",
+                                itemAccessor: new Accessor(field, "item."),
+                                translationAccessor: null,
+                                maskAccessor: "errorMask");
                         }
-                        if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
-                        {
-                            throw new ArgumentException("Unsupported type generator: " + field);
-                        }
-                        generator.GenerateWrite(
-                            fg: fg,
-                            objGen: obj,
-                            typeGen: field,
-                            writerAccessor: "writer",
-                            itemAccessor: new Accessor(field, "item."),
-                            translationAccessor: null,
-                            maskAccessor: "errorMask");
                     }
                 }
                 fg.AppendLine();
@@ -1148,6 +1163,7 @@ namespace Mutagen.Bethesda.Generation
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
 
+                        var accessor = new Accessor(field, "item.");
                         if (field is DataType dataType)
                         {
                             fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
@@ -1217,22 +1233,29 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (!generator.ShouldGenerateWrite(field)) continue;
                             if (fieldData.NoBinary) continue;
-                            bool modGroup = false;
+                            bool doIf = true;
                             if (field is LoquiType loqui
                                 && loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group
                                 && obj.GetObjectType() == ObjectType.Mod)
                             {
-                                modGroup = true;
                                 fg.AppendLine($"if (importMask?.{field.Name} ?? true)");
                             }
-                            using (new BraceWrapper(fg, doIt: modGroup))
+                            else if (field.HasBeenSet)
+                            {
+                                fg.AppendLine($"if ({field.HasBeenSetAccessor(accessor)})");
+                            }
+                            else
+                            {
+                                doIf = false;
+                            }
+                            using (new BraceWrapper(fg, doIt: doIf))
                             {
                                 generator.GenerateWrite(
                                     fg: fg,
                                     objGen: obj,
                                     typeGen: field,
                                     writerAccessor: "writer",
-                                    itemAccessor: new Accessor(field, "item."),
+                                    itemAccessor: accessor,
                                     translationAccessor: null,
                                     maskAccessor: $"errorMask");
                             }

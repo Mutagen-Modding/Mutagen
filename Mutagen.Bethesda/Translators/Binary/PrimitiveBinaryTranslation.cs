@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public abstract int? ExpectedLength { get; }
 
-        protected abstract T ParseValue(MutagenFrame reader);
+        public abstract T ParseValue(MutagenFrame reader);
 
         public void ParseInto(
             MutagenFrame frame,
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Binary
             return Parse(frame, out item, errorMask);
         }
 
-        protected abstract void WriteValue(MutagenWriter writer, T item);
+        public abstract void WriteValue(MutagenWriter writer, T item);
 
         bool IBinaryTranslation<T?>.Parse(MutagenFrame frame, out T? item, ErrorMaskBuilder errorMask)
         {
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Binary
             WriteValue(writer, item);
         }
 
-        protected void WriteValue(MutagenWriter writer, T? item)
+        public void WriteValue(MutagenWriter writer, T? item)
         {
             if (!item.HasValue) return;
             WriteValue(

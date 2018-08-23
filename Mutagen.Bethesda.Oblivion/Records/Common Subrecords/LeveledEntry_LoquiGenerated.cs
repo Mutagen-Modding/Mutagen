@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LeveledEntry<T> : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         ILeveledEntry<T>,
         ILoquiObject<LeveledEntry<T>>,
         ILoquiObjectSetter,
-        IPropertySupporter<Int16>,
-        IPropertySupporter<Byte[]>,
         IEquatable<LeveledEntry<T>>
         where T : Bethesda.MajorRecord, ILoquiObject<T>
     {
@@ -51,105 +51,27 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Level
-        protected Int16 _Level;
-        protected PropertyForwarder<LeveledEntry<T>, Int16> _LevelForwarder;
-        public INotifyingSetItem<Int16> Level_Property => _LevelForwarder ?? (_LevelForwarder = new PropertyForwarder<LeveledEntry<T>, Int16>(this, (int)LeveledEntry_FieldIndex.Level));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int16 _Level;
         public Int16 Level
         {
             get => this._Level;
-            set => this.SetLevel(value);
+            set => this.RaiseAndSetIfChanged(ref this._Level, value, nameof(Level));
         }
-        protected void SetLevel(
-            Int16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Level];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Level == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Level] = hasBeenSet;
-            }
-            if (_Int16_subscriptions != null)
-            {
-                var tmp = Level;
-                _Level = item;
-                _Int16_subscriptions.FireSubscriptions(
-                    index: (int)LeveledEntry_FieldIndex.Level,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Level = item;
-            }
-        }
-        protected void UnsetLevel()
-        {
-            _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Level] = false;
-            Level = default(Int16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int16> ILeveledEntry<T>.Level_Property => this.Level_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int16> ILeveledEntryGetter<T>.Level_Property => this.Level_Property;
         #endregion
         #region Fluff
-        protected Byte[] _Fluff = new byte[2];
-        protected PropertyForwarder<LeveledEntry<T>, Byte[]> _FluffForwarder;
-        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<LeveledEntry<T>, Byte[]>(this, (int)LeveledEntry_FieldIndex.Fluff));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Fluff = new byte[2];
         public Byte[] Fluff
         {
-            get => this._Fluff;
-            set => this.SetFluff(value);
-        }
-        protected void SetFluff(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Fluff;
+            set
             {
-                item = new byte[2];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Fluff;
-                _Fluff = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)LeveledEntry_FieldIndex.Fluff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Fluff = item;
+                this._Fluff = value;
+                if (value == null)
+                {
+                    this._Fluff = new byte[2];
+                }
             }
         }
-        protected void UnsetFluff()
-        {
-            SetFluff(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> ILeveledEntry<T>.Fluff_Property => this.Fluff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> ILeveledEntryGetter<T>.Fluff_Property => this.Fluff_Property;
         #endregion
         #region Reference
         public FormIDLink<T> Reference_Property { get; } = new FormIDLink<T>();
@@ -159,105 +81,58 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<T> ILeveledEntryGetter<T>.Reference_Property => this.Reference_Property;
         #endregion
         #region Count
-        protected Int16 _Count;
-        protected PropertyForwarder<LeveledEntry<T>, Int16> _CountForwarder;
-        public INotifyingSetItem<Int16> Count_Property => _CountForwarder ?? (_CountForwarder = new PropertyForwarder<LeveledEntry<T>, Int16>(this, (int)LeveledEntry_FieldIndex.Count));
+        public bool Count_IsSet
+        {
+            get => _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Count];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LeveledEntry_FieldIndex.Count, nameof(Count_IsSet));
+        }
+        bool ILeveledEntryGetter<T>.Count_IsSet => Count_IsSet;
+        private Int16 _Count;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 Count
         {
             get => this._Count;
-            set => this.SetCount(value);
+            set => Count_Set(value);
         }
-        protected void SetCount(
-            Int16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Int16 ILeveledEntryGetter<T>.Count => this.Count;
+        public void Count_Set(
+            Int16 value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Count];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Count == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Count] = hasBeenSet;
-            }
-            if (_Int16_subscriptions != null)
-            {
-                var tmp = Count;
-                _Count = item;
-                _Int16_subscriptions.FireSubscriptions(
-                    index: (int)LeveledEntry_FieldIndex.Count,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Count = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Count, value, _hasBeenSetTracker, markSet, (int)LeveledEntry_FieldIndex.Count, nameof(Count), nameof(Count_IsSet));
         }
-        protected void UnsetCount()
+        public void Count_Unset()
         {
-            _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Count] = false;
-            Count = default(Int16);
+            this.Count_Set(default(Int16), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Int16> ILeveledEntry<T>.Count_Property => this.Count_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Int16> ILeveledEntryGetter<T>.Count_Property => this.Count_Property;
         #endregion
         #region Fluff2
-        protected Byte[] _Fluff2 = new byte[2];
-        protected PropertyForwarder<LeveledEntry<T>, Byte[]> _Fluff2Forwarder;
-        public INotifyingSetItem<Byte[]> Fluff2_Property => _Fluff2Forwarder ?? (_Fluff2Forwarder = new PropertyForwarder<LeveledEntry<T>, Byte[]>(this, (int)LeveledEntry_FieldIndex.Fluff2));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool Fluff2_IsSet
+        {
+            get => _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LeveledEntry_FieldIndex.Fluff2, nameof(Fluff2_IsSet));
+        }
+        bool ILeveledEntryGetter<T>.Fluff2_IsSet => Fluff2_IsSet;
+        protected Byte[] _Fluff2;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff2
         {
             get => this._Fluff2;
-            set => this.SetFluff2(value);
-        }
-        protected void SetFluff2(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
-            {
-                item = new byte[2];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff2, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Fluff2;
-                _Fluff2 = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)LeveledEntry_FieldIndex.Fluff2,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Fluff2 = item;
-            }
-        }
-        protected void UnsetFluff2()
-        {
-            SetFluff2(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => Fluff2_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> ILeveledEntry<T>.Fluff2_Property => this.Fluff2_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> ILeveledEntryGetter<T>.Fluff2_Property => this.Fluff2_Property;
+        Byte[] ILeveledEntryGetter<T>.Fluff2 => this.Fluff2;
+        public void Fluff2_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _Fluff2, value, _hasBeenSetTracker, markSet, (int)LeveledEntry_FieldIndex.Fluff2, nameof(Fluff2), nameof(Fluff2_IsSet));
+        }
+        public void Fluff2_Unset()
+        {
+            this.Fluff2_Set(default(Byte[]), false);
+        }
         #endregion
 
         #region Loqui Getter Interface
@@ -324,13 +199,13 @@ namespace Mutagen.Bethesda.Oblivion
             if (this.Level != rhs.Level) return false;
             if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
             if (!this.Reference_Property.Equals(rhs.Reference_Property)) return false;
-            if (Count_Property.HasBeenSet != rhs.Count_Property.HasBeenSet) return false;
-            if (Count_Property.HasBeenSet)
+            if (Count_IsSet != rhs.Count_IsSet) return false;
+            if (Count_IsSet)
             {
                 if (this.Count != rhs.Count) return false;
             }
-            if (Fluff2_Property.HasBeenSet != rhs.Fluff2_Property.HasBeenSet) return false;
-            if (Fluff2_Property.HasBeenSet)
+            if (Fluff2_IsSet != rhs.Fluff2_IsSet) return false;
+            if (Fluff2_IsSet)
             {
                 if (!this.Fluff2.EqualsFast(rhs.Fluff2)) return false;
             }
@@ -343,11 +218,11 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Level).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
-            if (Count_Property.HasBeenSet)
+            if (Count_IsSet)
             {
                 ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
             }
-            if (Fluff2_Property.HasBeenSet)
+            if (Fluff2_IsSet)
             {
                 ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
             }
@@ -704,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLevel();
+                            item.Level = default(Int16);
                         }
                     }
                     catch (Exception ex)
@@ -730,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFluff();
+                            item.Fluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -763,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCount();
+                            item.Count = default(Int16);
                         }
                     }
                     catch (Exception ex)
@@ -789,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFluff2();
+                            item.Fluff2 = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -825,296 +700,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Int16
-        protected ObjectCentralizationSubscriptions<Int16> _Int16_subscriptions;
-        Int16 IPropertySupporter<Int16>.Get(int index)
-        {
-            return GetInt16(index: index);
-        }
-
-        protected Int16 GetInt16(int index)
-        {
-            switch ((LeveledEntry_FieldIndex)index)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                    return Level;
-                case LeveledEntry_FieldIndex.Count:
-                    return Count;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int16>.Set(
-            int index,
-            Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt16(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt16(
-            int index,
-            Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((LeveledEntry_FieldIndex)index)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                    SetLevel(item, hasBeenSet, cmds);
-                    break;
-                case LeveledEntry_FieldIndex.Count:
-                    SetCount(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int16>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int16>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int16>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt16(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt16(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((LeveledEntry_FieldIndex)index)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                    SetLevel(
-                        item: default(Int16),
-                        hasBeenSet: false);
-                    break;
-                case LeveledEntry_FieldIndex.Count:
-                    SetCount(
-                        item: default(Int16),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int16>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int16> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int16_subscriptions == null)
-            {
-                _Int16_subscriptions = new ObjectCentralizationSubscriptions<Int16>();
-            }
-            _Int16_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int16>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int16_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int16>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int16 IPropertySupporter<Int16>.DefaultValue(int index)
-        {
-            return DefaultValueInt16(index: index);
-        }
-
-        protected Int16 DefaultValueInt16(int index)
-        {
-            switch ((LeveledEntry_FieldIndex)index)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                case LeveledEntry_FieldIndex.Count:
-                    return default(Int16);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((LeveledEntry_FieldIndex)index)
-            {
-                case LeveledEntry_FieldIndex.Fluff:
-                    return Fluff;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    return Fluff2;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((LeveledEntry_FieldIndex)index)
-            {
-                case LeveledEntry_FieldIndex.Fluff:
-                    SetFluff(item, hasBeenSet, cmds);
-                    break;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    SetFluff2(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((LeveledEntry_FieldIndex)index)
-            {
-                case LeveledEntry_FieldIndex.Fluff:
-                    SetFluff(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    SetFluff2(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((LeveledEntry_FieldIndex)index)
-            {
-                case LeveledEntry_FieldIndex.Fluff:
-                case LeveledEntry_FieldIndex.Fluff2:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LeveledEntry_Registration.TRIGGERING_RECORD_TYPE;
@@ -1174,21 +759,20 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (ret.StructCustom)
                 {
-                    object structUnsubber = new object();
+                    CompositeDisposable structUnsubber = new CompositeDisposable();
                     Action unsubAction = () =>
                     {
-                        ret.Count_Property.Unsubscribe(structUnsubber);
-                        ret.Fluff2_Property.Unsubscribe(structUnsubber);
+                        structUnsubber.Dispose();
                         ret.StructCustom = false;
                     };
-                    ret.Count_Property.Subscribe(
-                        owner: structUnsubber,
-                        callback: unsubAction,
-                        cmds: NotifyingSubscribeParameters.NoFire);
-                    ret.Fluff2_Property.Subscribe(
-                        owner: structUnsubber,
-                        callback: unsubAction,
-                        cmds: NotifyingSubscribeParameters.NoFire);
+                    structUnsubber.Add(
+                        ret.WhenAny(x => x.Count)
+                        .Skip(1)
+                        .Subscribe(unsubAction));
+                    structUnsubber.Add(
+                        ret.WhenAny(x => x.Fluff2)
+                        .Skip(1)
+                        .Subscribe(unsubAction));
                 }
             }
             catch (Exception ex)
@@ -1369,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetLevel();
+                    item.Level = default(Int16);
                 }
             }
             catch (Exception ex)
@@ -1393,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFluff();
+                    item.Fluff = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -1423,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetCount();
+                    item.Count = default(Int16);
                 }
             }
             catch (Exception ex)
@@ -1448,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFluff2();
+                    item.Fluff2 = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -1595,14 +1179,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LeveledEntry_FieldIndex.Level:
-                    this.SetLevel(
-                        (Int16)obj,
-                        cmds: cmds);
+                    this.Level = (Int16)obj;
                     break;
                 case LeveledEntry_FieldIndex.Fluff:
-                    this.SetFluff(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Fluff = (Byte[])obj;
                     break;
                 case LeveledEntry_FieldIndex.Reference:
                     this.Reference_Property.Set(
@@ -1610,14 +1190,10 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case LeveledEntry_FieldIndex.Count:
-                    this.SetCount(
-                        (Int16)obj,
-                        cmds: cmds);
+                    this.Count = (Int16)obj;
                     break;
                 case LeveledEntry_FieldIndex.Fluff2:
-                    this.SetFluff2(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Fluff2 = (Byte[])obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1657,14 +1233,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LeveledEntry_FieldIndex.Level:
-                    obj.SetLevel(
-                        (Int16)pair.Value,
-                        cmds: null);
+                    obj.Level = (Int16)pair.Value;
                     break;
                 case LeveledEntry_FieldIndex.Fluff:
-                    obj.SetFluff(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Fluff = (Byte[])pair.Value;
                     break;
                 case LeveledEntry_FieldIndex.Reference:
                     obj.Reference_Property.Set(
@@ -1672,14 +1244,10 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case LeveledEntry_FieldIndex.Count:
-                    obj.SetCount(
-                        (Int16)pair.Value,
-                        cmds: null);
+                    obj.Count = (Int16)pair.Value;
                     break;
                 case LeveledEntry_FieldIndex.Fluff2:
-                    obj.SetFluff2(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Fluff2 = (Byte[])pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1698,17 +1266,19 @@ namespace Mutagen.Bethesda.Oblivion
         where T : Bethesda.MajorRecord, ILoquiObject<T>
     {
         new Int16 Level { get; set; }
-        new INotifyingItem<Int16> Level_Property { get; }
 
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
 
         new T Reference { get; set; }
         new Int16 Count { get; set; }
-        new INotifyingSetItem<Int16> Count_Property { get; }
+        new bool Count_IsSet { get; set; }
+        void Count_Set(Int16 item, bool hasBeenSet = true);
+        void Count_Unset();
 
         new Byte[] Fluff2 { get; set; }
-        new INotifyingSetItem<Byte[]> Fluff2_Property { get; }
+        new bool Fluff2_IsSet { get; set; }
+        void Fluff2_Set(Byte[] item, bool hasBeenSet = true);
+        void Fluff2_Unset();
 
     }
 
@@ -1717,12 +1287,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Level
         Int16 Level { get; }
-        INotifyingItemGetter<Int16> Level_Property { get; }
 
         #endregion
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region Reference
@@ -1732,12 +1300,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Count
         Int16 Count { get; }
-        INotifyingSetItemGetter<Int16> Count_Property { get; }
+        bool Count_IsSet { get; }
 
         #endregion
         #region Fluff2
         Byte[] Fluff2 { get; }
-        INotifyingSetItemGetter<Byte[]> Fluff2_Property { get; }
+        bool Fluff2_IsSet { get; }
 
         #endregion
 
@@ -2001,9 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Level);
                 try
                 {
-                    item.Level_Property.Set(
-                        value: rhs.Level,
-                        cmds: cmds);
+                    item.Level = rhs.Level;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2020,9 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff);
                 try
                 {
-                    item.Fluff_Property.Set(
-                        value: rhs.Fluff,
-                        cmds: cmds);
+                    item.Fluff = rhs.Fluff;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2058,9 +1622,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Count);
                 try
                 {
-                    item.Count_Property.SetToWithDefault(
-                        rhs: rhs.Count_Property,
-                        def: def?.Count_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Count,
+                        rhsHasBeenSet: rhs.Count_IsSet,
+                        defItem: def?.Count ?? default(Int16),
+                        defHasBeenSet: def?.Count_IsSet ?? false,
+                        outRhsItem: out var rhsCountItem,
+                        outDefItem: out var defCountItem))
+                    {
+                        item.Count = rhsCountItem;
+                    }
+                    else
+                    {
+                        item.Count_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2077,9 +1652,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff2);
                 try
                 {
-                    item.Fluff2_Property.SetToWithDefault(
-                        rhs: rhs.Fluff2_Property,
-                        def: def?.Fluff2_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Fluff2,
+                        rhsHasBeenSet: rhs.Fluff2_IsSet,
+                        defItem: def?.Fluff2 ?? default(Byte[]),
+                        defHasBeenSet: def?.Fluff2_IsSet ?? false,
+                        outRhsItem: out var rhsFluff2Item,
+                        outDefItem: out var defFluff2Item))
+                    {
+                        item.Fluff2 = rhsFluff2Item;
+                    }
+                    else
+                    {
+                        item.Fluff2_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2111,10 +1697,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case LeveledEntry_FieldIndex.Count:
-                    obj.Count_Property.HasBeenSet = on;
+                    obj.Count_IsSet = on;
                     break;
                 case LeveledEntry_FieldIndex.Fluff2:
-                    obj.Fluff2_Property.HasBeenSet = on;
+                    obj.Fluff2_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2137,13 +1723,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Fluff = default(Byte[]);
                     break;
                 case LeveledEntry_FieldIndex.Reference:
-                    obj.Reference = default(FormIDLink<T>);
+                    obj.Reference_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case LeveledEntry_FieldIndex.Count:
-                    obj.Count_Property.Unset(cmds);
+                    obj.Count_Unset();
                     break;
                 case LeveledEntry_FieldIndex.Fluff2:
-                    obj.Fluff2_Property.Unset(cmds);
+                    obj.Fluff2_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2163,9 +1749,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledEntry_FieldIndex.Reference:
                     return true;
                 case LeveledEntry_FieldIndex.Count:
-                    return obj.Count_Property.HasBeenSet;
+                    return obj.Count_IsSet;
                 case LeveledEntry_FieldIndex.Fluff2:
-                    return obj.Fluff2_Property.HasBeenSet;
+                    return obj.Fluff2_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2201,9 +1787,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Level = default(Int16);
             item.Fluff = default(Byte[]);
-            item.Reference = default(FormIDLink<T>);
-            item.Count_Property.Unset(cmds.ToUnsetParams());
-            item.Fluff2_Property.Unset(cmds.ToUnsetParams());
+            item.Reference_Property.Unset(cmds.ToUnsetParams());
+            item.Count_Unset();
+            item.Fluff2_Unset();
         }
 
         public static LeveledEntry_Mask<bool> GetEqualsMask<T>(
@@ -2226,8 +1812,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Level = item.Level == rhs.Level;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
             ret.Reference = item.Reference == rhs.Reference;
-            ret.Count = item.Count_Property.Equals(rhs.Count_Property, (l, r) => l == r);
-            ret.Fluff2 = item.Fluff2_Property.Equals(rhs.Fluff2_Property, (l, r) => l.EqualsFast(r));
+            ret.Count = item.Count_IsSet == rhs.Count_IsSet && item.Count == rhs.Count;
+            ret.Fluff2 = item.Fluff2_IsSet == rhs.Fluff2_IsSet && item.Fluff2.EqualsFast(rhs.Fluff2);
         }
 
         public static string ToString<T>(
@@ -2288,8 +1874,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LeveledEntry_Mask<bool?> checkMask)
             where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
-            if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_Property.HasBeenSet) return false;
-            if (checkMask.Fluff2.HasValue && checkMask.Fluff2.Value != item.Fluff2_Property.HasBeenSet) return false;
+            if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_IsSet) return false;
+            if (checkMask.Fluff2.HasValue && checkMask.Fluff2.Value != item.Fluff2_IsSet) return false;
             return true;
         }
 
@@ -2300,8 +1886,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Level = true;
             ret.Fluff = true;
             ret.Reference = true;
-            ret.Count = item.Count_Property.HasBeenSet;
-            ret.Fluff2 = item.Fluff2_Property.HasBeenSet;
+            ret.Count = item.Count_IsSet;
+            ret.Fluff2 = item.Fluff2_IsSet;
             return ret;
         }
 
@@ -2347,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Level),
-                    item: item.Level_Property,
+                    item: item.Level,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Level,
                     errorMask: errorMask);
             }
@@ -2356,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Fluff),
-                    item: item.Fluff_Property,
+                    item: item.Fluff,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
@@ -2369,23 +1955,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
                     errorMask: errorMask);
             }
-            if (item.Count_Property.HasBeenSet
+            if (item.Count_IsSet
                 && (translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Count) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Count),
-                    item: item.Count_Property,
+                    item: item.Count,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Count,
                     errorMask: errorMask);
             }
-            if (item.Fluff2_Property.HasBeenSet
+            if (item.Fluff2_IsSet
                 && (translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Fluff2) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Fluff2),
-                    item: item.Fluff2_Property,
+                    item: item.Fluff2,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
                     errorMask: errorMask);
             }
@@ -2442,12 +2028,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Level_Property,
+                item: item.Level,
                 fieldIndex: (int)LeveledEntry_FieldIndex.Level,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff_Property,
+                item: item.Fluff,
                 fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
@@ -2455,16 +2041,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Reference_Property,
                 fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Count_Property,
-                fieldIndex: (int)LeveledEntry_FieldIndex.Count,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Fluff2_Property,
-                fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
-                errorMask: errorMask);
+            if (item.Count_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Count,
+                    fieldIndex: (int)LeveledEntry_FieldIndex.Count,
+                    errorMask: errorMask);
+            }
+            if (item.Fluff2_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Fluff2,
+                    fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
+                    errorMask: errorMask);
+            }
         }
 
         #endregion

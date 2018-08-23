@@ -9,13 +9,13 @@ namespace Mutagen.Bethesda.Binary
         public readonly static DateTimeBinaryTranslation Instance = new DateTimeBinaryTranslation();
         public override int? ExpectedLength => 4;
 
-        protected override DateTime ParseValue(MutagenFrame reader)
+        public override DateTime ParseValue(MutagenFrame reader)
         {
             reader.Reader.ReadBytes(4);
             return DateTime.Now;
         }
 
-        protected override void WriteValue(MutagenWriter writer, DateTime item)
+        public override void WriteValue(MutagenWriter writer, DateTime item)
         {
             writer.Write(new byte[4]);
         }

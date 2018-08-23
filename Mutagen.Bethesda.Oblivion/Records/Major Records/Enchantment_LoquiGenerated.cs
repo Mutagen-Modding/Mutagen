@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -35,10 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Enchantment>,
         ILoquiObjectSetter,
         INamed,
-        IPropertySupporter<String>,
-        IPropertySupporter<Enchantment.EnchantmentType>,
-        IPropertySupporter<UInt32>,
-        IPropertySupporter<Enchantment.Flag>,
         IEquatable<Enchantment>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -54,244 +52,62 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<Enchantment, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Enchantment, String>(this, (int)Enchantment_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Enchantment_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool IEnchantmentGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IEnchantmentGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Enchantment_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Enchantment_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IEnchantment.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IEnchantmentGetter.Name_Property => this.Name_Property;
         #endregion
         #region Type
-        protected Enchantment.EnchantmentType _Type;
-        protected PropertyForwarder<Enchantment, Enchantment.EnchantmentType> _TypeForwarder;
-        public INotifyingSetItem<Enchantment.EnchantmentType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<Enchantment, Enchantment.EnchantmentType>(this, (int)Enchantment_FieldIndex.Type));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Enchantment.EnchantmentType _Type;
         public Enchantment.EnchantmentType Type
         {
             get => this._Type;
-            set => this.SetType(value);
+            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
         }
-        protected void SetType(
-            Enchantment.EnchantmentType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Enchantment_FieldIndex.Type];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Type == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Enchantment_FieldIndex.Type] = hasBeenSet;
-            }
-            if (_EnchantmentEnchantmentType_subscriptions != null)
-            {
-                var tmp = Type;
-                _Type = item;
-                _EnchantmentEnchantmentType_subscriptions.FireSubscriptions(
-                    index: (int)Enchantment_FieldIndex.Type,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Type = item;
-            }
-        }
-        protected void UnsetType()
-        {
-            _hasBeenSetTracker[(int)Enchantment_FieldIndex.Type] = false;
-            Type = default(Enchantment.EnchantmentType);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Enchantment.EnchantmentType> IEnchantment.Type_Property => this.Type_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Enchantment.EnchantmentType> IEnchantmentGetter.Type_Property => this.Type_Property;
         #endregion
         #region ChargeAmount
-        protected UInt32 _ChargeAmount;
-        protected PropertyForwarder<Enchantment, UInt32> _ChargeAmountForwarder;
-        public INotifyingSetItem<UInt32> ChargeAmount_Property => _ChargeAmountForwarder ?? (_ChargeAmountForwarder = new PropertyForwarder<Enchantment, UInt32>(this, (int)Enchantment_FieldIndex.ChargeAmount));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _ChargeAmount;
         public UInt32 ChargeAmount
         {
             get => this._ChargeAmount;
-            set => this.SetChargeAmount(value);
+            set => this.RaiseAndSetIfChanged(ref this._ChargeAmount, value, nameof(ChargeAmount));
         }
-        protected void SetChargeAmount(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Enchantment_FieldIndex.ChargeAmount];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ChargeAmount == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Enchantment_FieldIndex.ChargeAmount] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = ChargeAmount;
-                _ChargeAmount = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)Enchantment_FieldIndex.ChargeAmount,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ChargeAmount = item;
-            }
-        }
-        protected void UnsetChargeAmount()
-        {
-            _hasBeenSetTracker[(int)Enchantment_FieldIndex.ChargeAmount] = false;
-            ChargeAmount = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IEnchantment.ChargeAmount_Property => this.ChargeAmount_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IEnchantmentGetter.ChargeAmount_Property => this.ChargeAmount_Property;
         #endregion
         #region EnchantCost
-        protected UInt32 _EnchantCost;
-        protected PropertyForwarder<Enchantment, UInt32> _EnchantCostForwarder;
-        public INotifyingSetItem<UInt32> EnchantCost_Property => _EnchantCostForwarder ?? (_EnchantCostForwarder = new PropertyForwarder<Enchantment, UInt32>(this, (int)Enchantment_FieldIndex.EnchantCost));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _EnchantCost;
         public UInt32 EnchantCost
         {
             get => this._EnchantCost;
-            set => this.SetEnchantCost(value);
+            set => this.RaiseAndSetIfChanged(ref this._EnchantCost, value, nameof(EnchantCost));
         }
-        protected void SetEnchantCost(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Enchantment_FieldIndex.EnchantCost];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EnchantCost == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Enchantment_FieldIndex.EnchantCost] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = EnchantCost;
-                _EnchantCost = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)Enchantment_FieldIndex.EnchantCost,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _EnchantCost = item;
-            }
-        }
-        protected void UnsetEnchantCost()
-        {
-            _hasBeenSetTracker[(int)Enchantment_FieldIndex.EnchantCost] = false;
-            EnchantCost = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IEnchantment.EnchantCost_Property => this.EnchantCost_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IEnchantmentGetter.EnchantCost_Property => this.EnchantCost_Property;
         #endregion
         #region Flags
-        protected Enchantment.Flag _Flags;
-        protected PropertyForwarder<Enchantment, Enchantment.Flag> _FlagsForwarder;
-        public INotifyingSetItem<Enchantment.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Enchantment, Enchantment.Flag>(this, (int)Enchantment_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Enchantment.Flag _Flags;
         public Enchantment.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            Enchantment.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Enchantment_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Enchantment_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_EnchantmentFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _EnchantmentFlag_subscriptions.FireSubscriptions(
-                    index: (int)Enchantment_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)Enchantment_FieldIndex.Flags] = false;
-            Flags = default(Enchantment.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Enchantment.Flag> IEnchantment.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Enchantment.Flag> IEnchantmentGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -370,8 +186,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
@@ -390,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
@@ -730,7 +546,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -756,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetType();
+                            item.Type = default(Enchantment.EnchantmentType);
                         }
                     }
                     catch (Exception ex)
@@ -782,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetChargeAmount();
+                            item.ChargeAmount = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -808,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEnchantCost();
+                            item.EnchantCost = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -834,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Enchantment.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -905,567 +721,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Name:
-                    return Name;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Name:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Enchantment.EnchantmentType
-        protected ObjectCentralizationSubscriptions<Enchantment.EnchantmentType> _EnchantmentEnchantmentType_subscriptions;
-        Enchantment.EnchantmentType IPropertySupporter<Enchantment.EnchantmentType>.Get(int index)
-        {
-            return GetEnchantmentEnchantmentType(index: index);
-        }
-
-        protected Enchantment.EnchantmentType GetEnchantmentEnchantmentType(int index)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Type:
-                    return Type;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Enchantment.EnchantmentType: {index}");
-            }
-        }
-
-        void IPropertySupporter<Enchantment.EnchantmentType>.Set(
-            int index,
-            Enchantment.EnchantmentType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetEnchantmentEnchantmentType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetEnchantmentEnchantmentType(
-            int index,
-            Enchantment.EnchantmentType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Type:
-                    SetType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Enchantment.EnchantmentType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Enchantment.EnchantmentType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Enchantment.EnchantmentType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Enchantment.EnchantmentType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetEnchantmentEnchantmentType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetEnchantmentEnchantmentType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Type:
-                    SetType(
-                        item: default(Enchantment.EnchantmentType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Enchantment.EnchantmentType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Enchantment.EnchantmentType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Enchantment.EnchantmentType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_EnchantmentEnchantmentType_subscriptions == null)
-            {
-                _EnchantmentEnchantmentType_subscriptions = new ObjectCentralizationSubscriptions<Enchantment.EnchantmentType>();
-            }
-            _EnchantmentEnchantmentType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Enchantment.EnchantmentType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _EnchantmentEnchantmentType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Enchantment.EnchantmentType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Enchantment.EnchantmentType IPropertySupporter<Enchantment.EnchantmentType>.DefaultValue(int index)
-        {
-            return DefaultValueEnchantmentEnchantmentType(index: index);
-        }
-
-        protected Enchantment.EnchantmentType DefaultValueEnchantmentEnchantmentType(int index)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Type:
-                    return default(Enchantment.EnchantmentType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Enchantment.EnchantmentType: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter UInt32
-        UInt32 IPropertySupporter<UInt32>.Get(int index)
-        {
-            return GetUInt32(index: index);
-        }
-
-        protected override UInt32 GetUInt32(int index)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.ChargeAmount:
-                    return ChargeAmount;
-                case Enchantment_FieldIndex.EnchantCost:
-                    return EnchantCost;
-                default:
-                    return base.GetUInt32(index: index);
-            }
-        }
-
-        void IPropertySupporter<UInt32>.Set(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetUInt32(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.ChargeAmount:
-                    SetChargeAmount(item, hasBeenSet, cmds);
-                    break;
-                case Enchantment_FieldIndex.EnchantCost:
-                    SetEnchantCost(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetUInt32(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetUInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.ChargeAmount:
-                    SetChargeAmount(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                case Enchantment_FieldIndex.EnchantCost:
-                    SetEnchantCost(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetUInt32(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt32_subscriptions == null)
-            {
-                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
-            }
-            _UInt32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
-        {
-            return DefaultValueUInt32(index: index);
-        }
-
-        protected override UInt32 DefaultValueUInt32(int index)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.ChargeAmount:
-                case Enchantment_FieldIndex.EnchantCost:
-                    return default(UInt32);
-                default:
-                    return base.DefaultValueUInt32(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Enchantment.Flag
-        protected ObjectCentralizationSubscriptions<Enchantment.Flag> _EnchantmentFlag_subscriptions;
-        Enchantment.Flag IPropertySupporter<Enchantment.Flag>.Get(int index)
-        {
-            return GetEnchantmentFlag(index: index);
-        }
-
-        protected Enchantment.Flag GetEnchantmentFlag(int index)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Enchantment.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<Enchantment.Flag>.Set(
-            int index,
-            Enchantment.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetEnchantmentFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetEnchantmentFlag(
-            int index,
-            Enchantment.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Enchantment.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Enchantment.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Enchantment.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Enchantment.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetEnchantmentFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetEnchantmentFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(Enchantment.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Enchantment.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Enchantment.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Enchantment.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_EnchantmentFlag_subscriptions == null)
-            {
-                _EnchantmentFlag_subscriptions = new ObjectCentralizationSubscriptions<Enchantment.Flag>();
-            }
-            _EnchantmentFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Enchantment.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _EnchantmentFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Enchantment.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Enchantment.Flag IPropertySupporter<Enchantment.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueEnchantmentFlag(index: index);
-        }
-
-        protected Enchantment.Flag DefaultValueEnchantmentFlag(int index)
-        {
-            switch ((Enchantment_FieldIndex)index)
-            {
-                case Enchantment_FieldIndex.Flags:
-                    return default(Enchantment.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Enchantment.Flag: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Enchantment_Registration.TRIGGERING_RECORD_TYPE;
@@ -1694,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1727,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetType();
+                                item.Type = default(Enchantment.EnchantmentType);
                             }
                         }
                         catch (Exception ex)
@@ -1751,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetChargeAmount();
+                                item.ChargeAmount = default(UInt32);
                             }
                         }
                         catch (Exception ex)
@@ -1775,7 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetEnchantCost();
+                                item.EnchantCost = default(UInt32);
                             }
                         }
                         catch (Exception ex)
@@ -1799,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFlags();
+                                item.Flags = default(Enchantment.Flag);
                             }
                         }
                         catch (Exception ex)
@@ -1943,29 +1198,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Enchantment_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 case Enchantment_FieldIndex.Type:
-                    this.SetType(
-                        (Enchantment.EnchantmentType)obj,
-                        cmds: cmds);
+                    this.Type = (Enchantment.EnchantmentType)obj;
                     break;
                 case Enchantment_FieldIndex.ChargeAmount:
-                    this.SetChargeAmount(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.ChargeAmount = (UInt32)obj;
                     break;
                 case Enchantment_FieldIndex.EnchantCost:
-                    this.SetEnchantCost(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.EnchantCost = (UInt32)obj;
                     break;
                 case Enchantment_FieldIndex.Flags:
-                    this.SetFlags(
-                        (Enchantment.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (Enchantment.Flag)obj;
                     break;
                 case Enchantment_FieldIndex.Effects:
                     this._Effects.SetTo((IEnumerable<Effect>)obj, cmds);
@@ -2002,29 +1247,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Enchantment_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 case Enchantment_FieldIndex.Type:
-                    obj.SetType(
-                        (Enchantment.EnchantmentType)pair.Value,
-                        cmds: null);
+                    obj.Type = (Enchantment.EnchantmentType)pair.Value;
                     break;
                 case Enchantment_FieldIndex.ChargeAmount:
-                    obj.SetChargeAmount(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.ChargeAmount = (UInt32)pair.Value;
                     break;
                 case Enchantment_FieldIndex.EnchantCost:
-                    obj.SetEnchantCost(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.EnchantCost = (UInt32)pair.Value;
                     break;
                 case Enchantment_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (Enchantment.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (Enchantment.Flag)pair.Value;
                     break;
                 case Enchantment_FieldIndex.Effects:
                     obj._Effects.SetTo((IEnumerable<Effect>)pair.Value, null);
@@ -2045,19 +1280,17 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEnchantment : IEnchantmentGetter, IMajorRecord, ILoquiClass<IEnchantment, IEnchantmentGetter>, ILoquiClass<Enchantment, IEnchantmentGetter>
     {
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
         new Enchantment.EnchantmentType Type { get; set; }
-        new INotifyingItem<Enchantment.EnchantmentType> Type_Property { get; }
 
         new UInt32 ChargeAmount { get; set; }
-        new INotifyingItem<UInt32> ChargeAmount_Property { get; }
 
         new UInt32 EnchantCost { get; set; }
-        new INotifyingItem<UInt32> EnchantCost_Property { get; }
 
         new Enchantment.Flag Flags { get; set; }
-        new INotifyingItem<Enchantment.Flag> Flags_Property { get; }
 
         new INotifyingList<Effect> Effects { get; }
     }
@@ -2066,27 +1299,23 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
         #region Type
         Enchantment.EnchantmentType Type { get; }
-        INotifyingItemGetter<Enchantment.EnchantmentType> Type_Property { get; }
 
         #endregion
         #region ChargeAmount
         UInt32 ChargeAmount { get; }
-        INotifyingItemGetter<UInt32> ChargeAmount_Property { get; }
 
         #endregion
         #region EnchantCost
         UInt32 EnchantCost { get; }
-        INotifyingItemGetter<UInt32> EnchantCost_Property { get; }
 
         #endregion
         #region Flags
         Enchantment.Flag Flags { get; }
-        INotifyingItemGetter<Enchantment.Flag> Flags_Property { get; }
 
         #endregion
         #region Effects
@@ -2371,9 +1600,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2390,9 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
                 try
                 {
-                    item.Type_Property.Set(
-                        value: rhs.Type,
-                        cmds: cmds);
+                    item.Type = rhs.Type;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2409,9 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
                 try
                 {
-                    item.ChargeAmount_Property.Set(
-                        value: rhs.ChargeAmount,
-                        cmds: cmds);
+                    item.ChargeAmount = rhs.ChargeAmount;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2428,9 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
                 try
                 {
-                    item.EnchantCost_Property.Set(
-                        value: rhs.EnchantCost,
-                        cmds: cmds);
+                    item.EnchantCost = rhs.EnchantCost;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2447,9 +1681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2477,7 +1709,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Effect);
                                     return Effect.Copy(
                                         r,
                                         copyMask?.Effects?.Specific,
@@ -2518,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Enchantment_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 case Enchantment_FieldIndex.Effects:
                     obj.Effects.HasBeenSet = on;
@@ -2538,7 +1769,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Enchantment_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 case Enchantment_FieldIndex.Type:
                     obj.Type = default(Enchantment.EnchantmentType);
@@ -2574,7 +1805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Flags:
                     return true;
                 case Enchantment_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 case Enchantment_FieldIndex.Effects:
                     return obj.Effects.HasBeenSet;
                 default:
@@ -2610,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantment item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Name_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Unset();
             item.Type = default(Enchantment.EnchantmentType);
             item.ChargeAmount = default(UInt32);
             item.EnchantCost = default(UInt32);
@@ -2633,7 +1864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Type = item.Type == rhs.Type;
             ret.ChargeAmount = item.ChargeAmount == rhs.ChargeAmount;
             ret.EnchantCost = item.EnchantCost == rhs.EnchantCost;
@@ -2739,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IEnchantmentGetter item,
             Enchantment_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
             return true;
         }
@@ -2747,7 +1978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Enchantment_Mask<bool> GetHasBeenSetMask(IEnchantmentGetter item)
         {
             var ret = new Enchantment_Mask<bool>();
-            ret.Name = item.Name_Property.HasBeenSet;
+            ret.Name = item.Name_IsSet;
             ret.Type = true;
             ret.ChargeAmount = true;
             ret.EnchantCost = true;
@@ -2814,13 +2045,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Enchantment");
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)Enchantment_FieldIndex.Name,
                     errorMask: errorMask);
             }
@@ -2829,7 +2060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
                     node: elem,
                     name: nameof(item.Type),
-                    item: item.Type_Property,
+                    item: item.Type,
                     fieldIndex: (int)Enchantment_FieldIndex.Type,
                     errorMask: errorMask);
             }
@@ -2838,7 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ChargeAmount),
-                    item: item.ChargeAmount_Property,
+                    item: item.ChargeAmount,
                     fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
                     errorMask: errorMask);
             }
@@ -2847,7 +2078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.EnchantCost),
-                    item: item.EnchantCost_Property,
+                    item: item.EnchantCost,
                     fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
                     errorMask: errorMask);
             }
@@ -2856,7 +2087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)Enchantment_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -2939,47 +2170,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)Enchantment_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Enchantment_Registration.FULL_HEADER),
-                nullable: false);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)Enchantment_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Enchantment_Registration.FULL_HEADER),
+                    nullable: false);
+            }
             if (item.ENITDataTypeState.HasFlag(Enchantment.ENITDataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENIT_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
                         writer,
-                        item.Type_Property,
+                        item.Type,
                         length: 4,
                         fieldIndex: (int)Enchantment_FieldIndex.Type,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ChargeAmount_Property,
+                        item: item.ChargeAmount,
                         fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.EnchantCost_Property,
+                        item: item.EnchantCost,
                         fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
                         writer,
-                        item.Flags_Property,
+                        item.Flags,
                         length: 4,
                         fieldIndex: (int)Enchantment_FieldIndex.Flags,
                         errorMask: errorMask);
                 }
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
-                writer: writer,
-                items: item.Effects,
-                fieldIndex: (int)Enchantment_FieldIndex.Effects,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<Effect>.Instance.Write);
+            if (item.Effects.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
+                    writer: writer,
+                    items: item.Effects,
+                    fieldIndex: (int)Enchantment_FieldIndex.Effects,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<Effect>.Instance.Write);
+            }
         }
 
         #endregion

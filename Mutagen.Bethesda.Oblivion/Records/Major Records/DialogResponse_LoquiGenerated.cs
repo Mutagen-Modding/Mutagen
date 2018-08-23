@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,15 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class DialogResponse : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IDialogResponse,
         ILoquiObject<DialogResponse>,
         ILoquiObjectSetter,
-        IPropertySupporter<EmotionType>,
-        IPropertySupporter<Int32>,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<Byte>,
-        IPropertySupporter<String>,
         IEquatable<DialogResponse>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -53,350 +50,110 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Emotion
-        protected EmotionType _Emotion;
-        protected PropertyForwarder<DialogResponse, EmotionType> _EmotionForwarder;
-        public INotifyingSetItem<EmotionType> Emotion_Property => _EmotionForwarder ?? (_EmotionForwarder = new PropertyForwarder<DialogResponse, EmotionType>(this, (int)DialogResponse_FieldIndex.Emotion));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private EmotionType _Emotion;
         public EmotionType Emotion
         {
             get => this._Emotion;
-            set => this.SetEmotion(value);
+            set => this.RaiseAndSetIfChanged(ref this._Emotion, value, nameof(Emotion));
         }
-        protected void SetEmotion(
-            EmotionType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Emotion];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Emotion == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Emotion] = hasBeenSet;
-            }
-            if (_EmotionType_subscriptions != null)
-            {
-                var tmp = Emotion;
-                _Emotion = item;
-                _EmotionType_subscriptions.FireSubscriptions(
-                    index: (int)DialogResponse_FieldIndex.Emotion,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Emotion = item;
-            }
-        }
-        protected void UnsetEmotion()
-        {
-            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Emotion] = false;
-            Emotion = default(EmotionType);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<EmotionType> IDialogResponse.Emotion_Property => this.Emotion_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<EmotionType> IDialogResponseGetter.Emotion_Property => this.Emotion_Property;
         #endregion
         #region EmotionValue
-        protected Int32 _EmotionValue;
-        protected PropertyForwarder<DialogResponse, Int32> _EmotionValueForwarder;
-        public INotifyingSetItem<Int32> EmotionValue_Property => _EmotionValueForwarder ?? (_EmotionValueForwarder = new PropertyForwarder<DialogResponse, Int32>(this, (int)DialogResponse_FieldIndex.EmotionValue));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _EmotionValue;
         public Int32 EmotionValue
         {
             get => this._EmotionValue;
-            set => this.SetEmotionValue(value);
+            set => this.RaiseAndSetIfChanged(ref this._EmotionValue, value, nameof(EmotionValue));
         }
-        protected void SetEmotionValue(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogResponse_FieldIndex.EmotionValue];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && EmotionValue == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogResponse_FieldIndex.EmotionValue] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = EmotionValue;
-                _EmotionValue = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)DialogResponse_FieldIndex.EmotionValue,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _EmotionValue = item;
-            }
-        }
-        protected void UnsetEmotionValue()
-        {
-            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.EmotionValue] = false;
-            EmotionValue = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IDialogResponse.EmotionValue_Property => this.EmotionValue_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IDialogResponseGetter.EmotionValue_Property => this.EmotionValue_Property;
         #endregion
         #region Fluff1
-        protected Byte[] _Fluff1 = new byte[4];
-        protected PropertyForwarder<DialogResponse, Byte[]> _Fluff1Forwarder;
-        public INotifyingSetItem<Byte[]> Fluff1_Property => _Fluff1Forwarder ?? (_Fluff1Forwarder = new PropertyForwarder<DialogResponse, Byte[]>(this, (int)DialogResponse_FieldIndex.Fluff1));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Fluff1 = new byte[4];
         public Byte[] Fluff1
         {
-            get => this._Fluff1;
-            set => this.SetFluff1(value);
-        }
-        protected void SetFluff1(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Fluff1;
+            set
             {
-                item = new byte[4];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Fluff1];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff1, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Fluff1] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Fluff1;
-                _Fluff1 = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)DialogResponse_FieldIndex.Fluff1,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Fluff1 = item;
+                this._Fluff1 = value;
+                if (value == null)
+                {
+                    this._Fluff1 = new byte[4];
+                }
             }
         }
-        protected void UnsetFluff1()
-        {
-            SetFluff1(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IDialogResponse.Fluff1_Property => this.Fluff1_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IDialogResponseGetter.Fluff1_Property => this.Fluff1_Property;
         #endregion
         #region ResponseNumber
-        protected Byte _ResponseNumber;
-        protected PropertyForwarder<DialogResponse, Byte> _ResponseNumberForwarder;
-        public INotifyingSetItem<Byte> ResponseNumber_Property => _ResponseNumberForwarder ?? (_ResponseNumberForwarder = new PropertyForwarder<DialogResponse, Byte>(this, (int)DialogResponse_FieldIndex.ResponseNumber));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _ResponseNumber;
         public Byte ResponseNumber
         {
             get => this._ResponseNumber;
-            set => this.SetResponseNumber(value);
+            set => this.RaiseAndSetIfChanged(ref this._ResponseNumber, value, nameof(ResponseNumber));
         }
-        protected void SetResponseNumber(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseNumber];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ResponseNumber == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseNumber] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = ResponseNumber;
-                _ResponseNumber = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)DialogResponse_FieldIndex.ResponseNumber,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ResponseNumber = item;
-            }
-        }
-        protected void UnsetResponseNumber()
-        {
-            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseNumber] = false;
-            ResponseNumber = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IDialogResponse.ResponseNumber_Property => this.ResponseNumber_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IDialogResponseGetter.ResponseNumber_Property => this.ResponseNumber_Property;
         #endregion
         #region Fluff2
-        protected Byte[] _Fluff2 = new byte[3];
-        protected PropertyForwarder<DialogResponse, Byte[]> _Fluff2Forwarder;
-        public INotifyingSetItem<Byte[]> Fluff2_Property => _Fluff2Forwarder ?? (_Fluff2Forwarder = new PropertyForwarder<DialogResponse, Byte[]>(this, (int)DialogResponse_FieldIndex.Fluff2));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Fluff2 = new byte[3];
         public Byte[] Fluff2
         {
-            get => this._Fluff2;
-            set => this.SetFluff2(value);
-        }
-        protected void SetFluff2(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Fluff2;
+            set
             {
-                item = new byte[3];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Fluff2];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff2, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogResponse_FieldIndex.Fluff2] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Fluff2;
-                _Fluff2 = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)DialogResponse_FieldIndex.Fluff2,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Fluff2 = item;
+                this._Fluff2 = value;
+                if (value == null)
+                {
+                    this._Fluff2 = new byte[3];
+                }
             }
         }
-        protected void UnsetFluff2()
-        {
-            SetFluff2(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IDialogResponse.Fluff2_Property => this.Fluff2_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IDialogResponseGetter.Fluff2_Property => this.Fluff2_Property;
         #endregion
         #region ResponseText
-        protected String _ResponseText;
-        protected PropertyForwarder<DialogResponse, String> _ResponseTextForwarder;
-        public INotifyingSetItem<String> ResponseText_Property => _ResponseTextForwarder ?? (_ResponseTextForwarder = new PropertyForwarder<DialogResponse, String>(this, (int)DialogResponse_FieldIndex.ResponseText));
+        public bool ResponseText_IsSet
+        {
+            get => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)DialogResponse_FieldIndex.ResponseText, nameof(ResponseText_IsSet));
+        }
+        bool IDialogResponseGetter.ResponseText_IsSet => ResponseText_IsSet;
+        private String _ResponseText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ResponseText
         {
             get => this._ResponseText;
-            set => this.SetResponseText(value);
+            set => ResponseText_Set(value);
         }
-        protected void SetResponseText(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IDialogResponseGetter.ResponseText => this.ResponseText;
+        public void ResponseText_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ResponseText == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = ResponseText;
-                _ResponseText = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)DialogResponse_FieldIndex.ResponseText,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ResponseText = item;
-            }
+            this.RaiseAndSetIfChanged(ref _ResponseText, value, _hasBeenSetTracker, markSet, (int)DialogResponse_FieldIndex.ResponseText, nameof(ResponseText), nameof(ResponseText_IsSet));
         }
-        protected void UnsetResponseText()
+        public void ResponseText_Unset()
         {
-            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText] = false;
-            ResponseText = default(String);
+            this.ResponseText_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IDialogResponse.ResponseText_Property => this.ResponseText_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IDialogResponseGetter.ResponseText_Property => this.ResponseText_Property;
         #endregion
         #region ActorNotes
-        protected String _ActorNotes;
-        protected PropertyForwarder<DialogResponse, String> _ActorNotesForwarder;
-        public INotifyingSetItem<String> ActorNotes_Property => _ActorNotesForwarder ?? (_ActorNotesForwarder = new PropertyForwarder<DialogResponse, String>(this, (int)DialogResponse_FieldIndex.ActorNotes));
+        public bool ActorNotes_IsSet
+        {
+            get => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)DialogResponse_FieldIndex.ActorNotes, nameof(ActorNotes_IsSet));
+        }
+        bool IDialogResponseGetter.ActorNotes_IsSet => ActorNotes_IsSet;
+        private String _ActorNotes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ActorNotes
         {
             get => this._ActorNotes;
-            set => this.SetActorNotes(value);
+            set => ActorNotes_Set(value);
         }
-        protected void SetActorNotes(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IDialogResponseGetter.ActorNotes => this.ActorNotes;
+        public void ActorNotes_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ActorNotes == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = ActorNotes;
-                _ActorNotes = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)DialogResponse_FieldIndex.ActorNotes,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ActorNotes = item;
-            }
+            this.RaiseAndSetIfChanged(ref _ActorNotes, value, _hasBeenSetTracker, markSet, (int)DialogResponse_FieldIndex.ActorNotes, nameof(ActorNotes), nameof(ActorNotes_IsSet));
         }
-        protected void UnsetActorNotes()
+        public void ActorNotes_Unset()
         {
-            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes] = false;
-            ActorNotes = default(String);
+            this.ActorNotes_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IDialogResponse.ActorNotes_Property => this.ActorNotes_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IDialogResponseGetter.ActorNotes_Property => this.ActorNotes_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -465,13 +222,13 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.Fluff1.EqualsFast(rhs.Fluff1)) return false;
             if (this.ResponseNumber != rhs.ResponseNumber) return false;
             if (!this.Fluff2.EqualsFast(rhs.Fluff2)) return false;
-            if (ResponseText_Property.HasBeenSet != rhs.ResponseText_Property.HasBeenSet) return false;
-            if (ResponseText_Property.HasBeenSet)
+            if (ResponseText_IsSet != rhs.ResponseText_IsSet) return false;
+            if (ResponseText_IsSet)
             {
                 if (!object.Equals(this.ResponseText, rhs.ResponseText)) return false;
             }
-            if (ActorNotes_Property.HasBeenSet != rhs.ActorNotes_Property.HasBeenSet) return false;
-            if (ActorNotes_Property.HasBeenSet)
+            if (ActorNotes_IsSet != rhs.ActorNotes_IsSet) return false;
+            if (ActorNotes_IsSet)
             {
                 if (!object.Equals(this.ActorNotes, rhs.ActorNotes)) return false;
             }
@@ -486,11 +243,11 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Fluff1).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(ResponseNumber).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
-            if (ResponseText_Property.HasBeenSet)
+            if (ResponseText_IsSet)
             {
                 ret = HashHelper.GetHashCode(ResponseText).CombineHashCode(ret);
             }
-            if (ActorNotes_Property.HasBeenSet)
+            if (ActorNotes_IsSet)
             {
                 ret = HashHelper.GetHashCode(ActorNotes).CombineHashCode(ret);
             }
@@ -824,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEmotion();
+                            item.Emotion = default(EmotionType);
                         }
                     }
                     catch (Exception ex)
@@ -850,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEmotionValue();
+                            item.EmotionValue = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -876,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFluff1();
+                            item.Fluff1 = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -902,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetResponseNumber();
+                            item.ResponseNumber = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -928,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFluff2();
+                            item.Fluff2 = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -954,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetResponseText();
+                            item.ResponseText = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -980,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetActorNotes();
+                            item.ActorNotes = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1018,698 +775,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter EmotionType
-        protected ObjectCentralizationSubscriptions<EmotionType> _EmotionType_subscriptions;
-        EmotionType IPropertySupporter<EmotionType>.Get(int index)
-        {
-            return GetEmotionType(index: index);
-        }
-
-        protected EmotionType GetEmotionType(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    return Emotion;
-                default:
-                    throw new ArgumentException($"Unknown index for field type EmotionType: {index}");
-            }
-        }
-
-        void IPropertySupporter<EmotionType>.Set(
-            int index,
-            EmotionType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetEmotionType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetEmotionType(
-            int index,
-            EmotionType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    SetEmotion(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type EmotionType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<EmotionType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<EmotionType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<EmotionType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetEmotionType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetEmotionType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    SetEmotion(
-                        item: default(EmotionType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type EmotionType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<EmotionType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<EmotionType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_EmotionType_subscriptions == null)
-            {
-                _EmotionType_subscriptions = new ObjectCentralizationSubscriptions<EmotionType>();
-            }
-            _EmotionType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<EmotionType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _EmotionType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<EmotionType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        EmotionType IPropertySupporter<EmotionType>.DefaultValue(int index)
-        {
-            return DefaultValueEmotionType(index: index);
-        }
-
-        protected EmotionType DefaultValueEmotionType(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    return default(EmotionType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type EmotionType: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.EmotionValue:
-                    return EmotionValue;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.EmotionValue:
-                    SetEmotionValue(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.EmotionValue:
-                    SetEmotionValue(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.EmotionValue:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.Fluff1:
-                    return Fluff1;
-                case DialogResponse_FieldIndex.Fluff2:
-                    return Fluff2;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.Fluff1:
-                    SetFluff1(item, hasBeenSet, cmds);
-                    break;
-                case DialogResponse_FieldIndex.Fluff2:
-                    SetFluff2(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.Fluff1:
-                    SetFluff1(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case DialogResponse_FieldIndex.Fluff2:
-                    SetFluff2(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.Fluff1:
-                case DialogResponse_FieldIndex.Fluff2:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    return ResponseNumber;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    SetResponseNumber(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    SetResponseNumber(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected String GetString(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.ResponseText:
-                    return ResponseText;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    return ActorNotes;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.ResponseText:
-                    SetResponseText(item, hasBeenSet, cmds);
-                    break;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    SetActorNotes(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.ResponseText:
-                    SetResponseText(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    SetActorNotes(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected String DefaultValueString(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.ResponseText:
-                case DialogResponse_FieldIndex.ActorNotes:
-                    return default(String);
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = DialogResponse_Registration.TRIGGERING_RECORD_TYPE;
@@ -1971,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetEmotion();
+                                item.Emotion = default(EmotionType);
                             }
                         }
                         catch (Exception ex)
@@ -1995,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetEmotionValue();
+                                item.EmotionValue = default(Int32);
                             }
                         }
                         catch (Exception ex)
@@ -2019,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFluff1();
+                                item.Fluff1 = default(Byte[]);
                             }
                         }
                         catch (Exception ex)
@@ -2043,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetResponseNumber();
+                                item.ResponseNumber = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -2067,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFluff2();
+                                item.Fluff2 = default(Byte[]);
                             }
                         }
                         catch (Exception ex)
@@ -2096,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetResponseText();
+                            item.ResponseText = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -2124,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetActorNotes();
+                            item.ActorNotes = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -2267,39 +1332,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogResponse_FieldIndex.Emotion:
-                    this.SetEmotion(
-                        (EmotionType)obj,
-                        cmds: cmds);
+                    this.Emotion = (EmotionType)obj;
                     break;
                 case DialogResponse_FieldIndex.EmotionValue:
-                    this.SetEmotionValue(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.EmotionValue = (Int32)obj;
                     break;
                 case DialogResponse_FieldIndex.Fluff1:
-                    this.SetFluff1(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Fluff1 = (Byte[])obj;
                     break;
                 case DialogResponse_FieldIndex.ResponseNumber:
-                    this.SetResponseNumber(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.ResponseNumber = (Byte)obj;
                     break;
                 case DialogResponse_FieldIndex.Fluff2:
-                    this.SetFluff2(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Fluff2 = (Byte[])obj;
                     break;
                 case DialogResponse_FieldIndex.ResponseText:
-                    this.SetResponseText(
-                        (String)obj,
-                        cmds: cmds);
+                    this.ResponseText = (String)obj;
                     break;
                 case DialogResponse_FieldIndex.ActorNotes:
-                    this.SetActorNotes(
-                        (String)obj,
-                        cmds: cmds);
+                    this.ActorNotes = (String)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2339,39 +1390,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogResponse_FieldIndex.Emotion:
-                    obj.SetEmotion(
-                        (EmotionType)pair.Value,
-                        cmds: null);
+                    obj.Emotion = (EmotionType)pair.Value;
                     break;
                 case DialogResponse_FieldIndex.EmotionValue:
-                    obj.SetEmotionValue(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.EmotionValue = (Int32)pair.Value;
                     break;
                 case DialogResponse_FieldIndex.Fluff1:
-                    obj.SetFluff1(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Fluff1 = (Byte[])pair.Value;
                     break;
                 case DialogResponse_FieldIndex.ResponseNumber:
-                    obj.SetResponseNumber(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.ResponseNumber = (Byte)pair.Value;
                     break;
                 case DialogResponse_FieldIndex.Fluff2:
-                    obj.SetFluff2(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Fluff2 = (Byte[])pair.Value;
                     break;
                 case DialogResponse_FieldIndex.ResponseText:
-                    obj.SetResponseText(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.ResponseText = (String)pair.Value;
                     break;
                 case DialogResponse_FieldIndex.ActorNotes:
-                    obj.SetActorNotes(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.ActorNotes = (String)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2389,25 +1426,24 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IDialogResponse : IDialogResponseGetter, ILoquiClass<IDialogResponse, IDialogResponseGetter>, ILoquiClass<DialogResponse, IDialogResponseGetter>
     {
         new EmotionType Emotion { get; set; }
-        new INotifyingItem<EmotionType> Emotion_Property { get; }
 
         new Int32 EmotionValue { get; set; }
-        new INotifyingItem<Int32> EmotionValue_Property { get; }
 
         new Byte[] Fluff1 { get; set; }
-        new INotifyingItem<Byte[]> Fluff1_Property { get; }
 
         new Byte ResponseNumber { get; set; }
-        new INotifyingItem<Byte> ResponseNumber_Property { get; }
 
         new Byte[] Fluff2 { get; set; }
-        new INotifyingItem<Byte[]> Fluff2_Property { get; }
 
         new String ResponseText { get; set; }
-        new INotifyingSetItem<String> ResponseText_Property { get; }
+        new bool ResponseText_IsSet { get; set; }
+        void ResponseText_Set(String item, bool hasBeenSet = true);
+        void ResponseText_Unset();
 
         new String ActorNotes { get; set; }
-        new INotifyingSetItem<String> ActorNotes_Property { get; }
+        new bool ActorNotes_IsSet { get; set; }
+        void ActorNotes_Set(String item, bool hasBeenSet = true);
+        void ActorNotes_Unset();
 
     }
 
@@ -2415,37 +1451,32 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Emotion
         EmotionType Emotion { get; }
-        INotifyingItemGetter<EmotionType> Emotion_Property { get; }
 
         #endregion
         #region EmotionValue
         Int32 EmotionValue { get; }
-        INotifyingItemGetter<Int32> EmotionValue_Property { get; }
 
         #endregion
         #region Fluff1
         Byte[] Fluff1 { get; }
-        INotifyingItemGetter<Byte[]> Fluff1_Property { get; }
 
         #endregion
         #region ResponseNumber
         Byte ResponseNumber { get; }
-        INotifyingItemGetter<Byte> ResponseNumber_Property { get; }
 
         #endregion
         #region Fluff2
         Byte[] Fluff2 { get; }
-        INotifyingItemGetter<Byte[]> Fluff2_Property { get; }
 
         #endregion
         #region ResponseText
         String ResponseText { get; }
-        INotifyingSetItemGetter<String> ResponseText_Property { get; }
+        bool ResponseText_IsSet { get; }
 
         #endregion
         #region ActorNotes
         String ActorNotes { get; }
-        INotifyingSetItemGetter<String> ActorNotes_Property { get; }
+        bool ActorNotes_IsSet { get; }
 
         #endregion
 
@@ -2724,9 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
                 try
                 {
-                    item.Emotion_Property.Set(
-                        value: rhs.Emotion,
-                        cmds: cmds);
+                    item.Emotion = rhs.Emotion;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2743,9 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
                 try
                 {
-                    item.EmotionValue_Property.Set(
-                        value: rhs.EmotionValue,
-                        cmds: cmds);
+                    item.EmotionValue = rhs.EmotionValue;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2762,9 +1789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
                 try
                 {
-                    item.Fluff1_Property.Set(
-                        value: rhs.Fluff1,
-                        cmds: cmds);
+                    item.Fluff1 = rhs.Fluff1;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2781,9 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
                 try
                 {
-                    item.ResponseNumber_Property.Set(
-                        value: rhs.ResponseNumber,
-                        cmds: cmds);
+                    item.ResponseNumber = rhs.ResponseNumber;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2800,9 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
                 try
                 {
-                    item.Fluff2_Property.Set(
-                        value: rhs.Fluff2,
-                        cmds: cmds);
+                    item.Fluff2 = rhs.Fluff2;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2819,9 +1840,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
                 try
                 {
-                    item.ResponseText_Property.SetToWithDefault(
-                        rhs: rhs.ResponseText_Property,
-                        def: def?.ResponseText_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.ResponseText,
+                        rhsHasBeenSet: rhs.ResponseText_IsSet,
+                        defItem: def?.ResponseText ?? default(String),
+                        defHasBeenSet: def?.ResponseText_IsSet ?? false,
+                        outRhsItem: out var rhsResponseTextItem,
+                        outDefItem: out var defResponseTextItem))
+                    {
+                        item.ResponseText = rhsResponseTextItem;
+                    }
+                    else
+                    {
+                        item.ResponseText_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2838,9 +1870,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
                 try
                 {
-                    item.ActorNotes_Property.SetToWithDefault(
-                        rhs: rhs.ActorNotes_Property,
-                        def: def?.ActorNotes_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.ActorNotes,
+                        rhsHasBeenSet: rhs.ActorNotes_IsSet,
+                        defItem: def?.ActorNotes ?? default(String),
+                        defHasBeenSet: def?.ActorNotes_IsSet ?? false,
+                        outRhsItem: out var rhsActorNotesItem,
+                        outDefItem: out var defActorNotesItem))
+                    {
+                        item.ActorNotes = rhsActorNotesItem;
+                    }
+                    else
+                    {
+                        item.ActorNotes_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2873,10 +1916,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case DialogResponse_FieldIndex.ResponseText:
-                    obj.ResponseText_Property.HasBeenSet = on;
+                    obj.ResponseText_IsSet = on;
                     break;
                 case DialogResponse_FieldIndex.ActorNotes:
-                    obj.ActorNotes_Property.HasBeenSet = on;
+                    obj.ActorNotes_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2907,10 +1950,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Fluff2 = default(Byte[]);
                     break;
                 case DialogResponse_FieldIndex.ResponseText:
-                    obj.ResponseText_Property.Unset(cmds);
+                    obj.ResponseText_Unset();
                     break;
                 case DialogResponse_FieldIndex.ActorNotes:
-                    obj.ActorNotes_Property.Unset(cmds);
+                    obj.ActorNotes_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2931,9 +1974,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogResponse_FieldIndex.Fluff2:
                     return true;
                 case DialogResponse_FieldIndex.ResponseText:
-                    return obj.ResponseText_Property.HasBeenSet;
+                    return obj.ResponseText_IsSet;
                 case DialogResponse_FieldIndex.ActorNotes:
-                    return obj.ActorNotes_Property.HasBeenSet;
+                    return obj.ActorNotes_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2974,8 +2017,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff1 = default(Byte[]);
             item.ResponseNumber = default(Byte);
             item.Fluff2 = default(Byte[]);
-            item.ResponseText_Property.Unset(cmds.ToUnsetParams());
-            item.ActorNotes_Property.Unset(cmds.ToUnsetParams());
+            item.ResponseText_Unset();
+            item.ActorNotes_Unset();
         }
 
         public static DialogResponse_Mask<bool> GetEqualsMask(
@@ -2998,8 +2041,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Fluff1 = item.Fluff1.EqualsFast(rhs.Fluff1);
             ret.ResponseNumber = item.ResponseNumber == rhs.ResponseNumber;
             ret.Fluff2 = item.Fluff2.EqualsFast(rhs.Fluff2);
-            ret.ResponseText = item.ResponseText_Property.Equals(rhs.ResponseText_Property, (l, r) => object.Equals(l, r));
-            ret.ActorNotes = item.ActorNotes_Property.Equals(rhs.ActorNotes_Property, (l, r) => object.Equals(l, r));
+            ret.ResponseText = item.ResponseText_IsSet == rhs.ResponseText_IsSet && object.Equals(item.ResponseText, rhs.ResponseText);
+            ret.ActorNotes = item.ActorNotes_IsSet == rhs.ActorNotes_IsSet && object.Equals(item.ActorNotes, rhs.ActorNotes);
         }
 
         public static string ToString(
@@ -3065,8 +2108,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IDialogResponseGetter item,
             DialogResponse_Mask<bool?> checkMask)
         {
-            if (checkMask.ResponseText.HasValue && checkMask.ResponseText.Value != item.ResponseText_Property.HasBeenSet) return false;
-            if (checkMask.ActorNotes.HasValue && checkMask.ActorNotes.Value != item.ActorNotes_Property.HasBeenSet) return false;
+            if (checkMask.ResponseText.HasValue && checkMask.ResponseText.Value != item.ResponseText_IsSet) return false;
+            if (checkMask.ActorNotes.HasValue && checkMask.ActorNotes.Value != item.ActorNotes_IsSet) return false;
             return true;
         }
 
@@ -3078,8 +2121,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Fluff1 = true;
             ret.ResponseNumber = true;
             ret.Fluff2 = true;
-            ret.ResponseText = item.ResponseText_Property.HasBeenSet;
-            ret.ActorNotes = item.ActorNotes_Property.HasBeenSet;
+            ret.ResponseText = item.ResponseText_IsSet;
+            ret.ActorNotes = item.ActorNotes_IsSet;
             return ret;
         }
 
@@ -3121,7 +2164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<EmotionType>.Instance.Write(
                     node: elem,
                     name: nameof(item.Emotion),
-                    item: item.Emotion_Property,
+                    item: item.Emotion,
                     fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
                     errorMask: errorMask);
             }
@@ -3130,7 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.EmotionValue),
-                    item: item.EmotionValue_Property,
+                    item: item.EmotionValue,
                     fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
                     errorMask: errorMask);
             }
@@ -3139,7 +2182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Fluff1),
-                    item: item.Fluff1_Property,
+                    item: item.Fluff1,
                     fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
                     errorMask: errorMask);
             }
@@ -3148,7 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ResponseNumber),
-                    item: item.ResponseNumber_Property,
+                    item: item.ResponseNumber,
                     fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
                     errorMask: errorMask);
             }
@@ -3157,27 +2200,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Fluff2),
-                    item: item.Fluff2_Property,
+                    item: item.Fluff2,
                     fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
                     errorMask: errorMask);
             }
-            if (item.ResponseText_Property.HasBeenSet
+            if (item.ResponseText_IsSet
                 && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ResponseText),
-                    item: item.ResponseText_Property,
+                    item: item.ResponseText,
                     fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
                     errorMask: errorMask);
             }
-            if (item.ActorNotes_Property.HasBeenSet
+            if (item.ActorNotes_IsSet
                 && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ActorNotes) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ActorNotes),
-                    item: item.ActorNotes_Property,
+                    item: item.ActorNotes,
                     fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
                     errorMask: errorMask);
             }
@@ -3230,46 +2273,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Write(
                         writer,
-                        item.Emotion_Property,
+                        item.Emotion,
                         length: 4,
                         fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.EmotionValue_Property,
+                        item: item.EmotionValue,
                         fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Fluff1_Property,
+                        item: item.Fluff1,
                         fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ResponseNumber_Property,
+                        item: item.ResponseNumber,
                         fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Fluff2_Property,
+                        item: item.Fluff2,
                         fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
                         errorMask: errorMask);
                 }
             }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ResponseText_Property,
-                fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM1_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ActorNotes_Property,
-                fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM2_HEADER),
-                nullable: false);
+            if (item.ResponseText_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ResponseText,
+                    fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM1_HEADER),
+                    nullable: false);
+            }
+            if (item.ActorNotes_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ActorNotes,
+                    fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM2_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

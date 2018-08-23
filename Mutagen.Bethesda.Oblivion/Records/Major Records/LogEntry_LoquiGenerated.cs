@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,13 +31,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LogEntry : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         ILogEntry,
         ILoquiObject<LogEntry>,
         ILoquiObjectSetter,
-        IPropertySupporter<LogEntry.Flag>,
-        IPropertySupporter<String>,
-        IPropertySupporter<ScriptFields>,
         IEquatable<LogEntry>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -52,52 +51,30 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        protected LogEntry.Flag _Flags;
-        protected PropertyForwarder<LogEntry, LogEntry.Flag> _FlagsForwarder;
-        public INotifyingSetItem<LogEntry.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<LogEntry, LogEntry.Flag>(this, (int)LogEntry_FieldIndex.Flags));
+        public bool Flags_IsSet
+        {
+            get => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Flags];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LogEntry_FieldIndex.Flags, nameof(Flags_IsSet));
+        }
+        bool ILogEntryGetter.Flags_IsSet => Flags_IsSet;
+        private LogEntry.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public LogEntry.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => Flags_Set(value);
         }
-        protected void SetFlags(
-            LogEntry.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        LogEntry.Flag ILogEntryGetter.Flags => this.Flags;
+        public void Flags_Set(
+            LogEntry.Flag value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LogEntry_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LogEntry_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_LogEntryFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _LogEntryFlag_subscriptions.FireSubscriptions(
-                    index: (int)LogEntry_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)LogEntry_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
         }
-        protected void UnsetFlags()
+        public void Flags_Unset()
         {
-            _hasBeenSetTracker[(int)LogEntry_FieldIndex.Flags] = false;
-            Flags = default(LogEntry.Flag);
+            this.Flags_Set(default(LogEntry.Flag), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<LogEntry.Flag> ILogEntry.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<LogEntry.Flag> ILogEntryGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -118,100 +95,57 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entry
-        protected String _Entry;
-        protected PropertyForwarder<LogEntry, String> _EntryForwarder;
-        public INotifyingSetItem<String> Entry_Property => _EntryForwarder ?? (_EntryForwarder = new PropertyForwarder<LogEntry, String>(this, (int)LogEntry_FieldIndex.Entry));
+        public bool Entry_IsSet
+        {
+            get => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Entry];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LogEntry_FieldIndex.Entry, nameof(Entry_IsSet));
+        }
+        bool ILogEntryGetter.Entry_IsSet => Entry_IsSet;
+        private String _Entry;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Entry
         {
             get => this._Entry;
-            set => this.SetEntry(value);
+            set => Entry_Set(value);
         }
-        protected void SetEntry(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String ILogEntryGetter.Entry => this.Entry;
+        public void Entry_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LogEntry_FieldIndex.Entry];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Entry == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LogEntry_FieldIndex.Entry] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Entry;
-                _Entry = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)LogEntry_FieldIndex.Entry,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Entry = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Entry, value, _hasBeenSetTracker, markSet, (int)LogEntry_FieldIndex.Entry, nameof(Entry), nameof(Entry_IsSet));
         }
-        protected void UnsetEntry()
+        public void Entry_Unset()
         {
-            _hasBeenSetTracker[(int)LogEntry_FieldIndex.Entry] = false;
-            Entry = default(String);
+            this.Entry_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> ILogEntry.Entry_Property => this.Entry_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> ILogEntryGetter.Entry_Property => this.Entry_Property;
         #endregion
         #region ResultScript
-        protected ScriptFields _ResultScript;
-        protected PropertyForwarder<LogEntry, ScriptFields> _ResultScriptForwarder;
-        public INotifyingSetItem<ScriptFields> ResultScript_Property => _ResultScriptForwarder ?? (_ResultScriptForwarder = new PropertyForwarder<LogEntry, ScriptFields>(this, (int)LogEntry_FieldIndex.ResultScript));
+        public bool ResultScript_IsSet
+        {
+            get => _hasBeenSetTracker[(int)LogEntry_FieldIndex.ResultScript];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)LogEntry_FieldIndex.ResultScript, nameof(ResultScript_IsSet));
+        }
+        bool ILogEntryGetter.ResultScript_IsSet => ResultScript_IsSet;
+        private ScriptFields _ResultScript;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptFields ResultScript
         {
-            get => this._ResultScript;
-            set => this.SetResultScript(value);
+            get => _ResultScript;
+            set => ResultScript_Set(value);
         }
-        protected void SetResultScript(
-            ScriptFields item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void ResultScript_Set(
+            ScriptFields value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)LogEntry_FieldIndex.ResultScript];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(ResultScript, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)LogEntry_FieldIndex.ResultScript] = hasBeenSet;
-            }
-            if (_ScriptFields_subscriptions != null)
-            {
-                var tmp = ResultScript;
-                _ResultScript = item;
-                _ScriptFields_subscriptions.FireSubscriptions(
-                    index: (int)LogEntry_FieldIndex.ResultScript,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ResultScript = item;
-            }
+            this.RaiseAndSetIfChanged(ref _ResultScript, value, _hasBeenSetTracker, markSet, (int)LogEntry_FieldIndex.ResultScript, nameof(ResultScript), nameof(ResultScript_IsSet));
         }
-        protected void UnsetResultScript()
+        public void ResultScript_Unset()
         {
-            _hasBeenSetTracker[(int)LogEntry_FieldIndex.ResultScript] = false;
-            ResultScript = default(ScriptFields);
+            this.ResultScript_Set(default(ScriptFields), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<ScriptFields> ILogEntry.ResultScript_Property => this.ResultScript_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<ScriptFields> ILogEntryGetter.ResultScript_Property => this.ResultScript_Property;
+        ScriptFields ILogEntryGetter.ResultScript => this.ResultScript;
         #endregion
 
         #region Loqui Getter Interface
@@ -275,8 +209,8 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(LogEntry rhs)
         {
             if (rhs == null) return false;
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (Flags_IsSet)
             {
                 if (this.Flags != rhs.Flags) return false;
             }
@@ -285,13 +219,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Conditions.SequenceEqual(rhs.Conditions)) return false;
             }
-            if (Entry_Property.HasBeenSet != rhs.Entry_Property.HasBeenSet) return false;
-            if (Entry_Property.HasBeenSet)
+            if (Entry_IsSet != rhs.Entry_IsSet) return false;
+            if (Entry_IsSet)
             {
                 if (!object.Equals(this.Entry, rhs.Entry)) return false;
             }
-            if (ResultScript_Property.HasBeenSet != rhs.ResultScript_Property.HasBeenSet) return false;
-            if (ResultScript_Property.HasBeenSet)
+            if (ResultScript_IsSet != rhs.ResultScript_IsSet) return false;
+            if (ResultScript_IsSet)
             {
                 if (!object.Equals(this.ResultScript, rhs.ResultScript)) return false;
             }
@@ -301,7 +235,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet)
             {
                 ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             }
@@ -309,11 +243,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Conditions).CombineHashCode(ret);
             }
-            if (Entry_Property.HasBeenSet)
+            if (Entry_IsSet)
             {
                 ret = HashHelper.GetHashCode(Entry).CombineHashCode(ret);
             }
-            if (ResultScript_Property.HasBeenSet)
+            if (ResultScript_IsSet)
             {
                 ret = HashHelper.GetHashCode(ResultScript).CombineHashCode(ret);
             }
@@ -647,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(LogEntry.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -701,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEntry();
+                            item.Entry = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -728,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetResultScript();
+                            item.ResultScript = default(ScriptFields);
                         }
                     }
                     catch (Exception ex)
@@ -763,408 +697,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter LogEntry.Flag
-        protected ObjectCentralizationSubscriptions<LogEntry.Flag> _LogEntryFlag_subscriptions;
-        LogEntry.Flag IPropertySupporter<LogEntry.Flag>.Get(int index)
-        {
-            return GetLogEntryFlag(index: index);
-        }
-
-        protected LogEntry.Flag GetLogEntryFlag(int index)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type LogEntry.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<LogEntry.Flag>.Set(
-            int index,
-            LogEntry.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetLogEntryFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetLogEntryFlag(
-            int index,
-            LogEntry.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type LogEntry.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<LogEntry.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<LogEntry.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<LogEntry.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetLogEntryFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetLogEntryFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(LogEntry.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type LogEntry.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<LogEntry.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<LogEntry.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_LogEntryFlag_subscriptions == null)
-            {
-                _LogEntryFlag_subscriptions = new ObjectCentralizationSubscriptions<LogEntry.Flag>();
-            }
-            _LogEntryFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<LogEntry.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _LogEntryFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<LogEntry.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        LogEntry.Flag IPropertySupporter<LogEntry.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueLogEntryFlag(index: index);
-        }
-
-        protected LogEntry.Flag DefaultValueLogEntryFlag(int index)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    return default(LogEntry.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type LogEntry.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected String GetString(int index)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.Entry:
-                    return Entry;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.Entry:
-                    SetEntry(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.Entry:
-                    SetEntry(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected String DefaultValueString(int index)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.Entry:
-                    return default(String);
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter ScriptFields
-        protected ObjectCentralizationSubscriptions<ScriptFields> _ScriptFields_subscriptions;
-        ScriptFields IPropertySupporter<ScriptFields>.Get(int index)
-        {
-            return GetScriptFields(index: index);
-        }
-
-        protected ScriptFields GetScriptFields(int index)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.ResultScript:
-                    return ResultScript;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
-            }
-        }
-
-        void IPropertySupporter<ScriptFields>.Set(
-            int index,
-            ScriptFields item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetScriptFields(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetScriptFields(
-            int index,
-            ScriptFields item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.ResultScript:
-                    SetResultScript(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
-            }
-        }
-
-        bool IPropertySupporter<ScriptFields>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<ScriptFields>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<ScriptFields>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetScriptFields(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetScriptFields(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.ResultScript:
-                    SetResultScript(
-                        item: default(ScriptFields),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptFields>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<ScriptFields> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ScriptFields_subscriptions == null)
-            {
-                _ScriptFields_subscriptions = new ObjectCentralizationSubscriptions<ScriptFields>();
-            }
-            _ScriptFields_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptFields>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ScriptFields_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<ScriptFields>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        ScriptFields IPropertySupporter<ScriptFields>.DefaultValue(int index)
-        {
-            return DefaultValueScriptFields(index: index);
-        }
-
-        protected ScriptFields DefaultValueScriptFields(int index)
-        {
-            switch ((LogEntry_FieldIndex)index)
-            {
-                case LogEntry_FieldIndex.ResultScript:
-                    return default(ScriptFields);
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1410,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(LogEntry.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -1451,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEntry();
+                            item.Entry = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1484,7 +1016,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetResultScript();
+                            item.ResultScript = default(ScriptFields);
                         }
                     }
                     catch (Exception ex)
@@ -1627,22 +1159,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LogEntry_FieldIndex.Flags:
-                    this.SetFlags(
-                        (LogEntry.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (LogEntry.Flag)obj;
                     break;
                 case LogEntry_FieldIndex.Conditions:
                     this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
                     break;
                 case LogEntry_FieldIndex.Entry:
-                    this.SetEntry(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Entry = (String)obj;
                     break;
                 case LogEntry_FieldIndex.ResultScript:
-                    this.SetResultScript(
-                        (ScriptFields)obj,
-                        cmds: cmds);
+                    this.ResultScript = (ScriptFields)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1682,22 +1208,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LogEntry_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (LogEntry.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (LogEntry.Flag)pair.Value;
                     break;
                 case LogEntry_FieldIndex.Conditions:
                     obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
                     break;
                 case LogEntry_FieldIndex.Entry:
-                    obj.SetEntry(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Entry = (String)pair.Value;
                     break;
                 case LogEntry_FieldIndex.ResultScript:
-                    obj.SetResultScript(
-                        (ScriptFields)pair.Value,
-                        cmds: null);
+                    obj.ResultScript = (ScriptFields)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1715,14 +1235,20 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILogEntry : ILogEntryGetter, ILoquiClass<ILogEntry, ILogEntryGetter>, ILoquiClass<LogEntry, ILogEntryGetter>
     {
         new LogEntry.Flag Flags { get; set; }
-        new INotifyingSetItem<LogEntry.Flag> Flags_Property { get; }
+        new bool Flags_IsSet { get; set; }
+        void Flags_Set(LogEntry.Flag item, bool hasBeenSet = true);
+        void Flags_Unset();
 
         new INotifyingList<Condition> Conditions { get; }
         new String Entry { get; set; }
-        new INotifyingSetItem<String> Entry_Property { get; }
+        new bool Entry_IsSet { get; set; }
+        void Entry_Set(String item, bool hasBeenSet = true);
+        void Entry_Unset();
 
         new ScriptFields ResultScript { get; set; }
-        new INotifyingSetItem<ScriptFields> ResultScript_Property { get; }
+        new bool ResultScript_IsSet { get; set; }
+        void ResultScript_Set(ScriptFields item, bool hasBeenSet = true);
+        void ResultScript_Unset();
 
     }
 
@@ -1730,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Flags
         LogEntry.Flag Flags { get; }
-        INotifyingSetItemGetter<LogEntry.Flag> Flags_Property { get; }
+        bool Flags_IsSet { get; }
 
         #endregion
         #region Conditions
@@ -1738,12 +1264,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entry
         String Entry { get; }
-        INotifyingSetItemGetter<String> Entry_Property { get; }
+        bool Entry_IsSet { get; }
 
         #endregion
         #region ResultScript
         ScriptFields ResultScript { get; }
-        INotifyingSetItemGetter<ScriptFields> ResultScript_Property { get; }
+        bool ResultScript_IsSet { get; }
 
         #endregion
 
@@ -2016,9 +1542,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Flags,
+                        rhsHasBeenSet: rhs.Flags_IsSet,
+                        defItem: def?.Flags ?? default(LogEntry.Flag),
+                        defHasBeenSet: def?.Flags_IsSet ?? false,
+                        outRhsItem: out var rhsFlagsItem,
+                        outDefItem: out var defFlagsItem))
+                    {
+                        item.Flags = rhsFlagsItem;
+                    }
+                    else
+                    {
+                        item.Flags_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2046,7 +1583,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Condition);
                                     return Condition.Copy(
                                         r,
                                         copyMask?.Conditions?.Specific,
@@ -2072,9 +1608,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.Entry);
                 try
                 {
-                    item.Entry_Property.SetToWithDefault(
-                        rhs: rhs.Entry_Property,
-                        def: def?.Entry_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Entry,
+                        rhsHasBeenSet: rhs.Entry_IsSet,
+                        defItem: def?.Entry ?? default(String),
+                        defHasBeenSet: def?.Entry_IsSet ?? false,
+                        outRhsItem: out var rhsEntryItem,
+                        outDefItem: out var defEntryItem))
+                    {
+                        item.Entry = rhsEntryItem;
+                    }
+                    else
+                    {
+                        item.Entry_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2091,36 +1638,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
                 try
                 {
-                    item.ResultScript_Property.SetToWithDefault(
-                        rhs.ResultScript_Property,
-                        def?.ResultScript_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.ResultScript,
+                        rhsHasBeenSet: rhs.ResultScript_IsSet,
+                        defItem: def?.ResultScript,
+                        defHasBeenSet: def?.ResultScript_IsSet ?? false,
+                        outRhsItem: out var rhsResultScriptItem,
+                        outDefItem: out var defResultScriptItem))
+                    {
+                        switch (copyMask?.ResultScript.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.ResultScript.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    ScriptFieldsCommon.CopyFieldsFrom(
-                                        item: item.ResultScript,
-                                        rhs: rhs.ResultScript,
-                                        def: def?.ResultScript,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.ResultScript.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(ScriptFields);
-                                    return ScriptFields.Copy(
-                                        r,
-                                        copyMask?.ResultScript?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.ResultScript?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.ResultScript = rhsResultScriptItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                ScriptFieldsCommon.CopyFieldsFrom(
+                                    item: item.ResultScript,
+                                    rhs: rhs.ResultScript,
+                                    def: def?.ResultScript,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.ResultScript.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.ResultScript = ScriptFields.Copy(
+                                    rhsResultScriptItem,
+                                    copyMask?.ResultScript?.Specific,
+                                    def: defResultScriptItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.ResultScript?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.ResultScript_IsSet = false;
+                        item.ResultScript = default(ScriptFields);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2146,16 +1700,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LogEntry_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
+                    obj.Flags_IsSet = on;
                     break;
                 case LogEntry_FieldIndex.Conditions:
                     obj.Conditions.HasBeenSet = on;
                     break;
                 case LogEntry_FieldIndex.Entry:
-                    obj.Entry_Property.HasBeenSet = on;
+                    obj.Entry_IsSet = on;
                     break;
                 case LogEntry_FieldIndex.ResultScript:
-                    obj.ResultScript_Property.HasBeenSet = on;
+                    obj.ResultScript_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2171,16 +1725,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LogEntry_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags_Unset();
                     break;
                 case LogEntry_FieldIndex.Conditions:
                     obj.Conditions.Unset(cmds);
                     break;
                 case LogEntry_FieldIndex.Entry:
-                    obj.Entry_Property.Unset(cmds);
+                    obj.Entry_Unset();
                     break;
                 case LogEntry_FieldIndex.ResultScript:
-                    obj.ResultScript_Property.Unset(cmds);
+                    obj.ResultScript_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2195,13 +1749,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LogEntry_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                    return obj.Flags_IsSet;
                 case LogEntry_FieldIndex.Conditions:
                     return obj.Conditions.HasBeenSet;
                 case LogEntry_FieldIndex.Entry:
-                    return obj.Entry_Property.HasBeenSet;
+                    return obj.Entry_IsSet;
                 case LogEntry_FieldIndex.ResultScript:
-                    return obj.ResultScript_Property.HasBeenSet;
+                    return obj.ResultScript_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2231,10 +1785,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILogEntry item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.Flags_Unset();
             item.Conditions.Unset(cmds.ToUnsetParams());
-            item.Entry_Property.Unset(cmds.ToUnsetParams());
-            item.ResultScript_Property.Unset(cmds.ToUnsetParams());
+            item.Entry_Unset();
+            item.ResultScript_Unset();
         }
 
         public static LogEntry_Mask<bool> GetEqualsMask(
@@ -2252,7 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LogEntry_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
             if (item.Conditions.HasBeenSet == rhs.Conditions.HasBeenSet)
             {
                 if (item.Conditions.HasBeenSet)
@@ -2278,8 +1832,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
                 ret.Conditions.Overall = false;
             }
-            ret.Entry = item.Entry_Property.Equals(rhs.Entry_Property, (l, r) => object.Equals(l, r));
-            ret.ResultScript = item.ResultScript_Property.LoquiEqualsHelper(rhs.ResultScript_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Entry = item.Entry_IsSet == rhs.Entry_IsSet && object.Equals(item.Entry, rhs.Entry);
+            ret.ResultScript = IHasBeenSetExt.LoquiEqualsHelper(item.ResultScript_IsSet, rhs.ResultScript_IsSet, item.ResultScript, rhs.ResultScript, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
         }
 
         public static string ToString(
@@ -2347,10 +1901,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILogEntryGetter item,
             LogEntry_Mask<bool?> checkMask)
         {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
             if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
-            if (checkMask.Entry.HasValue && checkMask.Entry.Value != item.Entry_Property.HasBeenSet) return false;
-            if (checkMask.ResultScript.Overall.HasValue && checkMask.ResultScript.Overall.Value != item.ResultScript_Property.HasBeenSet) return false;
+            if (checkMask.Entry.HasValue && checkMask.Entry.Value != item.Entry_IsSet) return false;
+            if (checkMask.ResultScript.Overall.HasValue && checkMask.ResultScript.Overall.Value != item.ResultScript_IsSet) return false;
             if (checkMask.ResultScript.Specific != null && (item.ResultScript == null || !item.ResultScript.HasBeenSet(checkMask.ResultScript.Specific))) return false;
             return true;
         }
@@ -2358,10 +1912,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LogEntry_Mask<bool> GetHasBeenSetMask(ILogEntryGetter item)
         {
             var ret = new LogEntry_Mask<bool>();
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.Flags = item.Flags_IsSet;
             ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Entry = item.Entry_Property.HasBeenSet;
-            ret.ResultScript = new MaskItem<bool, ScriptFields_Mask<bool>>(item.ResultScript_Property.HasBeenSet, ScriptFieldsCommon.GetHasBeenSetMask(item.ResultScript));
+            ret.Entry = item.Entry_IsSet;
+            ret.ResultScript = new MaskItem<bool, ScriptFields_Mask<bool>>(item.ResultScript_IsSet, ScriptFieldsCommon.GetHasBeenSetMask(item.ResultScript));
             return ret;
         }
 
@@ -2398,13 +1952,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LogEntry");
             }
-            if (item.Flags_Property.HasBeenSet
+            if (item.Flags_IsSet
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<LogEntry.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)LogEntry_FieldIndex.Flags,
                     errorMask: errorMask);
             }
@@ -2429,22 +1983,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if (item.Entry_Property.HasBeenSet
+            if (item.Entry_IsSet
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Entry),
-                    item: item.Entry_Property,
+                    item: item.Entry,
                     fieldIndex: (int)LogEntry_FieldIndex.Entry,
                     errorMask: errorMask);
             }
-            if (item.ResultScript_Property.HasBeenSet
+            if (item.ResultScript_IsSet
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
             {
                 LoquiXmlTranslation<ScriptFields>.Instance.Write(
                     node: elem,
-                    item: item.ResultScript_Property,
+                    item: item.ResultScript,
                     name: nameof(item.ResultScript),
                     fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
                     errorMask: errorMask,
@@ -2493,32 +2047,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LogEntry.Flag>.Instance.Write(
-                writer,
-                item.Flags_Property,
-                length: 1,
-                fieldIndex: (int)LogEntry_FieldIndex.Flags,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.QSDT_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
-                writer: writer,
-                items: item.Conditions,
-                fieldIndex: (int)LogEntry_FieldIndex.Conditions,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<Condition>.Instance.Write);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Entry_Property,
-                fieldIndex: (int)LogEntry_FieldIndex.Entry,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.CNAM_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<ScriptFields>.Instance.Write(
-                writer: writer,
-                item: item.ResultScript_Property,
-                fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
-                errorMask: errorMask);
+            if (item.Flags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<LogEntry.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1,
+                    fieldIndex: (int)LogEntry_FieldIndex.Flags,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.QSDT_HEADER),
+                    nullable: false);
+            }
+            if (item.Conditions.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                    writer: writer,
+                    items: item.Conditions,
+                    fieldIndex: (int)LogEntry_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<Condition>.Instance.Write);
+            }
+            if (item.Entry_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Entry,
+                    fieldIndex: (int)LogEntry_FieldIndex.Entry,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.CNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.ResultScript_IsSet)
+            {
+                LoquiBinaryTranslation<ScriptFields>.Instance.Write(
+                    writer: writer,
+                    item: item.ResultScript,
+                    fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
+                    errorMask: errorMask);
+            }
         }
 
         #endregion

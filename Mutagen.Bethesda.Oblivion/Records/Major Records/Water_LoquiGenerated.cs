@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows.Media;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
@@ -35,13 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         IWater,
         ILoquiObject<Water>,
         ILoquiObjectSetter,
-        IPropertySupporter<String>,
-        IPropertySupporter<Byte>,
-        IPropertySupporter<Water.Flag>,
-        IPropertySupporter<Single>,
-        IPropertySupporter<Color>,
-        IPropertySupporter<UInt16>,
-        IPropertySupporter<RelatedWaters>,
         IEquatable<Water>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,196 +52,108 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Texture
-        protected String _Texture;
-        protected PropertyForwarder<Water, String> _TextureForwarder;
-        public INotifyingSetItem<String> Texture_Property => _TextureForwarder ?? (_TextureForwarder = new PropertyForwarder<Water, String>(this, (int)Water_FieldIndex.Texture));
+        public bool Texture_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Water_FieldIndex.Texture];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.Texture, nameof(Texture_IsSet));
+        }
+        bool IWaterGetter.Texture_IsSet => Texture_IsSet;
+        private String _Texture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Texture
         {
             get => this._Texture;
-            set => this.SetTexture(value);
+            set => Texture_Set(value);
         }
-        protected void SetTexture(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IWaterGetter.Texture => this.Texture;
+        public void Texture_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.Texture];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Texture == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.Texture] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Texture;
-                _Texture = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.Texture,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Texture = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Texture, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.Texture, nameof(Texture), nameof(Texture_IsSet));
         }
-        protected void UnsetTexture()
+        public void Texture_Unset()
         {
-            _hasBeenSetTracker[(int)Water_FieldIndex.Texture] = false;
-            Texture = default(String);
+            this.Texture_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IWater.Texture_Property => this.Texture_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IWaterGetter.Texture_Property => this.Texture_Property;
         #endregion
         #region Opacity
-        protected Byte _Opacity;
-        protected PropertyForwarder<Water, Byte> _OpacityForwarder;
-        public INotifyingSetItem<Byte> Opacity_Property => _OpacityForwarder ?? (_OpacityForwarder = new PropertyForwarder<Water, Byte>(this, (int)Water_FieldIndex.Opacity));
+        public bool Opacity_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Water_FieldIndex.Opacity];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.Opacity, nameof(Opacity_IsSet));
+        }
+        bool IWaterGetter.Opacity_IsSet => Opacity_IsSet;
+        private Byte _Opacity;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Opacity
         {
             get => this._Opacity;
-            set => this.SetOpacity(value);
+            set => Opacity_Set(value);
         }
-        protected void SetOpacity(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Byte IWaterGetter.Opacity => this.Opacity;
+        public void Opacity_Set(
+            Byte value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.Opacity];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Opacity == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.Opacity] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Opacity;
-                _Opacity = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.Opacity,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Opacity = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Opacity, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.Opacity, nameof(Opacity), nameof(Opacity_IsSet));
         }
-        protected void UnsetOpacity()
+        public void Opacity_Unset()
         {
-            _hasBeenSetTracker[(int)Water_FieldIndex.Opacity] = false;
-            Opacity = default(Byte);
+            this.Opacity_Set(default(Byte), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte> IWater.Opacity_Property => this.Opacity_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte> IWaterGetter.Opacity_Property => this.Opacity_Property;
         #endregion
         #region Flags
-        protected Water.Flag _Flags;
-        protected PropertyForwarder<Water, Water.Flag> _FlagsForwarder;
-        public INotifyingSetItem<Water.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Water, Water.Flag>(this, (int)Water_FieldIndex.Flags));
+        public bool Flags_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Water_FieldIndex.Flags];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.Flags, nameof(Flags_IsSet));
+        }
+        bool IWaterGetter.Flags_IsSet => Flags_IsSet;
+        private Water.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Water.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => Flags_Set(value);
         }
-        protected void SetFlags(
-            Water.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Water.Flag IWaterGetter.Flags => this.Flags;
+        public void Flags_Set(
+            Water.Flag value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_WaterFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _WaterFlag_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
         }
-        protected void UnsetFlags()
+        public void Flags_Unset()
         {
-            _hasBeenSetTracker[(int)Water_FieldIndex.Flags] = false;
-            Flags = default(Water.Flag);
+            this.Flags_Set(default(Water.Flag), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Water.Flag> IWater.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Water.Flag> IWaterGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region MaterialID
-        protected String _MaterialID;
-        protected PropertyForwarder<Water, String> _MaterialIDForwarder;
-        public INotifyingSetItem<String> MaterialID_Property => _MaterialIDForwarder ?? (_MaterialIDForwarder = new PropertyForwarder<Water, String>(this, (int)Water_FieldIndex.MaterialID));
+        public bool MaterialID_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.MaterialID, nameof(MaterialID_IsSet));
+        }
+        bool IWaterGetter.MaterialID_IsSet => MaterialID_IsSet;
+        private String _MaterialID;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String MaterialID
         {
             get => this._MaterialID;
-            set => this.SetMaterialID(value);
+            set => MaterialID_Set(value);
         }
-        protected void SetMaterialID(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IWaterGetter.MaterialID => this.MaterialID;
+        public void MaterialID_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaterialID == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = MaterialID;
-                _MaterialID = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.MaterialID,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MaterialID = item;
-            }
+            this.RaiseAndSetIfChanged(ref _MaterialID, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.MaterialID, nameof(MaterialID), nameof(MaterialID_IsSet));
         }
-        protected void UnsetMaterialID()
+        public void MaterialID_Unset()
         {
-            _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID] = false;
-            MaterialID = default(String);
+            this.MaterialID_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IWater.MaterialID_Property => this.MaterialID_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IWaterGetter.MaterialID_Property => this.MaterialID_Property;
         #endregion
         #region Sound
         public FormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
@@ -256,1300 +163,239 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Sound> IWaterGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region WindVelocity
-        protected Single _WindVelocity;
-        protected PropertyForwarder<Water, Single> _WindVelocityForwarder;
-        public INotifyingSetItem<Single> WindVelocity_Property => _WindVelocityForwarder ?? (_WindVelocityForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.WindVelocity));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _WindVelocity;
         public Single WindVelocity
         {
             get => this._WindVelocity;
-            set => this.SetWindVelocity(value);
+            set => this.RaiseAndSetIfChanged(ref this._WindVelocity, value, nameof(WindVelocity));
         }
-        protected void SetWindVelocity(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.WindVelocity];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && WindVelocity == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.WindVelocity] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = WindVelocity;
-                _WindVelocity = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.WindVelocity,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _WindVelocity = item;
-            }
-        }
-        protected void UnsetWindVelocity()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.WindVelocity] = false;
-            WindVelocity = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.WindVelocity_Property => this.WindVelocity_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.WindVelocity_Property => this.WindVelocity_Property;
         #endregion
         #region WindDirection
-        protected Single _WindDirection;
-        protected PropertyForwarder<Water, Single> _WindDirectionForwarder;
-        public INotifyingSetItem<Single> WindDirection_Property => _WindDirectionForwarder ?? (_WindDirectionForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.WindDirection));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _WindDirection;
         public Single WindDirection
         {
             get => this._WindDirection;
-            set => this.SetWindDirection(value);
+            set => this.RaiseAndSetIfChanged(ref this._WindDirection, value, nameof(WindDirection));
         }
-        protected void SetWindDirection(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.WindDirection];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && WindDirection == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.WindDirection] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = WindDirection;
-                _WindDirection = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.WindDirection,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _WindDirection = item;
-            }
-        }
-        protected void UnsetWindDirection()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.WindDirection] = false;
-            WindDirection = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.WindDirection_Property => this.WindDirection_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.WindDirection_Property => this.WindDirection_Property;
         #endregion
         #region WaveAmplitude
-        protected Single _WaveAmplitude;
-        protected PropertyForwarder<Water, Single> _WaveAmplitudeForwarder;
-        public INotifyingSetItem<Single> WaveAmplitude_Property => _WaveAmplitudeForwarder ?? (_WaveAmplitudeForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.WaveAmplitude));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _WaveAmplitude;
         public Single WaveAmplitude
         {
             get => this._WaveAmplitude;
-            set => this.SetWaveAmplitude(value);
+            set => this.RaiseAndSetIfChanged(ref this._WaveAmplitude, value, nameof(WaveAmplitude));
         }
-        protected void SetWaveAmplitude(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.WaveAmplitude];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && WaveAmplitude == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.WaveAmplitude] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = WaveAmplitude;
-                _WaveAmplitude = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.WaveAmplitude,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _WaveAmplitude = item;
-            }
-        }
-        protected void UnsetWaveAmplitude()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.WaveAmplitude] = false;
-            WaveAmplitude = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.WaveAmplitude_Property => this.WaveAmplitude_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.WaveAmplitude_Property => this.WaveAmplitude_Property;
         #endregion
         #region WaveFrequency
-        protected Single _WaveFrequency;
-        protected PropertyForwarder<Water, Single> _WaveFrequencyForwarder;
-        public INotifyingSetItem<Single> WaveFrequency_Property => _WaveFrequencyForwarder ?? (_WaveFrequencyForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.WaveFrequency));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _WaveFrequency;
         public Single WaveFrequency
         {
             get => this._WaveFrequency;
-            set => this.SetWaveFrequency(value);
+            set => this.RaiseAndSetIfChanged(ref this._WaveFrequency, value, nameof(WaveFrequency));
         }
-        protected void SetWaveFrequency(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.WaveFrequency];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && WaveFrequency == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.WaveFrequency] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = WaveFrequency;
-                _WaveFrequency = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.WaveFrequency,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _WaveFrequency = item;
-            }
-        }
-        protected void UnsetWaveFrequency()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.WaveFrequency] = false;
-            WaveFrequency = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.WaveFrequency_Property => this.WaveFrequency_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.WaveFrequency_Property => this.WaveFrequency_Property;
         #endregion
         #region SunPower
-        protected Single _SunPower;
-        protected PropertyForwarder<Water, Single> _SunPowerForwarder;
-        public INotifyingSetItem<Single> SunPower_Property => _SunPowerForwarder ?? (_SunPowerForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.SunPower));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _SunPower;
         public Single SunPower
         {
             get => this._SunPower;
-            set => this.SetSunPower(value);
+            set => this.RaiseAndSetIfChanged(ref this._SunPower, value, nameof(SunPower));
         }
-        protected void SetSunPower(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.SunPower];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SunPower == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.SunPower] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = SunPower;
-                _SunPower = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.SunPower,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SunPower = item;
-            }
-        }
-        protected void UnsetSunPower()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.SunPower] = false;
-            SunPower = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.SunPower_Property => this.SunPower_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.SunPower_Property => this.SunPower_Property;
         #endregion
         #region ReflectivityAmount
-        protected Single _ReflectivityAmount;
-        protected PropertyForwarder<Water, Single> _ReflectivityAmountForwarder;
-        public INotifyingSetItem<Single> ReflectivityAmount_Property => _ReflectivityAmountForwarder ?? (_ReflectivityAmountForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.ReflectivityAmount));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _ReflectivityAmount;
         public Single ReflectivityAmount
         {
             get => this._ReflectivityAmount;
-            set => this.SetReflectivityAmount(value);
+            set => this.RaiseAndSetIfChanged(ref this._ReflectivityAmount, value, nameof(ReflectivityAmount));
         }
-        protected void SetReflectivityAmount(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.ReflectivityAmount];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ReflectivityAmount == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.ReflectivityAmount] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = ReflectivityAmount;
-                _ReflectivityAmount = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.ReflectivityAmount,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ReflectivityAmount = item;
-            }
-        }
-        protected void UnsetReflectivityAmount()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.ReflectivityAmount] = false;
-            ReflectivityAmount = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.ReflectivityAmount_Property => this.ReflectivityAmount_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.ReflectivityAmount_Property => this.ReflectivityAmount_Property;
         #endregion
         #region FresnelAmount
-        protected Single _FresnelAmount;
-        protected PropertyForwarder<Water, Single> _FresnelAmountForwarder;
-        public INotifyingSetItem<Single> FresnelAmount_Property => _FresnelAmountForwarder ?? (_FresnelAmountForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.FresnelAmount));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FresnelAmount;
         public Single FresnelAmount
         {
             get => this._FresnelAmount;
-            set => this.SetFresnelAmount(value);
+            set => this.RaiseAndSetIfChanged(ref this._FresnelAmount, value, nameof(FresnelAmount));
         }
-        protected void SetFresnelAmount(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.FresnelAmount];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FresnelAmount == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.FresnelAmount] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = FresnelAmount;
-                _FresnelAmount = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.FresnelAmount,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FresnelAmount = item;
-            }
-        }
-        protected void UnsetFresnelAmount()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.FresnelAmount] = false;
-            FresnelAmount = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.FresnelAmount_Property => this.FresnelAmount_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.FresnelAmount_Property => this.FresnelAmount_Property;
         #endregion
         #region ScrollXSpeed
-        protected Single _ScrollXSpeed;
-        protected PropertyForwarder<Water, Single> _ScrollXSpeedForwarder;
-        public INotifyingSetItem<Single> ScrollXSpeed_Property => _ScrollXSpeedForwarder ?? (_ScrollXSpeedForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.ScrollXSpeed));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _ScrollXSpeed;
         public Single ScrollXSpeed
         {
             get => this._ScrollXSpeed;
-            set => this.SetScrollXSpeed(value);
+            set => this.RaiseAndSetIfChanged(ref this._ScrollXSpeed, value, nameof(ScrollXSpeed));
         }
-        protected void SetScrollXSpeed(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.ScrollXSpeed];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ScrollXSpeed == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.ScrollXSpeed] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = ScrollXSpeed;
-                _ScrollXSpeed = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.ScrollXSpeed,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ScrollXSpeed = item;
-            }
-        }
-        protected void UnsetScrollXSpeed()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.ScrollXSpeed] = false;
-            ScrollXSpeed = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.ScrollXSpeed_Property => this.ScrollXSpeed_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.ScrollXSpeed_Property => this.ScrollXSpeed_Property;
         #endregion
         #region ScrollYSpeed
-        protected Single _ScrollYSpeed;
-        protected PropertyForwarder<Water, Single> _ScrollYSpeedForwarder;
-        public INotifyingSetItem<Single> ScrollYSpeed_Property => _ScrollYSpeedForwarder ?? (_ScrollYSpeedForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.ScrollYSpeed));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _ScrollYSpeed;
         public Single ScrollYSpeed
         {
             get => this._ScrollYSpeed;
-            set => this.SetScrollYSpeed(value);
+            set => this.RaiseAndSetIfChanged(ref this._ScrollYSpeed, value, nameof(ScrollYSpeed));
         }
-        protected void SetScrollYSpeed(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.ScrollYSpeed];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ScrollYSpeed == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.ScrollYSpeed] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = ScrollYSpeed;
-                _ScrollYSpeed = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.ScrollYSpeed,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ScrollYSpeed = item;
-            }
-        }
-        protected void UnsetScrollYSpeed()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.ScrollYSpeed] = false;
-            ScrollYSpeed = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.ScrollYSpeed_Property => this.ScrollYSpeed_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.ScrollYSpeed_Property => this.ScrollYSpeed_Property;
         #endregion
         #region FogDistanceNearPlane
-        protected Single _FogDistanceNearPlane;
-        protected PropertyForwarder<Water, Single> _FogDistanceNearPlaneForwarder;
-        public INotifyingSetItem<Single> FogDistanceNearPlane_Property => _FogDistanceNearPlaneForwarder ?? (_FogDistanceNearPlaneForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.FogDistanceNearPlane));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FogDistanceNearPlane;
         public Single FogDistanceNearPlane
         {
             get => this._FogDistanceNearPlane;
-            set => this.SetFogDistanceNearPlane(value);
+            set => this.RaiseAndSetIfChanged(ref this._FogDistanceNearPlane, value, nameof(FogDistanceNearPlane));
         }
-        protected void SetFogDistanceNearPlane(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.FogDistanceNearPlane];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogDistanceNearPlane == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.FogDistanceNearPlane] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = FogDistanceNearPlane;
-                _FogDistanceNearPlane = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.FogDistanceNearPlane,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FogDistanceNearPlane = item;
-            }
-        }
-        protected void UnsetFogDistanceNearPlane()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.FogDistanceNearPlane] = false;
-            FogDistanceNearPlane = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.FogDistanceNearPlane_Property => this.FogDistanceNearPlane_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.FogDistanceNearPlane_Property => this.FogDistanceNearPlane_Property;
         #endregion
         #region FogDistanceFarPlane
-        protected Single _FogDistanceFarPlane;
-        protected PropertyForwarder<Water, Single> _FogDistanceFarPlaneForwarder;
-        public INotifyingSetItem<Single> FogDistanceFarPlane_Property => _FogDistanceFarPlaneForwarder ?? (_FogDistanceFarPlaneForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.FogDistanceFarPlane));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FogDistanceFarPlane;
         public Single FogDistanceFarPlane
         {
             get => this._FogDistanceFarPlane;
-            set => this.SetFogDistanceFarPlane(value);
+            set => this.RaiseAndSetIfChanged(ref this._FogDistanceFarPlane, value, nameof(FogDistanceFarPlane));
         }
-        protected void SetFogDistanceFarPlane(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.FogDistanceFarPlane];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FogDistanceFarPlane == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.FogDistanceFarPlane] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = FogDistanceFarPlane;
-                _FogDistanceFarPlane = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.FogDistanceFarPlane,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FogDistanceFarPlane = item;
-            }
-        }
-        protected void UnsetFogDistanceFarPlane()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.FogDistanceFarPlane] = false;
-            FogDistanceFarPlane = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.FogDistanceFarPlane_Property => this.FogDistanceFarPlane_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.FogDistanceFarPlane_Property => this.FogDistanceFarPlane_Property;
         #endregion
         #region ShallowColor
-        protected Color _ShallowColor;
-        protected PropertyForwarder<Water, Color> _ShallowColorForwarder;
-        public INotifyingSetItem<Color> ShallowColor_Property => _ShallowColorForwarder ?? (_ShallowColorForwarder = new PropertyForwarder<Water, Color>(this, (int)Water_FieldIndex.ShallowColor));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _ShallowColor;
         public Color ShallowColor
         {
             get => this._ShallowColor;
-            set => this.SetShallowColor(value);
+            set => this.RaiseAndSetIfChanged(ref this._ShallowColor, value, nameof(ShallowColor));
         }
-        protected void SetShallowColor(
-            Color item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.ShallowColor];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ShallowColor == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.ShallowColor] = hasBeenSet;
-            }
-            if (_Color_subscriptions != null)
-            {
-                var tmp = ShallowColor;
-                _ShallowColor = item;
-                _Color_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.ShallowColor,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ShallowColor = item;
-            }
-        }
-        protected void UnsetShallowColor()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.ShallowColor] = false;
-            ShallowColor = default(Color);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Color> IWater.ShallowColor_Property => this.ShallowColor_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Color> IWaterGetter.ShallowColor_Property => this.ShallowColor_Property;
         #endregion
         #region DeepColor
-        protected Color _DeepColor;
-        protected PropertyForwarder<Water, Color> _DeepColorForwarder;
-        public INotifyingSetItem<Color> DeepColor_Property => _DeepColorForwarder ?? (_DeepColorForwarder = new PropertyForwarder<Water, Color>(this, (int)Water_FieldIndex.DeepColor));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _DeepColor;
         public Color DeepColor
         {
             get => this._DeepColor;
-            set => this.SetDeepColor(value);
+            set => this.RaiseAndSetIfChanged(ref this._DeepColor, value, nameof(DeepColor));
         }
-        protected void SetDeepColor(
-            Color item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.DeepColor];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DeepColor == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.DeepColor] = hasBeenSet;
-            }
-            if (_Color_subscriptions != null)
-            {
-                var tmp = DeepColor;
-                _DeepColor = item;
-                _Color_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.DeepColor,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DeepColor = item;
-            }
-        }
-        protected void UnsetDeepColor()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.DeepColor] = false;
-            DeepColor = default(Color);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Color> IWater.DeepColor_Property => this.DeepColor_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Color> IWaterGetter.DeepColor_Property => this.DeepColor_Property;
         #endregion
         #region ReflectionColor
-        protected Color _ReflectionColor;
-        protected PropertyForwarder<Water, Color> _ReflectionColorForwarder;
-        public INotifyingSetItem<Color> ReflectionColor_Property => _ReflectionColorForwarder ?? (_ReflectionColorForwarder = new PropertyForwarder<Water, Color>(this, (int)Water_FieldIndex.ReflectionColor));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _ReflectionColor;
         public Color ReflectionColor
         {
             get => this._ReflectionColor;
-            set => this.SetReflectionColor(value);
+            set => this.RaiseAndSetIfChanged(ref this._ReflectionColor, value, nameof(ReflectionColor));
         }
-        protected void SetReflectionColor(
-            Color item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.ReflectionColor];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ReflectionColor == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.ReflectionColor] = hasBeenSet;
-            }
-            if (_Color_subscriptions != null)
-            {
-                var tmp = ReflectionColor;
-                _ReflectionColor = item;
-                _Color_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.ReflectionColor,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ReflectionColor = item;
-            }
-        }
-        protected void UnsetReflectionColor()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.ReflectionColor] = false;
-            ReflectionColor = default(Color);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Color> IWater.ReflectionColor_Property => this.ReflectionColor_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Color> IWaterGetter.ReflectionColor_Property => this.ReflectionColor_Property;
         #endregion
         #region TextureBlend
-        protected Byte _TextureBlend;
-        protected PropertyForwarder<Water, Byte> _TextureBlendForwarder;
-        public INotifyingSetItem<Byte> TextureBlend_Property => _TextureBlendForwarder ?? (_TextureBlendForwarder = new PropertyForwarder<Water, Byte>(this, (int)Water_FieldIndex.TextureBlend));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _TextureBlend;
         public Byte TextureBlend
         {
             get => this._TextureBlend;
-            set => this.SetTextureBlend(value);
+            set => this.RaiseAndSetIfChanged(ref this._TextureBlend, value, nameof(TextureBlend));
         }
-        protected void SetTextureBlend(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.TextureBlend];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && TextureBlend == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.TextureBlend] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = TextureBlend;
-                _TextureBlend = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.TextureBlend,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _TextureBlend = item;
-            }
-        }
-        protected void UnsetTextureBlend()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.TextureBlend] = false;
-            TextureBlend = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IWater.TextureBlend_Property => this.TextureBlend_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IWaterGetter.TextureBlend_Property => this.TextureBlend_Property;
         #endregion
         #region RainSimulatorForce
-        protected Single _RainSimulatorForce;
-        protected PropertyForwarder<Water, Single> _RainSimulatorForceForwarder;
-        public INotifyingSetItem<Single> RainSimulatorForce_Property => _RainSimulatorForceForwarder ?? (_RainSimulatorForceForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.RainSimulatorForce));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RainSimulatorForce;
         public Single RainSimulatorForce
         {
             get => this._RainSimulatorForce;
-            set => this.SetRainSimulatorForce(value);
+            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorForce, value, nameof(RainSimulatorForce));
         }
-        protected void SetRainSimulatorForce(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorForce];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RainSimulatorForce == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorForce] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RainSimulatorForce;
-                _RainSimulatorForce = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.RainSimulatorForce,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RainSimulatorForce = item;
-            }
-        }
-        protected void UnsetRainSimulatorForce()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorForce] = false;
-            RainSimulatorForce = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.RainSimulatorForce_Property => this.RainSimulatorForce_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.RainSimulatorForce_Property => this.RainSimulatorForce_Property;
         #endregion
         #region RainSimulatorVelocity
-        protected Single _RainSimulatorVelocity;
-        protected PropertyForwarder<Water, Single> _RainSimulatorVelocityForwarder;
-        public INotifyingSetItem<Single> RainSimulatorVelocity_Property => _RainSimulatorVelocityForwarder ?? (_RainSimulatorVelocityForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.RainSimulatorVelocity));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RainSimulatorVelocity;
         public Single RainSimulatorVelocity
         {
             get => this._RainSimulatorVelocity;
-            set => this.SetRainSimulatorVelocity(value);
+            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorVelocity, value, nameof(RainSimulatorVelocity));
         }
-        protected void SetRainSimulatorVelocity(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorVelocity];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RainSimulatorVelocity == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorVelocity] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RainSimulatorVelocity;
-                _RainSimulatorVelocity = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.RainSimulatorVelocity,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RainSimulatorVelocity = item;
-            }
-        }
-        protected void UnsetRainSimulatorVelocity()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorVelocity] = false;
-            RainSimulatorVelocity = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.RainSimulatorVelocity_Property => this.RainSimulatorVelocity_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.RainSimulatorVelocity_Property => this.RainSimulatorVelocity_Property;
         #endregion
         #region RainSimulatorFalloff
-        protected Single _RainSimulatorFalloff;
-        protected PropertyForwarder<Water, Single> _RainSimulatorFalloffForwarder;
-        public INotifyingSetItem<Single> RainSimulatorFalloff_Property => _RainSimulatorFalloffForwarder ?? (_RainSimulatorFalloffForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.RainSimulatorFalloff));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RainSimulatorFalloff;
         public Single RainSimulatorFalloff
         {
             get => this._RainSimulatorFalloff;
-            set => this.SetRainSimulatorFalloff(value);
+            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorFalloff, value, nameof(RainSimulatorFalloff));
         }
-        protected void SetRainSimulatorFalloff(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorFalloff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RainSimulatorFalloff == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorFalloff] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RainSimulatorFalloff;
-                _RainSimulatorFalloff = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.RainSimulatorFalloff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RainSimulatorFalloff = item;
-            }
-        }
-        protected void UnsetRainSimulatorFalloff()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorFalloff] = false;
-            RainSimulatorFalloff = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.RainSimulatorFalloff_Property => this.RainSimulatorFalloff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.RainSimulatorFalloff_Property => this.RainSimulatorFalloff_Property;
         #endregion
         #region RainSimulatorDampner
-        protected Single _RainSimulatorDampner;
-        protected PropertyForwarder<Water, Single> _RainSimulatorDampnerForwarder;
-        public INotifyingSetItem<Single> RainSimulatorDampner_Property => _RainSimulatorDampnerForwarder ?? (_RainSimulatorDampnerForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.RainSimulatorDampner));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RainSimulatorDampner;
         public Single RainSimulatorDampner
         {
             get => this._RainSimulatorDampner;
-            set => this.SetRainSimulatorDampner(value);
+            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorDampner, value, nameof(RainSimulatorDampner));
         }
-        protected void SetRainSimulatorDampner(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorDampner];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RainSimulatorDampner == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorDampner] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RainSimulatorDampner;
-                _RainSimulatorDampner = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.RainSimulatorDampner,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RainSimulatorDampner = item;
-            }
-        }
-        protected void UnsetRainSimulatorDampner()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorDampner] = false;
-            RainSimulatorDampner = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.RainSimulatorDampner_Property => this.RainSimulatorDampner_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.RainSimulatorDampner_Property => this.RainSimulatorDampner_Property;
         #endregion
         #region RainSimulatorStartingSize
-        protected Single _RainSimulatorStartingSize;
-        protected PropertyForwarder<Water, Single> _RainSimulatorStartingSizeForwarder;
-        public INotifyingSetItem<Single> RainSimulatorStartingSize_Property => _RainSimulatorStartingSizeForwarder ?? (_RainSimulatorStartingSizeForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.RainSimulatorStartingSize));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RainSimulatorStartingSize;
         public Single RainSimulatorStartingSize
         {
             get => this._RainSimulatorStartingSize;
-            set => this.SetRainSimulatorStartingSize(value);
+            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorStartingSize, value, nameof(RainSimulatorStartingSize));
         }
-        protected void SetRainSimulatorStartingSize(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorStartingSize];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && RainSimulatorStartingSize == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorStartingSize] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = RainSimulatorStartingSize;
-                _RainSimulatorStartingSize = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.RainSimulatorStartingSize,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RainSimulatorStartingSize = item;
-            }
-        }
-        protected void UnsetRainSimulatorStartingSize()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.RainSimulatorStartingSize] = false;
-            RainSimulatorStartingSize = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.RainSimulatorStartingSize_Property => this.RainSimulatorStartingSize_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.RainSimulatorStartingSize_Property => this.RainSimulatorStartingSize_Property;
         #endregion
         #region DisplacementSimulatorForce
-        protected Single _DisplacementSimulatorForce;
-        protected PropertyForwarder<Water, Single> _DisplacementSimulatorForceForwarder;
-        public INotifyingSetItem<Single> DisplacementSimulatorForce_Property => _DisplacementSimulatorForceForwarder ?? (_DisplacementSimulatorForceForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.DisplacementSimulatorForce));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DisplacementSimulatorForce;
         public Single DisplacementSimulatorForce
         {
             get => this._DisplacementSimulatorForce;
-            set => this.SetDisplacementSimulatorForce(value);
+            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorForce, value, nameof(DisplacementSimulatorForce));
         }
-        protected void SetDisplacementSimulatorForce(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorForce];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DisplacementSimulatorForce == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorForce] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DisplacementSimulatorForce;
-                _DisplacementSimulatorForce = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.DisplacementSimulatorForce,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DisplacementSimulatorForce = item;
-            }
-        }
-        protected void UnsetDisplacementSimulatorForce()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorForce] = false;
-            DisplacementSimulatorForce = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.DisplacementSimulatorForce_Property => this.DisplacementSimulatorForce_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.DisplacementSimulatorForce_Property => this.DisplacementSimulatorForce_Property;
         #endregion
         #region DisplacementSimulatorVelocity
-        protected Single _DisplacementSimulatorVelocity;
-        protected PropertyForwarder<Water, Single> _DisplacementSimulatorVelocityForwarder;
-        public INotifyingSetItem<Single> DisplacementSimulatorVelocity_Property => _DisplacementSimulatorVelocityForwarder ?? (_DisplacementSimulatorVelocityForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.DisplacementSimulatorVelocity));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DisplacementSimulatorVelocity;
         public Single DisplacementSimulatorVelocity
         {
             get => this._DisplacementSimulatorVelocity;
-            set => this.SetDisplacementSimulatorVelocity(value);
+            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorVelocity, value, nameof(DisplacementSimulatorVelocity));
         }
-        protected void SetDisplacementSimulatorVelocity(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorVelocity];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DisplacementSimulatorVelocity == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorVelocity] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DisplacementSimulatorVelocity;
-                _DisplacementSimulatorVelocity = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DisplacementSimulatorVelocity = item;
-            }
-        }
-        protected void UnsetDisplacementSimulatorVelocity()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorVelocity] = false;
-            DisplacementSimulatorVelocity = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.DisplacementSimulatorVelocity_Property => this.DisplacementSimulatorVelocity_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.DisplacementSimulatorVelocity_Property => this.DisplacementSimulatorVelocity_Property;
         #endregion
         #region DisplacementSimulatorFalloff
-        protected Single _DisplacementSimulatorFalloff;
-        protected PropertyForwarder<Water, Single> _DisplacementSimulatorFalloffForwarder;
-        public INotifyingSetItem<Single> DisplacementSimulatorFalloff_Property => _DisplacementSimulatorFalloffForwarder ?? (_DisplacementSimulatorFalloffForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.DisplacementSimulatorFalloff));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DisplacementSimulatorFalloff;
         public Single DisplacementSimulatorFalloff
         {
             get => this._DisplacementSimulatorFalloff;
-            set => this.SetDisplacementSimulatorFalloff(value);
+            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorFalloff, value, nameof(DisplacementSimulatorFalloff));
         }
-        protected void SetDisplacementSimulatorFalloff(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorFalloff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DisplacementSimulatorFalloff == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorFalloff] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DisplacementSimulatorFalloff;
-                _DisplacementSimulatorFalloff = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DisplacementSimulatorFalloff = item;
-            }
-        }
-        protected void UnsetDisplacementSimulatorFalloff()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorFalloff] = false;
-            DisplacementSimulatorFalloff = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.DisplacementSimulatorFalloff_Property => this.DisplacementSimulatorFalloff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.DisplacementSimulatorFalloff_Property => this.DisplacementSimulatorFalloff_Property;
         #endregion
         #region DisplacementSimulatorDampner
-        protected Single _DisplacementSimulatorDampner;
-        protected PropertyForwarder<Water, Single> _DisplacementSimulatorDampnerForwarder;
-        public INotifyingSetItem<Single> DisplacementSimulatorDampner_Property => _DisplacementSimulatorDampnerForwarder ?? (_DisplacementSimulatorDampnerForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.DisplacementSimulatorDampner));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DisplacementSimulatorDampner;
         public Single DisplacementSimulatorDampner
         {
             get => this._DisplacementSimulatorDampner;
-            set => this.SetDisplacementSimulatorDampner(value);
+            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorDampner, value, nameof(DisplacementSimulatorDampner));
         }
-        protected void SetDisplacementSimulatorDampner(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorDampner];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DisplacementSimulatorDampner == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorDampner] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DisplacementSimulatorDampner;
-                _DisplacementSimulatorDampner = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.DisplacementSimulatorDampner,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DisplacementSimulatorDampner = item;
-            }
-        }
-        protected void UnsetDisplacementSimulatorDampner()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorDampner] = false;
-            DisplacementSimulatorDampner = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.DisplacementSimulatorDampner_Property => this.DisplacementSimulatorDampner_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.DisplacementSimulatorDampner_Property => this.DisplacementSimulatorDampner_Property;
         #endregion
         #region DisplacementSimulatorStartingSize
-        protected Single _DisplacementSimulatorStartingSize;
-        protected PropertyForwarder<Water, Single> _DisplacementSimulatorStartingSizeForwarder;
-        public INotifyingSetItem<Single> DisplacementSimulatorStartingSize_Property => _DisplacementSimulatorStartingSizeForwarder ?? (_DisplacementSimulatorStartingSizeForwarder = new PropertyForwarder<Water, Single>(this, (int)Water_FieldIndex.DisplacementSimulatorStartingSize));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DisplacementSimulatorStartingSize;
         public Single DisplacementSimulatorStartingSize
         {
             get => this._DisplacementSimulatorStartingSize;
-            set => this.SetDisplacementSimulatorStartingSize(value);
+            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorStartingSize, value, nameof(DisplacementSimulatorStartingSize));
         }
-        protected void SetDisplacementSimulatorStartingSize(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorStartingSize];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DisplacementSimulatorStartingSize == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorStartingSize] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = DisplacementSimulatorStartingSize;
-                _DisplacementSimulatorStartingSize = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DisplacementSimulatorStartingSize = item;
-            }
-        }
-        protected void UnsetDisplacementSimulatorStartingSize()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.DisplacementSimulatorStartingSize] = false;
-            DisplacementSimulatorStartingSize = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IWater.DisplacementSimulatorStartingSize_Property => this.DisplacementSimulatorStartingSize_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IWaterGetter.DisplacementSimulatorStartingSize_Property => this.DisplacementSimulatorStartingSize_Property;
         #endregion
         #region Damage
-        protected UInt16 _Damage;
-        protected PropertyForwarder<Water, UInt16> _DamageForwarder;
-        public INotifyingSetItem<UInt16> Damage_Property => _DamageForwarder ?? (_DamageForwarder = new PropertyForwarder<Water, UInt16>(this, (int)Water_FieldIndex.Damage));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _Damage;
         public UInt16 Damage
         {
             get => this._Damage;
-            set => this.SetDamage(value);
+            set => this.RaiseAndSetIfChanged(ref this._Damage, value, nameof(Damage));
         }
-        protected void SetDamage(
-            UInt16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.Damage];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Damage == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.Damage] = hasBeenSet;
-            }
-            if (_UInt16_subscriptions != null)
-            {
-                var tmp = Damage;
-                _Damage = item;
-                _UInt16_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.Damage,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Damage = item;
-            }
-        }
-        protected void UnsetDamage()
-        {
-            _hasBeenSetTracker[(int)Water_FieldIndex.Damage] = false;
-            Damage = default(UInt16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt16> IWater.Damage_Property => this.Damage_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt16> IWaterGetter.Damage_Property => this.Damage_Property;
         #endregion
         #region RelatedWaters
-        protected RelatedWaters _RelatedWaters;
-        protected PropertyForwarder<Water, RelatedWaters> _RelatedWatersForwarder;
-        public INotifyingSetItem<RelatedWaters> RelatedWaters_Property => _RelatedWatersForwarder ?? (_RelatedWatersForwarder = new PropertyForwarder<Water, RelatedWaters>(this, (int)Water_FieldIndex.RelatedWaters));
+        public bool RelatedWaters_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Water_FieldIndex.RelatedWaters, nameof(RelatedWaters_IsSet));
+        }
+        bool IWaterGetter.RelatedWaters_IsSet => RelatedWaters_IsSet;
+        private RelatedWaters _RelatedWaters;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RelatedWaters RelatedWaters
         {
-            get => this._RelatedWaters;
-            set => this.SetRelatedWaters(value);
+            get => _RelatedWaters;
+            set => RelatedWaters_Set(value);
         }
-        protected void SetRelatedWaters(
-            RelatedWaters item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void RelatedWaters_Set(
+            RelatedWaters value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(RelatedWaters, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters] = hasBeenSet;
-            }
-            if (_RelatedWaters_subscriptions != null)
-            {
-                var tmp = RelatedWaters;
-                _RelatedWaters = item;
-                _RelatedWaters_subscriptions.FireSubscriptions(
-                    index: (int)Water_FieldIndex.RelatedWaters,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RelatedWaters = item;
-            }
+            this.RaiseAndSetIfChanged(ref _RelatedWaters, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.RelatedWaters, nameof(RelatedWaters), nameof(RelatedWaters_IsSet));
         }
-        protected void UnsetRelatedWaters()
+        public void RelatedWaters_Unset()
         {
-            _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters] = false;
-            RelatedWaters = default(RelatedWaters);
+            this.RelatedWaters_Set(default(RelatedWaters), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<RelatedWaters> IWater.RelatedWaters_Property => this.RelatedWaters_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<RelatedWaters> IWaterGetter.RelatedWaters_Property => this.RelatedWaters_Property;
+        RelatedWaters IWaterGetter.RelatedWaters => this.RelatedWaters;
         #endregion
 
         #region Loqui Getter Interface
@@ -1610,23 +456,23 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Texture_Property.HasBeenSet != rhs.Texture_Property.HasBeenSet) return false;
-            if (Texture_Property.HasBeenSet)
+            if (Texture_IsSet != rhs.Texture_IsSet) return false;
+            if (Texture_IsSet)
             {
                 if (!object.Equals(this.Texture, rhs.Texture)) return false;
             }
-            if (Opacity_Property.HasBeenSet != rhs.Opacity_Property.HasBeenSet) return false;
-            if (Opacity_Property.HasBeenSet)
+            if (Opacity_IsSet != rhs.Opacity_IsSet) return false;
+            if (Opacity_IsSet)
             {
                 if (this.Opacity != rhs.Opacity) return false;
             }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (Flags_IsSet)
             {
                 if (this.Flags != rhs.Flags) return false;
             }
-            if (MaterialID_Property.HasBeenSet != rhs.MaterialID_Property.HasBeenSet) return false;
-            if (MaterialID_Property.HasBeenSet)
+            if (MaterialID_IsSet != rhs.MaterialID_IsSet) return false;
+            if (MaterialID_IsSet)
             {
                 if (!object.Equals(this.MaterialID, rhs.MaterialID)) return false;
             }
@@ -1661,8 +507,8 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner)) return false;
             if (!this.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize)) return false;
             if (this.Damage != rhs.Damage) return false;
-            if (RelatedWaters_Property.HasBeenSet != rhs.RelatedWaters_Property.HasBeenSet) return false;
-            if (RelatedWaters_Property.HasBeenSet)
+            if (RelatedWaters_IsSet != rhs.RelatedWaters_IsSet) return false;
+            if (RelatedWaters_IsSet)
             {
                 if (!object.Equals(this.RelatedWaters, rhs.RelatedWaters)) return false;
             }
@@ -1672,19 +518,19 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Texture_Property.HasBeenSet)
+            if (Texture_IsSet)
             {
                 ret = HashHelper.GetHashCode(Texture).CombineHashCode(ret);
             }
-            if (Opacity_Property.HasBeenSet)
+            if (Opacity_IsSet)
             {
                 ret = HashHelper.GetHashCode(Opacity).CombineHashCode(ret);
             }
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet)
             {
                 ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             }
-            if (MaterialID_Property.HasBeenSet)
+            if (MaterialID_IsSet)
             {
                 ret = HashHelper.GetHashCode(MaterialID).CombineHashCode(ret);
             }
@@ -1718,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(DisplacementSimulatorDampner).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(DisplacementSimulatorStartingSize).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Damage).CombineHashCode(ret);
-            if (RelatedWaters_Property.HasBeenSet)
+            if (RelatedWaters_IsSet)
             {
                 ret = HashHelper.GetHashCode(RelatedWaters).CombineHashCode(ret);
             }
@@ -2050,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetTexture();
+                            item.Texture = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -2076,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetOpacity();
+                            item.Opacity = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2102,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Water.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -2128,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMaterialID();
+                            item.MaterialID = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -2161,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetWindVelocity();
+                            item.WindVelocity = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2187,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetWindDirection();
+                            item.WindDirection = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2213,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetWaveAmplitude();
+                            item.WaveAmplitude = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2239,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetWaveFrequency();
+                            item.WaveFrequency = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2265,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSunPower();
+                            item.SunPower = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2291,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetReflectivityAmount();
+                            item.ReflectivityAmount = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2317,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFresnelAmount();
+                            item.FresnelAmount = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2343,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetScrollXSpeed();
+                            item.ScrollXSpeed = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2369,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetScrollYSpeed();
+                            item.ScrollYSpeed = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2395,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFogDistanceNearPlane();
+                            item.FogDistanceNearPlane = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2421,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFogDistanceFarPlane();
+                            item.FogDistanceFarPlane = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2447,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetShallowColor();
+                            item.ShallowColor = default(Color);
                         }
                     }
                     catch (Exception ex)
@@ -2473,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDeepColor();
+                            item.DeepColor = default(Color);
                         }
                     }
                     catch (Exception ex)
@@ -2499,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetReflectionColor();
+                            item.ReflectionColor = default(Color);
                         }
                     }
                     catch (Exception ex)
@@ -2525,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetTextureBlend();
+                            item.TextureBlend = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2551,7 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRainSimulatorForce();
+                            item.RainSimulatorForce = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2577,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRainSimulatorVelocity();
+                            item.RainSimulatorVelocity = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2603,7 +1449,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRainSimulatorFalloff();
+                            item.RainSimulatorFalloff = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2629,7 +1475,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRainSimulatorDampner();
+                            item.RainSimulatorDampner = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2655,7 +1501,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRainSimulatorStartingSize();
+                            item.RainSimulatorStartingSize = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2681,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDisplacementSimulatorForce();
+                            item.DisplacementSimulatorForce = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2707,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDisplacementSimulatorVelocity();
+                            item.DisplacementSimulatorVelocity = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2733,7 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDisplacementSimulatorFalloff();
+                            item.DisplacementSimulatorFalloff = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2759,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDisplacementSimulatorDampner();
+                            item.DisplacementSimulatorDampner = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2785,7 +1631,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDisplacementSimulatorStartingSize();
+                            item.DisplacementSimulatorStartingSize = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2811,7 +1657,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDamage();
+                            item.Damage = default(UInt16);
                         }
                     }
                     catch (Exception ex)
@@ -2838,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRelatedWaters();
+                            item.RelatedWaters = default(RelatedWaters);
                         }
                     }
                     catch (Exception ex)
@@ -2907,1215 +1753,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Texture:
-                    return Texture;
-                case Water_FieldIndex.MaterialID:
-                    return MaterialID;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Texture:
-                    SetTexture(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.MaterialID:
-                    SetMaterialID(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Texture:
-                    SetTexture(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.MaterialID:
-                    SetMaterialID(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Texture:
-                case Water_FieldIndex.MaterialID:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Opacity:
-                    return Opacity;
-                case Water_FieldIndex.TextureBlend:
-                    return TextureBlend;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Opacity:
-                    SetOpacity(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.TextureBlend:
-                    SetTextureBlend(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Opacity:
-                    SetOpacity(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.TextureBlend:
-                    SetTextureBlend(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Opacity:
-                case Water_FieldIndex.TextureBlend:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Water.Flag
-        protected ObjectCentralizationSubscriptions<Water.Flag> _WaterFlag_subscriptions;
-        Water.Flag IPropertySupporter<Water.Flag>.Get(int index)
-        {
-            return GetWaterFlag(index: index);
-        }
-
-        protected Water.Flag GetWaterFlag(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Water.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<Water.Flag>.Set(
-            int index,
-            Water.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetWaterFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetWaterFlag(
-            int index,
-            Water.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Water.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Water.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Water.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Water.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetWaterFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetWaterFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(Water.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Water.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Water.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Water.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_WaterFlag_subscriptions == null)
-            {
-                _WaterFlag_subscriptions = new ObjectCentralizationSubscriptions<Water.Flag>();
-            }
-            _WaterFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Water.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _WaterFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Water.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Water.Flag IPropertySupporter<Water.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueWaterFlag(index: index);
-        }
-
-        protected Water.Flag DefaultValueWaterFlag(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Flags:
-                    return default(Water.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Water.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.WindVelocity:
-                    return WindVelocity;
-                case Water_FieldIndex.WindDirection:
-                    return WindDirection;
-                case Water_FieldIndex.WaveAmplitude:
-                    return WaveAmplitude;
-                case Water_FieldIndex.WaveFrequency:
-                    return WaveFrequency;
-                case Water_FieldIndex.SunPower:
-                    return SunPower;
-                case Water_FieldIndex.ReflectivityAmount:
-                    return ReflectivityAmount;
-                case Water_FieldIndex.FresnelAmount:
-                    return FresnelAmount;
-                case Water_FieldIndex.ScrollXSpeed:
-                    return ScrollXSpeed;
-                case Water_FieldIndex.ScrollYSpeed:
-                    return ScrollYSpeed;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    return FogDistanceNearPlane;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    return FogDistanceFarPlane;
-                case Water_FieldIndex.RainSimulatorForce:
-                    return RainSimulatorForce;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    return RainSimulatorVelocity;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    return RainSimulatorFalloff;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    return RainSimulatorDampner;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    return RainSimulatorStartingSize;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    return DisplacementSimulatorForce;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    return DisplacementSimulatorVelocity;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    return DisplacementSimulatorFalloff;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    return DisplacementSimulatorDampner;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    return DisplacementSimulatorStartingSize;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.WindVelocity:
-                    SetWindVelocity(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.WindDirection:
-                    SetWindDirection(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.WaveAmplitude:
-                    SetWaveAmplitude(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.WaveFrequency:
-                    SetWaveFrequency(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.SunPower:
-                    SetSunPower(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.ReflectivityAmount:
-                    SetReflectivityAmount(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.FresnelAmount:
-                    SetFresnelAmount(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.ScrollXSpeed:
-                    SetScrollXSpeed(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.ScrollYSpeed:
-                    SetScrollYSpeed(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    SetFogDistanceNearPlane(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    SetFogDistanceFarPlane(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.RainSimulatorForce:
-                    SetRainSimulatorForce(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    SetRainSimulatorVelocity(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    SetRainSimulatorFalloff(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    SetRainSimulatorDampner(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    SetRainSimulatorStartingSize(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    SetDisplacementSimulatorForce(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    SetDisplacementSimulatorVelocity(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    SetDisplacementSimulatorFalloff(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    SetDisplacementSimulatorDampner(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    SetDisplacementSimulatorStartingSize(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.WindVelocity:
-                    SetWindVelocity(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.WindDirection:
-                    SetWindDirection(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.WaveAmplitude:
-                    SetWaveAmplitude(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.WaveFrequency:
-                    SetWaveFrequency(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.SunPower:
-                    SetSunPower(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.ReflectivityAmount:
-                    SetReflectivityAmount(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.FresnelAmount:
-                    SetFresnelAmount(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.ScrollXSpeed:
-                    SetScrollXSpeed(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.ScrollYSpeed:
-                    SetScrollYSpeed(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    SetFogDistanceNearPlane(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    SetFogDistanceFarPlane(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.RainSimulatorForce:
-                    SetRainSimulatorForce(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    SetRainSimulatorVelocity(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    SetRainSimulatorFalloff(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    SetRainSimulatorDampner(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    SetRainSimulatorStartingSize(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    SetDisplacementSimulatorForce(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    SetDisplacementSimulatorVelocity(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    SetDisplacementSimulatorFalloff(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    SetDisplacementSimulatorDampner(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    SetDisplacementSimulatorStartingSize(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.WindVelocity:
-                case Water_FieldIndex.WindDirection:
-                case Water_FieldIndex.WaveAmplitude:
-                case Water_FieldIndex.WaveFrequency:
-                case Water_FieldIndex.SunPower:
-                case Water_FieldIndex.ReflectivityAmount:
-                case Water_FieldIndex.FresnelAmount:
-                case Water_FieldIndex.ScrollXSpeed:
-                case Water_FieldIndex.ScrollYSpeed:
-                case Water_FieldIndex.FogDistanceNearPlane:
-                case Water_FieldIndex.FogDistanceFarPlane:
-                case Water_FieldIndex.RainSimulatorForce:
-                case Water_FieldIndex.RainSimulatorVelocity:
-                case Water_FieldIndex.RainSimulatorFalloff:
-                case Water_FieldIndex.RainSimulatorDampner:
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Color
-        protected ObjectCentralizationSubscriptions<Color> _Color_subscriptions;
-        Color IPropertySupporter<Color>.Get(int index)
-        {
-            return GetColor(index: index);
-        }
-
-        protected Color GetColor(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.ShallowColor:
-                    return ShallowColor;
-                case Water_FieldIndex.DeepColor:
-                    return DeepColor;
-                case Water_FieldIndex.ReflectionColor:
-                    return ReflectionColor;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Color: {index}");
-            }
-        }
-
-        void IPropertySupporter<Color>.Set(
-            int index,
-            Color item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetColor(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetColor(
-            int index,
-            Color item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.ShallowColor:
-                    SetShallowColor(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.DeepColor:
-                    SetDeepColor(item, hasBeenSet, cmds);
-                    break;
-                case Water_FieldIndex.ReflectionColor:
-                    SetReflectionColor(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Color: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Color>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Color>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Color>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetColor(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetColor(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.ShallowColor:
-                    SetShallowColor(
-                        item: default(Color),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.DeepColor:
-                    SetDeepColor(
-                        item: default(Color),
-                        hasBeenSet: false);
-                    break;
-                case Water_FieldIndex.ReflectionColor:
-                    SetReflectionColor(
-                        item: default(Color),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Color: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Color>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Color> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Color_subscriptions == null)
-            {
-                _Color_subscriptions = new ObjectCentralizationSubscriptions<Color>();
-            }
-            _Color_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Color>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Color_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Color>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Color IPropertySupporter<Color>.DefaultValue(int index)
-        {
-            return DefaultValueColor(index: index);
-        }
-
-        protected Color DefaultValueColor(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.ShallowColor:
-                case Water_FieldIndex.DeepColor:
-                case Water_FieldIndex.ReflectionColor:
-                    return default(Color);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Color: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter UInt16
-        protected ObjectCentralizationSubscriptions<UInt16> _UInt16_subscriptions;
-        UInt16 IPropertySupporter<UInt16>.Get(int index)
-        {
-            return GetUInt16(index: index);
-        }
-
-        protected UInt16 GetUInt16(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Damage:
-                    return Damage;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        void IPropertySupporter<UInt16>.Set(
-            int index,
-            UInt16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt16(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetUInt16(
-            int index,
-            UInt16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Damage:
-                    SetDamage(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        bool IPropertySupporter<UInt16>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt16>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt16>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt16(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetUInt16(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Damage:
-                    SetDamage(
-                        item: default(UInt16),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt16>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt16> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt16_subscriptions == null)
-            {
-                _UInt16_subscriptions = new ObjectCentralizationSubscriptions<UInt16>();
-            }
-            _UInt16_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt16>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt16_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt16>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt16 IPropertySupporter<UInt16>.DefaultValue(int index)
-        {
-            return DefaultValueUInt16(index: index);
-        }
-
-        protected UInt16 DefaultValueUInt16(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Damage:
-                    return default(UInt16);
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt16: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RelatedWaters
-        protected ObjectCentralizationSubscriptions<RelatedWaters> _RelatedWaters_subscriptions;
-        RelatedWaters IPropertySupporter<RelatedWaters>.Get(int index)
-        {
-            return GetRelatedWaters(index: index);
-        }
-
-        protected RelatedWaters GetRelatedWaters(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.RelatedWaters:
-                    return RelatedWaters;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RelatedWaters: {index}");
-            }
-        }
-
-        void IPropertySupporter<RelatedWaters>.Set(
-            int index,
-            RelatedWaters item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRelatedWaters(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRelatedWaters(
-            int index,
-            RelatedWaters item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.RelatedWaters:
-                    SetRelatedWaters(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RelatedWaters: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RelatedWaters>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RelatedWaters>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RelatedWaters>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRelatedWaters(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRelatedWaters(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.RelatedWaters:
-                    SetRelatedWaters(
-                        item: default(RelatedWaters),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RelatedWaters: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RelatedWaters>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RelatedWaters> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RelatedWaters_subscriptions == null)
-            {
-                _RelatedWaters_subscriptions = new ObjectCentralizationSubscriptions<RelatedWaters>();
-            }
-            _RelatedWaters_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RelatedWaters>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RelatedWaters_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RelatedWaters>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RelatedWaters IPropertySupporter<RelatedWaters>.DefaultValue(int index)
-        {
-            return DefaultValueRelatedWaters(index: index);
-        }
-
-        protected RelatedWaters DefaultValueRelatedWaters(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.RelatedWaters:
-                    return default(RelatedWaters);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RelatedWaters: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Water_Registration.TRIGGERING_RECORD_TYPE;
@@ -4436,7 +2073,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetTexture();
+                            item.Texture = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -4463,7 +2100,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetOpacity();
+                            item.Opacity = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -4490,7 +2127,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Water.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -4518,7 +2155,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMaterialID();
+                            item.MaterialID = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -4568,7 +2205,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetWindVelocity();
+                                item.WindVelocity = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4592,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetWindDirection();
+                                item.WindDirection = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4616,7 +2253,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetWaveAmplitude();
+                                item.WaveAmplitude = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4640,7 +2277,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetWaveFrequency();
+                                item.WaveFrequency = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4664,7 +2301,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetSunPower();
+                                item.SunPower = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4688,7 +2325,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetReflectivityAmount();
+                                item.ReflectivityAmount = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4712,7 +2349,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFresnelAmount();
+                                item.FresnelAmount = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4736,7 +2373,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetScrollXSpeed();
+                                item.ScrollXSpeed = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4760,7 +2397,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetScrollYSpeed();
+                                item.ScrollYSpeed = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4784,7 +2421,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFogDistanceNearPlane();
+                                item.FogDistanceNearPlane = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4817,7 +2454,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFogDistanceFarPlane();
+                                item.FogDistanceFarPlane = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4842,7 +2479,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetShallowColor();
+                                item.ShallowColor = default(Color);
                             }
                         }
                         catch (Exception ex)
@@ -4867,7 +2504,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDeepColor();
+                                item.DeepColor = default(Color);
                             }
                         }
                         catch (Exception ex)
@@ -4892,7 +2529,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetReflectionColor();
+                                item.ReflectionColor = default(Color);
                             }
                         }
                         catch (Exception ex)
@@ -4916,7 +2553,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetTextureBlend();
+                                item.TextureBlend = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4950,7 +2587,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRainSimulatorForce();
+                                item.RainSimulatorForce = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4974,7 +2611,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRainSimulatorVelocity();
+                                item.RainSimulatorVelocity = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4998,7 +2635,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRainSimulatorFalloff();
+                                item.RainSimulatorFalloff = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5022,7 +2659,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRainSimulatorDampner();
+                                item.RainSimulatorDampner = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5046,7 +2683,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRainSimulatorStartingSize();
+                                item.RainSimulatorStartingSize = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5070,7 +2707,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDisplacementSimulatorForce();
+                                item.DisplacementSimulatorForce = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5103,7 +2740,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDisplacementSimulatorVelocity();
+                                item.DisplacementSimulatorVelocity = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5127,7 +2764,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDisplacementSimulatorFalloff();
+                                item.DisplacementSimulatorFalloff = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5151,7 +2788,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDisplacementSimulatorDampner();
+                                item.DisplacementSimulatorDampner = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5175,7 +2812,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDisplacementSimulatorStartingSize();
+                                item.DisplacementSimulatorStartingSize = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -5199,7 +2836,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetDamage();
+                                item.Damage = default(UInt16);
                             }
                         }
                         catch (Exception ex)
@@ -5226,7 +2863,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRelatedWaters();
+                            item.RelatedWaters = default(RelatedWaters);
                         }
                     }
                     catch (Exception ex)
@@ -5359,24 +2996,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Water_FieldIndex.Texture:
-                    this.SetTexture(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Texture = (String)obj;
                     break;
                 case Water_FieldIndex.Opacity:
-                    this.SetOpacity(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Opacity = (Byte)obj;
                     break;
                 case Water_FieldIndex.Flags:
-                    this.SetFlags(
-                        (Water.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (Water.Flag)obj;
                     break;
                 case Water_FieldIndex.MaterialID:
-                    this.SetMaterialID(
-                        (String)obj,
-                        cmds: cmds);
+                    this.MaterialID = (String)obj;
                     break;
                 case Water_FieldIndex.Sound:
                     this.Sound_Property.Set(
@@ -5384,139 +3013,85 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Water_FieldIndex.WindVelocity:
-                    this.SetWindVelocity(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.WindVelocity = (Single)obj;
                     break;
                 case Water_FieldIndex.WindDirection:
-                    this.SetWindDirection(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.WindDirection = (Single)obj;
                     break;
                 case Water_FieldIndex.WaveAmplitude:
-                    this.SetWaveAmplitude(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.WaveAmplitude = (Single)obj;
                     break;
                 case Water_FieldIndex.WaveFrequency:
-                    this.SetWaveFrequency(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.WaveFrequency = (Single)obj;
                     break;
                 case Water_FieldIndex.SunPower:
-                    this.SetSunPower(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.SunPower = (Single)obj;
                     break;
                 case Water_FieldIndex.ReflectivityAmount:
-                    this.SetReflectivityAmount(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.ReflectivityAmount = (Single)obj;
                     break;
                 case Water_FieldIndex.FresnelAmount:
-                    this.SetFresnelAmount(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.FresnelAmount = (Single)obj;
                     break;
                 case Water_FieldIndex.ScrollXSpeed:
-                    this.SetScrollXSpeed(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.ScrollXSpeed = (Single)obj;
                     break;
                 case Water_FieldIndex.ScrollYSpeed:
-                    this.SetScrollYSpeed(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.ScrollYSpeed = (Single)obj;
                     break;
                 case Water_FieldIndex.FogDistanceNearPlane:
-                    this.SetFogDistanceNearPlane(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.FogDistanceNearPlane = (Single)obj;
                     break;
                 case Water_FieldIndex.FogDistanceFarPlane:
-                    this.SetFogDistanceFarPlane(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.FogDistanceFarPlane = (Single)obj;
                     break;
                 case Water_FieldIndex.ShallowColor:
-                    this.SetShallowColor(
-                        (Color)obj,
-                        cmds: cmds);
+                    this.ShallowColor = (Color)obj;
                     break;
                 case Water_FieldIndex.DeepColor:
-                    this.SetDeepColor(
-                        (Color)obj,
-                        cmds: cmds);
+                    this.DeepColor = (Color)obj;
                     break;
                 case Water_FieldIndex.ReflectionColor:
-                    this.SetReflectionColor(
-                        (Color)obj,
-                        cmds: cmds);
+                    this.ReflectionColor = (Color)obj;
                     break;
                 case Water_FieldIndex.TextureBlend:
-                    this.SetTextureBlend(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.TextureBlend = (Byte)obj;
                     break;
                 case Water_FieldIndex.RainSimulatorForce:
-                    this.SetRainSimulatorForce(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RainSimulatorForce = (Single)obj;
                     break;
                 case Water_FieldIndex.RainSimulatorVelocity:
-                    this.SetRainSimulatorVelocity(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RainSimulatorVelocity = (Single)obj;
                     break;
                 case Water_FieldIndex.RainSimulatorFalloff:
-                    this.SetRainSimulatorFalloff(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RainSimulatorFalloff = (Single)obj;
                     break;
                 case Water_FieldIndex.RainSimulatorDampner:
-                    this.SetRainSimulatorDampner(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RainSimulatorDampner = (Single)obj;
                     break;
                 case Water_FieldIndex.RainSimulatorStartingSize:
-                    this.SetRainSimulatorStartingSize(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.RainSimulatorStartingSize = (Single)obj;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorForce:
-                    this.SetDisplacementSimulatorForce(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DisplacementSimulatorForce = (Single)obj;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    this.SetDisplacementSimulatorVelocity(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DisplacementSimulatorVelocity = (Single)obj;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    this.SetDisplacementSimulatorFalloff(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DisplacementSimulatorFalloff = (Single)obj;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorDampner:
-                    this.SetDisplacementSimulatorDampner(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DisplacementSimulatorDampner = (Single)obj;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    this.SetDisplacementSimulatorStartingSize(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.DisplacementSimulatorStartingSize = (Single)obj;
                     break;
                 case Water_FieldIndex.Damage:
-                    this.SetDamage(
-                        (UInt16)obj,
-                        cmds: cmds);
+                    this.Damage = (UInt16)obj;
                     break;
                 case Water_FieldIndex.RelatedWaters:
-                    this.SetRelatedWaters(
-                        (RelatedWaters)obj,
-                        cmds: cmds);
+                    this.RelatedWaters = (RelatedWaters)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -5550,24 +3125,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Water_FieldIndex.Texture:
-                    obj.SetTexture(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Texture = (String)pair.Value;
                     break;
                 case Water_FieldIndex.Opacity:
-                    obj.SetOpacity(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Opacity = (Byte)pair.Value;
                     break;
                 case Water_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (Water.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (Water.Flag)pair.Value;
                     break;
                 case Water_FieldIndex.MaterialID:
-                    obj.SetMaterialID(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.MaterialID = (String)pair.Value;
                     break;
                 case Water_FieldIndex.Sound:
                     obj.Sound_Property.Set(
@@ -5575,139 +3142,85 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Water_FieldIndex.WindVelocity:
-                    obj.SetWindVelocity(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.WindVelocity = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.WindDirection:
-                    obj.SetWindDirection(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.WindDirection = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.WaveAmplitude:
-                    obj.SetWaveAmplitude(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.WaveAmplitude = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.WaveFrequency:
-                    obj.SetWaveFrequency(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.WaveFrequency = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.SunPower:
-                    obj.SetSunPower(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.SunPower = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.ReflectivityAmount:
-                    obj.SetReflectivityAmount(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.ReflectivityAmount = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.FresnelAmount:
-                    obj.SetFresnelAmount(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.FresnelAmount = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.ScrollXSpeed:
-                    obj.SetScrollXSpeed(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.ScrollXSpeed = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.ScrollYSpeed:
-                    obj.SetScrollYSpeed(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.ScrollYSpeed = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.FogDistanceNearPlane:
-                    obj.SetFogDistanceNearPlane(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.FogDistanceNearPlane = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.FogDistanceFarPlane:
-                    obj.SetFogDistanceFarPlane(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.FogDistanceFarPlane = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.ShallowColor:
-                    obj.SetShallowColor(
-                        (Color)pair.Value,
-                        cmds: null);
+                    obj.ShallowColor = (Color)pair.Value;
                     break;
                 case Water_FieldIndex.DeepColor:
-                    obj.SetDeepColor(
-                        (Color)pair.Value,
-                        cmds: null);
+                    obj.DeepColor = (Color)pair.Value;
                     break;
                 case Water_FieldIndex.ReflectionColor:
-                    obj.SetReflectionColor(
-                        (Color)pair.Value,
-                        cmds: null);
+                    obj.ReflectionColor = (Color)pair.Value;
                     break;
                 case Water_FieldIndex.TextureBlend:
-                    obj.SetTextureBlend(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.TextureBlend = (Byte)pair.Value;
                     break;
                 case Water_FieldIndex.RainSimulatorForce:
-                    obj.SetRainSimulatorForce(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RainSimulatorForce = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.RainSimulatorVelocity:
-                    obj.SetRainSimulatorVelocity(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RainSimulatorVelocity = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.RainSimulatorFalloff:
-                    obj.SetRainSimulatorFalloff(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RainSimulatorFalloff = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.RainSimulatorDampner:
-                    obj.SetRainSimulatorDampner(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RainSimulatorDampner = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.RainSimulatorStartingSize:
-                    obj.SetRainSimulatorStartingSize(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.RainSimulatorStartingSize = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorForce:
-                    obj.SetDisplacementSimulatorForce(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DisplacementSimulatorForce = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    obj.SetDisplacementSimulatorVelocity(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DisplacementSimulatorVelocity = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    obj.SetDisplacementSimulatorFalloff(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DisplacementSimulatorFalloff = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorDampner:
-                    obj.SetDisplacementSimulatorDampner(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DisplacementSimulatorDampner = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    obj.SetDisplacementSimulatorStartingSize(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.DisplacementSimulatorStartingSize = (Single)pair.Value;
                     break;
                 case Water_FieldIndex.Damage:
-                    obj.SetDamage(
-                        (UInt16)pair.Value,
-                        cmds: null);
+                    obj.Damage = (UInt16)pair.Value;
                     break;
                 case Water_FieldIndex.RelatedWaters:
-                    obj.SetRelatedWaters(
-                        (RelatedWaters)pair.Value,
-                        cmds: null);
+                    obj.RelatedWaters = (RelatedWaters)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -5725,98 +3238,82 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWater : IWaterGetter, IMajorRecord, ILoquiClass<IWater, IWaterGetter>, ILoquiClass<Water, IWaterGetter>
     {
         new String Texture { get; set; }
-        new INotifyingSetItem<String> Texture_Property { get; }
+        new bool Texture_IsSet { get; set; }
+        void Texture_Set(String item, bool hasBeenSet = true);
+        void Texture_Unset();
 
         new Byte Opacity { get; set; }
-        new INotifyingSetItem<Byte> Opacity_Property { get; }
+        new bool Opacity_IsSet { get; set; }
+        void Opacity_Set(Byte item, bool hasBeenSet = true);
+        void Opacity_Unset();
 
         new Water.Flag Flags { get; set; }
-        new INotifyingSetItem<Water.Flag> Flags_Property { get; }
+        new bool Flags_IsSet { get; set; }
+        void Flags_Set(Water.Flag item, bool hasBeenSet = true);
+        void Flags_Unset();
 
         new String MaterialID { get; set; }
-        new INotifyingSetItem<String> MaterialID_Property { get; }
+        new bool MaterialID_IsSet { get; set; }
+        void MaterialID_Set(String item, bool hasBeenSet = true);
+        void MaterialID_Unset();
 
         new Sound Sound { get; set; }
         new Single WindVelocity { get; set; }
-        new INotifyingItem<Single> WindVelocity_Property { get; }
 
         new Single WindDirection { get; set; }
-        new INotifyingItem<Single> WindDirection_Property { get; }
 
         new Single WaveAmplitude { get; set; }
-        new INotifyingItem<Single> WaveAmplitude_Property { get; }
 
         new Single WaveFrequency { get; set; }
-        new INotifyingItem<Single> WaveFrequency_Property { get; }
 
         new Single SunPower { get; set; }
-        new INotifyingItem<Single> SunPower_Property { get; }
 
         new Single ReflectivityAmount { get; set; }
-        new INotifyingItem<Single> ReflectivityAmount_Property { get; }
 
         new Single FresnelAmount { get; set; }
-        new INotifyingItem<Single> FresnelAmount_Property { get; }
 
         new Single ScrollXSpeed { get; set; }
-        new INotifyingItem<Single> ScrollXSpeed_Property { get; }
 
         new Single ScrollYSpeed { get; set; }
-        new INotifyingItem<Single> ScrollYSpeed_Property { get; }
 
         new Single FogDistanceNearPlane { get; set; }
-        new INotifyingItem<Single> FogDistanceNearPlane_Property { get; }
 
         new Single FogDistanceFarPlane { get; set; }
-        new INotifyingItem<Single> FogDistanceFarPlane_Property { get; }
 
         new Color ShallowColor { get; set; }
-        new INotifyingItem<Color> ShallowColor_Property { get; }
 
         new Color DeepColor { get; set; }
-        new INotifyingItem<Color> DeepColor_Property { get; }
 
         new Color ReflectionColor { get; set; }
-        new INotifyingItem<Color> ReflectionColor_Property { get; }
 
         new Byte TextureBlend { get; set; }
-        new INotifyingItem<Byte> TextureBlend_Property { get; }
 
         new Single RainSimulatorForce { get; set; }
-        new INotifyingItem<Single> RainSimulatorForce_Property { get; }
 
         new Single RainSimulatorVelocity { get; set; }
-        new INotifyingItem<Single> RainSimulatorVelocity_Property { get; }
 
         new Single RainSimulatorFalloff { get; set; }
-        new INotifyingItem<Single> RainSimulatorFalloff_Property { get; }
 
         new Single RainSimulatorDampner { get; set; }
-        new INotifyingItem<Single> RainSimulatorDampner_Property { get; }
 
         new Single RainSimulatorStartingSize { get; set; }
-        new INotifyingItem<Single> RainSimulatorStartingSize_Property { get; }
 
         new Single DisplacementSimulatorForce { get; set; }
-        new INotifyingItem<Single> DisplacementSimulatorForce_Property { get; }
 
         new Single DisplacementSimulatorVelocity { get; set; }
-        new INotifyingItem<Single> DisplacementSimulatorVelocity_Property { get; }
 
         new Single DisplacementSimulatorFalloff { get; set; }
-        new INotifyingItem<Single> DisplacementSimulatorFalloff_Property { get; }
 
         new Single DisplacementSimulatorDampner { get; set; }
-        new INotifyingItem<Single> DisplacementSimulatorDampner_Property { get; }
 
         new Single DisplacementSimulatorStartingSize { get; set; }
-        new INotifyingItem<Single> DisplacementSimulatorStartingSize_Property { get; }
 
         new UInt16 Damage { get; set; }
-        new INotifyingItem<UInt16> Damage_Property { get; }
 
         new RelatedWaters RelatedWaters { get; set; }
-        new INotifyingSetItem<RelatedWaters> RelatedWaters_Property { get; }
+        new bool RelatedWaters_IsSet { get; set; }
+        void RelatedWaters_Set(RelatedWaters item, bool hasBeenSet = true);
+        void RelatedWaters_Unset();
 
     }
 
@@ -5824,22 +3321,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Texture
         String Texture { get; }
-        INotifyingSetItemGetter<String> Texture_Property { get; }
+        bool Texture_IsSet { get; }
 
         #endregion
         #region Opacity
         Byte Opacity { get; }
-        INotifyingSetItemGetter<Byte> Opacity_Property { get; }
+        bool Opacity_IsSet { get; }
 
         #endregion
         #region Flags
         Water.Flag Flags { get; }
-        INotifyingSetItemGetter<Water.Flag> Flags_Property { get; }
+        bool Flags_IsSet { get; }
 
         #endregion
         #region MaterialID
         String MaterialID { get; }
-        INotifyingSetItemGetter<String> MaterialID_Property { get; }
+        bool MaterialID_IsSet { get; }
 
         #endregion
         #region Sound
@@ -5849,137 +3346,111 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region WindVelocity
         Single WindVelocity { get; }
-        INotifyingItemGetter<Single> WindVelocity_Property { get; }
 
         #endregion
         #region WindDirection
         Single WindDirection { get; }
-        INotifyingItemGetter<Single> WindDirection_Property { get; }
 
         #endregion
         #region WaveAmplitude
         Single WaveAmplitude { get; }
-        INotifyingItemGetter<Single> WaveAmplitude_Property { get; }
 
         #endregion
         #region WaveFrequency
         Single WaveFrequency { get; }
-        INotifyingItemGetter<Single> WaveFrequency_Property { get; }
 
         #endregion
         #region SunPower
         Single SunPower { get; }
-        INotifyingItemGetter<Single> SunPower_Property { get; }
 
         #endregion
         #region ReflectivityAmount
         Single ReflectivityAmount { get; }
-        INotifyingItemGetter<Single> ReflectivityAmount_Property { get; }
 
         #endregion
         #region FresnelAmount
         Single FresnelAmount { get; }
-        INotifyingItemGetter<Single> FresnelAmount_Property { get; }
 
         #endregion
         #region ScrollXSpeed
         Single ScrollXSpeed { get; }
-        INotifyingItemGetter<Single> ScrollXSpeed_Property { get; }
 
         #endregion
         #region ScrollYSpeed
         Single ScrollYSpeed { get; }
-        INotifyingItemGetter<Single> ScrollYSpeed_Property { get; }
 
         #endregion
         #region FogDistanceNearPlane
         Single FogDistanceNearPlane { get; }
-        INotifyingItemGetter<Single> FogDistanceNearPlane_Property { get; }
 
         #endregion
         #region FogDistanceFarPlane
         Single FogDistanceFarPlane { get; }
-        INotifyingItemGetter<Single> FogDistanceFarPlane_Property { get; }
 
         #endregion
         #region ShallowColor
         Color ShallowColor { get; }
-        INotifyingItemGetter<Color> ShallowColor_Property { get; }
 
         #endregion
         #region DeepColor
         Color DeepColor { get; }
-        INotifyingItemGetter<Color> DeepColor_Property { get; }
 
         #endregion
         #region ReflectionColor
         Color ReflectionColor { get; }
-        INotifyingItemGetter<Color> ReflectionColor_Property { get; }
 
         #endregion
         #region TextureBlend
         Byte TextureBlend { get; }
-        INotifyingItemGetter<Byte> TextureBlend_Property { get; }
 
         #endregion
         #region RainSimulatorForce
         Single RainSimulatorForce { get; }
-        INotifyingItemGetter<Single> RainSimulatorForce_Property { get; }
 
         #endregion
         #region RainSimulatorVelocity
         Single RainSimulatorVelocity { get; }
-        INotifyingItemGetter<Single> RainSimulatorVelocity_Property { get; }
 
         #endregion
         #region RainSimulatorFalloff
         Single RainSimulatorFalloff { get; }
-        INotifyingItemGetter<Single> RainSimulatorFalloff_Property { get; }
 
         #endregion
         #region RainSimulatorDampner
         Single RainSimulatorDampner { get; }
-        INotifyingItemGetter<Single> RainSimulatorDampner_Property { get; }
 
         #endregion
         #region RainSimulatorStartingSize
         Single RainSimulatorStartingSize { get; }
-        INotifyingItemGetter<Single> RainSimulatorStartingSize_Property { get; }
 
         #endregion
         #region DisplacementSimulatorForce
         Single DisplacementSimulatorForce { get; }
-        INotifyingItemGetter<Single> DisplacementSimulatorForce_Property { get; }
 
         #endregion
         #region DisplacementSimulatorVelocity
         Single DisplacementSimulatorVelocity { get; }
-        INotifyingItemGetter<Single> DisplacementSimulatorVelocity_Property { get; }
 
         #endregion
         #region DisplacementSimulatorFalloff
         Single DisplacementSimulatorFalloff { get; }
-        INotifyingItemGetter<Single> DisplacementSimulatorFalloff_Property { get; }
 
         #endregion
         #region DisplacementSimulatorDampner
         Single DisplacementSimulatorDampner { get; }
-        INotifyingItemGetter<Single> DisplacementSimulatorDampner_Property { get; }
 
         #endregion
         #region DisplacementSimulatorStartingSize
         Single DisplacementSimulatorStartingSize { get; }
-        INotifyingItemGetter<Single> DisplacementSimulatorStartingSize_Property { get; }
 
         #endregion
         #region Damage
         UInt16 Damage { get; }
-        INotifyingItemGetter<UInt16> Damage_Property { get; }
 
         #endregion
         #region RelatedWaters
         RelatedWaters RelatedWaters { get; }
-        INotifyingSetItemGetter<RelatedWaters> RelatedWaters_Property { get; }
+        bool RelatedWaters_IsSet { get; }
 
         #endregion
 
@@ -6576,9 +4047,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Texture);
                 try
                 {
-                    item.Texture_Property.SetToWithDefault(
-                        rhs: rhs.Texture_Property,
-                        def: def?.Texture_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Texture,
+                        rhsHasBeenSet: rhs.Texture_IsSet,
+                        defItem: def?.Texture ?? default(String),
+                        defHasBeenSet: def?.Texture_IsSet ?? false,
+                        outRhsItem: out var rhsTextureItem,
+                        outDefItem: out var defTextureItem))
+                    {
+                        item.Texture = rhsTextureItem;
+                    }
+                    else
+                    {
+                        item.Texture_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6595,9 +4077,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
                 try
                 {
-                    item.Opacity_Property.SetToWithDefault(
-                        rhs: rhs.Opacity_Property,
-                        def: def?.Opacity_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Opacity,
+                        rhsHasBeenSet: rhs.Opacity_IsSet,
+                        defItem: def?.Opacity ?? default(Byte),
+                        defHasBeenSet: def?.Opacity_IsSet ?? false,
+                        outRhsItem: out var rhsOpacityItem,
+                        outDefItem: out var defOpacityItem))
+                    {
+                        item.Opacity = rhsOpacityItem;
+                    }
+                    else
+                    {
+                        item.Opacity_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6614,9 +4107,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Flags,
+                        rhsHasBeenSet: rhs.Flags_IsSet,
+                        defItem: def?.Flags ?? default(Water.Flag),
+                        defHasBeenSet: def?.Flags_IsSet ?? false,
+                        outRhsItem: out var rhsFlagsItem,
+                        outDefItem: out var defFlagsItem))
+                    {
+                        item.Flags = rhsFlagsItem;
+                    }
+                    else
+                    {
+                        item.Flags_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6633,9 +4137,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
                 try
                 {
-                    item.MaterialID_Property.SetToWithDefault(
-                        rhs: rhs.MaterialID_Property,
-                        def: def?.MaterialID_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.MaterialID,
+                        rhsHasBeenSet: rhs.MaterialID_IsSet,
+                        defItem: def?.MaterialID ?? default(String),
+                        defHasBeenSet: def?.MaterialID_IsSet ?? false,
+                        outRhsItem: out var rhsMaterialIDItem,
+                        outDefItem: out var defMaterialIDItem))
+                    {
+                        item.MaterialID = rhsMaterialIDItem;
+                    }
+                    else
+                    {
+                        item.MaterialID_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6672,9 +4187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
                 try
                 {
-                    item.WindVelocity_Property.Set(
-                        value: rhs.WindVelocity,
-                        cmds: cmds);
+                    item.WindVelocity = rhs.WindVelocity;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6691,9 +4204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
                 try
                 {
-                    item.WindDirection_Property.Set(
-                        value: rhs.WindDirection,
-                        cmds: cmds);
+                    item.WindDirection = rhs.WindDirection;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6710,9 +4221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
                 try
                 {
-                    item.WaveAmplitude_Property.Set(
-                        value: rhs.WaveAmplitude,
-                        cmds: cmds);
+                    item.WaveAmplitude = rhs.WaveAmplitude;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6729,9 +4238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
                 try
                 {
-                    item.WaveFrequency_Property.Set(
-                        value: rhs.WaveFrequency,
-                        cmds: cmds);
+                    item.WaveFrequency = rhs.WaveFrequency;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6748,9 +4255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
                 try
                 {
-                    item.SunPower_Property.Set(
-                        value: rhs.SunPower,
-                        cmds: cmds);
+                    item.SunPower = rhs.SunPower;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6767,9 +4272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
                 try
                 {
-                    item.ReflectivityAmount_Property.Set(
-                        value: rhs.ReflectivityAmount,
-                        cmds: cmds);
+                    item.ReflectivityAmount = rhs.ReflectivityAmount;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6786,9 +4289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
                 try
                 {
-                    item.FresnelAmount_Property.Set(
-                        value: rhs.FresnelAmount,
-                        cmds: cmds);
+                    item.FresnelAmount = rhs.FresnelAmount;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6805,9 +4306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
                 try
                 {
-                    item.ScrollXSpeed_Property.Set(
-                        value: rhs.ScrollXSpeed,
-                        cmds: cmds);
+                    item.ScrollXSpeed = rhs.ScrollXSpeed;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6824,9 +4323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
                 try
                 {
-                    item.ScrollYSpeed_Property.Set(
-                        value: rhs.ScrollYSpeed,
-                        cmds: cmds);
+                    item.ScrollYSpeed = rhs.ScrollYSpeed;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6843,9 +4340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
                 try
                 {
-                    item.FogDistanceNearPlane_Property.Set(
-                        value: rhs.FogDistanceNearPlane,
-                        cmds: cmds);
+                    item.FogDistanceNearPlane = rhs.FogDistanceNearPlane;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6862,9 +4357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
                 try
                 {
-                    item.FogDistanceFarPlane_Property.Set(
-                        value: rhs.FogDistanceFarPlane,
-                        cmds: cmds);
+                    item.FogDistanceFarPlane = rhs.FogDistanceFarPlane;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6881,9 +4374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
                 try
                 {
-                    item.ShallowColor_Property.Set(
-                        value: rhs.ShallowColor,
-                        cmds: cmds);
+                    item.ShallowColor = rhs.ShallowColor;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6900,9 +4391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
                 try
                 {
-                    item.DeepColor_Property.Set(
-                        value: rhs.DeepColor,
-                        cmds: cmds);
+                    item.DeepColor = rhs.DeepColor;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6919,9 +4408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
                 try
                 {
-                    item.ReflectionColor_Property.Set(
-                        value: rhs.ReflectionColor,
-                        cmds: cmds);
+                    item.ReflectionColor = rhs.ReflectionColor;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6938,9 +4425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
                 try
                 {
-                    item.TextureBlend_Property.Set(
-                        value: rhs.TextureBlend,
-                        cmds: cmds);
+                    item.TextureBlend = rhs.TextureBlend;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6957,9 +4442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
                 try
                 {
-                    item.RainSimulatorForce_Property.Set(
-                        value: rhs.RainSimulatorForce,
-                        cmds: cmds);
+                    item.RainSimulatorForce = rhs.RainSimulatorForce;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6976,9 +4459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
                 try
                 {
-                    item.RainSimulatorVelocity_Property.Set(
-                        value: rhs.RainSimulatorVelocity,
-                        cmds: cmds);
+                    item.RainSimulatorVelocity = rhs.RainSimulatorVelocity;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6995,9 +4476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
                 try
                 {
-                    item.RainSimulatorFalloff_Property.Set(
-                        value: rhs.RainSimulatorFalloff,
-                        cmds: cmds);
+                    item.RainSimulatorFalloff = rhs.RainSimulatorFalloff;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7014,9 +4493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
                 try
                 {
-                    item.RainSimulatorDampner_Property.Set(
-                        value: rhs.RainSimulatorDampner,
-                        cmds: cmds);
+                    item.RainSimulatorDampner = rhs.RainSimulatorDampner;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7033,9 +4510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
                 try
                 {
-                    item.RainSimulatorStartingSize_Property.Set(
-                        value: rhs.RainSimulatorStartingSize,
-                        cmds: cmds);
+                    item.RainSimulatorStartingSize = rhs.RainSimulatorStartingSize;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7052,9 +4527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
                 try
                 {
-                    item.DisplacementSimulatorForce_Property.Set(
-                        value: rhs.DisplacementSimulatorForce,
-                        cmds: cmds);
+                    item.DisplacementSimulatorForce = rhs.DisplacementSimulatorForce;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7071,9 +4544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
                 try
                 {
-                    item.DisplacementSimulatorVelocity_Property.Set(
-                        value: rhs.DisplacementSimulatorVelocity,
-                        cmds: cmds);
+                    item.DisplacementSimulatorVelocity = rhs.DisplacementSimulatorVelocity;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7090,9 +4561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
                 try
                 {
-                    item.DisplacementSimulatorFalloff_Property.Set(
-                        value: rhs.DisplacementSimulatorFalloff,
-                        cmds: cmds);
+                    item.DisplacementSimulatorFalloff = rhs.DisplacementSimulatorFalloff;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7109,9 +4578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
                 try
                 {
-                    item.DisplacementSimulatorDampner_Property.Set(
-                        value: rhs.DisplacementSimulatorDampner,
-                        cmds: cmds);
+                    item.DisplacementSimulatorDampner = rhs.DisplacementSimulatorDampner;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7128,9 +4595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
                 try
                 {
-                    item.DisplacementSimulatorStartingSize_Property.Set(
-                        value: rhs.DisplacementSimulatorStartingSize,
-                        cmds: cmds);
+                    item.DisplacementSimulatorStartingSize = rhs.DisplacementSimulatorStartingSize;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7147,9 +4612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Damage);
                 try
                 {
-                    item.Damage_Property.Set(
-                        value: rhs.Damage,
-                        cmds: cmds);
+                    item.Damage = rhs.Damage;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7166,36 +4629,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
                 try
                 {
-                    item.RelatedWaters_Property.SetToWithDefault(
-                        rhs.RelatedWaters_Property,
-                        def?.RelatedWaters_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.RelatedWaters,
+                        rhsHasBeenSet: rhs.RelatedWaters_IsSet,
+                        defItem: def?.RelatedWaters,
+                        defHasBeenSet: def?.RelatedWaters_IsSet ?? false,
+                        outRhsItem: out var rhsRelatedWatersItem,
+                        outDefItem: out var defRelatedWatersItem))
+                    {
+                        switch (copyMask?.RelatedWaters.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.RelatedWaters.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RelatedWatersCommon.CopyFieldsFrom(
-                                        item: item.RelatedWaters,
-                                        rhs: rhs.RelatedWaters,
-                                        def: def?.RelatedWaters,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.RelatedWaters.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(RelatedWaters);
-                                    return RelatedWaters.Copy(
-                                        r,
-                                        copyMask?.RelatedWaters?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.RelatedWaters?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.RelatedWaters = rhsRelatedWatersItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RelatedWatersCommon.CopyFieldsFrom(
+                                    item: item.RelatedWaters,
+                                    rhs: rhs.RelatedWaters,
+                                    def: def?.RelatedWaters,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.RelatedWaters.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.RelatedWaters = RelatedWaters.Copy(
+                                    rhsRelatedWatersItem,
+                                    copyMask?.RelatedWaters?.Specific,
+                                    def: defRelatedWatersItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.RelatedWaters?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.RelatedWaters_IsSet = false;
+                        item.RelatedWaters = default(RelatedWaters);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7249,22 +4719,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Water_FieldIndex.Texture:
-                    obj.Texture_Property.HasBeenSet = on;
+                    obj.Texture_IsSet = on;
                     break;
                 case Water_FieldIndex.Opacity:
-                    obj.Opacity_Property.HasBeenSet = on;
+                    obj.Opacity_IsSet = on;
                     break;
                 case Water_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
+                    obj.Flags_IsSet = on;
                     break;
                 case Water_FieldIndex.MaterialID:
-                    obj.MaterialID_Property.HasBeenSet = on;
+                    obj.MaterialID_IsSet = on;
                     break;
                 case Water_FieldIndex.Sound:
                     obj.Sound_Property.HasBeenSet = on;
                     break;
                 case Water_FieldIndex.RelatedWaters:
-                    obj.RelatedWaters_Property.HasBeenSet = on;
+                    obj.RelatedWaters_IsSet = on;
                     break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -7281,19 +4751,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Water_FieldIndex.Texture:
-                    obj.Texture_Property.Unset(cmds);
+                    obj.Texture_Unset();
                     break;
                 case Water_FieldIndex.Opacity:
-                    obj.Opacity_Property.Unset(cmds);
+                    obj.Opacity_Unset();
                     break;
                 case Water_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags_Unset();
                     break;
                 case Water_FieldIndex.MaterialID:
-                    obj.MaterialID_Property.Unset(cmds);
+                    obj.MaterialID_Unset();
                     break;
                 case Water_FieldIndex.Sound:
-                    obj.Sound_Property.Unset(cmds);
+                    obj.Sound_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Water_FieldIndex.WindVelocity:
                     obj.WindVelocity = default(Single);
@@ -7374,7 +4844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Damage = default(UInt16);
                     break;
                 case Water_FieldIndex.RelatedWaters:
-                    obj.RelatedWaters_Property.Unset(cmds);
+                    obj.RelatedWaters_Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -7417,17 +4887,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.Damage:
                     return true;
                 case Water_FieldIndex.Texture:
-                    return obj.Texture_Property.HasBeenSet;
+                    return obj.Texture_IsSet;
                 case Water_FieldIndex.Opacity:
-                    return obj.Opacity_Property.HasBeenSet;
+                    return obj.Opacity_IsSet;
                 case Water_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                    return obj.Flags_IsSet;
                 case Water_FieldIndex.MaterialID:
-                    return obj.MaterialID_Property.HasBeenSet;
+                    return obj.MaterialID_IsSet;
                 case Water_FieldIndex.Sound:
                     return obj.Sound_Property.HasBeenSet;
                 case Water_FieldIndex.RelatedWaters:
-                    return obj.RelatedWaters_Property.HasBeenSet;
+                    return obj.RelatedWaters_IsSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -7513,10 +4983,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWater item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Texture_Property.Unset(cmds.ToUnsetParams());
-            item.Opacity_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
-            item.MaterialID_Property.Unset(cmds.ToUnsetParams());
+            item.Texture_Unset();
+            item.Opacity_Unset();
+            item.Flags_Unset();
+            item.MaterialID_Unset();
             item.Sound_Property.Unset(cmds.ToUnsetParams());
             item.WindVelocity = default(Single);
             item.WindDirection = default(Single);
@@ -7544,7 +5014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.DisplacementSimulatorDampner = default(Single);
             item.DisplacementSimulatorStartingSize = default(Single);
             item.Damage = default(UInt16);
-            item.RelatedWaters_Property.Unset(cmds.ToUnsetParams());
+            item.RelatedWaters_Unset();
         }
 
         public static Water_Mask<bool> GetEqualsMask(
@@ -7562,10 +5032,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Water_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Texture = item.Texture_Property.Equals(rhs.Texture_Property, (l, r) => object.Equals(l, r));
-            ret.Opacity = item.Opacity_Property.Equals(rhs.Opacity_Property, (l, r) => l == r);
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
-            ret.MaterialID = item.MaterialID_Property.Equals(rhs.MaterialID_Property, (l, r) => object.Equals(l, r));
+            ret.Texture = item.Texture_IsSet == rhs.Texture_IsSet && object.Equals(item.Texture, rhs.Texture);
+            ret.Opacity = item.Opacity_IsSet == rhs.Opacity_IsSet && item.Opacity == rhs.Opacity;
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.MaterialID = item.MaterialID_IsSet == rhs.MaterialID_IsSet && object.Equals(item.MaterialID, rhs.MaterialID);
             ret.Sound = item.Sound_Property.Equals(rhs.Sound_Property, (l, r) => l == r);
             ret.WindVelocity = item.WindVelocity == rhs.WindVelocity;
             ret.WindDirection = item.WindDirection == rhs.WindDirection;
@@ -7593,7 +5063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DisplacementSimulatorDampner = item.DisplacementSimulatorDampner == rhs.DisplacementSimulatorDampner;
             ret.DisplacementSimulatorStartingSize = item.DisplacementSimulatorStartingSize == rhs.DisplacementSimulatorStartingSize;
             ret.Damage = item.Damage == rhs.Damage;
-            ret.RelatedWaters = item.RelatedWaters_Property.LoquiEqualsHelper(rhs.RelatedWaters_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.RelatedWaters = IHasBeenSetExt.LoquiEqualsHelper(item.RelatedWaters_IsSet, rhs.RelatedWaters_IsSet, item.RelatedWaters, rhs.RelatedWaters, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -7760,12 +5230,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IWaterGetter item,
             Water_Mask<bool?> checkMask)
         {
-            if (checkMask.Texture.HasValue && checkMask.Texture.Value != item.Texture_Property.HasBeenSet) return false;
-            if (checkMask.Opacity.HasValue && checkMask.Opacity.Value != item.Opacity_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
-            if (checkMask.MaterialID.HasValue && checkMask.MaterialID.Value != item.MaterialID_Property.HasBeenSet) return false;
+            if (checkMask.Texture.HasValue && checkMask.Texture.Value != item.Texture_IsSet) return false;
+            if (checkMask.Opacity.HasValue && checkMask.Opacity.Value != item.Opacity_IsSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.MaterialID.HasValue && checkMask.MaterialID.Value != item.MaterialID_IsSet) return false;
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_Property.HasBeenSet) return false;
-            if (checkMask.RelatedWaters.Overall.HasValue && checkMask.RelatedWaters.Overall.Value != item.RelatedWaters_Property.HasBeenSet) return false;
+            if (checkMask.RelatedWaters.Overall.HasValue && checkMask.RelatedWaters.Overall.Value != item.RelatedWaters_IsSet) return false;
             if (checkMask.RelatedWaters.Specific != null && (item.RelatedWaters == null || !item.RelatedWaters.HasBeenSet(checkMask.RelatedWaters.Specific))) return false;
             return true;
         }
@@ -7773,10 +5243,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Water_Mask<bool> GetHasBeenSetMask(IWaterGetter item)
         {
             var ret = new Water_Mask<bool>();
-            ret.Texture = item.Texture_Property.HasBeenSet;
-            ret.Opacity = item.Opacity_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
-            ret.MaterialID = item.MaterialID_Property.HasBeenSet;
+            ret.Texture = item.Texture_IsSet;
+            ret.Opacity = item.Opacity_IsSet;
+            ret.Flags = item.Flags_IsSet;
+            ret.MaterialID = item.MaterialID_IsSet;
             ret.Sound = item.Sound_Property.HasBeenSet;
             ret.WindVelocity = true;
             ret.WindDirection = true;
@@ -7804,7 +5274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DisplacementSimulatorDampner = true;
             ret.DisplacementSimulatorStartingSize = true;
             ret.Damage = true;
-            ret.RelatedWaters = new MaskItem<bool, RelatedWaters_Mask<bool>>(item.RelatedWaters_Property.HasBeenSet, RelatedWatersCommon.GetHasBeenSetMask(item.RelatedWaters));
+            ret.RelatedWaters = new MaskItem<bool, RelatedWaters_Mask<bool>>(item.RelatedWaters_IsSet, RelatedWatersCommon.GetHasBeenSetMask(item.RelatedWaters));
             return ret;
         }
 
@@ -7866,43 +5336,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Water");
             }
-            if (item.Texture_Property.HasBeenSet
+            if (item.Texture_IsSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Texture),
-                    item: item.Texture_Property,
+                    item: item.Texture,
                     fieldIndex: (int)Water_FieldIndex.Texture,
                     errorMask: errorMask);
             }
-            if (item.Opacity_Property.HasBeenSet
+            if (item.Opacity_IsSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Opacity),
-                    item: item.Opacity_Property,
+                    item: item.Opacity,
                     fieldIndex: (int)Water_FieldIndex.Opacity,
                     errorMask: errorMask);
             }
-            if (item.Flags_Property.HasBeenSet
+            if (item.Flags_IsSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Water.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)Water_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.MaterialID_Property.HasBeenSet
+            if (item.MaterialID_IsSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.MaterialID) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MaterialID),
-                    item: item.MaterialID_Property,
+                    item: item.MaterialID,
                     fieldIndex: (int)Water_FieldIndex.MaterialID,
                     errorMask: errorMask);
             }
@@ -7921,7 +5391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.WindVelocity),
-                    item: item.WindVelocity_Property,
+                    item: item.WindVelocity,
                     fieldIndex: (int)Water_FieldIndex.WindVelocity,
                     errorMask: errorMask);
             }
@@ -7930,7 +5400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.WindDirection),
-                    item: item.WindDirection_Property,
+                    item: item.WindDirection,
                     fieldIndex: (int)Water_FieldIndex.WindDirection,
                     errorMask: errorMask);
             }
@@ -7939,7 +5409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.WaveAmplitude),
-                    item: item.WaveAmplitude_Property,
+                    item: item.WaveAmplitude,
                     fieldIndex: (int)Water_FieldIndex.WaveAmplitude,
                     errorMask: errorMask);
             }
@@ -7948,7 +5418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.WaveFrequency),
-                    item: item.WaveFrequency_Property,
+                    item: item.WaveFrequency,
                     fieldIndex: (int)Water_FieldIndex.WaveFrequency,
                     errorMask: errorMask);
             }
@@ -7957,7 +5427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SunPower),
-                    item: item.SunPower_Property,
+                    item: item.SunPower,
                     fieldIndex: (int)Water_FieldIndex.SunPower,
                     errorMask: errorMask);
             }
@@ -7966,7 +5436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ReflectivityAmount),
-                    item: item.ReflectivityAmount_Property,
+                    item: item.ReflectivityAmount,
                     fieldIndex: (int)Water_FieldIndex.ReflectivityAmount,
                     errorMask: errorMask);
             }
@@ -7975,7 +5445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FresnelAmount),
-                    item: item.FresnelAmount_Property,
+                    item: item.FresnelAmount,
                     fieldIndex: (int)Water_FieldIndex.FresnelAmount,
                     errorMask: errorMask);
             }
@@ -7984,7 +5454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ScrollXSpeed),
-                    item: item.ScrollXSpeed_Property,
+                    item: item.ScrollXSpeed,
                     fieldIndex: (int)Water_FieldIndex.ScrollXSpeed,
                     errorMask: errorMask);
             }
@@ -7993,7 +5463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ScrollYSpeed),
-                    item: item.ScrollYSpeed_Property,
+                    item: item.ScrollYSpeed,
                     fieldIndex: (int)Water_FieldIndex.ScrollYSpeed,
                     errorMask: errorMask);
             }
@@ -8002,7 +5472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FogDistanceNearPlane),
-                    item: item.FogDistanceNearPlane_Property,
+                    item: item.FogDistanceNearPlane,
                     fieldIndex: (int)Water_FieldIndex.FogDistanceNearPlane,
                     errorMask: errorMask);
             }
@@ -8011,7 +5481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FogDistanceFarPlane),
-                    item: item.FogDistanceFarPlane_Property,
+                    item: item.FogDistanceFarPlane,
                     fieldIndex: (int)Water_FieldIndex.FogDistanceFarPlane,
                     errorMask: errorMask);
             }
@@ -8020,7 +5490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ColorXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ShallowColor),
-                    item: item.ShallowColor_Property,
+                    item: item.ShallowColor,
                     fieldIndex: (int)Water_FieldIndex.ShallowColor,
                     errorMask: errorMask);
             }
@@ -8029,7 +5499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ColorXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DeepColor),
-                    item: item.DeepColor_Property,
+                    item: item.DeepColor,
                     fieldIndex: (int)Water_FieldIndex.DeepColor,
                     errorMask: errorMask);
             }
@@ -8038,7 +5508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ColorXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ReflectionColor),
-                    item: item.ReflectionColor_Property,
+                    item: item.ReflectionColor,
                     fieldIndex: (int)Water_FieldIndex.ReflectionColor,
                     errorMask: errorMask);
             }
@@ -8047,7 +5517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.TextureBlend),
-                    item: item.TextureBlend_Property,
+                    item: item.TextureBlend,
                     fieldIndex: (int)Water_FieldIndex.TextureBlend,
                     errorMask: errorMask);
             }
@@ -8056,7 +5526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RainSimulatorForce),
-                    item: item.RainSimulatorForce_Property,
+                    item: item.RainSimulatorForce,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorForce,
                     errorMask: errorMask);
             }
@@ -8065,7 +5535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RainSimulatorVelocity),
-                    item: item.RainSimulatorVelocity_Property,
+                    item: item.RainSimulatorVelocity,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorVelocity,
                     errorMask: errorMask);
             }
@@ -8074,7 +5544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RainSimulatorFalloff),
-                    item: item.RainSimulatorFalloff_Property,
+                    item: item.RainSimulatorFalloff,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorFalloff,
                     errorMask: errorMask);
             }
@@ -8083,7 +5553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RainSimulatorDampner),
-                    item: item.RainSimulatorDampner_Property,
+                    item: item.RainSimulatorDampner,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorDampner,
                     errorMask: errorMask);
             }
@@ -8092,7 +5562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RainSimulatorStartingSize),
-                    item: item.RainSimulatorStartingSize_Property,
+                    item: item.RainSimulatorStartingSize,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorStartingSize,
                     errorMask: errorMask);
             }
@@ -8101,7 +5571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DisplacementSimulatorForce),
-                    item: item.DisplacementSimulatorForce_Property,
+                    item: item.DisplacementSimulatorForce,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorForce,
                     errorMask: errorMask);
             }
@@ -8110,7 +5580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DisplacementSimulatorVelocity),
-                    item: item.DisplacementSimulatorVelocity_Property,
+                    item: item.DisplacementSimulatorVelocity,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
                     errorMask: errorMask);
             }
@@ -8119,7 +5589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DisplacementSimulatorFalloff),
-                    item: item.DisplacementSimulatorFalloff_Property,
+                    item: item.DisplacementSimulatorFalloff,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
                     errorMask: errorMask);
             }
@@ -8128,7 +5598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DisplacementSimulatorDampner),
-                    item: item.DisplacementSimulatorDampner_Property,
+                    item: item.DisplacementSimulatorDampner,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorDampner,
                     errorMask: errorMask);
             }
@@ -8137,7 +5607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DisplacementSimulatorStartingSize),
-                    item: item.DisplacementSimulatorStartingSize_Property,
+                    item: item.DisplacementSimulatorStartingSize,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
                     errorMask: errorMask);
             }
@@ -8146,16 +5616,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt16XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Damage),
-                    item: item.Damage_Property,
+                    item: item.Damage,
                     fieldIndex: (int)Water_FieldIndex.Damage,
                     errorMask: errorMask);
             }
-            if (item.RelatedWaters_Property.HasBeenSet
+            if (item.RelatedWaters_IsSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
                 LoquiXmlTranslation<RelatedWaters>.Instance.Write(
                     node: elem,
-                    item: item.RelatedWaters_Property,
+                    item: item.RelatedWaters,
                     name: nameof(item.RelatedWaters),
                     fieldIndex: (int)Water_FieldIndex.RelatedWaters,
                     errorMask: errorMask,
@@ -8219,42 +5689,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Texture_Property,
-                fieldIndex: (int)Water_FieldIndex.Texture,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Opacity_Property,
-                fieldIndex: (int)Water_FieldIndex.Opacity,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Water.Flag>.Instance.Write(
-                writer,
-                item.Flags_Property,
-                length: 1,
-                fieldIndex: (int)Water_FieldIndex.Flags,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MaterialID_Property,
-                fieldIndex: (int)Water_FieldIndex.MaterialID,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Sound_Property,
-                fieldIndex: (int)Water_FieldIndex.Sound,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER),
-                nullable: false);
+            if (item.Texture_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Texture,
+                    fieldIndex: (int)Water_FieldIndex.Texture,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Opacity_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Opacity,
+                    fieldIndex: (int)Water_FieldIndex.Opacity,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Flags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Water.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1,
+                    fieldIndex: (int)Water_FieldIndex.Flags,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.MaterialID_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MaterialID,
+                    fieldIndex: (int)Water_FieldIndex.MaterialID,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Sound_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Sound_Property,
+                    fieldIndex: (int)Water_FieldIndex.Sound,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER),
+                    nullable: false);
+            }
             if (item.DATADataTypeState.HasFlag(Water.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER)))
@@ -8267,52 +5752,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.WindVelocity_Property,
+                            item: item.WindVelocity,
                             fieldIndex: (int)Water_FieldIndex.WindVelocity,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.WindDirection_Property,
+                            item: item.WindDirection,
                             fieldIndex: (int)Water_FieldIndex.WindDirection,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.WaveAmplitude_Property,
+                            item: item.WaveAmplitude,
                             fieldIndex: (int)Water_FieldIndex.WaveAmplitude,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.WaveFrequency_Property,
+                            item: item.WaveFrequency,
                             fieldIndex: (int)Water_FieldIndex.WaveFrequency,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.SunPower_Property,
+                            item: item.SunPower,
                             fieldIndex: (int)Water_FieldIndex.SunPower,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.ReflectivityAmount_Property,
+                            item: item.ReflectivityAmount,
                             fieldIndex: (int)Water_FieldIndex.ReflectivityAmount,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.FresnelAmount_Property,
+                            item: item.FresnelAmount,
                             fieldIndex: (int)Water_FieldIndex.FresnelAmount,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.ScrollXSpeed_Property,
+                            item: item.ScrollXSpeed,
                             fieldIndex: (int)Water_FieldIndex.ScrollXSpeed,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.ScrollYSpeed_Property,
+                            item: item.ScrollYSpeed,
                             fieldIndex: (int)Water_FieldIndex.ScrollYSpeed,
                             errorMask: errorMask);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.FogDistanceNearPlane_Property,
+                            item: item.FogDistanceNearPlane,
                             fieldIndex: (int)Water_FieldIndex.FogDistanceNearPlane,
                             errorMask: errorMask);
                         Water.WriteBinary_BloodCustomLogic(
@@ -8323,30 +5808,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.FogDistanceFarPlane_Property,
+                                item: item.FogDistanceFarPlane,
                                 fieldIndex: (int)Water_FieldIndex.FogDistanceFarPlane,
                                 errorMask: errorMask);
                             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.ShallowColor_Property,
+                                item: item.ShallowColor,
                                 fieldIndex: (int)Water_FieldIndex.ShallowColor,
                                 errorMask: errorMask,
                                 extraByte: true);
                             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.DeepColor_Property,
+                                item: item.DeepColor,
                                 fieldIndex: (int)Water_FieldIndex.DeepColor,
                                 errorMask: errorMask,
                                 extraByte: true);
                             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.ReflectionColor_Property,
+                                item: item.ReflectionColor,
                                 fieldIndex: (int)Water_FieldIndex.ReflectionColor,
                                 errorMask: errorMask,
                                 extraByte: true);
                             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.TextureBlend_Property,
+                                item: item.TextureBlend,
                                 fieldIndex: (int)Water_FieldIndex.TextureBlend,
                                 errorMask: errorMask);
                             writer.WriteZeros(3);
@@ -8358,32 +5843,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorForce_Property,
+                                    item: item.RainSimulatorForce,
                                     fieldIndex: (int)Water_FieldIndex.RainSimulatorForce,
                                     errorMask: errorMask);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorVelocity_Property,
+                                    item: item.RainSimulatorVelocity,
                                     fieldIndex: (int)Water_FieldIndex.RainSimulatorVelocity,
                                     errorMask: errorMask);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorFalloff_Property,
+                                    item: item.RainSimulatorFalloff,
                                     fieldIndex: (int)Water_FieldIndex.RainSimulatorFalloff,
                                     errorMask: errorMask);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorDampner_Property,
+                                    item: item.RainSimulatorDampner,
                                     fieldIndex: (int)Water_FieldIndex.RainSimulatorDampner,
                                     errorMask: errorMask);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorStartingSize_Property,
+                                    item: item.RainSimulatorStartingSize,
                                     fieldIndex: (int)Water_FieldIndex.RainSimulatorStartingSize,
                                     errorMask: errorMask);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.DisplacementSimulatorForce_Property,
+                                    item: item.DisplacementSimulatorForce,
                                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorForce,
                                     errorMask: errorMask);
                                 Water.WriteBinary_OddExtraBytes(
@@ -8394,27 +5879,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 {
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.DisplacementSimulatorVelocity_Property,
+                                        item: item.DisplacementSimulatorVelocity,
                                         fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
                                         errorMask: errorMask);
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.DisplacementSimulatorFalloff_Property,
+                                        item: item.DisplacementSimulatorFalloff,
                                         fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
                                         errorMask: errorMask);
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.DisplacementSimulatorDampner_Property,
+                                        item: item.DisplacementSimulatorDampner,
                                         fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorDampner,
                                         errorMask: errorMask);
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.DisplacementSimulatorStartingSize_Property,
+                                        item: item.DisplacementSimulatorStartingSize,
                                         fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
                                         errorMask: errorMask);
                                     Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.Damage_Property,
+                                        item: item.Damage,
                                         fieldIndex: (int)Water_FieldIndex.Damage,
                                         errorMask: errorMask);
                                 }
@@ -8423,11 +5908,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-            LoquiBinaryTranslation<RelatedWaters>.Instance.Write(
-                writer: writer,
-                item: item.RelatedWaters_Property,
-                fieldIndex: (int)Water_FieldIndex.RelatedWaters,
-                errorMask: errorMask);
+            if (item.RelatedWaters_IsSet)
+            {
+                LoquiBinaryTranslation<RelatedWaters>.Instance.Write(
+                    writer: writer,
+                    item: item.RelatedWaters,
+                    fieldIndex: (int)Water_FieldIndex.RelatedWaters,
+                    errorMask: errorMask);
+            }
         }
 
         #endregion

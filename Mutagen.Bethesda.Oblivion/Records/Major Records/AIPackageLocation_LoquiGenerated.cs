@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class AIPackageLocation : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IAIPackageLocation,
         ILoquiObject<AIPackageLocation>,
         ILoquiObjectSetter,
-        IPropertySupporter<AIPackageLocation.LocationType>,
-        IPropertySupporter<Single>,
         IEquatable<AIPackageLocation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,52 +50,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        protected AIPackageLocation.LocationType _Type;
-        protected PropertyForwarder<AIPackageLocation, AIPackageLocation.LocationType> _TypeForwarder;
-        public INotifyingSetItem<AIPackageLocation.LocationType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<AIPackageLocation, AIPackageLocation.LocationType>(this, (int)AIPackageLocation_FieldIndex.Type));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AIPackageLocation.LocationType _Type;
         public AIPackageLocation.LocationType Type
         {
             get => this._Type;
-            set => this.SetType(value);
+            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
         }
-        protected void SetType(
-            AIPackageLocation.LocationType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageLocation_FieldIndex.Type];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Type == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageLocation_FieldIndex.Type] = hasBeenSet;
-            }
-            if (_AIPackageLocationLocationType_subscriptions != null)
-            {
-                var tmp = Type;
-                _Type = item;
-                _AIPackageLocationLocationType_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageLocation_FieldIndex.Type,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Type = item;
-            }
-        }
-        protected void UnsetType()
-        {
-            _hasBeenSetTracker[(int)AIPackageLocation_FieldIndex.Type] = false;
-            Type = default(AIPackageLocation.LocationType);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<AIPackageLocation.LocationType> IAIPackageLocation.Type_Property => this.Type_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<AIPackageLocation.LocationType> IAIPackageLocationGetter.Type_Property => this.Type_Property;
         #endregion
         #region LocationReference
         public FormIDLink<Placed> LocationReference_Property { get; } = new FormIDLink<Placed>();
@@ -105,52 +65,12 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Placed> IAIPackageLocationGetter.LocationReference_Property => this.LocationReference_Property;
         #endregion
         #region Radius
-        protected Single _Radius;
-        protected PropertyForwarder<AIPackageLocation, Single> _RadiusForwarder;
-        public INotifyingSetItem<Single> Radius_Property => _RadiusForwarder ?? (_RadiusForwarder = new PropertyForwarder<AIPackageLocation, Single>(this, (int)AIPackageLocation_FieldIndex.Radius));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Radius;
         public Single Radius
         {
             get => this._Radius;
-            set => this.SetRadius(value);
+            set => this.RaiseAndSetIfChanged(ref this._Radius, value, nameof(Radius));
         }
-        protected void SetRadius(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)AIPackageLocation_FieldIndex.Radius];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Radius == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)AIPackageLocation_FieldIndex.Radius] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Radius;
-                _Radius = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)AIPackageLocation_FieldIndex.Radius,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Radius = item;
-            }
-        }
-        protected void UnsetRadius()
-        {
-            _hasBeenSetTracker[(int)AIPackageLocation_FieldIndex.Radius] = false;
-            Radius = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IAIPackageLocation.Radius_Property => this.Radius_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IAIPackageLocationGetter.Radius_Property => this.Radius_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -556,7 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetType();
+                            item.Type = default(AIPackageLocation.LocationType);
                         }
                     }
                     catch (Exception ex)
@@ -589,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRadius();
+                            item.Radius = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -622,274 +542,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter AIPackageLocation.LocationType
-        protected ObjectCentralizationSubscriptions<AIPackageLocation.LocationType> _AIPackageLocationLocationType_subscriptions;
-        AIPackageLocation.LocationType IPropertySupporter<AIPackageLocation.LocationType>.Get(int index)
-        {
-            return GetAIPackageLocationLocationType(index: index);
-        }
-
-        protected AIPackageLocation.LocationType GetAIPackageLocationLocationType(int index)
-        {
-            switch ((AIPackageLocation_FieldIndex)index)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    return Type;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageLocation.LocationType: {index}");
-            }
-        }
-
-        void IPropertySupporter<AIPackageLocation.LocationType>.Set(
-            int index,
-            AIPackageLocation.LocationType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetAIPackageLocationLocationType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetAIPackageLocationLocationType(
-            int index,
-            AIPackageLocation.LocationType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackageLocation_FieldIndex)index)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    SetType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageLocation.LocationType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<AIPackageLocation.LocationType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<AIPackageLocation.LocationType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<AIPackageLocation.LocationType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetAIPackageLocationLocationType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetAIPackageLocationLocationType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackageLocation_FieldIndex)index)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    SetType(
-                        item: default(AIPackageLocation.LocationType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageLocation.LocationType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageLocation.LocationType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<AIPackageLocation.LocationType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_AIPackageLocationLocationType_subscriptions == null)
-            {
-                _AIPackageLocationLocationType_subscriptions = new ObjectCentralizationSubscriptions<AIPackageLocation.LocationType>();
-            }
-            _AIPackageLocationLocationType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<AIPackageLocation.LocationType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _AIPackageLocationLocationType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<AIPackageLocation.LocationType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        AIPackageLocation.LocationType IPropertySupporter<AIPackageLocation.LocationType>.DefaultValue(int index)
-        {
-            return DefaultValueAIPackageLocationLocationType(index: index);
-        }
-
-        protected AIPackageLocation.LocationType DefaultValueAIPackageLocationLocationType(int index)
-        {
-            switch ((AIPackageLocation_FieldIndex)index)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    return default(AIPackageLocation.LocationType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type AIPackageLocation.LocationType: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((AIPackageLocation_FieldIndex)index)
-            {
-                case AIPackageLocation_FieldIndex.Radius:
-                    return Radius;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((AIPackageLocation_FieldIndex)index)
-            {
-                case AIPackageLocation_FieldIndex.Radius:
-                    SetRadius(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((AIPackageLocation_FieldIndex)index)
-            {
-                case AIPackageLocation_FieldIndex.Radius:
-                    SetRadius(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((AIPackageLocation_FieldIndex)index)
-            {
-                case AIPackageLocation_FieldIndex.Radius:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AIPackageLocation_Registration.TRIGGERING_RECORD_TYPE;
@@ -1118,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetType();
+                    item.Type = default(AIPackageLocation.LocationType);
                 }
             }
             catch (Exception ex)
@@ -1147,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetRadius();
+                    item.Radius = default(Single);
                 }
             }
             catch (Exception ex)
@@ -1286,9 +938,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AIPackageLocation_FieldIndex.Type:
-                    this.SetType(
-                        (AIPackageLocation.LocationType)obj,
-                        cmds: cmds);
+                    this.Type = (AIPackageLocation.LocationType)obj;
                     break;
                 case AIPackageLocation_FieldIndex.LocationReference:
                     this.LocationReference_Property.Set(
@@ -1296,9 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case AIPackageLocation_FieldIndex.Radius:
-                    this.SetRadius(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Radius = (Single)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1338,9 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case AIPackageLocation_FieldIndex.Type:
-                    obj.SetType(
-                        (AIPackageLocation.LocationType)pair.Value,
-                        cmds: null);
+                    obj.Type = (AIPackageLocation.LocationType)pair.Value;
                     break;
                 case AIPackageLocation_FieldIndex.LocationReference:
                     obj.LocationReference_Property.Set(
@@ -1348,9 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case AIPackageLocation_FieldIndex.Radius:
-                    obj.SetRadius(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Radius = (Single)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1368,11 +1012,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackageLocation : IAIPackageLocationGetter, ILoquiClass<IAIPackageLocation, IAIPackageLocationGetter>, ILoquiClass<AIPackageLocation, IAIPackageLocationGetter>
     {
         new AIPackageLocation.LocationType Type { get; set; }
-        new INotifyingItem<AIPackageLocation.LocationType> Type_Property { get; }
 
         new Placed LocationReference { get; set; }
         new Single Radius { get; set; }
-        new INotifyingItem<Single> Radius_Property { get; }
 
     }
 
@@ -1380,7 +1022,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Type
         AIPackageLocation.LocationType Type { get; }
-        INotifyingItemGetter<AIPackageLocation.LocationType> Type_Property { get; }
 
         #endregion
         #region LocationReference
@@ -1390,7 +1031,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Radius
         Single Radius { get; }
-        INotifyingItemGetter<Single> Radius_Property { get; }
 
         #endregion
 
@@ -1619,9 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
                 try
                 {
-                    item.Type_Property.Set(
-                        value: rhs.Type,
-                        cmds: cmds);
+                    item.Type = rhs.Type;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1657,9 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
                 try
                 {
-                    item.Radius_Property.Set(
-                        value: rhs.Radius,
-                        cmds: cmds);
+                    item.Radius = rhs.Radius;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1706,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Type = default(AIPackageLocation.LocationType);
                     break;
                 case AIPackageLocation_FieldIndex.LocationReference:
-                    obj.LocationReference = default(FormIDLink<Placed>);
+                    obj.LocationReference_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case AIPackageLocation_FieldIndex.Radius:
                     obj.Radius = default(Single);
@@ -1755,7 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Type = default(AIPackageLocation.LocationType);
-            item.LocationReference = default(FormIDLink<Placed>);
+            item.LocationReference_Property.Unset(cmds.ToUnsetParams());
             item.Radius = default(Single);
         }
 
@@ -1876,7 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<AIPackageLocation.LocationType>.Instance.Write(
                     node: elem,
                     name: nameof(item.Type),
-                    item: item.Type_Property,
+                    item: item.Type,
                     fieldIndex: (int)AIPackageLocation_FieldIndex.Type,
                     errorMask: errorMask);
             }
@@ -1894,7 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Radius),
-                    item: item.Radius_Property,
+                    item: item.Radius,
                     fieldIndex: (int)AIPackageLocation_FieldIndex.Radius,
                     errorMask: errorMask);
             }
@@ -1947,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Write(
                 writer,
-                item.Type_Property,
+                item.Type,
                 length: 4,
                 fieldIndex: (int)AIPackageLocation_FieldIndex.Type,
                 errorMask: errorMask);
@@ -1958,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Radius_Property,
+                item: item.Radius,
                 fieldIndex: (int)AIPackageLocation_FieldIndex.Radius,
                 errorMask: errorMask);
         }

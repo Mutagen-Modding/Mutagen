@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -33,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
         ISubspace,
         ILoquiObject<Subspace>,
         ILoquiObjectSetter,
-        IPropertySupporter<Single>,
         IEquatable<Subspace>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -49,148 +50,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region X
-        protected Single _X;
-        protected PropertyForwarder<Subspace, Single> _XForwarder;
-        public INotifyingSetItem<Single> X_Property => _XForwarder ?? (_XForwarder = new PropertyForwarder<Subspace, Single>(this, (int)Subspace_FieldIndex.X));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _X;
         public Single X
         {
             get => this._X;
-            set => this.SetX(value);
+            set => this.RaiseAndSetIfChanged(ref this._X, value, nameof(X));
         }
-        protected void SetX(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Subspace_FieldIndex.X];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && X == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Subspace_FieldIndex.X] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = X;
-                _X = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Subspace_FieldIndex.X,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _X = item;
-            }
-        }
-        protected void UnsetX()
-        {
-            _hasBeenSetTracker[(int)Subspace_FieldIndex.X] = false;
-            X = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ISubspace.X_Property => this.X_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ISubspaceGetter.X_Property => this.X_Property;
         #endregion
         #region Y
-        protected Single _Y;
-        protected PropertyForwarder<Subspace, Single> _YForwarder;
-        public INotifyingSetItem<Single> Y_Property => _YForwarder ?? (_YForwarder = new PropertyForwarder<Subspace, Single>(this, (int)Subspace_FieldIndex.Y));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Y;
         public Single Y
         {
             get => this._Y;
-            set => this.SetY(value);
+            set => this.RaiseAndSetIfChanged(ref this._Y, value, nameof(Y));
         }
-        protected void SetY(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Subspace_FieldIndex.Y];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Y == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Subspace_FieldIndex.Y] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Y;
-                _Y = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Subspace_FieldIndex.Y,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Y = item;
-            }
-        }
-        protected void UnsetY()
-        {
-            _hasBeenSetTracker[(int)Subspace_FieldIndex.Y] = false;
-            Y = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ISubspace.Y_Property => this.Y_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ISubspaceGetter.Y_Property => this.Y_Property;
         #endregion
         #region Z
-        protected Single _Z;
-        protected PropertyForwarder<Subspace, Single> _ZForwarder;
-        public INotifyingSetItem<Single> Z_Property => _ZForwarder ?? (_ZForwarder = new PropertyForwarder<Subspace, Single>(this, (int)Subspace_FieldIndex.Z));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Z;
         public Single Z
         {
             get => this._Z;
-            set => this.SetZ(value);
+            set => this.RaiseAndSetIfChanged(ref this._Z, value, nameof(Z));
         }
-        protected void SetZ(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Subspace_FieldIndex.Z];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Z == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Subspace_FieldIndex.Z] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Z;
-                _Z = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Subspace_FieldIndex.Z,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Z = item;
-            }
-        }
-        protected void UnsetZ()
-        {
-            _hasBeenSetTracker[(int)Subspace_FieldIndex.Z] = false;
-            Z = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> ISubspace.Z_Property => this.Z_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> ISubspaceGetter.Z_Property => this.Z_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -591,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetX();
+                            item.X = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -617,7 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetY();
+                            item.Y = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -643,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetZ();
+                            item.Z = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -681,162 +562,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((Subspace_FieldIndex)index)
-            {
-                case Subspace_FieldIndex.X:
-                    return X;
-                case Subspace_FieldIndex.Y:
-                    return Y;
-                case Subspace_FieldIndex.Z:
-                    return Z;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Subspace_FieldIndex)index)
-            {
-                case Subspace_FieldIndex.X:
-                    SetX(item, hasBeenSet, cmds);
-                    break;
-                case Subspace_FieldIndex.Y:
-                    SetY(item, hasBeenSet, cmds);
-                    break;
-                case Subspace_FieldIndex.Z:
-                    SetZ(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Subspace_FieldIndex)index)
-            {
-                case Subspace_FieldIndex.X:
-                    SetX(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Subspace_FieldIndex.Y:
-                    SetY(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Subspace_FieldIndex.Z:
-                    SetZ(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((Subspace_FieldIndex)index)
-            {
-                case Subspace_FieldIndex.X:
-                case Subspace_FieldIndex.Y:
-                case Subspace_FieldIndex.Z:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Subspace_Registration.TRIGGERING_RECORD_TYPE;
@@ -1057,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetX();
+                                item.X = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -1081,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetY();
+                                item.Y = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -1105,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetZ();
+                                item.Z = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -1239,19 +964,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Subspace_FieldIndex.X:
-                    this.SetX(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.X = (Single)obj;
                     break;
                 case Subspace_FieldIndex.Y:
-                    this.SetY(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Y = (Single)obj;
                     break;
                 case Subspace_FieldIndex.Z:
-                    this.SetZ(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Z = (Single)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1285,19 +1004,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Subspace_FieldIndex.X:
-                    obj.SetX(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.X = (Single)pair.Value;
                     break;
                 case Subspace_FieldIndex.Y:
-                    obj.SetY(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Y = (Single)pair.Value;
                     break;
                 case Subspace_FieldIndex.Z:
-                    obj.SetZ(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Z = (Single)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1315,13 +1028,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISubspace : ISubspaceGetter, IMajorRecord, ILoquiClass<ISubspace, ISubspaceGetter>, ILoquiClass<Subspace, ISubspaceGetter>
     {
         new Single X { get; set; }
-        new INotifyingItem<Single> X_Property { get; }
 
         new Single Y { get; set; }
-        new INotifyingItem<Single> Y_Property { get; }
 
         new Single Z { get; set; }
-        new INotifyingItem<Single> Z_Property { get; }
 
     }
 
@@ -1329,17 +1039,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region X
         Single X { get; }
-        INotifyingItemGetter<Single> X_Property { get; }
 
         #endregion
         #region Y
         Single Y { get; }
-        INotifyingItemGetter<Single> Y_Property { get; }
 
         #endregion
         #region Z
         Single Z { get; }
-        INotifyingItemGetter<Single> Z_Property { get; }
 
         #endregion
 
@@ -1581,9 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Subspace_FieldIndex.X);
                 try
                 {
-                    item.X_Property.Set(
-                        value: rhs.X,
-                        cmds: cmds);
+                    item.X = rhs.X;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1600,9 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
                 try
                 {
-                    item.Y_Property.Set(
-                        value: rhs.Y,
-                        cmds: cmds);
+                    item.Y = rhs.Y;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1619,9 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
                 try
                 {
-                    item.Z_Property.Set(
-                        value: rhs.Z,
-                        cmds: cmds);
+                    item.Z = rhs.Z;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1866,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.X),
-                    item: item.X_Property,
+                    item: item.X,
                     fieldIndex: (int)Subspace_FieldIndex.X,
                     errorMask: errorMask);
             }
@@ -1875,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Y),
-                    item: item.Y_Property,
+                    item: item.Y,
                     fieldIndex: (int)Subspace_FieldIndex.Y,
                     errorMask: errorMask);
             }
@@ -1884,7 +1585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Z),
-                    item: item.Z_Property,
+                    item: item.Z,
                     fieldIndex: (int)Subspace_FieldIndex.Z,
                     errorMask: errorMask);
             }
@@ -1952,17 +1653,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.X_Property,
+                        item: item.X,
                         fieldIndex: (int)Subspace_FieldIndex.X,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Y_Property,
+                        item: item.Y,
                         fieldIndex: (int)Subspace_FieldIndex.Y,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Z_Property,
+                        item: item.Z,
                         fieldIndex: (int)Subspace_FieldIndex.Z,
                         errorMask: errorMask);
                 }

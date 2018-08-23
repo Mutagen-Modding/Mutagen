@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReactiveUI;
+using System.Reactive.Linq;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -14,8 +16,8 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor()
         {
             this.TypeChar = TRIGGER_CHAR;
-            this.RawFloat_Property.Subscribe((change) => this.Data = (short)Math.Round(change.New));
-            this.Data_Property.Subscribe((change) => this.RawFloat = change.New, cmds: NotifyingSubscribeParameters.NoFire);
+            this.WhenAny(x => x.RawFloat).Subscribe((change) => this.Data = (short)Math.Round(change));
+            this.WhenAny(x => x.Data).Subscribe((change) => this.RawFloat = change);
         }
     }
 }

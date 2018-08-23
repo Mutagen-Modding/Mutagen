@@ -43,12 +43,10 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Do
-        private Boolean _Do;
-        public Boolean Do { get => _Do; set => _Do = value; }
+        public Boolean Do { get; set; }
         #endregion
         #region Path
-        private String _Path;
-        public String Path { get => _Path; set => _Path = value; }
+        public String Path { get; set; }
         #endregion
 
         #region Loqui Getter Interface
@@ -621,10 +619,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case Passthrough_FieldIndex.Do:
-                    this._Do = (Boolean)obj;
+                    this.Do = (Boolean)obj;
                     break;
                 case Passthrough_FieldIndex.Path:
-                    this._Path = (String)obj;
+                    this.Path = (String)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -664,10 +662,10 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case Passthrough_FieldIndex.Do:
-                    obj._Do = (Boolean)pair.Value;
+                    obj.Do = (Boolean)pair.Value;
                     break;
                 case Passthrough_FieldIndex.Path:
-                    obj._Path = (String)pair.Value;
+                    obj.Path = (String)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");

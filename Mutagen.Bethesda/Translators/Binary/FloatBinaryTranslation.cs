@@ -9,14 +9,30 @@ namespace Mutagen.Bethesda.Binary
         public readonly static FloatBinaryTranslation Instance = new FloatBinaryTranslation();
         public override int? ExpectedLength => 4;
 
-        protected override float ParseValue(MutagenFrame reader)
+        public override float ParseValue(MutagenFrame reader)
         {
-            return reader.Reader.ReadFloat();
+            var ret = reader.Reader.ReadFloat();
+            if (ret == float.Epsilon)
+            {
+                return 0f;
+            }
+            return ret;
         }
 
-        protected override void WriteValue(MutagenWriter writer, float item)
+        public override void WriteValue(MutagenWriter writer, float item)
         {
-            writer.Write(item);
+            if (item == float.Epsilon)
+            {
+                item = 0f;
+            }
+            if (item == 0f)
+            {
+                writer.Write(0);
+            }
+            else
+            {
+                writer.Write(item);
+            }
         }
     }
 }

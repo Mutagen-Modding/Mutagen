@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class HavokData : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IHavokData,
         ILoquiObject<HavokData>,
         ILoquiObjectSetter,
-        IPropertySupporter<HavokData.MaterialType>,
-        IPropertySupporter<Byte>,
         IEquatable<HavokData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,148 +50,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Material
-        protected HavokData.MaterialType _Material;
-        protected PropertyForwarder<HavokData, HavokData.MaterialType> _MaterialForwarder;
-        public INotifyingSetItem<HavokData.MaterialType> Material_Property => _MaterialForwarder ?? (_MaterialForwarder = new PropertyForwarder<HavokData, HavokData.MaterialType>(this, (int)HavokData_FieldIndex.Material));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private HavokData.MaterialType _Material;
         public HavokData.MaterialType Material
         {
             get => this._Material;
-            set => this.SetMaterial(value);
+            set => this.RaiseAndSetIfChanged(ref this._Material, value, nameof(Material));
         }
-        protected void SetMaterial(
-            HavokData.MaterialType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)HavokData_FieldIndex.Material];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Material == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)HavokData_FieldIndex.Material] = hasBeenSet;
-            }
-            if (_HavokDataMaterialType_subscriptions != null)
-            {
-                var tmp = Material;
-                _Material = item;
-                _HavokDataMaterialType_subscriptions.FireSubscriptions(
-                    index: (int)HavokData_FieldIndex.Material,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Material = item;
-            }
-        }
-        protected void UnsetMaterial()
-        {
-            _hasBeenSetTracker[(int)HavokData_FieldIndex.Material] = false;
-            Material = default(HavokData.MaterialType);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<HavokData.MaterialType> IHavokData.Material_Property => this.Material_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<HavokData.MaterialType> IHavokDataGetter.Material_Property => this.Material_Property;
         #endregion
         #region Friction
-        protected Byte _Friction;
-        protected PropertyForwarder<HavokData, Byte> _FrictionForwarder;
-        public INotifyingSetItem<Byte> Friction_Property => _FrictionForwarder ?? (_FrictionForwarder = new PropertyForwarder<HavokData, Byte>(this, (int)HavokData_FieldIndex.Friction));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Friction;
         public Byte Friction
         {
             get => this._Friction;
-            set => this.SetFriction(value);
+            set => this.RaiseAndSetIfChanged(ref this._Friction, value, nameof(Friction));
         }
-        protected void SetFriction(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)HavokData_FieldIndex.Friction];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Friction == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)HavokData_FieldIndex.Friction] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Friction;
-                _Friction = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)HavokData_FieldIndex.Friction,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Friction = item;
-            }
-        }
-        protected void UnsetFriction()
-        {
-            _hasBeenSetTracker[(int)HavokData_FieldIndex.Friction] = false;
-            Friction = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IHavokData.Friction_Property => this.Friction_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IHavokDataGetter.Friction_Property => this.Friction_Property;
         #endregion
         #region Restitution
-        protected Byte _Restitution;
-        protected PropertyForwarder<HavokData, Byte> _RestitutionForwarder;
-        public INotifyingSetItem<Byte> Restitution_Property => _RestitutionForwarder ?? (_RestitutionForwarder = new PropertyForwarder<HavokData, Byte>(this, (int)HavokData_FieldIndex.Restitution));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Restitution;
         public Byte Restitution
         {
             get => this._Restitution;
-            set => this.SetRestitution(value);
+            set => this.RaiseAndSetIfChanged(ref this._Restitution, value, nameof(Restitution));
         }
-        protected void SetRestitution(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)HavokData_FieldIndex.Restitution];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Restitution == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)HavokData_FieldIndex.Restitution] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = Restitution;
-                _Restitution = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)HavokData_FieldIndex.Restitution,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Restitution = item;
-            }
-        }
-        protected void UnsetRestitution()
-        {
-            _hasBeenSetTracker[(int)HavokData_FieldIndex.Restitution] = false;
-            Restitution = default(Byte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte> IHavokData.Restitution_Property => this.Restitution_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte> IHavokDataGetter.Restitution_Property => this.Restitution_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -597,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMaterial();
+                            item.Material = default(HavokData.MaterialType);
                         }
                     }
                     catch (Exception ex)
@@ -623,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFriction();
+                            item.Friction = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -649,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRestitution();
+                            item.Restitution = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -682,285 +562,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter HavokData.MaterialType
-        protected ObjectCentralizationSubscriptions<HavokData.MaterialType> _HavokDataMaterialType_subscriptions;
-        HavokData.MaterialType IPropertySupporter<HavokData.MaterialType>.Get(int index)
-        {
-            return GetHavokDataMaterialType(index: index);
-        }
-
-        protected HavokData.MaterialType GetHavokDataMaterialType(int index)
-        {
-            switch ((HavokData_FieldIndex)index)
-            {
-                case HavokData_FieldIndex.Material:
-                    return Material;
-                default:
-                    throw new ArgumentException($"Unknown index for field type HavokData.MaterialType: {index}");
-            }
-        }
-
-        void IPropertySupporter<HavokData.MaterialType>.Set(
-            int index,
-            HavokData.MaterialType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetHavokDataMaterialType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetHavokDataMaterialType(
-            int index,
-            HavokData.MaterialType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((HavokData_FieldIndex)index)
-            {
-                case HavokData_FieldIndex.Material:
-                    SetMaterial(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type HavokData.MaterialType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<HavokData.MaterialType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<HavokData.MaterialType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<HavokData.MaterialType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetHavokDataMaterialType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetHavokDataMaterialType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((HavokData_FieldIndex)index)
-            {
-                case HavokData_FieldIndex.Material:
-                    SetMaterial(
-                        item: default(HavokData.MaterialType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type HavokData.MaterialType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<HavokData.MaterialType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<HavokData.MaterialType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_HavokDataMaterialType_subscriptions == null)
-            {
-                _HavokDataMaterialType_subscriptions = new ObjectCentralizationSubscriptions<HavokData.MaterialType>();
-            }
-            _HavokDataMaterialType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<HavokData.MaterialType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _HavokDataMaterialType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<HavokData.MaterialType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        HavokData.MaterialType IPropertySupporter<HavokData.MaterialType>.DefaultValue(int index)
-        {
-            return DefaultValueHavokDataMaterialType(index: index);
-        }
-
-        protected HavokData.MaterialType DefaultValueHavokDataMaterialType(int index)
-        {
-            switch ((HavokData_FieldIndex)index)
-            {
-                case HavokData_FieldIndex.Material:
-                    return default(HavokData.MaterialType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type HavokData.MaterialType: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((HavokData_FieldIndex)index)
-            {
-                case HavokData_FieldIndex.Friction:
-                    return Friction;
-                case HavokData_FieldIndex.Restitution:
-                    return Restitution;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((HavokData_FieldIndex)index)
-            {
-                case HavokData_FieldIndex.Friction:
-                    SetFriction(item, hasBeenSet, cmds);
-                    break;
-                case HavokData_FieldIndex.Restitution:
-                    SetRestitution(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((HavokData_FieldIndex)index)
-            {
-                case HavokData_FieldIndex.Friction:
-                    SetFriction(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                case HavokData_FieldIndex.Restitution:
-                    SetRestitution(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((HavokData_FieldIndex)index)
-            {
-                case HavokData_FieldIndex.Friction:
-                case HavokData_FieldIndex.Restitution:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = HavokData_Registration.TRIGGERING_RECORD_TYPE;
@@ -1183,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetMaterial();
+                    item.Material = default(HavokData.MaterialType);
                 }
             }
             catch (Exception ex)
@@ -1207,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFriction();
+                    item.Friction = default(Byte);
                 }
             }
             catch (Exception ex)
@@ -1231,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetRestitution();
+                    item.Restitution = default(Byte);
                 }
             }
             catch (Exception ex)
@@ -1370,19 +971,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case HavokData_FieldIndex.Material:
-                    this.SetMaterial(
-                        (HavokData.MaterialType)obj,
-                        cmds: cmds);
+                    this.Material = (HavokData.MaterialType)obj;
                     break;
                 case HavokData_FieldIndex.Friction:
-                    this.SetFriction(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Friction = (Byte)obj;
                     break;
                 case HavokData_FieldIndex.Restitution:
-                    this.SetRestitution(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.Restitution = (Byte)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1422,19 +1017,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case HavokData_FieldIndex.Material:
-                    obj.SetMaterial(
-                        (HavokData.MaterialType)pair.Value,
-                        cmds: null);
+                    obj.Material = (HavokData.MaterialType)pair.Value;
                     break;
                 case HavokData_FieldIndex.Friction:
-                    obj.SetFriction(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Friction = (Byte)pair.Value;
                     break;
                 case HavokData_FieldIndex.Restitution:
-                    obj.SetRestitution(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.Restitution = (Byte)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1452,13 +1041,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IHavokData : IHavokDataGetter, ILoquiClass<IHavokData, IHavokDataGetter>, ILoquiClass<HavokData, IHavokDataGetter>
     {
         new HavokData.MaterialType Material { get; set; }
-        new INotifyingItem<HavokData.MaterialType> Material_Property { get; }
 
         new Byte Friction { get; set; }
-        new INotifyingItem<Byte> Friction_Property { get; }
 
         new Byte Restitution { get; set; }
-        new INotifyingItem<Byte> Restitution_Property { get; }
 
     }
 
@@ -1466,17 +1052,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Material
         HavokData.MaterialType Material { get; }
-        INotifyingItemGetter<HavokData.MaterialType> Material_Property { get; }
 
         #endregion
         #region Friction
         Byte Friction { get; }
-        INotifyingItemGetter<Byte> Friction_Property { get; }
 
         #endregion
         #region Restitution
         Byte Restitution { get; }
-        INotifyingItemGetter<Byte> Restitution_Property { get; }
 
         #endregion
 
@@ -1705,9 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)HavokData_FieldIndex.Material);
                 try
                 {
-                    item.Material_Property.Set(
-                        value: rhs.Material,
-                        cmds: cmds);
+                    item.Material = rhs.Material;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1724,9 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)HavokData_FieldIndex.Friction);
                 try
                 {
-                    item.Friction_Property.Set(
-                        value: rhs.Friction,
-                        cmds: cmds);
+                    item.Friction = rhs.Friction;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1743,9 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)HavokData_FieldIndex.Restitution);
                 try
                 {
-                    item.Restitution_Property.Set(
-                        value: rhs.Restitution,
-                        cmds: cmds);
+                    item.Restitution = rhs.Restitution;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1962,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<HavokData.MaterialType>.Instance.Write(
                     node: elem,
                     name: nameof(item.Material),
-                    item: item.Material_Property,
+                    item: item.Material,
                     fieldIndex: (int)HavokData_FieldIndex.Material,
                     errorMask: errorMask);
             }
@@ -1971,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Friction),
-                    item: item.Friction_Property,
+                    item: item.Friction,
                     fieldIndex: (int)HavokData_FieldIndex.Friction,
                     errorMask: errorMask);
             }
@@ -1980,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Restitution),
-                    item: item.Restitution_Property,
+                    item: item.Restitution,
                     fieldIndex: (int)HavokData_FieldIndex.Restitution,
                     errorMask: errorMask);
             }
@@ -2033,18 +1610,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Write(
                 writer,
-                item.Material_Property,
+                item.Material,
                 length: 1,
                 fieldIndex: (int)HavokData_FieldIndex.Material,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Friction_Property,
+                item: item.Friction,
                 fieldIndex: (int)HavokData_FieldIndex.Friction,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Restitution_Property,
+                item: item.Restitution,
                 fieldIndex: (int)HavokData_FieldIndex.Restitution,
                 errorMask: errorMask);
         }

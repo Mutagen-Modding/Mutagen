@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -1128,7 +1130,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(RegionDataObject);
                                     return RegionDataObject.Copy(
                                         r,
                                         copyMask?.Objects?.Specific,
@@ -1455,13 +1456,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject>.Instance.Write(
-                writer: writer,
-                items: item.Objects,
-                fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
-                recordType: RegionDataObjects_Registration.RDOT_HEADER,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<RegionDataObject>.Instance.Write);
+            if (item.Objects.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject>.Instance.Write(
+                    writer: writer,
+                    items: item.Objects,
+                    fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
+                    recordType: RegionDataObjects_Registration.RDOT_HEADER,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<RegionDataObject>.Instance.Write);
+            }
         }
 
         #endregion

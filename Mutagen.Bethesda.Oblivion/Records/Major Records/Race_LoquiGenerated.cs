@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -35,17 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Race>,
         ILoquiObjectSetter,
         INamed,
-        IPropertySupporter<String>,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<Single>,
-        IPropertySupporter<Race.Flag>,
-        IPropertySupporter<RaceVoices>,
-        IPropertySupporter<RaceHair>,
-        IPropertySupporter<Byte>,
-        IPropertySupporter<Int32>,
-        IPropertySupporter<RaceStatsGendered>,
-        IPropertySupporter<GenderedBodyData>,
-        IPropertySupporter<FaceGenData>,
         IEquatable<Race>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -61,100 +52,56 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<Race, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Race, String>(this, (int)Race_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool IRaceGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IRaceGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IRace.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IRaceGetter.Name_Property => this.Name_Property;
         #endregion
         #region Description
-        protected String _Description;
-        protected PropertyForwarder<Race, String> _DescriptionForwarder;
-        public INotifyingSetItem<String> Description_Property => _DescriptionForwarder ?? (_DescriptionForwarder = new PropertyForwarder<Race, String>(this, (int)Race_FieldIndex.Description));
+        public bool Description_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.Description];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.Description, nameof(Description_IsSet));
+        }
+        bool IRaceGetter.Description_IsSet => Description_IsSet;
+        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
             get => this._Description;
-            set => this.SetDescription(value);
+            set => Description_Set(value);
         }
-        protected void SetDescription(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IRaceGetter.Description => this.Description;
+        public void Description_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.Description];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Description == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.Description] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Description;
-                _Description = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.Description,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Description = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
         }
-        protected void UnsetDescription()
+        public void Description_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.Description] = false;
-            Description = default(String);
+            this.Description_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IRace.Description_Property => this.Description_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IRaceGetter.Description_Property => this.Description_Property;
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -211,585 +158,218 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        protected Byte[] _Fluff = new byte[4];
-        protected PropertyForwarder<Race, Byte[]> _FluffForwarder;
-        public INotifyingSetItem<Byte[]> Fluff_Property => _FluffForwarder ?? (_FluffForwarder = new PropertyForwarder<Race, Byte[]>(this, (int)Race_FieldIndex.Fluff));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Fluff = new byte[4];
         public Byte[] Fluff
         {
-            get => this._Fluff;
-            set => this.SetFluff(value);
-        }
-        protected void SetFluff(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _Fluff;
+            set
             {
-                item = new byte[4];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.Fluff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Fluff, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.Fluff] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Fluff;
-                _Fluff = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.Fluff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Fluff = item;
+                this._Fluff = value;
+                if (value == null)
+                {
+                    this._Fluff = new byte[4];
+                }
             }
         }
-        protected void UnsetFluff()
-        {
-            SetFluff(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IRace.Fluff_Property => this.Fluff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IRaceGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region MaleHeight
-        protected Single _MaleHeight;
-        protected PropertyForwarder<Race, Single> _MaleHeightForwarder;
-        public INotifyingSetItem<Single> MaleHeight_Property => _MaleHeightForwarder ?? (_MaleHeightForwarder = new PropertyForwarder<Race, Single>(this, (int)Race_FieldIndex.MaleHeight));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _MaleHeight;
         public Single MaleHeight
         {
             get => this._MaleHeight;
-            set => this.SetMaleHeight(value);
+            set => this.RaiseAndSetIfChanged(ref this._MaleHeight, value, nameof(MaleHeight));
         }
-        protected void SetMaleHeight(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.MaleHeight];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaleHeight == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.MaleHeight] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = MaleHeight;
-                _MaleHeight = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.MaleHeight,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MaleHeight = item;
-            }
-        }
-        protected void UnsetMaleHeight()
-        {
-            _hasBeenSetTracker[(int)Race_FieldIndex.MaleHeight] = false;
-            MaleHeight = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRace.MaleHeight_Property => this.MaleHeight_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRaceGetter.MaleHeight_Property => this.MaleHeight_Property;
         #endregion
         #region FemaleHeight
-        protected Single _FemaleHeight;
-        protected PropertyForwarder<Race, Single> _FemaleHeightForwarder;
-        public INotifyingSetItem<Single> FemaleHeight_Property => _FemaleHeightForwarder ?? (_FemaleHeightForwarder = new PropertyForwarder<Race, Single>(this, (int)Race_FieldIndex.FemaleHeight));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FemaleHeight;
         public Single FemaleHeight
         {
             get => this._FemaleHeight;
-            set => this.SetFemaleHeight(value);
+            set => this.RaiseAndSetIfChanged(ref this._FemaleHeight, value, nameof(FemaleHeight));
         }
-        protected void SetFemaleHeight(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.FemaleHeight];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FemaleHeight == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.FemaleHeight] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = FemaleHeight;
-                _FemaleHeight = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.FemaleHeight,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FemaleHeight = item;
-            }
-        }
-        protected void UnsetFemaleHeight()
-        {
-            _hasBeenSetTracker[(int)Race_FieldIndex.FemaleHeight] = false;
-            FemaleHeight = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRace.FemaleHeight_Property => this.FemaleHeight_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRaceGetter.FemaleHeight_Property => this.FemaleHeight_Property;
         #endregion
         #region MaleWeight
-        protected Single _MaleWeight;
-        protected PropertyForwarder<Race, Single> _MaleWeightForwarder;
-        public INotifyingSetItem<Single> MaleWeight_Property => _MaleWeightForwarder ?? (_MaleWeightForwarder = new PropertyForwarder<Race, Single>(this, (int)Race_FieldIndex.MaleWeight));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _MaleWeight;
         public Single MaleWeight
         {
             get => this._MaleWeight;
-            set => this.SetMaleWeight(value);
+            set => this.RaiseAndSetIfChanged(ref this._MaleWeight, value, nameof(MaleWeight));
         }
-        protected void SetMaleWeight(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.MaleWeight];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MaleWeight == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.MaleWeight] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = MaleWeight;
-                _MaleWeight = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.MaleWeight,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MaleWeight = item;
-            }
-        }
-        protected void UnsetMaleWeight()
-        {
-            _hasBeenSetTracker[(int)Race_FieldIndex.MaleWeight] = false;
-            MaleWeight = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRace.MaleWeight_Property => this.MaleWeight_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRaceGetter.MaleWeight_Property => this.MaleWeight_Property;
         #endregion
         #region FemaleWeight
-        protected Single _FemaleWeight;
-        protected PropertyForwarder<Race, Single> _FemaleWeightForwarder;
-        public INotifyingSetItem<Single> FemaleWeight_Property => _FemaleWeightForwarder ?? (_FemaleWeightForwarder = new PropertyForwarder<Race, Single>(this, (int)Race_FieldIndex.FemaleWeight));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FemaleWeight;
         public Single FemaleWeight
         {
             get => this._FemaleWeight;
-            set => this.SetFemaleWeight(value);
+            set => this.RaiseAndSetIfChanged(ref this._FemaleWeight, value, nameof(FemaleWeight));
         }
-        protected void SetFemaleWeight(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.FemaleWeight];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FemaleWeight == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.FemaleWeight] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = FemaleWeight;
-                _FemaleWeight = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.FemaleWeight,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FemaleWeight = item;
-            }
-        }
-        protected void UnsetFemaleWeight()
-        {
-            _hasBeenSetTracker[(int)Race_FieldIndex.FemaleWeight] = false;
-            FemaleWeight = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IRace.FemaleWeight_Property => this.FemaleWeight_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IRaceGetter.FemaleWeight_Property => this.FemaleWeight_Property;
         #endregion
         #region Flags
-        protected Race.Flag _Flags;
-        protected PropertyForwarder<Race, Race.Flag> _FlagsForwarder;
-        public INotifyingSetItem<Race.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Race, Race.Flag>(this, (int)Race_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Race.Flag _Flags;
         public Race.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            Race.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_RaceFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _RaceFlag_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)Race_FieldIndex.Flags] = false;
-            Flags = default(Race.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Race.Flag> IRace.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Race.Flag> IRaceGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Voices
-        protected RaceVoices _Voices;
-        protected PropertyForwarder<Race, RaceVoices> _VoicesForwarder;
-        public INotifyingSetItem<RaceVoices> Voices_Property => _VoicesForwarder ?? (_VoicesForwarder = new PropertyForwarder<Race, RaceVoices>(this, (int)Race_FieldIndex.Voices));
+        public bool Voices_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.Voices];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.Voices, nameof(Voices_IsSet));
+        }
+        bool IRaceGetter.Voices_IsSet => Voices_IsSet;
+        private RaceVoices _Voices;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RaceVoices Voices
         {
-            get => this._Voices;
-            set => this.SetVoices(value);
+            get => _Voices;
+            set => Voices_Set(value);
         }
-        protected void SetVoices(
-            RaceVoices item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Voices_Set(
+            RaceVoices value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.Voices];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Voices, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.Voices] = hasBeenSet;
-            }
-            if (_RaceVoices_subscriptions != null)
-            {
-                var tmp = Voices;
-                _Voices = item;
-                _RaceVoices_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.Voices,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Voices = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Voices, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Voices, nameof(Voices), nameof(Voices_IsSet));
         }
-        protected void UnsetVoices()
+        public void Voices_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.Voices] = false;
-            Voices = default(RaceVoices);
+            this.Voices_Set(default(RaceVoices), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<RaceVoices> IRace.Voices_Property => this.Voices_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<RaceVoices> IRaceGetter.Voices_Property => this.Voices_Property;
+        RaceVoices IRaceGetter.Voices => this.Voices;
         #endregion
         #region DefaultHair
-        protected RaceHair _DefaultHair;
-        protected PropertyForwarder<Race, RaceHair> _DefaultHairForwarder;
-        public INotifyingSetItem<RaceHair> DefaultHair_Property => _DefaultHairForwarder ?? (_DefaultHairForwarder = new PropertyForwarder<Race, RaceHair>(this, (int)Race_FieldIndex.DefaultHair));
+        public bool DefaultHair_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHair];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.DefaultHair, nameof(DefaultHair_IsSet));
+        }
+        bool IRaceGetter.DefaultHair_IsSet => DefaultHair_IsSet;
+        private RaceHair _DefaultHair;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RaceHair DefaultHair
         {
-            get => this._DefaultHair;
-            set => this.SetDefaultHair(value);
+            get => _DefaultHair;
+            set => DefaultHair_Set(value);
         }
-        protected void SetDefaultHair(
-            RaceHair item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void DefaultHair_Set(
+            RaceHair value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHair];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(DefaultHair, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHair] = hasBeenSet;
-            }
-            if (_RaceHair_subscriptions != null)
-            {
-                var tmp = DefaultHair;
-                _DefaultHair = item;
-                _RaceHair_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.DefaultHair,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DefaultHair = item;
-            }
+            this.RaiseAndSetIfChanged(ref _DefaultHair, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.DefaultHair, nameof(DefaultHair), nameof(DefaultHair_IsSet));
         }
-        protected void UnsetDefaultHair()
+        public void DefaultHair_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHair] = false;
-            DefaultHair = default(RaceHair);
+            this.DefaultHair_Set(default(RaceHair), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<RaceHair> IRace.DefaultHair_Property => this.DefaultHair_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<RaceHair> IRaceGetter.DefaultHair_Property => this.DefaultHair_Property;
+        RaceHair IRaceGetter.DefaultHair => this.DefaultHair;
         #endregion
         #region DefaultHairColor
-        protected Byte _DefaultHairColor;
-        protected PropertyForwarder<Race, Byte> _DefaultHairColorForwarder;
-        public INotifyingSetItem<Byte> DefaultHairColor_Property => _DefaultHairColorForwarder ?? (_DefaultHairColorForwarder = new PropertyForwarder<Race, Byte>(this, (int)Race_FieldIndex.DefaultHairColor));
+        public bool DefaultHairColor_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHairColor];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.DefaultHairColor, nameof(DefaultHairColor_IsSet));
+        }
+        bool IRaceGetter.DefaultHairColor_IsSet => DefaultHairColor_IsSet;
+        private Byte _DefaultHairColor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte DefaultHairColor
         {
             get => this._DefaultHairColor;
-            set => this.SetDefaultHairColor(value);
+            set => DefaultHairColor_Set(value);
         }
-        protected void SetDefaultHairColor(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Byte IRaceGetter.DefaultHairColor => this.DefaultHairColor;
+        public void DefaultHairColor_Set(
+            Byte value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHairColor];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && DefaultHairColor == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHairColor] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = DefaultHairColor;
-                _DefaultHairColor = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.DefaultHairColor,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DefaultHairColor = item;
-            }
+            this.RaiseAndSetIfChanged(ref _DefaultHairColor, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.DefaultHairColor, nameof(DefaultHairColor), nameof(DefaultHairColor_IsSet));
         }
-        protected void UnsetDefaultHairColor()
+        public void DefaultHairColor_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHairColor] = false;
-            DefaultHairColor = default(Byte);
+            this.DefaultHairColor_Set(default(Byte), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte> IRace.DefaultHairColor_Property => this.DefaultHairColor_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte> IRaceGetter.DefaultHairColor_Property => this.DefaultHairColor_Property;
         #endregion
         #region FaceGenMainClamp
-        protected Int32 _FaceGenMainClamp;
-        protected PropertyForwarder<Race, Int32> _FaceGenMainClampForwarder;
-        public INotifyingSetItem<Int32> FaceGenMainClamp_Property => _FaceGenMainClampForwarder ?? (_FaceGenMainClampForwarder = new PropertyForwarder<Race, Int32>(this, (int)Race_FieldIndex.FaceGenMainClamp));
+        public bool FaceGenMainClamp_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenMainClamp];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.FaceGenMainClamp, nameof(FaceGenMainClamp_IsSet));
+        }
+        bool IRaceGetter.FaceGenMainClamp_IsSet => FaceGenMainClamp_IsSet;
+        private Int32 _FaceGenMainClamp;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 FaceGenMainClamp
         {
             get => this._FaceGenMainClamp;
-            set => this.SetFaceGenMainClamp(value);
+            set => FaceGenMainClamp_Set(value);
         }
-        protected void SetFaceGenMainClamp(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Int32 IRaceGetter.FaceGenMainClamp => this.FaceGenMainClamp;
+        public void FaceGenMainClamp_Set(
+            Int32 value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenMainClamp];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FaceGenMainClamp == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenMainClamp] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = FaceGenMainClamp;
-                _FaceGenMainClamp = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.FaceGenMainClamp,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FaceGenMainClamp = item;
-            }
+            this.RaiseAndSetIfChanged(ref _FaceGenMainClamp, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.FaceGenMainClamp, nameof(FaceGenMainClamp), nameof(FaceGenMainClamp_IsSet));
         }
-        protected void UnsetFaceGenMainClamp()
+        public void FaceGenMainClamp_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenMainClamp] = false;
-            FaceGenMainClamp = default(Int32);
+            this.FaceGenMainClamp_Set(default(Int32), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Int32> IRace.FaceGenMainClamp_Property => this.FaceGenMainClamp_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Int32> IRaceGetter.FaceGenMainClamp_Property => this.FaceGenMainClamp_Property;
         #endregion
         #region FaceGenFaceClamp
-        protected Int32 _FaceGenFaceClamp;
-        protected PropertyForwarder<Race, Int32> _FaceGenFaceClampForwarder;
-        public INotifyingSetItem<Int32> FaceGenFaceClamp_Property => _FaceGenFaceClampForwarder ?? (_FaceGenFaceClampForwarder = new PropertyForwarder<Race, Int32>(this, (int)Race_FieldIndex.FaceGenFaceClamp));
+        public bool FaceGenFaceClamp_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenFaceClamp];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.FaceGenFaceClamp, nameof(FaceGenFaceClamp_IsSet));
+        }
+        bool IRaceGetter.FaceGenFaceClamp_IsSet => FaceGenFaceClamp_IsSet;
+        private Int32 _FaceGenFaceClamp;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 FaceGenFaceClamp
         {
             get => this._FaceGenFaceClamp;
-            set => this.SetFaceGenFaceClamp(value);
+            set => FaceGenFaceClamp_Set(value);
         }
-        protected void SetFaceGenFaceClamp(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Int32 IRaceGetter.FaceGenFaceClamp => this.FaceGenFaceClamp;
+        public void FaceGenFaceClamp_Set(
+            Int32 value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenFaceClamp];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FaceGenFaceClamp == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenFaceClamp] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = FaceGenFaceClamp;
-                _FaceGenFaceClamp = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.FaceGenFaceClamp,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FaceGenFaceClamp = item;
-            }
+            this.RaiseAndSetIfChanged(ref _FaceGenFaceClamp, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.FaceGenFaceClamp, nameof(FaceGenFaceClamp), nameof(FaceGenFaceClamp_IsSet));
         }
-        protected void UnsetFaceGenFaceClamp()
+        public void FaceGenFaceClamp_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenFaceClamp] = false;
-            FaceGenFaceClamp = default(Int32);
+            this.FaceGenFaceClamp_Set(default(Int32), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Int32> IRace.FaceGenFaceClamp_Property => this.FaceGenFaceClamp_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Int32> IRaceGetter.FaceGenFaceClamp_Property => this.FaceGenFaceClamp_Property;
         #endregion
         #region RaceStats
-        protected RaceStatsGendered _RaceStats;
-        protected PropertyForwarder<Race, RaceStatsGendered> _RaceStatsForwarder;
-        public INotifyingSetItem<RaceStatsGendered> RaceStats_Property => _RaceStatsForwarder ?? (_RaceStatsForwarder = new PropertyForwarder<Race, RaceStatsGendered>(this, (int)Race_FieldIndex.RaceStats));
+        public bool RaceStats_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.RaceStats];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.RaceStats, nameof(RaceStats_IsSet));
+        }
+        bool IRaceGetter.RaceStats_IsSet => RaceStats_IsSet;
+        private RaceStatsGendered _RaceStats;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RaceStatsGendered RaceStats
         {
-            get => this._RaceStats;
-            set => this.SetRaceStats(value);
+            get => _RaceStats;
+            set => RaceStats_Set(value);
         }
-        protected void SetRaceStats(
-            RaceStatsGendered item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void RaceStats_Set(
+            RaceStatsGendered value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.RaceStats];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(RaceStats, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.RaceStats] = hasBeenSet;
-            }
-            if (_RaceStatsGendered_subscriptions != null)
-            {
-                var tmp = RaceStats;
-                _RaceStats = item;
-                _RaceStatsGendered_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.RaceStats,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RaceStats = item;
-            }
+            this.RaiseAndSetIfChanged(ref _RaceStats, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.RaceStats, nameof(RaceStats), nameof(RaceStats_IsSet));
         }
-        protected void UnsetRaceStats()
+        public void RaceStats_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.RaceStats] = false;
-            RaceStats = default(RaceStatsGendered);
+            this.RaceStats_Set(default(RaceStatsGendered), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<RaceStatsGendered> IRace.RaceStats_Property => this.RaceStats_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<RaceStatsGendered> IRaceGetter.RaceStats_Property => this.RaceStats_Property;
+        RaceStatsGendered IRaceGetter.RaceStats => this.RaceStats;
         #endregion
         #region FaceData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -810,52 +390,31 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region BodyData
-        protected GenderedBodyData _BodyData;
-        protected PropertyForwarder<Race, GenderedBodyData> _BodyDataForwarder;
-        public INotifyingSetItem<GenderedBodyData> BodyData_Property => _BodyDataForwarder ?? (_BodyDataForwarder = new PropertyForwarder<Race, GenderedBodyData>(this, (int)Race_FieldIndex.BodyData));
+        public bool BodyData_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.BodyData];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.BodyData, nameof(BodyData_IsSet));
+        }
+        bool IRaceGetter.BodyData_IsSet => BodyData_IsSet;
+        private GenderedBodyData _BodyData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public GenderedBodyData BodyData
         {
-            get => this._BodyData;
-            set => this.SetBodyData(value);
+            get => _BodyData;
+            set => BodyData_Set(value);
         }
-        protected void SetBodyData(
-            GenderedBodyData item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void BodyData_Set(
+            GenderedBodyData value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.BodyData];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(BodyData, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.BodyData] = hasBeenSet;
-            }
-            if (_GenderedBodyData_subscriptions != null)
-            {
-                var tmp = BodyData;
-                _BodyData = item;
-                _GenderedBodyData_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.BodyData,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _BodyData = item;
-            }
+            this.RaiseAndSetIfChanged(ref _BodyData, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.BodyData, nameof(BodyData), nameof(BodyData_IsSet));
         }
-        protected void UnsetBodyData()
+        public void BodyData_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.BodyData] = false;
-            BodyData = default(GenderedBodyData);
+            this.BodyData_Set(default(GenderedBodyData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<GenderedBodyData> IRace.BodyData_Property => this.BodyData_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<GenderedBodyData> IRaceGetter.BodyData_Property => this.BodyData_Property;
+        GenderedBodyData IRaceGetter.BodyData => this.BodyData;
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -894,105 +453,59 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region FaceGenData
-        protected FaceGenData _FaceGenData;
-        protected PropertyForwarder<Race, FaceGenData> _FaceGenDataForwarder;
-        public INotifyingSetItem<FaceGenData> FaceGenData_Property => _FaceGenDataForwarder ?? (_FaceGenDataForwarder = new PropertyForwarder<Race, FaceGenData>(this, (int)Race_FieldIndex.FaceGenData));
+        public bool FaceGenData_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenData];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.FaceGenData, nameof(FaceGenData_IsSet));
+        }
+        bool IRaceGetter.FaceGenData_IsSet => FaceGenData_IsSet;
+        private FaceGenData _FaceGenData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FaceGenData FaceGenData
         {
-            get => this._FaceGenData;
-            set => this.SetFaceGenData(value);
+            get => _FaceGenData;
+            set => FaceGenData_Set(value);
         }
-        protected void SetFaceGenData(
-            FaceGenData item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void FaceGenData_Set(
+            FaceGenData value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenData];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FaceGenData, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenData] = hasBeenSet;
-            }
-            if (_FaceGenData_subscriptions != null)
-            {
-                var tmp = FaceGenData;
-                _FaceGenData = item;
-                _FaceGenData_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.FaceGenData,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FaceGenData = item;
-            }
+            this.RaiseAndSetIfChanged(ref _FaceGenData, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.FaceGenData, nameof(FaceGenData), nameof(FaceGenData_IsSet));
         }
-        protected void UnsetFaceGenData()
+        public void FaceGenData_Unset()
         {
-            _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenData] = false;
-            FaceGenData = default(FaceGenData);
+            this.FaceGenData_Set(default(FaceGenData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<FaceGenData> IRace.FaceGenData_Property => this.FaceGenData_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<FaceGenData> IRaceGetter.FaceGenData_Property => this.FaceGenData_Property;
+        FaceGenData IRaceGetter.FaceGenData => this.FaceGenData;
         #endregion
         #region Unknown
-        protected Byte[] _Unknown = new byte[2];
-        protected PropertyForwarder<Race, Byte[]> _UnknownForwarder;
-        public INotifyingSetItem<Byte[]> Unknown_Property => _UnknownForwarder ?? (_UnknownForwarder = new PropertyForwarder<Race, Byte[]>(this, (int)Race_FieldIndex.Unknown));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool Unknown_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Race_FieldIndex.Unknown];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Race_FieldIndex.Unknown, nameof(Unknown_IsSet));
+        }
+        bool IRaceGetter.Unknown_IsSet => Unknown_IsSet;
+        protected Byte[] _Unknown;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Unknown
         {
             get => this._Unknown;
-            set => this.SetUnknown(value);
-        }
-        protected void SetUnknown(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
-            {
-                item = new byte[2];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Race_FieldIndex.Unknown];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Unknown, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Race_FieldIndex.Unknown] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = Unknown;
-                _Unknown = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)Race_FieldIndex.Unknown,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Unknown = item;
-            }
-        }
-        protected void UnsetUnknown()
-        {
-            SetUnknown(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => Unknown_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IRace.Unknown_Property => this.Unknown_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IRaceGetter.Unknown_Property => this.Unknown_Property;
+        Byte[] IRaceGetter.Unknown => this.Unknown;
+        public void Unknown_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
+        }
+        public void Unknown_Unset()
+        {
+            this.Unknown_Set(default(Byte[]), false);
+        }
         #endregion
 
         #region Loqui Getter Interface
@@ -1053,13 +566,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
-            if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
-            if (Description_Property.HasBeenSet)
+            if (Description_IsSet != rhs.Description_IsSet) return false;
+            if (Description_IsSet)
             {
                 if (!object.Equals(this.Description, rhs.Description)) return false;
             }
@@ -1080,33 +593,33 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
             if (!this.FemaleWeight.EqualsWithin(rhs.FemaleWeight)) return false;
             if (this.Flags != rhs.Flags) return false;
-            if (Voices_Property.HasBeenSet != rhs.Voices_Property.HasBeenSet) return false;
-            if (Voices_Property.HasBeenSet)
+            if (Voices_IsSet != rhs.Voices_IsSet) return false;
+            if (Voices_IsSet)
             {
                 if (!object.Equals(this.Voices, rhs.Voices)) return false;
             }
-            if (DefaultHair_Property.HasBeenSet != rhs.DefaultHair_Property.HasBeenSet) return false;
-            if (DefaultHair_Property.HasBeenSet)
+            if (DefaultHair_IsSet != rhs.DefaultHair_IsSet) return false;
+            if (DefaultHair_IsSet)
             {
                 if (!object.Equals(this.DefaultHair, rhs.DefaultHair)) return false;
             }
-            if (DefaultHairColor_Property.HasBeenSet != rhs.DefaultHairColor_Property.HasBeenSet) return false;
-            if (DefaultHairColor_Property.HasBeenSet)
+            if (DefaultHairColor_IsSet != rhs.DefaultHairColor_IsSet) return false;
+            if (DefaultHairColor_IsSet)
             {
                 if (this.DefaultHairColor != rhs.DefaultHairColor) return false;
             }
-            if (FaceGenMainClamp_Property.HasBeenSet != rhs.FaceGenMainClamp_Property.HasBeenSet) return false;
-            if (FaceGenMainClamp_Property.HasBeenSet)
+            if (FaceGenMainClamp_IsSet != rhs.FaceGenMainClamp_IsSet) return false;
+            if (FaceGenMainClamp_IsSet)
             {
                 if (this.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
             }
-            if (FaceGenFaceClamp_Property.HasBeenSet != rhs.FaceGenFaceClamp_Property.HasBeenSet) return false;
-            if (FaceGenFaceClamp_Property.HasBeenSet)
+            if (FaceGenFaceClamp_IsSet != rhs.FaceGenFaceClamp_IsSet) return false;
+            if (FaceGenFaceClamp_IsSet)
             {
                 if (this.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
             }
-            if (RaceStats_Property.HasBeenSet != rhs.RaceStats_Property.HasBeenSet) return false;
-            if (RaceStats_Property.HasBeenSet)
+            if (RaceStats_IsSet != rhs.RaceStats_IsSet) return false;
+            if (RaceStats_IsSet)
             {
                 if (!object.Equals(this.RaceStats, rhs.RaceStats)) return false;
             }
@@ -1115,8 +628,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.FaceData.SequenceEqual(rhs.FaceData)) return false;
             }
-            if (BodyData_Property.HasBeenSet != rhs.BodyData_Property.HasBeenSet) return false;
-            if (BodyData_Property.HasBeenSet)
+            if (BodyData_IsSet != rhs.BodyData_IsSet) return false;
+            if (BodyData_IsSet)
             {
                 if (!object.Equals(this.BodyData, rhs.BodyData)) return false;
             }
@@ -1130,13 +643,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Eyes.SequenceEqual(rhs.Eyes)) return false;
             }
-            if (FaceGenData_Property.HasBeenSet != rhs.FaceGenData_Property.HasBeenSet) return false;
-            if (FaceGenData_Property.HasBeenSet)
+            if (FaceGenData_IsSet != rhs.FaceGenData_IsSet) return false;
+            if (FaceGenData_IsSet)
             {
                 if (!object.Equals(this.FaceGenData, rhs.FaceGenData)) return false;
             }
-            if (Unknown_Property.HasBeenSet != rhs.Unknown_Property.HasBeenSet) return false;
-            if (Unknown_Property.HasBeenSet)
+            if (Unknown_IsSet != rhs.Unknown_IsSet) return false;
+            if (Unknown_IsSet)
             {
                 if (!this.Unknown.EqualsFast(rhs.Unknown)) return false;
             }
@@ -1146,11 +659,11 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
-            if (Description_Property.HasBeenSet)
+            if (Description_IsSet)
             {
                 ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
             }
@@ -1169,27 +682,27 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(MaleWeight).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(FemaleWeight).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (Voices_Property.HasBeenSet)
+            if (Voices_IsSet)
             {
                 ret = HashHelper.GetHashCode(Voices).CombineHashCode(ret);
             }
-            if (DefaultHair_Property.HasBeenSet)
+            if (DefaultHair_IsSet)
             {
                 ret = HashHelper.GetHashCode(DefaultHair).CombineHashCode(ret);
             }
-            if (DefaultHairColor_Property.HasBeenSet)
+            if (DefaultHairColor_IsSet)
             {
                 ret = HashHelper.GetHashCode(DefaultHairColor).CombineHashCode(ret);
             }
-            if (FaceGenMainClamp_Property.HasBeenSet)
+            if (FaceGenMainClamp_IsSet)
             {
                 ret = HashHelper.GetHashCode(FaceGenMainClamp).CombineHashCode(ret);
             }
-            if (FaceGenFaceClamp_Property.HasBeenSet)
+            if (FaceGenFaceClamp_IsSet)
             {
                 ret = HashHelper.GetHashCode(FaceGenFaceClamp).CombineHashCode(ret);
             }
-            if (RaceStats_Property.HasBeenSet)
+            if (RaceStats_IsSet)
             {
                 ret = HashHelper.GetHashCode(RaceStats).CombineHashCode(ret);
             }
@@ -1197,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(FaceData).CombineHashCode(ret);
             }
-            if (BodyData_Property.HasBeenSet)
+            if (BodyData_IsSet)
             {
                 ret = HashHelper.GetHashCode(BodyData).CombineHashCode(ret);
             }
@@ -1209,11 +722,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Eyes).CombineHashCode(ret);
             }
-            if (FaceGenData_Property.HasBeenSet)
+            if (FaceGenData_IsSet)
             {
                 ret = HashHelper.GetHashCode(FaceGenData).CombineHashCode(ret);
             }
-            if (Unknown_Property.HasBeenSet)
+            if (Unknown_IsSet)
             {
                 ret = HashHelper.GetHashCode(Unknown).CombineHashCode(ret);
             }
@@ -1545,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1571,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDescription();
+                            item.Description = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1681,7 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFluff();
+                            item.Fluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1707,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMaleHeight();
+                            item.MaleHeight = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1733,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFemaleHeight();
+                            item.FemaleHeight = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1759,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMaleWeight();
+                            item.MaleWeight = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1785,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFemaleWeight();
+                            item.FemaleWeight = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1811,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Race.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -1838,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVoices();
+                            item.Voices = default(RaceVoices);
                         }
                     }
                     catch (Exception ex)
@@ -1865,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDefaultHair();
+                            item.DefaultHair = default(RaceHair);
                         }
                     }
                     catch (Exception ex)
@@ -1891,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDefaultHairColor();
+                            item.DefaultHairColor = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -1917,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFaceGenMainClamp();
+                            item.FaceGenMainClamp = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1943,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFaceGenFaceClamp();
+                            item.FaceGenFaceClamp = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1970,7 +1483,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRaceStats();
+                            item.RaceStats = default(RaceStatsGendered);
                         }
                     }
                     catch (Exception ex)
@@ -2025,7 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBodyData();
+                            item.BodyData = default(GenderedBodyData);
                         }
                     }
                     catch (Exception ex)
@@ -2108,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFaceGenData();
+                            item.FaceGenData = default(FaceGenData);
                         }
                     }
                     catch (Exception ex)
@@ -2134,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUnknown();
+                            item.Unknown = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -2198,1553 +1711,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Name:
-                    return Name;
-                case Race_FieldIndex.Description:
-                    return Description;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                case Race_FieldIndex.Description:
-                    SetDescription(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                case Race_FieldIndex.Description:
-                    SetDescription(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Name:
-                case Race_FieldIndex.Description:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Fluff:
-                    return Fluff;
-                case Race_FieldIndex.Unknown:
-                    return Unknown;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Fluff:
-                    SetFluff(item, hasBeenSet, cmds);
-                    break;
-                case Race_FieldIndex.Unknown:
-                    SetUnknown(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Fluff:
-                    SetFluff(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case Race_FieldIndex.Unknown:
-                    SetUnknown(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.Unknown:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.MaleHeight:
-                    return MaleHeight;
-                case Race_FieldIndex.FemaleHeight:
-                    return FemaleHeight;
-                case Race_FieldIndex.MaleWeight:
-                    return MaleWeight;
-                case Race_FieldIndex.FemaleWeight:
-                    return FemaleWeight;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.MaleHeight:
-                    SetMaleHeight(item, hasBeenSet, cmds);
-                    break;
-                case Race_FieldIndex.FemaleHeight:
-                    SetFemaleHeight(item, hasBeenSet, cmds);
-                    break;
-                case Race_FieldIndex.MaleWeight:
-                    SetMaleWeight(item, hasBeenSet, cmds);
-                    break;
-                case Race_FieldIndex.FemaleWeight:
-                    SetFemaleWeight(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.MaleHeight:
-                    SetMaleHeight(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Race_FieldIndex.FemaleHeight:
-                    SetFemaleHeight(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Race_FieldIndex.MaleWeight:
-                    SetMaleWeight(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case Race_FieldIndex.FemaleWeight:
-                    SetFemaleWeight(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.MaleHeight:
-                case Race_FieldIndex.FemaleHeight:
-                case Race_FieldIndex.MaleWeight:
-                case Race_FieldIndex.FemaleWeight:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Race.Flag
-        protected ObjectCentralizationSubscriptions<Race.Flag> _RaceFlag_subscriptions;
-        Race.Flag IPropertySupporter<Race.Flag>.Get(int index)
-        {
-            return GetRaceFlag(index: index);
-        }
-
-        protected Race.Flag GetRaceFlag(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Race.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<Race.Flag>.Set(
-            int index,
-            Race.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRaceFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRaceFlag(
-            int index,
-            Race.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Race.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Race.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Race.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Race.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRaceFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRaceFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(Race.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Race.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Race.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Race.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RaceFlag_subscriptions == null)
-            {
-                _RaceFlag_subscriptions = new ObjectCentralizationSubscriptions<Race.Flag>();
-            }
-            _RaceFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Race.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RaceFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Race.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Race.Flag IPropertySupporter<Race.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueRaceFlag(index: index);
-        }
-
-        protected Race.Flag DefaultValueRaceFlag(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Flags:
-                    return default(Race.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Race.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RaceVoices
-        protected ObjectCentralizationSubscriptions<RaceVoices> _RaceVoices_subscriptions;
-        RaceVoices IPropertySupporter<RaceVoices>.Get(int index)
-        {
-            return GetRaceVoices(index: index);
-        }
-
-        protected RaceVoices GetRaceVoices(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Voices:
-                    return Voices;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceVoices: {index}");
-            }
-        }
-
-        void IPropertySupporter<RaceVoices>.Set(
-            int index,
-            RaceVoices item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRaceVoices(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRaceVoices(
-            int index,
-            RaceVoices item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Voices:
-                    SetVoices(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceVoices: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RaceVoices>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RaceVoices>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RaceVoices>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRaceVoices(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRaceVoices(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Voices:
-                    SetVoices(
-                        item: default(RaceVoices),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceVoices: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RaceVoices>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RaceVoices> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RaceVoices_subscriptions == null)
-            {
-                _RaceVoices_subscriptions = new ObjectCentralizationSubscriptions<RaceVoices>();
-            }
-            _RaceVoices_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RaceVoices>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RaceVoices_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RaceVoices>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RaceVoices IPropertySupporter<RaceVoices>.DefaultValue(int index)
-        {
-            return DefaultValueRaceVoices(index: index);
-        }
-
-        protected RaceVoices DefaultValueRaceVoices(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.Voices:
-                    return default(RaceVoices);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceVoices: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RaceHair
-        protected ObjectCentralizationSubscriptions<RaceHair> _RaceHair_subscriptions;
-        RaceHair IPropertySupporter<RaceHair>.Get(int index)
-        {
-            return GetRaceHair(index: index);
-        }
-
-        protected RaceHair GetRaceHair(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.DefaultHair:
-                    return DefaultHair;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceHair: {index}");
-            }
-        }
-
-        void IPropertySupporter<RaceHair>.Set(
-            int index,
-            RaceHair item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRaceHair(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRaceHair(
-            int index,
-            RaceHair item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.DefaultHair:
-                    SetDefaultHair(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceHair: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RaceHair>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RaceHair>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RaceHair>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRaceHair(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRaceHair(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.DefaultHair:
-                    SetDefaultHair(
-                        item: default(RaceHair),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceHair: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RaceHair>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RaceHair> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RaceHair_subscriptions == null)
-            {
-                _RaceHair_subscriptions = new ObjectCentralizationSubscriptions<RaceHair>();
-            }
-            _RaceHair_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RaceHair>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RaceHair_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RaceHair>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RaceHair IPropertySupporter<RaceHair>.DefaultValue(int index)
-        {
-            return DefaultValueRaceHair(index: index);
-        }
-
-        protected RaceHair DefaultValueRaceHair(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.DefaultHair:
-                    return default(RaceHair);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceHair: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.DefaultHairColor:
-                    return DefaultHairColor;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.DefaultHairColor:
-                    SetDefaultHairColor(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.DefaultHairColor:
-                    SetDefaultHairColor(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.DefaultHairColor:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.FaceGenMainClamp:
-                    return FaceGenMainClamp;
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    return FaceGenFaceClamp;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.FaceGenMainClamp:
-                    SetFaceGenMainClamp(item, hasBeenSet, cmds);
-                    break;
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    SetFaceGenFaceClamp(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.FaceGenMainClamp:
-                    SetFaceGenMainClamp(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    SetFaceGenFaceClamp(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.FaceGenMainClamp:
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter RaceStatsGendered
-        protected ObjectCentralizationSubscriptions<RaceStatsGendered> _RaceStatsGendered_subscriptions;
-        RaceStatsGendered IPropertySupporter<RaceStatsGendered>.Get(int index)
-        {
-            return GetRaceStatsGendered(index: index);
-        }
-
-        protected RaceStatsGendered GetRaceStatsGendered(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.RaceStats:
-                    return RaceStats;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceStatsGendered: {index}");
-            }
-        }
-
-        void IPropertySupporter<RaceStatsGendered>.Set(
-            int index,
-            RaceStatsGendered item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRaceStatsGendered(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRaceStatsGendered(
-            int index,
-            RaceStatsGendered item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.RaceStats:
-                    SetRaceStats(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceStatsGendered: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RaceStatsGendered>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RaceStatsGendered>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RaceStatsGendered>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRaceStatsGendered(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRaceStatsGendered(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.RaceStats:
-                    SetRaceStats(
-                        item: default(RaceStatsGendered),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceStatsGendered: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RaceStatsGendered>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RaceStatsGendered> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RaceStatsGendered_subscriptions == null)
-            {
-                _RaceStatsGendered_subscriptions = new ObjectCentralizationSubscriptions<RaceStatsGendered>();
-            }
-            _RaceStatsGendered_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RaceStatsGendered>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RaceStatsGendered_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RaceStatsGendered>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RaceStatsGendered IPropertySupporter<RaceStatsGendered>.DefaultValue(int index)
-        {
-            return DefaultValueRaceStatsGendered(index: index);
-        }
-
-        protected RaceStatsGendered DefaultValueRaceStatsGendered(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.RaceStats:
-                    return default(RaceStatsGendered);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceStatsGendered: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter GenderedBodyData
-        protected ObjectCentralizationSubscriptions<GenderedBodyData> _GenderedBodyData_subscriptions;
-        GenderedBodyData IPropertySupporter<GenderedBodyData>.Get(int index)
-        {
-            return GetGenderedBodyData(index: index);
-        }
-
-        protected GenderedBodyData GetGenderedBodyData(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.BodyData:
-                    return BodyData;
-                default:
-                    throw new ArgumentException($"Unknown index for field type GenderedBodyData: {index}");
-            }
-        }
-
-        void IPropertySupporter<GenderedBodyData>.Set(
-            int index,
-            GenderedBodyData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetGenderedBodyData(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetGenderedBodyData(
-            int index,
-            GenderedBodyData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.BodyData:
-                    SetBodyData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type GenderedBodyData: {index}");
-            }
-        }
-
-        bool IPropertySupporter<GenderedBodyData>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<GenderedBodyData>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<GenderedBodyData>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetGenderedBodyData(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetGenderedBodyData(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.BodyData:
-                    SetBodyData(
-                        item: default(GenderedBodyData),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type GenderedBodyData: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<GenderedBodyData>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<GenderedBodyData> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_GenderedBodyData_subscriptions == null)
-            {
-                _GenderedBodyData_subscriptions = new ObjectCentralizationSubscriptions<GenderedBodyData>();
-            }
-            _GenderedBodyData_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<GenderedBodyData>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _GenderedBodyData_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<GenderedBodyData>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        GenderedBodyData IPropertySupporter<GenderedBodyData>.DefaultValue(int index)
-        {
-            return DefaultValueGenderedBodyData(index: index);
-        }
-
-        protected GenderedBodyData DefaultValueGenderedBodyData(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.BodyData:
-                    return default(GenderedBodyData);
-                default:
-                    throw new ArgumentException($"Unknown index for field type GenderedBodyData: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter FaceGenData
-        protected ObjectCentralizationSubscriptions<FaceGenData> _FaceGenData_subscriptions;
-        FaceGenData IPropertySupporter<FaceGenData>.Get(int index)
-        {
-            return GetFaceGenData(index: index);
-        }
-
-        protected FaceGenData GetFaceGenData(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.FaceGenData:
-                    return FaceGenData;
-                default:
-                    throw new ArgumentException($"Unknown index for field type FaceGenData: {index}");
-            }
-        }
-
-        void IPropertySupporter<FaceGenData>.Set(
-            int index,
-            FaceGenData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetFaceGenData(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetFaceGenData(
-            int index,
-            FaceGenData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.FaceGenData:
-                    SetFaceGenData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type FaceGenData: {index}");
-            }
-        }
-
-        bool IPropertySupporter<FaceGenData>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<FaceGenData>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<FaceGenData>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetFaceGenData(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetFaceGenData(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.FaceGenData:
-                    SetFaceGenData(
-                        item: default(FaceGenData),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type FaceGenData: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<FaceGenData>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<FaceGenData> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_FaceGenData_subscriptions == null)
-            {
-                _FaceGenData_subscriptions = new ObjectCentralizationSubscriptions<FaceGenData>();
-            }
-            _FaceGenData_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<FaceGenData>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _FaceGenData_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<FaceGenData>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        FaceGenData IPropertySupporter<FaceGenData>.DefaultValue(int index)
-        {
-            return DefaultValueFaceGenData(index: index);
-        }
-
-        protected FaceGenData DefaultValueFaceGenData(int index)
-        {
-            switch ((Race_FieldIndex)index)
-            {
-                case Race_FieldIndex.FaceGenData:
-                    return default(FaceGenData);
-                default:
-                    throw new ArgumentException($"Unknown index for field type FaceGenData: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Race_Registration.TRIGGERING_RECORD_TYPE;
@@ -3987,7 +1953,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -4015,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDescription();
+                            item.Description = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -4075,7 +2041,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFluff();
+                                item.Fluff = default(Byte[]);
                             }
                         }
                         catch (Exception ex)
@@ -4099,7 +2065,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetMaleHeight();
+                                item.MaleHeight = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4123,7 +2089,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFemaleHeight();
+                                item.FemaleHeight = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4147,7 +2113,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetMaleWeight();
+                                item.MaleWeight = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4171,7 +2137,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFemaleWeight();
+                                item.FemaleWeight = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -4195,7 +2161,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFlags();
+                                item.Flags = default(Race.Flag);
                             }
                         }
                         catch (Exception ex)
@@ -4222,7 +2188,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVoices();
+                            item.Voices = default(RaceVoices);
                         }
                     }
                     catch (Exception ex)
@@ -4248,7 +2214,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDefaultHair();
+                            item.DefaultHair = default(RaceHair);
                         }
                     }
                     catch (Exception ex)
@@ -4275,7 +2241,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDefaultHairColor();
+                            item.DefaultHairColor = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -4302,7 +2268,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFaceGenMainClamp();
+                            item.FaceGenMainClamp = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -4329,7 +2295,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFaceGenFaceClamp();
+                            item.FaceGenFaceClamp = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -4355,7 +2321,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRaceStats();
+                            item.RaceStats = default(RaceStatsGendered);
                         }
                     }
                     catch (Exception ex)
@@ -4393,7 +2359,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBodyData();
+                            item.BodyData = default(GenderedBodyData);
                         }
                     }
                     catch (Exception ex)
@@ -4441,7 +2407,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFaceGenData();
+                            item.FaceGenData = default(FaceGenData);
                         }
                     }
                     catch (Exception ex)
@@ -4468,7 +2434,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetUnknown();
+                            item.Unknown = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -4601,14 +2567,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Race_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 case Race_FieldIndex.Description:
-                    this.SetDescription(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Description = (String)obj;
                     break;
                 case Race_FieldIndex.Spells:
                     this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj, cmds);
@@ -4620,72 +2582,46 @@ namespace Mutagen.Bethesda.Oblivion
                     this._SkillBoosts.SetTo((IEnumerable<SkillBoost>)obj, cmds);
                     break;
                 case Race_FieldIndex.Fluff:
-                    this.SetFluff(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Fluff = (Byte[])obj;
                     break;
                 case Race_FieldIndex.MaleHeight:
-                    this.SetMaleHeight(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.MaleHeight = (Single)obj;
                     break;
                 case Race_FieldIndex.FemaleHeight:
-                    this.SetFemaleHeight(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.FemaleHeight = (Single)obj;
                     break;
                 case Race_FieldIndex.MaleWeight:
-                    this.SetMaleWeight(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.MaleWeight = (Single)obj;
                     break;
                 case Race_FieldIndex.FemaleWeight:
-                    this.SetFemaleWeight(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.FemaleWeight = (Single)obj;
                     break;
                 case Race_FieldIndex.Flags:
-                    this.SetFlags(
-                        (Race.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (Race.Flag)obj;
                     break;
                 case Race_FieldIndex.Voices:
-                    this.SetVoices(
-                        (RaceVoices)obj,
-                        cmds: cmds);
+                    this.Voices = (RaceVoices)obj;
                     break;
                 case Race_FieldIndex.DefaultHair:
-                    this.SetDefaultHair(
-                        (RaceHair)obj,
-                        cmds: cmds);
+                    this.DefaultHair = (RaceHair)obj;
                     break;
                 case Race_FieldIndex.DefaultHairColor:
-                    this.SetDefaultHairColor(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.DefaultHairColor = (Byte)obj;
                     break;
                 case Race_FieldIndex.FaceGenMainClamp:
-                    this.SetFaceGenMainClamp(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.FaceGenMainClamp = (Int32)obj;
                     break;
                 case Race_FieldIndex.FaceGenFaceClamp:
-                    this.SetFaceGenFaceClamp(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.FaceGenFaceClamp = (Int32)obj;
                     break;
                 case Race_FieldIndex.RaceStats:
-                    this.SetRaceStats(
-                        (RaceStatsGendered)obj,
-                        cmds: cmds);
+                    this.RaceStats = (RaceStatsGendered)obj;
                     break;
                 case Race_FieldIndex.FaceData:
                     this._FaceData.SetTo((IEnumerable<FacePart>)obj, cmds);
                     break;
                 case Race_FieldIndex.BodyData:
-                    this.SetBodyData(
-                        (GenderedBodyData)obj,
-                        cmds: cmds);
+                    this.BodyData = (GenderedBodyData)obj;
                     break;
                 case Race_FieldIndex.Hairs:
                     this._Hairs.SetTo((IEnumerable<FormIDLink<Hair>>)obj, cmds);
@@ -4694,14 +2630,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)obj, cmds);
                     break;
                 case Race_FieldIndex.FaceGenData:
-                    this.SetFaceGenData(
-                        (FaceGenData)obj,
-                        cmds: cmds);
+                    this.FaceGenData = (FaceGenData)obj;
                     break;
                 case Race_FieldIndex.Unknown:
-                    this.SetUnknown(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.Unknown = (Byte[])obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -4735,14 +2667,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Race_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 case Race_FieldIndex.Description:
-                    obj.SetDescription(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Description = (String)pair.Value;
                     break;
                 case Race_FieldIndex.Spells:
                     obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value, null);
@@ -4754,72 +2682,46 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._SkillBoosts.SetTo((IEnumerable<SkillBoost>)pair.Value, null);
                     break;
                 case Race_FieldIndex.Fluff:
-                    obj.SetFluff(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Fluff = (Byte[])pair.Value;
                     break;
                 case Race_FieldIndex.MaleHeight:
-                    obj.SetMaleHeight(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.MaleHeight = (Single)pair.Value;
                     break;
                 case Race_FieldIndex.FemaleHeight:
-                    obj.SetFemaleHeight(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.FemaleHeight = (Single)pair.Value;
                     break;
                 case Race_FieldIndex.MaleWeight:
-                    obj.SetMaleWeight(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.MaleWeight = (Single)pair.Value;
                     break;
                 case Race_FieldIndex.FemaleWeight:
-                    obj.SetFemaleWeight(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.FemaleWeight = (Single)pair.Value;
                     break;
                 case Race_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (Race.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (Race.Flag)pair.Value;
                     break;
                 case Race_FieldIndex.Voices:
-                    obj.SetVoices(
-                        (RaceVoices)pair.Value,
-                        cmds: null);
+                    obj.Voices = (RaceVoices)pair.Value;
                     break;
                 case Race_FieldIndex.DefaultHair:
-                    obj.SetDefaultHair(
-                        (RaceHair)pair.Value,
-                        cmds: null);
+                    obj.DefaultHair = (RaceHair)pair.Value;
                     break;
                 case Race_FieldIndex.DefaultHairColor:
-                    obj.SetDefaultHairColor(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.DefaultHairColor = (Byte)pair.Value;
                     break;
                 case Race_FieldIndex.FaceGenMainClamp:
-                    obj.SetFaceGenMainClamp(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.FaceGenMainClamp = (Int32)pair.Value;
                     break;
                 case Race_FieldIndex.FaceGenFaceClamp:
-                    obj.SetFaceGenFaceClamp(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.FaceGenFaceClamp = (Int32)pair.Value;
                     break;
                 case Race_FieldIndex.RaceStats:
-                    obj.SetRaceStats(
-                        (RaceStatsGendered)pair.Value,
-                        cmds: null);
+                    obj.RaceStats = (RaceStatsGendered)pair.Value;
                     break;
                 case Race_FieldIndex.FaceData:
                     obj._FaceData.SetTo((IEnumerable<FacePart>)pair.Value, null);
                     break;
                 case Race_FieldIndex.BodyData:
-                    obj.SetBodyData(
-                        (GenderedBodyData)pair.Value,
-                        cmds: null);
+                    obj.BodyData = (GenderedBodyData)pair.Value;
                     break;
                 case Race_FieldIndex.Hairs:
                     obj._Hairs.SetTo((IEnumerable<FormIDLink<Hair>>)pair.Value, null);
@@ -4828,14 +2730,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)pair.Value, null);
                     break;
                 case Race_FieldIndex.FaceGenData:
-                    obj.SetFaceGenData(
-                        (FaceGenData)pair.Value,
-                        cmds: null);
+                    obj.FaceGenData = (FaceGenData)pair.Value;
                     break;
                 case Race_FieldIndex.Unknown:
-                    obj.SetUnknown(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.Unknown = (Byte[])pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -4853,61 +2751,77 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRace : IRaceGetter, IMajorRecord, ILoquiClass<IRace, IRaceGetter>, ILoquiClass<Race, IRaceGetter>
     {
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
         new String Description { get; set; }
-        new INotifyingSetItem<String> Description_Property { get; }
+        new bool Description_IsSet { get; set; }
+        void Description_Set(String item, bool hasBeenSet = true);
+        void Description_Unset();
 
         new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
         new INotifyingList<Relation> Relations { get; }
         new INotifyingList<SkillBoost> SkillBoosts { get; }
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
 
         new Single MaleHeight { get; set; }
-        new INotifyingItem<Single> MaleHeight_Property { get; }
 
         new Single FemaleHeight { get; set; }
-        new INotifyingItem<Single> FemaleHeight_Property { get; }
 
         new Single MaleWeight { get; set; }
-        new INotifyingItem<Single> MaleWeight_Property { get; }
 
         new Single FemaleWeight { get; set; }
-        new INotifyingItem<Single> FemaleWeight_Property { get; }
 
         new Race.Flag Flags { get; set; }
-        new INotifyingItem<Race.Flag> Flags_Property { get; }
 
         new RaceVoices Voices { get; set; }
-        new INotifyingSetItem<RaceVoices> Voices_Property { get; }
+        new bool Voices_IsSet { get; set; }
+        void Voices_Set(RaceVoices item, bool hasBeenSet = true);
+        void Voices_Unset();
 
         new RaceHair DefaultHair { get; set; }
-        new INotifyingSetItem<RaceHair> DefaultHair_Property { get; }
+        new bool DefaultHair_IsSet { get; set; }
+        void DefaultHair_Set(RaceHair item, bool hasBeenSet = true);
+        void DefaultHair_Unset();
 
         new Byte DefaultHairColor { get; set; }
-        new INotifyingSetItem<Byte> DefaultHairColor_Property { get; }
+        new bool DefaultHairColor_IsSet { get; set; }
+        void DefaultHairColor_Set(Byte item, bool hasBeenSet = true);
+        void DefaultHairColor_Unset();
 
         new Int32 FaceGenMainClamp { get; set; }
-        new INotifyingSetItem<Int32> FaceGenMainClamp_Property { get; }
+        new bool FaceGenMainClamp_IsSet { get; set; }
+        void FaceGenMainClamp_Set(Int32 item, bool hasBeenSet = true);
+        void FaceGenMainClamp_Unset();
 
         new Int32 FaceGenFaceClamp { get; set; }
-        new INotifyingSetItem<Int32> FaceGenFaceClamp_Property { get; }
+        new bool FaceGenFaceClamp_IsSet { get; set; }
+        void FaceGenFaceClamp_Set(Int32 item, bool hasBeenSet = true);
+        void FaceGenFaceClamp_Unset();
 
         new RaceStatsGendered RaceStats { get; set; }
-        new INotifyingSetItem<RaceStatsGendered> RaceStats_Property { get; }
+        new bool RaceStats_IsSet { get; set; }
+        void RaceStats_Set(RaceStatsGendered item, bool hasBeenSet = true);
+        void RaceStats_Unset();
 
         new INotifyingList<FacePart> FaceData { get; }
         new GenderedBodyData BodyData { get; set; }
-        new INotifyingSetItem<GenderedBodyData> BodyData_Property { get; }
+        new bool BodyData_IsSet { get; set; }
+        void BodyData_Set(GenderedBodyData item, bool hasBeenSet = true);
+        void BodyData_Unset();
 
         new INotifyingList<FormIDLink<Hair>> Hairs { get; }
         new INotifyingList<FormIDLink<Eye>> Eyes { get; }
         new FaceGenData FaceGenData { get; set; }
-        new INotifyingSetItem<FaceGenData> FaceGenData_Property { get; }
+        new bool FaceGenData_IsSet { get; set; }
+        void FaceGenData_Set(FaceGenData item, bool hasBeenSet = true);
+        void FaceGenData_Unset();
 
         new Byte[] Unknown { get; set; }
-        new INotifyingSetItem<Byte[]> Unknown_Property { get; }
+        new bool Unknown_IsSet { get; set; }
+        void Unknown_Set(Byte[] item, bool hasBeenSet = true);
+        void Unknown_Unset();
 
     }
 
@@ -4915,12 +2829,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
         #region Description
         String Description { get; }
-        INotifyingSetItemGetter<String> Description_Property { get; }
+        bool Description_IsSet { get; }
 
         #endregion
         #region Spells
@@ -4934,62 +2848,56 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region MaleHeight
         Single MaleHeight { get; }
-        INotifyingItemGetter<Single> MaleHeight_Property { get; }
 
         #endregion
         #region FemaleHeight
         Single FemaleHeight { get; }
-        INotifyingItemGetter<Single> FemaleHeight_Property { get; }
 
         #endregion
         #region MaleWeight
         Single MaleWeight { get; }
-        INotifyingItemGetter<Single> MaleWeight_Property { get; }
 
         #endregion
         #region FemaleWeight
         Single FemaleWeight { get; }
-        INotifyingItemGetter<Single> FemaleWeight_Property { get; }
 
         #endregion
         #region Flags
         Race.Flag Flags { get; }
-        INotifyingItemGetter<Race.Flag> Flags_Property { get; }
 
         #endregion
         #region Voices
         RaceVoices Voices { get; }
-        INotifyingSetItemGetter<RaceVoices> Voices_Property { get; }
+        bool Voices_IsSet { get; }
 
         #endregion
         #region DefaultHair
         RaceHair DefaultHair { get; }
-        INotifyingSetItemGetter<RaceHair> DefaultHair_Property { get; }
+        bool DefaultHair_IsSet { get; }
 
         #endregion
         #region DefaultHairColor
         Byte DefaultHairColor { get; }
-        INotifyingSetItemGetter<Byte> DefaultHairColor_Property { get; }
+        bool DefaultHairColor_IsSet { get; }
 
         #endregion
         #region FaceGenMainClamp
         Int32 FaceGenMainClamp { get; }
-        INotifyingSetItemGetter<Int32> FaceGenMainClamp_Property { get; }
+        bool FaceGenMainClamp_IsSet { get; }
 
         #endregion
         #region FaceGenFaceClamp
         Int32 FaceGenFaceClamp { get; }
-        INotifyingSetItemGetter<Int32> FaceGenFaceClamp_Property { get; }
+        bool FaceGenFaceClamp_IsSet { get; }
 
         #endregion
         #region RaceStats
         RaceStatsGendered RaceStats { get; }
-        INotifyingSetItemGetter<RaceStatsGendered> RaceStats_Property { get; }
+        bool RaceStats_IsSet { get; }
 
         #endregion
         #region FaceData
@@ -4997,7 +2905,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BodyData
         GenderedBodyData BodyData { get; }
-        INotifyingSetItemGetter<GenderedBodyData> BodyData_Property { get; }
+        bool BodyData_IsSet { get; }
 
         #endregion
         #region Hairs
@@ -5008,12 +2916,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceGenData
         FaceGenData FaceGenData { get; }
-        INotifyingSetItemGetter<FaceGenData> FaceGenData_Property { get; }
+        bool FaceGenData_IsSet { get; }
 
         #endregion
         #region Unknown
         Byte[] Unknown { get; }
-        INotifyingSetItemGetter<Byte[]> Unknown_Property { get; }
+        bool Unknown_IsSet { get; }
 
         #endregion
 
@@ -5518,9 +3426,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5537,9 +3456,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Description);
                 try
                 {
-                    item.Description_Property.SetToWithDefault(
-                        rhs: rhs.Description_Property,
-                        def: def?.Description_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Description,
+                        rhsHasBeenSet: rhs.Description_IsSet,
+                        defItem: def?.Description ?? default(String),
+                        defHasBeenSet: def?.Description_IsSet ?? false,
+                        outRhsItem: out var rhsDescriptionItem,
+                        outDefItem: out var defDescriptionItem))
+                    {
+                        item.Description = rhsDescriptionItem;
+                    }
+                    else
+                    {
+                        item.Description_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5587,7 +3517,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Relation);
                                     return Relation.Copy(
                                         r,
                                         copyMask?.Relations?.Specific,
@@ -5624,7 +3553,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(SkillBoost);
                                     return SkillBoost.Copy(
                                         r,
                                         copyMask?.SkillBoosts?.Specific,
@@ -5650,9 +3578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Fluff);
                 try
                 {
-                    item.Fluff_Property.Set(
-                        value: rhs.Fluff,
-                        cmds: cmds);
+                    item.Fluff = rhs.Fluff;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5669,9 +3595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.MaleHeight);
                 try
                 {
-                    item.MaleHeight_Property.Set(
-                        value: rhs.MaleHeight,
-                        cmds: cmds);
+                    item.MaleHeight = rhs.MaleHeight;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5688,9 +3612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.FemaleHeight);
                 try
                 {
-                    item.FemaleHeight_Property.Set(
-                        value: rhs.FemaleHeight,
-                        cmds: cmds);
+                    item.FemaleHeight = rhs.FemaleHeight;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5707,9 +3629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.MaleWeight);
                 try
                 {
-                    item.MaleWeight_Property.Set(
-                        value: rhs.MaleWeight,
-                        cmds: cmds);
+                    item.MaleWeight = rhs.MaleWeight;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5726,9 +3646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.FemaleWeight);
                 try
                 {
-                    item.FemaleWeight_Property.Set(
-                        value: rhs.FemaleWeight,
-                        cmds: cmds);
+                    item.FemaleWeight = rhs.FemaleWeight;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5745,9 +3663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5764,36 +3680,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Voices);
                 try
                 {
-                    item.Voices_Property.SetToWithDefault(
-                        rhs.Voices_Property,
-                        def?.Voices_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Voices,
+                        rhsHasBeenSet: rhs.Voices_IsSet,
+                        defItem: def?.Voices,
+                        defHasBeenSet: def?.Voices_IsSet ?? false,
+                        outRhsItem: out var rhsVoicesItem,
+                        outDefItem: out var defVoicesItem))
+                    {
+                        switch (copyMask?.Voices.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Voices.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RaceVoicesCommon.CopyFieldsFrom(
-                                        item: item.Voices,
-                                        rhs: rhs.Voices,
-                                        def: def?.Voices,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Voices.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(RaceVoices);
-                                    return RaceVoices.Copy(
-                                        r,
-                                        copyMask?.Voices?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Voices?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Voices = rhsVoicesItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RaceVoicesCommon.CopyFieldsFrom(
+                                    item: item.Voices,
+                                    rhs: rhs.Voices,
+                                    def: def?.Voices,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Voices.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Voices = RaceVoices.Copy(
+                                    rhsVoicesItem,
+                                    copyMask?.Voices?.Specific,
+                                    def: defVoicesItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Voices?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Voices_IsSet = false;
+                        item.Voices = default(RaceVoices);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5810,36 +3733,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
                 try
                 {
-                    item.DefaultHair_Property.SetToWithDefault(
-                        rhs.DefaultHair_Property,
-                        def?.DefaultHair_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.DefaultHair,
+                        rhsHasBeenSet: rhs.DefaultHair_IsSet,
+                        defItem: def?.DefaultHair,
+                        defHasBeenSet: def?.DefaultHair_IsSet ?? false,
+                        outRhsItem: out var rhsDefaultHairItem,
+                        outDefItem: out var defDefaultHairItem))
+                    {
+                        switch (copyMask?.DefaultHair.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.DefaultHair.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RaceHairCommon.CopyFieldsFrom(
-                                        item: item.DefaultHair,
-                                        rhs: rhs.DefaultHair,
-                                        def: def?.DefaultHair,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.DefaultHair.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(RaceHair);
-                                    return RaceHair.Copy(
-                                        r,
-                                        copyMask?.DefaultHair?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.DefaultHair?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.DefaultHair = rhsDefaultHairItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RaceHairCommon.CopyFieldsFrom(
+                                    item: item.DefaultHair,
+                                    rhs: rhs.DefaultHair,
+                                    def: def?.DefaultHair,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.DefaultHair.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.DefaultHair = RaceHair.Copy(
+                                    rhsDefaultHairItem,
+                                    copyMask?.DefaultHair?.Specific,
+                                    def: defDefaultHairItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.DefaultHair?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.DefaultHair_IsSet = false;
+                        item.DefaultHair = default(RaceHair);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5856,9 +3786,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColor);
                 try
                 {
-                    item.DefaultHairColor_Property.SetToWithDefault(
-                        rhs: rhs.DefaultHairColor_Property,
-                        def: def?.DefaultHairColor_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.DefaultHairColor,
+                        rhsHasBeenSet: rhs.DefaultHairColor_IsSet,
+                        defItem: def?.DefaultHairColor ?? default(Byte),
+                        defHasBeenSet: def?.DefaultHairColor_IsSet ?? false,
+                        outRhsItem: out var rhsDefaultHairColorItem,
+                        outDefItem: out var defDefaultHairColorItem))
+                    {
+                        item.DefaultHairColor = rhsDefaultHairColorItem;
+                    }
+                    else
+                    {
+                        item.DefaultHairColor_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5875,9 +3816,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.FaceGenMainClamp);
                 try
                 {
-                    item.FaceGenMainClamp_Property.SetToWithDefault(
-                        rhs: rhs.FaceGenMainClamp_Property,
-                        def: def?.FaceGenMainClamp_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.FaceGenMainClamp,
+                        rhsHasBeenSet: rhs.FaceGenMainClamp_IsSet,
+                        defItem: def?.FaceGenMainClamp ?? default(Int32),
+                        defHasBeenSet: def?.FaceGenMainClamp_IsSet ?? false,
+                        outRhsItem: out var rhsFaceGenMainClampItem,
+                        outDefItem: out var defFaceGenMainClampItem))
+                    {
+                        item.FaceGenMainClamp = rhsFaceGenMainClampItem;
+                    }
+                    else
+                    {
+                        item.FaceGenMainClamp_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5894,9 +3846,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.FaceGenFaceClamp);
                 try
                 {
-                    item.FaceGenFaceClamp_Property.SetToWithDefault(
-                        rhs: rhs.FaceGenFaceClamp_Property,
-                        def: def?.FaceGenFaceClamp_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.FaceGenFaceClamp,
+                        rhsHasBeenSet: rhs.FaceGenFaceClamp_IsSet,
+                        defItem: def?.FaceGenFaceClamp ?? default(Int32),
+                        defHasBeenSet: def?.FaceGenFaceClamp_IsSet ?? false,
+                        outRhsItem: out var rhsFaceGenFaceClampItem,
+                        outDefItem: out var defFaceGenFaceClampItem))
+                    {
+                        item.FaceGenFaceClamp = rhsFaceGenFaceClampItem;
+                    }
+                    else
+                    {
+                        item.FaceGenFaceClamp_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5913,36 +3876,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
                 try
                 {
-                    item.RaceStats_Property.SetToWithDefault(
-                        rhs.RaceStats_Property,
-                        def?.RaceStats_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.RaceStats,
+                        rhsHasBeenSet: rhs.RaceStats_IsSet,
+                        defItem: def?.RaceStats,
+                        defHasBeenSet: def?.RaceStats_IsSet ?? false,
+                        outRhsItem: out var rhsRaceStatsItem,
+                        outDefItem: out var defRaceStatsItem))
+                    {
+                        switch (copyMask?.RaceStats.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.RaceStats.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    RaceStatsGenderedCommon.CopyFieldsFrom(
-                                        item: item.RaceStats,
-                                        rhs: rhs.RaceStats,
-                                        def: def?.RaceStats,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.RaceStats.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(RaceStatsGendered);
-                                    return RaceStatsGendered.Copy(
-                                        r,
-                                        copyMask?.RaceStats?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.RaceStats?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.RaceStats = rhsRaceStatsItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                RaceStatsGenderedCommon.CopyFieldsFrom(
+                                    item: item.RaceStats,
+                                    rhs: rhs.RaceStats,
+                                    def: def?.RaceStats,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.RaceStats.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.RaceStats = RaceStatsGendered.Copy(
+                                    rhsRaceStatsItem,
+                                    copyMask?.RaceStats?.Specific,
+                                    def: defRaceStatsItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.RaceStats?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.RaceStats_IsSet = false;
+                        item.RaceStats = default(RaceStatsGendered);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5970,7 +3940,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(FacePart);
                                     return FacePart.Copy(
                                         r,
                                         copyMask?.FaceData?.Specific,
@@ -5996,36 +3965,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
                 try
                 {
-                    item.BodyData_Property.SetToWithDefault(
-                        rhs.BodyData_Property,
-                        def?.BodyData_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.BodyData,
+                        rhsHasBeenSet: rhs.BodyData_IsSet,
+                        defItem: def?.BodyData,
+                        defHasBeenSet: def?.BodyData_IsSet ?? false,
+                        outRhsItem: out var rhsBodyDataItem,
+                        outDefItem: out var defBodyDataItem))
+                    {
+                        switch (copyMask?.BodyData.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.BodyData.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    GenderedBodyDataCommon.CopyFieldsFrom(
-                                        item: item.BodyData,
-                                        rhs: rhs.BodyData,
-                                        def: def?.BodyData,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.BodyData.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(GenderedBodyData);
-                                    return GenderedBodyData.Copy(
-                                        r,
-                                        copyMask?.BodyData?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.BodyData?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.BodyData = rhsBodyDataItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                GenderedBodyDataCommon.CopyFieldsFrom(
+                                    item: item.BodyData,
+                                    rhs: rhs.BodyData,
+                                    def: def?.BodyData,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.BodyData.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.BodyData = GenderedBodyData.Copy(
+                                    rhsBodyDataItem,
+                                    copyMask?.BodyData?.Specific,
+                                    def: defBodyDataItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.BodyData?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.BodyData_IsSet = false;
+                        item.BodyData = default(GenderedBodyData);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6082,36 +4058,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
                 try
                 {
-                    item.FaceGenData_Property.SetToWithDefault(
-                        rhs.FaceGenData_Property,
-                        def?.FaceGenData_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.FaceGenData,
+                        rhsHasBeenSet: rhs.FaceGenData_IsSet,
+                        defItem: def?.FaceGenData,
+                        defHasBeenSet: def?.FaceGenData_IsSet ?? false,
+                        outRhsItem: out var rhsFaceGenDataItem,
+                        outDefItem: out var defFaceGenDataItem))
+                    {
+                        switch (copyMask?.FaceGenData.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.FaceGenData.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    FaceGenDataCommon.CopyFieldsFrom(
-                                        item: item.FaceGenData,
-                                        rhs: rhs.FaceGenData,
-                                        def: def?.FaceGenData,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.FaceGenData.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(FaceGenData);
-                                    return FaceGenData.Copy(
-                                        r,
-                                        copyMask?.FaceGenData?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.FaceGenData?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.FaceGenData = rhsFaceGenDataItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                FaceGenDataCommon.CopyFieldsFrom(
+                                    item: item.FaceGenData,
+                                    rhs: rhs.FaceGenData,
+                                    def: def?.FaceGenData,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.FaceGenData.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.FaceGenData = FaceGenData.Copy(
+                                    rhsFaceGenDataItem,
+                                    copyMask?.FaceGenData?.Specific,
+                                    def: defFaceGenDataItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.FaceGenData?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.FaceGenData_IsSet = false;
+                        item.FaceGenData = default(FaceGenData);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6128,9 +4111,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Unknown);
                 try
                 {
-                    item.Unknown_Property.SetToWithDefault(
-                        rhs: rhs.Unknown_Property,
-                        def: def?.Unknown_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Unknown,
+                        rhsHasBeenSet: rhs.Unknown_IsSet,
+                        defItem: def?.Unknown ?? default(Byte[]),
+                        defHasBeenSet: def?.Unknown_IsSet ?? false,
+                        outRhsItem: out var rhsUnknownItem,
+                        outDefItem: out var defUnknownItem))
+                    {
+                        item.Unknown = rhsUnknownItem;
+                    }
+                    else
+                    {
+                        item.Unknown_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6165,10 +4159,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Race_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 case Race_FieldIndex.Description:
-                    obj.Description_Property.HasBeenSet = on;
+                    obj.Description_IsSet = on;
                     break;
                 case Race_FieldIndex.Spells:
                     obj.Spells.HasBeenSet = on;
@@ -6177,28 +4171,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Relations.HasBeenSet = on;
                     break;
                 case Race_FieldIndex.Voices:
-                    obj.Voices_Property.HasBeenSet = on;
+                    obj.Voices_IsSet = on;
                     break;
                 case Race_FieldIndex.DefaultHair:
-                    obj.DefaultHair_Property.HasBeenSet = on;
+                    obj.DefaultHair_IsSet = on;
                     break;
                 case Race_FieldIndex.DefaultHairColor:
-                    obj.DefaultHairColor_Property.HasBeenSet = on;
+                    obj.DefaultHairColor_IsSet = on;
                     break;
                 case Race_FieldIndex.FaceGenMainClamp:
-                    obj.FaceGenMainClamp_Property.HasBeenSet = on;
+                    obj.FaceGenMainClamp_IsSet = on;
                     break;
                 case Race_FieldIndex.FaceGenFaceClamp:
-                    obj.FaceGenFaceClamp_Property.HasBeenSet = on;
+                    obj.FaceGenFaceClamp_IsSet = on;
                     break;
                 case Race_FieldIndex.RaceStats:
-                    obj.RaceStats_Property.HasBeenSet = on;
+                    obj.RaceStats_IsSet = on;
                     break;
                 case Race_FieldIndex.FaceData:
                     obj.FaceData.HasBeenSet = on;
                     break;
                 case Race_FieldIndex.BodyData:
-                    obj.BodyData_Property.HasBeenSet = on;
+                    obj.BodyData_IsSet = on;
                     break;
                 case Race_FieldIndex.Hairs:
                     obj.Hairs.HasBeenSet = on;
@@ -6207,10 +4201,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Eyes.HasBeenSet = on;
                     break;
                 case Race_FieldIndex.FaceGenData:
-                    obj.FaceGenData_Property.HasBeenSet = on;
+                    obj.FaceGenData_IsSet = on;
                     break;
                 case Race_FieldIndex.Unknown:
-                    obj.Unknown_Property.HasBeenSet = on;
+                    obj.Unknown_IsSet = on;
                     break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -6227,10 +4221,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Race_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 case Race_FieldIndex.Description:
-                    obj.Description_Property.Unset(cmds);
+                    obj.Description_Unset();
                     break;
                 case Race_FieldIndex.Spells:
                     obj.Spells.Unset(cmds);
@@ -6260,28 +4254,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags = default(Race.Flag);
                     break;
                 case Race_FieldIndex.Voices:
-                    obj.Voices_Property.Unset(cmds);
+                    obj.Voices_Unset();
                     break;
                 case Race_FieldIndex.DefaultHair:
-                    obj.DefaultHair_Property.Unset(cmds);
+                    obj.DefaultHair_Unset();
                     break;
                 case Race_FieldIndex.DefaultHairColor:
-                    obj.DefaultHairColor_Property.Unset(cmds);
+                    obj.DefaultHairColor_Unset();
                     break;
                 case Race_FieldIndex.FaceGenMainClamp:
-                    obj.FaceGenMainClamp_Property.Unset(cmds);
+                    obj.FaceGenMainClamp_Unset();
                     break;
                 case Race_FieldIndex.FaceGenFaceClamp:
-                    obj.FaceGenFaceClamp_Property.Unset(cmds);
+                    obj.FaceGenFaceClamp_Unset();
                     break;
                 case Race_FieldIndex.RaceStats:
-                    obj.RaceStats_Property.Unset(cmds);
+                    obj.RaceStats_Unset();
                     break;
                 case Race_FieldIndex.FaceData:
                     obj.FaceData.Unset(cmds);
                     break;
                 case Race_FieldIndex.BodyData:
-                    obj.BodyData_Property.Unset(cmds);
+                    obj.BodyData_Unset();
                     break;
                 case Race_FieldIndex.Hairs:
                     obj.Hairs.Unset(cmds);
@@ -6290,10 +4284,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Eyes.Unset(cmds);
                     break;
                 case Race_FieldIndex.FaceGenData:
-                    obj.FaceGenData_Property.Unset(cmds);
+                    obj.FaceGenData_Unset();
                     break;
                 case Race_FieldIndex.Unknown:
-                    obj.Unknown_Property.Unset(cmds);
+                    obj.Unknown_Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -6317,37 +4311,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Flags:
                     return true;
                 case Race_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 case Race_FieldIndex.Description:
-                    return obj.Description_Property.HasBeenSet;
+                    return obj.Description_IsSet;
                 case Race_FieldIndex.Spells:
                     return obj.Spells.HasBeenSet;
                 case Race_FieldIndex.Relations:
                     return obj.Relations.HasBeenSet;
                 case Race_FieldIndex.Voices:
-                    return obj.Voices_Property.HasBeenSet;
+                    return obj.Voices_IsSet;
                 case Race_FieldIndex.DefaultHair:
-                    return obj.DefaultHair_Property.HasBeenSet;
+                    return obj.DefaultHair_IsSet;
                 case Race_FieldIndex.DefaultHairColor:
-                    return obj.DefaultHairColor_Property.HasBeenSet;
+                    return obj.DefaultHairColor_IsSet;
                 case Race_FieldIndex.FaceGenMainClamp:
-                    return obj.FaceGenMainClamp_Property.HasBeenSet;
+                    return obj.FaceGenMainClamp_IsSet;
                 case Race_FieldIndex.FaceGenFaceClamp:
-                    return obj.FaceGenFaceClamp_Property.HasBeenSet;
+                    return obj.FaceGenFaceClamp_IsSet;
                 case Race_FieldIndex.RaceStats:
-                    return obj.RaceStats_Property.HasBeenSet;
+                    return obj.RaceStats_IsSet;
                 case Race_FieldIndex.FaceData:
                     return obj.FaceData.HasBeenSet;
                 case Race_FieldIndex.BodyData:
-                    return obj.BodyData_Property.HasBeenSet;
+                    return obj.BodyData_IsSet;
                 case Race_FieldIndex.Hairs:
                     return obj.Hairs.HasBeenSet;
                 case Race_FieldIndex.Eyes:
                     return obj.Eyes.HasBeenSet;
                 case Race_FieldIndex.FaceGenData:
-                    return obj.FaceGenData_Property.HasBeenSet;
+                    return obj.FaceGenData_IsSet;
                 case Race_FieldIndex.Unknown:
-                    return obj.Unknown_Property.HasBeenSet;
+                    return obj.Unknown_IsSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -6415,8 +4409,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRace item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Name_Property.Unset(cmds.ToUnsetParams());
-            item.Description_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Unset();
+            item.Description_Unset();
             item.Spells.Unset(cmds.ToUnsetParams());
             item.Relations.Unset(cmds.ToUnsetParams());
             item.SkillBoosts.Unset(cmds.ToUnsetParams());
@@ -6426,18 +4420,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MaleWeight = default(Single);
             item.FemaleWeight = default(Single);
             item.Flags = default(Race.Flag);
-            item.Voices_Property.Unset(cmds.ToUnsetParams());
-            item.DefaultHair_Property.Unset(cmds.ToUnsetParams());
-            item.DefaultHairColor_Property.Unset(cmds.ToUnsetParams());
-            item.FaceGenMainClamp_Property.Unset(cmds.ToUnsetParams());
-            item.FaceGenFaceClamp_Property.Unset(cmds.ToUnsetParams());
-            item.RaceStats_Property.Unset(cmds.ToUnsetParams());
+            item.Voices_Unset();
+            item.DefaultHair_Unset();
+            item.DefaultHairColor_Unset();
+            item.FaceGenMainClamp_Unset();
+            item.FaceGenFaceClamp_Unset();
+            item.RaceStats_Unset();
             item.FaceData.Unset(cmds.ToUnsetParams());
-            item.BodyData_Property.Unset(cmds.ToUnsetParams());
+            item.BodyData_Unset();
             item.Hairs.Unset(cmds.ToUnsetParams());
             item.Eyes.Unset(cmds.ToUnsetParams());
-            item.FaceGenData_Property.Unset(cmds.ToUnsetParams());
-            item.Unknown_Property.Unset(cmds.ToUnsetParams());
+            item.FaceGenData_Unset();
+            item.Unknown_Unset();
         }
 
         public static Race_Mask<bool> GetEqualsMask(
@@ -6455,8 +4449,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
-            ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
             if (item.Spells.HasBeenSet == rhs.Spells.HasBeenSet)
             {
                 if (item.Spells.HasBeenSet)
@@ -6518,12 +4512,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MaleWeight = item.MaleWeight == rhs.MaleWeight;
             ret.FemaleWeight = item.FemaleWeight == rhs.FemaleWeight;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Voices = item.Voices_Property.LoquiEqualsHelper(rhs.Voices_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.DefaultHair = item.DefaultHair_Property.LoquiEqualsHelper(rhs.DefaultHair_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.DefaultHairColor = item.DefaultHairColor_Property.Equals(rhs.DefaultHairColor_Property, (l, r) => l == r);
-            ret.FaceGenMainClamp = item.FaceGenMainClamp_Property.Equals(rhs.FaceGenMainClamp_Property, (l, r) => l == r);
-            ret.FaceGenFaceClamp = item.FaceGenFaceClamp_Property.Equals(rhs.FaceGenFaceClamp_Property, (l, r) => l == r);
-            ret.RaceStats = item.RaceStats_Property.LoquiEqualsHelper(rhs.RaceStats_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Voices = IHasBeenSetExt.LoquiEqualsHelper(item.Voices_IsSet, rhs.Voices_IsSet, item.Voices, rhs.Voices, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.DefaultHair = IHasBeenSetExt.LoquiEqualsHelper(item.DefaultHair_IsSet, rhs.DefaultHair_IsSet, item.DefaultHair, rhs.DefaultHair, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.DefaultHairColor = item.DefaultHairColor_IsSet == rhs.DefaultHairColor_IsSet && item.DefaultHairColor == rhs.DefaultHairColor;
+            ret.FaceGenMainClamp = item.FaceGenMainClamp_IsSet == rhs.FaceGenMainClamp_IsSet && item.FaceGenMainClamp == rhs.FaceGenMainClamp;
+            ret.FaceGenFaceClamp = item.FaceGenFaceClamp_IsSet == rhs.FaceGenFaceClamp_IsSet && item.FaceGenFaceClamp == rhs.FaceGenFaceClamp;
+            ret.RaceStats = IHasBeenSetExt.LoquiEqualsHelper(item.RaceStats_IsSet, rhs.RaceStats_IsSet, item.RaceStats, rhs.RaceStats, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.FaceData.HasBeenSet == rhs.FaceData.HasBeenSet)
             {
                 if (item.FaceData.HasBeenSet)
@@ -6549,7 +4543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.FaceData = new MaskItem<bool, IEnumerable<MaskItem<bool, FacePart_Mask<bool>>>>();
                 ret.FaceData.Overall = false;
             }
-            ret.BodyData = item.BodyData_Property.LoquiEqualsHelper(rhs.BodyData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.BodyData = IHasBeenSetExt.LoquiEqualsHelper(item.BodyData_IsSet, rhs.BodyData_IsSet, item.BodyData, rhs.BodyData, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Hairs.HasBeenSet == rhs.Hairs.HasBeenSet)
             {
                 if (item.Hairs.HasBeenSet)
@@ -6588,8 +4582,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Eyes = new MaskItem<bool, IEnumerable<bool>>();
                 ret.Eyes.Overall = false;
             }
-            ret.FaceGenData = item.FaceGenData_Property.LoquiEqualsHelper(rhs.FaceGenData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Unknown = item.Unknown_Property.Equals(rhs.Unknown_Property, (l, r) => l.EqualsFast(r));
+            ret.FaceGenData = IHasBeenSetExt.LoquiEqualsHelper(item.FaceGenData_IsSet, rhs.FaceGenData_IsSet, item.FaceGenData, rhs.FaceGenData, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && item.Unknown.EqualsFast(rhs.Unknown);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -6804,36 +4798,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRaceGetter item,
             Race_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
             if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
             if (checkMask.SkillBoosts.Overall.HasValue && checkMask.SkillBoosts.Overall.Value != item.SkillBoosts.HasBeenSet) return false;
-            if (checkMask.Voices.Overall.HasValue && checkMask.Voices.Overall.Value != item.Voices_Property.HasBeenSet) return false;
+            if (checkMask.Voices.Overall.HasValue && checkMask.Voices.Overall.Value != item.Voices_IsSet) return false;
             if (checkMask.Voices.Specific != null && (item.Voices == null || !item.Voices.HasBeenSet(checkMask.Voices.Specific))) return false;
-            if (checkMask.DefaultHair.Overall.HasValue && checkMask.DefaultHair.Overall.Value != item.DefaultHair_Property.HasBeenSet) return false;
+            if (checkMask.DefaultHair.Overall.HasValue && checkMask.DefaultHair.Overall.Value != item.DefaultHair_IsSet) return false;
             if (checkMask.DefaultHair.Specific != null && (item.DefaultHair == null || !item.DefaultHair.HasBeenSet(checkMask.DefaultHair.Specific))) return false;
-            if (checkMask.DefaultHairColor.HasValue && checkMask.DefaultHairColor.Value != item.DefaultHairColor_Property.HasBeenSet) return false;
-            if (checkMask.FaceGenMainClamp.HasValue && checkMask.FaceGenMainClamp.Value != item.FaceGenMainClamp_Property.HasBeenSet) return false;
-            if (checkMask.FaceGenFaceClamp.HasValue && checkMask.FaceGenFaceClamp.Value != item.FaceGenFaceClamp_Property.HasBeenSet) return false;
-            if (checkMask.RaceStats.Overall.HasValue && checkMask.RaceStats.Overall.Value != item.RaceStats_Property.HasBeenSet) return false;
+            if (checkMask.DefaultHairColor.HasValue && checkMask.DefaultHairColor.Value != item.DefaultHairColor_IsSet) return false;
+            if (checkMask.FaceGenMainClamp.HasValue && checkMask.FaceGenMainClamp.Value != item.FaceGenMainClamp_IsSet) return false;
+            if (checkMask.FaceGenFaceClamp.HasValue && checkMask.FaceGenFaceClamp.Value != item.FaceGenFaceClamp_IsSet) return false;
+            if (checkMask.RaceStats.Overall.HasValue && checkMask.RaceStats.Overall.Value != item.RaceStats_IsSet) return false;
             if (checkMask.RaceStats.Specific != null && (item.RaceStats == null || !item.RaceStats.HasBeenSet(checkMask.RaceStats.Specific))) return false;
             if (checkMask.FaceData.Overall.HasValue && checkMask.FaceData.Overall.Value != item.FaceData.HasBeenSet) return false;
-            if (checkMask.BodyData.Overall.HasValue && checkMask.BodyData.Overall.Value != item.BodyData_Property.HasBeenSet) return false;
+            if (checkMask.BodyData.Overall.HasValue && checkMask.BodyData.Overall.Value != item.BodyData_IsSet) return false;
             if (checkMask.BodyData.Specific != null && (item.BodyData == null || !item.BodyData.HasBeenSet(checkMask.BodyData.Specific))) return false;
             if (checkMask.Hairs.Overall.HasValue && checkMask.Hairs.Overall.Value != item.Hairs.HasBeenSet) return false;
             if (checkMask.Eyes.Overall.HasValue && checkMask.Eyes.Overall.Value != item.Eyes.HasBeenSet) return false;
-            if (checkMask.FaceGenData.Overall.HasValue && checkMask.FaceGenData.Overall.Value != item.FaceGenData_Property.HasBeenSet) return false;
+            if (checkMask.FaceGenData.Overall.HasValue && checkMask.FaceGenData.Overall.Value != item.FaceGenData_IsSet) return false;
             if (checkMask.FaceGenData.Specific != null && (item.FaceGenData == null || !item.FaceGenData.HasBeenSet(checkMask.FaceGenData.Specific))) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_Property.HasBeenSet) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
             return true;
         }
 
         public static Race_Mask<bool> GetHasBeenSetMask(IRaceGetter item)
         {
             var ret = new Race_Mask<bool>();
-            ret.Name = item.Name_Property.HasBeenSet;
-            ret.Description = item.Description_Property.HasBeenSet;
+            ret.Name = item.Name_IsSet;
+            ret.Description = item.Description_IsSet;
             ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
             ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, Relation_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>(item.SkillBoosts.HasBeenSet, item.SkillBoosts.Select((i) => new MaskItem<bool, SkillBoost_Mask<bool>>(true, i.GetHasBeenSetMask())));
@@ -6843,18 +4837,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MaleWeight = true;
             ret.FemaleWeight = true;
             ret.Flags = true;
-            ret.Voices = new MaskItem<bool, RaceVoices_Mask<bool>>(item.Voices_Property.HasBeenSet, RaceVoicesCommon.GetHasBeenSetMask(item.Voices));
-            ret.DefaultHair = new MaskItem<bool, RaceHair_Mask<bool>>(item.DefaultHair_Property.HasBeenSet, RaceHairCommon.GetHasBeenSetMask(item.DefaultHair));
-            ret.DefaultHairColor = item.DefaultHairColor_Property.HasBeenSet;
-            ret.FaceGenMainClamp = item.FaceGenMainClamp_Property.HasBeenSet;
-            ret.FaceGenFaceClamp = item.FaceGenFaceClamp_Property.HasBeenSet;
-            ret.RaceStats = new MaskItem<bool, RaceStatsGendered_Mask<bool>>(item.RaceStats_Property.HasBeenSet, RaceStatsGenderedCommon.GetHasBeenSetMask(item.RaceStats));
+            ret.Voices = new MaskItem<bool, RaceVoices_Mask<bool>>(item.Voices_IsSet, RaceVoicesCommon.GetHasBeenSetMask(item.Voices));
+            ret.DefaultHair = new MaskItem<bool, RaceHair_Mask<bool>>(item.DefaultHair_IsSet, RaceHairCommon.GetHasBeenSetMask(item.DefaultHair));
+            ret.DefaultHairColor = item.DefaultHairColor_IsSet;
+            ret.FaceGenMainClamp = item.FaceGenMainClamp_IsSet;
+            ret.FaceGenFaceClamp = item.FaceGenFaceClamp_IsSet;
+            ret.RaceStats = new MaskItem<bool, RaceStatsGendered_Mask<bool>>(item.RaceStats_IsSet, RaceStatsGenderedCommon.GetHasBeenSetMask(item.RaceStats));
             ret.FaceData = new MaskItem<bool, IEnumerable<MaskItem<bool, FacePart_Mask<bool>>>>(item.FaceData.HasBeenSet, item.FaceData.Select((i) => new MaskItem<bool, FacePart_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.BodyData = new MaskItem<bool, GenderedBodyData_Mask<bool>>(item.BodyData_Property.HasBeenSet, GenderedBodyDataCommon.GetHasBeenSetMask(item.BodyData));
+            ret.BodyData = new MaskItem<bool, GenderedBodyData_Mask<bool>>(item.BodyData_IsSet, GenderedBodyDataCommon.GetHasBeenSetMask(item.BodyData));
             ret.Hairs = new MaskItem<bool, IEnumerable<bool>>(item.Hairs.HasBeenSet, null);
             ret.Eyes = new MaskItem<bool, IEnumerable<bool>>(item.Eyes.HasBeenSet, null);
-            ret.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_Property.HasBeenSet, FaceGenDataCommon.GetHasBeenSetMask(item.FaceGenData));
-            ret.Unknown = item.Unknown_Property.HasBeenSet;
+            ret.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_IsSet, FaceGenDataCommon.GetHasBeenSetMask(item.FaceGenData));
+            ret.Unknown = item.Unknown_IsSet;
             return ret;
         }
 
@@ -6916,23 +4910,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Race");
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)Race_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Description_Property.HasBeenSet
+            if (item.Description_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Description),
-                    item: item.Description_Property,
+                    item: item.Description,
                     fieldIndex: (int)Race_FieldIndex.Description,
                     errorMask: errorMask);
             }
@@ -7002,7 +4996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Fluff),
-                    item: item.Fluff_Property,
+                    item: item.Fluff,
                     fieldIndex: (int)Race_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
@@ -7011,7 +5005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MaleHeight),
-                    item: item.MaleHeight_Property,
+                    item: item.MaleHeight,
                     fieldIndex: (int)Race_FieldIndex.MaleHeight,
                     errorMask: errorMask);
             }
@@ -7020,7 +5014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FemaleHeight),
-                    item: item.FemaleHeight_Property,
+                    item: item.FemaleHeight,
                     fieldIndex: (int)Race_FieldIndex.FemaleHeight,
                     errorMask: errorMask);
             }
@@ -7029,7 +5023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.MaleWeight),
-                    item: item.MaleWeight_Property,
+                    item: item.MaleWeight,
                     fieldIndex: (int)Race_FieldIndex.MaleWeight,
                     errorMask: errorMask);
             }
@@ -7038,7 +5032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FemaleWeight),
-                    item: item.FemaleWeight_Property,
+                    item: item.FemaleWeight,
                     fieldIndex: (int)Race_FieldIndex.FemaleWeight,
                     errorMask: errorMask);
             }
@@ -7047,68 +5041,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<Race.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)Race_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.Voices_Property.HasBeenSet
+            if (item.Voices_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
                 LoquiXmlTranslation<RaceVoices>.Instance.Write(
                     node: elem,
-                    item: item.Voices_Property,
+                    item: item.Voices,
                     name: nameof(item.Voices),
                     fieldIndex: (int)Race_FieldIndex.Voices,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Voices));
             }
-            if (item.DefaultHair_Property.HasBeenSet
+            if (item.DefaultHair_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHair) ?? true))
             {
                 LoquiXmlTranslation<RaceHair>.Instance.Write(
                     node: elem,
-                    item: item.DefaultHair_Property,
+                    item: item.DefaultHair,
                     name: nameof(item.DefaultHair),
                     fieldIndex: (int)Race_FieldIndex.DefaultHair,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHair));
             }
-            if (item.DefaultHairColor_Property.HasBeenSet
+            if (item.DefaultHairColor_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColor) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.DefaultHairColor),
-                    item: item.DefaultHairColor_Property,
+                    item: item.DefaultHairColor,
                     fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
                     errorMask: errorMask);
             }
-            if (item.FaceGenMainClamp_Property.HasBeenSet
+            if (item.FaceGenMainClamp_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenMainClamp) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FaceGenMainClamp),
-                    item: item.FaceGenMainClamp_Property,
+                    item: item.FaceGenMainClamp,
                     fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
                     errorMask: errorMask);
             }
-            if (item.FaceGenFaceClamp_Property.HasBeenSet
+            if (item.FaceGenFaceClamp_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenFaceClamp) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FaceGenFaceClamp),
-                    item: item.FaceGenFaceClamp_Property,
+                    item: item.FaceGenFaceClamp,
                     fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
                     errorMask: errorMask);
             }
-            if (item.RaceStats_Property.HasBeenSet
+            if (item.RaceStats_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.RaceStats) ?? true))
             {
                 LoquiXmlTranslation<RaceStatsGendered>.Instance.Write(
                     node: elem,
-                    item: item.RaceStats_Property,
+                    item: item.RaceStats,
                     name: nameof(item.RaceStats),
                     fieldIndex: (int)Race_FieldIndex.RaceStats,
                     errorMask: errorMask,
@@ -7135,12 +5129,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if (item.BodyData_Property.HasBeenSet
+            if (item.BodyData_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
                 LoquiXmlTranslation<GenderedBodyData>.Instance.Write(
                     node: elem,
-                    item: item.BodyData_Property,
+                    item: item.BodyData,
                     name: nameof(item.BodyData),
                     fieldIndex: (int)Race_FieldIndex.BodyData,
                     errorMask: errorMask,
@@ -7186,24 +5180,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if (item.FaceGenData_Property.HasBeenSet
+            if (item.FaceGenData_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenData) ?? true))
             {
                 LoquiXmlTranslation<FaceGenData>.Instance.Write(
                     node: elem,
-                    item: item.FaceGenData_Property,
+                    item: item.FaceGenData,
                     name: nameof(item.FaceGenData),
                     fieldIndex: (int)Race_FieldIndex.FaceGenData,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceGenData));
             }
-            if (item.Unknown_Property.HasBeenSet
+            if (item.Unknown_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Unknown),
-                    item: item.Unknown_Property,
+                    item: item.Unknown,
                     fieldIndex: (int)Race_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
@@ -7265,33 +5259,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)Race_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.FULL_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Description_Property,
-                fieldIndex: (int)Race_FieldIndex.Description,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.DESC_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.WriteListOfRecords(
-                writer: writer,
-                items: item.Spells,
-                fieldIndex: (int)Race_FieldIndex.Spells,
-                recordType: Race_Registration.SPLO_HEADER,
-                errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Write(
-                writer: writer,
-                items: item.Relations,
-                fieldIndex: (int)Race_FieldIndex.Relations,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<Relation>.Instance.Write);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)Race_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Race_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Description_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Description,
+                    fieldIndex: (int)Race_FieldIndex.Description,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Race_Registration.DESC_HEADER),
+                    nullable: false);
+            }
+            if (item.Spells.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.WriteListOfRecords(
+                    writer: writer,
+                    items: item.Spells,
+                    fieldIndex: (int)Race_FieldIndex.Spells,
+                    recordType: Race_Registration.SPLO_HEADER,
+                    errorMask: errorMask,
+                    transl: FormIDBinaryTranslation.Instance.Write);
+            }
+            if (item.Relations.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Write(
+                    writer: writer,
+                    items: item.Relations,
+                    fieldIndex: (int)Race_FieldIndex.Relations,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<Relation>.Instance.Write);
+            }
             if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DATA_HEADER)))
@@ -7304,115 +5310,148 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         transl: LoquiBinaryTranslation<SkillBoost>.Instance.Write);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Fluff_Property,
+                        item: item.Fluff,
                         fieldIndex: (int)Race_FieldIndex.Fluff,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.MaleHeight_Property,
+                        item: item.MaleHeight,
                         fieldIndex: (int)Race_FieldIndex.MaleHeight,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FemaleHeight_Property,
+                        item: item.FemaleHeight,
                         fieldIndex: (int)Race_FieldIndex.FemaleHeight,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.MaleWeight_Property,
+                        item: item.MaleWeight,
                         fieldIndex: (int)Race_FieldIndex.MaleWeight,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FemaleWeight_Property,
+                        item: item.FemaleWeight,
                         fieldIndex: (int)Race_FieldIndex.FemaleWeight,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
                         writer,
-                        item.Flags_Property,
+                        item.Flags,
                         length: 2,
                         fieldIndex: (int)Race_FieldIndex.Flags,
                         errorMask: errorMask);
                 }
             }
-            LoquiBinaryTranslation<RaceVoices>.Instance.Write(
-                writer: writer,
-                item: item.Voices_Property,
-                fieldIndex: (int)Race_FieldIndex.Voices,
-                errorMask: errorMask);
-            LoquiBinaryTranslation<RaceHair>.Instance.Write(
-                writer: writer,
-                item: item.DefaultHair_Property,
-                fieldIndex: (int)Race_FieldIndex.DefaultHair,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.DefaultHairColor_Property,
-                fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.CNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FaceGenMainClamp_Property,
-                fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.PNAM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FaceGenFaceClamp_Property,
-                fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.UNAM_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<RaceStatsGendered>.Instance.Write(
-                writer: writer,
-                item: item.RaceStats_Property,
-                fieldIndex: (int)Race_FieldIndex.RaceStats,
-                errorMask: errorMask);
-            using (HeaderExport.ExportHeader(writer, Race_Registration.NAM0_HEADER, ObjectType.Subrecord)) { }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.Write(
-                writer: writer,
-                items: item.FaceData,
-                fieldIndex: (int)Race_FieldIndex.FaceData,
-                errorMask: errorMask,
-                transl: LoquiBinaryTranslation<FacePart>.Instance.Write);
-            if (item.BodyData_Property.HasBeenSet)
+            if (item.Voices_IsSet)
+            {
+                LoquiBinaryTranslation<RaceVoices>.Instance.Write(
+                    writer: writer,
+                    item: item.Voices,
+                    fieldIndex: (int)Race_FieldIndex.Voices,
+                    errorMask: errorMask);
+            }
+            if (item.DefaultHair_IsSet)
+            {
+                LoquiBinaryTranslation<RaceHair>.Instance.Write(
+                    writer: writer,
+                    item: item.DefaultHair,
+                    fieldIndex: (int)Race_FieldIndex.DefaultHair,
+                    errorMask: errorMask);
+            }
+            if (item.DefaultHairColor_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DefaultHairColor,
+                    fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Race_Registration.CNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.FaceGenMainClamp_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FaceGenMainClamp,
+                    fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Race_Registration.PNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.FaceGenFaceClamp_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FaceGenFaceClamp,
+                    fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Race_Registration.UNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.RaceStats_IsSet)
+            {
+                LoquiBinaryTranslation<RaceStatsGendered>.Instance.Write(
+                    writer: writer,
+                    item: item.RaceStats,
+                    fieldIndex: (int)Race_FieldIndex.RaceStats,
+                    errorMask: errorMask);
+            }
+            if (item.FaceData.HasBeenSet)
+            {
+                using (HeaderExport.ExportHeader(writer, Race_Registration.NAM0_HEADER, ObjectType.Subrecord)) { }
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.Write(
+                    writer: writer,
+                    items: item.FaceData,
+                    fieldIndex: (int)Race_FieldIndex.FaceData,
+                    errorMask: errorMask,
+                    transl: LoquiBinaryTranslation<FacePart>.Instance.Write);
+            }
+            if (item.BodyData_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, Race_Registration.NAM1_HEADER, ObjectType.Subrecord)) { }
+                LoquiBinaryTranslation<GenderedBodyData>.Instance.Write(
+                    writer: writer,
+                    item: item.BodyData,
+                    fieldIndex: (int)Race_FieldIndex.BodyData,
+                    errorMask: errorMask);
             }
-            LoquiBinaryTranslation<GenderedBodyData>.Instance.Write(
-                writer: writer,
-                item: item.BodyData_Property,
-                fieldIndex: (int)Race_FieldIndex.BodyData,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>>.Instance.Write(
-                writer: writer,
-                items: item.Hairs,
-                fieldIndex: (int)Race_FieldIndex.Hairs,
-                recordType: Race_Registration.HNAM_HEADER,
-                errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>>.Instance.Write(
-                writer: writer,
-                items: item.Eyes,
-                fieldIndex: (int)Race_FieldIndex.Eyes,
-                recordType: Race_Registration.ENAM_HEADER,
-                errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
-            LoquiBinaryTranslation<FaceGenData>.Instance.Write(
-                writer: writer,
-                item: item.FaceGenData_Property,
-                fieldIndex: (int)Race_FieldIndex.FaceGenData,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown_Property,
-                fieldIndex: (int)Race_FieldIndex.Unknown,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.SNAM_HEADER),
-                nullable: false);
+            if (item.Hairs.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>>.Instance.Write(
+                    writer: writer,
+                    items: item.Hairs,
+                    fieldIndex: (int)Race_FieldIndex.Hairs,
+                    recordType: Race_Registration.HNAM_HEADER,
+                    errorMask: errorMask,
+                    transl: FormIDBinaryTranslation.Instance.Write);
+            }
+            if (item.Eyes.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>>.Instance.Write(
+                    writer: writer,
+                    items: item.Eyes,
+                    fieldIndex: (int)Race_FieldIndex.Eyes,
+                    recordType: Race_Registration.ENAM_HEADER,
+                    errorMask: errorMask,
+                    transl: FormIDBinaryTranslation.Instance.Write);
+            }
+            if (item.FaceGenData_IsSet)
+            {
+                LoquiBinaryTranslation<FaceGenData>.Instance.Write(
+                    writer: writer,
+                    item: item.FaceGenData,
+                    fieldIndex: (int)Race_FieldIndex.FaceGenData,
+                    errorMask: errorMask);
+            }
+            if (item.Unknown_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown,
+                    fieldIndex: (int)Race_FieldIndex.Unknown,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Race_Registration.SNAM_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

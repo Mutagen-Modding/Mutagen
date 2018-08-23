@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,11 +31,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RaceStatsGendered : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IRaceStatsGendered,
         ILoquiObject<RaceStatsGendered>,
         ILoquiObjectSetter,
-        IPropertySupporter<RaceStats>,
         IEquatable<RaceStatsGendered>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,100 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        protected RaceStats _Male;
-        protected PropertyForwarder<RaceStatsGendered, RaceStats> _MaleForwarder;
-        public INotifyingSetItem<RaceStats> Male_Property => _MaleForwarder ?? (_MaleForwarder = new PropertyForwarder<RaceStatsGendered, RaceStats>(this, (int)RaceStatsGendered_FieldIndex.Male));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public RaceStats Male
-        {
-            get => this._Male;
-            set => this.SetMale(value);
-        }
-        protected void SetMale(
-            RaceStats item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RaceStatsGendered_FieldIndex.Male];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Male, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RaceStatsGendered_FieldIndex.Male] = hasBeenSet;
-            }
-            if (_RaceStats_subscriptions != null)
-            {
-                var tmp = Male;
-                _Male = item;
-                _RaceStats_subscriptions.FireSubscriptions(
-                    index: (int)RaceStatsGendered_FieldIndex.Male,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Male = item;
-            }
-        }
-        protected void UnsetMale()
-        {
-            _hasBeenSetTracker[(int)RaceStatsGendered_FieldIndex.Male] = false;
-            Male = default(RaceStats);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<RaceStats> IRaceStatsGendered.Male_Property => this.Male_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<RaceStats> IRaceStatsGenderedGetter.Male_Property => this.Male_Property;
+        public RaceStats Male { get; set; }
         #endregion
         #region Female
-        protected RaceStats _Female;
-        protected PropertyForwarder<RaceStatsGendered, RaceStats> _FemaleForwarder;
-        public INotifyingSetItem<RaceStats> Female_Property => _FemaleForwarder ?? (_FemaleForwarder = new PropertyForwarder<RaceStatsGendered, RaceStats>(this, (int)RaceStatsGendered_FieldIndex.Female));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public RaceStats Female
-        {
-            get => this._Female;
-            set => this.SetFemale(value);
-        }
-        protected void SetFemale(
-            RaceStats item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)RaceStatsGendered_FieldIndex.Female];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Female, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)RaceStatsGendered_FieldIndex.Female] = hasBeenSet;
-            }
-            if (_RaceStats_subscriptions != null)
-            {
-                var tmp = Female;
-                _Female = item;
-                _RaceStats_subscriptions.FireSubscriptions(
-                    index: (int)RaceStatsGendered_FieldIndex.Female,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Female = item;
-            }
-        }
-        protected void UnsetFemale()
-        {
-            _hasBeenSetTracker[(int)RaceStatsGendered_FieldIndex.Female] = false;
-            Female = default(RaceStats);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<RaceStats> IRaceStatsGendered.Female_Property => this.Female_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<RaceStats> IRaceStatsGenderedGetter.Female_Property => this.Female_Property;
+        public RaceStats Female { get; set; }
         #endregion
 
         #region Loqui Getter Interface
@@ -548,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMale();
+                            item.Male = default(RaceStats);
                         }
                     }
                     catch (Exception ex)
@@ -575,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFemale();
+                            item.Female = default(RaceStats);
                         }
                     }
                     catch (Exception ex)
@@ -607,151 +518,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter RaceStats
-        protected ObjectCentralizationSubscriptions<RaceStats> _RaceStats_subscriptions;
-        RaceStats IPropertySupporter<RaceStats>.Get(int index)
-        {
-            return GetRaceStats(index: index);
-        }
-
-        protected RaceStats GetRaceStats(int index)
-        {
-            switch ((RaceStatsGendered_FieldIndex)index)
-            {
-                case RaceStatsGendered_FieldIndex.Male:
-                    return Male;
-                case RaceStatsGendered_FieldIndex.Female:
-                    return Female;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceStats: {index}");
-            }
-        }
-
-        void IPropertySupporter<RaceStats>.Set(
-            int index,
-            RaceStats item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetRaceStats(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetRaceStats(
-            int index,
-            RaceStats item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((RaceStatsGendered_FieldIndex)index)
-            {
-                case RaceStatsGendered_FieldIndex.Male:
-                    SetMale(item, hasBeenSet, cmds);
-                    break;
-                case RaceStatsGendered_FieldIndex.Female:
-                    SetFemale(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceStats: {index}");
-            }
-        }
-
-        bool IPropertySupporter<RaceStats>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<RaceStats>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<RaceStats>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetRaceStats(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetRaceStats(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((RaceStatsGendered_FieldIndex)index)
-            {
-                case RaceStatsGendered_FieldIndex.Male:
-                    SetMale(
-                        item: default(RaceStats),
-                        hasBeenSet: false);
-                    break;
-                case RaceStatsGendered_FieldIndex.Female:
-                    SetFemale(
-                        item: default(RaceStats),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceStats: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RaceStats>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<RaceStats> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_RaceStats_subscriptions == null)
-            {
-                _RaceStats_subscriptions = new ObjectCentralizationSubscriptions<RaceStats>();
-            }
-            _RaceStats_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<RaceStats>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _RaceStats_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<RaceStats>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        RaceStats IPropertySupporter<RaceStats>.DefaultValue(int index)
-        {
-            return DefaultValueRaceStats(index: index);
-        }
-
-        protected RaceStats DefaultValueRaceStats(int index)
-        {
-            switch ((RaceStatsGendered_FieldIndex)index)
-            {
-                case RaceStatsGendered_FieldIndex.Male:
-                case RaceStatsGendered_FieldIndex.Female:
-                    return default(RaceStats);
-                default:
-                    throw new ArgumentException($"Unknown index for field type RaceStats: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RaceStatsGendered_Registration.TRIGGERING_RECORD_TYPE;
@@ -974,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetMale();
+                    item.Male = default(RaceStats);
                 }
             }
             catch (Exception ex)
@@ -998,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetFemale();
+                    item.Female = default(RaceStats);
                 }
             }
             catch (Exception ex)
@@ -1137,14 +903,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RaceStatsGendered_FieldIndex.Male:
-                    this.SetMale(
-                        (RaceStats)obj,
-                        cmds: cmds);
+                    this.Male = (RaceStats)obj;
                     break;
                 case RaceStatsGendered_FieldIndex.Female:
-                    this.SetFemale(
-                        (RaceStats)obj,
-                        cmds: cmds);
+                    this.Female = (RaceStats)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1184,14 +946,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RaceStatsGendered_FieldIndex.Male:
-                    obj.SetMale(
-                        (RaceStats)pair.Value,
-                        cmds: null);
+                    obj.Male = (RaceStats)pair.Value;
                     break;
                 case RaceStatsGendered_FieldIndex.Female:
-                    obj.SetFemale(
-                        (RaceStats)pair.Value,
-                        cmds: null);
+                    obj.Female = (RaceStats)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1209,10 +967,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRaceStatsGendered : IRaceStatsGenderedGetter, ILoquiClass<IRaceStatsGendered, IRaceStatsGenderedGetter>, ILoquiClass<RaceStatsGendered, IRaceStatsGenderedGetter>
     {
         new RaceStats Male { get; set; }
-        new INotifyingItem<RaceStats> Male_Property { get; }
 
         new RaceStats Female { get; set; }
-        new INotifyingItem<RaceStats> Female_Property { get; }
 
     }
 
@@ -1220,12 +976,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         RaceStats Male { get; }
-        INotifyingItemGetter<RaceStats> Male_Property { get; }
 
         #endregion
         #region Female
         RaceStats Female { get; }
-        INotifyingItemGetter<RaceStats> Female_Property { get; }
 
         #endregion
 
@@ -1723,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 LoquiXmlTranslation<RaceStats>.Instance.Write(
                     node: elem,
-                    item: item.Male_Property,
+                    item: item.Male,
                     name: nameof(item.Male),
                     fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
                     errorMask: errorMask,
@@ -1733,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 LoquiXmlTranslation<RaceStats>.Instance.Write(
                     node: elem,
-                    item: item.Female_Property,
+                    item: item.Female,
                     name: nameof(item.Female),
                     fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
                     errorMask: errorMask,
@@ -1788,12 +1542,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             LoquiBinaryTranslation<RaceStats>.Instance.Write(
                 writer: writer,
-                item: item.Male_Property,
+                item: item.Male,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
                 errorMask: errorMask);
             LoquiBinaryTranslation<RaceStats>.Instance.Write(
                 writer: writer,
-                item: item.Female_Property,
+                item: item.Female,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
                 errorMask: errorMask);
         }

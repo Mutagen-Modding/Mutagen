@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -27,13 +29,10 @@ namespace Mutagen.Bethesda
 {
     #region Class
     public partial class ListGroup<T> : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IListGroup<T>,
         ILoquiObject<ListGroup<T>>,
         ILoquiObjectSetter,
-        IPropertySupporter<String>,
-        IPropertySupporter<GroupTypeEnum>,
-        IPropertySupporter<Byte[]>,
         IEquatable<ListGroup<T>>
         where T : ILoquiObject<T>
     {
@@ -57,151 +56,35 @@ namespace Mutagen.Bethesda
         }
 
         #region ContainedRecordType
-        protected String _ContainedRecordType;
-        protected PropertyForwarder<ListGroup<T>, String> _ContainedRecordTypeForwarder;
-        public INotifyingSetItemGetter<String> ContainedRecordType_Property => _ContainedRecordTypeForwarder ?? (_ContainedRecordTypeForwarder = new PropertyForwarder<ListGroup<T>, String>(this, (int)ListGroup_FieldIndex.ContainedRecordType));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _ContainedRecordType;
         public String ContainedRecordType
         {
             get => this._ContainedRecordType;
-            protected set => this.SetContainedRecordType(value);
+            protected set => this.RaiseAndSetIfChanged(ref this._ContainedRecordType, value, nameof(ContainedRecordType));
         }
-        protected void SetContainedRecordType(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ListGroup_FieldIndex.ContainedRecordType];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ContainedRecordType == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ListGroup_FieldIndex.ContainedRecordType] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = ContainedRecordType;
-                _ContainedRecordType = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)ListGroup_FieldIndex.ContainedRecordType,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ContainedRecordType = item;
-            }
-        }
-        protected void UnsetContainedRecordType()
-        {
-            _hasBeenSetTracker[(int)ListGroup_FieldIndex.ContainedRecordType] = false;
-            ContainedRecordType = default(String);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<String> IListGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
         #endregion
         #region GroupType
-        protected GroupTypeEnum _GroupType;
-        protected PropertyForwarder<ListGroup<T>, GroupTypeEnum> _GroupTypeForwarder;
-        public INotifyingSetItem<GroupTypeEnum> GroupType_Property => _GroupTypeForwarder ?? (_GroupTypeForwarder = new PropertyForwarder<ListGroup<T>, GroupTypeEnum>(this, (int)ListGroup_FieldIndex.GroupType));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private GroupTypeEnum _GroupType;
         public GroupTypeEnum GroupType
         {
             get => this._GroupType;
-            set => this.SetGroupType(value);
+            set => this.RaiseAndSetIfChanged(ref this._GroupType, value, nameof(GroupType));
         }
-        protected void SetGroupType(
-            GroupTypeEnum item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ListGroup_FieldIndex.GroupType];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && GroupType == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ListGroup_FieldIndex.GroupType] = hasBeenSet;
-            }
-            if (_GroupTypeEnum_subscriptions != null)
-            {
-                var tmp = GroupType;
-                _GroupType = item;
-                _GroupTypeEnum_subscriptions.FireSubscriptions(
-                    index: (int)ListGroup_FieldIndex.GroupType,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _GroupType = item;
-            }
-        }
-        protected void UnsetGroupType()
-        {
-            _hasBeenSetTracker[(int)ListGroup_FieldIndex.GroupType] = false;
-            GroupType = default(GroupTypeEnum);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<GroupTypeEnum> IListGroup<T>.GroupType_Property => this.GroupType_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<GroupTypeEnum> IListGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        protected Byte[] _LastModified = new byte[4];
-        protected PropertyForwarder<ListGroup<T>, Byte[]> _LastModifiedForwarder;
-        public INotifyingSetItem<Byte[]> LastModified_Property => _LastModifiedForwarder ?? (_LastModifiedForwarder = new PropertyForwarder<ListGroup<T>, Byte[]>(this, (int)ListGroup_FieldIndex.LastModified));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _LastModified = new byte[4];
         public Byte[] LastModified
         {
-            get => this._LastModified;
-            set => this.SetLastModified(value);
-        }
-        protected void SetLastModified(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            if (item == null)
+            get => _LastModified;
+            set
             {
-                item = new byte[4];
-            }
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ListGroup_FieldIndex.LastModified];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(LastModified, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ListGroup_FieldIndex.LastModified] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = LastModified;
-                _LastModified = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)ListGroup_FieldIndex.LastModified,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _LastModified = item;
+                this._LastModified = value;
+                if (value == null)
+                {
+                    this._LastModified = new byte[4];
+                }
             }
         }
-        protected void UnsetLastModified()
-        {
-            SetLastModified(
-                item: default(Byte[]),
-                hasBeenSet: false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Byte[]> IListGroup<T>.LastModified_Property => this.LastModified_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Byte[]> IListGroupGetter<T>.LastModified_Property => this.LastModified_Property;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -585,7 +468,7 @@ namespace Mutagen.Bethesda
                         }
                         else
                         {
-                            item.UnsetGroupType();
+                            item.GroupType = default(GroupTypeEnum);
                         }
                     }
                     catch (Exception ex)
@@ -611,7 +494,7 @@ namespace Mutagen.Bethesda
                         }
                         else
                         {
-                            item.UnsetLastModified();
+                            item.LastModified = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -673,408 +556,6 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected String GetString(int index)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    return ContainedRecordType;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    SetContainedRecordType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    SetContainedRecordType(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected String DefaultValueString(int index)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.ContainedRecordType:
-                    return default(String);
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter GroupTypeEnum
-        protected ObjectCentralizationSubscriptions<GroupTypeEnum> _GroupTypeEnum_subscriptions;
-        GroupTypeEnum IPropertySupporter<GroupTypeEnum>.Get(int index)
-        {
-            return GetGroupTypeEnum(index: index);
-        }
-
-        protected GroupTypeEnum GetGroupTypeEnum(int index)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    return GroupType;
-                default:
-                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
-            }
-        }
-
-        void IPropertySupporter<GroupTypeEnum>.Set(
-            int index,
-            GroupTypeEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetGroupTypeEnum(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetGroupTypeEnum(
-            int index,
-            GroupTypeEnum item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    SetGroupType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
-            }
-        }
-
-        bool IPropertySupporter<GroupTypeEnum>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<GroupTypeEnum>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<GroupTypeEnum>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetGroupTypeEnum(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetGroupTypeEnum(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    SetGroupType(
-                        item: default(GroupTypeEnum),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<GroupTypeEnum>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<GroupTypeEnum> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_GroupTypeEnum_subscriptions == null)
-            {
-                _GroupTypeEnum_subscriptions = new ObjectCentralizationSubscriptions<GroupTypeEnum>();
-            }
-            _GroupTypeEnum_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<GroupTypeEnum>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _GroupTypeEnum_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<GroupTypeEnum>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        GroupTypeEnum IPropertySupporter<GroupTypeEnum>.DefaultValue(int index)
-        {
-            return DefaultValueGroupTypeEnum(index: index);
-        }
-
-        protected GroupTypeEnum DefaultValueGroupTypeEnum(int index)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    return default(GroupTypeEnum);
-                default:
-                    throw new ArgumentException($"Unknown index for field type GroupTypeEnum: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.LastModified:
-                    return LastModified;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.LastModified:
-                    SetLastModified(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.LastModified:
-                    SetLastModified(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((ListGroup_FieldIndex)index)
-            {
-                case ListGroup_FieldIndex.LastModified:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)typeof(T).GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
@@ -1320,7 +801,7 @@ namespace Mutagen.Bethesda
                 }
                 else
                 {
-                    item.UnsetGroupType();
+                    item.GroupType = default(GroupTypeEnum);
                 }
             }
             catch (Exception ex)
@@ -1344,7 +825,7 @@ namespace Mutagen.Bethesda
                 }
                 else
                 {
-                    item.UnsetLastModified();
+                    item.LastModified = default(Byte[]);
                 }
             }
             catch (Exception ex)
@@ -1524,14 +1005,10 @@ namespace Mutagen.Bethesda
                 case ListGroup_FieldIndex.ContainedRecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case ListGroup_FieldIndex.GroupType:
-                    this.SetGroupType(
-                        (GroupTypeEnum)obj,
-                        cmds: cmds);
+                    this.GroupType = (GroupTypeEnum)obj;
                     break;
                 case ListGroup_FieldIndex.LastModified:
-                    this.SetLastModified(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.LastModified = (Byte[])obj;
                     break;
                 case ListGroup_FieldIndex.Items:
                     this._Items.SetTo((IEnumerable<T>)obj, cmds);
@@ -1574,14 +1051,10 @@ namespace Mutagen.Bethesda
             switch (enu)
             {
                 case ListGroup_FieldIndex.GroupType:
-                    obj.SetGroupType(
-                        (GroupTypeEnum)pair.Value,
-                        cmds: null);
+                    obj.GroupType = (GroupTypeEnum)pair.Value;
                     break;
                 case ListGroup_FieldIndex.LastModified:
-                    obj.SetLastModified(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.LastModified = (Byte[])pair.Value;
                     break;
                 case ListGroup_FieldIndex.Items:
                     obj._Items.SetTo((IEnumerable<T>)pair.Value, null);
@@ -1603,10 +1076,8 @@ namespace Mutagen.Bethesda
         where T : ILoquiObject<T>
     {
         new GroupTypeEnum GroupType { get; set; }
-        new INotifyingItem<GroupTypeEnum> GroupType_Property { get; }
 
         new Byte[] LastModified { get; set; }
-        new INotifyingItem<Byte[]> LastModified_Property { get; }
 
         new INotifyingList<T> Items { get; }
     }
@@ -1616,17 +1087,14 @@ namespace Mutagen.Bethesda
     {
         #region ContainedRecordType
         String ContainedRecordType { get; }
-        INotifyingItemGetter<String> ContainedRecordType_Property { get; }
 
         #endregion
         #region GroupType
         GroupTypeEnum GroupType { get; }
-        INotifyingItemGetter<GroupTypeEnum> GroupType_Property { get; }
 
         #endregion
         #region LastModified
         Byte[] LastModified { get; }
-        INotifyingItemGetter<Byte[]> LastModified_Property { get; }
 
         #endregion
         #region Items
@@ -1885,9 +1353,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask?.PushIndex((int)ListGroup_FieldIndex.GroupType);
                 try
                 {
-                    item.GroupType_Property.Set(
-                        value: rhs.GroupType,
-                        cmds: cmds);
+                    item.GroupType = rhs.GroupType;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1904,9 +1370,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask?.PushIndex((int)ListGroup_FieldIndex.LastModified);
                 try
                 {
-                    item.LastModified_Property.Set(
-                        value: rhs.LastModified,
-                        cmds: cmds);
+                    item.LastModified = rhs.LastModified;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1934,7 +1398,6 @@ namespace Mutagen.Bethesda.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(T);
                                     var copyFunc = LoquiRegistration.GetCopyFunc<T>();
                                     return copyFunc(r, null, d);
                                 default:
@@ -2209,7 +1672,7 @@ namespace Mutagen.Bethesda.Internals
                 EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
                     node: elem,
                     name: nameof(item.GroupType),
-                    item: item.GroupType_Property,
+                    item: item.GroupType,
                     fieldIndex: (int)ListGroup_FieldIndex.GroupType,
                     errorMask: errorMask);
             }
@@ -2218,7 +1681,7 @@ namespace Mutagen.Bethesda.Internals
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.LastModified),
-                    item: item.LastModified_Property,
+                    item: item.LastModified,
                     fieldIndex: (int)ListGroup_FieldIndex.LastModified,
                     errorMask: errorMask);
             }
@@ -2304,13 +1767,13 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
-                item.GroupType_Property,
+                item.GroupType,
                 length: 4,
                 fieldIndex: (int)ListGroup_FieldIndex.GroupType,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LastModified_Property,
+                item: item.LastModified,
                 fieldIndex: (int)ListGroup_FieldIndex.LastModified,
                 errorMask: errorMask);
         }

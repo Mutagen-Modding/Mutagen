@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 }
                                 else
                                 {
-                                    item.UnsetUnknown();
+                                    item.Unknown_Unset();
                                 }
                             }
                         }
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            if (item.Unknown_Property.HasBeenSet)
+            if (item.Unknown_IsSet)
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.PGAG_HEADER))
                 {

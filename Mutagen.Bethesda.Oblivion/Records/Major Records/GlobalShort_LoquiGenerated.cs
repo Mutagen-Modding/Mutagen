@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,7 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         IGlobalShort,
         ILoquiObject<GlobalShort>,
         ILoquiObjectSetter,
-        IPropertySupporter<Int16>,
         IEquatable<GlobalShort>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,50 +51,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        protected Int16 _Data;
-        protected PropertyForwarder<GlobalShort, Int16> _DataForwarder;
-        public INotifyingSetItemGetter<Int16> Data_Property => _DataForwarder ?? (_DataForwarder = new PropertyForwarder<GlobalShort, Int16>(this, (int)GlobalShort_FieldIndex.Data));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int16 _Data;
         public Int16 Data
         {
             get => this._Data;
-            protected set => this.SetData(value);
+            protected set => this.RaiseAndSetIfChanged(ref this._Data, value, nameof(Data));
         }
-        protected void SetData(
-            Int16 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Data == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data] = hasBeenSet;
-            }
-            if (_Int16_subscriptions != null)
-            {
-                var tmp = Data;
-                _Data = item;
-                _Int16_subscriptions.FireSubscriptions(
-                    index: (int)GlobalShort_FieldIndex.Data,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Data = item;
-            }
-        }
-        protected void UnsetData()
-        {
-            _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data] = false;
-            Data = default(Int16);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int16> IGlobalShortGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -533,140 +496,6 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        #region IPropertySupporter Int16
-        protected ObjectCentralizationSubscriptions<Int16> _Int16_subscriptions;
-        Int16 IPropertySupporter<Int16>.Get(int index)
-        {
-            return GetInt16(index: index);
-        }
-
-        protected Int16 GetInt16(int index)
-        {
-            switch ((GlobalShort_FieldIndex)index)
-            {
-                case GlobalShort_FieldIndex.Data:
-                    return Data;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int16>.Set(
-            int index,
-            Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt16(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt16(
-            int index,
-            Int16 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((GlobalShort_FieldIndex)index)
-            {
-                case GlobalShort_FieldIndex.Data:
-                    SetData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int16>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int16>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int16>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt16(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt16(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((GlobalShort_FieldIndex)index)
-            {
-                case GlobalShort_FieldIndex.Data:
-                    SetData(
-                        item: default(Int16),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int16>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int16> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int16_subscriptions == null)
-            {
-                _Int16_subscriptions = new ObjectCentralizationSubscriptions<Int16>();
-            }
-            _Int16_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int16>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int16_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int16>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int16 IPropertySupporter<Int16>.DefaultValue(int index)
-        {
-            return DefaultValueInt16(index: index);
-        }
-
-        protected Int16 DefaultValueInt16(int index)
-        {
-            switch ((GlobalShort_FieldIndex)index)
-            {
-                case GlobalShort_FieldIndex.Data:
-                    return default(Int16);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int16: {index}");
-            }
-        }
-
-        #endregion
-
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = GlobalShort_Registration.TRIGGERING_RECORD_TYPE;
         #endregion
@@ -1025,7 +854,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         Int16 Data { get; }
-        INotifyingItemGetter<Int16> Data_Property { get; }
 
         #endregion
 

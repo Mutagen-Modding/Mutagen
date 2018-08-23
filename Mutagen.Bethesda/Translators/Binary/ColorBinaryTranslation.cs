@@ -50,12 +50,12 @@ namespace Mutagen.Bethesda.Binary
                 errorMask: errorMask);
         }
 
-        protected override Color ParseValue(MutagenFrame reader)
+        public override Color ParseValue(MutagenFrame reader)
         {
             return reader.ReadColor();
         }
 
-        protected override void WriteValue(MutagenWriter writer, Color item)
+        public override void WriteValue(MutagenWriter writer, Color item)
         {
             writer.Write(item);
         }

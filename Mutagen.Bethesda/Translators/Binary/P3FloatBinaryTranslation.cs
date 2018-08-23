@@ -9,19 +9,19 @@ namespace Mutagen.Bethesda.Binary
         public readonly static P3FloatBinaryTranslation Instance = new P3FloatBinaryTranslation();
         public override int? ExpectedLength => 1;
 
-        protected override P3Float ParseValue(MutagenFrame reader)
+        public override P3Float ParseValue(MutagenFrame reader)
         {
             return new P3Float(
-                reader.Reader.ReadFloat(),
-                reader.Reader.ReadFloat(),
-                reader.Reader.ReadFloat());
+               FloatBinaryTranslation.Instance.ParseValue(reader),
+                FloatBinaryTranslation.Instance.ParseValue(reader),
+                FloatBinaryTranslation.Instance.ParseValue(reader));
         }
 
-        protected override void WriteValue(MutagenWriter writer, P3Float item)
+        public override void WriteValue(MutagenWriter writer, P3Float item)
         {
-            writer.Write(item.X);
-            writer.Write(item.Y);
-            writer.Write(item.Z);
+            FloatBinaryTranslation.Instance.WriteValue(writer, item.X);
+            FloatBinaryTranslation.Instance.WriteValue(writer, item.Y);
+            FloatBinaryTranslation.Instance.WriteValue(writer, item.Z);
         }
     }
 }

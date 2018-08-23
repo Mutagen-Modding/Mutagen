@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,11 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WeatherSound : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IWeatherSound,
         ILoquiObject<WeatherSound>,
         ILoquiObjectSetter,
-        IPropertySupporter<WeatherSound.SoundType>,
         IEquatable<WeatherSound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -56,52 +57,12 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Sound> IWeatherSoundGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Type
-        protected WeatherSound.SoundType _Type;
-        protected PropertyForwarder<WeatherSound, WeatherSound.SoundType> _TypeForwarder;
-        public INotifyingSetItem<WeatherSound.SoundType> Type_Property => _TypeForwarder ?? (_TypeForwarder = new PropertyForwarder<WeatherSound, WeatherSound.SoundType>(this, (int)WeatherSound_FieldIndex.Type));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WeatherSound.SoundType _Type;
         public WeatherSound.SoundType Type
         {
             get => this._Type;
-            set => this.SetType(value);
+            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
         }
-        protected void SetType(
-            WeatherSound.SoundType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)WeatherSound_FieldIndex.Type];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Type == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)WeatherSound_FieldIndex.Type] = hasBeenSet;
-            }
-            if (_WeatherSoundSoundType_subscriptions != null)
-            {
-                var tmp = Type;
-                _Type = item;
-                _WeatherSoundSoundType_subscriptions.FireSubscriptions(
-                    index: (int)WeatherSound_FieldIndex.Type,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Type = item;
-            }
-        }
-        protected void UnsetType()
-        {
-            _hasBeenSetTracker[(int)WeatherSound_FieldIndex.Type] = false;
-            Type = default(WeatherSound.SoundType);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<WeatherSound.SoundType> IWeatherSound.Type_Property => this.Type_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<WeatherSound.SoundType> IWeatherSoundGetter.Type_Property => this.Type_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -512,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetType();
+                            item.Type = default(WeatherSound.SoundType);
                         }
                     }
                     catch (Exception ex)
@@ -544,140 +505,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter WeatherSound.SoundType
-        protected ObjectCentralizationSubscriptions<WeatherSound.SoundType> _WeatherSoundSoundType_subscriptions;
-        WeatherSound.SoundType IPropertySupporter<WeatherSound.SoundType>.Get(int index)
-        {
-            return GetWeatherSoundSoundType(index: index);
-        }
-
-        protected WeatherSound.SoundType GetWeatherSoundSoundType(int index)
-        {
-            switch ((WeatherSound_FieldIndex)index)
-            {
-                case WeatherSound_FieldIndex.Type:
-                    return Type;
-                default:
-                    throw new ArgumentException($"Unknown index for field type WeatherSound.SoundType: {index}");
-            }
-        }
-
-        void IPropertySupporter<WeatherSound.SoundType>.Set(
-            int index,
-            WeatherSound.SoundType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetWeatherSoundSoundType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetWeatherSoundSoundType(
-            int index,
-            WeatherSound.SoundType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((WeatherSound_FieldIndex)index)
-            {
-                case WeatherSound_FieldIndex.Type:
-                    SetType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type WeatherSound.SoundType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<WeatherSound.SoundType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<WeatherSound.SoundType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<WeatherSound.SoundType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetWeatherSoundSoundType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetWeatherSoundSoundType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((WeatherSound_FieldIndex)index)
-            {
-                case WeatherSound_FieldIndex.Type:
-                    SetType(
-                        item: default(WeatherSound.SoundType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type WeatherSound.SoundType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<WeatherSound.SoundType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<WeatherSound.SoundType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_WeatherSoundSoundType_subscriptions == null)
-            {
-                _WeatherSoundSoundType_subscriptions = new ObjectCentralizationSubscriptions<WeatherSound.SoundType>();
-            }
-            _WeatherSoundSoundType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<WeatherSound.SoundType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _WeatherSoundSoundType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<WeatherSound.SoundType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        WeatherSound.SoundType IPropertySupporter<WeatherSound.SoundType>.DefaultValue(int index)
-        {
-            return DefaultValueWeatherSoundSoundType(index: index);
-        }
-
-        protected WeatherSound.SoundType DefaultValueWeatherSoundSoundType(int index)
-        {
-            switch ((WeatherSound_FieldIndex)index)
-            {
-                case WeatherSound_FieldIndex.Type:
-                    return default(WeatherSound.SoundType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type WeatherSound.SoundType: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = WeatherSound_Registration.TRIGGERING_RECORD_TYPE;
@@ -911,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetType();
+                    item.Type = default(WeatherSound.SoundType);
                 }
             }
             catch (Exception ex)
@@ -1055,9 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case WeatherSound_FieldIndex.Type:
-                    this.SetType(
-                        (WeatherSound.SoundType)obj,
-                        cmds: cmds);
+                    this.Type = (WeatherSound.SoundType)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1102,9 +927,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case WeatherSound_FieldIndex.Type:
-                    obj.SetType(
-                        (WeatherSound.SoundType)pair.Value,
-                        cmds: null);
+                    obj.Type = (WeatherSound.SoundType)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1123,7 +946,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Sound Sound { get; set; }
         new WeatherSound.SoundType Type { get; set; }
-        new INotifyingItem<WeatherSound.SoundType> Type_Property { get; }
 
     }
 
@@ -1136,7 +958,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Type
         WeatherSound.SoundType Type { get; }
-        INotifyingItemGetter<WeatherSound.SoundType> Type_Property { get; }
 
         #endregion
 
@@ -1372,9 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)WeatherSound_FieldIndex.Type);
                 try
                 {
-                    item.Type_Property.Set(
-                        value: rhs.Type,
-                        cmds: cmds);
+                    item.Type = rhs.Type;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1417,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    obj.Sound = default(FormIDLink<Sound>);
+                    obj.Sound_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case WeatherSound_FieldIndex.Type:
                     obj.Type = default(WeatherSound.SoundType);
@@ -1462,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherSound item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Sound = default(FormIDLink<Sound>);
+            item.Sound_Property.Unset(cmds.ToUnsetParams());
             item.Type = default(WeatherSound.SoundType);
         }
 
@@ -1586,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<WeatherSound.SoundType>.Instance.Write(
                     node: elem,
                     name: nameof(item.Type),
-                    item: item.Type_Property,
+                    item: item.Type,
                     fieldIndex: (int)WeatherSound_FieldIndex.Type,
                     errorMask: errorMask);
             }
@@ -1644,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Write(
                 writer,
-                item.Type_Property,
+                item.Type,
                 length: 4,
                 fieldIndex: (int)WeatherSound_FieldIndex.Type,
                 errorMask: errorMask);

@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,18 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedObject,
         ILoquiObject<PlacedObject>,
         ILoquiObjectSetter,
-        IPropertySupporter<Byte[]>,
-        IPropertySupporter<TeleportDestination>,
-        IPropertySupporter<LockInformation>,
-        IPropertySupporter<Int32>,
-        IPropertySupporter<EnableParent>,
-        IPropertySupporter<Byte>,
-        IPropertySupporter<DistantLODData>,
-        IPropertySupporter<Single>,
-        IPropertySupporter<PlacedObject.ActionFlag>,
-        IPropertySupporter<MapMarker>,
-        IPropertySupporter<Boolean>,
-        IPropertySupporter<P3Float>,
         IEquatable<PlacedObject>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -68,198 +58,114 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<MajorRecord> IPlacedObjectGetter.Base_Property => this.Base_Property;
         #endregion
         #region XPCIFluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool XPCIFluff_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.XPCIFluff];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.XPCIFluff, nameof(XPCIFluff_IsSet));
+        }
+        bool IPlacedObjectGetter.XPCIFluff_IsSet => XPCIFluff_IsSet;
         protected Byte[] _XPCIFluff;
-        protected PropertyForwarder<PlacedObject, Byte[]> _XPCIFluffForwarder;
-        public INotifyingSetItem<Byte[]> XPCIFluff_Property => _XPCIFluffForwarder ?? (_XPCIFluffForwarder = new PropertyForwarder<PlacedObject, Byte[]>(this, (int)PlacedObject_FieldIndex.XPCIFluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] XPCIFluff
         {
             get => this._XPCIFluff;
-            set => this.SetXPCIFluff(value);
-        }
-        protected void SetXPCIFluff(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.XPCIFluff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(XPCIFluff, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.XPCIFluff] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = XPCIFluff;
-                _XPCIFluff = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.XPCIFluff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _XPCIFluff = item;
-            }
-        }
-        protected void UnsetXPCIFluff()
-        {
-            SetXPCIFluff(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => XPCIFluff_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IPlacedObject.XPCIFluff_Property => this.XPCIFluff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IPlacedObjectGetter.XPCIFluff_Property => this.XPCIFluff_Property;
+        Byte[] IPlacedObjectGetter.XPCIFluff => this.XPCIFluff;
+        public void XPCIFluff_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _XPCIFluff, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.XPCIFluff, nameof(XPCIFluff), nameof(XPCIFluff_IsSet));
+        }
+        public void XPCIFluff_Unset()
+        {
+            this.XPCIFluff_Set(default(Byte[]), false);
+        }
         #endregion
         #region FULLFluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool FULLFluff_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FULLFluff];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.FULLFluff, nameof(FULLFluff_IsSet));
+        }
+        bool IPlacedObjectGetter.FULLFluff_IsSet => FULLFluff_IsSet;
         protected Byte[] _FULLFluff;
-        protected PropertyForwarder<PlacedObject, Byte[]> _FULLFluffForwarder;
-        public INotifyingSetItem<Byte[]> FULLFluff_Property => _FULLFluffForwarder ?? (_FULLFluffForwarder = new PropertyForwarder<PlacedObject, Byte[]>(this, (int)PlacedObject_FieldIndex.FULLFluff));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] FULLFluff
         {
             get => this._FULLFluff;
-            set => this.SetFULLFluff(value);
-        }
-        protected void SetFULLFluff(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FULLFluff];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(FULLFluff, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FULLFluff] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = FULLFluff;
-                _FULLFluff = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.FULLFluff,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FULLFluff = item;
-            }
-        }
-        protected void UnsetFULLFluff()
-        {
-            SetFULLFluff(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => FULLFluff_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IPlacedObject.FULLFluff_Property => this.FULLFluff_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IPlacedObjectGetter.FULLFluff_Property => this.FULLFluff_Property;
+        Byte[] IPlacedObjectGetter.FULLFluff => this.FULLFluff;
+        public void FULLFluff_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _FULLFluff, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.FULLFluff, nameof(FULLFluff), nameof(FULLFluff_IsSet));
+        }
+        public void FULLFluff_Unset()
+        {
+            this.FULLFluff_Set(default(Byte[]), false);
+        }
         #endregion
         #region TeleportDestination
-        protected TeleportDestination _TeleportDestination;
-        protected PropertyForwarder<PlacedObject, TeleportDestination> _TeleportDestinationForwarder;
-        public INotifyingSetItem<TeleportDestination> TeleportDestination_Property => _TeleportDestinationForwarder ?? (_TeleportDestinationForwarder = new PropertyForwarder<PlacedObject, TeleportDestination>(this, (int)PlacedObject_FieldIndex.TeleportDestination));
+        public bool TeleportDestination_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.TeleportDestination];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.TeleportDestination, nameof(TeleportDestination_IsSet));
+        }
+        bool IPlacedObjectGetter.TeleportDestination_IsSet => TeleportDestination_IsSet;
+        private TeleportDestination _TeleportDestination;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public TeleportDestination TeleportDestination
         {
-            get => this._TeleportDestination;
-            set => this.SetTeleportDestination(value);
+            get => _TeleportDestination;
+            set => TeleportDestination_Set(value);
         }
-        protected void SetTeleportDestination(
-            TeleportDestination item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void TeleportDestination_Set(
+            TeleportDestination value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.TeleportDestination];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(TeleportDestination, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.TeleportDestination] = hasBeenSet;
-            }
-            if (_TeleportDestination_subscriptions != null)
-            {
-                var tmp = TeleportDestination;
-                _TeleportDestination = item;
-                _TeleportDestination_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.TeleportDestination,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _TeleportDestination = item;
-            }
+            this.RaiseAndSetIfChanged(ref _TeleportDestination, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.TeleportDestination, nameof(TeleportDestination), nameof(TeleportDestination_IsSet));
         }
-        protected void UnsetTeleportDestination()
+        public void TeleportDestination_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.TeleportDestination] = false;
-            TeleportDestination = default(TeleportDestination);
+            this.TeleportDestination_Set(default(TeleportDestination), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<TeleportDestination> IPlacedObject.TeleportDestination_Property => this.TeleportDestination_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<TeleportDestination> IPlacedObjectGetter.TeleportDestination_Property => this.TeleportDestination_Property;
+        TeleportDestination IPlacedObjectGetter.TeleportDestination => this.TeleportDestination;
         #endregion
         #region Lock
-        protected LockInformation _Lock;
-        protected PropertyForwarder<PlacedObject, LockInformation> _LockForwarder;
-        public INotifyingSetItem<LockInformation> Lock_Property => _LockForwarder ?? (_LockForwarder = new PropertyForwarder<PlacedObject, LockInformation>(this, (int)PlacedObject_FieldIndex.Lock));
+        public bool Lock_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Lock];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.Lock, nameof(Lock_IsSet));
+        }
+        bool IPlacedObjectGetter.Lock_IsSet => Lock_IsSet;
+        private LockInformation _Lock;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public LockInformation Lock
         {
-            get => this._Lock;
-            set => this.SetLock(value);
+            get => _Lock;
+            set => Lock_Set(value);
         }
-        protected void SetLock(
-            LockInformation item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Lock_Set(
+            LockInformation value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Lock];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Lock, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Lock] = hasBeenSet;
-            }
-            if (_LockInformation_subscriptions != null)
-            {
-                var tmp = Lock;
-                _Lock = item;
-                _LockInformation_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.Lock,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Lock = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Lock, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Lock, nameof(Lock), nameof(Lock_IsSet));
         }
-        protected void UnsetLock()
+        public void Lock_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Lock] = false;
-            Lock = default(LockInformation);
+            this.Lock_Set(default(LockInformation), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<LockInformation> IPlacedObject.Lock_Property => this.Lock_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<LockInformation> IPlacedObjectGetter.Lock_Property => this.Lock_Property;
+        LockInformation IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region Owner
         public FormIDSetLink<Faction> Owner_Property { get; } = new FormIDSetLink<Faction>();
@@ -269,52 +175,30 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Faction> IPlacedObjectGetter.Owner_Property => this.Owner_Property;
         #endregion
         #region FactionRank
-        protected Int32 _FactionRank;
-        protected PropertyForwarder<PlacedObject, Int32> _FactionRankForwarder;
-        public INotifyingSetItem<Int32> FactionRank_Property => _FactionRankForwarder ?? (_FactionRankForwarder = new PropertyForwarder<PlacedObject, Int32>(this, (int)PlacedObject_FieldIndex.FactionRank));
+        public bool FactionRank_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FactionRank];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.FactionRank, nameof(FactionRank_IsSet));
+        }
+        bool IPlacedObjectGetter.FactionRank_IsSet => FactionRank_IsSet;
+        private Int32 _FactionRank;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 FactionRank
         {
             get => this._FactionRank;
-            set => this.SetFactionRank(value);
+            set => FactionRank_Set(value);
         }
-        protected void SetFactionRank(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Int32 IPlacedObjectGetter.FactionRank => this.FactionRank;
+        public void FactionRank_Set(
+            Int32 value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FactionRank];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FactionRank == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FactionRank] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = FactionRank;
-                _FactionRank = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.FactionRank,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FactionRank = item;
-            }
+            this.RaiseAndSetIfChanged(ref _FactionRank, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.FactionRank, nameof(FactionRank), nameof(FactionRank_IsSet));
         }
-        protected void UnsetFactionRank()
+        public void FactionRank_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FactionRank] = false;
-            FactionRank = default(Int32);
+            this.FactionRank_Set(default(Int32), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Int32> IPlacedObject.FactionRank_Property => this.FactionRank_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Int32> IPlacedObjectGetter.FactionRank_Property => this.FactionRank_Property;
         #endregion
         #region GlobalVariable
         public FormIDSetLink<Global> GlobalVariable_Property { get; } = new FormIDSetLink<Global>();
@@ -324,52 +208,31 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Global> IPlacedObjectGetter.GlobalVariable_Property => this.GlobalVariable_Property;
         #endregion
         #region EnableParent
-        protected EnableParent _EnableParent;
-        protected PropertyForwarder<PlacedObject, EnableParent> _EnableParentForwarder;
-        public INotifyingSetItem<EnableParent> EnableParent_Property => _EnableParentForwarder ?? (_EnableParentForwarder = new PropertyForwarder<PlacedObject, EnableParent>(this, (int)PlacedObject_FieldIndex.EnableParent));
+        public bool EnableParent_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.EnableParent];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.EnableParent, nameof(EnableParent_IsSet));
+        }
+        bool IPlacedObjectGetter.EnableParent_IsSet => EnableParent_IsSet;
+        private EnableParent _EnableParent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public EnableParent EnableParent
         {
-            get => this._EnableParent;
-            set => this.SetEnableParent(value);
+            get => _EnableParent;
+            set => EnableParent_Set(value);
         }
-        protected void SetEnableParent(
-            EnableParent item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void EnableParent_Set(
+            EnableParent value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.EnableParent];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(EnableParent, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.EnableParent] = hasBeenSet;
-            }
-            if (_EnableParent_subscriptions != null)
-            {
-                var tmp = EnableParent;
-                _EnableParent = item;
-                _EnableParent_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.EnableParent,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _EnableParent = item;
-            }
+            this.RaiseAndSetIfChanged(ref _EnableParent, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.EnableParent, nameof(EnableParent), nameof(EnableParent_IsSet));
         }
-        protected void UnsetEnableParent()
+        public void EnableParent_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.EnableParent] = false;
-            EnableParent = default(EnableParent);
+            this.EnableParent_Set(default(EnableParent), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<EnableParent> IPlacedObject.EnableParent_Property => this.EnableParent_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<EnableParent> IPlacedObjectGetter.EnableParent_Property => this.EnableParent_Property;
+        EnableParent IPlacedObjectGetter.EnableParent => this.EnableParent;
         #endregion
         #region Target
         public FormIDSetLink<PlacedObject> Target_Property { get; } = new FormIDSetLink<PlacedObject>();
@@ -379,244 +242,135 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<PlacedObject> IPlacedObjectGetter.Target_Property => this.Target_Property;
         #endregion
         #region SpeedTreeSeed
-        protected Byte _SpeedTreeSeed;
-        protected PropertyForwarder<PlacedObject, Byte> _SpeedTreeSeedForwarder;
-        public INotifyingSetItem<Byte> SpeedTreeSeed_Property => _SpeedTreeSeedForwarder ?? (_SpeedTreeSeedForwarder = new PropertyForwarder<PlacedObject, Byte>(this, (int)PlacedObject_FieldIndex.SpeedTreeSeed));
+        public bool SpeedTreeSeed_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.SpeedTreeSeed];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.SpeedTreeSeed, nameof(SpeedTreeSeed_IsSet));
+        }
+        bool IPlacedObjectGetter.SpeedTreeSeed_IsSet => SpeedTreeSeed_IsSet;
+        private Byte _SpeedTreeSeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte SpeedTreeSeed
         {
             get => this._SpeedTreeSeed;
-            set => this.SetSpeedTreeSeed(value);
+            set => SpeedTreeSeed_Set(value);
         }
-        protected void SetSpeedTreeSeed(
-            Byte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Byte IPlacedObjectGetter.SpeedTreeSeed => this.SpeedTreeSeed;
+        public void SpeedTreeSeed_Set(
+            Byte value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.SpeedTreeSeed];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && SpeedTreeSeed == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.SpeedTreeSeed] = hasBeenSet;
-            }
-            if (_Byte_subscriptions != null)
-            {
-                var tmp = SpeedTreeSeed;
-                _SpeedTreeSeed = item;
-                _Byte_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.SpeedTreeSeed,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _SpeedTreeSeed = item;
-            }
+            this.RaiseAndSetIfChanged(ref _SpeedTreeSeed, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.SpeedTreeSeed, nameof(SpeedTreeSeed), nameof(SpeedTreeSeed_IsSet));
         }
-        protected void UnsetSpeedTreeSeed()
+        public void SpeedTreeSeed_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.SpeedTreeSeed] = false;
-            SpeedTreeSeed = default(Byte);
+            this.SpeedTreeSeed_Set(default(Byte), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte> IPlacedObject.SpeedTreeSeed_Property => this.SpeedTreeSeed_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte> IPlacedObjectGetter.SpeedTreeSeed_Property => this.SpeedTreeSeed_Property;
         #endregion
         #region DistantLODData
-        protected DistantLODData _DistantLODData;
-        protected PropertyForwarder<PlacedObject, DistantLODData> _DistantLODDataForwarder;
-        public INotifyingSetItem<DistantLODData> DistantLODData_Property => _DistantLODDataForwarder ?? (_DistantLODDataForwarder = new PropertyForwarder<PlacedObject, DistantLODData>(this, (int)PlacedObject_FieldIndex.DistantLODData));
+        public bool DistantLODData_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.DistantLODData];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.DistantLODData, nameof(DistantLODData_IsSet));
+        }
+        bool IPlacedObjectGetter.DistantLODData_IsSet => DistantLODData_IsSet;
+        private DistantLODData _DistantLODData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public DistantLODData DistantLODData
         {
-            get => this._DistantLODData;
-            set => this.SetDistantLODData(value);
+            get => _DistantLODData;
+            set => DistantLODData_Set(value);
         }
-        protected void SetDistantLODData(
-            DistantLODData item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void DistantLODData_Set(
+            DistantLODData value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.DistantLODData];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(DistantLODData, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.DistantLODData] = hasBeenSet;
-            }
-            if (_DistantLODData_subscriptions != null)
-            {
-                var tmp = DistantLODData;
-                _DistantLODData = item;
-                _DistantLODData_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.DistantLODData,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _DistantLODData = item;
-            }
+            this.RaiseAndSetIfChanged(ref _DistantLODData, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.DistantLODData, nameof(DistantLODData), nameof(DistantLODData_IsSet));
         }
-        protected void UnsetDistantLODData()
+        public void DistantLODData_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.DistantLODData] = false;
-            DistantLODData = default(DistantLODData);
+            this.DistantLODData_Set(default(DistantLODData), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<DistantLODData> IPlacedObject.DistantLODData_Property => this.DistantLODData_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<DistantLODData> IPlacedObjectGetter.DistantLODData_Property => this.DistantLODData_Property;
+        DistantLODData IPlacedObjectGetter.DistantLODData => this.DistantLODData;
         #endregion
         #region Charge
-        protected Single _Charge;
-        protected PropertyForwarder<PlacedObject, Single> _ChargeForwarder;
-        public INotifyingSetItem<Single> Charge_Property => _ChargeForwarder ?? (_ChargeForwarder = new PropertyForwarder<PlacedObject, Single>(this, (int)PlacedObject_FieldIndex.Charge));
+        public bool Charge_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Charge];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.Charge, nameof(Charge_IsSet));
+        }
+        bool IPlacedObjectGetter.Charge_IsSet => Charge_IsSet;
+        private Single _Charge;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Charge
         {
             get => this._Charge;
-            set => this.SetCharge(value);
+            set => Charge_Set(value);
         }
-        protected void SetCharge(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Single IPlacedObjectGetter.Charge => this.Charge;
+        public void Charge_Set(
+            Single value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Charge];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Charge == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Charge] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Charge;
-                _Charge = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.Charge,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Charge = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Charge, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Charge, nameof(Charge), nameof(Charge_IsSet));
         }
-        protected void UnsetCharge()
+        public void Charge_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Charge] = false;
-            Charge = default(Single);
+            this.Charge_Set(default(Single), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Single> IPlacedObject.Charge_Property => this.Charge_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Single> IPlacedObjectGetter.Charge_Property => this.Charge_Property;
         #endregion
         #region Health
-        protected Int32 _Health;
-        protected PropertyForwarder<PlacedObject, Int32> _HealthForwarder;
-        public INotifyingSetItem<Int32> Health_Property => _HealthForwarder ?? (_HealthForwarder = new PropertyForwarder<PlacedObject, Int32>(this, (int)PlacedObject_FieldIndex.Health));
+        public bool Health_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Health];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.Health, nameof(Health_IsSet));
+        }
+        bool IPlacedObjectGetter.Health_IsSet => Health_IsSet;
+        private Int32 _Health;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Health
         {
             get => this._Health;
-            set => this.SetHealth(value);
+            set => Health_Set(value);
         }
-        protected void SetHealth(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Int32 IPlacedObjectGetter.Health => this.Health;
+        public void Health_Set(
+            Int32 value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Health];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Health == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Health] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = Health;
-                _Health = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.Health,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Health = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Health, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Health, nameof(Health), nameof(Health_IsSet));
         }
-        protected void UnsetHealth()
+        public void Health_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Health] = false;
-            Health = default(Int32);
+            this.Health_Set(default(Int32), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Int32> IPlacedObject.Health_Property => this.Health_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Int32> IPlacedObjectGetter.Health_Property => this.Health_Property;
         #endregion
         #region LevelModifier
-        protected Int32 _LevelModifier;
-        protected PropertyForwarder<PlacedObject, Int32> _LevelModifierForwarder;
-        public INotifyingSetItem<Int32> LevelModifier_Property => _LevelModifierForwarder ?? (_LevelModifierForwarder = new PropertyForwarder<PlacedObject, Int32>(this, (int)PlacedObject_FieldIndex.LevelModifier));
+        public bool LevelModifier_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.LevelModifier];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.LevelModifier, nameof(LevelModifier_IsSet));
+        }
+        bool IPlacedObjectGetter.LevelModifier_IsSet => LevelModifier_IsSet;
+        private Int32 _LevelModifier;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 LevelModifier
         {
             get => this._LevelModifier;
-            set => this.SetLevelModifier(value);
+            set => LevelModifier_Set(value);
         }
-        protected void SetLevelModifier(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Int32 IPlacedObjectGetter.LevelModifier => this.LevelModifier;
+        public void LevelModifier_Set(
+            Int32 value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.LevelModifier];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && LevelModifier == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.LevelModifier] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = LevelModifier;
-                _LevelModifier = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.LevelModifier,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _LevelModifier = item;
-            }
+            this.RaiseAndSetIfChanged(ref _LevelModifier, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.LevelModifier, nameof(LevelModifier), nameof(LevelModifier_IsSet));
         }
-        protected void UnsetLevelModifier()
+        public void LevelModifier_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.LevelModifier] = false;
-            LevelModifier = default(Int32);
+            this.LevelModifier_Set(default(Int32), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Int32> IPlacedObject.LevelModifier_Property => this.LevelModifier_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Int32> IPlacedObjectGetter.LevelModifier_Property => this.LevelModifier_Property;
         #endregion
         #region Unknown
         public FormIDSetLink<MajorRecord> Unknown_Property { get; } = new FormIDSetLink<MajorRecord>();
@@ -626,293 +380,145 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<MajorRecord> IPlacedObjectGetter.Unknown_Property => this.Unknown_Property;
         #endregion
         #region ActionFlags
-        protected PlacedObject.ActionFlag _ActionFlags;
-        protected PropertyForwarder<PlacedObject, PlacedObject.ActionFlag> _ActionFlagsForwarder;
-        public INotifyingSetItem<PlacedObject.ActionFlag> ActionFlags_Property => _ActionFlagsForwarder ?? (_ActionFlagsForwarder = new PropertyForwarder<PlacedObject, PlacedObject.ActionFlag>(this, (int)PlacedObject_FieldIndex.ActionFlags));
+        public bool ActionFlags_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ActionFlags];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.ActionFlags, nameof(ActionFlags_IsSet));
+        }
+        bool IPlacedObjectGetter.ActionFlags_IsSet => ActionFlags_IsSet;
+        private PlacedObject.ActionFlag _ActionFlags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public PlacedObject.ActionFlag ActionFlags
         {
             get => this._ActionFlags;
-            set => this.SetActionFlags(value);
+            set => ActionFlags_Set(value);
         }
-        protected void SetActionFlags(
-            PlacedObject.ActionFlag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        PlacedObject.ActionFlag IPlacedObjectGetter.ActionFlags => this.ActionFlags;
+        public void ActionFlags_Set(
+            PlacedObject.ActionFlag value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ActionFlags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && ActionFlags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ActionFlags] = hasBeenSet;
-            }
-            if (_PlacedObjectActionFlag_subscriptions != null)
-            {
-                var tmp = ActionFlags;
-                _ActionFlags = item;
-                _PlacedObjectActionFlag_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.ActionFlags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _ActionFlags = item;
-            }
+            this.RaiseAndSetIfChanged(ref _ActionFlags, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.ActionFlags, nameof(ActionFlags), nameof(ActionFlags_IsSet));
         }
-        protected void UnsetActionFlags()
+        public void ActionFlags_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ActionFlags] = false;
-            ActionFlags = default(PlacedObject.ActionFlag);
+            this.ActionFlags_Set(default(PlacedObject.ActionFlag), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<PlacedObject.ActionFlag> IPlacedObject.ActionFlags_Property => this.ActionFlags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<PlacedObject.ActionFlag> IPlacedObjectGetter.ActionFlags_Property => this.ActionFlags_Property;
         #endregion
         #region Count
-        protected Int32 _Count;
-        protected PropertyForwarder<PlacedObject, Int32> _CountForwarder;
-        public INotifyingSetItem<Int32> Count_Property => _CountForwarder ?? (_CountForwarder = new PropertyForwarder<PlacedObject, Int32>(this, (int)PlacedObject_FieldIndex.Count));
+        public bool Count_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Count];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.Count, nameof(Count_IsSet));
+        }
+        bool IPlacedObjectGetter.Count_IsSet => Count_IsSet;
+        private Int32 _Count;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Count
         {
             get => this._Count;
-            set => this.SetCount(value);
+            set => Count_Set(value);
         }
-        protected void SetCount(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Int32 IPlacedObjectGetter.Count => this.Count;
+        public void Count_Set(
+            Int32 value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Count];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Count == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Count] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = Count;
-                _Count = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.Count,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Count = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Count, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Count, nameof(Count), nameof(Count_IsSet));
         }
-        protected void UnsetCount()
+        public void Count_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Count] = false;
-            Count = default(Int32);
+            this.Count_Set(default(Int32), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Int32> IPlacedObject.Count_Property => this.Count_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Int32> IPlacedObjectGetter.Count_Property => this.Count_Property;
         #endregion
         #region MapMarker
-        protected MapMarker _MapMarker;
-        protected PropertyForwarder<PlacedObject, MapMarker> _MapMarkerForwarder;
-        public INotifyingSetItem<MapMarker> MapMarker_Property => _MapMarkerForwarder ?? (_MapMarkerForwarder = new PropertyForwarder<PlacedObject, MapMarker>(this, (int)PlacedObject_FieldIndex.MapMarker));
+        public bool MapMarker_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.MapMarker];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.MapMarker, nameof(MapMarker_IsSet));
+        }
+        bool IPlacedObjectGetter.MapMarker_IsSet => MapMarker_IsSet;
+        private MapMarker _MapMarker;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MapMarker MapMarker
         {
-            get => this._MapMarker;
-            set => this.SetMapMarker(value);
+            get => _MapMarker;
+            set => MapMarker_Set(value);
         }
-        protected void SetMapMarker(
-            MapMarker item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void MapMarker_Set(
+            MapMarker value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.MapMarker];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(MapMarker, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.MapMarker] = hasBeenSet;
-            }
-            if (_MapMarker_subscriptions != null)
-            {
-                var tmp = MapMarker;
-                _MapMarker = item;
-                _MapMarker_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.MapMarker,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MapMarker = item;
-            }
+            this.RaiseAndSetIfChanged(ref _MapMarker, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.MapMarker, nameof(MapMarker), nameof(MapMarker_IsSet));
         }
-        protected void UnsetMapMarker()
+        public void MapMarker_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.MapMarker] = false;
-            MapMarker = default(MapMarker);
+            this.MapMarker_Set(default(MapMarker), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<MapMarker> IPlacedObject.MapMarker_Property => this.MapMarker_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<MapMarker> IPlacedObjectGetter.MapMarker_Property => this.MapMarker_Property;
+        MapMarker IPlacedObjectGetter.MapMarker => this.MapMarker;
         #endregion
         #region OpenByDefault
-        protected Boolean _OpenByDefault;
-        protected PropertyForwarder<PlacedObject, Boolean> _OpenByDefaultForwarder;
-        public INotifyingSetItem<Boolean> OpenByDefault_Property => _OpenByDefaultForwarder ?? (_OpenByDefaultForwarder = new PropertyForwarder<PlacedObject, Boolean>(this, (int)PlacedObject_FieldIndex.OpenByDefault));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Boolean _OpenByDefault;
         public Boolean OpenByDefault
         {
             get => this._OpenByDefault;
-            set => this.SetOpenByDefault(value);
+            set => this.RaiseAndSetIfChanged(ref this._OpenByDefault, value, nameof(OpenByDefault));
         }
-        protected void SetOpenByDefault(
-            Boolean item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.OpenByDefault];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && OpenByDefault == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.OpenByDefault] = hasBeenSet;
-            }
-            if (_Boolean_subscriptions != null)
-            {
-                var tmp = OpenByDefault;
-                _OpenByDefault = item;
-                _Boolean_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.OpenByDefault,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _OpenByDefault = item;
-            }
-        }
-        protected void UnsetOpenByDefault()
-        {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.OpenByDefault] = false;
-            OpenByDefault = default(Boolean);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Boolean> IPlacedObject.OpenByDefault_Property => this.OpenByDefault_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Boolean> IPlacedObjectGetter.OpenByDefault_Property => this.OpenByDefault_Property;
         #endregion
         #region RagdollData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool RagdollData_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.RagdollData];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.RagdollData, nameof(RagdollData_IsSet));
+        }
+        bool IPlacedObjectGetter.RagdollData_IsSet => RagdollData_IsSet;
         protected Byte[] _RagdollData;
-        protected PropertyForwarder<PlacedObject, Byte[]> _RagdollDataForwarder;
-        public INotifyingSetItem<Byte[]> RagdollData_Property => _RagdollDataForwarder ?? (_RagdollDataForwarder = new PropertyForwarder<PlacedObject, Byte[]>(this, (int)PlacedObject_FieldIndex.RagdollData));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] RagdollData
         {
             get => this._RagdollData;
-            set => this.SetRagdollData(value);
-        }
-        protected void SetRagdollData(
-            Byte[] item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.RagdollData];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(RagdollData, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.RagdollData] = hasBeenSet;
-            }
-            if (_ByteArr_subscriptions != null)
-            {
-                var tmp = RagdollData;
-                _RagdollData = item;
-                _ByteArr_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.RagdollData,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _RagdollData = item;
-            }
-        }
-        protected void UnsetRagdollData()
-        {
-            SetRagdollData(
-                item: default(Byte[]),
-                hasBeenSet: false);
+            set => RagdollData_Set(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Byte[]> IPlacedObject.RagdollData_Property => this.RagdollData_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Byte[]> IPlacedObjectGetter.RagdollData_Property => this.RagdollData_Property;
+        Byte[] IPlacedObjectGetter.RagdollData => this.RagdollData;
+        public void RagdollData_Set(
+            Byte[] value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _RagdollData, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.RagdollData, nameof(RagdollData), nameof(RagdollData_IsSet));
+        }
+        public void RagdollData_Unset()
+        {
+            this.RagdollData_Set(default(Byte[]), false);
+        }
         #endregion
         #region Scale
-        protected Single _Scale;
-        protected PropertyForwarder<PlacedObject, Single> _ScaleForwarder;
-        public INotifyingSetItem<Single> Scale_Property => _ScaleForwarder ?? (_ScaleForwarder = new PropertyForwarder<PlacedObject, Single>(this, (int)PlacedObject_FieldIndex.Scale));
+        public bool Scale_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Scale];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)PlacedObject_FieldIndex.Scale, nameof(Scale_IsSet));
+        }
+        bool IPlacedObjectGetter.Scale_IsSet => Scale_IsSet;
+        private Single _Scale;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Scale
         {
             get => this._Scale;
-            set => this.SetScale(value);
+            set => Scale_Set(value);
         }
-        protected void SetScale(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Single IPlacedObjectGetter.Scale => this.Scale;
+        public void Scale_Set(
+            Single value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Scale];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Scale == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Scale] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Scale;
-                _Scale = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.Scale,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Scale = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Scale, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Scale, nameof(Scale), nameof(Scale_IsSet));
         }
-        protected void UnsetScale()
+        public void Scale_Unset()
         {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Scale] = false;
-            Scale = default(Single);
+            this.Scale_Set(default(Single), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Single> IPlacedObject.Scale_Property => this.Scale_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Single> IPlacedObjectGetter.Scale_Property => this.Scale_Property;
         #endregion
         #region ContainedSoul
         public FormIDSetLink<SoulGem> ContainedSoul_Property { get; } = new FormIDSetLink<SoulGem>();
@@ -922,100 +528,20 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<SoulGem> IPlacedObjectGetter.ContainedSoul_Property => this.ContainedSoul_Property;
         #endregion
         #region Position
-        protected P3Float _Position;
-        protected PropertyForwarder<PlacedObject, P3Float> _PositionForwarder;
-        public INotifyingSetItem<P3Float> Position_Property => _PositionForwarder ?? (_PositionForwarder = new PropertyForwarder<PlacedObject, P3Float>(this, (int)PlacedObject_FieldIndex.Position));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3Float _Position;
         public P3Float Position
         {
             get => this._Position;
-            set => this.SetPosition(value);
+            set => this.RaiseAndSetIfChanged(ref this._Position, value, nameof(Position));
         }
-        protected void SetPosition(
-            P3Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Position];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Position == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Position] = hasBeenSet;
-            }
-            if (_P3Float_subscriptions != null)
-            {
-                var tmp = Position;
-                _Position = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.Position,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Position = item;
-            }
-        }
-        protected void UnsetPosition()
-        {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Position] = false;
-            Position = default(P3Float);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IPlacedObject.Position_Property => this.Position_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IPlacedObjectGetter.Position_Property => this.Position_Property;
         #endregion
         #region Rotation
-        protected P3Float _Rotation;
-        protected PropertyForwarder<PlacedObject, P3Float> _RotationForwarder;
-        public INotifyingSetItem<P3Float> Rotation_Property => _RotationForwarder ?? (_RotationForwarder = new PropertyForwarder<PlacedObject, P3Float>(this, (int)PlacedObject_FieldIndex.Rotation));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3Float _Rotation;
         public P3Float Rotation
         {
             get => this._Rotation;
-            set => this.SetRotation(value);
+            set => this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
         }
-        protected void SetRotation(
-            P3Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Rotation];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Rotation == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Rotation] = hasBeenSet;
-            }
-            if (_P3Float_subscriptions != null)
-            {
-                var tmp = Rotation;
-                _Rotation = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)PlacedObject_FieldIndex.Rotation,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Rotation = item;
-            }
-        }
-        protected void UnsetRotation()
-        {
-            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Rotation] = false;
-            Rotation = default(P3Float);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> IPlacedObject.Rotation_Property => this.Rotation_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> IPlacedObjectGetter.Rotation_Property => this.Rotation_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1081,23 +607,23 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Base_Property.Equals(rhs.Base_Property)) return false;
             }
-            if (XPCIFluff_Property.HasBeenSet != rhs.XPCIFluff_Property.HasBeenSet) return false;
-            if (XPCIFluff_Property.HasBeenSet)
+            if (XPCIFluff_IsSet != rhs.XPCIFluff_IsSet) return false;
+            if (XPCIFluff_IsSet)
             {
                 if (!this.XPCIFluff.EqualsFast(rhs.XPCIFluff)) return false;
             }
-            if (FULLFluff_Property.HasBeenSet != rhs.FULLFluff_Property.HasBeenSet) return false;
-            if (FULLFluff_Property.HasBeenSet)
+            if (FULLFluff_IsSet != rhs.FULLFluff_IsSet) return false;
+            if (FULLFluff_IsSet)
             {
                 if (!this.FULLFluff.EqualsFast(rhs.FULLFluff)) return false;
             }
-            if (TeleportDestination_Property.HasBeenSet != rhs.TeleportDestination_Property.HasBeenSet) return false;
-            if (TeleportDestination_Property.HasBeenSet)
+            if (TeleportDestination_IsSet != rhs.TeleportDestination_IsSet) return false;
+            if (TeleportDestination_IsSet)
             {
                 if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
             }
-            if (Lock_Property.HasBeenSet != rhs.Lock_Property.HasBeenSet) return false;
-            if (Lock_Property.HasBeenSet)
+            if (Lock_IsSet != rhs.Lock_IsSet) return false;
+            if (Lock_IsSet)
             {
                 if (!object.Equals(this.Lock, rhs.Lock)) return false;
             }
@@ -1106,8 +632,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Owner_Property.Equals(rhs.Owner_Property)) return false;
             }
-            if (FactionRank_Property.HasBeenSet != rhs.FactionRank_Property.HasBeenSet) return false;
-            if (FactionRank_Property.HasBeenSet)
+            if (FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
+            if (FactionRank_IsSet)
             {
                 if (this.FactionRank != rhs.FactionRank) return false;
             }
@@ -1116,8 +642,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
             }
-            if (EnableParent_Property.HasBeenSet != rhs.EnableParent_Property.HasBeenSet) return false;
-            if (EnableParent_Property.HasBeenSet)
+            if (EnableParent_IsSet != rhs.EnableParent_IsSet) return false;
+            if (EnableParent_IsSet)
             {
                 if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
             }
@@ -1126,28 +652,28 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Target_Property.Equals(rhs.Target_Property)) return false;
             }
-            if (SpeedTreeSeed_Property.HasBeenSet != rhs.SpeedTreeSeed_Property.HasBeenSet) return false;
-            if (SpeedTreeSeed_Property.HasBeenSet)
+            if (SpeedTreeSeed_IsSet != rhs.SpeedTreeSeed_IsSet) return false;
+            if (SpeedTreeSeed_IsSet)
             {
                 if (this.SpeedTreeSeed != rhs.SpeedTreeSeed) return false;
             }
-            if (DistantLODData_Property.HasBeenSet != rhs.DistantLODData_Property.HasBeenSet) return false;
-            if (DistantLODData_Property.HasBeenSet)
+            if (DistantLODData_IsSet != rhs.DistantLODData_IsSet) return false;
+            if (DistantLODData_IsSet)
             {
                 if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
             }
-            if (Charge_Property.HasBeenSet != rhs.Charge_Property.HasBeenSet) return false;
-            if (Charge_Property.HasBeenSet)
+            if (Charge_IsSet != rhs.Charge_IsSet) return false;
+            if (Charge_IsSet)
             {
                 if (!this.Charge.EqualsWithin(rhs.Charge)) return false;
             }
-            if (Health_Property.HasBeenSet != rhs.Health_Property.HasBeenSet) return false;
-            if (Health_Property.HasBeenSet)
+            if (Health_IsSet != rhs.Health_IsSet) return false;
+            if (Health_IsSet)
             {
                 if (this.Health != rhs.Health) return false;
             }
-            if (LevelModifier_Property.HasBeenSet != rhs.LevelModifier_Property.HasBeenSet) return false;
-            if (LevelModifier_Property.HasBeenSet)
+            if (LevelModifier_IsSet != rhs.LevelModifier_IsSet) return false;
+            if (LevelModifier_IsSet)
             {
                 if (this.LevelModifier != rhs.LevelModifier) return false;
             }
@@ -1156,29 +682,29 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Unknown_Property.Equals(rhs.Unknown_Property)) return false;
             }
-            if (ActionFlags_Property.HasBeenSet != rhs.ActionFlags_Property.HasBeenSet) return false;
-            if (ActionFlags_Property.HasBeenSet)
+            if (ActionFlags_IsSet != rhs.ActionFlags_IsSet) return false;
+            if (ActionFlags_IsSet)
             {
                 if (this.ActionFlags != rhs.ActionFlags) return false;
             }
-            if (Count_Property.HasBeenSet != rhs.Count_Property.HasBeenSet) return false;
-            if (Count_Property.HasBeenSet)
+            if (Count_IsSet != rhs.Count_IsSet) return false;
+            if (Count_IsSet)
             {
                 if (this.Count != rhs.Count) return false;
             }
-            if (MapMarker_Property.HasBeenSet != rhs.MapMarker_Property.HasBeenSet) return false;
-            if (MapMarker_Property.HasBeenSet)
+            if (MapMarker_IsSet != rhs.MapMarker_IsSet) return false;
+            if (MapMarker_IsSet)
             {
                 if (!object.Equals(this.MapMarker, rhs.MapMarker)) return false;
             }
             if (this.OpenByDefault != rhs.OpenByDefault) return false;
-            if (RagdollData_Property.HasBeenSet != rhs.RagdollData_Property.HasBeenSet) return false;
-            if (RagdollData_Property.HasBeenSet)
+            if (RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
+            if (RagdollData_IsSet)
             {
                 if (!this.RagdollData.EqualsFast(rhs.RagdollData)) return false;
             }
-            if (Scale_Property.HasBeenSet != rhs.Scale_Property.HasBeenSet) return false;
-            if (Scale_Property.HasBeenSet)
+            if (Scale_IsSet != rhs.Scale_IsSet) return false;
+            if (Scale_IsSet)
             {
                 if (!this.Scale.EqualsWithin(rhs.Scale)) return false;
             }
@@ -1199,19 +725,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Base).CombineHashCode(ret);
             }
-            if (XPCIFluff_Property.HasBeenSet)
+            if (XPCIFluff_IsSet)
             {
                 ret = HashHelper.GetHashCode(XPCIFluff).CombineHashCode(ret);
             }
-            if (FULLFluff_Property.HasBeenSet)
+            if (FULLFluff_IsSet)
             {
                 ret = HashHelper.GetHashCode(FULLFluff).CombineHashCode(ret);
             }
-            if (TeleportDestination_Property.HasBeenSet)
+            if (TeleportDestination_IsSet)
             {
                 ret = HashHelper.GetHashCode(TeleportDestination).CombineHashCode(ret);
             }
-            if (Lock_Property.HasBeenSet)
+            if (Lock_IsSet)
             {
                 ret = HashHelper.GetHashCode(Lock).CombineHashCode(ret);
             }
@@ -1219,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Owner).CombineHashCode(ret);
             }
-            if (FactionRank_Property.HasBeenSet)
+            if (FactionRank_IsSet)
             {
                 ret = HashHelper.GetHashCode(FactionRank).CombineHashCode(ret);
             }
@@ -1227,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(GlobalVariable).CombineHashCode(ret);
             }
-            if (EnableParent_Property.HasBeenSet)
+            if (EnableParent_IsSet)
             {
                 ret = HashHelper.GetHashCode(EnableParent).CombineHashCode(ret);
             }
@@ -1235,23 +761,23 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Target).CombineHashCode(ret);
             }
-            if (SpeedTreeSeed_Property.HasBeenSet)
+            if (SpeedTreeSeed_IsSet)
             {
                 ret = HashHelper.GetHashCode(SpeedTreeSeed).CombineHashCode(ret);
             }
-            if (DistantLODData_Property.HasBeenSet)
+            if (DistantLODData_IsSet)
             {
                 ret = HashHelper.GetHashCode(DistantLODData).CombineHashCode(ret);
             }
-            if (Charge_Property.HasBeenSet)
+            if (Charge_IsSet)
             {
                 ret = HashHelper.GetHashCode(Charge).CombineHashCode(ret);
             }
-            if (Health_Property.HasBeenSet)
+            if (Health_IsSet)
             {
                 ret = HashHelper.GetHashCode(Health).CombineHashCode(ret);
             }
-            if (LevelModifier_Property.HasBeenSet)
+            if (LevelModifier_IsSet)
             {
                 ret = HashHelper.GetHashCode(LevelModifier).CombineHashCode(ret);
             }
@@ -1259,24 +785,24 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Unknown).CombineHashCode(ret);
             }
-            if (ActionFlags_Property.HasBeenSet)
+            if (ActionFlags_IsSet)
             {
                 ret = HashHelper.GetHashCode(ActionFlags).CombineHashCode(ret);
             }
-            if (Count_Property.HasBeenSet)
+            if (Count_IsSet)
             {
                 ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
             }
-            if (MapMarker_Property.HasBeenSet)
+            if (MapMarker_IsSet)
             {
                 ret = HashHelper.GetHashCode(MapMarker).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(OpenByDefault).CombineHashCode(ret);
-            if (RagdollData_Property.HasBeenSet)
+            if (RagdollData_IsSet)
             {
                 ret = HashHelper.GetHashCode(RagdollData).CombineHashCode(ret);
             }
-            if (Scale_Property.HasBeenSet)
+            if (Scale_IsSet)
             {
                 ret = HashHelper.GetHashCode(Scale).CombineHashCode(ret);
             }
@@ -1653,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetXPCIFluff();
+                            item.XPCIFluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1679,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFULLFluff();
+                            item.FULLFluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -1706,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetTeleportDestination();
+                            item.TeleportDestination = default(TeleportDestination);
                         }
                     }
                     catch (Exception ex)
@@ -1733,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLock();
+                            item.Lock = default(LockInformation);
                         }
                     }
                     catch (Exception ex)
@@ -1766,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFactionRank();
+                            item.FactionRank = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1800,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEnableParent();
+                            item.EnableParent = default(EnableParent);
                         }
                     }
                     catch (Exception ex)
@@ -1833,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSpeedTreeSeed();
+                            item.SpeedTreeSeed = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -1860,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDistantLODData();
+                            item.DistantLODData = default(DistantLODData);
                         }
                     }
                     catch (Exception ex)
@@ -1886,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCharge();
+                            item.Charge = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1912,7 +1438,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetHealth();
+                            item.Health = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1938,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLevelModifier();
+                            item.LevelModifier = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1971,7 +1497,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetActionFlags();
+                            item.ActionFlags = default(PlacedObject.ActionFlag);
                         }
                     }
                     catch (Exception ex)
@@ -1997,7 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCount();
+                            item.Count = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -2024,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMapMarker();
+                            item.MapMarker = default(MapMarker);
                         }
                     }
                     catch (Exception ex)
@@ -2050,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetOpenByDefault();
+                            item.OpenByDefault = default(Boolean);
                         }
                     }
                     catch (Exception ex)
@@ -2076,7 +1602,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRagdollData();
+                            item.RagdollData = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -2102,7 +1628,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetScale();
+                            item.Scale = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -2135,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPosition();
+                            item.Position = default(P3Float);
                         }
                     }
                     catch (Exception ex)
@@ -2161,7 +1687,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRotation();
+                            item.Rotation = default(P3Float);
                         }
                     }
                     catch (Exception ex)
@@ -2228,1691 +1754,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter Byte[]
-        protected ObjectCentralizationSubscriptions<Byte[]> _ByteArr_subscriptions;
-        Byte[] IPropertySupporter<Byte[]>.Get(int index)
-        {
-            return GetByteArr(index: index);
-        }
-
-        protected Byte[] GetByteArr(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    return XPCIFluff;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    return FULLFluff;
-                case PlacedObject_FieldIndex.RagdollData:
-                    return RagdollData;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte[]>.Set(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByteArr(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByteArr(
-            int index,
-            Byte[] item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    SetXPCIFluff(item, hasBeenSet, cmds);
-                    break;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    SetFULLFluff(item, hasBeenSet, cmds);
-                    break;
-                case PlacedObject_FieldIndex.RagdollData:
-                    SetRagdollData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte[]>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte[]>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte[]>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByteArr(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByteArr(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    SetXPCIFluff(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    SetFULLFluff(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                case PlacedObject_FieldIndex.RagdollData:
-                    SetRagdollData(
-                        item: default(Byte[]),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte[]> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ByteArr_subscriptions == null)
-            {
-                _ByteArr_subscriptions = new ObjectCentralizationSubscriptions<Byte[]>();
-            }
-            _ByteArr_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte[]>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ByteArr_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte[]>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte[] IPropertySupporter<Byte[]>.DefaultValue(int index)
-        {
-            return DefaultValueByteArr(index: index);
-        }
-
-        protected Byte[] DefaultValueByteArr(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.XPCIFluff:
-                case PlacedObject_FieldIndex.FULLFluff:
-                case PlacedObject_FieldIndex.RagdollData:
-                    return default(Byte[]);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte[]: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter TeleportDestination
-        protected ObjectCentralizationSubscriptions<TeleportDestination> _TeleportDestination_subscriptions;
-        TeleportDestination IPropertySupporter<TeleportDestination>.Get(int index)
-        {
-            return GetTeleportDestination(index: index);
-        }
-
-        protected TeleportDestination GetTeleportDestination(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    return TeleportDestination;
-                default:
-                    throw new ArgumentException($"Unknown index for field type TeleportDestination: {index}");
-            }
-        }
-
-        void IPropertySupporter<TeleportDestination>.Set(
-            int index,
-            TeleportDestination item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetTeleportDestination(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetTeleportDestination(
-            int index,
-            TeleportDestination item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    SetTeleportDestination(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type TeleportDestination: {index}");
-            }
-        }
-
-        bool IPropertySupporter<TeleportDestination>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<TeleportDestination>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<TeleportDestination>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetTeleportDestination(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetTeleportDestination(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    SetTeleportDestination(
-                        item: default(TeleportDestination),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type TeleportDestination: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<TeleportDestination>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<TeleportDestination> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_TeleportDestination_subscriptions == null)
-            {
-                _TeleportDestination_subscriptions = new ObjectCentralizationSubscriptions<TeleportDestination>();
-            }
-            _TeleportDestination_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<TeleportDestination>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _TeleportDestination_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<TeleportDestination>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        TeleportDestination IPropertySupporter<TeleportDestination>.DefaultValue(int index)
-        {
-            return DefaultValueTeleportDestination(index: index);
-        }
-
-        protected TeleportDestination DefaultValueTeleportDestination(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    return default(TeleportDestination);
-                default:
-                    throw new ArgumentException($"Unknown index for field type TeleportDestination: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter LockInformation
-        protected ObjectCentralizationSubscriptions<LockInformation> _LockInformation_subscriptions;
-        LockInformation IPropertySupporter<LockInformation>.Get(int index)
-        {
-            return GetLockInformation(index: index);
-        }
-
-        protected LockInformation GetLockInformation(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Lock:
-                    return Lock;
-                default:
-                    throw new ArgumentException($"Unknown index for field type LockInformation: {index}");
-            }
-        }
-
-        void IPropertySupporter<LockInformation>.Set(
-            int index,
-            LockInformation item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetLockInformation(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetLockInformation(
-            int index,
-            LockInformation item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Lock:
-                    SetLock(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type LockInformation: {index}");
-            }
-        }
-
-        bool IPropertySupporter<LockInformation>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<LockInformation>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<LockInformation>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetLockInformation(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetLockInformation(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Lock:
-                    SetLock(
-                        item: default(LockInformation),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type LockInformation: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<LockInformation>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<LockInformation> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_LockInformation_subscriptions == null)
-            {
-                _LockInformation_subscriptions = new ObjectCentralizationSubscriptions<LockInformation>();
-            }
-            _LockInformation_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<LockInformation>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _LockInformation_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<LockInformation>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        LockInformation IPropertySupporter<LockInformation>.DefaultValue(int index)
-        {
-            return DefaultValueLockInformation(index: index);
-        }
-
-        protected LockInformation DefaultValueLockInformation(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Lock:
-                    return default(LockInformation);
-                default:
-                    throw new ArgumentException($"Unknown index for field type LockInformation: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.FactionRank:
-                    return FactionRank;
-                case PlacedObject_FieldIndex.Health:
-                    return Health;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    return LevelModifier;
-                case PlacedObject_FieldIndex.Count:
-                    return Count;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.FactionRank:
-                    SetFactionRank(item, hasBeenSet, cmds);
-                    break;
-                case PlacedObject_FieldIndex.Health:
-                    SetHealth(item, hasBeenSet, cmds);
-                    break;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    SetLevelModifier(item, hasBeenSet, cmds);
-                    break;
-                case PlacedObject_FieldIndex.Count:
-                    SetCount(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.FactionRank:
-                    SetFactionRank(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                case PlacedObject_FieldIndex.Health:
-                    SetHealth(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    SetLevelModifier(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                case PlacedObject_FieldIndex.Count:
-                    SetCount(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.FactionRank:
-                case PlacedObject_FieldIndex.Health:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.Count:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter EnableParent
-        protected ObjectCentralizationSubscriptions<EnableParent> _EnableParent_subscriptions;
-        EnableParent IPropertySupporter<EnableParent>.Get(int index)
-        {
-            return GetEnableParent(index: index);
-        }
-
-        protected EnableParent GetEnableParent(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.EnableParent:
-                    return EnableParent;
-                default:
-                    throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
-            }
-        }
-
-        void IPropertySupporter<EnableParent>.Set(
-            int index,
-            EnableParent item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetEnableParent(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetEnableParent(
-            int index,
-            EnableParent item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.EnableParent:
-                    SetEnableParent(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
-            }
-        }
-
-        bool IPropertySupporter<EnableParent>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<EnableParent>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<EnableParent>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetEnableParent(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetEnableParent(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.EnableParent:
-                    SetEnableParent(
-                        item: default(EnableParent),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<EnableParent>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<EnableParent> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_EnableParent_subscriptions == null)
-            {
-                _EnableParent_subscriptions = new ObjectCentralizationSubscriptions<EnableParent>();
-            }
-            _EnableParent_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<EnableParent>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _EnableParent_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<EnableParent>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        EnableParent IPropertySupporter<EnableParent>.DefaultValue(int index)
-        {
-            return DefaultValueEnableParent(index: index);
-        }
-
-        protected EnableParent DefaultValueEnableParent(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.EnableParent:
-                    return default(EnableParent);
-                default:
-                    throw new ArgumentException($"Unknown index for field type EnableParent: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Byte
-        protected ObjectCentralizationSubscriptions<Byte> _Byte_subscriptions;
-        Byte IPropertySupporter<Byte>.Get(int index)
-        {
-            return GetByte(index: index);
-        }
-
-        protected Byte GetByte(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    return SpeedTreeSeed;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        void IPropertySupporter<Byte>.Set(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetByte(
-            int index,
-            Byte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    SetSpeedTreeSeed(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Byte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Byte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Byte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    SetSpeedTreeSeed(
-                        item: default(Byte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Byte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Byte_subscriptions == null)
-            {
-                _Byte_subscriptions = new ObjectCentralizationSubscriptions<Byte>();
-            }
-            _Byte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Byte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Byte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Byte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Byte IPropertySupporter<Byte>.DefaultValue(int index)
-        {
-            return DefaultValueByte(index: index);
-        }
-
-        protected Byte DefaultValueByte(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    return default(Byte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Byte: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter DistantLODData
-        protected ObjectCentralizationSubscriptions<DistantLODData> _DistantLODData_subscriptions;
-        DistantLODData IPropertySupporter<DistantLODData>.Get(int index)
-        {
-            return GetDistantLODData(index: index);
-        }
-
-        protected DistantLODData GetDistantLODData(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.DistantLODData:
-                    return DistantLODData;
-                default:
-                    throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
-            }
-        }
-
-        void IPropertySupporter<DistantLODData>.Set(
-            int index,
-            DistantLODData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetDistantLODData(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetDistantLODData(
-            int index,
-            DistantLODData item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.DistantLODData:
-                    SetDistantLODData(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
-            }
-        }
-
-        bool IPropertySupporter<DistantLODData>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<DistantLODData>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<DistantLODData>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetDistantLODData(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetDistantLODData(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.DistantLODData:
-                    SetDistantLODData(
-                        item: default(DistantLODData),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<DistantLODData>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<DistantLODData> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_DistantLODData_subscriptions == null)
-            {
-                _DistantLODData_subscriptions = new ObjectCentralizationSubscriptions<DistantLODData>();
-            }
-            _DistantLODData_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<DistantLODData>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _DistantLODData_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<DistantLODData>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        DistantLODData IPropertySupporter<DistantLODData>.DefaultValue(int index)
-        {
-            return DefaultValueDistantLODData(index: index);
-        }
-
-        protected DistantLODData DefaultValueDistantLODData(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.DistantLODData:
-                    return default(DistantLODData);
-                default:
-                    throw new ArgumentException($"Unknown index for field type DistantLODData: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Charge:
-                    return Charge;
-                case PlacedObject_FieldIndex.Scale:
-                    return Scale;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Charge:
-                    SetCharge(item, hasBeenSet, cmds);
-                    break;
-                case PlacedObject_FieldIndex.Scale:
-                    SetScale(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Charge:
-                    SetCharge(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                case PlacedObject_FieldIndex.Scale:
-                    SetScale(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.Scale:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter PlacedObject.ActionFlag
-        protected ObjectCentralizationSubscriptions<PlacedObject.ActionFlag> _PlacedObjectActionFlag_subscriptions;
-        PlacedObject.ActionFlag IPropertySupporter<PlacedObject.ActionFlag>.Get(int index)
-        {
-            return GetPlacedObjectActionFlag(index: index);
-        }
-
-        protected PlacedObject.ActionFlag GetPlacedObjectActionFlag(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.ActionFlags:
-                    return ActionFlags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type PlacedObject.ActionFlag: {index}");
-            }
-        }
-
-        void IPropertySupporter<PlacedObject.ActionFlag>.Set(
-            int index,
-            PlacedObject.ActionFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetPlacedObjectActionFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetPlacedObjectActionFlag(
-            int index,
-            PlacedObject.ActionFlag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.ActionFlags:
-                    SetActionFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type PlacedObject.ActionFlag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<PlacedObject.ActionFlag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<PlacedObject.ActionFlag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<PlacedObject.ActionFlag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetPlacedObjectActionFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetPlacedObjectActionFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.ActionFlags:
-                    SetActionFlags(
-                        item: default(PlacedObject.ActionFlag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type PlacedObject.ActionFlag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<PlacedObject.ActionFlag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<PlacedObject.ActionFlag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_PlacedObjectActionFlag_subscriptions == null)
-            {
-                _PlacedObjectActionFlag_subscriptions = new ObjectCentralizationSubscriptions<PlacedObject.ActionFlag>();
-            }
-            _PlacedObjectActionFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<PlacedObject.ActionFlag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _PlacedObjectActionFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<PlacedObject.ActionFlag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        PlacedObject.ActionFlag IPropertySupporter<PlacedObject.ActionFlag>.DefaultValue(int index)
-        {
-            return DefaultValuePlacedObjectActionFlag(index: index);
-        }
-
-        protected PlacedObject.ActionFlag DefaultValuePlacedObjectActionFlag(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.ActionFlags:
-                    return default(PlacedObject.ActionFlag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type PlacedObject.ActionFlag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter MapMarker
-        protected ObjectCentralizationSubscriptions<MapMarker> _MapMarker_subscriptions;
-        MapMarker IPropertySupporter<MapMarker>.Get(int index)
-        {
-            return GetMapMarker(index: index);
-        }
-
-        protected MapMarker GetMapMarker(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.MapMarker:
-                    return MapMarker;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapMarker: {index}");
-            }
-        }
-
-        void IPropertySupporter<MapMarker>.Set(
-            int index,
-            MapMarker item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMapMarker(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMapMarker(
-            int index,
-            MapMarker item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.MapMarker:
-                    SetMapMarker(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapMarker: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MapMarker>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MapMarker>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MapMarker>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMapMarker(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMapMarker(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.MapMarker:
-                    SetMapMarker(
-                        item: default(MapMarker),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapMarker: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MapMarker>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MapMarker> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MapMarker_subscriptions == null)
-            {
-                _MapMarker_subscriptions = new ObjectCentralizationSubscriptions<MapMarker>();
-            }
-            _MapMarker_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MapMarker>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MapMarker_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MapMarker>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MapMarker IPropertySupporter<MapMarker>.DefaultValue(int index)
-        {
-            return DefaultValueMapMarker(index: index);
-        }
-
-        protected MapMarker DefaultValueMapMarker(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.MapMarker:
-                    return default(MapMarker);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MapMarker: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Boolean
-        protected ObjectCentralizationSubscriptions<Boolean> _Boolean_subscriptions;
-        Boolean IPropertySupporter<Boolean>.Get(int index)
-        {
-            return GetBoolean(index: index);
-        }
-
-        protected Boolean GetBoolean(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    return OpenByDefault;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Boolean: {index}");
-            }
-        }
-
-        void IPropertySupporter<Boolean>.Set(
-            int index,
-            Boolean item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetBoolean(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetBoolean(
-            int index,
-            Boolean item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    SetOpenByDefault(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Boolean: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Boolean>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Boolean>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Boolean>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetBoolean(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetBoolean(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    SetOpenByDefault(
-                        item: default(Boolean),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Boolean: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Boolean>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Boolean> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Boolean_subscriptions == null)
-            {
-                _Boolean_subscriptions = new ObjectCentralizationSubscriptions<Boolean>();
-            }
-            _Boolean_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Boolean>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Boolean_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Boolean>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Boolean IPropertySupporter<Boolean>.DefaultValue(int index)
-        {
-            return DefaultValueBoolean(index: index);
-        }
-
-        protected Boolean DefaultValueBoolean(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    return default(Boolean);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Boolean: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter P3Float
-        protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
-        P3Float IPropertySupporter<P3Float>.Get(int index)
-        {
-            return GetP3Float(index: index);
-        }
-
-        protected P3Float GetP3Float(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Position:
-                    return Position;
-                case PlacedObject_FieldIndex.Rotation:
-                    return Rotation;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        void IPropertySupporter<P3Float>.Set(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP3Float(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP3Float(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Position:
-                    SetPosition(item, hasBeenSet, cmds);
-                    break;
-                case PlacedObject_FieldIndex.Rotation:
-                    SetRotation(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P3Float>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P3Float>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP3Float(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP3Float(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Position:
-                    SetPosition(
-                        item: default(P3Float),
-                        hasBeenSet: false);
-                    break;
-                case PlacedObject_FieldIndex.Rotation:
-                    SetRotation(
-                        item: default(P3Float),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P3Float> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P3Float_subscriptions == null)
-            {
-                _P3Float_subscriptions = new ObjectCentralizationSubscriptions<P3Float>();
-            }
-            _P3Float_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P3Float_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P3Float>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P3Float IPropertySupporter<P3Float>.DefaultValue(int index)
-        {
-            return DefaultValueP3Float(index: index);
-        }
-
-        protected P3Float DefaultValueP3Float(int index)
-        {
-            switch ((PlacedObject_FieldIndex)index)
-            {
-                case PlacedObject_FieldIndex.Position:
-                case PlacedObject_FieldIndex.Rotation:
-                    return default(P3Float);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = PlacedObject_Registration.TRIGGERING_RECORD_TYPE;
@@ -4205,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetXPCIFluff();
+                            item.XPCIFluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -4232,7 +2073,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFULLFluff();
+                            item.FULLFluff = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -4258,7 +2099,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetTeleportDestination();
+                            item.TeleportDestination = default(TeleportDestination);
                         }
                     }
                     catch (Exception ex)
@@ -4284,7 +2125,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLock();
+                            item.Lock = default(LockInformation);
                         }
                     }
                     catch (Exception ex)
@@ -4319,7 +2160,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFactionRank();
+                            item.FactionRank = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -4353,7 +2194,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetEnableParent();
+                            item.EnableParent = default(EnableParent);
                         }
                     }
                     catch (Exception ex)
@@ -4388,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSpeedTreeSeed();
+                            item.SpeedTreeSeed = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -4414,7 +2255,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetDistantLODData();
+                            item.DistantLODData = default(DistantLODData);
                         }
                     }
                     catch (Exception ex)
@@ -4441,7 +2282,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCharge();
+                            item.Charge = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -4468,7 +2309,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetHealth();
+                            item.Health = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -4495,7 +2336,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLevelModifier();
+                            item.LevelModifier = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -4530,7 +2371,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetActionFlags();
+                            item.ActionFlags = default(PlacedObject.ActionFlag);
                         }
                     }
                     catch (Exception ex)
@@ -4557,7 +2398,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetCount();
+                            item.Count = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -4584,7 +2425,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMapMarker();
+                            item.MapMarker = default(MapMarker);
                         }
                     }
                     catch (Exception ex)
@@ -4620,7 +2461,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRagdollData();
+                            item.RagdollData = default(Byte[]);
                         }
                     }
                     catch (Exception ex)
@@ -4647,7 +2488,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetScale();
+                            item.Scale = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -4688,7 +2529,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetPosition();
+                                item.Position = default(P3Float);
                             }
                         }
                         catch (Exception ex)
@@ -4712,7 +2553,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetRotation();
+                                item.Rotation = default(P3Float);
                             }
                         }
                         catch (Exception ex)
@@ -4851,24 +2692,16 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
-                    this.SetXPCIFluff(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.XPCIFluff = (Byte[])obj;
                     break;
                 case PlacedObject_FieldIndex.FULLFluff:
-                    this.SetFULLFluff(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.FULLFluff = (Byte[])obj;
                     break;
                 case PlacedObject_FieldIndex.TeleportDestination:
-                    this.SetTeleportDestination(
-                        (TeleportDestination)obj,
-                        cmds: cmds);
+                    this.TeleportDestination = (TeleportDestination)obj;
                     break;
                 case PlacedObject_FieldIndex.Lock:
-                    this.SetLock(
-                        (LockInformation)obj,
-                        cmds: cmds);
+                    this.Lock = (LockInformation)obj;
                     break;
                 case PlacedObject_FieldIndex.Owner:
                     this.Owner_Property.Set(
@@ -4876,9 +2709,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.FactionRank:
-                    this.SetFactionRank(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.FactionRank = (Int32)obj;
                     break;
                 case PlacedObject_FieldIndex.GlobalVariable:
                     this.GlobalVariable_Property.Set(
@@ -4886,9 +2717,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.EnableParent:
-                    this.SetEnableParent(
-                        (EnableParent)obj,
-                        cmds: cmds);
+                    this.EnableParent = (EnableParent)obj;
                     break;
                 case PlacedObject_FieldIndex.Target:
                     this.Target_Property.Set(
@@ -4896,29 +2725,19 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    this.SetSpeedTreeSeed(
-                        (Byte)obj,
-                        cmds: cmds);
+                    this.SpeedTreeSeed = (Byte)obj;
                     break;
                 case PlacedObject_FieldIndex.DistantLODData:
-                    this.SetDistantLODData(
-                        (DistantLODData)obj,
-                        cmds: cmds);
+                    this.DistantLODData = (DistantLODData)obj;
                     break;
                 case PlacedObject_FieldIndex.Charge:
-                    this.SetCharge(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Charge = (Single)obj;
                     break;
                 case PlacedObject_FieldIndex.Health:
-                    this.SetHealth(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.Health = (Int32)obj;
                     break;
                 case PlacedObject_FieldIndex.LevelModifier:
-                    this.SetLevelModifier(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.LevelModifier = (Int32)obj;
                     break;
                 case PlacedObject_FieldIndex.Unknown:
                     this.Unknown_Property.Set(
@@ -4926,34 +2745,22 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
-                    this.SetActionFlags(
-                        (PlacedObject.ActionFlag)obj,
-                        cmds: cmds);
+                    this.ActionFlags = (PlacedObject.ActionFlag)obj;
                     break;
                 case PlacedObject_FieldIndex.Count:
-                    this.SetCount(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.Count = (Int32)obj;
                     break;
                 case PlacedObject_FieldIndex.MapMarker:
-                    this.SetMapMarker(
-                        (MapMarker)obj,
-                        cmds: cmds);
+                    this.MapMarker = (MapMarker)obj;
                     break;
                 case PlacedObject_FieldIndex.OpenByDefault:
-                    this.SetOpenByDefault(
-                        (Boolean)obj,
-                        cmds: cmds);
+                    this.OpenByDefault = (Boolean)obj;
                     break;
                 case PlacedObject_FieldIndex.RagdollData:
-                    this.SetRagdollData(
-                        (Byte[])obj,
-                        cmds: cmds);
+                    this.RagdollData = (Byte[])obj;
                     break;
                 case PlacedObject_FieldIndex.Scale:
-                    this.SetScale(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Scale = (Single)obj;
                     break;
                 case PlacedObject_FieldIndex.ContainedSoul:
                     this.ContainedSoul_Property.Set(
@@ -4961,14 +2768,10 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.Position:
-                    this.SetPosition(
-                        (P3Float)obj,
-                        cmds: cmds);
+                    this.Position = (P3Float)obj;
                     break;
                 case PlacedObject_FieldIndex.Rotation:
-                    this.SetRotation(
-                        (P3Float)obj,
-                        cmds: cmds);
+                    this.Rotation = (P3Float)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -5007,24 +2810,16 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
-                    obj.SetXPCIFluff(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.XPCIFluff = (Byte[])pair.Value;
                     break;
                 case PlacedObject_FieldIndex.FULLFluff:
-                    obj.SetFULLFluff(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.FULLFluff = (Byte[])pair.Value;
                     break;
                 case PlacedObject_FieldIndex.TeleportDestination:
-                    obj.SetTeleportDestination(
-                        (TeleportDestination)pair.Value,
-                        cmds: null);
+                    obj.TeleportDestination = (TeleportDestination)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Lock:
-                    obj.SetLock(
-                        (LockInformation)pair.Value,
-                        cmds: null);
+                    obj.Lock = (LockInformation)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Owner:
                     obj.Owner_Property.Set(
@@ -5032,9 +2827,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case PlacedObject_FieldIndex.FactionRank:
-                    obj.SetFactionRank(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.FactionRank = (Int32)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.GlobalVariable:
                     obj.GlobalVariable_Property.Set(
@@ -5042,9 +2835,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case PlacedObject_FieldIndex.EnableParent:
-                    obj.SetEnableParent(
-                        (EnableParent)pair.Value,
-                        cmds: null);
+                    obj.EnableParent = (EnableParent)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Target:
                     obj.Target_Property.Set(
@@ -5052,29 +2843,19 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    obj.SetSpeedTreeSeed(
-                        (Byte)pair.Value,
-                        cmds: null);
+                    obj.SpeedTreeSeed = (Byte)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.DistantLODData:
-                    obj.SetDistantLODData(
-                        (DistantLODData)pair.Value,
-                        cmds: null);
+                    obj.DistantLODData = (DistantLODData)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Charge:
-                    obj.SetCharge(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Charge = (Single)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Health:
-                    obj.SetHealth(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.Health = (Int32)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.LevelModifier:
-                    obj.SetLevelModifier(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.LevelModifier = (Int32)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Unknown:
                     obj.Unknown_Property.Set(
@@ -5082,34 +2863,22 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
-                    obj.SetActionFlags(
-                        (PlacedObject.ActionFlag)pair.Value,
-                        cmds: null);
+                    obj.ActionFlags = (PlacedObject.ActionFlag)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Count:
-                    obj.SetCount(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.Count = (Int32)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.MapMarker:
-                    obj.SetMapMarker(
-                        (MapMarker)pair.Value,
-                        cmds: null);
+                    obj.MapMarker = (MapMarker)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.OpenByDefault:
-                    obj.SetOpenByDefault(
-                        (Boolean)pair.Value,
-                        cmds: null);
+                    obj.OpenByDefault = (Boolean)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.RagdollData:
-                    obj.SetRagdollData(
-                        (Byte[])pair.Value,
-                        cmds: null);
+                    obj.RagdollData = (Byte[])pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Scale:
-                    obj.SetScale(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Scale = (Single)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.ContainedSoul:
                     obj.ContainedSoul_Property.Set(
@@ -5117,14 +2886,10 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case PlacedObject_FieldIndex.Position:
-                    obj.SetPosition(
-                        (P3Float)pair.Value,
-                        cmds: null);
+                    obj.Position = (P3Float)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Rotation:
-                    obj.SetRotation(
-                        (P3Float)pair.Value,
-                        cmds: null);
+                    obj.Rotation = (P3Float)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -5143,66 +2908,95 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new MajorRecord Base { get; set; }
         new Byte[] XPCIFluff { get; set; }
-        new INotifyingSetItem<Byte[]> XPCIFluff_Property { get; }
+        new bool XPCIFluff_IsSet { get; set; }
+        void XPCIFluff_Set(Byte[] item, bool hasBeenSet = true);
+        void XPCIFluff_Unset();
 
         new Byte[] FULLFluff { get; set; }
-        new INotifyingSetItem<Byte[]> FULLFluff_Property { get; }
+        new bool FULLFluff_IsSet { get; set; }
+        void FULLFluff_Set(Byte[] item, bool hasBeenSet = true);
+        void FULLFluff_Unset();
 
         new TeleportDestination TeleportDestination { get; set; }
-        new INotifyingSetItem<TeleportDestination> TeleportDestination_Property { get; }
+        new bool TeleportDestination_IsSet { get; set; }
+        void TeleportDestination_Set(TeleportDestination item, bool hasBeenSet = true);
+        void TeleportDestination_Unset();
 
         new LockInformation Lock { get; set; }
-        new INotifyingSetItem<LockInformation> Lock_Property { get; }
+        new bool Lock_IsSet { get; set; }
+        void Lock_Set(LockInformation item, bool hasBeenSet = true);
+        void Lock_Unset();
 
         new Faction Owner { get; set; }
         new Int32 FactionRank { get; set; }
-        new INotifyingSetItem<Int32> FactionRank_Property { get; }
+        new bool FactionRank_IsSet { get; set; }
+        void FactionRank_Set(Int32 item, bool hasBeenSet = true);
+        void FactionRank_Unset();
 
         new Global GlobalVariable { get; set; }
         new EnableParent EnableParent { get; set; }
-        new INotifyingSetItem<EnableParent> EnableParent_Property { get; }
+        new bool EnableParent_IsSet { get; set; }
+        void EnableParent_Set(EnableParent item, bool hasBeenSet = true);
+        void EnableParent_Unset();
 
         new PlacedObject Target { get; set; }
         new Byte SpeedTreeSeed { get; set; }
-        new INotifyingSetItem<Byte> SpeedTreeSeed_Property { get; }
+        new bool SpeedTreeSeed_IsSet { get; set; }
+        void SpeedTreeSeed_Set(Byte item, bool hasBeenSet = true);
+        void SpeedTreeSeed_Unset();
 
         new DistantLODData DistantLODData { get; set; }
-        new INotifyingSetItem<DistantLODData> DistantLODData_Property { get; }
+        new bool DistantLODData_IsSet { get; set; }
+        void DistantLODData_Set(DistantLODData item, bool hasBeenSet = true);
+        void DistantLODData_Unset();
 
         new Single Charge { get; set; }
-        new INotifyingSetItem<Single> Charge_Property { get; }
+        new bool Charge_IsSet { get; set; }
+        void Charge_Set(Single item, bool hasBeenSet = true);
+        void Charge_Unset();
 
         new Int32 Health { get; set; }
-        new INotifyingSetItem<Int32> Health_Property { get; }
+        new bool Health_IsSet { get; set; }
+        void Health_Set(Int32 item, bool hasBeenSet = true);
+        void Health_Unset();
 
         new Int32 LevelModifier { get; set; }
-        new INotifyingSetItem<Int32> LevelModifier_Property { get; }
+        new bool LevelModifier_IsSet { get; set; }
+        void LevelModifier_Set(Int32 item, bool hasBeenSet = true);
+        void LevelModifier_Unset();
 
         new MajorRecord Unknown { get; set; }
         new PlacedObject.ActionFlag ActionFlags { get; set; }
-        new INotifyingSetItem<PlacedObject.ActionFlag> ActionFlags_Property { get; }
+        new bool ActionFlags_IsSet { get; set; }
+        void ActionFlags_Set(PlacedObject.ActionFlag item, bool hasBeenSet = true);
+        void ActionFlags_Unset();
 
         new Int32 Count { get; set; }
-        new INotifyingSetItem<Int32> Count_Property { get; }
+        new bool Count_IsSet { get; set; }
+        void Count_Set(Int32 item, bool hasBeenSet = true);
+        void Count_Unset();
 
         new MapMarker MapMarker { get; set; }
-        new INotifyingSetItem<MapMarker> MapMarker_Property { get; }
+        new bool MapMarker_IsSet { get; set; }
+        void MapMarker_Set(MapMarker item, bool hasBeenSet = true);
+        void MapMarker_Unset();
 
         new Boolean OpenByDefault { get; set; }
-        new INotifyingItem<Boolean> OpenByDefault_Property { get; }
 
         new Byte[] RagdollData { get; set; }
-        new INotifyingSetItem<Byte[]> RagdollData_Property { get; }
+        new bool RagdollData_IsSet { get; set; }
+        void RagdollData_Set(Byte[] item, bool hasBeenSet = true);
+        void RagdollData_Unset();
 
         new Single Scale { get; set; }
-        new INotifyingSetItem<Single> Scale_Property { get; }
+        new bool Scale_IsSet { get; set; }
+        void Scale_Set(Single item, bool hasBeenSet = true);
+        void Scale_Unset();
 
         new SoulGem ContainedSoul { get; set; }
         new P3Float Position { get; set; }
-        new INotifyingItem<P3Float> Position_Property { get; }
 
         new P3Float Rotation { get; set; }
-        new INotifyingItem<P3Float> Rotation_Property { get; }
 
     }
 
@@ -5215,22 +3009,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region XPCIFluff
         Byte[] XPCIFluff { get; }
-        INotifyingSetItemGetter<Byte[]> XPCIFluff_Property { get; }
+        bool XPCIFluff_IsSet { get; }
 
         #endregion
         #region FULLFluff
         Byte[] FULLFluff { get; }
-        INotifyingSetItemGetter<Byte[]> FULLFluff_Property { get; }
+        bool FULLFluff_IsSet { get; }
 
         #endregion
         #region TeleportDestination
         TeleportDestination TeleportDestination { get; }
-        INotifyingSetItemGetter<TeleportDestination> TeleportDestination_Property { get; }
+        bool TeleportDestination_IsSet { get; }
 
         #endregion
         #region Lock
         LockInformation Lock { get; }
-        INotifyingSetItemGetter<LockInformation> Lock_Property { get; }
+        bool Lock_IsSet { get; }
 
         #endregion
         #region Owner
@@ -5240,7 +3034,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FactionRank
         Int32 FactionRank { get; }
-        INotifyingSetItemGetter<Int32> FactionRank_Property { get; }
+        bool FactionRank_IsSet { get; }
 
         #endregion
         #region GlobalVariable
@@ -5250,7 +3044,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region EnableParent
         EnableParent EnableParent { get; }
-        INotifyingSetItemGetter<EnableParent> EnableParent_Property { get; }
+        bool EnableParent_IsSet { get; }
 
         #endregion
         #region Target
@@ -5260,27 +3054,27 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SpeedTreeSeed
         Byte SpeedTreeSeed { get; }
-        INotifyingSetItemGetter<Byte> SpeedTreeSeed_Property { get; }
+        bool SpeedTreeSeed_IsSet { get; }
 
         #endregion
         #region DistantLODData
         DistantLODData DistantLODData { get; }
-        INotifyingSetItemGetter<DistantLODData> DistantLODData_Property { get; }
+        bool DistantLODData_IsSet { get; }
 
         #endregion
         #region Charge
         Single Charge { get; }
-        INotifyingSetItemGetter<Single> Charge_Property { get; }
+        bool Charge_IsSet { get; }
 
         #endregion
         #region Health
         Int32 Health { get; }
-        INotifyingSetItemGetter<Int32> Health_Property { get; }
+        bool Health_IsSet { get; }
 
         #endregion
         #region LevelModifier
         Int32 LevelModifier { get; }
-        INotifyingSetItemGetter<Int32> LevelModifier_Property { get; }
+        bool LevelModifier_IsSet { get; }
 
         #endregion
         #region Unknown
@@ -5290,32 +3084,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ActionFlags
         PlacedObject.ActionFlag ActionFlags { get; }
-        INotifyingSetItemGetter<PlacedObject.ActionFlag> ActionFlags_Property { get; }
+        bool ActionFlags_IsSet { get; }
 
         #endregion
         #region Count
         Int32 Count { get; }
-        INotifyingSetItemGetter<Int32> Count_Property { get; }
+        bool Count_IsSet { get; }
 
         #endregion
         #region MapMarker
         MapMarker MapMarker { get; }
-        INotifyingSetItemGetter<MapMarker> MapMarker_Property { get; }
+        bool MapMarker_IsSet { get; }
 
         #endregion
         #region OpenByDefault
         Boolean OpenByDefault { get; }
-        INotifyingItemGetter<Boolean> OpenByDefault_Property { get; }
 
         #endregion
         #region RagdollData
         Byte[] RagdollData { get; }
-        INotifyingSetItemGetter<Byte[]> RagdollData_Property { get; }
+        bool RagdollData_IsSet { get; }
 
         #endregion
         #region Scale
         Single Scale { get; }
-        INotifyingSetItemGetter<Single> Scale_Property { get; }
+        bool Scale_IsSet { get; }
 
         #endregion
         #region ContainedSoul
@@ -5325,12 +3118,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Position
         P3Float Position { get; }
-        INotifyingItemGetter<P3Float> Position_Property { get; }
 
         #endregion
         #region Rotation
         P3Float Rotation { get; }
-        INotifyingItemGetter<P3Float> Rotation_Property { get; }
 
         #endregion
 
@@ -5880,9 +3671,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.XPCIFluff);
                 try
                 {
-                    item.XPCIFluff_Property.SetToWithDefault(
-                        rhs: rhs.XPCIFluff_Property,
-                        def: def?.XPCIFluff_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.XPCIFluff,
+                        rhsHasBeenSet: rhs.XPCIFluff_IsSet,
+                        defItem: def?.XPCIFluff ?? default(Byte[]),
+                        defHasBeenSet: def?.XPCIFluff_IsSet ?? false,
+                        outRhsItem: out var rhsXPCIFluffItem,
+                        outDefItem: out var defXPCIFluffItem))
+                    {
+                        item.XPCIFluff = rhsXPCIFluffItem;
+                    }
+                    else
+                    {
+                        item.XPCIFluff_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5899,9 +3701,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.FULLFluff);
                 try
                 {
-                    item.FULLFluff_Property.SetToWithDefault(
-                        rhs: rhs.FULLFluff_Property,
-                        def: def?.FULLFluff_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.FULLFluff,
+                        rhsHasBeenSet: rhs.FULLFluff_IsSet,
+                        defItem: def?.FULLFluff ?? default(Byte[]),
+                        defHasBeenSet: def?.FULLFluff_IsSet ?? false,
+                        outRhsItem: out var rhsFULLFluffItem,
+                        outDefItem: out var defFULLFluffItem))
+                    {
+                        item.FULLFluff = rhsFULLFluffItem;
+                    }
+                    else
+                    {
+                        item.FULLFluff_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5918,36 +3731,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportDestination);
                 try
                 {
-                    item.TeleportDestination_Property.SetToWithDefault(
-                        rhs.TeleportDestination_Property,
-                        def?.TeleportDestination_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.TeleportDestination,
+                        rhsHasBeenSet: rhs.TeleportDestination_IsSet,
+                        defItem: def?.TeleportDestination,
+                        defHasBeenSet: def?.TeleportDestination_IsSet ?? false,
+                        outRhsItem: out var rhsTeleportDestinationItem,
+                        outDefItem: out var defTeleportDestinationItem))
+                    {
+                        switch (copyMask?.TeleportDestination.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.TeleportDestination.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    TeleportDestinationCommon.CopyFieldsFrom(
-                                        item: item.TeleportDestination,
-                                        rhs: rhs.TeleportDestination,
-                                        def: def?.TeleportDestination,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.TeleportDestination.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(TeleportDestination);
-                                    return TeleportDestination.Copy(
-                                        r,
-                                        copyMask?.TeleportDestination?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TeleportDestination?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.TeleportDestination = rhsTeleportDestinationItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                TeleportDestinationCommon.CopyFieldsFrom(
+                                    item: item.TeleportDestination,
+                                    rhs: rhs.TeleportDestination,
+                                    def: def?.TeleportDestination,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.TeleportDestination.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.TeleportDestination = TeleportDestination.Copy(
+                                    rhsTeleportDestinationItem,
+                                    copyMask?.TeleportDestination?.Specific,
+                                    def: defTeleportDestinationItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.TeleportDestination?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.TeleportDestination_IsSet = false;
+                        item.TeleportDestination = default(TeleportDestination);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5964,36 +3784,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lock);
                 try
                 {
-                    item.Lock_Property.SetToWithDefault(
-                        rhs.Lock_Property,
-                        def?.Lock_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Lock,
+                        rhsHasBeenSet: rhs.Lock_IsSet,
+                        defItem: def?.Lock,
+                        defHasBeenSet: def?.Lock_IsSet ?? false,
+                        outRhsItem: out var rhsLockItem,
+                        outDefItem: out var defLockItem))
+                    {
+                        switch (copyMask?.Lock.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Lock.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    LockInformationCommon.CopyFieldsFrom(
-                                        item: item.Lock,
-                                        rhs: rhs.Lock,
-                                        def: def?.Lock,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Lock.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(LockInformation);
-                                    return LockInformation.Copy(
-                                        r,
-                                        copyMask?.Lock?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Lock?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Lock = rhsLockItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                LockInformationCommon.CopyFieldsFrom(
+                                    item: item.Lock,
+                                    rhs: rhs.Lock,
+                                    def: def?.Lock,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Lock.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Lock = LockInformation.Copy(
+                                    rhsLockItem,
+                                    copyMask?.Lock?.Specific,
+                                    def: defLockItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Lock?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Lock_IsSet = false;
+                        item.Lock = default(LockInformation);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6030,9 +3857,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.FactionRank);
                 try
                 {
-                    item.FactionRank_Property.SetToWithDefault(
-                        rhs: rhs.FactionRank_Property,
-                        def: def?.FactionRank_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.FactionRank,
+                        rhsHasBeenSet: rhs.FactionRank_IsSet,
+                        defItem: def?.FactionRank ?? default(Int32),
+                        defHasBeenSet: def?.FactionRank_IsSet ?? false,
+                        outRhsItem: out var rhsFactionRankItem,
+                        outDefItem: out var defFactionRankItem))
+                    {
+                        item.FactionRank = rhsFactionRankItem;
+                    }
+                    else
+                    {
+                        item.FactionRank_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6069,36 +3907,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.EnableParent);
                 try
                 {
-                    item.EnableParent_Property.SetToWithDefault(
-                        rhs.EnableParent_Property,
-                        def?.EnableParent_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.EnableParent,
+                        rhsHasBeenSet: rhs.EnableParent_IsSet,
+                        defItem: def?.EnableParent,
+                        defHasBeenSet: def?.EnableParent_IsSet ?? false,
+                        outRhsItem: out var rhsEnableParentItem,
+                        outDefItem: out var defEnableParentItem))
+                    {
+                        switch (copyMask?.EnableParent.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.EnableParent.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    EnableParentCommon.CopyFieldsFrom(
-                                        item: item.EnableParent,
-                                        rhs: rhs.EnableParent,
-                                        def: def?.EnableParent,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.EnableParent.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(EnableParent);
-                                    return EnableParent.Copy(
-                                        r,
-                                        copyMask?.EnableParent?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.EnableParent?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.EnableParent = rhsEnableParentItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                EnableParentCommon.CopyFieldsFrom(
+                                    item: item.EnableParent,
+                                    rhs: rhs.EnableParent,
+                                    def: def?.EnableParent,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.EnableParent.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.EnableParent = EnableParent.Copy(
+                                    rhsEnableParentItem,
+                                    copyMask?.EnableParent?.Specific,
+                                    def: defEnableParentItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.EnableParent?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.EnableParent_IsSet = false;
+                        item.EnableParent = default(EnableParent);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6135,9 +3980,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.SpeedTreeSeed);
                 try
                 {
-                    item.SpeedTreeSeed_Property.SetToWithDefault(
-                        rhs: rhs.SpeedTreeSeed_Property,
-                        def: def?.SpeedTreeSeed_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.SpeedTreeSeed,
+                        rhsHasBeenSet: rhs.SpeedTreeSeed_IsSet,
+                        defItem: def?.SpeedTreeSeed ?? default(Byte),
+                        defHasBeenSet: def?.SpeedTreeSeed_IsSet ?? false,
+                        outRhsItem: out var rhsSpeedTreeSeedItem,
+                        outDefItem: out var defSpeedTreeSeedItem))
+                    {
+                        item.SpeedTreeSeed = rhsSpeedTreeSeedItem;
+                    }
+                    else
+                    {
+                        item.SpeedTreeSeed_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6154,36 +4010,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.DistantLODData);
                 try
                 {
-                    item.DistantLODData_Property.SetToWithDefault(
-                        rhs.DistantLODData_Property,
-                        def?.DistantLODData_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.DistantLODData,
+                        rhsHasBeenSet: rhs.DistantLODData_IsSet,
+                        defItem: def?.DistantLODData,
+                        defHasBeenSet: def?.DistantLODData_IsSet ?? false,
+                        outRhsItem: out var rhsDistantLODDataItem,
+                        outDefItem: out var defDistantLODDataItem))
+                    {
+                        switch (copyMask?.DistantLODData.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.DistantLODData.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    DistantLODDataCommon.CopyFieldsFrom(
-                                        item: item.DistantLODData,
-                                        rhs: rhs.DistantLODData,
-                                        def: def?.DistantLODData,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.DistantLODData.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(DistantLODData);
-                                    return DistantLODData.Copy(
-                                        r,
-                                        copyMask?.DistantLODData?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.DistantLODData?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.DistantLODData = rhsDistantLODDataItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                DistantLODDataCommon.CopyFieldsFrom(
+                                    item: item.DistantLODData,
+                                    rhs: rhs.DistantLODData,
+                                    def: def?.DistantLODData,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.DistantLODData.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.DistantLODData = DistantLODData.Copy(
+                                    rhsDistantLODDataItem,
+                                    copyMask?.DistantLODData?.Specific,
+                                    def: defDistantLODDataItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.DistantLODData?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.DistantLODData_IsSet = false;
+                        item.DistantLODData = default(DistantLODData);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6200,9 +4063,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Charge);
                 try
                 {
-                    item.Charge_Property.SetToWithDefault(
-                        rhs: rhs.Charge_Property,
-                        def: def?.Charge_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Charge,
+                        rhsHasBeenSet: rhs.Charge_IsSet,
+                        defItem: def?.Charge ?? default(Single),
+                        defHasBeenSet: def?.Charge_IsSet ?? false,
+                        outRhsItem: out var rhsChargeItem,
+                        outDefItem: out var defChargeItem))
+                    {
+                        item.Charge = rhsChargeItem;
+                    }
+                    else
+                    {
+                        item.Charge_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6219,9 +4093,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Health);
                 try
                 {
-                    item.Health_Property.SetToWithDefault(
-                        rhs: rhs.Health_Property,
-                        def: def?.Health_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Health,
+                        rhsHasBeenSet: rhs.Health_IsSet,
+                        defItem: def?.Health ?? default(Int32),
+                        defHasBeenSet: def?.Health_IsSet ?? false,
+                        outRhsItem: out var rhsHealthItem,
+                        outDefItem: out var defHealthItem))
+                    {
+                        item.Health = rhsHealthItem;
+                    }
+                    else
+                    {
+                        item.Health_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6238,9 +4123,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.LevelModifier);
                 try
                 {
-                    item.LevelModifier_Property.SetToWithDefault(
-                        rhs: rhs.LevelModifier_Property,
-                        def: def?.LevelModifier_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.LevelModifier,
+                        rhsHasBeenSet: rhs.LevelModifier_IsSet,
+                        defItem: def?.LevelModifier ?? default(Int32),
+                        defHasBeenSet: def?.LevelModifier_IsSet ?? false,
+                        outRhsItem: out var rhsLevelModifierItem,
+                        outDefItem: out var defLevelModifierItem))
+                    {
+                        item.LevelModifier = rhsLevelModifierItem;
+                    }
+                    else
+                    {
+                        item.LevelModifier_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6277,9 +4173,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.ActionFlags);
                 try
                 {
-                    item.ActionFlags_Property.SetToWithDefault(
-                        rhs: rhs.ActionFlags_Property,
-                        def: def?.ActionFlags_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.ActionFlags,
+                        rhsHasBeenSet: rhs.ActionFlags_IsSet,
+                        defItem: def?.ActionFlags ?? default(PlacedObject.ActionFlag),
+                        defHasBeenSet: def?.ActionFlags_IsSet ?? false,
+                        outRhsItem: out var rhsActionFlagsItem,
+                        outDefItem: out var defActionFlagsItem))
+                    {
+                        item.ActionFlags = rhsActionFlagsItem;
+                    }
+                    else
+                    {
+                        item.ActionFlags_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6296,9 +4203,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Count);
                 try
                 {
-                    item.Count_Property.SetToWithDefault(
-                        rhs: rhs.Count_Property,
-                        def: def?.Count_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Count,
+                        rhsHasBeenSet: rhs.Count_IsSet,
+                        defItem: def?.Count ?? default(Int32),
+                        defHasBeenSet: def?.Count_IsSet ?? false,
+                        outRhsItem: out var rhsCountItem,
+                        outDefItem: out var defCountItem))
+                    {
+                        item.Count = rhsCountItem;
+                    }
+                    else
+                    {
+                        item.Count_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6315,36 +4233,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
                 try
                 {
-                    item.MapMarker_Property.SetToWithDefault(
-                        rhs.MapMarker_Property,
-                        def?.MapMarker_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.MapMarker,
+                        rhsHasBeenSet: rhs.MapMarker_IsSet,
+                        defItem: def?.MapMarker,
+                        defHasBeenSet: def?.MapMarker_IsSet ?? false,
+                        outRhsItem: out var rhsMapMarkerItem,
+                        outDefItem: out var defMapMarkerItem))
+                    {
+                        switch (copyMask?.MapMarker.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.MapMarker.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    MapMarkerCommon.CopyFieldsFrom(
-                                        item: item.MapMarker,
-                                        rhs: rhs.MapMarker,
-                                        def: def?.MapMarker,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.MapMarker.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(MapMarker);
-                                    return MapMarker.Copy(
-                                        r,
-                                        copyMask?.MapMarker?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.MapMarker?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.MapMarker = rhsMapMarkerItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                MapMarkerCommon.CopyFieldsFrom(
+                                    item: item.MapMarker,
+                                    rhs: rhs.MapMarker,
+                                    def: def?.MapMarker,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.MapMarker.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.MapMarker = MapMarker.Copy(
+                                    rhsMapMarkerItem,
+                                    copyMask?.MapMarker?.Specific,
+                                    def: defMapMarkerItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.MapMarker?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.MapMarker_IsSet = false;
+                        item.MapMarker = default(MapMarker);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6361,9 +4286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.OpenByDefault);
                 try
                 {
-                    item.OpenByDefault_Property.Set(
-                        value: rhs.OpenByDefault,
-                        cmds: cmds);
+                    item.OpenByDefault = rhs.OpenByDefault;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6380,9 +4303,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.RagdollData);
                 try
                 {
-                    item.RagdollData_Property.SetToWithDefault(
-                        rhs: rhs.RagdollData_Property,
-                        def: def?.RagdollData_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.RagdollData,
+                        rhsHasBeenSet: rhs.RagdollData_IsSet,
+                        defItem: def?.RagdollData ?? default(Byte[]),
+                        defHasBeenSet: def?.RagdollData_IsSet ?? false,
+                        outRhsItem: out var rhsRagdollDataItem,
+                        outDefItem: out var defRagdollDataItem))
+                    {
+                        item.RagdollData = rhsRagdollDataItem;
+                    }
+                    else
+                    {
+                        item.RagdollData_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6399,9 +4333,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Scale);
                 try
                 {
-                    item.Scale_Property.SetToWithDefault(
-                        rhs: rhs.Scale_Property,
-                        def: def?.Scale_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Scale,
+                        rhsHasBeenSet: rhs.Scale_IsSet,
+                        defItem: def?.Scale ?? default(Single),
+                        defHasBeenSet: def?.Scale_IsSet ?? false,
+                        outRhsItem: out var rhsScaleItem,
+                        outDefItem: out var defScaleItem))
+                    {
+                        item.Scale = rhsScaleItem;
+                    }
+                    else
+                    {
+                        item.Scale_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6438,9 +4383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Position);
                 try
                 {
-                    item.Position_Property.Set(
-                        value: rhs.Position,
-                        cmds: cmds);
+                    item.Position = rhs.Position;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6457,9 +4400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Rotation);
                 try
                 {
-                    item.Rotation_Property.Set(
-                        value: rhs.Rotation,
-                        cmds: cmds);
+                    item.Rotation = rhs.Rotation;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6493,64 +4434,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Base_Property.HasBeenSet = on;
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff_Property.HasBeenSet = on;
+                    obj.XPCIFluff_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.FULLFluff:
-                    obj.FULLFluff_Property.HasBeenSet = on;
+                    obj.FULLFluff_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.TeleportDestination:
-                    obj.TeleportDestination_Property.HasBeenSet = on;
+                    obj.TeleportDestination_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.Lock:
-                    obj.Lock_Property.HasBeenSet = on;
+                    obj.Lock_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.Owner:
                     obj.Owner_Property.HasBeenSet = on;
                     break;
                 case PlacedObject_FieldIndex.FactionRank:
-                    obj.FactionRank_Property.HasBeenSet = on;
+                    obj.FactionRank_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.GlobalVariable:
                     obj.GlobalVariable_Property.HasBeenSet = on;
                     break;
                 case PlacedObject_FieldIndex.EnableParent:
-                    obj.EnableParent_Property.HasBeenSet = on;
+                    obj.EnableParent_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.Target:
                     obj.Target_Property.HasBeenSet = on;
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    obj.SpeedTreeSeed_Property.HasBeenSet = on;
+                    obj.SpeedTreeSeed_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.DistantLODData:
-                    obj.DistantLODData_Property.HasBeenSet = on;
+                    obj.DistantLODData_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.Charge:
-                    obj.Charge_Property.HasBeenSet = on;
+                    obj.Charge_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.Health:
-                    obj.Health_Property.HasBeenSet = on;
+                    obj.Health_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.LevelModifier:
-                    obj.LevelModifier_Property.HasBeenSet = on;
+                    obj.LevelModifier_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.Unknown:
                     obj.Unknown_Property.HasBeenSet = on;
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
-                    obj.ActionFlags_Property.HasBeenSet = on;
+                    obj.ActionFlags_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.Count:
-                    obj.Count_Property.HasBeenSet = on;
+                    obj.Count_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.MapMarker:
-                    obj.MapMarker_Property.HasBeenSet = on;
+                    obj.MapMarker_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.RagdollData:
-                    obj.RagdollData_Property.HasBeenSet = on;
+                    obj.RagdollData_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.Scale:
-                    obj.Scale_Property.HasBeenSet = on;
+                    obj.Scale_IsSet = on;
                     break;
                 case PlacedObject_FieldIndex.ContainedSoul:
                     obj.ContainedSoul_Property.HasBeenSet = on;
@@ -6570,73 +4511,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
-                    obj.Base_Property.Unset(cmds);
+                    obj.Base_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff_Property.Unset(cmds);
+                    obj.XPCIFluff_Unset();
                     break;
                 case PlacedObject_FieldIndex.FULLFluff:
-                    obj.FULLFluff_Property.Unset(cmds);
+                    obj.FULLFluff_Unset();
                     break;
                 case PlacedObject_FieldIndex.TeleportDestination:
-                    obj.TeleportDestination_Property.Unset(cmds);
+                    obj.TeleportDestination_Unset();
                     break;
                 case PlacedObject_FieldIndex.Lock:
-                    obj.Lock_Property.Unset(cmds);
+                    obj.Lock_Unset();
                     break;
                 case PlacedObject_FieldIndex.Owner:
-                    obj.Owner_Property.Unset(cmds);
+                    obj.Owner_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PlacedObject_FieldIndex.FactionRank:
-                    obj.FactionRank_Property.Unset(cmds);
+                    obj.FactionRank_Unset();
                     break;
                 case PlacedObject_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Unset(cmds);
+                    obj.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PlacedObject_FieldIndex.EnableParent:
-                    obj.EnableParent_Property.Unset(cmds);
+                    obj.EnableParent_Unset();
                     break;
                 case PlacedObject_FieldIndex.Target:
-                    obj.Target_Property.Unset(cmds);
+                    obj.Target_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    obj.SpeedTreeSeed_Property.Unset(cmds);
+                    obj.SpeedTreeSeed_Unset();
                     break;
                 case PlacedObject_FieldIndex.DistantLODData:
-                    obj.DistantLODData_Property.Unset(cmds);
+                    obj.DistantLODData_Unset();
                     break;
                 case PlacedObject_FieldIndex.Charge:
-                    obj.Charge_Property.Unset(cmds);
+                    obj.Charge_Unset();
                     break;
                 case PlacedObject_FieldIndex.Health:
-                    obj.Health_Property.Unset(cmds);
+                    obj.Health_Unset();
                     break;
                 case PlacedObject_FieldIndex.LevelModifier:
-                    obj.LevelModifier_Property.Unset(cmds);
+                    obj.LevelModifier_Unset();
                     break;
                 case PlacedObject_FieldIndex.Unknown:
-                    obj.Unknown_Property.Unset(cmds);
+                    obj.Unknown_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
-                    obj.ActionFlags_Property.Unset(cmds);
+                    obj.ActionFlags_Unset();
                     break;
                 case PlacedObject_FieldIndex.Count:
-                    obj.Count_Property.Unset(cmds);
+                    obj.Count_Unset();
                     break;
                 case PlacedObject_FieldIndex.MapMarker:
-                    obj.MapMarker_Property.Unset(cmds);
+                    obj.MapMarker_Unset();
                     break;
                 case PlacedObject_FieldIndex.OpenByDefault:
                     obj.OpenByDefault = default(Boolean);
                     break;
                 case PlacedObject_FieldIndex.RagdollData:
-                    obj.RagdollData_Property.Unset(cmds);
+                    obj.RagdollData_Unset();
                     break;
                 case PlacedObject_FieldIndex.Scale:
-                    obj.Scale_Property.Unset(cmds);
+                    obj.Scale_Unset();
                     break;
                 case PlacedObject_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_Property.Unset(cmds);
+                    obj.ContainedSoul_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PlacedObject_FieldIndex.Position:
                     obj.Position = default(P3Float);
@@ -6664,45 +4605,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Base:
                     return obj.Base_Property.HasBeenSet;
                 case PlacedObject_FieldIndex.XPCIFluff:
-                    return obj.XPCIFluff_Property.HasBeenSet;
+                    return obj.XPCIFluff_IsSet;
                 case PlacedObject_FieldIndex.FULLFluff:
-                    return obj.FULLFluff_Property.HasBeenSet;
+                    return obj.FULLFluff_IsSet;
                 case PlacedObject_FieldIndex.TeleportDestination:
-                    return obj.TeleportDestination_Property.HasBeenSet;
+                    return obj.TeleportDestination_IsSet;
                 case PlacedObject_FieldIndex.Lock:
-                    return obj.Lock_Property.HasBeenSet;
+                    return obj.Lock_IsSet;
                 case PlacedObject_FieldIndex.Owner:
                     return obj.Owner_Property.HasBeenSet;
                 case PlacedObject_FieldIndex.FactionRank:
-                    return obj.FactionRank_Property.HasBeenSet;
+                    return obj.FactionRank_IsSet;
                 case PlacedObject_FieldIndex.GlobalVariable:
                     return obj.GlobalVariable_Property.HasBeenSet;
                 case PlacedObject_FieldIndex.EnableParent:
-                    return obj.EnableParent_Property.HasBeenSet;
+                    return obj.EnableParent_IsSet;
                 case PlacedObject_FieldIndex.Target:
                     return obj.Target_Property.HasBeenSet;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    return obj.SpeedTreeSeed_Property.HasBeenSet;
+                    return obj.SpeedTreeSeed_IsSet;
                 case PlacedObject_FieldIndex.DistantLODData:
-                    return obj.DistantLODData_Property.HasBeenSet;
+                    return obj.DistantLODData_IsSet;
                 case PlacedObject_FieldIndex.Charge:
-                    return obj.Charge_Property.HasBeenSet;
+                    return obj.Charge_IsSet;
                 case PlacedObject_FieldIndex.Health:
-                    return obj.Health_Property.HasBeenSet;
+                    return obj.Health_IsSet;
                 case PlacedObject_FieldIndex.LevelModifier:
-                    return obj.LevelModifier_Property.HasBeenSet;
+                    return obj.LevelModifier_IsSet;
                 case PlacedObject_FieldIndex.Unknown:
                     return obj.Unknown_Property.HasBeenSet;
                 case PlacedObject_FieldIndex.ActionFlags:
-                    return obj.ActionFlags_Property.HasBeenSet;
+                    return obj.ActionFlags_IsSet;
                 case PlacedObject_FieldIndex.Count:
-                    return obj.Count_Property.HasBeenSet;
+                    return obj.Count_IsSet;
                 case PlacedObject_FieldIndex.MapMarker:
-                    return obj.MapMarker_Property.HasBeenSet;
+                    return obj.MapMarker_IsSet;
                 case PlacedObject_FieldIndex.RagdollData:
-                    return obj.RagdollData_Property.HasBeenSet;
+                    return obj.RagdollData_IsSet;
                 case PlacedObject_FieldIndex.Scale:
-                    return obj.Scale_Property.HasBeenSet;
+                    return obj.Scale_IsSet;
                 case PlacedObject_FieldIndex.ContainedSoul:
                     return obj.ContainedSoul_Property.HasBeenSet;
                 default:
@@ -6777,27 +4718,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Base_Property.Unset(cmds.ToUnsetParams());
-            item.XPCIFluff_Property.Unset(cmds.ToUnsetParams());
-            item.FULLFluff_Property.Unset(cmds.ToUnsetParams());
-            item.TeleportDestination_Property.Unset(cmds.ToUnsetParams());
-            item.Lock_Property.Unset(cmds.ToUnsetParams());
+            item.XPCIFluff_Unset();
+            item.FULLFluff_Unset();
+            item.TeleportDestination_Unset();
+            item.Lock_Unset();
             item.Owner_Property.Unset(cmds.ToUnsetParams());
-            item.FactionRank_Property.Unset(cmds.ToUnsetParams());
+            item.FactionRank_Unset();
             item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
-            item.EnableParent_Property.Unset(cmds.ToUnsetParams());
+            item.EnableParent_Unset();
             item.Target_Property.Unset(cmds.ToUnsetParams());
-            item.SpeedTreeSeed_Property.Unset(cmds.ToUnsetParams());
-            item.DistantLODData_Property.Unset(cmds.ToUnsetParams());
-            item.Charge_Property.Unset(cmds.ToUnsetParams());
-            item.Health_Property.Unset(cmds.ToUnsetParams());
-            item.LevelModifier_Property.Unset(cmds.ToUnsetParams());
+            item.SpeedTreeSeed_Unset();
+            item.DistantLODData_Unset();
+            item.Charge_Unset();
+            item.Health_Unset();
+            item.LevelModifier_Unset();
             item.Unknown_Property.Unset(cmds.ToUnsetParams());
-            item.ActionFlags_Property.Unset(cmds.ToUnsetParams());
-            item.Count_Property.Unset(cmds.ToUnsetParams());
-            item.MapMarker_Property.Unset(cmds.ToUnsetParams());
+            item.ActionFlags_Unset();
+            item.Count_Unset();
+            item.MapMarker_Unset();
             item.OpenByDefault = default(Boolean);
-            item.RagdollData_Property.Unset(cmds.ToUnsetParams());
-            item.Scale_Property.Unset(cmds.ToUnsetParams());
+            item.RagdollData_Unset();
+            item.Scale_Unset();
             item.ContainedSoul_Property.Unset(cmds.ToUnsetParams());
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
@@ -6819,27 +4760,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Base = item.Base_Property.Equals(rhs.Base_Property, (l, r) => l == r);
-            ret.XPCIFluff = item.XPCIFluff_Property.Equals(rhs.XPCIFluff_Property, (l, r) => l.EqualsFast(r));
-            ret.FULLFluff = item.FULLFluff_Property.Equals(rhs.FULLFluff_Property, (l, r) => l.EqualsFast(r));
-            ret.TeleportDestination = item.TeleportDestination_Property.LoquiEqualsHelper(rhs.TeleportDestination_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Lock = item.Lock_Property.LoquiEqualsHelper(rhs.Lock_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && item.XPCIFluff.EqualsFast(rhs.XPCIFluff);
+            ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && item.FULLFluff.EqualsFast(rhs.FULLFluff);
+            ret.TeleportDestination = IHasBeenSetExt.LoquiEqualsHelper(item.TeleportDestination_IsSet, rhs.TeleportDestination_IsSet, item.TeleportDestination, rhs.TeleportDestination, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Lock = IHasBeenSetExt.LoquiEqualsHelper(item.Lock_IsSet, rhs.Lock_IsSet, item.Lock, rhs.Lock, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Owner = item.Owner_Property.Equals(rhs.Owner_Property, (l, r) => l == r);
-            ret.FactionRank = item.FactionRank_Property.Equals(rhs.FactionRank_Property, (l, r) => l == r);
+            ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
             ret.GlobalVariable = item.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property, (l, r) => l == r);
-            ret.EnableParent = item.EnableParent_Property.LoquiEqualsHelper(rhs.EnableParent_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.EnableParent = IHasBeenSetExt.LoquiEqualsHelper(item.EnableParent_IsSet, rhs.EnableParent_IsSet, item.EnableParent, rhs.EnableParent, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Target = item.Target_Property.Equals(rhs.Target_Property, (l, r) => l == r);
-            ret.SpeedTreeSeed = item.SpeedTreeSeed_Property.Equals(rhs.SpeedTreeSeed_Property, (l, r) => l == r);
-            ret.DistantLODData = item.DistantLODData_Property.LoquiEqualsHelper(rhs.DistantLODData_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Charge = item.Charge_Property.Equals(rhs.Charge_Property, (l, r) => l == r);
-            ret.Health = item.Health_Property.Equals(rhs.Health_Property, (l, r) => l == r);
-            ret.LevelModifier = item.LevelModifier_Property.Equals(rhs.LevelModifier_Property, (l, r) => l == r);
+            ret.SpeedTreeSeed = item.SpeedTreeSeed_IsSet == rhs.SpeedTreeSeed_IsSet && item.SpeedTreeSeed == rhs.SpeedTreeSeed;
+            ret.DistantLODData = IHasBeenSetExt.LoquiEqualsHelper(item.DistantLODData_IsSet, rhs.DistantLODData_IsSet, item.DistantLODData, rhs.DistantLODData, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Charge = item.Charge_IsSet == rhs.Charge_IsSet && item.Charge == rhs.Charge;
+            ret.Health = item.Health_IsSet == rhs.Health_IsSet && item.Health == rhs.Health;
+            ret.LevelModifier = item.LevelModifier_IsSet == rhs.LevelModifier_IsSet && item.LevelModifier == rhs.LevelModifier;
             ret.Unknown = item.Unknown_Property.Equals(rhs.Unknown_Property, (l, r) => l == r);
-            ret.ActionFlags = item.ActionFlags_Property.Equals(rhs.ActionFlags_Property, (l, r) => l == r);
-            ret.Count = item.Count_Property.Equals(rhs.Count_Property, (l, r) => l == r);
-            ret.MapMarker = item.MapMarker_Property.LoquiEqualsHelper(rhs.MapMarker_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.ActionFlags = item.ActionFlags_IsSet == rhs.ActionFlags_IsSet && item.ActionFlags == rhs.ActionFlags;
+            ret.Count = item.Count_IsSet == rhs.Count_IsSet && item.Count == rhs.Count;
+            ret.MapMarker = IHasBeenSetExt.LoquiEqualsHelper(item.MapMarker_IsSet, rhs.MapMarker_IsSet, item.MapMarker, rhs.MapMarker, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.OpenByDefault = item.OpenByDefault == rhs.OpenByDefault;
-            ret.RagdollData = item.RagdollData_Property.Equals(rhs.RagdollData_Property, (l, r) => l.EqualsFast(r));
-            ret.Scale = item.Scale_Property.Equals(rhs.Scale_Property, (l, r) => l == r);
+            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && item.RagdollData.EqualsFast(rhs.RagdollData);
+            ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale == rhs.Scale;
             ret.ContainedSoul = item.ContainedSoul_Property.Equals(rhs.ContainedSoul_Property, (l, r) => l == r);
             ret.Position = item.Position == rhs.Position;
             ret.Rotation = item.Rotation == rhs.Rotation;
@@ -6982,31 +4923,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedObject_Mask<bool?> checkMask)
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
-            if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_Property.HasBeenSet) return false;
-            if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_Property.HasBeenSet) return false;
-            if (checkMask.TeleportDestination.Overall.HasValue && checkMask.TeleportDestination.Overall.Value != item.TeleportDestination_Property.HasBeenSet) return false;
+            if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_IsSet) return false;
+            if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_IsSet) return false;
+            if (checkMask.TeleportDestination.Overall.HasValue && checkMask.TeleportDestination.Overall.Value != item.TeleportDestination_IsSet) return false;
             if (checkMask.TeleportDestination.Specific != null && (item.TeleportDestination == null || !item.TeleportDestination.HasBeenSet(checkMask.TeleportDestination.Specific))) return false;
-            if (checkMask.Lock.Overall.HasValue && checkMask.Lock.Overall.Value != item.Lock_Property.HasBeenSet) return false;
+            if (checkMask.Lock.Overall.HasValue && checkMask.Lock.Overall.Value != item.Lock_IsSet) return false;
             if (checkMask.Lock.Specific != null && (item.Lock == null || !item.Lock.HasBeenSet(checkMask.Lock.Specific))) return false;
             if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner_Property.HasBeenSet) return false;
-            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != item.FactionRank_Property.HasBeenSet) return false;
+            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != item.FactionRank_IsSet) return false;
             if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable_Property.HasBeenSet) return false;
-            if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_Property.HasBeenSet) return false;
+            if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_IsSet) return false;
             if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
             if (checkMask.Target.HasValue && checkMask.Target.Value != item.Target_Property.HasBeenSet) return false;
-            if (checkMask.SpeedTreeSeed.HasValue && checkMask.SpeedTreeSeed.Value != item.SpeedTreeSeed_Property.HasBeenSet) return false;
-            if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_Property.HasBeenSet) return false;
+            if (checkMask.SpeedTreeSeed.HasValue && checkMask.SpeedTreeSeed.Value != item.SpeedTreeSeed_IsSet) return false;
+            if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_IsSet) return false;
             if (checkMask.DistantLODData.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
-            if (checkMask.Charge.HasValue && checkMask.Charge.Value != item.Charge_Property.HasBeenSet) return false;
-            if (checkMask.Health.HasValue && checkMask.Health.Value != item.Health_Property.HasBeenSet) return false;
-            if (checkMask.LevelModifier.HasValue && checkMask.LevelModifier.Value != item.LevelModifier_Property.HasBeenSet) return false;
+            if (checkMask.Charge.HasValue && checkMask.Charge.Value != item.Charge_IsSet) return false;
+            if (checkMask.Health.HasValue && checkMask.Health.Value != item.Health_IsSet) return false;
+            if (checkMask.LevelModifier.HasValue && checkMask.LevelModifier.Value != item.LevelModifier_IsSet) return false;
             if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_Property.HasBeenSet) return false;
-            if (checkMask.ActionFlags.HasValue && checkMask.ActionFlags.Value != item.ActionFlags_Property.HasBeenSet) return false;
-            if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_Property.HasBeenSet) return false;
-            if (checkMask.MapMarker.Overall.HasValue && checkMask.MapMarker.Overall.Value != item.MapMarker_Property.HasBeenSet) return false;
+            if (checkMask.ActionFlags.HasValue && checkMask.ActionFlags.Value != item.ActionFlags_IsSet) return false;
+            if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_IsSet) return false;
+            if (checkMask.MapMarker.Overall.HasValue && checkMask.MapMarker.Overall.Value != item.MapMarker_IsSet) return false;
             if (checkMask.MapMarker.Specific != null && (item.MapMarker == null || !item.MapMarker.HasBeenSet(checkMask.MapMarker.Specific))) return false;
-            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_Property.HasBeenSet) return false;
-            if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_Property.HasBeenSet) return false;
+            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
+            if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_IsSet) return false;
             if (checkMask.ContainedSoul.HasValue && checkMask.ContainedSoul.Value != item.ContainedSoul_Property.HasBeenSet) return false;
             return true;
         }
@@ -7015,27 +4956,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PlacedObject_Mask<bool>();
             ret.Base = item.Base_Property.HasBeenSet;
-            ret.XPCIFluff = item.XPCIFluff_Property.HasBeenSet;
-            ret.FULLFluff = item.FULLFluff_Property.HasBeenSet;
-            ret.TeleportDestination = new MaskItem<bool, TeleportDestination_Mask<bool>>(item.TeleportDestination_Property.HasBeenSet, TeleportDestinationCommon.GetHasBeenSetMask(item.TeleportDestination));
-            ret.Lock = new MaskItem<bool, LockInformation_Mask<bool>>(item.Lock_Property.HasBeenSet, LockInformationCommon.GetHasBeenSetMask(item.Lock));
+            ret.XPCIFluff = item.XPCIFluff_IsSet;
+            ret.FULLFluff = item.FULLFluff_IsSet;
+            ret.TeleportDestination = new MaskItem<bool, TeleportDestination_Mask<bool>>(item.TeleportDestination_IsSet, TeleportDestinationCommon.GetHasBeenSetMask(item.TeleportDestination));
+            ret.Lock = new MaskItem<bool, LockInformation_Mask<bool>>(item.Lock_IsSet, LockInformationCommon.GetHasBeenSetMask(item.Lock));
             ret.Owner = item.Owner_Property.HasBeenSet;
-            ret.FactionRank = item.FactionRank_Property.HasBeenSet;
+            ret.FactionRank = item.FactionRank_IsSet;
             ret.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
-            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_Property.HasBeenSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
+            ret.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, EnableParentCommon.GetHasBeenSetMask(item.EnableParent));
             ret.Target = item.Target_Property.HasBeenSet;
-            ret.SpeedTreeSeed = item.SpeedTreeSeed_Property.HasBeenSet;
-            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_Property.HasBeenSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData));
-            ret.Charge = item.Charge_Property.HasBeenSet;
-            ret.Health = item.Health_Property.HasBeenSet;
-            ret.LevelModifier = item.LevelModifier_Property.HasBeenSet;
+            ret.SpeedTreeSeed = item.SpeedTreeSeed_IsSet;
+            ret.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, DistantLODDataCommon.GetHasBeenSetMask(item.DistantLODData));
+            ret.Charge = item.Charge_IsSet;
+            ret.Health = item.Health_IsSet;
+            ret.LevelModifier = item.LevelModifier_IsSet;
             ret.Unknown = item.Unknown_Property.HasBeenSet;
-            ret.ActionFlags = item.ActionFlags_Property.HasBeenSet;
-            ret.Count = item.Count_Property.HasBeenSet;
-            ret.MapMarker = new MaskItem<bool, MapMarker_Mask<bool>>(item.MapMarker_Property.HasBeenSet, MapMarkerCommon.GetHasBeenSetMask(item.MapMarker));
+            ret.ActionFlags = item.ActionFlags_IsSet;
+            ret.Count = item.Count_IsSet;
+            ret.MapMarker = new MaskItem<bool, MapMarker_Mask<bool>>(item.MapMarker_IsSet, MapMarkerCommon.GetHasBeenSetMask(item.MapMarker));
             ret.OpenByDefault = true;
-            ret.RagdollData = item.RagdollData_Property.HasBeenSet;
-            ret.Scale = item.Scale_Property.HasBeenSet;
+            ret.RagdollData = item.RagdollData_IsSet;
+            ret.Scale = item.Scale_IsSet;
             ret.ContainedSoul = item.ContainedSoul_Property.HasBeenSet;
             ret.Position = true;
             ret.Rotation = true;
@@ -7135,43 +5076,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.Base,
                     errorMask: errorMask);
             }
-            if (item.XPCIFluff_Property.HasBeenSet
+            if (item.XPCIFluff_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCIFluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.XPCIFluff),
-                    item: item.XPCIFluff_Property,
+                    item: item.XPCIFluff,
                     fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
                     errorMask: errorMask);
             }
-            if (item.FULLFluff_Property.HasBeenSet
+            if (item.FULLFluff_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FULLFluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FULLFluff),
-                    item: item.FULLFluff_Property,
+                    item: item.FULLFluff,
                     fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
                     errorMask: errorMask);
             }
-            if (item.TeleportDestination_Property.HasBeenSet
+            if (item.TeleportDestination_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
             {
                 LoquiXmlTranslation<TeleportDestination>.Instance.Write(
                     node: elem,
-                    item: item.TeleportDestination_Property,
+                    item: item.TeleportDestination,
                     name: nameof(item.TeleportDestination),
                     fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
             }
-            if (item.Lock_Property.HasBeenSet
+            if (item.Lock_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
             {
                 LoquiXmlTranslation<LockInformation>.Instance.Write(
                     node: elem,
-                    item: item.Lock_Property,
+                    item: item.Lock,
                     name: nameof(item.Lock),
                     fieldIndex: (int)PlacedObject_FieldIndex.Lock,
                     errorMask: errorMask,
@@ -7187,13 +5128,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                     errorMask: errorMask);
             }
-            if (item.FactionRank_Property.HasBeenSet
+            if (item.FactionRank_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FactionRank),
-                    item: item.FactionRank_Property,
+                    item: item.FactionRank,
                     fieldIndex: (int)PlacedObject_FieldIndex.FactionRank,
                     errorMask: errorMask);
             }
@@ -7207,12 +5148,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }
-            if (item.EnableParent_Property.HasBeenSet
+            if (item.EnableParent_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
                 LoquiXmlTranslation<EnableParent>.Instance.Write(
                     node: elem,
-                    item: item.EnableParent_Property,
+                    item: item.EnableParent,
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
                     errorMask: errorMask,
@@ -7228,54 +5169,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.Target,
                     errorMask: errorMask);
             }
-            if (item.SpeedTreeSeed_Property.HasBeenSet
+            if (item.SpeedTreeSeed_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpeedTreeSeed) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.SpeedTreeSeed),
-                    item: item.SpeedTreeSeed_Property,
+                    item: item.SpeedTreeSeed,
                     fieldIndex: (int)PlacedObject_FieldIndex.SpeedTreeSeed,
                     errorMask: errorMask);
             }
-            if (item.DistantLODData_Property.HasBeenSet
+            if (item.DistantLODData_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLODData) ?? true))
             {
                 LoquiXmlTranslation<DistantLODData>.Instance.Write(
                     node: elem,
-                    item: item.DistantLODData_Property,
+                    item: item.DistantLODData,
                     name: nameof(item.DistantLODData),
                     fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DistantLODData));
             }
-            if (item.Charge_Property.HasBeenSet
+            if (item.Charge_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Charge),
-                    item: item.Charge_Property,
+                    item: item.Charge,
                     fieldIndex: (int)PlacedObject_FieldIndex.Charge,
                     errorMask: errorMask);
             }
-            if (item.Health_Property.HasBeenSet
+            if (item.Health_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Health) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Health),
-                    item: item.Health_Property,
+                    item: item.Health,
                     fieldIndex: (int)PlacedObject_FieldIndex.Health,
                     errorMask: errorMask);
             }
-            if (item.LevelModifier_Property.HasBeenSet
+            if (item.LevelModifier_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.LevelModifier),
-                    item: item.LevelModifier_Property,
+                    item: item.LevelModifier,
                     fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
                     errorMask: errorMask);
             }
@@ -7289,32 +5230,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if (item.ActionFlags_Property.HasBeenSet
+            if (item.ActionFlags_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActionFlags) ?? true))
             {
                 EnumXmlTranslation<PlacedObject.ActionFlag>.Instance.Write(
                     node: elem,
                     name: nameof(item.ActionFlags),
-                    item: item.ActionFlags_Property,
+                    item: item.ActionFlags,
                     fieldIndex: (int)PlacedObject_FieldIndex.ActionFlags,
                     errorMask: errorMask);
             }
-            if (item.Count_Property.HasBeenSet
+            if (item.Count_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Count) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Count),
-                    item: item.Count_Property,
+                    item: item.Count,
                     fieldIndex: (int)PlacedObject_FieldIndex.Count,
                     errorMask: errorMask);
             }
-            if (item.MapMarker_Property.HasBeenSet
+            if (item.MapMarker_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
             {
                 LoquiXmlTranslation<MapMarker>.Instance.Write(
                     node: elem,
-                    item: item.MapMarker_Property,
+                    item: item.MapMarker,
                     name: nameof(item.MapMarker),
                     fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
                     errorMask: errorMask,
@@ -7325,27 +5266,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 BooleanXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.OpenByDefault),
-                    item: item.OpenByDefault_Property,
+                    item: item.OpenByDefault,
                     fieldIndex: (int)PlacedObject_FieldIndex.OpenByDefault,
                     errorMask: errorMask);
             }
-            if (item.RagdollData_Property.HasBeenSet
+            if (item.RagdollData_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RagdollData),
-                    item: item.RagdollData_Property,
+                    item: item.RagdollData,
                     fieldIndex: (int)PlacedObject_FieldIndex.RagdollData,
                     errorMask: errorMask);
             }
-            if (item.Scale_Property.HasBeenSet
+            if (item.Scale_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Scale),
-                    item: item.Scale_Property,
+                    item: item.Scale,
                     fieldIndex: (int)PlacedObject_FieldIndex.Scale,
                     errorMask: errorMask);
             }
@@ -7364,7 +5305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P3FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Position),
-                    item: item.Position_Property,
+                    item: item.Position,
                     fieldIndex: (int)PlacedObject_FieldIndex.Position,
                     errorMask: errorMask);
             }
@@ -7373,7 +5314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P3FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Rotation),
-                    item: item.Rotation_Property,
+                    item: item.Rotation,
                     fieldIndex: (int)PlacedObject_FieldIndex.Rotation,
                     errorMask: errorMask);
             }
@@ -7435,171 +5376,234 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Base_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.Base,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.NAME_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.XPCIFluff_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XPCI_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FULLFluff_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.FULL_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<TeleportDestination>.Instance.Write(
-                writer: writer,
-                item: item.TeleportDestination_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
-                errorMask: errorMask);
-            LoquiBinaryTranslation<LockInformation>.Instance.Write(
-                writer: writer,
-                item: item.Lock_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.Lock,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Owner_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.Owner,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XOWN_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FactionRank_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.FactionRank,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRNK_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.GlobalVariable_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XGLB_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<EnableParent>.Instance.Write(
-                writer: writer,
-                item: item.EnableParent_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Target_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.Target,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XTRG_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SpeedTreeSeed_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.SpeedTreeSeed,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSED_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<DistantLODData>.Instance.Write(
-                writer: writer,
-                item: item.DistantLODData_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Charge_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.Charge,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCHG_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Health_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.Health,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XHLT_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.LevelModifier_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLCM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRTM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Write(
-                writer,
-                item.ActionFlags_Property,
-                length: 4,
-                fieldIndex: (int)PlacedObject_FieldIndex.ActionFlags,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XACT_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Count_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.Count,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCNT_HEADER),
-                nullable: false);
-            if (item.MapMarker_Property.HasBeenSet)
+            if (item.Base_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Base_Property,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Base,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.NAME_HEADER),
+                    nullable: false);
+            }
+            if (item.XPCIFluff_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.XPCIFluff,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XPCI_HEADER),
+                    nullable: false);
+            }
+            if (item.FULLFluff_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FULLFluff,
+                    fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.TeleportDestination_IsSet)
+            {
+                LoquiBinaryTranslation<TeleportDestination>.Instance.Write(
+                    writer: writer,
+                    item: item.TeleportDestination,
+                    fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
+                    errorMask: errorMask);
+            }
+            if (item.Lock_IsSet)
+            {
+                LoquiBinaryTranslation<LockInformation>.Instance.Write(
+                    writer: writer,
+                    item: item.Lock,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Lock,
+                    errorMask: errorMask);
+            }
+            if (item.Owner_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Owner_Property,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Owner,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XOWN_HEADER),
+                    nullable: false);
+            }
+            if (item.FactionRank_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FactionRank,
+                    fieldIndex: (int)PlacedObject_FieldIndex.FactionRank,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRNK_HEADER),
+                    nullable: false);
+            }
+            if (item.GlobalVariable_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.GlobalVariable_Property,
+                    fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XGLB_HEADER),
+                    nullable: false);
+            }
+            if (item.EnableParent_IsSet)
+            {
+                LoquiBinaryTranslation<EnableParent>.Instance.Write(
+                    writer: writer,
+                    item: item.EnableParent,
+                    fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
+                    errorMask: errorMask);
+            }
+            if (item.Target_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Target_Property,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Target,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XTRG_HEADER),
+                    nullable: false);
+            }
+            if (item.SpeedTreeSeed_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpeedTreeSeed,
+                    fieldIndex: (int)PlacedObject_FieldIndex.SpeedTreeSeed,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSED_HEADER),
+                    nullable: false);
+            }
+            if (item.DistantLODData_IsSet)
+            {
+                LoquiBinaryTranslation<DistantLODData>.Instance.Write(
+                    writer: writer,
+                    item: item.DistantLODData,
+                    fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
+                    errorMask: errorMask);
+            }
+            if (item.Charge_IsSet)
+            {
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Charge,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Charge,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCHG_HEADER),
+                    nullable: false);
+            }
+            if (item.Health_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Health,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Health,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XHLT_HEADER),
+                    nullable: false);
+            }
+            if (item.LevelModifier_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.LevelModifier,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLCM_HEADER),
+                    nullable: false);
+            }
+            if (item.Unknown_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown_Property,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRTM_HEADER),
+                    nullable: false);
+            }
+            if (item.ActionFlags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Write(
+                    writer,
+                    item.ActionFlags,
+                    length: 4,
+                    fieldIndex: (int)PlacedObject_FieldIndex.ActionFlags,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XACT_HEADER),
+                    nullable: false);
+            }
+            if (item.Count_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Count,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Count,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCNT_HEADER),
+                    nullable: false);
+            }
+            if (item.MapMarker_IsSet)
             {
                 using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XMRK_HEADER, ObjectType.Subrecord)) { }
+                LoquiBinaryTranslation<MapMarker>.Instance.Write(
+                    writer: writer,
+                    item: item.MapMarker,
+                    fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
+                    errorMask: errorMask);
             }
-            LoquiBinaryTranslation<MapMarker>.Instance.Write(
-                writer: writer,
-                item: item.MapMarker_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
-                errorMask: errorMask);
             PlacedObject.WriteBinary_OpenByDefault(
                 writer: writer,
                 item: item,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.RagdollData_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.RagdollData,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRGD_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Scale_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.Scale,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSCL_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ContainedSoul_Property,
-                fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSOL_HEADER),
-                nullable: false);
+            if (item.RagdollData_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RagdollData,
+                    fieldIndex: (int)PlacedObject_FieldIndex.RagdollData,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRGD_HEADER),
+                    nullable: false);
+            }
+            if (item.Scale_IsSet)
+            {
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Scale,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Scale,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSCL_HEADER),
+                    nullable: false);
+            }
+            if (item.ContainedSoul_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ContainedSoul_Property,
+                    fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSOL_HEADER),
+                    nullable: false);
+            }
             if (item.DATADataTypeState.HasFlag(PlacedObject.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedObject_Registration.DATA_HEADER)))
                 {
                     Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Position_Property,
+                        item: item.Position,
                         fieldIndex: (int)PlacedObject_FieldIndex.Position,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Rotation_Property,
+                        item: item.Rotation,
                         fieldIndex: (int)PlacedObject_FieldIndex.Rotation,
                         errorMask: errorMask);
                 }

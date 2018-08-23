@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation
             LoquiGenerator gen = new LoquiGenerator()
             {
                 RaisePropertyChangedDefault = false,
-                NotifyingDefault = NotifyingType.NotifyingItem,
+                NotifyingDefault = NotifyingType.ReactiveUI,
                 ObjectCentralizedDefault = true,
                 HasBeenSetDefault = true
             };

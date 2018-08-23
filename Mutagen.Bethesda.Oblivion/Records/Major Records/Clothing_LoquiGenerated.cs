@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -34,8 +36,6 @@ namespace Mutagen.Bethesda.Oblivion
         IClothing,
         ILoquiObject<Clothing>,
         ILoquiObjectSetter,
-        IPropertySupporter<UInt32>,
-        IPropertySupporter<Single>,
         IEquatable<Clothing>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -51,100 +51,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Value
-        protected UInt32 _Value;
-        protected PropertyForwarder<Clothing, UInt32> _ValueForwarder;
-        public INotifyingSetItem<UInt32> Value_Property => _ValueForwarder ?? (_ValueForwarder = new PropertyForwarder<Clothing, UInt32>(this, (int)Clothing_FieldIndex.Value));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _Value;
         public UInt32 Value
         {
             get => this._Value;
-            set => this.SetValue(value);
+            set => this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
         }
-        protected void SetValue(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Clothing_FieldIndex.Value];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Value == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Clothing_FieldIndex.Value] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = Value;
-                _Value = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)Clothing_FieldIndex.Value,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Value = item;
-            }
-        }
-        protected void UnsetValue()
-        {
-            _hasBeenSetTracker[(int)Clothing_FieldIndex.Value] = false;
-            Value = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IClothing.Value_Property => this.Value_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IClothingGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        protected Single _Weight;
-        protected PropertyForwarder<Clothing, Single> _WeightForwarder;
-        public INotifyingSetItem<Single> Weight_Property => _WeightForwarder ?? (_WeightForwarder = new PropertyForwarder<Clothing, Single>(this, (int)Clothing_FieldIndex.Weight));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Weight;
         public Single Weight
         {
             get => this._Weight;
-            set => this.SetWeight(value);
+            set => this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
         }
-        protected void SetWeight(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Clothing_FieldIndex.Weight];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Weight == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Clothing_FieldIndex.Weight] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Weight;
-                _Weight = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Clothing_FieldIndex.Weight,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Weight = item;
-            }
-        }
-        protected void UnsetWeight()
-        {
-            _hasBeenSetTracker[(int)Clothing_FieldIndex.Weight] = false;
-            Weight = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IClothing.Weight_Property => this.Weight_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IClothingGetter.Weight_Property => this.Weight_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -575,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetValue();
+                            item.Value = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -601,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetWeight();
+                            item.Weight = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -638,281 +558,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter UInt32
-        UInt32 IPropertySupporter<UInt32>.Get(int index)
-        {
-            return GetUInt32(index: index);
-        }
-
-        protected override UInt32 GetUInt32(int index)
-        {
-            switch ((Clothing_FieldIndex)index)
-            {
-                case Clothing_FieldIndex.Value:
-                    return Value;
-                default:
-                    return base.GetUInt32(index: index);
-            }
-        }
-
-        void IPropertySupporter<UInt32>.Set(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetUInt32(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Clothing_FieldIndex)index)
-            {
-                case Clothing_FieldIndex.Value:
-                    SetValue(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetUInt32(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetUInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Clothing_FieldIndex)index)
-            {
-                case Clothing_FieldIndex.Value:
-                    SetValue(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetUInt32(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt32_subscriptions == null)
-            {
-                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
-            }
-            _UInt32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
-        {
-            return DefaultValueUInt32(index: index);
-        }
-
-        protected override UInt32 DefaultValueUInt32(int index)
-        {
-            switch ((Clothing_FieldIndex)index)
-            {
-                case Clothing_FieldIndex.Value:
-                    return default(UInt32);
-                default:
-                    return base.DefaultValueUInt32(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((Clothing_FieldIndex)index)
-            {
-                case Clothing_FieldIndex.Weight:
-                    return Weight;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Clothing_FieldIndex)index)
-            {
-                case Clothing_FieldIndex.Weight:
-                    SetWeight(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Clothing_FieldIndex)index)
-            {
-                case Clothing_FieldIndex.Weight:
-                    SetWeight(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((Clothing_FieldIndex)index)
-            {
-                case Clothing_FieldIndex.Weight:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Clothing_Registration.TRIGGERING_RECORD_TYPE;
@@ -1146,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetValue();
+                                item.Value = default(UInt32);
                             }
                         }
                         catch (Exception ex)
@@ -1170,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetWeight();
+                                item.Weight = default(Single);
                             }
                         }
                         catch (Exception ex)
@@ -1304,14 +949,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Clothing_FieldIndex.Value:
-                    this.SetValue(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.Value = (UInt32)obj;
                     break;
                 case Clothing_FieldIndex.Weight:
-                    this.SetWeight(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Weight = (Single)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1345,14 +986,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Clothing_FieldIndex.Value:
-                    obj.SetValue(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.Value = (UInt32)pair.Value;
                     break;
                 case Clothing_FieldIndex.Weight:
-                    obj.SetWeight(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Weight = (Single)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1370,10 +1007,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClothing : IClothingGetter, IClothingAbstract, ILoquiClass<IClothing, IClothingGetter>, ILoquiClass<Clothing, IClothingGetter>
     {
         new UInt32 Value { get; set; }
-        new INotifyingItem<UInt32> Value_Property { get; }
 
         new Single Weight { get; set; }
-        new INotifyingItem<Single> Weight_Property { get; }
 
     }
 
@@ -1381,12 +1016,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Value
         UInt32 Value { get; }
-        INotifyingItemGetter<UInt32> Value_Property { get; }
 
         #endregion
         #region Weight
         Single Weight { get; }
-        INotifyingItemGetter<Single> Weight_Property { get; }
 
         #endregion
 
@@ -1628,9 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Clothing_FieldIndex.Value);
                 try
                 {
-                    item.Value_Property.Set(
-                        value: rhs.Value,
-                        cmds: cmds);
+                    item.Value = rhs.Value;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1647,9 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Clothing_FieldIndex.Weight);
                 try
                 {
-                    item.Weight_Property.Set(
-                        value: rhs.Weight,
-                        cmds: cmds);
+                    item.Weight = rhs.Weight;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1929,7 +1558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Value),
-                    item: item.Value_Property,
+                    item: item.Value,
                     fieldIndex: (int)Clothing_FieldIndex.Value,
                     errorMask: errorMask);
             }
@@ -1938,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Weight),
-                    item: item.Weight_Property,
+                    item: item.Weight,
                     fieldIndex: (int)Clothing_FieldIndex.Weight,
                     errorMask: errorMask);
             }
@@ -2006,12 +1635,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Value_Property,
+                        item: item.Value,
                         fieldIndex: (int)Clothing_FieldIndex.Value,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Weight_Property,
+                        item: item.Weight,
                         fieldIndex: (int)Clothing_FieldIndex.Weight,
                         errorMask: errorMask);
                 }

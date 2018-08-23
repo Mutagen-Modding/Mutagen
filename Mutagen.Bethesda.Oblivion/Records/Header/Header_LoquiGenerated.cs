@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,13 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Header : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IHeader,
         ILoquiObject<Header>,
         ILoquiObjectSetter,
-        IPropertySupporter<Single>,
-        IPropertySupporter<Int32>,
-        IPropertySupporter<UInt32>,
         IEquatable<Header>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -51,148 +50,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Version
-        protected Single _Version;
-        protected PropertyForwarder<Header, Single> _VersionForwarder;
-        public INotifyingSetItem<Single> Version_Property => _VersionForwarder ?? (_VersionForwarder = new PropertyForwarder<Header, Single>(this, (int)Header_FieldIndex.Version));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Version;
         public Single Version
         {
             get => this._Version;
-            set => this.SetVersion(value);
+            set => this.RaiseAndSetIfChanged(ref this._Version, value, nameof(Version));
         }
-        protected void SetVersion(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Header_FieldIndex.Version];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Version == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Header_FieldIndex.Version] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = Version;
-                _Version = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Header_FieldIndex.Version,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Version = item;
-            }
-        }
-        protected void UnsetVersion()
-        {
-            _hasBeenSetTracker[(int)Header_FieldIndex.Version] = false;
-            Version = default(Single);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Single> IHeader.Version_Property => this.Version_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Single> IHeaderGetter.Version_Property => this.Version_Property;
         #endregion
         #region NumRecords
-        protected Int32 _NumRecords;
-        protected PropertyForwarder<Header, Int32> _NumRecordsForwarder;
-        public INotifyingSetItem<Int32> NumRecords_Property => _NumRecordsForwarder ?? (_NumRecordsForwarder = new PropertyForwarder<Header, Int32>(this, (int)Header_FieldIndex.NumRecords));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _NumRecords;
         public Int32 NumRecords
         {
             get => this._NumRecords;
-            set => this.SetNumRecords(value);
+            set => this.RaiseAndSetIfChanged(ref this._NumRecords, value, nameof(NumRecords));
         }
-        protected void SetNumRecords(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Header_FieldIndex.NumRecords];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && NumRecords == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Header_FieldIndex.NumRecords] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = NumRecords;
-                _NumRecords = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)Header_FieldIndex.NumRecords,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _NumRecords = item;
-            }
-        }
-        protected void UnsetNumRecords()
-        {
-            _hasBeenSetTracker[(int)Header_FieldIndex.NumRecords] = false;
-            NumRecords = default(Int32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<Int32> IHeader.NumRecords_Property => this.NumRecords_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<Int32> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
         #endregion
         #region NextObjectID
-        protected UInt32 _NextObjectID;
-        protected PropertyForwarder<Header, UInt32> _NextObjectIDForwarder;
-        public INotifyingSetItem<UInt32> NextObjectID_Property => _NextObjectIDForwarder ?? (_NextObjectIDForwarder = new PropertyForwarder<Header, UInt32>(this, (int)Header_FieldIndex.NextObjectID));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _NextObjectID;
         public UInt32 NextObjectID
         {
             get => this._NextObjectID;
-            set => this.SetNextObjectID(value);
+            set => this.RaiseAndSetIfChanged(ref this._NextObjectID, value, nameof(NextObjectID));
         }
-        protected void SetNextObjectID(
-            UInt32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Header_FieldIndex.NextObjectID];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && NextObjectID == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Header_FieldIndex.NextObjectID] = hasBeenSet;
-            }
-            if (_UInt32_subscriptions != null)
-            {
-                var tmp = NextObjectID;
-                _NextObjectID = item;
-                _UInt32_subscriptions.FireSubscriptions(
-                    index: (int)Header_FieldIndex.NextObjectID,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _NextObjectID = item;
-            }
-        }
-        protected void UnsetNextObjectID()
-        {
-            _hasBeenSetTracker[(int)Header_FieldIndex.NextObjectID] = false;
-            NextObjectID = default(UInt32);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<UInt32> IHeader.NextObjectID_Property => this.NextObjectID_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<UInt32> IHeaderGetter.NextObjectID_Property => this.NextObjectID_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -598,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetVersion();
+                            item.Version = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -624,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetNumRecords();
+                            item.NumRecords = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -650,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetNextObjectID();
+                            item.NextObjectID = default(UInt32);
                         }
                     }
                     catch (Exception ex)
@@ -683,408 +562,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.Version:
-                    return Version;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.Version:
-                    SetVersion(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.Version:
-                    SetVersion(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.Version:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.NumRecords:
-                    return NumRecords;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.NumRecords:
-                    SetNumRecords(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.NumRecords:
-                    SetNumRecords(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.NumRecords:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter UInt32
-        protected ObjectCentralizationSubscriptions<UInt32> _UInt32_subscriptions;
-        UInt32 IPropertySupporter<UInt32>.Get(int index)
-        {
-            return GetUInt32(index: index);
-        }
-
-        protected UInt32 GetUInt32(int index)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.NextObjectID:
-                    return NextObjectID;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        void IPropertySupporter<UInt32>.Set(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetUInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetUInt32(
-            int index,
-            UInt32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.NextObjectID:
-                    SetNextObjectID(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<UInt32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<UInt32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<UInt32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetUInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetUInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.NextObjectID:
-                    SetNextObjectID(
-                        item: default(UInt32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<UInt32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_UInt32_subscriptions == null)
-            {
-                _UInt32_subscriptions = new ObjectCentralizationSubscriptions<UInt32>();
-            }
-            _UInt32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<UInt32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _UInt32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<UInt32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        UInt32 IPropertySupporter<UInt32>.DefaultValue(int index)
-        {
-            return DefaultValueUInt32(index: index);
-        }
-
-        protected UInt32 DefaultValueUInt32(int index)
-        {
-            switch ((Header_FieldIndex)index)
-            {
-                case Header_FieldIndex.NextObjectID:
-                    return default(UInt32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type UInt32: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Header_Registration.TRIGGERING_RECORD_TYPE;
@@ -1307,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetVersion();
+                    item.Version = default(Single);
                 }
             }
             catch (Exception ex)
@@ -1331,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetNumRecords();
+                    item.NumRecords = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -1355,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetNextObjectID();
+                    item.NextObjectID = default(UInt32);
                 }
             }
             catch (Exception ex)
@@ -1494,19 +971,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    this.SetVersion(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.Version = (Single)obj;
                     break;
                 case Header_FieldIndex.NumRecords:
-                    this.SetNumRecords(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.NumRecords = (Int32)obj;
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    this.SetNextObjectID(
-                        (UInt32)obj,
-                        cmds: cmds);
+                    this.NextObjectID = (UInt32)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1546,19 +1017,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    obj.SetVersion(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.Version = (Single)pair.Value;
                     break;
                 case Header_FieldIndex.NumRecords:
-                    obj.SetNumRecords(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.NumRecords = (Int32)pair.Value;
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    obj.SetNextObjectID(
-                        (UInt32)pair.Value,
-                        cmds: null);
+                    obj.NextObjectID = (UInt32)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1576,13 +1041,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IHeader : IHeaderGetter, ILoquiClass<IHeader, IHeaderGetter>, ILoquiClass<Header, IHeaderGetter>
     {
         new Single Version { get; set; }
-        new INotifyingItem<Single> Version_Property { get; }
 
         new Int32 NumRecords { get; set; }
-        new INotifyingItem<Int32> NumRecords_Property { get; }
 
         new UInt32 NextObjectID { get; set; }
-        new INotifyingItem<UInt32> NextObjectID_Property { get; }
 
     }
 
@@ -1590,17 +1052,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Version
         Single Version { get; }
-        INotifyingItemGetter<Single> Version_Property { get; }
 
         #endregion
         #region NumRecords
         Int32 NumRecords { get; }
-        INotifyingItemGetter<Int32> NumRecords_Property { get; }
 
         #endregion
         #region NextObjectID
         UInt32 NextObjectID { get; }
-        INotifyingItemGetter<UInt32> NextObjectID_Property { get; }
 
         #endregion
 
@@ -1829,9 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Header_FieldIndex.Version);
                 try
                 {
-                    item.Version_Property.Set(
-                        value: rhs.Version,
-                        cmds: cmds);
+                    item.Version = rhs.Version;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1848,9 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Header_FieldIndex.NumRecords);
                 try
                 {
-                    item.NumRecords_Property.Set(
-                        value: rhs.NumRecords,
-                        cmds: cmds);
+                    item.NumRecords = rhs.NumRecords;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1867,9 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Header_FieldIndex.NextObjectID);
                 try
                 {
-                    item.NextObjectID_Property.Set(
-                        value: rhs.NextObjectID,
-                        cmds: cmds);
+                    item.NextObjectID = rhs.NextObjectID;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2086,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Version),
-                    item: item.Version_Property,
+                    item: item.Version,
                     fieldIndex: (int)Header_FieldIndex.Version,
                     errorMask: errorMask);
             }
@@ -2095,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.NumRecords),
-                    item: item.NumRecords_Property,
+                    item: item.NumRecords,
                     fieldIndex: (int)Header_FieldIndex.NumRecords,
                     errorMask: errorMask);
             }
@@ -2104,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 UInt32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.NextObjectID),
-                    item: item.NextObjectID_Property,
+                    item: item.NextObjectID,
                     fieldIndex: (int)Header_FieldIndex.NextObjectID,
                     errorMask: errorMask);
             }
@@ -2157,17 +1610,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Version_Property,
+                item: item.Version,
                 fieldIndex: (int)Header_FieldIndex.Version,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.NumRecords_Property,
+                item: item.NumRecords,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.NextObjectID_Property,
+                item: item.NextObjectID,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,
                 errorMask: errorMask);
         }

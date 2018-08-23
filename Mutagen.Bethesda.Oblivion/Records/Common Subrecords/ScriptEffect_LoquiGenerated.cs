@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,14 +30,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptEffect : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         IScriptEffect,
         ILoquiObject<ScriptEffect>,
         ILoquiObjectSetter,
         INamed,
-        IPropertySupporter<MagicSchool>,
-        IPropertySupporter<ScriptEffect.Flag>,
-        IPropertySupporter<String>,
         IEquatable<ScriptEffect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -59,52 +58,12 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Script> IScriptEffectGetter.Script_Property => this.Script_Property;
         #endregion
         #region MagicSchool
-        protected MagicSchool _MagicSchool;
-        protected PropertyForwarder<ScriptEffect, MagicSchool> _MagicSchoolForwarder;
-        public INotifyingSetItem<MagicSchool> MagicSchool_Property => _MagicSchoolForwarder ?? (_MagicSchoolForwarder = new PropertyForwarder<ScriptEffect, MagicSchool>(this, (int)ScriptEffect_FieldIndex.MagicSchool));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MagicSchool _MagicSchool;
         public MagicSchool MagicSchool
         {
             get => this._MagicSchool;
-            set => this.SetMagicSchool(value);
+            set => this.RaiseAndSetIfChanged(ref this._MagicSchool, value, nameof(MagicSchool));
         }
-        protected void SetMagicSchool(
-            MagicSchool item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.MagicSchool];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MagicSchool == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.MagicSchool] = hasBeenSet;
-            }
-            if (_MagicSchool_subscriptions != null)
-            {
-                var tmp = MagicSchool;
-                _MagicSchool = item;
-                _MagicSchool_subscriptions.FireSubscriptions(
-                    index: (int)ScriptEffect_FieldIndex.MagicSchool,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MagicSchool = item;
-            }
-        }
-        protected void UnsetMagicSchool()
-        {
-            _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.MagicSchool] = false;
-            MagicSchool = default(MagicSchool);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<MagicSchool> IScriptEffect.MagicSchool_Property => this.MagicSchool_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<MagicSchool> IScriptEffectGetter.MagicSchool_Property => this.MagicSchool_Property;
         #endregion
         #region VisualEffect
         public EDIDLink<MagicEffect> VisualEffect_Property { get; } = new EDIDLink<MagicEffect>();
@@ -114,100 +73,38 @@ namespace Mutagen.Bethesda.Oblivion
         EDIDLink<MagicEffect> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
         #endregion
         #region Flags
-        protected ScriptEffect.Flag _Flags;
-        protected PropertyForwarder<ScriptEffect, ScriptEffect.Flag> _FlagsForwarder;
-        public INotifyingSetItem<ScriptEffect.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<ScriptEffect, ScriptEffect.Flag>(this, (int)ScriptEffect_FieldIndex.Flags));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ScriptEffect.Flag _Flags;
         public ScriptEffect.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
-        protected void SetFlags(
-            ScriptEffect.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_ScriptEffectFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _ScriptEffectFlag_subscriptions.FireSubscriptions(
-                    index: (int)ScriptEffect_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
-        }
-        protected void UnsetFlags()
-        {
-            _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Flags] = false;
-            Flags = default(ScriptEffect.Flag);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<ScriptEffect.Flag> IScriptEffect.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<ScriptEffect.Flag> IScriptEffectGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<ScriptEffect, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<ScriptEffect, String>(this, (int)ScriptEffect_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ScriptEffect_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool IScriptEffectGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String IScriptEffectGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)ScriptEffect_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)ScriptEffect_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IScriptEffect.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IScriptEffectGetter.Name_Property => this.Name_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -275,8 +172,8 @@ namespace Mutagen.Bethesda.Oblivion
             if (this.MagicSchool != rhs.MagicSchool) return false;
             if (!this.VisualEffect_Property.Equals(rhs.VisualEffect_Property)) return false;
             if (this.Flags != rhs.Flags) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
@@ -290,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(MagicSchool).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(VisualEffect).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
@@ -631,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMagicSchool();
+                            item.MagicSchool = default(MagicSchool);
                         }
                     }
                     catch (Exception ex)
@@ -664,7 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(ScriptEffect.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -690,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -726,408 +623,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter MagicSchool
-        protected ObjectCentralizationSubscriptions<MagicSchool> _MagicSchool_subscriptions;
-        MagicSchool IPropertySupporter<MagicSchool>.Get(int index)
-        {
-            return GetMagicSchool(index: index);
-        }
-
-        protected MagicSchool GetMagicSchool(int index)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    return MagicSchool;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
-            }
-        }
-
-        void IPropertySupporter<MagicSchool>.Set(
-            int index,
-            MagicSchool item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMagicSchool(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMagicSchool(
-            int index,
-            MagicSchool item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    SetMagicSchool(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MagicSchool>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MagicSchool>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MagicSchool>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMagicSchool(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMagicSchool(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    SetMagicSchool(
-                        item: default(MagicSchool),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MagicSchool>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MagicSchool> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MagicSchool_subscriptions == null)
-            {
-                _MagicSchool_subscriptions = new ObjectCentralizationSubscriptions<MagicSchool>();
-            }
-            _MagicSchool_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MagicSchool>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MagicSchool_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MagicSchool>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MagicSchool IPropertySupporter<MagicSchool>.DefaultValue(int index)
-        {
-            return DefaultValueMagicSchool(index: index);
-        }
-
-        protected MagicSchool DefaultValueMagicSchool(int index)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    return default(MagicSchool);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MagicSchool: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter ScriptEffect.Flag
-        protected ObjectCentralizationSubscriptions<ScriptEffect.Flag> _ScriptEffectFlag_subscriptions;
-        ScriptEffect.Flag IPropertySupporter<ScriptEffect.Flag>.Get(int index)
-        {
-            return GetScriptEffectFlag(index: index);
-        }
-
-        protected ScriptEffect.Flag GetScriptEffectFlag(int index)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptEffect.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<ScriptEffect.Flag>.Set(
-            int index,
-            ScriptEffect.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetScriptEffectFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetScriptEffectFlag(
-            int index,
-            ScriptEffect.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptEffect.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<ScriptEffect.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<ScriptEffect.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<ScriptEffect.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetScriptEffectFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetScriptEffectFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(ScriptEffect.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptEffect.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptEffect.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<ScriptEffect.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ScriptEffectFlag_subscriptions == null)
-            {
-                _ScriptEffectFlag_subscriptions = new ObjectCentralizationSubscriptions<ScriptEffect.Flag>();
-            }
-            _ScriptEffectFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ScriptEffect.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ScriptEffectFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<ScriptEffect.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        ScriptEffect.Flag IPropertySupporter<ScriptEffect.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueScriptEffectFlag(index: index);
-        }
-
-        protected ScriptEffect.Flag DefaultValueScriptEffectFlag(int index)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.Flags:
-                    return default(ScriptEffect.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type ScriptEffect.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected String GetString(int index)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.Name:
-                    return Name;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected String DefaultValueString(int index)
-        {
-            switch ((ScriptEffect_FieldIndex)index)
-            {
-                case ScriptEffect_FieldIndex.Name:
-                    return default(String);
-                default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ScriptEffect_Registration.TRIGGERING_RECORD_TYPE;
@@ -1203,26 +698,24 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (ret.SCITDataTypeState != default(SCITDataType))
                 {
-                    object dataTypeStateSubber = new object();
+                    CompositeDisposable structUnsubber = new CompositeDisposable();
                     Action unsubAction = () =>
                     {
-                        ret.MagicSchool_Property.Unsubscribe(dataTypeStateSubber);
-                        ret.VisualEffect_Property.Unsubscribe(dataTypeStateSubber);
-                        ret.Flags_Property.Unsubscribe(dataTypeStateSubber);
+                        structUnsubber.Dispose();
                         ret.SCITDataTypeState = default(SCITDataType);
                     };
-                    ret.MagicSchool_Property.Subscribe(
-                        owner: dataTypeStateSubber,
-                        callback: unsubAction,
-                        cmds: NotifyingSubscribeParameters.NoFire);
-                    ret.VisualEffect_Property.Subscribe(
-                        owner: dataTypeStateSubber,
-                        callback: unsubAction,
-                        cmds: NotifyingSubscribeParameters.NoFire);
-                    ret.Flags_Property.Subscribe(
-                        owner: dataTypeStateSubber,
-                        callback: unsubAction,
-                        cmds: NotifyingSubscribeParameters.NoFire);
+                    structUnsubber.Add(
+                        ret.WhenAny(x => x.MagicSchool)
+                        .Skip(1)
+                        .Subscribe(unsubAction));
+                    structUnsubber.Add(
+                        ret.WhenAny(x => x.VisualEffect)
+                        .Skip(1)
+                        .Subscribe(unsubAction));
+                    structUnsubber.Add(
+                        ret.WhenAny(x => x.Flags)
+                        .Skip(1)
+                        .Subscribe(unsubAction));
                 }
             }
             catch (Exception ex)
@@ -1431,7 +924,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetMagicSchool();
+                                item.MagicSchool = default(MagicSchool);
                             }
                         }
                         catch (Exception ex)
@@ -1465,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                item.UnsetFlags();
+                                item.Flags = default(ScriptEffect.Flag);
                             }
                         }
                         catch (Exception ex)
@@ -1494,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1642,9 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
-                    this.SetMagicSchool(
-                        (MagicSchool)obj,
-                        cmds: cmds);
+                    this.MagicSchool = (MagicSchool)obj;
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
                     this.VisualEffect_Property.Set(
@@ -1652,14 +1143,10 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
-                    this.SetFlags(
-                        (ScriptEffect.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (ScriptEffect.Flag)obj;
                     break;
                 case ScriptEffect_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1704,9 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
-                    obj.SetMagicSchool(
-                        (MagicSchool)pair.Value,
-                        cmds: null);
+                    obj.MagicSchool = (MagicSchool)pair.Value;
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
                     obj.VisualEffect_Property.Set(
@@ -1714,14 +1199,10 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (ScriptEffect.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (ScriptEffect.Flag)pair.Value;
                     break;
                 case ScriptEffect_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1740,14 +1221,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Script Script { get; set; }
         new MagicSchool MagicSchool { get; set; }
-        new INotifyingItem<MagicSchool> MagicSchool_Property { get; }
 
         new MagicEffect VisualEffect { get; set; }
         new ScriptEffect.Flag Flags { get; set; }
-        new INotifyingItem<ScriptEffect.Flag> Flags_Property { get; }
 
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
     }
 
@@ -1760,7 +1241,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MagicSchool
         MagicSchool MagicSchool { get; }
-        INotifyingItemGetter<MagicSchool> MagicSchool_Property { get; }
 
         #endregion
         #region VisualEffect
@@ -1770,12 +1250,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         ScriptEffect.Flag Flags { get; }
-        INotifyingItemGetter<ScriptEffect.Flag> Flags_Property { get; }
 
         #endregion
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
 
@@ -2048,9 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
                 try
                 {
-                    item.MagicSchool_Property.Set(
-                        value: rhs.MagicSchool,
-                        cmds: cmds);
+                    item.MagicSchool = rhs.MagicSchool;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2086,9 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
-                        cmds: cmds);
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2105,9 +1580,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2139,7 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case ScriptEffect_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2155,19 +1641,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptEffect_FieldIndex.Script:
-                    obj.Script = default(FormIDLink<Script>);
+                    obj.Script_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
                     obj.MagicSchool = default(MagicSchool);
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
-                    obj.VisualEffect = default(EDIDLink<MagicEffect>);
+                    obj.VisualEffect_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case ScriptEffect_FieldIndex.Flags:
                     obj.Flags = default(ScriptEffect.Flag);
                     break;
                 case ScriptEffect_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2187,7 +1673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.Flags:
                     return true;
                 case ScriptEffect_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2219,11 +1705,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffect item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Script = default(FormIDLink<Script>);
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.MagicSchool = default(MagicSchool);
-            item.VisualEffect = default(EDIDLink<MagicEffect>);
+            item.VisualEffect_Property.Unset(cmds.ToUnsetParams());
             item.Flags = default(ScriptEffect.Flag);
-            item.Name_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Unset();
         }
 
         public static ScriptEffect_Mask<bool> GetEqualsMask(
@@ -2245,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.VisualEffect = item.VisualEffect == rhs.VisualEffect;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
         }
 
         public static string ToString(
@@ -2303,7 +1789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptEffectGetter item,
             ScriptEffect_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             return true;
         }
 
@@ -2314,7 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MagicSchool = true;
             ret.VisualEffect = true;
             ret.Flags = true;
-            ret.Name = item.Name_Property.HasBeenSet;
+            ret.Name = item.Name_IsSet;
             return ret;
         }
 
@@ -2365,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<MagicSchool>.Instance.Write(
                     node: elem,
                     name: nameof(item.MagicSchool),
-                    item: item.MagicSchool_Property,
+                    item: item.MagicSchool,
                     fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                     errorMask: errorMask);
             }
@@ -2383,17 +1869,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Name,
                     errorMask: errorMask);
             }
@@ -2453,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
                             writer,
-                            item.MagicSchool_Property,
+                            item.MagicSchool,
                             length: 4,
                             fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                             errorMask: errorMask);
@@ -2466,7 +1952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
                                 writer,
-                                item.Flags_Property,
+                                item.Flags,
                                 length: 4,
                                 fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                                 errorMask: errorMask);
@@ -2474,13 +1960,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)ScriptEffect_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.FULL_HEADER),
-                nullable: false);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.FULL_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

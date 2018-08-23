@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,11 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class TeleportDestination : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         ITeleportDestination,
         ILoquiObject<TeleportDestination>,
         ILoquiObjectSetter,
-        IPropertySupporter<P3Float>,
         IEquatable<TeleportDestination>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -56,100 +57,20 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Door> ITeleportDestinationGetter.Door_Property => this.Door_Property;
         #endregion
         #region Position
-        protected P3Float _Position;
-        protected PropertyForwarder<TeleportDestination, P3Float> _PositionForwarder;
-        public INotifyingSetItem<P3Float> Position_Property => _PositionForwarder ?? (_PositionForwarder = new PropertyForwarder<TeleportDestination, P3Float>(this, (int)TeleportDestination_FieldIndex.Position));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3Float _Position;
         public P3Float Position
         {
             get => this._Position;
-            set => this.SetPosition(value);
+            set => this.RaiseAndSetIfChanged(ref this._Position, value, nameof(Position));
         }
-        protected void SetPosition(
-            P3Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)TeleportDestination_FieldIndex.Position];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Position == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)TeleportDestination_FieldIndex.Position] = hasBeenSet;
-            }
-            if (_P3Float_subscriptions != null)
-            {
-                var tmp = Position;
-                _Position = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)TeleportDestination_FieldIndex.Position,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Position = item;
-            }
-        }
-        protected void UnsetPosition()
-        {
-            _hasBeenSetTracker[(int)TeleportDestination_FieldIndex.Position] = false;
-            Position = default(P3Float);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> ITeleportDestination.Position_Property => this.Position_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> ITeleportDestinationGetter.Position_Property => this.Position_Property;
         #endregion
         #region Rotation
-        protected P3Float _Rotation;
-        protected PropertyForwarder<TeleportDestination, P3Float> _RotationForwarder;
-        public INotifyingSetItem<P3Float> Rotation_Property => _RotationForwarder ?? (_RotationForwarder = new PropertyForwarder<TeleportDestination, P3Float>(this, (int)TeleportDestination_FieldIndex.Rotation));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3Float _Rotation;
         public P3Float Rotation
         {
             get => this._Rotation;
-            set => this.SetRotation(value);
+            set => this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
         }
-        protected void SetRotation(
-            P3Float item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)TeleportDestination_FieldIndex.Rotation];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Rotation == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)TeleportDestination_FieldIndex.Rotation] = hasBeenSet;
-            }
-            if (_P3Float_subscriptions != null)
-            {
-                var tmp = Rotation;
-                _Rotation = item;
-                _P3Float_subscriptions.FireSubscriptions(
-                    index: (int)TeleportDestination_FieldIndex.Rotation,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Rotation = item;
-            }
-        }
-        protected void UnsetRotation()
-        {
-            _hasBeenSetTracker[(int)TeleportDestination_FieldIndex.Rotation] = false;
-            Rotation = default(P3Float);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<P3Float> ITeleportDestination.Rotation_Property => this.Rotation_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<P3Float> ITeleportDestinationGetter.Rotation_Property => this.Rotation_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -562,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPosition();
+                            item.Position = default(P3Float);
                         }
                     }
                     catch (Exception ex)
@@ -588,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetRotation();
+                            item.Rotation = default(P3Float);
                         }
                     }
                     catch (Exception ex)
@@ -621,151 +542,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter P3Float
-        protected ObjectCentralizationSubscriptions<P3Float> _P3Float_subscriptions;
-        P3Float IPropertySupporter<P3Float>.Get(int index)
-        {
-            return GetP3Float(index: index);
-        }
-
-        protected P3Float GetP3Float(int index)
-        {
-            switch ((TeleportDestination_FieldIndex)index)
-            {
-                case TeleportDestination_FieldIndex.Position:
-                    return Position;
-                case TeleportDestination_FieldIndex.Rotation:
-                    return Rotation;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        void IPropertySupporter<P3Float>.Set(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP3Float(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP3Float(
-            int index,
-            P3Float item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((TeleportDestination_FieldIndex)index)
-            {
-                case TeleportDestination_FieldIndex.Position:
-                    SetPosition(item, hasBeenSet, cmds);
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    SetRotation(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P3Float>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P3Float>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P3Float>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP3Float(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP3Float(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((TeleportDestination_FieldIndex)index)
-            {
-                case TeleportDestination_FieldIndex.Position:
-                    SetPosition(
-                        item: default(P3Float),
-                        hasBeenSet: false);
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    SetRotation(
-                        item: default(P3Float),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P3Float> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P3Float_subscriptions == null)
-            {
-                _P3Float_subscriptions = new ObjectCentralizationSubscriptions<P3Float>();
-            }
-            _P3Float_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P3Float>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P3Float_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P3Float>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P3Float IPropertySupporter<P3Float>.DefaultValue(int index)
-        {
-            return DefaultValueP3Float(index: index);
-        }
-
-        protected P3Float DefaultValueP3Float(int index)
-        {
-            switch ((TeleportDestination_FieldIndex)index)
-            {
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
-                    return default(P3Float);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P3Float: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = TeleportDestination_Registration.TRIGGERING_RECORD_TYPE;
@@ -999,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetPosition();
+                    item.Position = default(P3Float);
                 }
             }
             catch (Exception ex)
@@ -1023,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetRotation();
+                    item.Rotation = default(P3Float);
                 }
             }
             catch (Exception ex)
@@ -1167,14 +943,10 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case TeleportDestination_FieldIndex.Position:
-                    this.SetPosition(
-                        (P3Float)obj,
-                        cmds: cmds);
+                    this.Position = (P3Float)obj;
                     break;
                 case TeleportDestination_FieldIndex.Rotation:
-                    this.SetRotation(
-                        (P3Float)obj,
-                        cmds: cmds);
+                    this.Rotation = (P3Float)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1219,14 +991,10 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case TeleportDestination_FieldIndex.Position:
-                    obj.SetPosition(
-                        (P3Float)pair.Value,
-                        cmds: null);
+                    obj.Position = (P3Float)pair.Value;
                     break;
                 case TeleportDestination_FieldIndex.Rotation:
-                    obj.SetRotation(
-                        (P3Float)pair.Value,
-                        cmds: null);
+                    obj.Rotation = (P3Float)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1245,10 +1013,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Door Door { get; set; }
         new P3Float Position { get; set; }
-        new INotifyingItem<P3Float> Position_Property { get; }
 
         new P3Float Rotation { get; set; }
-        new INotifyingItem<P3Float> Rotation_Property { get; }
 
     }
 
@@ -1261,12 +1027,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Position
         P3Float Position { get; }
-        INotifyingItemGetter<P3Float> Position_Property { get; }
 
         #endregion
         #region Rotation
         P3Float Rotation { get; }
-        INotifyingItemGetter<P3Float> Rotation_Property { get; }
 
         #endregion
 
@@ -1514,9 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
                 try
                 {
-                    item.Position_Property.Set(
-                        value: rhs.Position,
-                        cmds: cmds);
+                    item.Position = rhs.Position;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1533,9 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
                 try
                 {
-                    item.Rotation_Property.Set(
-                        value: rhs.Rotation,
-                        cmds: cmds);
+                    item.Rotation = rhs.Rotation;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1579,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Door:
-                    obj.Door = default(FormIDLink<Door>);
+                    obj.Door_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     obj.Position = default(P3Float);
@@ -1630,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestination item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Door = default(FormIDLink<Door>);
+            item.Door_Property.Unset(cmds.ToUnsetParams());
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
         }
@@ -1761,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P3FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Position),
-                    item: item.Position_Property,
+                    item: item.Position,
                     fieldIndex: (int)TeleportDestination_FieldIndex.Position,
                     errorMask: errorMask);
             }
@@ -1770,7 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 P3FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Rotation),
-                    item: item.Rotation_Property,
+                    item: item.Rotation,
                     fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
                     errorMask: errorMask);
             }
@@ -1828,12 +1588,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Position_Property,
+                item: item.Position,
                 fieldIndex: (int)TeleportDestination_FieldIndex.Position,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Rotation_Property,
+                item: item.Rotation,
                 fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
                 errorMask: errorMask);
         }

@@ -20,18 +20,6 @@ namespace Mutagen.Bethesda.Oblivion
             MasserSecunda,
         }
 
-        partial void CustomCtor()
-        {
-            this._SunriseBegin = NotifyingItem.Factory<DateTime>(
-                converter: (d) => DateConverter(d));
-            this._SunriseEnd = NotifyingItem.Factory<DateTime>(
-                converter: (d) => DateConverter(d));
-            this._SunsetBegin = NotifyingItem.Factory<DateTime>(
-                converter: (d) => DateConverter(d));
-            this._SunsetEnd = NotifyingItem.Factory<DateTime>(
-                converter: (d) => DateConverter(d));
-        }
-
         private static DateTime DateConverter(DateTime d)
         {
             return DateTime.MinValue

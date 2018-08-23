@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -35,15 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Cell>,
         ILoquiObjectSetter,
         INamed, IPlace,
-        IPropertySupporter<String>,
-        IPropertySupporter<Cell.Flag>,
-        IPropertySupporter<P2Int>,
-        IPropertySupporter<CellLighting>,
-        IPropertySupporter<MusicType>,
-        IPropertySupporter<Single>,
-        IPropertySupporter<Int32>,
-        IPropertySupporter<PathGrid>,
-        IPropertySupporter<Landscape>,
         IEquatable<Cell>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -59,196 +52,109 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        protected String _Name;
-        protected PropertyForwarder<Cell, String> _NameForwarder;
-        public INotifyingSetItem<String> Name_Property => _NameForwarder ?? (_NameForwarder = new PropertyForwarder<Cell, String>(this, (int)Cell_FieldIndex.Name));
+        public bool Name_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Cell_FieldIndex.Name];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Name, nameof(Name_IsSet));
+        }
+        bool ICellGetter.Name_IsSet => Name_IsSet;
+        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name;
-            set => this.SetName(value);
+            set => Name_Set(value);
         }
-        protected void SetName(
-            String item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        String ICellGetter.Name => this.Name;
+        public void Name_Set(
+            String value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Cell_FieldIndex.Name];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Name == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Cell_FieldIndex.Name] = hasBeenSet;
-            }
-            if (_String_subscriptions != null)
-            {
-                var tmp = Name;
-                _Name = item;
-                _String_subscriptions.FireSubscriptions(
-                    index: (int)Cell_FieldIndex.Name,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Name = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
-        protected void UnsetName()
+        public void Name_Unset()
         {
-            _hasBeenSetTracker[(int)Cell_FieldIndex.Name] = false;
-            Name = default(String);
+            this.Name_Set(default(String), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> ICell.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> ICellGetter.Name_Property => this.Name_Property;
         #endregion
         #region Flags
-        protected Cell.Flag _Flags;
-        protected PropertyForwarder<Cell, Cell.Flag> _FlagsForwarder;
-        public INotifyingSetItem<Cell.Flag> Flags_Property => _FlagsForwarder ?? (_FlagsForwarder = new PropertyForwarder<Cell, Cell.Flag>(this, (int)Cell_FieldIndex.Flags));
+        public bool Flags_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Cell_FieldIndex.Flags];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Flags, nameof(Flags_IsSet));
+        }
+        bool ICellGetter.Flags_IsSet => Flags_IsSet;
+        private Cell.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Cell.Flag Flags
         {
             get => this._Flags;
-            set => this.SetFlags(value);
+            set => Flags_Set(value);
         }
-        protected void SetFlags(
-            Cell.Flag item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Cell.Flag ICellGetter.Flags => this.Flags;
+        public void Flags_Set(
+            Cell.Flag value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Cell_FieldIndex.Flags];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Flags == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Cell_FieldIndex.Flags] = hasBeenSet;
-            }
-            if (_CellFlag_subscriptions != null)
-            {
-                var tmp = Flags;
-                _Flags = item;
-                _CellFlag_subscriptions.FireSubscriptions(
-                    index: (int)Cell_FieldIndex.Flags,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Flags = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Flags, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Flags, nameof(Flags), nameof(Flags_IsSet));
         }
-        protected void UnsetFlags()
+        public void Flags_Unset()
         {
-            _hasBeenSetTracker[(int)Cell_FieldIndex.Flags] = false;
-            Flags = default(Cell.Flag);
+            this.Flags_Set(default(Cell.Flag), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Cell.Flag> ICell.Flags_Property => this.Flags_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Cell.Flag> ICellGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Grid
-        protected P2Int _Grid;
-        protected PropertyForwarder<Cell, P2Int> _GridForwarder;
-        public INotifyingSetItem<P2Int> Grid_Property => _GridForwarder ?? (_GridForwarder = new PropertyForwarder<Cell, P2Int>(this, (int)Cell_FieldIndex.Grid));
+        public bool Grid_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Cell_FieldIndex.Grid];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Grid, nameof(Grid_IsSet));
+        }
+        bool ICellGetter.Grid_IsSet => Grid_IsSet;
+        private P2Int _Grid;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public P2Int Grid
         {
             get => this._Grid;
-            set => this.SetGrid(value);
+            set => Grid_Set(value);
         }
-        protected void SetGrid(
-            P2Int item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        P2Int ICellGetter.Grid => this.Grid;
+        public void Grid_Set(
+            P2Int value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Cell_FieldIndex.Grid];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Grid == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Cell_FieldIndex.Grid] = hasBeenSet;
-            }
-            if (_P2Int_subscriptions != null)
-            {
-                var tmp = Grid;
-                _Grid = item;
-                _P2Int_subscriptions.FireSubscriptions(
-                    index: (int)Cell_FieldIndex.Grid,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Grid = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Grid, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Grid, nameof(Grid), nameof(Grid_IsSet));
         }
-        protected void UnsetGrid()
+        public void Grid_Unset()
         {
-            _hasBeenSetTracker[(int)Cell_FieldIndex.Grid] = false;
-            Grid = default(P2Int);
+            this.Grid_Set(default(P2Int), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<P2Int> ICell.Grid_Property => this.Grid_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<P2Int> ICellGetter.Grid_Property => this.Grid_Property;
         #endregion
         #region Lighting
-        protected CellLighting _Lighting;
-        protected PropertyForwarder<Cell, CellLighting> _LightingForwarder;
-        public INotifyingSetItem<CellLighting> Lighting_Property => _LightingForwarder ?? (_LightingForwarder = new PropertyForwarder<Cell, CellLighting>(this, (int)Cell_FieldIndex.Lighting));
+        public bool Lighting_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Cell_FieldIndex.Lighting];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Lighting, nameof(Lighting_IsSet));
+        }
+        bool ICellGetter.Lighting_IsSet => Lighting_IsSet;
+        private CellLighting _Lighting;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public CellLighting Lighting
         {
-            get => this._Lighting;
-            set => this.SetLighting(value);
+            get => _Lighting;
+            set => Lighting_Set(value);
         }
-        protected void SetLighting(
-            CellLighting item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Lighting_Set(
+            CellLighting value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Cell_FieldIndex.Lighting];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Lighting, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Cell_FieldIndex.Lighting] = hasBeenSet;
-            }
-            if (_CellLighting_subscriptions != null)
-            {
-                var tmp = Lighting;
-                _Lighting = item;
-                _CellLighting_subscriptions.FireSubscriptions(
-                    index: (int)Cell_FieldIndex.Lighting,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Lighting = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Lighting, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Lighting, nameof(Lighting), nameof(Lighting_IsSet));
         }
-        protected void UnsetLighting()
+        public void Lighting_Unset()
         {
-            _hasBeenSetTracker[(int)Cell_FieldIndex.Lighting] = false;
-            Lighting = default(CellLighting);
+            this.Lighting_Set(default(CellLighting), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<CellLighting> ICell.Lighting_Property => this.Lighting_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<CellLighting> ICellGetter.Lighting_Property => this.Lighting_Property;
+        CellLighting ICellGetter.Lighting => this.Lighting;
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -269,100 +175,56 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MusicType
-        protected MusicType _MusicType;
-        protected PropertyForwarder<Cell, MusicType> _MusicTypeForwarder;
-        public INotifyingSetItem<MusicType> MusicType_Property => _MusicTypeForwarder ?? (_MusicTypeForwarder = new PropertyForwarder<Cell, MusicType>(this, (int)Cell_FieldIndex.MusicType));
+        public bool MusicType_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Cell_FieldIndex.MusicType];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.MusicType, nameof(MusicType_IsSet));
+        }
+        bool ICellGetter.MusicType_IsSet => MusicType_IsSet;
+        private MusicType _MusicType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MusicType MusicType
         {
             get => this._MusicType;
-            set => this.SetMusicType(value);
+            set => MusicType_Set(value);
         }
-        protected void SetMusicType(
-            MusicType item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        MusicType ICellGetter.MusicType => this.MusicType;
+        public void MusicType_Set(
+            MusicType value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Cell_FieldIndex.MusicType];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && MusicType == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Cell_FieldIndex.MusicType] = hasBeenSet;
-            }
-            if (_MusicType_subscriptions != null)
-            {
-                var tmp = MusicType;
-                _MusicType = item;
-                _MusicType_subscriptions.FireSubscriptions(
-                    index: (int)Cell_FieldIndex.MusicType,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _MusicType = item;
-            }
+            this.RaiseAndSetIfChanged(ref _MusicType, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.MusicType, nameof(MusicType), nameof(MusicType_IsSet));
         }
-        protected void UnsetMusicType()
+        public void MusicType_Unset()
         {
-            _hasBeenSetTracker[(int)Cell_FieldIndex.MusicType] = false;
-            MusicType = default(MusicType);
+            this.MusicType_Set(default(MusicType), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<MusicType> ICell.MusicType_Property => this.MusicType_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<MusicType> ICellGetter.MusicType_Property => this.MusicType_Property;
         #endregion
         #region WaterHeight
-        protected Single _WaterHeight;
-        protected PropertyForwarder<Cell, Single> _WaterHeightForwarder;
-        public INotifyingSetItem<Single> WaterHeight_Property => _WaterHeightForwarder ?? (_WaterHeightForwarder = new PropertyForwarder<Cell, Single>(this, (int)Cell_FieldIndex.WaterHeight));
+        public bool WaterHeight_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Cell_FieldIndex.WaterHeight];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.WaterHeight, nameof(WaterHeight_IsSet));
+        }
+        bool ICellGetter.WaterHeight_IsSet => WaterHeight_IsSet;
+        private Single _WaterHeight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single WaterHeight
         {
             get => this._WaterHeight;
-            set => this.SetWaterHeight(value);
+            set => WaterHeight_Set(value);
         }
-        protected void SetWaterHeight(
-            Single item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Single ICellGetter.WaterHeight => this.WaterHeight;
+        public void WaterHeight_Set(
+            Single value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Cell_FieldIndex.WaterHeight];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && WaterHeight == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Cell_FieldIndex.WaterHeight] = hasBeenSet;
-            }
-            if (_Single_subscriptions != null)
-            {
-                var tmp = WaterHeight;
-                _WaterHeight = item;
-                _Single_subscriptions.FireSubscriptions(
-                    index: (int)Cell_FieldIndex.WaterHeight,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _WaterHeight = item;
-            }
+            this.RaiseAndSetIfChanged(ref _WaterHeight, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.WaterHeight, nameof(WaterHeight), nameof(WaterHeight_IsSet));
         }
-        protected void UnsetWaterHeight()
+        public void WaterHeight_Unset()
         {
-            _hasBeenSetTracker[(int)Cell_FieldIndex.WaterHeight] = false;
-            WaterHeight = default(Single);
+            this.WaterHeight_Set(default(Single), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Single> ICell.WaterHeight_Property => this.WaterHeight_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Single> ICellGetter.WaterHeight_Property => this.WaterHeight_Property;
         #endregion
         #region Climate
         public FormIDSetLink<Climate> Climate_Property { get; } = new FormIDSetLink<Climate>();
@@ -386,52 +248,30 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Faction> ICellGetter.Owner_Property => this.Owner_Property;
         #endregion
         #region FactionRank
-        protected Int32 _FactionRank;
-        protected PropertyForwarder<Cell, Int32> _FactionRankForwarder;
-        public INotifyingSetItem<Int32> FactionRank_Property => _FactionRankForwarder ?? (_FactionRankForwarder = new PropertyForwarder<Cell, Int32>(this, (int)Cell_FieldIndex.FactionRank));
+        public bool FactionRank_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Cell_FieldIndex.FactionRank];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.FactionRank, nameof(FactionRank_IsSet));
+        }
+        bool ICellGetter.FactionRank_IsSet => FactionRank_IsSet;
+        private Int32 _FactionRank;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 FactionRank
         {
             get => this._FactionRank;
-            set => this.SetFactionRank(value);
+            set => FactionRank_Set(value);
         }
-        protected void SetFactionRank(
-            Int32 item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        Int32 ICellGetter.FactionRank => this.FactionRank;
+        public void FactionRank_Set(
+            Int32 value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Cell_FieldIndex.FactionRank];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && FactionRank == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Cell_FieldIndex.FactionRank] = hasBeenSet;
-            }
-            if (_Int32_subscriptions != null)
-            {
-                var tmp = FactionRank;
-                _FactionRank = item;
-                _Int32_subscriptions.FireSubscriptions(
-                    index: (int)Cell_FieldIndex.FactionRank,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _FactionRank = item;
-            }
+            this.RaiseAndSetIfChanged(ref _FactionRank, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.FactionRank, nameof(FactionRank), nameof(FactionRank_IsSet));
         }
-        protected void UnsetFactionRank()
+        public void FactionRank_Unset()
         {
-            _hasBeenSetTracker[(int)Cell_FieldIndex.FactionRank] = false;
-            FactionRank = default(Int32);
+            this.FactionRank_Set(default(Int32), false);
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Int32> ICell.FactionRank_Property => this.FactionRank_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Int32> ICellGetter.FactionRank_Property => this.FactionRank_Property;
         #endregion
         #region GlobalVariable
         public FormIDSetLink<Global> GlobalVariable_Property { get; } = new FormIDSetLink<Global>();
@@ -441,100 +281,58 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Global> ICellGetter.GlobalVariable_Property => this.GlobalVariable_Property;
         #endregion
         #region PathGrid
-        protected PathGrid _PathGrid;
-        protected PropertyForwarder<Cell, PathGrid> _PathGridForwarder;
-        public INotifyingSetItem<PathGrid> PathGrid_Property => _PathGridForwarder ?? (_PathGridForwarder = new PropertyForwarder<Cell, PathGrid>(this, (int)Cell_FieldIndex.PathGrid));
+        public bool PathGrid_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Cell_FieldIndex.PathGrid];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.PathGrid, nameof(PathGrid_IsSet));
+        }
+        bool ICellGetter.PathGrid_IsSet => PathGrid_IsSet;
+        private PathGrid _PathGrid;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public PathGrid PathGrid
         {
-            get => this._PathGrid;
-            set => this.SetPathGrid(value);
+            get => _PathGrid;
+            set => PathGrid_Set(value);
         }
-        protected void SetPathGrid(
-            PathGrid item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void PathGrid_Set(
+            PathGrid value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Cell_FieldIndex.PathGrid];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(PathGrid, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Cell_FieldIndex.PathGrid] = hasBeenSet;
-            }
-            if (_PathGrid_subscriptions != null)
-            {
-                var tmp = PathGrid;
-                _PathGrid = item;
-                _PathGrid_subscriptions.FireSubscriptions(
-                    index: (int)Cell_FieldIndex.PathGrid,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _PathGrid = item;
-            }
+            this.RaiseAndSetIfChanged(ref _PathGrid, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.PathGrid, nameof(PathGrid), nameof(PathGrid_IsSet));
         }
-        protected void UnsetPathGrid()
+        public void PathGrid_Unset()
         {
-            _hasBeenSetTracker[(int)Cell_FieldIndex.PathGrid] = false;
-            PathGrid = default(PathGrid);
+            this.PathGrid_Set(default(PathGrid), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<PathGrid> ICell.PathGrid_Property => this.PathGrid_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<PathGrid> ICellGetter.PathGrid_Property => this.PathGrid_Property;
+        PathGrid ICellGetter.PathGrid => this.PathGrid;
         #endregion
         #region Landscape
-        protected Landscape _Landscape;
-        protected PropertyForwarder<Cell, Landscape> _LandscapeForwarder;
-        public INotifyingSetItem<Landscape> Landscape_Property => _LandscapeForwarder ?? (_LandscapeForwarder = new PropertyForwarder<Cell, Landscape>(this, (int)Cell_FieldIndex.Landscape));
+        public bool Landscape_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Cell_FieldIndex.Landscape];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)Cell_FieldIndex.Landscape, nameof(Landscape_IsSet));
+        }
+        bool ICellGetter.Landscape_IsSet => Landscape_IsSet;
+        private Landscape _Landscape;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Landscape Landscape
         {
-            get => this._Landscape;
-            set => this.SetLandscape(value);
+            get => _Landscape;
+            set => Landscape_Set(value);
         }
-        protected void SetLandscape(
-            Landscape item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
+        public void Landscape_Set(
+            Landscape value,
+            bool markSet = true)
         {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)Cell_FieldIndex.Landscape];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && object.Equals(Landscape, item)) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)Cell_FieldIndex.Landscape] = hasBeenSet;
-            }
-            if (_Landscape_subscriptions != null)
-            {
-                var tmp = Landscape;
-                _Landscape = item;
-                _Landscape_subscriptions.FireSubscriptions(
-                    index: (int)Cell_FieldIndex.Landscape,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Landscape = item;
-            }
+            this.RaiseAndSetIfChanged(ref _Landscape, value, _hasBeenSetTracker, markSet, (int)Cell_FieldIndex.Landscape, nameof(Landscape), nameof(Landscape_IsSet));
         }
-        protected void UnsetLandscape()
+        public void Landscape_Unset()
         {
-            _hasBeenSetTracker[(int)Cell_FieldIndex.Landscape] = false;
-            Landscape = default(Landscape);
+            this.Landscape_Set(default(Landscape), false);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<Landscape> ICell.Landscape_Property => this.Landscape_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<Landscape> ICellGetter.Landscape_Property => this.Landscape_Property;
+        Landscape ICellGetter.Landscape => this.Landscape;
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -649,23 +447,23 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet != rhs.Name_IsSet) return false;
+            if (Name_IsSet)
             {
                 if (!object.Equals(this.Name, rhs.Name)) return false;
             }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet != rhs.Flags_IsSet) return false;
+            if (Flags_IsSet)
             {
                 if (this.Flags != rhs.Flags) return false;
             }
-            if (Grid_Property.HasBeenSet != rhs.Grid_Property.HasBeenSet) return false;
-            if (Grid_Property.HasBeenSet)
+            if (Grid_IsSet != rhs.Grid_IsSet) return false;
+            if (Grid_IsSet)
             {
                 if (this.Grid != rhs.Grid) return false;
             }
-            if (Lighting_Property.HasBeenSet != rhs.Lighting_Property.HasBeenSet) return false;
-            if (Lighting_Property.HasBeenSet)
+            if (Lighting_IsSet != rhs.Lighting_IsSet) return false;
+            if (Lighting_IsSet)
             {
                 if (!object.Equals(this.Lighting, rhs.Lighting)) return false;
             }
@@ -674,13 +472,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Regions.SequenceEqual(rhs.Regions)) return false;
             }
-            if (MusicType_Property.HasBeenSet != rhs.MusicType_Property.HasBeenSet) return false;
-            if (MusicType_Property.HasBeenSet)
+            if (MusicType_IsSet != rhs.MusicType_IsSet) return false;
+            if (MusicType_IsSet)
             {
                 if (this.MusicType != rhs.MusicType) return false;
             }
-            if (WaterHeight_Property.HasBeenSet != rhs.WaterHeight_Property.HasBeenSet) return false;
-            if (WaterHeight_Property.HasBeenSet)
+            if (WaterHeight_IsSet != rhs.WaterHeight_IsSet) return false;
+            if (WaterHeight_IsSet)
             {
                 if (!this.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
             }
@@ -699,8 +497,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Owner_Property.Equals(rhs.Owner_Property)) return false;
             }
-            if (FactionRank_Property.HasBeenSet != rhs.FactionRank_Property.HasBeenSet) return false;
-            if (FactionRank_Property.HasBeenSet)
+            if (FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
+            if (FactionRank_IsSet)
             {
                 if (this.FactionRank != rhs.FactionRank) return false;
             }
@@ -709,13 +507,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
             }
-            if (PathGrid_Property.HasBeenSet != rhs.PathGrid_Property.HasBeenSet) return false;
-            if (PathGrid_Property.HasBeenSet)
+            if (PathGrid_IsSet != rhs.PathGrid_IsSet) return false;
+            if (PathGrid_IsSet)
             {
                 if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
             }
-            if (Landscape_Property.HasBeenSet != rhs.Landscape_Property.HasBeenSet) return false;
-            if (Landscape_Property.HasBeenSet)
+            if (Landscape_IsSet != rhs.Landscape_IsSet) return false;
+            if (Landscape_IsSet)
             {
                 if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
             }
@@ -740,19 +538,19 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Name_Property.HasBeenSet)
+            if (Name_IsSet)
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
-            if (Flags_Property.HasBeenSet)
+            if (Flags_IsSet)
             {
                 ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             }
-            if (Grid_Property.HasBeenSet)
+            if (Grid_IsSet)
             {
                 ret = HashHelper.GetHashCode(Grid).CombineHashCode(ret);
             }
-            if (Lighting_Property.HasBeenSet)
+            if (Lighting_IsSet)
             {
                 ret = HashHelper.GetHashCode(Lighting).CombineHashCode(ret);
             }
@@ -760,11 +558,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Regions).CombineHashCode(ret);
             }
-            if (MusicType_Property.HasBeenSet)
+            if (MusicType_IsSet)
             {
                 ret = HashHelper.GetHashCode(MusicType).CombineHashCode(ret);
             }
-            if (WaterHeight_Property.HasBeenSet)
+            if (WaterHeight_IsSet)
             {
                 ret = HashHelper.GetHashCode(WaterHeight).CombineHashCode(ret);
             }
@@ -780,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Owner).CombineHashCode(ret);
             }
-            if (FactionRank_Property.HasBeenSet)
+            if (FactionRank_IsSet)
             {
                 ret = HashHelper.GetHashCode(FactionRank).CombineHashCode(ret);
             }
@@ -788,11 +586,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(GlobalVariable).CombineHashCode(ret);
             }
-            if (PathGrid_Property.HasBeenSet)
+            if (PathGrid_IsSet)
             {
                 ret = HashHelper.GetHashCode(PathGrid).CombineHashCode(ret);
             }
-            if (Landscape_Property.HasBeenSet)
+            if (Landscape_IsSet)
             {
                 ret = HashHelper.GetHashCode(Landscape).CombineHashCode(ret);
             }
@@ -1168,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1194,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Cell.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -1220,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetGrid();
+                            item.Grid = default(P2Int);
                         }
                     }
                     catch (Exception ex)
@@ -1247,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLighting();
+                            item.Lighting = default(CellLighting);
                         }
                     }
                     catch (Exception ex)
@@ -1301,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMusicType();
+                            item.MusicType = default(MusicType);
                         }
                     }
                     catch (Exception ex)
@@ -1327,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetWaterHeight();
+                            item.WaterHeight = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -1374,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFactionRank();
+                            item.FactionRank = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -1408,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetPathGrid();
+                            item.PathGrid = default(PathGrid);
                         }
                     }
                     catch (Exception ex)
@@ -1435,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLandscape();
+                            item.Landscape = default(Landscape);
                         }
                     }
                     catch (Exception ex)
@@ -1579,1219 +1377,6 @@ namespace Mutagen.Bethesda.Oblivion
                     return base.GetHasBeenSet(index);
             }
         }
-
-        #region IPropertySupporter String
-        String IPropertySupporter<String>.Get(int index)
-        {
-            return GetString(index: index);
-        }
-
-        protected override String GetString(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Name:
-                    return Name;
-                default:
-                    return base.GetString(index: index);
-            }
-        }
-
-        void IPropertySupporter<String>.Set(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetString(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected override void SetString(
-            int index,
-            String item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Name:
-                    SetName(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    base.SetString(
-                        index: index,
-                        item: item,
-                        hasBeenSet: hasBeenSet,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<String>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<String>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetString(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected override void UnsetString(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Name:
-                    SetName(
-                        item: default(String),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    base.UnsetString(
-                        index: index,
-                        cmds: cmds);
-                    break;
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<String> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_String_subscriptions == null)
-            {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
-            }
-            _String_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _String_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        String IPropertySupporter<String>.DefaultValue(int index)
-        {
-            return DefaultValueString(index: index);
-        }
-
-        protected override String DefaultValueString(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Name:
-                    return default(String);
-                default:
-                    return base.DefaultValueString(index: index);
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Cell.Flag
-        protected ObjectCentralizationSubscriptions<Cell.Flag> _CellFlag_subscriptions;
-        Cell.Flag IPropertySupporter<Cell.Flag>.Get(int index)
-        {
-            return GetCellFlag(index: index);
-        }
-
-        protected Cell.Flag GetCellFlag(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Cell.Flag: {index}");
-            }
-        }
-
-        void IPropertySupporter<Cell.Flag>.Set(
-            int index,
-            Cell.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetCellFlag(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetCellFlag(
-            int index,
-            Cell.Flag item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Flags:
-                    SetFlags(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Cell.Flag: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Cell.Flag>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Cell.Flag>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Cell.Flag>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetCellFlag(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetCellFlag(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Flags:
-                    SetFlags(
-                        item: default(Cell.Flag),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Cell.Flag: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Cell.Flag>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Cell.Flag> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_CellFlag_subscriptions == null)
-            {
-                _CellFlag_subscriptions = new ObjectCentralizationSubscriptions<Cell.Flag>();
-            }
-            _CellFlag_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Cell.Flag>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _CellFlag_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Cell.Flag>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Cell.Flag IPropertySupporter<Cell.Flag>.DefaultValue(int index)
-        {
-            return DefaultValueCellFlag(index: index);
-        }
-
-        protected Cell.Flag DefaultValueCellFlag(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Flags:
-                    return default(Cell.Flag);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Cell.Flag: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter P2Int
-        protected ObjectCentralizationSubscriptions<P2Int> _P2Int_subscriptions;
-        P2Int IPropertySupporter<P2Int>.Get(int index)
-        {
-            return GetP2Int(index: index);
-        }
-
-        protected P2Int GetP2Int(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Grid:
-                    return Grid;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
-            }
-        }
-
-        void IPropertySupporter<P2Int>.Set(
-            int index,
-            P2Int item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetP2Int(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetP2Int(
-            int index,
-            P2Int item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Grid:
-                    SetGrid(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
-            }
-        }
-
-        bool IPropertySupporter<P2Int>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<P2Int>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<P2Int>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetP2Int(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetP2Int(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Grid:
-                    SetGrid(
-                        item: default(P2Int),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<P2Int> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_P2Int_subscriptions == null)
-            {
-                _P2Int_subscriptions = new ObjectCentralizationSubscriptions<P2Int>();
-            }
-            _P2Int_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<P2Int>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _P2Int_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<P2Int>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        P2Int IPropertySupporter<P2Int>.DefaultValue(int index)
-        {
-            return DefaultValueP2Int(index: index);
-        }
-
-        protected P2Int DefaultValueP2Int(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Grid:
-                    return default(P2Int);
-                default:
-                    throw new ArgumentException($"Unknown index for field type P2Int: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter CellLighting
-        protected ObjectCentralizationSubscriptions<CellLighting> _CellLighting_subscriptions;
-        CellLighting IPropertySupporter<CellLighting>.Get(int index)
-        {
-            return GetCellLighting(index: index);
-        }
-
-        protected CellLighting GetCellLighting(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Lighting:
-                    return Lighting;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CellLighting: {index}");
-            }
-        }
-
-        void IPropertySupporter<CellLighting>.Set(
-            int index,
-            CellLighting item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetCellLighting(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetCellLighting(
-            int index,
-            CellLighting item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Lighting:
-                    SetLighting(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CellLighting: {index}");
-            }
-        }
-
-        bool IPropertySupporter<CellLighting>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<CellLighting>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<CellLighting>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetCellLighting(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetCellLighting(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Lighting:
-                    SetLighting(
-                        item: default(CellLighting),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type CellLighting: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<CellLighting>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<CellLighting> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_CellLighting_subscriptions == null)
-            {
-                _CellLighting_subscriptions = new ObjectCentralizationSubscriptions<CellLighting>();
-            }
-            _CellLighting_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<CellLighting>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _CellLighting_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<CellLighting>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        CellLighting IPropertySupporter<CellLighting>.DefaultValue(int index)
-        {
-            return DefaultValueCellLighting(index: index);
-        }
-
-        protected CellLighting DefaultValueCellLighting(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Lighting:
-                    return default(CellLighting);
-                default:
-                    throw new ArgumentException($"Unknown index for field type CellLighting: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter MusicType
-        protected ObjectCentralizationSubscriptions<MusicType> _MusicType_subscriptions;
-        MusicType IPropertySupporter<MusicType>.Get(int index)
-        {
-            return GetMusicType(index: index);
-        }
-
-        protected MusicType GetMusicType(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.MusicType:
-                    return MusicType;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        void IPropertySupporter<MusicType>.Set(
-            int index,
-            MusicType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetMusicType(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetMusicType(
-            int index,
-            MusicType item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.MusicType:
-                    SetMusicType(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        bool IPropertySupporter<MusicType>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<MusicType>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<MusicType>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetMusicType(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetMusicType(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.MusicType:
-                    SetMusicType(
-                        item: default(MusicType),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MusicType>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<MusicType> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_MusicType_subscriptions == null)
-            {
-                _MusicType_subscriptions = new ObjectCentralizationSubscriptions<MusicType>();
-            }
-            _MusicType_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<MusicType>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _MusicType_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<MusicType>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        MusicType IPropertySupporter<MusicType>.DefaultValue(int index)
-        {
-            return DefaultValueMusicType(index: index);
-        }
-
-        protected MusicType DefaultValueMusicType(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.MusicType:
-                    return default(MusicType);
-                default:
-                    throw new ArgumentException($"Unknown index for field type MusicType: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Single
-        protected ObjectCentralizationSubscriptions<Single> _Single_subscriptions;
-        Single IPropertySupporter<Single>.Get(int index)
-        {
-            return GetSingle(index: index);
-        }
-
-        protected Single GetSingle(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.WaterHeight:
-                    return WaterHeight;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        void IPropertySupporter<Single>.Set(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSingle(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSingle(
-            int index,
-            Single item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.WaterHeight:
-                    SetWaterHeight(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Single>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Single>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Single>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSingle(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSingle(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.WaterHeight:
-                    SetWaterHeight(
-                        item: default(Single),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Single> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Single_subscriptions == null)
-            {
-                _Single_subscriptions = new ObjectCentralizationSubscriptions<Single>();
-            }
-            _Single_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Single>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Single_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Single>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Single IPropertySupporter<Single>.DefaultValue(int index)
-        {
-            return DefaultValueSingle(index: index);
-        }
-
-        protected Single DefaultValueSingle(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.WaterHeight:
-                    return default(Single);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Single: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Int32
-        protected ObjectCentralizationSubscriptions<Int32> _Int32_subscriptions;
-        Int32 IPropertySupporter<Int32>.Get(int index)
-        {
-            return GetInt32(index: index);
-        }
-
-        protected Int32 GetInt32(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.FactionRank:
-                    return FactionRank;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        void IPropertySupporter<Int32>.Set(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetInt32(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetInt32(
-            int index,
-            Int32 item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.FactionRank:
-                    SetFactionRank(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Int32>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Int32>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Int32>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetInt32(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetInt32(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.FactionRank:
-                    SetFactionRank(
-                        item: default(Int32),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Int32> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Int32_subscriptions == null)
-            {
-                _Int32_subscriptions = new ObjectCentralizationSubscriptions<Int32>();
-            }
-            _Int32_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Int32>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Int32_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Int32>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Int32 IPropertySupporter<Int32>.DefaultValue(int index)
-        {
-            return DefaultValueInt32(index: index);
-        }
-
-        protected Int32 DefaultValueInt32(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.FactionRank:
-                    return default(Int32);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Int32: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter PathGrid
-        protected ObjectCentralizationSubscriptions<PathGrid> _PathGrid_subscriptions;
-        PathGrid IPropertySupporter<PathGrid>.Get(int index)
-        {
-            return GetPathGrid(index: index);
-        }
-
-        protected PathGrid GetPathGrid(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.PathGrid:
-                    return PathGrid;
-                default:
-                    throw new ArgumentException($"Unknown index for field type PathGrid: {index}");
-            }
-        }
-
-        void IPropertySupporter<PathGrid>.Set(
-            int index,
-            PathGrid item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetPathGrid(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetPathGrid(
-            int index,
-            PathGrid item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.PathGrid:
-                    SetPathGrid(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type PathGrid: {index}");
-            }
-        }
-
-        bool IPropertySupporter<PathGrid>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<PathGrid>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<PathGrid>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetPathGrid(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetPathGrid(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.PathGrid:
-                    SetPathGrid(
-                        item: default(PathGrid),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type PathGrid: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<PathGrid>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<PathGrid> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_PathGrid_subscriptions == null)
-            {
-                _PathGrid_subscriptions = new ObjectCentralizationSubscriptions<PathGrid>();
-            }
-            _PathGrid_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<PathGrid>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _PathGrid_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<PathGrid>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        PathGrid IPropertySupporter<PathGrid>.DefaultValue(int index)
-        {
-            return DefaultValuePathGrid(index: index);
-        }
-
-        protected PathGrid DefaultValuePathGrid(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.PathGrid:
-                    return default(PathGrid);
-                default:
-                    throw new ArgumentException($"Unknown index for field type PathGrid: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter Landscape
-        protected ObjectCentralizationSubscriptions<Landscape> _Landscape_subscriptions;
-        Landscape IPropertySupporter<Landscape>.Get(int index)
-        {
-            return GetLandscape(index: index);
-        }
-
-        protected Landscape GetLandscape(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Landscape:
-                    return Landscape;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Landscape: {index}");
-            }
-        }
-
-        void IPropertySupporter<Landscape>.Set(
-            int index,
-            Landscape item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetLandscape(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetLandscape(
-            int index,
-            Landscape item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Landscape:
-                    SetLandscape(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Landscape: {index}");
-            }
-        }
-
-        bool IPropertySupporter<Landscape>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<Landscape>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<Landscape>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetLandscape(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetLandscape(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Landscape:
-                    SetLandscape(
-                        item: default(Landscape),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type Landscape: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Landscape>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<Landscape> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_Landscape_subscriptions == null)
-            {
-                _Landscape_subscriptions = new ObjectCentralizationSubscriptions<Landscape>();
-            }
-            _Landscape_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<Landscape>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _Landscape_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<Landscape>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        Landscape IPropertySupporter<Landscape>.DefaultValue(int index)
-        {
-            return DefaultValueLandscape(index: index);
-        }
-
-        protected Landscape DefaultValueLandscape(int index)
-        {
-            switch ((Cell_FieldIndex)index)
-            {
-                case Cell_FieldIndex.Landscape:
-                    return default(Landscape);
-                default:
-                    throw new ArgumentException($"Unknown index for field type Landscape: {index}");
-            }
-        }
-
-        #endregion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Cell_Registration.TRIGGERING_RECORD_TYPE;
@@ -3054,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetName();
+                            item.Name = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -3081,7 +1666,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFlags();
+                            item.Flags = default(Cell.Flag);
                         }
                     }
                     catch (Exception ex)
@@ -3108,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetGrid();
+                            item.Grid = default(P2Int);
                         }
                     }
                     catch (Exception ex)
@@ -3134,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetLighting();
+                            item.Lighting = default(CellLighting);
                         }
                     }
                     catch (Exception ex)
@@ -3171,7 +1756,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetMusicType();
+                            item.MusicType = default(MusicType);
                         }
                     }
                     catch (Exception ex)
@@ -3198,7 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetWaterHeight();
+                            item.WaterHeight = default(Single);
                         }
                     }
                     catch (Exception ex)
@@ -3249,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetFactionRank();
+                            item.FactionRank = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -3408,37 +1993,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Cell_FieldIndex.Name:
-                    this.SetName(
-                        (String)obj,
-                        cmds: cmds);
+                    this.Name = (String)obj;
                     break;
                 case Cell_FieldIndex.Flags:
-                    this.SetFlags(
-                        (Cell.Flag)obj,
-                        cmds: cmds);
+                    this.Flags = (Cell.Flag)obj;
                     break;
                 case Cell_FieldIndex.Grid:
-                    this.SetGrid(
-                        (P2Int)obj,
-                        cmds: cmds);
+                    this.Grid = (P2Int)obj;
                     break;
                 case Cell_FieldIndex.Lighting:
-                    this.SetLighting(
-                        (CellLighting)obj,
-                        cmds: cmds);
+                    this.Lighting = (CellLighting)obj;
                     break;
                 case Cell_FieldIndex.Regions:
                     this._Regions.SetTo((IEnumerable<FormIDLink<Region>>)obj, cmds);
                     break;
                 case Cell_FieldIndex.MusicType:
-                    this.SetMusicType(
-                        (MusicType)obj,
-                        cmds: cmds);
+                    this.MusicType = (MusicType)obj;
                     break;
                 case Cell_FieldIndex.WaterHeight:
-                    this.SetWaterHeight(
-                        (Single)obj,
-                        cmds: cmds);
+                    this.WaterHeight = (Single)obj;
                     break;
                 case Cell_FieldIndex.Climate:
                     this.Climate_Property.Set(
@@ -3456,9 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Cell_FieldIndex.FactionRank:
-                    this.SetFactionRank(
-                        (Int32)obj,
-                        cmds: cmds);
+                    this.FactionRank = (Int32)obj;
                     break;
                 case Cell_FieldIndex.GlobalVariable:
                     this.GlobalVariable_Property.Set(
@@ -3466,14 +2037,10 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Cell_FieldIndex.PathGrid:
-                    this.SetPathGrid(
-                        (PathGrid)obj,
-                        cmds: cmds);
+                    this.PathGrid = (PathGrid)obj;
                     break;
                 case Cell_FieldIndex.Landscape:
-                    this.SetLandscape(
-                        (Landscape)obj,
-                        cmds: cmds);
+                    this.Landscape = (Landscape)obj;
                     break;
                 case Cell_FieldIndex.Persistent:
                     this._Persistent.SetTo((IEnumerable<Placed>)obj, cmds);
@@ -3516,37 +2083,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Cell_FieldIndex.Name:
-                    obj.SetName(
-                        (String)pair.Value,
-                        cmds: null);
+                    obj.Name = (String)pair.Value;
                     break;
                 case Cell_FieldIndex.Flags:
-                    obj.SetFlags(
-                        (Cell.Flag)pair.Value,
-                        cmds: null);
+                    obj.Flags = (Cell.Flag)pair.Value;
                     break;
                 case Cell_FieldIndex.Grid:
-                    obj.SetGrid(
-                        (P2Int)pair.Value,
-                        cmds: null);
+                    obj.Grid = (P2Int)pair.Value;
                     break;
                 case Cell_FieldIndex.Lighting:
-                    obj.SetLighting(
-                        (CellLighting)pair.Value,
-                        cmds: null);
+                    obj.Lighting = (CellLighting)pair.Value;
                     break;
                 case Cell_FieldIndex.Regions:
                     obj._Regions.SetTo((IEnumerable<FormIDLink<Region>>)pair.Value, null);
                     break;
                 case Cell_FieldIndex.MusicType:
-                    obj.SetMusicType(
-                        (MusicType)pair.Value,
-                        cmds: null);
+                    obj.MusicType = (MusicType)pair.Value;
                     break;
                 case Cell_FieldIndex.WaterHeight:
-                    obj.SetWaterHeight(
-                        (Single)pair.Value,
-                        cmds: null);
+                    obj.WaterHeight = (Single)pair.Value;
                     break;
                 case Cell_FieldIndex.Climate:
                     obj.Climate_Property.Set(
@@ -3564,9 +2119,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Cell_FieldIndex.FactionRank:
-                    obj.SetFactionRank(
-                        (Int32)pair.Value,
-                        cmds: null);
+                    obj.FactionRank = (Int32)pair.Value;
                     break;
                 case Cell_FieldIndex.GlobalVariable:
                     obj.GlobalVariable_Property.Set(
@@ -3574,14 +2127,10 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Cell_FieldIndex.PathGrid:
-                    obj.SetPathGrid(
-                        (PathGrid)pair.Value,
-                        cmds: null);
+                    obj.PathGrid = (PathGrid)pair.Value;
                     break;
                 case Cell_FieldIndex.Landscape:
-                    obj.SetLandscape(
-                        (Landscape)pair.Value,
-                        cmds: null);
+                    obj.Landscape = (Landscape)pair.Value;
                     break;
                 case Cell_FieldIndex.Persistent:
                     obj._Persistent.SetTo((IEnumerable<Placed>)pair.Value, null);
@@ -3608,36 +2157,54 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICell : ICellGetter, IPlace, ILoquiClass<ICell, ICellGetter>, ILoquiClass<Cell, ICellGetter>
     {
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new bool Name_IsSet { get; set; }
+        void Name_Set(String item, bool hasBeenSet = true);
+        void Name_Unset();
 
         new Cell.Flag Flags { get; set; }
-        new INotifyingSetItem<Cell.Flag> Flags_Property { get; }
+        new bool Flags_IsSet { get; set; }
+        void Flags_Set(Cell.Flag item, bool hasBeenSet = true);
+        void Flags_Unset();
 
         new P2Int Grid { get; set; }
-        new INotifyingSetItem<P2Int> Grid_Property { get; }
+        new bool Grid_IsSet { get; set; }
+        void Grid_Set(P2Int item, bool hasBeenSet = true);
+        void Grid_Unset();
 
         new CellLighting Lighting { get; set; }
-        new INotifyingSetItem<CellLighting> Lighting_Property { get; }
+        new bool Lighting_IsSet { get; set; }
+        void Lighting_Set(CellLighting item, bool hasBeenSet = true);
+        void Lighting_Unset();
 
         new INotifyingList<FormIDLink<Region>> Regions { get; }
         new MusicType MusicType { get; set; }
-        new INotifyingSetItem<MusicType> MusicType_Property { get; }
+        new bool MusicType_IsSet { get; set; }
+        void MusicType_Set(MusicType item, bool hasBeenSet = true);
+        void MusicType_Unset();
 
         new Single WaterHeight { get; set; }
-        new INotifyingSetItem<Single> WaterHeight_Property { get; }
+        new bool WaterHeight_IsSet { get; set; }
+        void WaterHeight_Set(Single item, bool hasBeenSet = true);
+        void WaterHeight_Unset();
 
         new Climate Climate { get; set; }
         new Water Water { get; set; }
         new Faction Owner { get; set; }
         new Int32 FactionRank { get; set; }
-        new INotifyingSetItem<Int32> FactionRank_Property { get; }
+        new bool FactionRank_IsSet { get; set; }
+        void FactionRank_Set(Int32 item, bool hasBeenSet = true);
+        void FactionRank_Unset();
 
         new Global GlobalVariable { get; set; }
         new PathGrid PathGrid { get; set; }
-        new INotifyingSetItem<PathGrid> PathGrid_Property { get; }
+        new bool PathGrid_IsSet { get; set; }
+        void PathGrid_Set(PathGrid item, bool hasBeenSet = true);
+        void PathGrid_Unset();
 
         new Landscape Landscape { get; set; }
-        new INotifyingSetItem<Landscape> Landscape_Property { get; }
+        new bool Landscape_IsSet { get; set; }
+        void Landscape_Set(Landscape item, bool hasBeenSet = true);
+        void Landscape_Unset();
 
         new INotifyingList<Placed> Persistent { get; }
         new INotifyingList<Placed> Temporary { get; }
@@ -3648,22 +2215,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        bool Name_IsSet { get; }
 
         #endregion
         #region Flags
         Cell.Flag Flags { get; }
-        INotifyingSetItemGetter<Cell.Flag> Flags_Property { get; }
+        bool Flags_IsSet { get; }
 
         #endregion
         #region Grid
         P2Int Grid { get; }
-        INotifyingSetItemGetter<P2Int> Grid_Property { get; }
+        bool Grid_IsSet { get; }
 
         #endregion
         #region Lighting
         CellLighting Lighting { get; }
-        INotifyingSetItemGetter<CellLighting> Lighting_Property { get; }
+        bool Lighting_IsSet { get; }
 
         #endregion
         #region Regions
@@ -3671,12 +2238,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MusicType
         MusicType MusicType { get; }
-        INotifyingSetItemGetter<MusicType> MusicType_Property { get; }
+        bool MusicType_IsSet { get; }
 
         #endregion
         #region WaterHeight
         Single WaterHeight { get; }
-        INotifyingSetItemGetter<Single> WaterHeight_Property { get; }
+        bool WaterHeight_IsSet { get; }
 
         #endregion
         #region Climate
@@ -3696,7 +2263,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FactionRank
         Int32 FactionRank { get; }
-        INotifyingSetItemGetter<Int32> FactionRank_Property { get; }
+        bool FactionRank_IsSet { get; }
 
         #endregion
         #region GlobalVariable
@@ -3706,12 +2273,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PathGrid
         PathGrid PathGrid { get; }
-        INotifyingSetItemGetter<PathGrid> PathGrid_Property { get; }
+        bool PathGrid_IsSet { get; }
 
         #endregion
         #region Landscape
         Landscape Landscape { get; }
-        INotifyingSetItemGetter<Landscape> Landscape_Property { get; }
+        bool Landscape_IsSet { get; }
 
         #endregion
         #region Persistent
@@ -4148,9 +2715,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Name);
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Name,
+                        rhsHasBeenSet: rhs.Name_IsSet,
+                        defItem: def?.Name ?? default(String),
+                        defHasBeenSet: def?.Name_IsSet ?? false,
+                        outRhsItem: out var rhsNameItem,
+                        outDefItem: out var defNameItem))
+                    {
+                        item.Name = rhsNameItem;
+                    }
+                    else
+                    {
+                        item.Name_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4167,9 +2745,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Flags,
+                        rhsHasBeenSet: rhs.Flags_IsSet,
+                        defItem: def?.Flags ?? default(Cell.Flag),
+                        defHasBeenSet: def?.Flags_IsSet ?? false,
+                        outRhsItem: out var rhsFlagsItem,
+                        outDefItem: out var defFlagsItem))
+                    {
+                        item.Flags = rhsFlagsItem;
+                    }
+                    else
+                    {
+                        item.Flags_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4186,9 +2775,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
                 try
                 {
-                    item.Grid_Property.SetToWithDefault(
-                        rhs: rhs.Grid_Property,
-                        def: def?.Grid_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Grid,
+                        rhsHasBeenSet: rhs.Grid_IsSet,
+                        defItem: def?.Grid ?? default(P2Int),
+                        defHasBeenSet: def?.Grid_IsSet ?? false,
+                        outRhsItem: out var rhsGridItem,
+                        outDefItem: out var defGridItem))
+                    {
+                        item.Grid = rhsGridItem;
+                    }
+                    else
+                    {
+                        item.Grid_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4205,36 +2805,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
                 try
                 {
-                    item.Lighting_Property.SetToWithDefault(
-                        rhs.Lighting_Property,
-                        def?.Lighting_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Lighting,
+                        rhsHasBeenSet: rhs.Lighting_IsSet,
+                        defItem: def?.Lighting,
+                        defHasBeenSet: def?.Lighting_IsSet ?? false,
+                        outRhsItem: out var rhsLightingItem,
+                        outDefItem: out var defLightingItem))
+                    {
+                        switch (copyMask?.Lighting.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Lighting.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    CellLightingCommon.CopyFieldsFrom(
-                                        item: item.Lighting,
-                                        rhs: rhs.Lighting,
-                                        def: def?.Lighting,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Lighting.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(CellLighting);
-                                    return CellLighting.Copy(
-                                        r,
-                                        copyMask?.Lighting?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Lighting?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Lighting = rhsLightingItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                CellLightingCommon.CopyFieldsFrom(
+                                    item: item.Lighting,
+                                    rhs: rhs.Lighting,
+                                    def: def?.Lighting,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Lighting.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Lighting = CellLighting.Copy(
+                                    rhsLightingItem,
+                                    copyMask?.Lighting?.Specific,
+                                    def: defLightingItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Lighting?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Lighting_IsSet = false;
+                        item.Lighting = default(CellLighting);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4271,9 +2878,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
                 try
                 {
-                    item.MusicType_Property.SetToWithDefault(
-                        rhs: rhs.MusicType_Property,
-                        def: def?.MusicType_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.MusicType,
+                        rhsHasBeenSet: rhs.MusicType_IsSet,
+                        defItem: def?.MusicType ?? default(MusicType),
+                        defHasBeenSet: def?.MusicType_IsSet ?? false,
+                        outRhsItem: out var rhsMusicTypeItem,
+                        outDefItem: out var defMusicTypeItem))
+                    {
+                        item.MusicType = rhsMusicTypeItem;
+                    }
+                    else
+                    {
+                        item.MusicType_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4290,9 +2908,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
                 try
                 {
-                    item.WaterHeight_Property.SetToWithDefault(
-                        rhs: rhs.WaterHeight_Property,
-                        def: def?.WaterHeight_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.WaterHeight,
+                        rhsHasBeenSet: rhs.WaterHeight_IsSet,
+                        defItem: def?.WaterHeight ?? default(Single),
+                        defHasBeenSet: def?.WaterHeight_IsSet ?? false,
+                        outRhsItem: out var rhsWaterHeightItem,
+                        outDefItem: out var defWaterHeightItem))
+                    {
+                        item.WaterHeight = rhsWaterHeightItem;
+                    }
+                    else
+                    {
+                        item.WaterHeight_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4369,9 +2998,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.FactionRank);
                 try
                 {
-                    item.FactionRank_Property.SetToWithDefault(
-                        rhs: rhs.FactionRank_Property,
-                        def: def?.FactionRank_Property);
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.FactionRank,
+                        rhsHasBeenSet: rhs.FactionRank_IsSet,
+                        defItem: def?.FactionRank ?? default(Int32),
+                        defHasBeenSet: def?.FactionRank_IsSet ?? false,
+                        outRhsItem: out var rhsFactionRankItem,
+                        outDefItem: out var defFactionRankItem))
+                    {
+                        item.FactionRank = rhsFactionRankItem;
+                    }
+                    else
+                    {
+                        item.FactionRank_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4408,36 +3048,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
                 try
                 {
-                    item.PathGrid_Property.SetToWithDefault(
-                        rhs.PathGrid_Property,
-                        def?.PathGrid_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.PathGrid,
+                        rhsHasBeenSet: rhs.PathGrid_IsSet,
+                        defItem: def?.PathGrid,
+                        defHasBeenSet: def?.PathGrid_IsSet ?? false,
+                        outRhsItem: out var rhsPathGridItem,
+                        outDefItem: out var defPathGridItem))
+                    {
+                        switch (copyMask?.PathGrid.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.PathGrid.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    PathGridCommon.CopyFieldsFrom(
-                                        item: item.PathGrid,
-                                        rhs: rhs.PathGrid,
-                                        def: def?.PathGrid,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.PathGrid.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(PathGrid);
-                                    return PathGrid.Copy(
-                                        r,
-                                        copyMask?.PathGrid?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.PathGrid?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.PathGrid = rhsPathGridItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                PathGridCommon.CopyFieldsFrom(
+                                    item: item.PathGrid,
+                                    rhs: rhs.PathGrid,
+                                    def: def?.PathGrid,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.PathGrid.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.PathGrid = PathGrid.Copy(
+                                    rhsPathGridItem,
+                                    copyMask?.PathGrid?.Specific,
+                                    def: defPathGridItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.PathGrid?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.PathGrid_IsSet = false;
+                        item.PathGrid = default(PathGrid);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4454,36 +3101,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
                 try
                 {
-                    item.Landscape_Property.SetToWithDefault(
-                        rhs.Landscape_Property,
-                        def?.Landscape_Property,
-                        cmds,
-                        (r, d) =>
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Landscape,
+                        rhsHasBeenSet: rhs.Landscape_IsSet,
+                        defItem: def?.Landscape,
+                        defHasBeenSet: def?.Landscape_IsSet ?? false,
+                        outRhsItem: out var rhsLandscapeItem,
+                        outDefItem: out var defLandscapeItem))
+                    {
+                        switch (copyMask?.Landscape.Overall ?? CopyOption.Reference)
                         {
-                            switch (copyMask?.Landscape.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    LandscapeCommon.CopyFieldsFrom(
-                                        item: item.Landscape,
-                                        rhs: rhs.Landscape,
-                                        def: def?.Landscape,
-                                        errorMask: errorMask,
-                                        copyMask: copyMask?.Landscape.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(Landscape);
-                                    return Landscape.Copy(
-                                        r,
-                                        copyMask?.Landscape?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Landscape?.Overall}. Cannot execute copy.");
-                            }
+                            case CopyOption.Reference:
+                                item.Landscape = rhsLandscapeItem;
+                                break;
+                            case CopyOption.CopyIn:
+                                LandscapeCommon.CopyFieldsFrom(
+                                    item: item.Landscape,
+                                    rhs: rhs.Landscape,
+                                    def: def?.Landscape,
+                                    errorMask: errorMask,
+                                    copyMask: copyMask?.Landscape.Specific,
+                                    cmds: cmds);
+                                break;
+                            case CopyOption.MakeCopy:
+                                item.Landscape = Landscape.Copy(
+                                    rhsLandscapeItem,
+                                    copyMask?.Landscape?.Specific,
+                                    def: defLandscapeItem);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Landscape?.Overall}. Cannot execute copy.");
                         }
-                        );
+                    }
+                    else
+                    {
+                        item.Landscape_IsSet = false;
+                        item.Landscape = default(Landscape);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4511,7 +3165,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Placed);
                                     return Placed.Copy(
                                         r,
                                         copyMask?.Persistent?.Specific,
@@ -4548,7 +3201,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Placed);
                                     return Placed.Copy(
                                         r,
                                         copyMask?.Temporary?.Specific,
@@ -4585,7 +3237,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Placed);
                                     return Placed.Copy(
                                         r,
                                         copyMask?.VisibleWhenDistant?.Specific,
@@ -4620,25 +3271,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Cell_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
+                    obj.Name_IsSet = on;
                     break;
                 case Cell_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
+                    obj.Flags_IsSet = on;
                     break;
                 case Cell_FieldIndex.Grid:
-                    obj.Grid_Property.HasBeenSet = on;
+                    obj.Grid_IsSet = on;
                     break;
                 case Cell_FieldIndex.Lighting:
-                    obj.Lighting_Property.HasBeenSet = on;
+                    obj.Lighting_IsSet = on;
                     break;
                 case Cell_FieldIndex.Regions:
                     obj.Regions.HasBeenSet = on;
                     break;
                 case Cell_FieldIndex.MusicType:
-                    obj.MusicType_Property.HasBeenSet = on;
+                    obj.MusicType_IsSet = on;
                     break;
                 case Cell_FieldIndex.WaterHeight:
-                    obj.WaterHeight_Property.HasBeenSet = on;
+                    obj.WaterHeight_IsSet = on;
                     break;
                 case Cell_FieldIndex.Climate:
                     obj.Climate_Property.HasBeenSet = on;
@@ -4650,16 +3301,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Owner_Property.HasBeenSet = on;
                     break;
                 case Cell_FieldIndex.FactionRank:
-                    obj.FactionRank_Property.HasBeenSet = on;
+                    obj.FactionRank_IsSet = on;
                     break;
                 case Cell_FieldIndex.GlobalVariable:
                     obj.GlobalVariable_Property.HasBeenSet = on;
                     break;
                 case Cell_FieldIndex.PathGrid:
-                    obj.PathGrid_Property.HasBeenSet = on;
+                    obj.PathGrid_IsSet = on;
                     break;
                 case Cell_FieldIndex.Landscape:
-                    obj.Landscape_Property.HasBeenSet = on;
+                    obj.Landscape_IsSet = on;
                     break;
                 case Cell_FieldIndex.Persistent:
                     obj.Persistent.HasBeenSet = on;
@@ -4685,46 +3336,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Cell_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name_Unset();
                     break;
                 case Cell_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags_Unset();
                     break;
                 case Cell_FieldIndex.Grid:
-                    obj.Grid_Property.Unset(cmds);
+                    obj.Grid_Unset();
                     break;
                 case Cell_FieldIndex.Lighting:
-                    obj.Lighting_Property.Unset(cmds);
+                    obj.Lighting_Unset();
                     break;
                 case Cell_FieldIndex.Regions:
                     obj.Regions.Unset(cmds);
                     break;
                 case Cell_FieldIndex.MusicType:
-                    obj.MusicType_Property.Unset(cmds);
+                    obj.MusicType_Unset();
                     break;
                 case Cell_FieldIndex.WaterHeight:
-                    obj.WaterHeight_Property.Unset(cmds);
+                    obj.WaterHeight_Unset();
                     break;
                 case Cell_FieldIndex.Climate:
-                    obj.Climate_Property.Unset(cmds);
+                    obj.Climate_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Cell_FieldIndex.Water:
-                    obj.Water_Property.Unset(cmds);
+                    obj.Water_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Cell_FieldIndex.Owner:
-                    obj.Owner_Property.Unset(cmds);
+                    obj.Owner_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Cell_FieldIndex.FactionRank:
-                    obj.FactionRank_Property.Unset(cmds);
+                    obj.FactionRank_Unset();
                     break;
                 case Cell_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Unset(cmds);
+                    obj.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Cell_FieldIndex.PathGrid:
-                    obj.PathGrid_Property.Unset(cmds);
+                    obj.PathGrid_Unset();
                     break;
                 case Cell_FieldIndex.Landscape:
-                    obj.Landscape_Property.Unset(cmds);
+                    obj.Landscape_Unset();
                     break;
                 case Cell_FieldIndex.Persistent:
                     obj.Persistent.Unset(cmds);
@@ -4749,19 +3400,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Cell_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return obj.Name_IsSet;
                 case Cell_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                    return obj.Flags_IsSet;
                 case Cell_FieldIndex.Grid:
-                    return obj.Grid_Property.HasBeenSet;
+                    return obj.Grid_IsSet;
                 case Cell_FieldIndex.Lighting:
-                    return obj.Lighting_Property.HasBeenSet;
+                    return obj.Lighting_IsSet;
                 case Cell_FieldIndex.Regions:
                     return obj.Regions.HasBeenSet;
                 case Cell_FieldIndex.MusicType:
-                    return obj.MusicType_Property.HasBeenSet;
+                    return obj.MusicType_IsSet;
                 case Cell_FieldIndex.WaterHeight:
-                    return obj.WaterHeight_Property.HasBeenSet;
+                    return obj.WaterHeight_IsSet;
                 case Cell_FieldIndex.Climate:
                     return obj.Climate_Property.HasBeenSet;
                 case Cell_FieldIndex.Water:
@@ -4769,13 +3420,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Owner:
                     return obj.Owner_Property.HasBeenSet;
                 case Cell_FieldIndex.FactionRank:
-                    return obj.FactionRank_Property.HasBeenSet;
+                    return obj.FactionRank_IsSet;
                 case Cell_FieldIndex.GlobalVariable:
                     return obj.GlobalVariable_Property.HasBeenSet;
                 case Cell_FieldIndex.PathGrid:
-                    return obj.PathGrid_Property.HasBeenSet;
+                    return obj.PathGrid_IsSet;
                 case Cell_FieldIndex.Landscape:
-                    return obj.Landscape_Property.HasBeenSet;
+                    return obj.Landscape_IsSet;
                 case Cell_FieldIndex.Persistent:
                     return obj.Persistent.HasBeenSet;
                 case Cell_FieldIndex.Temporary:
@@ -4837,20 +3488,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICell item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Name_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
-            item.Grid_Property.Unset(cmds.ToUnsetParams());
-            item.Lighting_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Unset();
+            item.Flags_Unset();
+            item.Grid_Unset();
+            item.Lighting_Unset();
             item.Regions.Unset(cmds.ToUnsetParams());
-            item.MusicType_Property.Unset(cmds.ToUnsetParams());
-            item.WaterHeight_Property.Unset(cmds.ToUnsetParams());
+            item.MusicType_Unset();
+            item.WaterHeight_Unset();
             item.Climate_Property.Unset(cmds.ToUnsetParams());
             item.Water_Property.Unset(cmds.ToUnsetParams());
             item.Owner_Property.Unset(cmds.ToUnsetParams());
-            item.FactionRank_Property.Unset(cmds.ToUnsetParams());
+            item.FactionRank_Unset();
             item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
-            item.PathGrid_Property.Unset(cmds.ToUnsetParams());
-            item.Landscape_Property.Unset(cmds.ToUnsetParams());
+            item.PathGrid_Unset();
+            item.Landscape_Unset();
             item.Persistent.Unset(cmds.ToUnsetParams());
             item.Temporary.Unset(cmds.ToUnsetParams());
             item.VisibleWhenDistant.Unset(cmds.ToUnsetParams());
@@ -4871,10 +3522,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Cell_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
-            ret.Grid = item.Grid_Property.Equals(rhs.Grid_Property, (l, r) => l == r);
-            ret.Lighting = item.Lighting_Property.LoquiEqualsHelper(rhs.Lighting_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Grid = item.Grid_IsSet == rhs.Grid_IsSet && item.Grid == rhs.Grid;
+            ret.Lighting = IHasBeenSetExt.LoquiEqualsHelper(item.Lighting_IsSet, rhs.Lighting_IsSet, item.Lighting, rhs.Lighting, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Regions.HasBeenSet == rhs.Regions.HasBeenSet)
             {
                 if (item.Regions.HasBeenSet)
@@ -4894,15 +3545,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Regions = new MaskItem<bool, IEnumerable<bool>>();
                 ret.Regions.Overall = false;
             }
-            ret.MusicType = item.MusicType_Property.Equals(rhs.MusicType_Property, (l, r) => l == r);
-            ret.WaterHeight = item.WaterHeight_Property.Equals(rhs.WaterHeight_Property, (l, r) => l == r);
+            ret.MusicType = item.MusicType_IsSet == rhs.MusicType_IsSet && item.MusicType == rhs.MusicType;
+            ret.WaterHeight = item.WaterHeight_IsSet == rhs.WaterHeight_IsSet && item.WaterHeight == rhs.WaterHeight;
             ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
             ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
             ret.Owner = item.Owner_Property.Equals(rhs.Owner_Property, (l, r) => l == r);
-            ret.FactionRank = item.FactionRank_Property.Equals(rhs.FactionRank_Property, (l, r) => l == r);
+            ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
             ret.GlobalVariable = item.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property, (l, r) => l == r);
-            ret.PathGrid = item.PathGrid_Property.LoquiEqualsHelper(rhs.PathGrid_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Landscape = item.Landscape_Property.LoquiEqualsHelper(rhs.Landscape_Property, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.PathGrid = IHasBeenSetExt.LoquiEqualsHelper(item.PathGrid_IsSet, rhs.PathGrid_IsSet, item.PathGrid, rhs.PathGrid, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Landscape = IHasBeenSetExt.LoquiEqualsHelper(item.Landscape_IsSet, rhs.Landscape_IsSet, item.Landscape, rhs.Landscape, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Persistent.HasBeenSet == rhs.Persistent.HasBeenSet)
             {
                 if (item.Persistent.HasBeenSet)
@@ -5140,22 +3791,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ICellGetter item,
             Cell_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
-            if (checkMask.Grid.HasValue && checkMask.Grid.Value != item.Grid_Property.HasBeenSet) return false;
-            if (checkMask.Lighting.Overall.HasValue && checkMask.Lighting.Overall.Value != item.Lighting_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.Grid.HasValue && checkMask.Grid.Value != item.Grid_IsSet) return false;
+            if (checkMask.Lighting.Overall.HasValue && checkMask.Lighting.Overall.Value != item.Lighting_IsSet) return false;
             if (checkMask.Lighting.Specific != null && (item.Lighting == null || !item.Lighting.HasBeenSet(checkMask.Lighting.Specific))) return false;
             if (checkMask.Regions.Overall.HasValue && checkMask.Regions.Overall.Value != item.Regions.HasBeenSet) return false;
-            if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_Property.HasBeenSet) return false;
-            if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != item.WaterHeight_Property.HasBeenSet) return false;
+            if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_IsSet) return false;
+            if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != item.WaterHeight_IsSet) return false;
             if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
             if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
             if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner_Property.HasBeenSet) return false;
-            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != item.FactionRank_Property.HasBeenSet) return false;
+            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != item.FactionRank_IsSet) return false;
             if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable_Property.HasBeenSet) return false;
-            if (checkMask.PathGrid.Overall.HasValue && checkMask.PathGrid.Overall.Value != item.PathGrid_Property.HasBeenSet) return false;
+            if (checkMask.PathGrid.Overall.HasValue && checkMask.PathGrid.Overall.Value != item.PathGrid_IsSet) return false;
             if (checkMask.PathGrid.Specific != null && (item.PathGrid == null || !item.PathGrid.HasBeenSet(checkMask.PathGrid.Specific))) return false;
-            if (checkMask.Landscape.Overall.HasValue && checkMask.Landscape.Overall.Value != item.Landscape_Property.HasBeenSet) return false;
+            if (checkMask.Landscape.Overall.HasValue && checkMask.Landscape.Overall.Value != item.Landscape_IsSet) return false;
             if (checkMask.Landscape.Specific != null && (item.Landscape == null || !item.Landscape.HasBeenSet(checkMask.Landscape.Specific))) return false;
             if (checkMask.Persistent.Overall.HasValue && checkMask.Persistent.Overall.Value != item.Persistent.HasBeenSet) return false;
             if (checkMask.Temporary.Overall.HasValue && checkMask.Temporary.Overall.Value != item.Temporary.HasBeenSet) return false;
@@ -5166,20 +3817,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Cell_Mask<bool> GetHasBeenSetMask(ICellGetter item)
         {
             var ret = new Cell_Mask<bool>();
-            ret.Name = item.Name_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
-            ret.Grid = item.Grid_Property.HasBeenSet;
-            ret.Lighting = new MaskItem<bool, CellLighting_Mask<bool>>(item.Lighting_Property.HasBeenSet, CellLightingCommon.GetHasBeenSetMask(item.Lighting));
+            ret.Name = item.Name_IsSet;
+            ret.Flags = item.Flags_IsSet;
+            ret.Grid = item.Grid_IsSet;
+            ret.Lighting = new MaskItem<bool, CellLighting_Mask<bool>>(item.Lighting_IsSet, CellLightingCommon.GetHasBeenSetMask(item.Lighting));
             ret.Regions = new MaskItem<bool, IEnumerable<bool>>(item.Regions.HasBeenSet, null);
-            ret.MusicType = item.MusicType_Property.HasBeenSet;
-            ret.WaterHeight = item.WaterHeight_Property.HasBeenSet;
+            ret.MusicType = item.MusicType_IsSet;
+            ret.WaterHeight = item.WaterHeight_IsSet;
             ret.Climate = item.Climate_Property.HasBeenSet;
             ret.Water = item.Water_Property.HasBeenSet;
             ret.Owner = item.Owner_Property.HasBeenSet;
-            ret.FactionRank = item.FactionRank_Property.HasBeenSet;
+            ret.FactionRank = item.FactionRank_IsSet;
             ret.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
-            ret.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_Property.HasBeenSet, PathGridCommon.GetHasBeenSetMask(item.PathGrid));
-            ret.Landscape = new MaskItem<bool, Landscape_Mask<bool>>(item.Landscape_Property.HasBeenSet, LandscapeCommon.GetHasBeenSetMask(item.Landscape));
+            ret.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_IsSet, PathGridCommon.GetHasBeenSetMask(item.PathGrid));
+            ret.Landscape = new MaskItem<bool, Landscape_Mask<bool>>(item.Landscape_IsSet, LandscapeCommon.GetHasBeenSetMask(item.Landscape));
             ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Persistent.HasBeenSet, item.Persistent.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, Placed_Mask<bool>>>>(item.VisibleWhenDistant.HasBeenSet, item.VisibleWhenDistant.Select((i) => new MaskItem<bool, Placed_Mask<bool>>(true, i.GetHasBeenSetMask())));
@@ -5269,42 +3920,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Cell");
             }
-            if (item.Name_Property.HasBeenSet
+            if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Name),
-                    item: item.Name_Property,
+                    item: item.Name,
                     fieldIndex: (int)Cell_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Flags_Property.HasBeenSet
+            if (item.Flags_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Cell.Flag>.Instance.Write(
                     node: elem,
                     name: nameof(item.Flags),
-                    item: item.Flags_Property,
+                    item: item.Flags,
                     fieldIndex: (int)Cell_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.Grid_Property.HasBeenSet
+            if (item.Grid_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
             {
                 P2IntXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Grid),
-                    item: item.Grid_Property,
+                    item: item.Grid,
                     fieldIndex: (int)Cell_FieldIndex.Grid,
                     errorMask: errorMask);
             }
-            if (item.Lighting_Property.HasBeenSet
+            if (item.Lighting_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
             {
                 LoquiXmlTranslation<CellLighting>.Instance.Write(
                     node: elem,
-                    item: item.Lighting_Property,
+                    item: item.Lighting,
                     name: nameof(item.Lighting),
                     fieldIndex: (int)Cell_FieldIndex.Lighting,
                     errorMask: errorMask,
@@ -5330,23 +3981,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if (item.MusicType_Property.HasBeenSet
+            if (item.MusicType_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.MusicType) ?? true))
             {
                 EnumXmlTranslation<MusicType>.Instance.Write(
                     node: elem,
                     name: nameof(item.MusicType),
-                    item: item.MusicType_Property,
+                    item: item.MusicType,
                     fieldIndex: (int)Cell_FieldIndex.MusicType,
                     errorMask: errorMask);
             }
-            if (item.WaterHeight_Property.HasBeenSet
+            if (item.WaterHeight_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.WaterHeight),
-                    item: item.WaterHeight_Property,
+                    item: item.WaterHeight,
                     fieldIndex: (int)Cell_FieldIndex.WaterHeight,
                     errorMask: errorMask);
             }
@@ -5380,13 +4031,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.Owner,
                     errorMask: errorMask);
             }
-            if (item.FactionRank_Property.HasBeenSet
+            if (item.FactionRank_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.FactionRank),
-                    item: item.FactionRank_Property,
+                    item: item.FactionRank,
                     fieldIndex: (int)Cell_FieldIndex.FactionRank,
                     errorMask: errorMask);
             }
@@ -5400,23 +4051,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }
-            if (item.PathGrid_Property.HasBeenSet
+            if (item.PathGrid_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
                 LoquiXmlTranslation<PathGrid>.Instance.Write(
                     node: elem,
-                    item: item.PathGrid_Property,
+                    item: item.PathGrid,
                     name: nameof(item.PathGrid),
                     fieldIndex: (int)Cell_FieldIndex.PathGrid,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid));
             }
-            if (item.Landscape_Property.HasBeenSet
+            if (item.Landscape_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
                 LoquiXmlTranslation<Landscape>.Instance.Write(
                     node: elem,
-                    item: item.Landscape_Property,
+                    item: item.Landscape,
                     name: nameof(item.Landscape),
                     fieldIndex: (int)Cell_FieldIndex.Landscape,
                     errorMask: errorMask,
@@ -5547,90 +4198,126 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)Cell_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.FULL_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Cell.Flag>.Instance.Write(
-                writer,
-                item.Flags_Property,
-                length: 1,
-                fieldIndex: (int)Cell_FieldIndex.Flags,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.DATA_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Grid_Property,
-                fieldIndex: (int)Cell_FieldIndex.Grid,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLC_HEADER),
-                nullable: false);
-            LoquiBinaryTranslation<CellLighting>.Instance.Write(
-                writer: writer,
-                item: item.Lighting_Property,
-                fieldIndex: (int)Cell_FieldIndex.Lighting,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Region>>.Instance.Write(
-                writer: writer,
-                items: item.Regions,
-                fieldIndex: (int)Cell_FieldIndex.Regions,
-                recordType: Cell_Registration.XCLR_HEADER,
-                errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
-                writer,
-                item.MusicType_Property,
-                length: 1,
-                fieldIndex: (int)Cell_FieldIndex.MusicType,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCMT_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.WaterHeight_Property,
-                fieldIndex: (int)Cell_FieldIndex.WaterHeight,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLW_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Climate_Property,
-                fieldIndex: (int)Cell_FieldIndex.Climate,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCCM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Water_Property,
-                fieldIndex: (int)Cell_FieldIndex.Water,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCWT_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Owner_Property,
-                fieldIndex: (int)Cell_FieldIndex.Owner,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XOWN_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FactionRank_Property,
-                fieldIndex: (int)Cell_FieldIndex.FactionRank,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XRNK_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.GlobalVariable_Property,
-                fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Cell_Registration.XGLB_HEADER),
-                nullable: false);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    fieldIndex: (int)Cell_FieldIndex.Name,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Flags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Cell.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1,
+                    fieldIndex: (int)Cell_FieldIndex.Flags,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.DATA_HEADER),
+                    nullable: false);
+            }
+            if (item.Grid_IsSet)
+            {
+                Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Grid,
+                    fieldIndex: (int)Cell_FieldIndex.Grid,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLC_HEADER),
+                    nullable: false);
+            }
+            if (item.Lighting_IsSet)
+            {
+                LoquiBinaryTranslation<CellLighting>.Instance.Write(
+                    writer: writer,
+                    item: item.Lighting,
+                    fieldIndex: (int)Cell_FieldIndex.Lighting,
+                    errorMask: errorMask);
+            }
+            if (item.Regions.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Region>>.Instance.Write(
+                    writer: writer,
+                    items: item.Regions,
+                    fieldIndex: (int)Cell_FieldIndex.Regions,
+                    recordType: Cell_Registration.XCLR_HEADER,
+                    errorMask: errorMask,
+                    transl: FormIDBinaryTranslation.Instance.Write);
+            }
+            if (item.MusicType_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
+                    writer,
+                    item.MusicType,
+                    length: 1,
+                    fieldIndex: (int)Cell_FieldIndex.MusicType,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCMT_HEADER),
+                    nullable: false);
+            }
+            if (item.WaterHeight_IsSet)
+            {
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.WaterHeight,
+                    fieldIndex: (int)Cell_FieldIndex.WaterHeight,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLW_HEADER),
+                    nullable: false);
+            }
+            if (item.Climate_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Climate_Property,
+                    fieldIndex: (int)Cell_FieldIndex.Climate,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCCM_HEADER),
+                    nullable: false);
+            }
+            if (item.Water_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Water_Property,
+                    fieldIndex: (int)Cell_FieldIndex.Water,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCWT_HEADER),
+                    nullable: false);
+            }
+            if (item.Owner_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Owner_Property,
+                    fieldIndex: (int)Cell_FieldIndex.Owner,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.XOWN_HEADER),
+                    nullable: false);
+            }
+            if (item.FactionRank_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FactionRank,
+                    fieldIndex: (int)Cell_FieldIndex.FactionRank,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.XRNK_HEADER),
+                    nullable: false);
+            }
+            if (item.GlobalVariable_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.GlobalVariable_Property,
+                    fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(Cell_Registration.XGLB_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -28,12 +30,10 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SkillBoost : 
-        ReactiveObject,
+        LoquiNotifyingObject,
         ISkillBoost,
         ILoquiObject<SkillBoost>,
         ILoquiObjectSetter,
-        IPropertySupporter<ActorValue>,
-        IPropertySupporter<SByte>,
         IEquatable<SkillBoost>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,100 +50,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
-        protected ActorValue _Skill;
-        protected PropertyForwarder<SkillBoost, ActorValue> _SkillForwarder;
-        public INotifyingSetItem<ActorValue> Skill_Property => _SkillForwarder ?? (_SkillForwarder = new PropertyForwarder<SkillBoost, ActorValue>(this, (int)SkillBoost_FieldIndex.Skill));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ActorValue _Skill;
         public ActorValue Skill
         {
             get => this._Skill;
-            set => this.SetSkill(value);
+            set => this.RaiseAndSetIfChanged(ref this._Skill, value, nameof(Skill));
         }
-        protected void SetSkill(
-            ActorValue item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillBoost_FieldIndex.Skill];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Skill == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)SkillBoost_FieldIndex.Skill] = hasBeenSet;
-            }
-            if (_ActorValue_subscriptions != null)
-            {
-                var tmp = Skill;
-                _Skill = item;
-                _ActorValue_subscriptions.FireSubscriptions(
-                    index: (int)SkillBoost_FieldIndex.Skill,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Skill = item;
-            }
-        }
-        protected void UnsetSkill()
-        {
-            _hasBeenSetTracker[(int)SkillBoost_FieldIndex.Skill] = false;
-            Skill = default(ActorValue);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<ActorValue> ISkillBoost.Skill_Property => this.Skill_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<ActorValue> ISkillBoostGetter.Skill_Property => this.Skill_Property;
         #endregion
         #region Boost
-        protected SByte _Boost;
-        protected PropertyForwarder<SkillBoost, SByte> _BoostForwarder;
-        public INotifyingSetItem<SByte> Boost_Property => _BoostForwarder ?? (_BoostForwarder = new PropertyForwarder<SkillBoost, SByte>(this, (int)SkillBoost_FieldIndex.Boost));
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SByte _Boost;
         public SByte Boost
         {
             get => this._Boost;
-            set => this.SetBoost(value);
+            set => this.RaiseAndSetIfChanged(ref this._Boost, value, nameof(Boost));
         }
-        protected void SetBoost(
-            SByte item,
-            bool hasBeenSet = true,
-            NotifyingFireParameters cmds = null)
-        {
-            var oldHasBeenSet = _hasBeenSetTracker[(int)SkillBoost_FieldIndex.Boost];
-            if ((cmds?.ForceFire ?? true) && oldHasBeenSet == hasBeenSet && Boost == item) return;
-            if (oldHasBeenSet != hasBeenSet)
-            {
-                _hasBeenSetTracker[(int)SkillBoost_FieldIndex.Boost] = hasBeenSet;
-            }
-            if (_SByte_subscriptions != null)
-            {
-                var tmp = Boost;
-                _Boost = item;
-                _SByte_subscriptions.FireSubscriptions(
-                    index: (int)SkillBoost_FieldIndex.Boost,
-                    oldHasBeenSet: oldHasBeenSet,
-                    newHasBeenSet: hasBeenSet,
-                    oldVal: tmp,
-                    newVal: item,
-                    cmds: cmds);
-            }
-            else
-            {
-                _Boost = item;
-            }
-        }
-        protected void UnsetBoost()
-        {
-            _hasBeenSetTracker[(int)SkillBoost_FieldIndex.Boost] = false;
-            Boost = default(SByte);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItem<SByte> ISkillBoost.Boost_Property => this.Boost_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingItemGetter<SByte> ISkillBoostGetter.Boost_Property => this.Boost_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -547,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetSkill();
+                            item.Skill = default(ActorValue);
                         }
                     }
                     catch (Exception ex)
@@ -573,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            item.UnsetBoost();
+                            item.Boost = default(SByte);
                         }
                     }
                     catch (Exception ex)
@@ -605,274 +525,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
-
-        #region IPropertySupporter ActorValue
-        protected ObjectCentralizationSubscriptions<ActorValue> _ActorValue_subscriptions;
-        ActorValue IPropertySupporter<ActorValue>.Get(int index)
-        {
-            return GetActorValue(index: index);
-        }
-
-        protected ActorValue GetActorValue(int index)
-        {
-            switch ((SkillBoost_FieldIndex)index)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    return Skill;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
-            }
-        }
-
-        void IPropertySupporter<ActorValue>.Set(
-            int index,
-            ActorValue item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetActorValue(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetActorValue(
-            int index,
-            ActorValue item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((SkillBoost_FieldIndex)index)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    SetSkill(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
-            }
-        }
-
-        bool IPropertySupporter<ActorValue>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<ActorValue>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<ActorValue>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetActorValue(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetActorValue(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((SkillBoost_FieldIndex)index)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    SetSkill(
-                        item: default(ActorValue),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ActorValue>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<ActorValue> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_ActorValue_subscriptions == null)
-            {
-                _ActorValue_subscriptions = new ObjectCentralizationSubscriptions<ActorValue>();
-            }
-            _ActorValue_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<ActorValue>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _ActorValue_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<ActorValue>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        ActorValue IPropertySupporter<ActorValue>.DefaultValue(int index)
-        {
-            return DefaultValueActorValue(index: index);
-        }
-
-        protected ActorValue DefaultValueActorValue(int index)
-        {
-            switch ((SkillBoost_FieldIndex)index)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    return default(ActorValue);
-                default:
-                    throw new ArgumentException($"Unknown index for field type ActorValue: {index}");
-            }
-        }
-
-        #endregion
-
-        #region IPropertySupporter SByte
-        protected ObjectCentralizationSubscriptions<SByte> _SByte_subscriptions;
-        SByte IPropertySupporter<SByte>.Get(int index)
-        {
-            return GetSByte(index: index);
-        }
-
-        protected SByte GetSByte(int index)
-        {
-            switch ((SkillBoost_FieldIndex)index)
-            {
-                case SkillBoost_FieldIndex.Boost:
-                    return Boost;
-                default:
-                    throw new ArgumentException($"Unknown index for field type SByte: {index}");
-            }
-        }
-
-        void IPropertySupporter<SByte>.Set(
-            int index,
-            SByte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            SetSByte(
-                index: index,
-                item: item,
-                hasBeenSet: hasBeenSet,
-                cmds: cmds);
-        }
-
-        protected void SetSByte(
-            int index,
-            SByte item,
-            bool hasBeenSet,
-            NotifyingFireParameters cmds)
-        {
-            switch ((SkillBoost_FieldIndex)index)
-            {
-                case SkillBoost_FieldIndex.Boost:
-                    SetBoost(item, hasBeenSet, cmds);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type SByte: {index}");
-            }
-        }
-
-        bool IPropertySupporter<SByte>.GetHasBeenSet(int index)
-        {
-            return this.GetHasBeenSet(index: index);
-        }
-
-        void IPropertySupporter<SByte>.SetHasBeenSet(
-            int index,
-            bool on)
-        {
-            _hasBeenSetTracker[index] = on;
-        }
-
-        void IPropertySupporter<SByte>.Unset(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            UnsetSByte(
-                index: index,
-                cmds: cmds);
-        }
-
-        protected void UnsetSByte(
-            int index,
-            NotifyingUnsetParameters cmds)
-        {
-            switch ((SkillBoost_FieldIndex)index)
-            {
-                case SkillBoost_FieldIndex.Boost:
-                    SetBoost(
-                        item: default(SByte),
-                        hasBeenSet: false);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown index for field type SByte: {index}");
-            }
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<SByte>.Subscribe(
-            int index,
-            object owner,
-            NotifyingSetItemInternalCallback<SByte> callback,
-            NotifyingSubscribeParameters cmds)
-        {
-            if (_SByte_subscriptions == null)
-            {
-                _SByte_subscriptions = new ObjectCentralizationSubscriptions<SByte>();
-            }
-            _SByte_subscriptions.Subscribe(
-                index: index,
-                owner: owner,
-                prop: this,
-                callback: callback,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        void IPropertySupporter<SByte>.Unsubscribe(
-            int index,
-            object owner)
-        {
-            _SByte_subscriptions?.Unsubscribe(index, owner);
-        }
-
-        void IPropertySupporter<SByte>.SetCurrentAsDefault(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        SByte IPropertySupporter<SByte>.DefaultValue(int index)
-        {
-            return DefaultValueSByte(index: index);
-        }
-
-        protected SByte DefaultValueSByte(int index)
-        {
-            switch ((SkillBoost_FieldIndex)index)
-            {
-                case SkillBoost_FieldIndex.Boost:
-                    return default(SByte);
-                default:
-                    throw new ArgumentException($"Unknown index for field type SByte: {index}");
-            }
-        }
-
-        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -1088,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetSkill();
+                    item.Skill = default(ActorValue);
                 }
             }
             catch (Exception ex)
@@ -1112,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    item.UnsetBoost();
+                    item.Boost = default(SByte);
                 }
             }
             catch (Exception ex)
@@ -1251,14 +903,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SkillBoost_FieldIndex.Skill:
-                    this.SetSkill(
-                        (ActorValue)obj,
-                        cmds: cmds);
+                    this.Skill = (ActorValue)obj;
                     break;
                 case SkillBoost_FieldIndex.Boost:
-                    this.SetBoost(
-                        (SByte)obj,
-                        cmds: cmds);
+                    this.Boost = (SByte)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1298,14 +946,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SkillBoost_FieldIndex.Skill:
-                    obj.SetSkill(
-                        (ActorValue)pair.Value,
-                        cmds: null);
+                    obj.Skill = (ActorValue)pair.Value;
                     break;
                 case SkillBoost_FieldIndex.Boost:
-                    obj.SetBoost(
-                        (SByte)pair.Value,
-                        cmds: null);
+                    obj.Boost = (SByte)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1323,10 +967,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISkillBoost : ISkillBoostGetter, ILoquiClass<ISkillBoost, ISkillBoostGetter>, ILoquiClass<SkillBoost, ISkillBoostGetter>
     {
         new ActorValue Skill { get; set; }
-        new INotifyingItem<ActorValue> Skill_Property { get; }
 
         new SByte Boost { get; set; }
-        new INotifyingItem<SByte> Boost_Property { get; }
 
     }
 
@@ -1334,12 +976,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Skill
         ActorValue Skill { get; }
-        INotifyingItemGetter<ActorValue> Skill_Property { get; }
 
         #endregion
         #region Boost
         SByte Boost { get; }
-        INotifyingItemGetter<SByte> Boost_Property { get; }
 
         #endregion
 
@@ -1554,9 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
                 try
                 {
-                    item.Skill_Property.Set(
-                        value: rhs.Skill,
-                        cmds: cmds);
+                    item.Skill = rhs.Skill;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1573,9 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
                 try
                 {
-                    item.Boost_Property.Set(
-                        value: rhs.Boost,
-                        cmds: cmds);
+                    item.Boost = rhs.Boost;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1778,7 +1414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 EnumXmlTranslation<ActorValue>.Instance.Write(
                     node: elem,
                     name: nameof(item.Skill),
-                    item: item.Skill_Property,
+                    item: item.Skill,
                     fieldIndex: (int)SkillBoost_FieldIndex.Skill,
                     errorMask: errorMask);
             }
@@ -1787,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Int8XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Boost),
-                    item: item.Boost_Property,
+                    item: item.Boost,
                     fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                     errorMask: errorMask);
             }
@@ -1834,13 +1470,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
-                item.Skill_Property,
+                item.Skill,
                 length: 1,
                 fieldIndex: (int)SkillBoost_FieldIndex.Skill,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Boost_Property,
+                item: item.Boost,
                 fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                 errorMask: errorMask);
         }

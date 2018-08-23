@@ -44,28 +44,24 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region TestNormal
-        private Boolean _TestNormal;
-        public Boolean TestNormal { get => _TestNormal; set => _TestNormal = value; }
+        public Boolean TestNormal { get; set; }
         #endregion
         #region TestObservable
-        private Boolean _TestObservable;
-        public Boolean TestObservable { get => _TestObservable; set => _TestObservable = value; }
+        public Boolean TestObservable { get; set; }
         #endregion
         #region TestFolder
-        private Boolean _TestFolder;
-        public Boolean TestFolder { get => _TestFolder; set => _TestFolder = value; }
+        public Boolean TestFolder { get; set; }
         #endregion
         #region ReuseCaches
-        private Boolean _ReuseCaches;
-        public Boolean ReuseCaches { get => _ReuseCaches; set => _ReuseCaches = value; }
+        public Boolean ReuseCaches { get; set; }
         #endregion
         #region DeleteCachesAfter
-        private Boolean _DeleteCachesAfter;
-        public Boolean DeleteCachesAfter { get => _DeleteCachesAfter; set => _DeleteCachesAfter = value; }
+        public readonly static Boolean _DeleteCachesAfter_Default = true;
+        public Boolean DeleteCachesAfter { get; set; }
         #endregion
         #region TestGroupMasks
-        private Boolean _TestGroupMasks;
-        public Boolean TestGroupMasks { get => _TestGroupMasks; set => _TestGroupMasks = value; }
+        public readonly static Boolean _TestGroupMasks_Default = true;
+        public Boolean TestGroupMasks { get; set; }
         #endregion
         #region OblivionESM
         public Passthrough OblivionESM { get; set; }
@@ -814,22 +810,22 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case TestingSettings_FieldIndex.TestNormal:
-                    this._TestNormal = (Boolean)obj;
+                    this.TestNormal = (Boolean)obj;
                     break;
                 case TestingSettings_FieldIndex.TestObservable:
-                    this._TestObservable = (Boolean)obj;
+                    this.TestObservable = (Boolean)obj;
                     break;
                 case TestingSettings_FieldIndex.TestFolder:
-                    this._TestFolder = (Boolean)obj;
+                    this.TestFolder = (Boolean)obj;
                     break;
                 case TestingSettings_FieldIndex.ReuseCaches:
-                    this._ReuseCaches = (Boolean)obj;
+                    this.ReuseCaches = (Boolean)obj;
                     break;
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
-                    this._DeleteCachesAfter = (Boolean)obj;
+                    this.DeleteCachesAfter = (Boolean)obj;
                     break;
                 case TestingSettings_FieldIndex.TestGroupMasks:
-                    this._TestGroupMasks = (Boolean)obj;
+                    this.TestGroupMasks = (Boolean)obj;
                     break;
                 case TestingSettings_FieldIndex.OblivionESM:
                     this.OblivionESM = (Passthrough)obj;
@@ -875,22 +871,22 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case TestingSettings_FieldIndex.TestNormal:
-                    obj._TestNormal = (Boolean)pair.Value;
+                    obj.TestNormal = (Boolean)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.TestObservable:
-                    obj._TestObservable = (Boolean)pair.Value;
+                    obj.TestObservable = (Boolean)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.TestFolder:
-                    obj._TestFolder = (Boolean)pair.Value;
+                    obj.TestFolder = (Boolean)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.ReuseCaches:
-                    obj._ReuseCaches = (Boolean)pair.Value;
+                    obj.ReuseCaches = (Boolean)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
-                    obj._DeleteCachesAfter = (Boolean)pair.Value;
+                    obj.DeleteCachesAfter = (Boolean)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.TestGroupMasks:
-                    obj._TestGroupMasks = (Boolean)pair.Value;
+                    obj.TestGroupMasks = (Boolean)pair.Value;
                     break;
                 case TestingSettings_FieldIndex.OblivionESM:
                     obj.OblivionESM = (Passthrough)pair.Value;
@@ -1418,10 +1414,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                     obj.ReuseCaches = default(Boolean);
                     break;
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
-                    obj.DeleteCachesAfter = default(Boolean);
+                    obj.DeleteCachesAfter = TestingSettings._DeleteCachesAfter_Default;
                     break;
                 case TestingSettings_FieldIndex.TestGroupMasks:
-                    obj.TestGroupMasks = default(Boolean);
+                    obj.TestGroupMasks = TestingSettings._TestGroupMasks_Default;
                     break;
                 case TestingSettings_FieldIndex.OblivionESM:
                     obj.OblivionESM = default(Passthrough);
@@ -1491,8 +1487,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestObservable = default(Boolean);
             item.TestFolder = default(Boolean);
             item.ReuseCaches = default(Boolean);
-            item.DeleteCachesAfter = default(Boolean);
-            item.TestGroupMasks = default(Boolean);
+            item.DeleteCachesAfter = TestingSettings._DeleteCachesAfter_Default;
+            item.TestGroupMasks = TestingSettings._TestGroupMasks_Default;
             item.OblivionESM = default(Passthrough);
             item.KnightsESP = default(Passthrough);
         }

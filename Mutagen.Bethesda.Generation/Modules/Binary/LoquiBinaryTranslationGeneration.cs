@@ -36,11 +36,7 @@ namespace Mutagen.Bethesda.Generation
             if (loquiGen.TryGetFieldData(out var data)
                 && data.MarkerType.HasValue)
             {
-                fg.AppendLine($"if ({itemAccessor.PropertyAccess}.HasBeenSet)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
-                }
+                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
             }
             bool isGroup = objGen.GetObjectType() == ObjectType.Mod
                 && loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;
@@ -54,7 +50,7 @@ namespace Mutagen.Bethesda.Generation
                 $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Write"))
                 {
                     args.Add($"writer: {writerAccessor}");
-                    args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
+                    args.Add($"item: {itemAccessor.DirectAccess}");
                     if (loquiGen.HasIndex)
                     {
                         args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
