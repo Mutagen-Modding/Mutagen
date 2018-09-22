@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda
                 return false;
             }
             M mod;
-            if (modList != null && unlinkedForm.Value.ModID != new ModID(0))
+            if (modList != null && unlinkedForm.Value.ModID != ModID.Zero)
             {
                 if (!sourceMod.MasterReferences.TryGet(unlinkedForm.Value.ModID.ID, out var masterRef)
                     || !ModKey.TryFactory(masterRef.Master, out var modKey)

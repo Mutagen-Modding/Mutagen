@@ -8,6 +8,7 @@ namespace Mutagen.Bethesda
 {
     public struct ModID
     {
+        public static readonly ModID Zero = new ModID(0);
         public readonly byte ID;
 
         public ModID(byte id)
