@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Generation
                                 fg.AppendLine($"foreach (var item in {field.Name}.SelectMany(f => f.Links))");
                                 break;
                             case LinkCase.Maybe:
-                                fg.AppendLine($"foreach (var item in Items.SelectWhere((f) => TryGet<ILinkContainer>.Create(successful: f is ILinkContainer, val: f as ILinkContainer))");
+                                fg.AppendLine($"foreach (var item in Items.WhereCastable<T, ILinkContainer>()");
                                 using (new DepthWrapper(fg))
                                 {
                                     fg.AppendLine(".SelectMany((f) => f.Links))");
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Generation
                                 fg.AppendLine($"foreach (var item in {field.Name}.Values.SelectMany(f => f.Links))");
                                 break;
                             case LinkCase.Maybe:
-                                fg.AppendLine($"foreach (var item in Items.SelectWhere((f) => TryGet<ILinkContainer>.Create(successful: f is ILinkContainer, val: f as ILinkContainer))");
+                                fg.AppendLine($"foreach (var item in Items.Select(kv => kv.Value).WhereCastable<T, ILinkContainer>()");
                                 using (new DepthWrapper(fg))
                                 {
                                     fg.AppendLine(".SelectMany((f) => f.Links))");

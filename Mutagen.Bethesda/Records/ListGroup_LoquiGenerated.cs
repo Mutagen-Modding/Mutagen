@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.SelectWhere((f) => TryGet<ILinkContainer>.Create(successful: f is ILinkContainer, val: f as ILinkContainer))
+            foreach (var item in Items.WhereCastable<T, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;

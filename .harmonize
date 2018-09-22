@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>fdbf25c283d41718c25c3a61e564ac45194692d4</Sha>
+         <Sha>37832ae4221b8e43607b9845ac9d522cd18c3264</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-12-2018 20:22:22</CommitDate>
-         <Description>FolderCleaner that monitors files and deletes any that were untouched/stale.  Directory/File enumeration refactoring</Description>
+         <CommitDate>09-22-2018 09:21:11</CommitDate>
+         <Description>EnumerableExt.WhereCastable</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
