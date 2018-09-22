@@ -24,7 +24,8 @@ namespace Mutagen.Bethesda.Generation
                 RaisePropertyChangedDefault = false,
                 NotifyingDefault = NotifyingType.NotifyingItem,
                 ObjectCentralizedDefault = true,
-                HasBeenSetDefault = true
+                HasBeenSetDefault = true,
+                ToStringDefault = false,
             };
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
             gen.XmlTranslation.ShouldGenerateXSD = false;

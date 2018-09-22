@@ -183,11 +183,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Activator>.GetEqualsMask(Activator rhs) => ActivatorCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IActivatorGetter>.GetEqualsMask(IActivatorGetter rhs) => ActivatorCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return ActivatorCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Activator_Mask<bool> printMask = null)

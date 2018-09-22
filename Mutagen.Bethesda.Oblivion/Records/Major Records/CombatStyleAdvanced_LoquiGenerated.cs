@@ -1082,11 +1082,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<CombatStyleAdvanced>.GetEqualsMask(CombatStyleAdvanced rhs) => CombatStyleAdvancedCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ICombatStyleAdvancedGetter>.GetEqualsMask(ICombatStyleAdvancedGetter rhs) => CombatStyleAdvancedCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return CombatStyleAdvancedCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             CombatStyleAdvanced_Mask<bool> printMask = null)

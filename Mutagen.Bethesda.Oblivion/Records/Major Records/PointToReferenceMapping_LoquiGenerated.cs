@@ -97,11 +97,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<PointToReferenceMapping>.GetEqualsMask(PointToReferenceMapping rhs) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IPointToReferenceMappingGetter>.GetEqualsMask(IPointToReferenceMappingGetter rhs) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return PointToReferenceMappingCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             PointToReferenceMapping_Mask<bool> printMask = null)

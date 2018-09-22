@@ -267,11 +267,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<WeatherType>.GetEqualsMask(WeatherType rhs) => WeatherTypeCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IWeatherTypeGetter>.GetEqualsMask(IWeatherTypeGetter rhs) => WeatherTypeCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return WeatherTypeCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             WeatherType_Mask<bool> printMask = null)

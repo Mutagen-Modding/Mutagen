@@ -141,11 +141,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<CreatureSound>.GetEqualsMask(CreatureSound rhs) => CreatureSoundCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ICreatureSoundGetter>.GetEqualsMask(ICreatureSoundGetter rhs) => CreatureSoundCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return CreatureSoundCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             CreatureSound_Mask<bool> printMask = null)

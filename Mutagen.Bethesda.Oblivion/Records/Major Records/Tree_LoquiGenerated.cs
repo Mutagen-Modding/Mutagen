@@ -668,11 +668,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Tree>.GetEqualsMask(Tree rhs) => TreeCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ITreeGetter>.GetEqualsMask(ITreeGetter rhs) => TreeCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return TreeCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Tree_Mask<bool> printMask = null)

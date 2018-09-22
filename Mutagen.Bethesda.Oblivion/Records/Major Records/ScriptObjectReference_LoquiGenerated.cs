@@ -76,11 +76,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<ScriptObjectReference>.GetEqualsMask(ScriptObjectReference rhs) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IScriptObjectReferenceGetter>.GetEqualsMask(IScriptObjectReferenceGetter rhs) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return ScriptObjectReferenceCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             ScriptObjectReference_Mask<bool> printMask = null)

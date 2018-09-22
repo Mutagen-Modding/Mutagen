@@ -697,11 +697,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<MagicEffect>.GetEqualsMask(MagicEffect rhs) => MagicEffectCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IMagicEffectGetter>.GetEqualsMask(IMagicEffectGetter rhs) => MagicEffectCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return MagicEffectCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             MagicEffect_Mask<bool> printMask = null)

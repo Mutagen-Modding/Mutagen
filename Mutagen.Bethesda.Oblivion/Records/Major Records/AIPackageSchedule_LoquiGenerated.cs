@@ -317,11 +317,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<AIPackageSchedule>.GetEqualsMask(AIPackageSchedule rhs) => AIPackageScheduleCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IAIPackageScheduleGetter>.GetEqualsMask(IAIPackageScheduleGetter rhs) => AIPackageScheduleCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return AIPackageScheduleCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             AIPackageSchedule_Mask<bool> printMask = null)

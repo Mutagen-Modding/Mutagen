@@ -389,11 +389,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<SigilStone>.GetEqualsMask(SigilStone rhs) => SigilStoneCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ISigilStoneGetter>.GetEqualsMask(ISigilStoneGetter rhs) => SigilStoneCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return SigilStoneCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             SigilStone_Mask<bool> printMask = null)

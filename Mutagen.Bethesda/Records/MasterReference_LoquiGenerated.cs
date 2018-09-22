@@ -170,11 +170,6 @@ namespace Mutagen.Bethesda
         IMask<bool> IEqualsMask<MasterReference>.GetEqualsMask(MasterReference rhs) => MasterReferenceCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IMasterReferenceGetter>.GetEqualsMask(IMasterReferenceGetter rhs) => MasterReferenceCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return MasterReferenceCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             MasterReference_Mask<bool> printMask = null)

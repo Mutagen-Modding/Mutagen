@@ -129,11 +129,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<SoundItem>.GetEqualsMask(SoundItem rhs) => SoundItemCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ISoundItemGetter>.GetEqualsMask(ISoundItemGetter rhs) => SoundItemCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return SoundItemCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             SoundItem_Mask<bool> printMask = null)

@@ -171,11 +171,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<SkillBoost>.GetEqualsMask(SkillBoost rhs) => SkillBoostCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ISkillBoostGetter>.GetEqualsMask(ISkillBoostGetter rhs) => SkillBoostCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return SkillBoostCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             SkillBoost_Mask<bool> printMask = null)

@@ -285,11 +285,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<LeveledEntry<T>>.GetEqualsMask(LeveledEntry<T> rhs) => LeveledEntryCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ILeveledEntryGetter<T>>.GetEqualsMask(ILeveledEntryGetter<T> rhs) => LeveledEntryCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return LeveledEntryCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             LeveledEntry_Mask<bool> printMask = null)

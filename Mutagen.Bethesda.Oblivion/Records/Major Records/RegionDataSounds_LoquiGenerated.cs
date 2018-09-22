@@ -136,11 +136,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RegionDataSounds>.GetEqualsMask(RegionDataSounds rhs) => RegionDataSoundsCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRegionDataSoundsGetter>.GetEqualsMask(IRegionDataSoundsGetter rhs) => RegionDataSoundsCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RegionDataSoundsCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RegionDataSounds_Mask<bool> printMask = null)

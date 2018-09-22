@@ -668,11 +668,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Weapon>.GetEqualsMask(Weapon rhs) => WeaponCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IWeaponGetter>.GetEqualsMask(IWeaponGetter rhs) => WeaponCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return WeaponCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Weapon_Mask<bool> printMask = null)

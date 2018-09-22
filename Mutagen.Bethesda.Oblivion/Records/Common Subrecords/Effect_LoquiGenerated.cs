@@ -373,11 +373,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Effect>.GetEqualsMask(Effect rhs) => EffectCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IEffectGetter>.GetEqualsMask(IEffectGetter rhs) => EffectCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return EffectCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Effect_Mask<bool> printMask = null)

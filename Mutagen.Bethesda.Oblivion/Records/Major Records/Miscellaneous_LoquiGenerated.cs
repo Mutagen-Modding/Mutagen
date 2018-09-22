@@ -322,11 +322,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Miscellaneous>.GetEqualsMask(Miscellaneous rhs) => MiscellaneousCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IMiscellaneousGetter>.GetEqualsMask(IMiscellaneousGetter rhs) => MiscellaneousCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return MiscellaneousCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Miscellaneous_Mask<bool> printMask = null)

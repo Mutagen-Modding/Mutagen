@@ -93,11 +93,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RelatedWaters>.GetEqualsMask(RelatedWaters rhs) => RelatedWatersCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRelatedWatersGetter>.GetEqualsMask(IRelatedWatersGetter rhs) => RelatedWatersCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RelatedWatersCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RelatedWaters_Mask<bool> printMask = null)

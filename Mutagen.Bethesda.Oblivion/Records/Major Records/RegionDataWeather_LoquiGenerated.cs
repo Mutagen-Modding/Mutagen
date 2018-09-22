@@ -87,11 +87,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RegionDataWeather>.GetEqualsMask(RegionDataWeather rhs) => RegionDataWeatherCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRegionDataWeatherGetter>.GetEqualsMask(IRegionDataWeatherGetter rhs) => RegionDataWeatherCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RegionDataWeatherCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RegionDataWeather_Mask<bool> printMask = null)

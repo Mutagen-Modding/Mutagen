@@ -218,11 +218,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RegionData>.GetEqualsMask(RegionData rhs) => RegionDataCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRegionDataGetter>.GetEqualsMask(IRegionDataGetter rhs) => RegionDataCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RegionDataCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RegionData_Mask<bool> printMask = null)

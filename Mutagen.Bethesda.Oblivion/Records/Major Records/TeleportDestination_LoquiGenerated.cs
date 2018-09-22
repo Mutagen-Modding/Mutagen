@@ -177,11 +177,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<TeleportDestination>.GetEqualsMask(TeleportDestination rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ITeleportDestinationGetter>.GetEqualsMask(ITeleportDestinationGetter rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return TeleportDestinationCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             TeleportDestination_Mask<bool> printMask = null)

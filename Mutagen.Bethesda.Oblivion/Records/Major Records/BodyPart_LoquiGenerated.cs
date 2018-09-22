@@ -171,11 +171,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<BodyPart>.GetEqualsMask(BodyPart rhs) => BodyPartCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IBodyPartGetter>.GetEqualsMask(IBodyPartGetter rhs) => BodyPartCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return BodyPartCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             BodyPart_Mask<bool> printMask = null)

@@ -136,11 +136,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<LoadScreenLocation>.GetEqualsMask(LoadScreenLocation rhs) => LoadScreenLocationCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ILoadScreenLocationGetter>.GetEqualsMask(ILoadScreenLocationGetter rhs) => LoadScreenLocationCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return LoadScreenLocationCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             LoadScreenLocation_Mask<bool> printMask = null)

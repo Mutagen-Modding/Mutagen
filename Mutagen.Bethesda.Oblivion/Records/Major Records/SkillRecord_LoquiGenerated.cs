@@ -649,11 +649,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs) => SkillRecordCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ISkillRecordGetter>.GetEqualsMask(ISkillRecordGetter rhs) => SkillRecordCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return SkillRecordCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             SkillRecord_Mask<bool> printMask = null)

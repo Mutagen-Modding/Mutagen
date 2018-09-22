@@ -389,11 +389,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Ingredient>.GetEqualsMask(Ingredient rhs) => IngredientCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IIngredientGetter>.GetEqualsMask(IIngredientGetter rhs) => IngredientCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return IngredientCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Ingredient_Mask<bool> printMask = null)

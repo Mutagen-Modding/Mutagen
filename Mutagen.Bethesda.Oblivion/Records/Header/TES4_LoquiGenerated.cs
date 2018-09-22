@@ -395,11 +395,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<TES4>.GetEqualsMask(TES4 rhs) => TES4Common.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ITES4Getter>.GetEqualsMask(ITES4Getter rhs) => TES4Common.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return TES4Common.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             TES4_Mask<bool> printMask = null)

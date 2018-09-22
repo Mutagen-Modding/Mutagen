@@ -194,11 +194,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<PathGridPoint>.GetEqualsMask(PathGridPoint rhs) => PathGridPointCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IPathGridPointGetter>.GetEqualsMask(IPathGridPointGetter rhs) => PathGridPointCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return PathGridPointCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             PathGridPoint_Mask<bool> printMask = null)

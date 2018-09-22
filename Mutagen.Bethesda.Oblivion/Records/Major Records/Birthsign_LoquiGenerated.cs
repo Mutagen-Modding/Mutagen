@@ -233,11 +233,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Birthsign>.GetEqualsMask(Birthsign rhs) => BirthsignCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IBirthsignGetter>.GetEqualsMask(IBirthsignGetter rhs) => BirthsignCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return BirthsignCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Birthsign_Mask<bool> printMask = null)

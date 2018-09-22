@@ -444,11 +444,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<OblivionMod>.GetEqualsMask(OblivionMod rhs) => OblivionModCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IOblivionModGetter>.GetEqualsMask(IOblivionModGetter rhs) => OblivionModCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return OblivionModCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             OblivionMod_Mask<bool> printMask = null)

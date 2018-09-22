@@ -174,11 +174,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<PathGrid>.GetEqualsMask(PathGrid rhs) => PathGridCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IPathGridGetter>.GetEqualsMask(IPathGridGetter rhs) => PathGridCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return PathGridCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             PathGrid_Mask<bool> printMask = null)

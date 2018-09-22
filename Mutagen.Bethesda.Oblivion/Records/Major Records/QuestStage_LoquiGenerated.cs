@@ -141,11 +141,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<QuestStage>.GetEqualsMask(QuestStage rhs) => QuestStageCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IQuestStageGetter>.GetEqualsMask(IQuestStageGetter rhs) => QuestStageCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return QuestStageCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             QuestStage_Mask<bool> printMask = null)

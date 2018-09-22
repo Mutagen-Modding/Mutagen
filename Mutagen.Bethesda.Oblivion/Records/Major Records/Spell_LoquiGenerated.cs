@@ -119,11 +119,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Spell>.GetEqualsMask(Spell rhs) => SpellCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ISpellGetter>.GetEqualsMask(ISpellGetter rhs) => SpellCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return SpellCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Spell_Mask<bool> printMask = null)

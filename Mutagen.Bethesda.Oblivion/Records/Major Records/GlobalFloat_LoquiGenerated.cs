@@ -117,11 +117,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<GlobalFloat>.GetEqualsMask(GlobalFloat rhs) => GlobalFloatCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IGlobalFloatGetter>.GetEqualsMask(IGlobalFloatGetter rhs) => GlobalFloatCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return GlobalFloatCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             GlobalFloat_Mask<bool> printMask = null)

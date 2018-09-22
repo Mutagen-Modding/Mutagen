@@ -232,11 +232,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<LockInformation>.GetEqualsMask(LockInformation rhs) => LockInformationCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ILockInformationGetter>.GetEqualsMask(ILockInformationGetter rhs) => LockInformationCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return LockInformationCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             LockInformation_Mask<bool> printMask = null)

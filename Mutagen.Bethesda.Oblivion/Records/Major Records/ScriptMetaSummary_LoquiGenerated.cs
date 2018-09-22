@@ -320,11 +320,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<ScriptMetaSummary>.GetEqualsMask(ScriptMetaSummary rhs) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IScriptMetaSummaryGetter>.GetEqualsMask(IScriptMetaSummaryGetter rhs) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return ScriptMetaSummaryCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             ScriptMetaSummary_Mask<bool> printMask = null)

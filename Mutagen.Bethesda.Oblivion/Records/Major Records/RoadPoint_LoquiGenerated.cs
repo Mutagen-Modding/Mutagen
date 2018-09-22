@@ -194,11 +194,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RoadPoint>.GetEqualsMask(RoadPoint rhs) => RoadPointCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRoadPointGetter>.GetEqualsMask(IRoadPointGetter rhs) => RoadPointCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RoadPointCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RoadPoint_Mask<bool> printMask = null)

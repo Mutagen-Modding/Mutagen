@@ -129,11 +129,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<EnableParent>.GetEqualsMask(EnableParent rhs) => EnableParentCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IEnableParentGetter>.GetEqualsMask(IEnableParentGetter rhs) => EnableParentCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return EnableParentCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             EnableParent_Mask<bool> printMask = null)

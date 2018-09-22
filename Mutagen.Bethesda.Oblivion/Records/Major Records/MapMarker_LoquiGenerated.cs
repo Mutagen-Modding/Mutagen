@@ -190,11 +190,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<MapMarker>.GetEqualsMask(MapMarker rhs) => MapMarkerCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IMapMarkerGetter>.GetEqualsMask(IMapMarkerGetter rhs) => MapMarkerCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return MapMarkerCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             MapMarker_Mask<bool> printMask = null)

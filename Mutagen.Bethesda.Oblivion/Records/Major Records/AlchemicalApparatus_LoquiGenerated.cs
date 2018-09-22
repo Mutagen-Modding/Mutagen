@@ -421,11 +421,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<AlchemicalApparatus>.GetEqualsMask(AlchemicalApparatus rhs) => AlchemicalApparatusCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IAlchemicalApparatusGetter>.GetEqualsMask(IAlchemicalApparatusGetter rhs) => AlchemicalApparatusCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return AlchemicalApparatusCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             AlchemicalApparatus_Mask<bool> printMask = null)

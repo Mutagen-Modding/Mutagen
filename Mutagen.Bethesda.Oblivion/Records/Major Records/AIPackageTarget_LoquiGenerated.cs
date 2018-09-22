@@ -219,11 +219,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<AIPackageTarget>.GetEqualsMask(AIPackageTarget rhs) => AIPackageTargetCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IAIPackageTargetGetter>.GetEqualsMask(IAIPackageTargetGetter rhs) => AIPackageTargetCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return AIPackageTargetCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             AIPackageTarget_Mask<bool> printMask = null)

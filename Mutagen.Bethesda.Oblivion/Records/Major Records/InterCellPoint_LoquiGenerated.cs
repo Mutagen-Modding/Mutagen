@@ -171,11 +171,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<InterCellPoint>.GetEqualsMask(InterCellPoint rhs) => InterCellPointCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IInterCellPointGetter>.GetEqualsMask(IInterCellPointGetter rhs) => InterCellPointCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return InterCellPointCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             InterCellPoint_Mask<bool> printMask = null)

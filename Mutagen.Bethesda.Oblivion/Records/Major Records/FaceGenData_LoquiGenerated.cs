@@ -221,11 +221,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<FaceGenData>.GetEqualsMask(FaceGenData rhs) => FaceGenDataCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IFaceGenDataGetter>.GetEqualsMask(IFaceGenDataGetter rhs) => FaceGenDataCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return FaceGenDataCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             FaceGenData_Mask<bool> printMask = null)

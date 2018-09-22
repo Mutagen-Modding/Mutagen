@@ -205,11 +205,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<DialogTopic>.GetEqualsMask(DialogTopic rhs) => DialogTopicCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IDialogTopicGetter>.GetEqualsMask(IDialogTopicGetter rhs) => DialogTopicCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return DialogTopicCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             DialogTopic_Mask<bool> printMask = null)

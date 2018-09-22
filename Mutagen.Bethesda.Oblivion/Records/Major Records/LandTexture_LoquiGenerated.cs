@@ -235,11 +235,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<LandTexture>.GetEqualsMask(LandTexture rhs) => LandTextureCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ILandTextureGetter>.GetEqualsMask(ILandTextureGetter rhs) => LandTextureCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return LandTextureCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             LandTexture_Mask<bool> printMask = null)

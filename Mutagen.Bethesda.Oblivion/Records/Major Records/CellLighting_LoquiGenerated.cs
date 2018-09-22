@@ -509,11 +509,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<CellLighting>.GetEqualsMask(CellLighting rhs) => CellLightingCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ICellLightingGetter>.GetEqualsMask(ICellLightingGetter rhs) => CellLightingCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return CellLightingCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             CellLighting_Mask<bool> printMask = null)

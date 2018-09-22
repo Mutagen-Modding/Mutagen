@@ -220,11 +220,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Header>.GetEqualsMask(Header rhs) => HeaderCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IHeaderGetter>.GetEqualsMask(IHeaderGetter rhs) => HeaderCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return HeaderCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Header_Mask<bool> printMask = null)

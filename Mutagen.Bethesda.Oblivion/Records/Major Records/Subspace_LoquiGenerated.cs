@@ -214,11 +214,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs) => SubspaceCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ISubspaceGetter>.GetEqualsMask(ISubspaceGetter rhs) => SubspaceCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return SubspaceCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Subspace_Mask<bool> printMask = null)

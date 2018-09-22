@@ -248,11 +248,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<CellBlock>.GetEqualsMask(CellBlock rhs) => CellBlockCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ICellBlockGetter>.GetEqualsMask(ICellBlockGetter rhs) => CellBlockCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return CellBlockCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             CellBlock_Mask<bool> printMask = null)

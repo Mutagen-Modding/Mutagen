@@ -218,11 +218,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<DistantLODData>.GetEqualsMask(DistantLODData rhs) => DistantLODDataCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IDistantLODDataGetter>.GetEqualsMask(IDistantLODDataGetter rhs) => DistantLODDataCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return DistantLODDataCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             DistantLODData_Mask<bool> printMask = null)

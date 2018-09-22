@@ -264,11 +264,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Door>.GetEqualsMask(Door rhs) => DoorCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IDoorGetter>.GetEqualsMask(IDoorGetter rhs) => DoorCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return DoorCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Door_Mask<bool> printMask = null)

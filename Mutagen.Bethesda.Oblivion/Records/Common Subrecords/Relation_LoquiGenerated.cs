@@ -129,11 +129,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Relation>.GetEqualsMask(Relation rhs) => RelationCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRelationGetter>.GetEqualsMask(IRelationGetter rhs) => RelationCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RelationCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Relation_Mask<bool> printMask = null)

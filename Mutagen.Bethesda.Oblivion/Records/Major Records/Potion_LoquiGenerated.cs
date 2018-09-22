@@ -389,11 +389,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Potion>.GetEqualsMask(Potion rhs) => PotionCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IPotionGetter>.GetEqualsMask(IPotionGetter rhs) => PotionCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return PotionCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Potion_Mask<bool> printMask = null)

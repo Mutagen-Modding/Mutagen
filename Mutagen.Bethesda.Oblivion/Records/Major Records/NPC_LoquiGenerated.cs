@@ -2787,11 +2787,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<NPC>.GetEqualsMask(NPC rhs) => NPCCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<INPCGetter>.GetEqualsMask(INPCGetter rhs) => NPCCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return NPCCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             NPC_Mask<bool> printMask = null)

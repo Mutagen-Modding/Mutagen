@@ -205,11 +205,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<MagicEffectSubData>.GetEqualsMask(MagicEffectSubData rhs) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IMagicEffectSubDataGetter>.GetEqualsMask(IMagicEffectSubDataGetter rhs) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return MagicEffectSubDataCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             MagicEffectSubData_Mask<bool> printMask = null)

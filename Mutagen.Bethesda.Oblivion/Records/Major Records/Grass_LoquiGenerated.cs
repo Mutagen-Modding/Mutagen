@@ -604,11 +604,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Grass>.GetEqualsMask(Grass rhs) => GrassCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IGrassGetter>.GetEqualsMask(IGrassGetter rhs) => GrassCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return GrassCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Grass_Mask<bool> printMask = null)

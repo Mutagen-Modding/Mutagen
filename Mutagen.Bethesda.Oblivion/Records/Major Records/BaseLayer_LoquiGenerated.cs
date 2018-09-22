@@ -176,11 +176,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<BaseLayer>.GetEqualsMask(BaseLayer rhs) => BaseLayerCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IBaseLayerGetter>.GetEqualsMask(IBaseLayerGetter rhs) => BaseLayerCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return BaseLayerCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             BaseLayer_Mask<bool> printMask = null)

@@ -248,11 +248,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<WorldspaceSubBlock>.GetEqualsMask(WorldspaceSubBlock rhs) => WorldspaceSubBlockCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IWorldspaceSubBlockGetter>.GetEqualsMask(IWorldspaceSubBlockGetter rhs) => WorldspaceSubBlockCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return WorldspaceSubBlockCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             WorldspaceSubBlock_Mask<bool> printMask = null)

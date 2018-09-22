@@ -419,11 +419,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<SoulGem>.GetEqualsMask(SoulGem rhs) => SoulGemCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ISoulGemGetter>.GetEqualsMask(ISoulGemGetter rhs) => SoulGemCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return SoulGemCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             SoulGem_Mask<bool> printMask = null)

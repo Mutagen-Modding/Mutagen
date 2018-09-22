@@ -171,11 +171,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RaceStatsGendered>.GetEqualsMask(RaceStatsGendered rhs) => RaceStatsGenderedCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRaceStatsGenderedGetter>.GetEqualsMask(IRaceStatsGenderedGetter rhs) => RaceStatsGenderedCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RaceStatsGenderedCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RaceStatsGendered_Mask<bool> printMask = null)

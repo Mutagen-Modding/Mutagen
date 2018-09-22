@@ -129,11 +129,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<ContainerItem>.GetEqualsMask(ContainerItem rhs) => ContainerItemCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IContainerItemGetter>.GetEqualsMask(IContainerItemGetter rhs) => ContainerItemCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return ContainerItemCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             ContainerItem_Mask<bool> printMask = null)

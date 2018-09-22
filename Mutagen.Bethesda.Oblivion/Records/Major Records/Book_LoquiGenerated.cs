@@ -523,11 +523,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Book>.GetEqualsMask(Book rhs) => BookCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IBookGetter>.GetEqualsMask(IBookGetter rhs) => BookCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return BookCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Book_Mask<bool> printMask = null)

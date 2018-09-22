@@ -204,11 +204,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<IdleAnimation>.GetEqualsMask(IdleAnimation rhs) => IdleAnimationCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IIdleAnimationGetter>.GetEqualsMask(IIdleAnimationGetter rhs) => IdleAnimationCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return IdleAnimationCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             IdleAnimation_Mask<bool> printMask = null)

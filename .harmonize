@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>df7b05927d2ee9ea431e5ae8b029c865668fb2b5</Sha>
+         <Sha>df1dcc4e6d1e37f4839ed04029280a965ab9a2e7</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-22-2018 07:23:22</CommitDate>
-         <Description>Nuget upgrades</Description>
+         <CommitDate>09-22-2018 08:55:23</CommitDate>
+         <Description>ToString generation improvements.  Defaults, and turning it off only disables to ToString() override</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

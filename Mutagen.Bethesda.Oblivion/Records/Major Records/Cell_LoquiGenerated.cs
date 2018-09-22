@@ -612,11 +612,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Cell>.GetEqualsMask(Cell rhs) => CellCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ICellGetter>.GetEqualsMask(ICellGetter rhs) => CellCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return CellCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Cell_Mask<bool> printMask = null)

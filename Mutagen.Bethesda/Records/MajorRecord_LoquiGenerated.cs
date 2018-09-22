@@ -227,11 +227,6 @@ namespace Mutagen.Bethesda
         IMask<bool> IEqualsMask<MajorRecord>.GetEqualsMask(MajorRecord rhs) => MajorRecordCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IMajorRecordGetter>.GetEqualsMask(IMajorRecordGetter rhs) => MajorRecordCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return MajorRecordCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             MajorRecord_Mask<bool> printMask = null)

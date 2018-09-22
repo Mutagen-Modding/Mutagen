@@ -230,11 +230,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Furnature>.GetEqualsMask(Furnature rhs) => FurnatureCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IFurnatureGetter>.GetEqualsMask(IFurnatureGetter rhs) => FurnatureCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return FurnatureCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Furnature_Mask<bool> printMask = null)

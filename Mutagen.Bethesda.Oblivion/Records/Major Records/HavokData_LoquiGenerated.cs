@@ -219,11 +219,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<HavokData>.GetEqualsMask(HavokData rhs) => HavokDataCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IHavokDataGetter>.GetEqualsMask(IHavokDataGetter rhs) => HavokDataCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return HavokDataCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             HavokData_Mask<bool> printMask = null)

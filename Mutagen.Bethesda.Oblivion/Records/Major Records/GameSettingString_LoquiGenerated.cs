@@ -119,11 +119,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<GameSettingString>.GetEqualsMask(GameSettingString rhs) => GameSettingStringCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IGameSettingStringGetter>.GetEqualsMask(IGameSettingStringGetter rhs) => GameSettingStringCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return GameSettingStringCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             GameSettingString_Mask<bool> printMask = null)

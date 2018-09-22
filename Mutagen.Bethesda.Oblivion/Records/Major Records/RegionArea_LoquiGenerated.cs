@@ -140,11 +140,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RegionArea>.GetEqualsMask(RegionArea rhs) => RegionAreaCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRegionAreaGetter>.GetEqualsMask(IRegionAreaGetter rhs) => RegionAreaCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RegionAreaCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RegionArea_Mask<bool> printMask = null)

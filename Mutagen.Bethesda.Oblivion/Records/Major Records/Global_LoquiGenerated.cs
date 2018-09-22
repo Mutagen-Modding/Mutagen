@@ -165,11 +165,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Global>.GetEqualsMask(Global rhs) => GlobalCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IGlobalGetter>.GetEqualsMask(IGlobalGetter rhs) => GlobalCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return GlobalCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Global_Mask<bool> printMask = null)

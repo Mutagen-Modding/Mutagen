@@ -238,11 +238,6 @@ namespace Mutagen.Bethesda
         IMask<bool> IEqualsMask<Group<T>>.GetEqualsMask(Group<T> rhs) => GroupCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IGroupGetter<T>>.GetEqualsMask(IGroupGetter<T> rhs) => GroupCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return GroupCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Group_Mask<bool> printMask = null)

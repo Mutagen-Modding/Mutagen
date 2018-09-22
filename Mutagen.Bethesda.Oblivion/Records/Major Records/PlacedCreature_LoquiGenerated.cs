@@ -385,11 +385,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<PlacedCreature>.GetEqualsMask(PlacedCreature rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IPlacedCreatureGetter>.GetEqualsMask(IPlacedCreatureGetter rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return PlacedCreatureCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             PlacedCreature_Mask<bool> printMask = null)

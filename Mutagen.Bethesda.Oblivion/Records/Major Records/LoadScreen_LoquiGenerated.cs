@@ -185,11 +185,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<LoadScreen>.GetEqualsMask(LoadScreen rhs) => LoadScreenCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ILoadScreenGetter>.GetEqualsMask(ILoadScreenGetter rhs) => LoadScreenCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return LoadScreenCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             LoadScreen_Mask<bool> printMask = null)

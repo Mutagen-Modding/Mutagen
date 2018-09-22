@@ -129,11 +129,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<WeatherSound>.GetEqualsMask(WeatherSound rhs) => WeatherSoundCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IWeatherSoundGetter>.GetEqualsMask(IWeatherSoundGetter rhs) => WeatherSoundCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return WeatherSoundCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             WeatherSound_Mask<bool> printMask = null)

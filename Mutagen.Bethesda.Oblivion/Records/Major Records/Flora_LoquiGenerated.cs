@@ -376,11 +376,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Flora>.GetEqualsMask(Flora rhs) => FloraCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IFloraGetter>.GetEqualsMask(IFloraGetter rhs) => FloraCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return FloraCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Flora_Mask<bool> printMask = null)

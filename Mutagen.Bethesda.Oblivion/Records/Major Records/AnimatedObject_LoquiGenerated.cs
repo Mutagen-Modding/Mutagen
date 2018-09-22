@@ -126,11 +126,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<AnimatedObject>.GetEqualsMask(AnimatedObject rhs) => AnimatedObjectCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IAnimatedObjectGetter>.GetEqualsMask(IAnimatedObjectGetter rhs) => AnimatedObjectCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return AnimatedObjectCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             AnimatedObject_Mask<bool> printMask = null)
