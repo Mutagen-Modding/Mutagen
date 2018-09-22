@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Tests
         public override string Nickname => TestingConstants.OBLIVION_ESM;
 
         public OblivionESM_Passthrough_Tests(TestingSettings settings)
-            : base(settings?.OblivionESM?.Path)
+            : base(Path.Combine(settings.DataFolder, settings.OblivionESM.Path))
         {
         }
 
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
         }
-        
+
         public async Task OblivionESM_Folder_Reimport()
         {
             var mod = OblivionMod.Create_Binary(

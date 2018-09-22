@@ -105,29 +105,46 @@ namespace Mutagen.Bethesda
             this._modsByLoadOrder.Clear();
         }
 
-        public void Import(
+        public async Task Import(
             DirectoryPath dataFolder,
             List<ModKey> loadOrder,
-            Func<FilePath, TryGet<Mod>> importer)
+            Func<FilePath, Task<TryGet<Mod>>> importer)
         {
             this.Clear();
-            foreach (var item in loadOrder)
-            {
-                FilePath modPath = dataFolder.GetFile(item.FileName);
-                if (modPath.Exists)
+            int index = 0;
+            var results = await Task.WhenAll(
+                loadOrder.Select(modKey =>
                 {
-                    var mod = importer(modPath);
-                    if (mod.Succeeded)
+                    var modIndex = index++;
+                    return Task.Run(async () =>
                     {
-                        this._modsByLoadOrder.Add(
-                            new ModListing<Mod>(
-                                item,
-                                mod.Value));
-                        continue;
-                    }
+                        FilePath modPath = dataFolder.GetFile(modKey.FileName);
+                        if (!modPath.Exists) return (modKey, modIndex, TryGet<Mod>.Failure);
+                        return (modKey, modIndex, await importer(modPath));
+                    });
+                }));
+            foreach (var item in results
+                .OrderBy(i => i.modIndex))
+            {
+                if (item.Item3.Succeeded)
+                {
+                    this._modsByLoadOrder.Add(
+                        new ModListing<Mod>(
+                            item.modKey,
+                            item.Item3.Value));
                 }
-                this._modsByLoadOrder.Add(
-                    new ModListing<Mod>(item));
+                else
+                {
+                    this._modsByLoadOrder.Add(
+                        new ModListing<Mod>(item.modKey));
+                }
+            }
+            foreach (var mod in this._modsByLoadOrder)
+            {
+                foreach (var link in mod.Mod.Links)
+                {
+                    link.Link(modList: this, sourceMod: mod.Mod);
+                }
             }
         }
 

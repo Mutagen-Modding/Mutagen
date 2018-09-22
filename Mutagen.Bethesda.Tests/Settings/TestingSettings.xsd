@@ -11,6 +11,8 @@
          <xs:element name="ReuseCaches" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="DeleteCachesAfter" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestGroupMasks" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="TestModList" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="DataFolder" type="NullableValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="OblivionESM" type="PassthroughType" minOccurs="0" maxOccurs="1" />
          <xs:element name="KnightsESP" type="PassthroughType" minOccurs="0" maxOccurs="1" />
       </xs:choice>

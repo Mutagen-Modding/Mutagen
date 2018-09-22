@@ -3488,10 +3488,6 @@ namespace Mutagen.Bethesda.Oblivion
                         if (parsed.Failed) break;
                     }
                 }
-                foreach (var link in ret.Links)
-                {
-                    link.Link(modList: null, sourceMod: ret);
-                }
             }
             catch (Exception ex)
             when (errorMask != null)

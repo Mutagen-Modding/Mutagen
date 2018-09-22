@@ -8,6 +8,8 @@
       <Bool name="ReuseCaches" />
       <Bool name="DeleteCachesAfter" default="true" />
       <Bool name="TestGroupMasks" default="true" />
+      <Bool name="TestModList" default="true" />
+      <String name="DataFolder" />
       <RefDirect name="OblivionESM" refName="Passthrough" />
       <RefDirect name="KnightsESP" refName="Passthrough" />
     </Fields>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Mutagen.Bethesda.Tests
         public override string Nickname => TestingConstants.KNIGHTS_ESP;
 
         public Knights_Passthrough_Tests(TestingSettings settings)
-            : base(settings?.KnightsESP?.Path)
+            : base(Path.Combine(settings.DataFolder, settings.KnightsESP.Path))
         {
         }
     }

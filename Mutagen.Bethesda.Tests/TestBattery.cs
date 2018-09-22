@@ -47,6 +47,10 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return obliv.OblivionESM_Folder_Reimport();
             }
+            if (settings.TestModList)
+            {
+                yield return ModList_Tests.Oblivion_Modlist(settings);
+            }
         }
     }
 }

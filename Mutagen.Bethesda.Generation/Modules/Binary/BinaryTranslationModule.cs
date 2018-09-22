@@ -79,17 +79,23 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(SpecialParseType)] = new SpecialParseTranslationGeneration();
             this._typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
             this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
+            APILine[] modAPILines = new APILine[]
+            {
+                new APILine((obj) => TryGet<string>.Create(
+                    successful: obj.GetObjectType() == ObjectType.Mod,
+                    val: "GroupMask importMask = null")),
+            };
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
                     majorAPI: new APILine[] { "MutagenWriter writer" },
-                    optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) },
+                    optionalAPI: modAPILines,
                     customAPI: new CustomMethodAPI[]
                     {
                         CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null")
                     }),
                 readerAPI: new MethodAPI(
                     majorAPI: new APILine[] { "MutagenFrame frame" },
-                    optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) },
+                    optionalAPI: modAPILines,
                     customAPI: new CustomMethodAPI[]
                     {
                         CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null")
@@ -99,7 +105,7 @@ namespace Mutagen.Bethesda.Generation
                     new MethodAPI(
                         majorAPI: new APILine[] { "string path" },
                         customAPI: null,
-                        optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) }))
+                        optionalAPI: modAPILines))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -111,7 +117,7 @@ namespace Mutagen.Bethesda.Generation
                     new MethodAPI(
                         majorAPI: new APILine[] { "Stream stream" },
                         customAPI: null,
-                        optionalAPI: new APILine[] { new APILine((obj) => TryGet<string>.Create(successful: obj.GetObjectType() == ObjectType.Mod, val: "GroupMask importMask = null")) }))
+                        optionalAPI: modAPILines))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -605,17 +611,6 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private void GenerateModLinking(ObjectGeneration obj, FileGeneration fg)
-        {
-            if (obj.GetObjectType() != ObjectType.Mod) return;
-            fg.AppendLine("foreach (var link in ret.Links)");
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"link.Link(modList: null, sourceMod: ret);");
-            }
-
-        }
-
         private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
         {
             if (field is DataType set)
@@ -922,7 +917,6 @@ namespace Mutagen.Bethesda.Generation
                     }
                     GenerateDataStateSubscriptions(obj, fg);
                     GenerateStructStateSubscriptions(obj, fg);
-                    GenerateModLinking(obj, fg);
                     if (data.CustomBinaryEnd)
                     {
                         using (var args = new ArgsWrapper(fg,
