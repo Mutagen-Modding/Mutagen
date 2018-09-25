@@ -83,6 +83,21 @@ namespace Mutagen.Bethesda.Oblivion
             cell.Persistent.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
             cell.Temporary.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
             cell.VisibleWhenDistant.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
+            cell.Landscape_Property.Subscribe(_subscribeObject, (r) =>
+            {
+                if (r.Old != null)
+                {
+                    _majorRecords.Remove(r.Old.FormID);
+                }
+                if (r.New != null)
+                {
+                    if (_majorRecords.ContainsKey(r.New.FormID))
+                    {
+                        throw new ArgumentException($"Cannot add a landscape {r.New.FormID} that exists elsewhere in the same mod.");
+                    }
+                    _majorRecords[r.New.FormID] = r.New;
+                }
+            });
             cell.PathGrid_Property.Subscribe(_subscribeObject, (r) =>
             {
                 if (r.Old != null)
@@ -118,7 +133,8 @@ namespace Mutagen.Bethesda.Oblivion
             cell.Persistent.Unsubscribe(_subscribeObject);
             cell.Temporary.Unsubscribe(_subscribeObject);
             cell.VisibleWhenDistant.Unsubscribe(_subscribeObject);
-            cell.PathGrid_Property.Subscribe(_subscribeObject, (r) => Utility.Modify(_majorRecords, r));
+            cell.Landscape_Property.Unsubscribe(_subscribeObject);
+            cell.PathGrid_Property.Unsubscribe(_subscribeObject);
         }
         #endregion
 
