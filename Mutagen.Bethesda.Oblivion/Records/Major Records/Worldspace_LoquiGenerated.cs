@@ -2610,7 +2610,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
             if (TopCell != null)
             {
-                TopCell.Link(
+                TopCell?.Link(
                     modList,
                     sourceMod,
                     cmds);

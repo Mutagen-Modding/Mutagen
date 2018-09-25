@@ -3796,14 +3796,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (Voices != null)
             {
-                Voices.Link(
+                Voices?.Link(
                     modList,
                     sourceMod,
                     cmds);
             }
             if (DefaultHair != null)
             {
-                DefaultHair.Link(
+                DefaultHair?.Link(
                     modList,
                     sourceMod,
                     cmds);

@@ -3127,151 +3127,151 @@ namespace Mutagen.Bethesda.Oblivion
             ModList<OblivionMod> modList,
             NotifyingFireParameters cmds = null)
         {
-            Factions.Link(
+            Factions?.Link(
                 modList,
                 this,
                 cmds);
-            Races.Link(
+            Races?.Link(
                 modList,
                 this,
                 cmds);
-            MagicEffects.Link(
+            MagicEffects?.Link(
                 modList,
                 this,
                 cmds);
-            Enchantments.Link(
+            Enchantments?.Link(
                 modList,
                 this,
                 cmds);
-            Spells.Link(
+            Spells?.Link(
                 modList,
                 this,
                 cmds);
-            Activators.Link(
+            Activators?.Link(
                 modList,
                 this,
                 cmds);
-            AlchemicalApparatus.Link(
+            AlchemicalApparatus?.Link(
                 modList,
                 this,
                 cmds);
-            Books.Link(
+            Books?.Link(
                 modList,
                 this,
                 cmds);
-            Containers.Link(
+            Containers?.Link(
                 modList,
                 this,
                 cmds);
-            Doors.Link(
+            Doors?.Link(
                 modList,
                 this,
                 cmds);
-            Ingredients.Link(
+            Ingredients?.Link(
                 modList,
                 this,
                 cmds);
-            Lights.Link(
+            Lights?.Link(
                 modList,
                 this,
                 cmds);
-            Miscellaneous.Link(
+            Miscellaneous?.Link(
                 modList,
                 this,
                 cmds);
-            Flora.Link(
+            Flora?.Link(
                 modList,
                 this,
                 cmds);
-            Furnature.Link(
+            Furnature?.Link(
                 modList,
                 this,
                 cmds);
-            Weapons.Link(
+            Weapons?.Link(
                 modList,
                 this,
                 cmds);
-            Ammo.Link(
+            Ammo?.Link(
                 modList,
                 this,
                 cmds);
-            NPCs.Link(
+            NPCs?.Link(
                 modList,
                 this,
                 cmds);
-            Creatures.Link(
+            Creatures?.Link(
                 modList,
                 this,
                 cmds);
-            LeveledCreatures.Link(
+            LeveledCreatures?.Link(
                 modList,
                 this,
                 cmds);
-            SoulGems.Link(
+            SoulGems?.Link(
                 modList,
                 this,
                 cmds);
-            Keys.Link(
+            Keys?.Link(
                 modList,
                 this,
                 cmds);
-            Potions.Link(
+            Potions?.Link(
                 modList,
                 this,
                 cmds);
-            SigilStones.Link(
+            SigilStones?.Link(
                 modList,
                 this,
                 cmds);
-            LeveledItems.Link(
+            LeveledItems?.Link(
                 modList,
                 this,
                 cmds);
-            Weathers.Link(
+            Weathers?.Link(
                 modList,
                 this,
                 cmds);
-            Climates.Link(
+            Climates?.Link(
                 modList,
                 this,
                 cmds);
-            Regions.Link(
+            Regions?.Link(
                 modList,
                 this,
                 cmds);
-            Cells.Link(
+            Cells?.Link(
                 modList,
                 this,
                 cmds);
-            Worldspaces.Link(
+            Worldspaces?.Link(
                 modList,
                 this,
                 cmds);
-            DialogTopics.Link(
+            DialogTopics?.Link(
                 modList,
                 this,
                 cmds);
-            Quests.Link(
+            Quests?.Link(
                 modList,
                 this,
                 cmds);
-            AIPackages.Link(
+            AIPackages?.Link(
                 modList,
                 this,
                 cmds);
-            LoadScreens.Link(
+            LoadScreens?.Link(
                 modList,
                 this,
                 cmds);
-            LeveledSpells.Link(
+            LeveledSpells?.Link(
                 modList,
                 this,
                 cmds);
-            AnimatedObjects.Link(
+            AnimatedObjects?.Link(
                 modList,
                 this,
                 cmds);
-            Waters.Link(
+            Waters?.Link(
                 modList,
                 this,
                 cmds);

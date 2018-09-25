@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
             if (ScriptEffect != null)
             {
-                ScriptEffect.Link(
+                ScriptEffect?.Link(
                     modList,
                     sourceMod,
                     cmds);

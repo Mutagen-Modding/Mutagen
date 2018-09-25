@@ -3966,14 +3966,14 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
             if (TeleportDestination != null)
             {
-                TeleportDestination.Link(
+                TeleportDestination?.Link(
                     modList,
                     sourceMod,
                     cmds);
             }
             if (Lock != null)
             {
-                Lock.Link(
+                Lock?.Link(
                     modList,
                     sourceMod,
                     cmds);
@@ -3988,7 +3988,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
             if (EnableParent != null)
             {
-                EnableParent.Link(
+                EnableParent?.Link(
                     modList,
                     sourceMod,
                     cmds);

@@ -1625,7 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
             if (Location != null)
             {
-                Location.Link(
+                Location?.Link(
                     modList,
                     sourceMod,
                     cmds);

@@ -4158,7 +4158,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
             if (RelatedWaters != null)
             {
-                RelatedWaters.Link(
+                RelatedWaters?.Link(
                     modList,
                     sourceMod,
                     cmds);

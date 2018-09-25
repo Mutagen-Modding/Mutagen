@@ -2124,21 +2124,21 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
             if (Objects != null)
             {
-                Objects.Link(
+                Objects?.Link(
                     modList,
                     sourceMod,
                     cmds);
             }
             if (Weather != null)
             {
-                Weather.Link(
+                Weather?.Link(
                     modList,
                     sourceMod,
                     cmds);
             }
             if (Sounds != null)
             {
-                Sounds.Link(
+                Sounds?.Link(
                     modList,
                     sourceMod,
                     cmds);

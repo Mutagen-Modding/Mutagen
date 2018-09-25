@@ -2842,14 +2842,14 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
             if (PathGrid != null)
             {
-                PathGrid.Link(
+                PathGrid?.Link(
                     modList,
                     sourceMod,
                     cmds);
             }
             if (Landscape != null)
             {
-                Landscape.Link(
+                Landscape?.Link(
                     modList,
                     sourceMod,
                     cmds);

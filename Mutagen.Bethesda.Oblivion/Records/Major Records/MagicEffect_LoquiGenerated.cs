@@ -2807,7 +2807,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            SubData.Link(
+            SubData?.Link(
                 modList,
                 sourceMod,
                 cmds);

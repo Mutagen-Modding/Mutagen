@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg, doIt: doBrace))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{(subLinkCase == LinkCase.Maybe ? $"{field.Name}linkCont" : field.Name)}.Link"))
+                            $"{(subLinkCase == LinkCase.Maybe ? $"{field.Name}linkCont" : field.Name)}?.Link"))
                         {
                             args.Add("modList");
                             args.Add(sourceModAccessor);

@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
             if (EnableParent != null)
             {
-                EnableParent.Link(
+                EnableParent?.Link(
                     modList,
                     sourceMod,
                     cmds);
