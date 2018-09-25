@@ -1141,6 +1141,23 @@ namespace Mutagen.Bethesda.Oblivion
             yield return VisualEffect_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            VisualEffect_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

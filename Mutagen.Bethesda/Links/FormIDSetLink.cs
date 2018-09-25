@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda
             ModList<M> modList,
             M sourceMod,
             NotifyingFireParameters cmds = null)
-            where M : IMod
+            where M : IMod<M>
         {
             if (!FormIDLink<T>.TryGetLink(
                 this.UnlinkedForm,

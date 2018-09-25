@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda
     }
 
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormID.ToString()}")]
-    public partial class MajorRecord : ILinkContainer
+    public partial class MajorRecord : ILinkSubContainer
     {
         [Flags]
         public enum MajorRecordFlag

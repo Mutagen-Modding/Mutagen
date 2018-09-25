@@ -2484,6 +2484,27 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Enchantment_Property;
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Enchantment_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

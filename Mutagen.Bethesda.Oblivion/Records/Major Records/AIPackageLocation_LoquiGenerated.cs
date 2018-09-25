@@ -894,6 +894,19 @@ namespace Mutagen.Bethesda.Oblivion
             yield return LocationReference_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            LocationReference_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

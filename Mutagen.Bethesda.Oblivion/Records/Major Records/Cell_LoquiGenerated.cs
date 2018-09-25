@@ -2817,6 +2817,45 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            Climate_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Water_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Owner_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            GlobalVariable_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            if (PathGrid != null)
+            {
+                PathGrid.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            if (Landscape != null)
+            {
+                Landscape.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation

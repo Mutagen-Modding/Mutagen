@@ -491,6 +491,27 @@ namespace Mutagen.Bethesda.Oblivion
             yield return RelatedWaterUnderwater_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            RelatedWaterDaytime_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            RelatedWaterNighttime_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            RelatedWaterUnderwater_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

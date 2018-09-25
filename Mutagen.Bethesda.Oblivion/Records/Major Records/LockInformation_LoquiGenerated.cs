@@ -1111,6 +1111,19 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Key_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Key_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

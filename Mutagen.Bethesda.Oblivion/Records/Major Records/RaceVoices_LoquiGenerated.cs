@@ -474,6 +474,23 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Female_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Male_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Female_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

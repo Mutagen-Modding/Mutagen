@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class ModList<Mod> : IEnumerable<ModListing<Mod>>
-        where Mod : IMod
+        where Mod : IMod<Mod>
     {
         private readonly List<ModListing<Mod>> _modsByLoadOrder = new List<ModListing<Mod>>();
 
@@ -141,10 +141,9 @@ namespace Mutagen.Bethesda
             }
             foreach (var mod in this._modsByLoadOrder)
             {
-                foreach (var link in mod.Mod.Links)
-                {
-                    link.Link(modList: this, sourceMod: mod.Mod);
-                }
+                mod.Mod.Link(
+                    modList: this, 
+                    cmds: null);
             }
         }
 

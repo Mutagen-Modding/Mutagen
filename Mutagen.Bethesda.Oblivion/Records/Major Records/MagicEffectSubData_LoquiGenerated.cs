@@ -841,6 +841,35 @@ namespace Mutagen.Bethesda.Oblivion
             yield return AreaSound_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            EnchantEffect_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            CastingSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            BoltSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            HitSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            AreaSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

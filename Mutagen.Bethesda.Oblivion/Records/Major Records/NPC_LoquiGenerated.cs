@@ -7216,6 +7216,57 @@ namespace Mutagen.Bethesda.Oblivion
             yield return CombatStyle_Property;
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in Factions)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            DeathItem_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Race_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in Items)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            Class_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Hair_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            CombatStyle_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

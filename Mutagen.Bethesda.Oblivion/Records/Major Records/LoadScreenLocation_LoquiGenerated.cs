@@ -700,6 +700,23 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Indirect_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Direct_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Indirect_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

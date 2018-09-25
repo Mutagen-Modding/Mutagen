@@ -1284,6 +1284,35 @@ namespace Mutagen.Bethesda.Oblivion
             yield return LoopSound_Property;
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            OpenSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            CloseSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            LoopSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

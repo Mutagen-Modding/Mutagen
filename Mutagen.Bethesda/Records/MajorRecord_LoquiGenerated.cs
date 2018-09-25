@@ -1034,6 +1034,15 @@ namespace Mutagen.Bethesda
         {
             yield break;
         }
+
+        public virtual void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+        }
+
         public virtual void Write_Xml_Folder(
             string path,
             out MajorRecord_ErrorMask errorMask,

@@ -3953,6 +3953,60 @@ namespace Mutagen.Bethesda.Oblivion
             yield return ContainedSoul_Property;
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            Base_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            if (TeleportDestination != null)
+            {
+                TeleportDestination.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            if (Lock != null)
+            {
+                Lock.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            Owner_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            GlobalVariable_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            if (EnableParent != null)
+            {
+                EnableParent.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            Target_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Unknown_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            ContainedSoul_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

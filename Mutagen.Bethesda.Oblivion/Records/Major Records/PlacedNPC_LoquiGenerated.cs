@@ -1952,6 +1952,34 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Horse_Property;
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            Base_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            if (EnableParent != null)
+            {
+                EnableParent.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            MerchantContainer_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Horse_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda
             IEDIDLink<T> link,
             M mod,
             NotifyingFireParameters cmds = null)
-            where M : IMod
+            where M : IMod<M>
         {
             if (string.IsNullOrWhiteSpace(link.EDID.Type)) return false;
             var group = mod.GetGroup<T>();
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda
             ModList<M> modList, 
             M sourceMod,
             NotifyingFireParameters cmds = null)
-            where M : IMod
+            where M : IMod<M>
         {
             if (TryLinkToMod(link, sourceMod, cmds)) return true;
             if (modList == null) return false;

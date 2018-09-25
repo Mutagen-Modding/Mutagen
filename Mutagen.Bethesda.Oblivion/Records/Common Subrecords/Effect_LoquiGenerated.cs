@@ -1535,6 +1535,26 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            MagicEffect_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            if (ScriptEffect != null)
+            {
+                ScriptEffect.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation

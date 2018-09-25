@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Generation
                         var doBrace = true;
                         if (subLinkCase == LinkCase.Maybe)
                         {
-                            fg.AppendLine($"if ({field.Name} is {nameof(ILinkContainer)} {field.Name}linkCont)");
+                            fg.AppendLine($"if ({field.Name} is {nameof(ILinkSubContainer)} {field.Name}linkCont)");
                         }
                         else if (loqui.SingletonType == SingletonLevel.None)
                         {
@@ -198,6 +198,158 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 fg.AppendLine("yield break;");
+            }
+            fg.AppendLine();
+
+            if (obj.GetObjectType() == ObjectType.Mod)
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"public{await obj.FunctionOverride(async (o) => (await HasLinks(o)) != LinkCase.No)}void Link"))
+                {
+                    args.Add($"ModList<{obj.Name}> modList");
+                    args.Add("NotifyingFireParameters cmds = null");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    await FillLinkCode(obj, fg);
+                }
+                fg.AppendLine();
+            }
+            else
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"public{await obj.FunctionOverride(async (o) => (await HasLinks(o)) != LinkCase.No)}void Link<M>",
+                    wheres: ((await obj.GetFunctionOverrideType(async (o) => (await HasLinks(o)) != LinkCase.No) != OverrideType.HasBase) ? "where M : IMod<M>" : null)))
+                {
+                    args.Add("ModList<M> modList");
+                    args.Add("M sourceMod");
+                    args.Add("NotifyingFireParameters cmds = null");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    await FillLinkCode(obj, fg);
+                }
+                fg.AppendLine();
+            }
+        }
+
+        private async Task FillLinkCode(ObjectGeneration obj, FileGeneration fg)
+        {
+            string sourceModAccessor = obj.GetObjectType() == ObjectType.Mod ? "this" : "sourceMod";
+            if (obj.BaseClass != null
+                && await HasLinks(obj.BaseClass) != LinkCase.No)
+            {
+                using (var args = new ArgsWrapper(fg,
+                $"base.Link"))
+                {
+                    args.Add("modList");
+                    args.Add(sourceModAccessor);
+                    args.Add("cmds");
+                }
+            }
+            foreach (var field in obj.IterateFields())
+            {
+                if (field is FormIDLinkType)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"{field.ProtectedProperty}.Link"))
+                    {
+                        args.Add("modList");
+                        args.Add(sourceModAccessor);
+                        args.Add("cmds");
+                    }
+                }
+                else if (field is LoquiType loqui)
+                {
+                    LinkCase subLinkCase;
+                    if (loqui.TargetObjectGeneration != null)
+                    {
+                        subLinkCase = await HasLinks(loqui);
+                    }
+                    else
+                    {
+                        subLinkCase = LinkCase.Maybe;
+                    }
+                    if (subLinkCase == LinkCase.No) continue;
+                    var doBrace = true;
+                    if (subLinkCase == LinkCase.Maybe)
+                    {
+                        fg.AppendLine($"if ({field.Name} is {nameof(ILinkSubContainer)} {field.Name}linkCont)");
+                    }
+                    else if (loqui.SingletonType == SingletonLevel.None)
+                    {
+                        fg.AppendLine($"if ({field.Name} != null)");
+                    }
+                    else
+                    {
+                        doBrace = false;
+                    }
+                    using (new BraceWrapper(fg, doIt: doBrace))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"{(subLinkCase == LinkCase.Maybe ? $"{field.Name}linkCont" : field.Name)}.Link"))
+                        {
+                            args.Add("modList");
+                            args.Add(sourceModAccessor);
+                            args.Add("cmds");
+                        }
+                    }
+                }
+                else if (field is ContainerType cont
+                    && cont.SubTypeGeneration is LoquiType contLoqui
+                    && await HasLinks(contLoqui) != LinkCase.No)
+                {
+                    var linktype = await HasLinks(contLoqui);
+                    switch (linktype)
+                    {
+                        case LinkCase.Yes:
+                            fg.AppendLine($"foreach (var item in {field.Name})");
+                            break;
+                        case LinkCase.Maybe:
+                            fg.AppendLine($"foreach (var item in Items.WhereCastable<T, {nameof(ILinkSubContainer)}>())");
+                            break;
+                        default:
+                            break;
+                    }
+                    using (new BraceWrapper(fg))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"item.Link"))
+                        {
+                            args.Add("modList");
+                            args.Add(sourceModAccessor);
+                            args.Add("cmds");
+                        }
+                    }
+                }
+                else if (field is DictType dict
+                    && dict.Mode == DictMode.KeyedValue
+                    && dict.ValueTypeGen is LoquiType dictLoqui
+                    && await HasLinks(dictLoqui) != LinkCase.No)
+                {
+                    var linktype = await HasLinks(dictLoqui);
+                    switch (linktype)
+                    {
+                        case LinkCase.Yes:
+                            fg.AppendLine($"foreach (var item in {field.Name}.Values)");
+                            break;
+                        case LinkCase.Maybe:
+                            fg.AppendLine($"foreach (var item in Items.Select(kv => kv.Value).WhereCastable<T, {nameof(ILinkSubContainer)}>())");
+                            break;
+                        default:
+                            break;
+                    }
+                    using (new BraceWrapper(fg))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"item.Link"))
+                        {
+                            args.Add("modList");
+                            args.Add(sourceModAccessor);
+                            args.Add("cmds");
+                        }
+                    }
+                }
             }
         }
     }

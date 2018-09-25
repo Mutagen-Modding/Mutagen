@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda
             ModList<M> modList,
             M sourceMod,
             NotifyingFireParameters cmds = null)
-            where M : IMod;
+            where M : IMod<M>;
     }
 
     public interface ILink<T> : ILink, INotifyingItem<T>

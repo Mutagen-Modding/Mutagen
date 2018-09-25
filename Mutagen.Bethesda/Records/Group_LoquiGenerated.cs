@@ -1064,6 +1064,22 @@ namespace Mutagen.Bethesda
             }
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            foreach (var item in Items.Select(kv => kv.Value).WhereCastable<T, ILinkSubContainer>())
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation

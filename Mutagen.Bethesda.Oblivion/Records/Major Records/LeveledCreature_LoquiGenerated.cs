@@ -1040,6 +1040,30 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Template_Property;
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            foreach (var item in Entries)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Template_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation

@@ -3776,6 +3776,40 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in Relations)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            if (Voices != null)
+            {
+                Voices.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            if (DefaultHair != null)
+            {
+                DefaultHair.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation

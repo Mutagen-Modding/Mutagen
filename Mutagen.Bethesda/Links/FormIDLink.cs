@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda
             ModList<M> modList,
             M sourceMod,
             out T item)
-            where M : IMod
+            where M : IMod<M>
         {
             if (!unlinkedForm.HasValue)
             {
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda
             ModList<M> modList,
             M sourceMod,
             NotifyingFireParameters cmds = null)
-            where M : IMod
+            where M : IMod<M>
         {
             if (!TryGetLink(
                 this.UnlinkedForm,
