@@ -8,7 +8,7 @@
       <List name="Spells">
         <FormIDLink recordType="SPLO" refName="Spell" />
       </List>
-      <RefList name="Relations" refName="Relation" />
+      <RefList name="Relations" refName="RaceRelation" />
       <Data>
         <Fields>
           <RefList name="SkillBoosts" maxSize="7" refName="SkillBoost" />
@@ -104,6 +104,12 @@
       <ByteArray name="SymmetricGeometry" recordType="FGGS" />
       <ByteArray name="AsymmetricGeometry" recordType="FGGA" />
       <ByteArray name="SymmetricTexture" recordType="FGTS" />
+    </Fields>
+  </Object>
+  <Object name="RaceRelation" objType="Subrecord" recordType="XNAM" GUID="503a83fb-a21e-4f6d-b0ca-752d6f972bda" ID="167">
+    <Fields>
+      <FormIDLink name="Race" refName="Race" />
+      <Int32 name="Modifier" />
     </Fields>
   </Object>
 </Loqui>

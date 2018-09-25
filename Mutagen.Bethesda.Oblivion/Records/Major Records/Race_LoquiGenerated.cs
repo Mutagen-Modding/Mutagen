@@ -176,19 +176,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Relation> _Relations = new NotifyingList<Relation>();
-        public INotifyingList<Relation> Relations => _Relations;
+        private readonly INotifyingList<RaceRelation> _Relations = new NotifyingList<RaceRelation>();
+        public INotifyingList<RaceRelation> Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Relation> RelationsEnumerable
+        public IEnumerable<RaceRelation> RelationsEnumerable
         {
             get => _Relations;
             set => _Relations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Relation> IRace.Relations => _Relations;
+        INotifyingList<RaceRelation> IRace.Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Relation> IRaceGetter.Relations => _Relations;
+        INotifyingListGetter<RaceRelation> IRaceGetter.Relations => _Relations;
         #endregion
 
         #endregion
@@ -1611,10 +1611,10 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.Relations);
-                        if (ListXmlTranslation<Relation>.Instance.Parse(
+                        if (ListXmlTranslation<RaceRelation>.Instance.Parse(
                             root: root,
                             enumer: out var RelationsItem,
-                            transl: LoquiXmlTranslation<Relation>.Instance.Parse,
+                            transl: LoquiXmlTranslation<RaceRelation>.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -4068,14 +4068,14 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
                 case 0x4D414E58: // XNAM
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Race_Registration.XNAM_HEADER,
                         item: item.Relations,
                         fieldIndex: (int)Race_FieldIndex.Relations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<Relation>.Instance.Parse);
+                        transl: LoquiBinaryTranslation<RaceRelation>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
                 case 0x41544144: // DATA
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -4643,7 +4643,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj, cmds);
                     break;
                 case Race_FieldIndex.Relations:
-                    this._Relations.SetTo((IEnumerable<Relation>)obj, cmds);
+                    this._Relations.SetTo((IEnumerable<RaceRelation>)obj, cmds);
                     break;
                 case Race_FieldIndex.SkillBoosts:
                     this._SkillBoosts.SetTo((IEnumerable<SkillBoost>)obj, cmds);
@@ -4777,7 +4777,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value, null);
                     break;
                 case Race_FieldIndex.Relations:
-                    obj._Relations.SetTo((IEnumerable<Relation>)pair.Value, null);
+                    obj._Relations.SetTo((IEnumerable<RaceRelation>)pair.Value, null);
                     break;
                 case Race_FieldIndex.SkillBoosts:
                     obj._SkillBoosts.SetTo((IEnumerable<SkillBoost>)pair.Value, null);
@@ -4888,7 +4888,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<String> Description_Property { get; }
 
         new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
-        new INotifyingList<Relation> Relations { get; }
+        new INotifyingList<RaceRelation> Relations { get; }
         new INotifyingList<SkillBoost> SkillBoosts { get; }
         new Byte[] Fluff { get; set; }
         new INotifyingItem<Byte[]> Fluff_Property { get; }
@@ -4956,7 +4956,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingListGetter<FormIDSetLink<Spell>> Spells { get; }
         #endregion
         #region Relations
-        INotifyingListGetter<Relation> Relations { get; }
+        INotifyingListGetter<RaceRelation> Relations { get; }
         #endregion
         #region SkillBoosts
         INotifyingListGetter<SkillBoost> SkillBoosts { get; }
@@ -5423,7 +5423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Spells:
                     return typeof(NotifyingList<FormIDSetLink<Spell>>);
                 case Race_FieldIndex.Relations:
-                    return typeof(NotifyingList<Relation>);
+                    return typeof(NotifyingList<RaceRelation>);
                 case Race_FieldIndex.SkillBoosts:
                     return typeof(NotifyingList<SkillBoost>);
                 case Race_FieldIndex.Fluff:
@@ -5616,8 +5616,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Relation);
-                                    return Relation.Copy(
+                                    if (r == null) return default(RaceRelation);
+                                    return RaceRelation.Copy(
                                         r,
                                         copyMask?.Relations?.Specific,
                                         def: d);
@@ -6509,10 +6509,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Relations.HasBeenSet)
                 {
-                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
-                    ret.Relations.Specific = item.Relations.SelectAgainst<Relation, MaskItem<bool, Relation_Mask<bool>>>(rhs.Relations, ((l, r) =>
+                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>();
+                    ret.Relations.Specific = item.Relations.SelectAgainst<RaceRelation, MaskItem<bool, RaceRelation_Mask<bool>>>(rhs.Relations, ((l, r) =>
                     {
-                        MaskItem<bool, Relation_Mask<bool>> itemRet;
+                        MaskItem<bool, RaceRelation_Mask<bool>> itemRet;
                         itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
@@ -6521,13 +6521,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 else
                 {
-                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
+                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>();
                     ret.Relations.Overall = true;
                 }
             }
             else
             {
-                ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
+                ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>();
                 ret.Relations.Overall = false;
             }
             ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
@@ -6864,7 +6864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = item.Name_Property.HasBeenSet;
             ret.Description = item.Description_Property.HasBeenSet;
             ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
-            ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, Relation_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, RaceRelation_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>(item.SkillBoosts.HasBeenSet, item.SkillBoosts.Select((i) => new MaskItem<bool, SkillBoost_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Fluff = true;
             ret.MaleHeight = true;
@@ -6988,16 +6988,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Relations.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
             {
-                ListXmlTranslation<Relation>.Instance.Write(
+                ListXmlTranslation<RaceRelation>.Instance.Write(
                     node: elem,
                     name: nameof(item.Relations),
                     item: item.Relations,
                     fieldIndex: (int)Race_FieldIndex.Relations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Relations),
-                    transl: (XElement subNode, Relation subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, RaceRelation subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        LoquiXmlTranslation<Relation>.Instance.Write(
+                        LoquiXmlTranslation<RaceRelation>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: "Item",
@@ -7315,12 +7315,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: Race_Registration.SPLO_HEADER,
                 errorMask: errorMask,
                 transl: FormIDBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.Write(
                 writer: writer,
                 items: item.Relations,
                 fieldIndex: (int)Race_FieldIndex.Relations,
                 errorMask: errorMask,
-                transl: LoquiBinaryTranslation<Relation>.Instance.Write);
+                transl: LoquiBinaryTranslation<RaceRelation>.Instance.Write);
             if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DATA_HEADER)))
@@ -7463,7 +7463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Name = initialValue;
             this.Description = initialValue;
             this.Spells = new MaskItem<T, IEnumerable<T>>(initialValue, null);
-            this.Relations = new MaskItem<T, IEnumerable<MaskItem<T, Relation_Mask<T>>>>(initialValue, null);
+            this.Relations = new MaskItem<T, IEnumerable<MaskItem<T, RaceRelation_Mask<T>>>>(initialValue, null);
             this.SkillBoosts = new MaskItem<T, IEnumerable<MaskItem<T, SkillBoost_Mask<T>>>>(initialValue, null);
             this.Fluff = initialValue;
             this.MaleHeight = initialValue;
@@ -7490,7 +7490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Name;
         public T Description;
         public MaskItem<T, IEnumerable<T>> Spells;
-        public MaskItem<T, IEnumerable<MaskItem<T, Relation_Mask<T>>>> Relations;
+        public MaskItem<T, IEnumerable<MaskItem<T, RaceRelation_Mask<T>>>> Relations;
         public MaskItem<T, IEnumerable<MaskItem<T, SkillBoost_Mask<T>>>> SkillBoosts;
         public T Fluff;
         public T MaleHeight;
@@ -7725,18 +7725,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Relations != null)
             {
-                obj.Relations = new MaskItem<R, IEnumerable<MaskItem<R, Relation_Mask<R>>>>();
+                obj.Relations = new MaskItem<R, IEnumerable<MaskItem<R, RaceRelation_Mask<R>>>>();
                 obj.Relations.Overall = eval(this.Relations.Overall);
                 if (Relations.Specific != null)
                 {
-                    List<MaskItem<R, Relation_Mask<R>>> l = new List<MaskItem<R, Relation_Mask<R>>>();
+                    List<MaskItem<R, RaceRelation_Mask<R>>> l = new List<MaskItem<R, RaceRelation_Mask<R>>>();
                     obj.Relations.Specific = l;
                     foreach (var item in Relations.Specific)
                     {
-                        MaskItem<R, Relation_Mask<R>> mask = default(MaskItem<R, Relation_Mask<R>>);
+                        MaskItem<R, RaceRelation_Mask<R>> mask = default(MaskItem<R, RaceRelation_Mask<R>>);
                         if (item != null)
                         {
-                            mask = new MaskItem<R, Relation_Mask<R>>();
+                            mask = new MaskItem<R, RaceRelation_Mask<R>>();
                             mask.Overall = eval(item.Overall);
                             if (item.Specific != null)
                             {
@@ -8148,7 +8148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Name;
         public Exception Description;
         public MaskItem<Exception, IEnumerable<Exception>> Spells;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> Relations;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>> Relations;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>> SkillBoosts;
         public Exception Fluff;
         public Exception MaleHeight;
@@ -8242,7 +8242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Spells = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
                     break;
                 case Race_FieldIndex.Relations:
-                    this.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(ex, null);
+                    this.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>>(ex, null);
                     break;
                 case Race_FieldIndex.SkillBoosts:
                     this.SkillBoosts = new MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>(ex, null);
@@ -8322,7 +8322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Spells = (MaskItem<Exception, IEnumerable<Exception>>)obj;
                     break;
                 case Race_FieldIndex.Relations:
-                    this.Relations = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>)obj;
+                    this.Relations = (MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>>)obj;
                     break;
                 case Race_FieldIndex.SkillBoosts:
                     this.SkillBoosts = (MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>)obj;
@@ -8607,7 +8607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = this.Name.Combine(rhs.Name);
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Spells = new MaskItem<Exception, IEnumerable<Exception>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<Exception>(this.Spells.Specific.And(rhs.Spells.Specific)));
-            ret.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(this.Relations.Overall.Combine(rhs.Relations.Overall), new List<MaskItem<Exception, Relation_ErrorMask>>(this.Relations.Specific.And(rhs.Relations.Specific)));
+            ret.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>>(this.Relations.Overall.Combine(rhs.Relations.Overall), new List<MaskItem<Exception, RaceRelation_ErrorMask>>(this.Relations.Specific.And(rhs.Relations.Specific)));
             ret.SkillBoosts = new MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>(this.SkillBoosts.Overall.Combine(rhs.SkillBoosts.Overall), new List<MaskItem<Exception, SkillBoost_ErrorMask>>(this.SkillBoosts.Specific.And(rhs.SkillBoosts.Specific)));
             ret.Fluff = this.Fluff.Combine(rhs.Fluff);
             ret.MaleHeight = this.MaleHeight.Combine(rhs.MaleHeight);
@@ -8651,7 +8651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Name;
         public bool Description;
         public CopyOption Spells;
-        public MaskItem<CopyOption, Relation_CopyMask> Relations;
+        public MaskItem<CopyOption, RaceRelation_CopyMask> Relations;
         public MaskItem<CopyOption, SkillBoost_CopyMask> SkillBoosts;
         public bool Fluff;
         public bool MaleHeight;
@@ -8681,7 +8681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Name;
         public bool Description;
         public bool Spells;
-        public MaskItem<bool, Relation_TranslationMask> Relations;
+        public MaskItem<bool, RaceRelation_TranslationMask> Relations;
         public MaskItem<bool, SkillBoost_TranslationMask> SkillBoosts;
         public bool Fluff;
         public bool MaleHeight;
