@@ -64,7 +64,8 @@ namespace Mutagen.Bethesda
             out T item)
             where M : IMod<M>
         {
-            if (!unlinkedForm.HasValue)
+            if (!unlinkedForm.HasValue
+                || unlinkedForm.Equals(FormID.NULL))
             {
                 item = default(T);
                 return false;
