@@ -55,6 +55,7 @@
     <Compile Include="INamed.cs" />
     <Compile Include="Links\EDIDSetLink.cs" />
     <Compile Include="Links\EDIDLink.cs" />
+    <Compile Include="Links\FormIDLinkTesterHelper.cs" />
     <Compile Include="Links\FormIDSetLink.cs" />
     <Compile Include="Links\IEDIDLink.cs" />
     <Compile Include="Links\IFormIDLink.cs" />

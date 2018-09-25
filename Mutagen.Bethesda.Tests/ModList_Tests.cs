@@ -21,10 +21,21 @@ namespace Mutagen.Bethesda.Tests
                 new ModKey("Knights", master: false)
             };
             ModList<OblivionMod> modList = new ModList<OblivionMod>();
+            FormIDLinkTesterHelper.Active = true;
             await modList.Import(
                 dataFolder: testingSettings.DataFolder,
                 loadOrder: loadOrder,
                 importer: async (filePath) => TryGet<OblivionMod>.Succeed(OblivionMod.Create_Binary(filePath.Path)));
+
+            Assert.NotNull(FormIDLinkTesterHelper.CreatedLinks);
+            Assert.DoesNotContain(FormIDLinkTesterHelper.CreatedLinks, l => l == null);
+
+            var failedLinks = FormIDLinkTesterHelper.CreatedLinks
+                .Where(l => !l.Linked)
+                .Where(l => l.FormID != FormID.NULL)
+                .ToArray();
+
+            Assert.Empty(failedLinks);
         }
     }
 }

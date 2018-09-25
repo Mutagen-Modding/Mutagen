@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Mutagen.Bethesda.Tests;
 using Noggog;
 using Noggog.Notifying;
 using System;
@@ -18,6 +19,9 @@ namespace Mutagen.Bethesda
 
         public FormIDSetLink()
         {
+#if DEBUG
+            FormIDLinkTesterHelper.Add(this);
+#endif
         }
 
         public FormIDSetLink(FormID unlinkedForm)
@@ -25,6 +29,9 @@ namespace Mutagen.Bethesda
         {
             this.UnlinkedForm = unlinkedForm;
             this._HasBeenSet = true;
+#if DEBUG
+            FormIDLinkTesterHelper.Add(this);
+#endif
         }
 
         private void UpdateUnlinkedForm(T change)
