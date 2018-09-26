@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataObjects,
         ILoquiObject<RegionDataObjects>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RegionDataObjects>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -492,9 +493,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RegionDataObjects_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
+        public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
             foreach (var item in Objects.SelectMany(f => f.Links))
             {
                 yield return item;
@@ -502,12 +507,16 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public void Link<M>(
+        public override void Link<M>(
             ModList<M> modList,
             M sourceMod,
             NotifyingFireParameters cmds = null)
-            where M : IMod<M>
+            
         {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
             foreach (var item in Objects)
             {
                 item.Link(

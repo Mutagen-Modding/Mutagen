@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda
         IPropertySupporter<MajorRecord.MajorRecordFlag>,
         IPropertySupporter<UInt32>,
         IPropertySupporter<String>,
+        ILinkSubContainer,
         IEquatable<MajorRecord>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

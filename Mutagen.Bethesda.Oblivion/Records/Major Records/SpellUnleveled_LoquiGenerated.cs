@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<UInt32>,
         IPropertySupporter<Spell.SpellLevel>,
         IPropertySupporter<Spell.SpellFlag>,
+        ILinkSubContainer,
         IEquatable<SpellUnleveled>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1418,6 +1419,10 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             
         {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
             foreach (var item in Effects)
             {
                 item.Link(

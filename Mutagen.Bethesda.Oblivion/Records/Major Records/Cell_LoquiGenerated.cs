@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Int32>,
         IPropertySupporter<PathGrid>,
         IPropertySupporter<Landscape>,
+        ILinkSubContainer,
         IEquatable<Cell>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2815,6 +2816,21 @@ namespace Mutagen.Bethesda.Oblivion
                     yield return item;
                 }
             }
+            foreach (var item in Persistent.WhereCastable<Placed, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
+            foreach (var item in Temporary.WhereCastable<Placed, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
+            foreach (var item in VisibleWhenDistant.WhereCastable<Placed, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
             yield break;
         }
 
@@ -2824,6 +2840,10 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             
         {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
             Climate_Property.Link(
                 modList,
                 sourceMod,
@@ -2850,6 +2870,27 @@ namespace Mutagen.Bethesda.Oblivion
             if (Landscape != null)
             {
                 Landscape?.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in Persistent.WhereCastable<Placed, ILinkSubContainer>())
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in Temporary.WhereCastable<Placed, ILinkSubContainer>())
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in VisibleWhenDistant.WhereCastable<Placed, ILinkSubContainer>())
+            {
+                item.Link(
                     modList,
                     sourceMod,
                     cmds);

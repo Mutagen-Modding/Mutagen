@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<LogEntry.Flag>,
         IPropertySupporter<String>,
         IPropertySupporter<ScriptFields>,
+        ILinkSubContainer,
         IEquatable<LogEntry>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1156,6 +1157,37 @@ namespace Mutagen.Bethesda.Oblivion
                     return default(ScriptFields);
                 default:
                     throw new ArgumentException($"Unknown index for field type ScriptFields: {index}");
+            }
+        }
+
+        #endregion
+
+        #region Mutagen
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            if (ResultScript is ILinkSubContainer ResultScriptlinkCont)
+            {
+                foreach (var item in ResultScriptlinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            if (ResultScript is ILinkSubContainer ResultScriptlinkCont)
+            {
+                ResultScriptlinkCont?.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
             }
         }
 

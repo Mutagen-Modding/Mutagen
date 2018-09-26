@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<QuestTarget>,
         ILoquiObjectSetter,
         IPropertySupporter<QuestTarget.Flag>,
+        ILinkSubContainer,
         IEquatable<QuestTarget>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

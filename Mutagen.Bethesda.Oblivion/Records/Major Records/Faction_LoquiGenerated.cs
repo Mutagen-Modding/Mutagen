@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<String>,
         IPropertySupporter<Faction.FactionFlag>,
         IPropertySupporter<Single>,
+        ILinkSubContainer,
         IEquatable<Faction>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

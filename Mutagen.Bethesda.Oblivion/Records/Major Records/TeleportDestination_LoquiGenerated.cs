@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<TeleportDestination>,
         ILoquiObjectSetter,
         IPropertySupporter<P3Float>,
+        ILinkSubContainer,
         IEquatable<TeleportDestination>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -12,13 +12,27 @@ namespace Mutagen.Bethesda.Generation
     {
         public enum LinkCase { No, Yes, Maybe }
 
+        public override async Task<IEnumerable<string>> Interfaces(ObjectGeneration obj)
+        {
+            if (await HasLinks(obj) != LinkCase.No)
+            {
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    return $"{nameof(ILinkContainer)}".Single();
+                }
+                else
+                {
+                    return $"{nameof(ILinkSubContainer)}".Single();
+                }
+            }
+            return Enumerable.Empty<string>();
+        }
+        
         public async Task<LinkCase> HasLinks(LoquiType loqui, GenericSpecification specifications = null)
         {
             if (loqui.TargetObjectGeneration != null)
             {
-                var subCase = await HasLinks(loqui.TargetObjectGeneration, loqui.GenericSpecification);
-                if (subCase == LinkCase.Yes) return LinkCase.Yes;
-                return subCase;
+                return await HasLinks(loqui.TargetObjectGeneration, loqui.GenericSpecification);
             }
             else if (specifications != null)
             {
@@ -80,6 +94,17 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+
+            // If no, check subclasses
+            if (bestCase == LinkCase.No)
+            {
+                foreach (var inheritingObject in await obj.InheritingObjects())
+                {
+                    var subCase = await HasLinks(inheritingObject, specifications);
+                    if (subCase != LinkCase.No) return LinkCase.Maybe;
+                }
+            }
+
             return bestCase;
         }
 
@@ -156,7 +181,7 @@ namespace Mutagen.Bethesda.Generation
                                 fg.AppendLine($"foreach (var item in {field.Name}.SelectMany(f => f.Links))");
                                 break;
                             case LinkCase.Maybe:
-                                fg.AppendLine($"foreach (var item in Items.WhereCastable<T, ILinkContainer>()");
+                                fg.AppendLine($"foreach (var item in {field.Name}.WhereCastable<{contLoqui.TypeName}, ILinkContainer>()");
                                 using (new DepthWrapper(fg))
                                 {
                                     fg.AppendLine(".SelectMany((f) => f.Links))");
@@ -182,7 +207,7 @@ namespace Mutagen.Bethesda.Generation
                                 fg.AppendLine($"foreach (var item in {field.Name}.Values.SelectMany(f => f.Links))");
                                 break;
                             case LinkCase.Maybe:
-                                fg.AppendLine($"foreach (var item in Items.Select(kv => kv.Value).WhereCastable<T, ILinkContainer>()");
+                                fg.AppendLine($"foreach (var item in {field.Name}.Select(kv => kv.Value).WhereCastable<{dictLoqui.TypeName}, ILinkContainer>()");
                                 using (new DepthWrapper(fg))
                                 {
                                     fg.AppendLine(".SelectMany((f) => f.Links))");
@@ -306,7 +331,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine($"foreach (var item in {field.Name})");
                             break;
                         case LinkCase.Maybe:
-                            fg.AppendLine($"foreach (var item in Items.WhereCastable<T, {nameof(ILinkSubContainer)}>())");
+                            fg.AppendLine($"foreach (var item in {field.Name}.WhereCastable<{contLoqui.TypeName}, {nameof(ILinkSubContainer)}>())");
                             break;
                         default:
                             break;
@@ -334,7 +359,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine($"foreach (var item in {field.Name}.Values)");
                             break;
                         case LinkCase.Maybe:
-                            fg.AppendLine($"foreach (var item in Items.Select(kv => kv.Value).WhereCastable<T, {nameof(ILinkSubContainer)}>())");
+                            fg.AppendLine($"foreach (var item in {field.Name}.Select(kv => kv.Value).WhereCastable<{dictLoqui.TypeName}, {nameof(ILinkSubContainer)}>())");
                             break;
                         default:
                             break;

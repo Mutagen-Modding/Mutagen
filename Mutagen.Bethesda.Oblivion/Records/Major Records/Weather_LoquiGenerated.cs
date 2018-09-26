@@ -41,6 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Byte>,
         IPropertySupporter<Weather.WeatherClassification>,
         IPropertySupporter<Color>,
+        ILinkSubContainer,
         IEquatable<Weather>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

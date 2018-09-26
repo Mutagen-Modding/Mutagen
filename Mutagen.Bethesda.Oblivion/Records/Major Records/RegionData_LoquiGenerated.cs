@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<RegionData.RegionDataType>,
         IPropertySupporter<RegionData.RegionDataFlag>,
         IPropertySupporter<Byte>,
+        ILinkSubContainer,
         IEquatable<RegionData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -987,6 +988,20 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        public virtual IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield break;
+        }
+
+        public virtual void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+        }
+
         #endregion
 
         #region Binary Translation

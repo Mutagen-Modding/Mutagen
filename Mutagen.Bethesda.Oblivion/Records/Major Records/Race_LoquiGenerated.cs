@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<RaceStatsGendered>,
         IPropertySupporter<GenderedBodyData>,
         IPropertySupporter<FaceGenData>,
+        ILinkSubContainer,
         IEquatable<Race>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

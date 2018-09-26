@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter,
         IPropertySupporter<Byte>,
         IPropertySupporter<Byte[]>,
+        ILinkSubContainer,
         IEquatable<RankPlacement>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

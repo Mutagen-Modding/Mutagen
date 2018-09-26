@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Resistance>,
         IPropertySupporter<UInt32>,
         IPropertySupporter<MagicEffectSubData>,
+        ILinkSubContainer,
         IEquatable<MagicEffect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

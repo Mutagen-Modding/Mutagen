@@ -43,6 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Color>,
         IPropertySupporter<Light.LightFlag>,
         IPropertySupporter<Single>,
+        ILinkSubContainer,
         IEquatable<Light>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

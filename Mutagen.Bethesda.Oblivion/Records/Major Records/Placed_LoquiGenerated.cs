@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaced,
         ILoquiObject<Placed>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<Placed>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -331,6 +332,31 @@ namespace Mutagen.Bethesda.Oblivion
                         translationMask: translationMask);
                     break;
             }
+        }
+
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
         }
 
         #endregion

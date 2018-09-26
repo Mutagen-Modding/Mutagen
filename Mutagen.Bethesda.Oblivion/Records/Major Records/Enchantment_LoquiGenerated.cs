@@ -39,6 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Enchantment.EnchantmentType>,
         IPropertySupporter<UInt32>,
         IPropertySupporter<Enchantment.Flag>,
+        ILinkSubContainer,
         IEquatable<Enchantment>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

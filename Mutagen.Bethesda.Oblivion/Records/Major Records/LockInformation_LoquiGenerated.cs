@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Byte>,
         IPropertySupporter<Byte[]>,
         IPropertySupporter<LockInformation.Flag>,
+        ILinkSubContainer,
         IEquatable<LockInformation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

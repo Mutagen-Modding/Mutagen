@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<DialogType>,
         IPropertySupporter<DialogItem.Flag>,
         IPropertySupporter<ScriptFields>,
+        ILinkSubContainer,
         IEquatable<DialogItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1426,6 +1427,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return Quest_Property;
             yield return PreviousTopic_Property;
+            if (Script is ILinkSubContainer ScriptlinkCont)
+            {
+                foreach (var item in ScriptlinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
 
@@ -1447,6 +1455,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            if (Script is ILinkSubContainer ScriptlinkCont)
+            {
+                ScriptlinkCont?.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
         }
 
         #endregion

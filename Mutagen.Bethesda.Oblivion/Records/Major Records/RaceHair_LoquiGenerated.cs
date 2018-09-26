@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceHair,
         ILoquiObject<RaceHair>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RaceHair>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

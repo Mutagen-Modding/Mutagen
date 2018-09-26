@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptObjectReference,
         ILoquiObject<ScriptObjectReference>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<ScriptObjectReference>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -453,19 +454,27 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ScriptObjectReference_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
+        public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
             yield return Reference_Property;
             yield break;
         }
 
-        public void Link<M>(
+        public override void Link<M>(
             ModList<M> modList,
             M sourceMod,
             NotifyingFireParameters cmds = null)
-            where M : IMod<M>
+            
         {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
             Reference_Property.Link(
                 modList,
                 sourceMod,

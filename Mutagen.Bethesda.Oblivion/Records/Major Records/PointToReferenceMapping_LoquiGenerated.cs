@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPointToReferenceMapping,
         ILoquiObject<PointToReferenceMapping>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<PointToReferenceMapping>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

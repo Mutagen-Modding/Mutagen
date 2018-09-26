@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<RegionDataMapName>,
         IPropertySupporter<RegionDataGrasses>,
         IPropertySupporter<RegionDataSounds>,
+        ILinkSubContainer,
         IEquatable<Region>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

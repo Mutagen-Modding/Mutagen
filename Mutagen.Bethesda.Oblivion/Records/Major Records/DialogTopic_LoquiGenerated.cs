@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamed,
         IPropertySupporter<String>,
         IPropertySupporter<DialogType>,
+        ILinkSubContainer,
         IEquatable<DialogTopic>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

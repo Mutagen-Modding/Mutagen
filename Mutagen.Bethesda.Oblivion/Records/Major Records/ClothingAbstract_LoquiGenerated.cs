@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<BipedFlag>,
         IPropertySupporter<EquipmentFlag>,
         IPropertySupporter<Model>,
+        ILinkSubContainer,
         IEquatable<ClothingAbstract>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

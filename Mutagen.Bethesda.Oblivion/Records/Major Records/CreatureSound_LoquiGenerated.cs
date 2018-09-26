@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<CreatureSound>,
         ILoquiObjectSetter,
         IPropertySupporter<CreatureSound.CreatureSoundType>,
+        ILinkSubContainer,
         IEquatable<CreatureSound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

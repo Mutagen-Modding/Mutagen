@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<LoadScreen>,
         ILoquiObjectSetter,
         IPropertySupporter<String>,
+        ILinkSubContainer,
         IEquatable<LoadScreen>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

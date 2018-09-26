@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter,
         IPropertySupporter<Byte[]>,
         IPropertySupporter<GroupTypeEnum>,
+        ILinkSubContainer,
         IEquatable<WorldspaceSubBlock>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

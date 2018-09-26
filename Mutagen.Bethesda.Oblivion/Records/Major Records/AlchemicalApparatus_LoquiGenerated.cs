@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<AlchemicalApparatus.ApparatusType>,
         IPropertySupporter<UInt32>,
         IPropertySupporter<Single>,
+        ILinkSubContainer,
         IEquatable<AlchemicalApparatus>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

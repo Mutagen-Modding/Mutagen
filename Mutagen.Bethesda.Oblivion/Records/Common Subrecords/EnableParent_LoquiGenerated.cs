@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<EnableParent>,
         ILoquiObjectSetter,
         IPropertySupporter<EnableParent.Flag>,
+        ILinkSubContainer,
         IEquatable<EnableParent>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

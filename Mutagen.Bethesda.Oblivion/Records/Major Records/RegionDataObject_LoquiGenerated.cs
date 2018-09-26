@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Byte>,
         IPropertySupporter<RegionDataObject.Flag>,
         IPropertySupporter<P3UInt16>,
+        ILinkSubContainer,
         IEquatable<RegionDataObject>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

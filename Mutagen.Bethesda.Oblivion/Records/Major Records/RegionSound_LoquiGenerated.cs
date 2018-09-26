@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter,
         IPropertySupporter<RegionSound.Flag>,
         IPropertySupporter<Single>,
+        ILinkSubContainer,
         IEquatable<RegionSound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

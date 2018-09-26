@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Effect.EffectType>,
         IPropertySupporter<ActorValueExtended>,
         IPropertySupporter<ScriptEffect>,
+        ILinkSubContainer,
         IEquatable<Effect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

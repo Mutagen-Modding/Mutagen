@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<QuestStage>,
         ILoquiObjectSetter,
         IPropertySupporter<UInt16>,
+        ILinkSubContainer,
         IEquatable<QuestStage>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -717,6 +718,32 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = QuestStage_Registration.TRIGGERING_RECORD_TYPE;
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in LogEntries.WhereCastable<LogEntry, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            foreach (var item in LogEntries.WhereCastable<LogEntry, ILinkSubContainer>())
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation

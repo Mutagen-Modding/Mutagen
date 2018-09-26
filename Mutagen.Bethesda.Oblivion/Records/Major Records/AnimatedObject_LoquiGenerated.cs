@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<AnimatedObject>,
         ILoquiObjectSetter,
         IPropertySupporter<Model>,
+        ILinkSubContainer,
         IEquatable<AnimatedObject>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

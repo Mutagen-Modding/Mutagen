@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRelatedWaters,
         ILoquiObject<RelatedWaters>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RelatedWaters>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

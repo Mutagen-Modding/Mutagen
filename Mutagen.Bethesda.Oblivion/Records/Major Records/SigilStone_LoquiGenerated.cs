@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Byte>,
         IPropertySupporter<UInt32>,
         IPropertySupporter<Single>,
+        ILinkSubContainer,
         IEquatable<SigilStone>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<PathGrid>,
         ILoquiObjectSetter,
         IPropertySupporter<Byte[]>,
+        ILinkSubContainer,
         IEquatable<PathGrid>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -891,6 +892,10 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             
         {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
             foreach (var item in PointToReferenceMappings)
             {
                 item.Link(

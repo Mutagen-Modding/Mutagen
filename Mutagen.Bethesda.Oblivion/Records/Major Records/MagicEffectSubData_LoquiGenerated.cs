@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<MagicEffectSubData>,
         ILoquiObjectSetter,
         IPropertySupporter<Single>,
+        ILinkSubContainer,
         IEquatable<MagicEffectSubData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Color>,
         IPropertySupporter<UInt16>,
         IPropertySupporter<RelatedWaters>,
+        ILinkSubContainer,
         IEquatable<Water>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

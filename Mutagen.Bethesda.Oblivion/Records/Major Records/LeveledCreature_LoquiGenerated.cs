@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter,
         IPropertySupporter<Byte>,
         IPropertySupporter<LeveledFlag>,
+        ILinkSubContainer,
         IEquatable<LeveledCreature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1047,6 +1048,10 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             
         {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
             foreach (var item in Entries)
             {
                 item.Link(

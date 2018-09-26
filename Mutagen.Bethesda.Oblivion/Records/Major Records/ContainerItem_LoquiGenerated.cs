@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ContainerItem>,
         ILoquiObjectSetter,
         IPropertySupporter<UInt32>,
+        ILinkSubContainer,
         IEquatable<ContainerItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

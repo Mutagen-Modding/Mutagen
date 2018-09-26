@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Landscape>,
         ILoquiObjectSetter,
         IPropertySupporter<Byte[]>,
+        ILinkSubContainer,
         IEquatable<Landscape>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1122,6 +1123,10 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             
         {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
             foreach (var item in Layers)
             {
                 item.Link(

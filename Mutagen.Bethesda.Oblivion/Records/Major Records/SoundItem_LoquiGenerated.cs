@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<SoundItem>,
         ILoquiObjectSetter,
         IPropertySupporter<Byte>,
+        ILinkSubContainer,
         IEquatable<SoundItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

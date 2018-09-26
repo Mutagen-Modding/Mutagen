@@ -39,6 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Model>,
         IPropertySupporter<Container.ContainerFlag>,
         IPropertySupporter<Single>,
+        ILinkSubContainer,
         IEquatable<Container>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

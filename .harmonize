@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>f80785c38cd481612ada64e24e94a6de31607dc1</Sha>
+         <Sha>1ce7f1728c68b8a71e0c1a96bfe4a07fc30a8082</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-25-2018 06:38:36</CommitDate>
-         <Description>ObjectGeneration.GeFunctionOverrideType</Description>
+         <CommitDate>09-26-2018 09:52:56</CommitDate>
+         <Description>Interface enumerables made to be Tasks</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

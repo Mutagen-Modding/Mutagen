@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter,
         IPropertySupporter<AlphaLayer.QuadrantEnum>,
         IPropertySupporter<UInt16>,
+        ILinkSubContainer,
         IEquatable<BaseLayer>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

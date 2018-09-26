@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter,
         IPropertySupporter<Int16>,
         IPropertySupporter<Byte[]>,
+        ILinkSubContainer,
         IEquatable<LeveledEntry<T>>
         where T : Bethesda.MajorRecord, ILoquiObject<T>
     {

@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptReference,
         ILoquiObject<ScriptReference>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<ScriptReference>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -329,6 +330,23 @@ namespace Mutagen.Bethesda.Oblivion
                 default:
                     break;
             }
+        }
+
+        #endregion
+
+        #region Mutagen
+        public virtual IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield break;
+        }
+
+        public virtual void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
         }
 
         #endregion

@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<OblivionMod>,
         ILoquiObjectSetter,
         IPropertySupporter<TES4>,
+        ILinkContainer,
         IEquatable<OblivionMod>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2984,6 +2985,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            if (Scripts is ILinkSubContainer ScriptslinkCont)
+            {
+                foreach (var item in ScriptslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in Enchantments.Links)
             {
                 yield return item;
@@ -3139,6 +3147,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 this,
                 cmds);
+            if (Scripts is ILinkSubContainer ScriptslinkCont)
+            {
+                ScriptslinkCont?.Link(
+                    modList,
+                    this,
+                    cmds);
+            }
             Enchantments?.Link(
                 modList,
                 this,

@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<UInt32>,
         IPropertySupporter<Single>,
         IPropertySupporter<SoulLevel>,
+        ILinkSubContainer,
         IEquatable<SoulGem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

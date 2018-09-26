@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<MagicSchool>,
         IPropertySupporter<ScriptEffect.Flag>,
         IPropertySupporter<String>,
+        ILinkSubContainer,
         IEquatable<ScriptEffect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<String>,
         IPropertySupporter<Quest.Flag>,
         IPropertySupporter<Byte>,
+        ILinkSubContainer,
         IEquatable<Quest>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1405,6 +1406,11 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             yield return Script_Property;
+            foreach (var item in Stages.WhereCastable<QuestStage, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
             foreach (var item in Targets.SelectMany(f => f.Links))
             {
                 yield return item;
@@ -1426,6 +1432,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in Stages.WhereCastable<QuestStage, ILinkSubContainer>())
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
             foreach (var item in Targets)
             {
                 item.Link(

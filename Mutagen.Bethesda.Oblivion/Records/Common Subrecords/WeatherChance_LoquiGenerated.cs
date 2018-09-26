@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<WeatherChance>,
         ILoquiObjectSetter,
         IPropertySupporter<Int32>,
+        ILinkSubContainer,
         IEquatable<WeatherChance>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter,
         IPropertySupporter<Byte>,
         IPropertySupporter<LeveledFlag>,
+        ILinkSubContainer,
         IEquatable<LeveledSpell>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

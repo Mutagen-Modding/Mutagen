@@ -41,6 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Book.BookFlag>,
         IPropertySupporter<Skill>,
         IPropertySupporter<Single>,
+        ILinkSubContainer,
         IEquatable<Book>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

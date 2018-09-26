@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<String>,
         IPropertySupporter<Model>,
         IPropertySupporter<Door.DoorFlag>,
+        ILinkSubContainer,
         IEquatable<Door>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

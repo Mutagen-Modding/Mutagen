@@ -39,6 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<EnableParent>,
         IPropertySupporter<Single>,
         IPropertySupporter<P3Float>,
+        ILinkSubContainer,
         IEquatable<PlacedNPC>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1959,6 +1960,10 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             
         {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
             Base_Property.Link(
                 modList,
                 sourceMod,

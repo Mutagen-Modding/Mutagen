@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda
         IPropertySupporter<String>,
         IPropertySupporter<GroupTypeEnum>,
         IPropertySupporter<Byte[]>,
+        ILinkSubContainer,
         IEquatable<Group<T>>
         where T : IFormID, ILoquiObject<T>
     {

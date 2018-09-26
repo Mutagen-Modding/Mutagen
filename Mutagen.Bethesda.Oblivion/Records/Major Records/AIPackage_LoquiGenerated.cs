@@ -39,6 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<AIPackageLocation>,
         IPropertySupporter<AIPackageSchedule>,
         IPropertySupporter<AIPackageTarget>,
+        ILinkSubContainer,
         IEquatable<AIPackage>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

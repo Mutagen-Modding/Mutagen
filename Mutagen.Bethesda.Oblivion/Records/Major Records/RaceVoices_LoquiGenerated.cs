@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceVoices,
         ILoquiObject<RaceVoices>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RaceVoices>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

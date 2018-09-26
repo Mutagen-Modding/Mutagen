@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<WeatherSound>,
         ILoquiObjectSetter,
         IPropertySupporter<WeatherSound.SoundType>,
+        ILinkSubContainer,
         IEquatable<WeatherSound>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

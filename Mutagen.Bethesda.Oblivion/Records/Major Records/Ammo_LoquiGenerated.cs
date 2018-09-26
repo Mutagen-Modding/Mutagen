@@ -41,6 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Single>,
         IPropertySupporter<Ammo.AmmoFlag>,
         IPropertySupporter<UInt32>,
+        ILinkSubContainer,
         IEquatable<Ammo>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2109,6 +2110,10 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             
         {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
             Enchantment_Property.Link(
                 modList,
                 sourceMod,

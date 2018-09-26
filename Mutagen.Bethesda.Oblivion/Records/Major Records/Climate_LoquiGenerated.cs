@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPropertySupporter<Model>,
         IPropertySupporter<Byte>,
         IPropertySupporter<Climate.MoonPhase>,
+        ILinkSubContainer,
         IEquatable<Climate>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

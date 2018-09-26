@@ -10,10 +10,10 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FolderExportModule : GenerationModule
     {
-        public override IEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
+        public override async Task<IEnumerable<string>> RequiredUsingStatements(ObjectGeneration obj)
         {
-            if (obj.GetObjectType() != ObjectType.Mod) yield break;
-            yield return "System.Threading.Tasks";
+            if (obj.GetObjectType() != ObjectType.Mod) return Enumerable.Empty<string>();
+            return "System.Threading.Tasks".Single();
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
