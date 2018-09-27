@@ -337,7 +337,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GRUP_RECORD_TYPE = ItemAbstract_Registration.TRIGGERING_RECORD_TYPE;
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -716,7 +715,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = AMMO_HEADER;
+        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        AMMO_HEADER,
+                        WEAP_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         #region Interface

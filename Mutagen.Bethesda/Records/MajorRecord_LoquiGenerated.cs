@@ -1763,11 +1763,11 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType WATR_HEADER = new RecordType("WATR");
-        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
+        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
@@ -1839,11 +1839,11 @@ namespace Mutagen.Bethesda.Internals
                         SBSP_HEADER,
                         TREE_HEADER,
                         WATR_HEADER,
-                        WEAP_HEADER,
                         WTHR_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER,
                         AMMO_HEADER,
+                        WEAP_HEADER,
                         LVLC_HEADER,
                         CELL_HEADER,
                         WRLD_HEADER,
