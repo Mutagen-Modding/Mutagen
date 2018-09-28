@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormIDLink<PlacedObject> Reference_Property { get; } = new FormIDLink<PlacedObject>();
+        public FormIDLink<Placed> Reference_Property { get; } = new FormIDLink<Placed>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public PlacedObject Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
+        public Placed Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<PlacedObject> IEnableParentGetter.Reference_Property => this.Reference_Property;
+        FormIDLink<Placed> IEnableParentGetter.Reference_Property => this.Reference_Property;
         #endregion
         #region Flags
         protected EnableParent.Flag _Flags;
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case EnableParent_FieldIndex.Reference:
                     this.Reference_Property.Set(
-                        (FormIDLink<PlacedObject>)obj,
+                        (FormIDLink<Placed>)obj,
                         cmds);
                     break;
                 case EnableParent_FieldIndex.Flags:
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case EnableParent_FieldIndex.Reference:
                     obj.Reference_Property.Set(
-                        (FormIDLink<PlacedObject>)pair.Value,
+                        (FormIDLink<Placed>)pair.Value,
                         null);
                     break;
                 case EnableParent_FieldIndex.Flags:
@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEnableParent : IEnableParentGetter, ILoquiClass<IEnableParent, IEnableParentGetter>, ILoquiClass<EnableParent, IEnableParentGetter>
     {
-        new PlacedObject Reference { get; set; }
+        new Placed Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
         new INotifyingItem<EnableParent.Flag> Flags_Property { get; }
 
@@ -1139,8 +1139,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEnableParentGetter : ILoquiObject
     {
         #region Reference
-        PlacedObject Reference { get; }
-        FormIDLink<PlacedObject> Reference_Property { get; }
+        Placed Reference { get; }
+        FormIDLink<Placed> Reference_Property { get; }
 
         #endregion
         #region Flags
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    return typeof(FormIDLink<PlacedObject>);
+                    return typeof(FormIDLink<Placed>);
                 case EnableParent_FieldIndex.Flags:
                     return typeof(EnableParent.Flag);
                 default:
@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    obj.Reference = default(FormIDLink<PlacedObject>);
+                    obj.Reference = default(FormIDLink<Placed>);
                     break;
                 case EnableParent_FieldIndex.Flags:
                     obj.Flags = default(EnableParent.Flag);
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParent item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Reference = default(FormIDLink<PlacedObject>);
+            item.Reference = default(FormIDLink<Placed>);
             item.Flags = default(EnableParent.Flag);
         }
 

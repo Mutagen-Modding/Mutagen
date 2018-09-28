@@ -373,11 +373,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<EnableParent> IPlacedObjectGetter.EnableParent_Property => this.EnableParent_Property;
         #endregion
         #region Target
-        public FormIDSetLink<PlacedObject> Target_Property { get; } = new FormIDSetLink<PlacedObject>();
+        public FormIDSetLink<Placed> Target_Property { get; } = new FormIDSetLink<Placed>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public PlacedObject Target { get => Target_Property.Item; set => Target_Property.Item = value; }
+        public Placed Target { get => Target_Property.Item; set => Target_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<PlacedObject> IPlacedObjectGetter.Target_Property => this.Target_Property;
+        FormIDSetLink<Placed> IPlacedObjectGetter.Target_Property => this.Target_Property;
         #endregion
         #region SpeedTreeSeed
         protected Byte _SpeedTreeSeed;
@@ -4946,7 +4946,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Target:
                     this.Target_Property.Set(
-                        (FormIDSetLink<PlacedObject>)obj,
+                        (FormIDSetLink<Placed>)obj,
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
@@ -5102,7 +5102,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Target:
                     obj.Target_Property.Set(
-                        (FormIDSetLink<PlacedObject>)pair.Value,
+                        (FormIDSetLink<Placed>)pair.Value,
                         null);
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
@@ -5216,7 +5216,7 @@ namespace Mutagen.Bethesda.Oblivion
         new EnableParent EnableParent { get; set; }
         new INotifyingSetItem<EnableParent> EnableParent_Property { get; }
 
-        new PlacedObject Target { get; set; }
+        new Placed Target { get; set; }
         new Byte SpeedTreeSeed { get; set; }
         new INotifyingSetItem<Byte> SpeedTreeSeed_Property { get; }
 
@@ -5308,8 +5308,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Target
-        PlacedObject Target { get; }
-        FormIDSetLink<PlacedObject> Target_Property { get; }
+        Placed Target { get; }
+        FormIDSetLink<Placed> Target_Property { get; }
 
         #endregion
         #region SpeedTreeSeed
@@ -5796,7 +5796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.EnableParent:
                     return typeof(EnableParent);
                 case PlacedObject_FieldIndex.Target:
-                    return typeof(FormIDSetLink<PlacedObject>);
+                    return typeof(FormIDSetLink<Placed>);
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
                     return typeof(Byte);
                 case PlacedObject_FieldIndex.DistantLODData:

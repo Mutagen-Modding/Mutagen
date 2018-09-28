@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda
         public bool Linked => this.Item != null;
         public FormID? UnlinkedForm { get; private set; }
         public FormID FormID => LinkExt.GetFormID(this);
+        Type ILink.TargetType => typeof(T);
 #if DEBUG
         public bool AttemptedLink { get; set; }
 #endif

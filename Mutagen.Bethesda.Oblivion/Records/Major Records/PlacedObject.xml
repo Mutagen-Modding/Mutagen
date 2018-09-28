@@ -11,7 +11,7 @@
       <Int32 name="FactionRank" recordType="XRNK" />
       <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <FormIDLink name="Target" recordType="XTRG" refName="PlacedObject" />
+      <FormIDLink name="Target" recordType="XTRG" refName="Placed" />
       <UInt8 name="SpeedTreeSeed" recordType="XSED" />
       <RefDirect name="DistantLODData" refName="DistantLODData" />
       <Float name="Charge" recordType="XCHG" />

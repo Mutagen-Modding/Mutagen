@@ -49,13 +49,20 @@ namespace Mutagen.Bethesda.Tests
             {
                 new ModKey("Oblivion", master: true),
                 new ModKey("Knights", master: false)
-            }; 
+            };
+            Dictionary<Type, HashSet<FormID>> knownUnlinked = new Dictionary<Type, HashSet<FormID>>();
+            knownUnlinked.TryCreateValue(typeof(Region)).Add(FormID.Factory(0x00078856));
             await ModList_Test(
                 testingSettings,
                 loadOrder,
                 unlinkedIgnoreTest: (link) =>
                 {
                     if (link.FormID == Mutagen.Bethesda.Oblivion.Constants.Player) return true;
+                    if (knownUnlinked.TryGetValue(link.TargetType, out var formIDs)
+                        && formIDs.Contains(link.FormID))
+                    {
+                        return true;
+                    }
                     return false;
                 });
         }

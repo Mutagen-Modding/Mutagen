@@ -5,7 +5,7 @@
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" />
       <RefList name="Entries" refName="LeveledEntry">
-        <GenericSpecification TypeToSpecify="T" Definition="Spell" />
+        <GenericSpecification TypeToSpecify="T" Definition="SpellAbstract" />
       </RefList>
     </Fields>
   </Object>

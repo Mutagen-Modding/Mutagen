@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda
     {
         bool Linked { get; }
         FormID FormID { get; }
+        Type TargetType { get; }
         bool Link<M>(
             ModList<M> modList,
             M sourceMod,
