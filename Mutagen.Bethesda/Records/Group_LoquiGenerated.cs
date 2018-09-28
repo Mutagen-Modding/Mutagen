@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda
                         return TryGet<int?>.Failure;
                     }
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Constants.RECORD_LENGTH;
+                    frame.Position += contentLength + Mutagen.Bethesda.Constants.RECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }
         }

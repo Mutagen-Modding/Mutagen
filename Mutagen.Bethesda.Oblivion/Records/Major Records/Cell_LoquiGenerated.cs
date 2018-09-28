@@ -3126,7 +3126,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Name);
@@ -3154,7 +3154,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Name);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
@@ -3181,7 +3181,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
                 case 0x434C4358: // XCLC
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
@@ -3234,7 +3234,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Lighting);
                 case 0x524C4358: // XCLR
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Region>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Regions,
@@ -3244,7 +3244,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);
                 case 0x544D4358: // XCMT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
@@ -3271,7 +3271,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.MusicType);
                 case 0x574C4358: // XCLW
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
@@ -3298,7 +3298,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
                 case 0x4D434358: // XCCM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Climate_Property,
@@ -3306,7 +3306,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Climate);
                 case 0x54574358: // XCWT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Water_Property,
@@ -3314,7 +3314,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
                 case 0x4E574F58: // XOWN
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Owner_Property,
@@ -3322,7 +3322,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Owner);
                 case 0x4B4E5258: // XRNK
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.FactionRank);
@@ -3349,7 +3349,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.FactionRank);
                 case 0x424C4758: // XGLB
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.GlobalVariable_Property,

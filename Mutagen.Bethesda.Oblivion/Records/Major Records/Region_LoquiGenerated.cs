@@ -2373,7 +2373,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4E4F4349: // ICON
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.Icon);
@@ -2401,7 +2401,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
                 case 0x524C4352: // RCLR
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
@@ -2429,7 +2429,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
                 case 0x4D414E57: // WNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Worldspace_Property,
@@ -2448,7 +2448,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<RegionArea>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
                 case 0x54414452: // RDAT
-                    using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                    using (var subFrame = frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_RegionAreaLogic_Custom(
                             frame: subFrame,

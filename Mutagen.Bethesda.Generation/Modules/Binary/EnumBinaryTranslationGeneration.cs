@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Generation
             var eType = typeGen as EnumType;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
 
             TranslationGeneration.WrapParseCall(

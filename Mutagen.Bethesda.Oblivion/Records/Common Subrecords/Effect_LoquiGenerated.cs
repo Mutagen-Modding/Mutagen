@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed(lastParsed);
                 case 0x54494645: // EFIT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)

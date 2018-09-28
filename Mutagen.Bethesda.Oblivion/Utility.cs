@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var register = LoquiRegistration.GetRegister(typeof(T));
             var regType = register.GetType();
-            var trigRecordMember = regType.GetMember(Constants.TRIGGERING_RECORDTYPE_MEMBER).First();
+            var trigRecordMember = regType.GetMember(Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER).First();
             //trigRecordMember.
             throw new NotImplementedException();
         }

@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x54534C57: // WLST
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Weathers,
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<WeatherChance>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);
                 case 0x4D414E46: // FNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.SunTexture);
@@ -2057,7 +2057,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
                 case 0x4D414E47: // GNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.SunGlareTexture);
@@ -2111,7 +2111,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
                 case 0x4D414E54: // TNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)

@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda
             switch (nextRecordType.TypeInt)
             {
                 case 0x44494445: // EDID
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
+                    frame.Position += contentLength + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }
         }

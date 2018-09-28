@@ -1936,7 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecord.TypeInt)
             {
                 case 1413764163: // CTDT
-                    frame = frame.SpawnWithLength(customLen + Constants.SUBRECORD_LENGTH);
+                    frame = frame.SpawnWithLength(customLen + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH);
                     using (frame)
                     {
                         return CustomRecordTypeTrigger(

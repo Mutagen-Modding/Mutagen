@@ -1653,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Name);
@@ -1707,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Model);
                 case 0x49524353: // SCRI
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Script_Property,
@@ -1715,7 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Script);
                 case 0x47494650: // PFIG
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Ingredient_Property,
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
                 case 0x43504650: // PFPC
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)

@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)CellSubBlock_FieldIndex.Items);
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Constants.RECORD_LENGTH;
+                    frame.Position += contentLength + Mutagen.Bethesda.Constants.RECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }
         }

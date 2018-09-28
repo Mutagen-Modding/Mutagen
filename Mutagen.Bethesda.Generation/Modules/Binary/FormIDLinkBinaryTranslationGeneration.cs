@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.TryGetFieldData(out var data)
                 && data.RecordType.HasValue)
             {
-                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
 
             TranslationGeneration.WrapParseCall(

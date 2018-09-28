@@ -149,11 +149,11 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.MarkerType.HasValue)
             {
-                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
+                fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
             }
             else if (listBinaryType == ListBinaryType.Trigger)
             {
-                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
 
             using (var args = new ArgsWrapper(fg,

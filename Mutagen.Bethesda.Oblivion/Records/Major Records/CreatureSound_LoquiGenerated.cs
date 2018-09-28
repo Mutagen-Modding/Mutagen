@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x54445343: // CSDT
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)CreatureSound_FieldIndex.SoundType);

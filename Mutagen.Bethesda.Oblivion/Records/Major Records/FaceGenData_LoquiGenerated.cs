@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x53474746: // FGGS
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 case 0x41474746: // FGGA
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 case 0x53544746: // FGTS
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);

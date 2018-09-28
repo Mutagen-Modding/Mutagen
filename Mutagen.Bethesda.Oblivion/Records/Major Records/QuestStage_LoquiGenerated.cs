@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x58444E49: // INDX
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);

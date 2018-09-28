@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position -= 16;
                 return;
             }
-            using (var subFrame = frame.SpawnWithLength(len - Constants.RECORD_HEADER_LENGTH))
+            using (var subFrame = frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH))
             {
                 while (!subFrame.Complete)
                 {
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
             var nextHeader = HeaderTranslation.GetNextRecordType(frame.Reader, out var pathLen);
             if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
             {
-                using (var subFrame = frame.SpawnWithLength(pathLen + Constants.RECORD_HEADER_LENGTH))
+                using (var subFrame = frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH))
                 {
                     using (errorMask.PushIndex((int)Cell_FieldIndex.PathGrid))
                     {
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else if (nextHeader.Equals(Landscape_Registration.LAND_HEADER))
             {
-                using (var subFrame = frame.SpawnWithLength(pathLen + Constants.RECORD_HEADER_LENGTH))
+                using (var subFrame = frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH))
                 {
                     using (errorMask.PushIndex((int)Cell_FieldIndex.Landscape))
                     {

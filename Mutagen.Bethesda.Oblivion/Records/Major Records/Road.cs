@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Oblivion
             var nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
             if (!nextRec.Equals(PGRP))
             {
-                frame.Reader.Position -= Constants.RECORD_LENGTH;
+                frame.Reader.Position -= Mutagen.Bethesda.Constants.RECORD_LENGTH;
                 return;
             }
             var pointBytes = frame.Reader.ReadBytes(len);
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
+                    frame.Reader.Position -= Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
                     {
                         while (!ptByteReader.Complete)

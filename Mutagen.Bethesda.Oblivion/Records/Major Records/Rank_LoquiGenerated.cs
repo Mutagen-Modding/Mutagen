@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4D414E52: // RNAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.RankNumber);
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 case 0x4D414E4D: // MNAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.MaleName);
@@ -1361,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
                 case 0x4D414E46: // FNAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.FemaleName);
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
                 case 0x4D414E49: // INAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.Insignia);

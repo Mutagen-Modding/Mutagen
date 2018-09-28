@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x49445343: // CSDI
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Sound_Property,
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
                 case 0x43445343: // CSDC
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)SoundItem_FieldIndex.Chance);

@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda
             {
                 case 0x5453414D: // MAST
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
                 case 0x41544144: // DATA
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.FileSize) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);

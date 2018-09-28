@@ -1335,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x58444E49: // INDX
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Index) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)FacePart_FieldIndex.Index);
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Model);
                 case 0x4E4F4349: // ICON
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Icon) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)FacePart_FieldIndex.Icon);

@@ -1947,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x54445254: // TRDT
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Fluff2) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -2077,7 +2077,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Fluff2);
                 case 0x314D414E: // NAM1
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
@@ -2105,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
                 case 0x324D414E: // NAM2
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);

@@ -1424,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x54445351: // QSDT
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.Flags);
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
                 case 0x4D414E43: // CNAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.Entry);

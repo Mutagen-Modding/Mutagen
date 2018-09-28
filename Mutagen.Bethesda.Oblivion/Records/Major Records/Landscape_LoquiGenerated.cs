@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
                 case 0x4C4D4E56: // VNML
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
                 case 0x54474856: // VHGT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
                 case 0x524C4356: // VCLR
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion
                         );
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
                 case 0x58455456: // VTEX
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Textures,

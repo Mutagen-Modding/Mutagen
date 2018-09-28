@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4C444F4D: // MODL
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Model_FieldIndex.File);
@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
                 case 0x42444F4D: // MODB
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
                 case 0x54444F4D: // MODT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Model_FieldIndex.Hashes);

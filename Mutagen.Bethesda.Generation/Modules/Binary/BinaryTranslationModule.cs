@@ -471,10 +471,10 @@ namespace Mutagen.Bethesda.Generation
                                             break;
                                         case ObjectType.Subrecord:
                                         case ObjectType.Record:
-                                            addString = " + Constants.SUBRECORD_LENGTH";
+                                            addString = " + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH";
                                             break;
                                         case ObjectType.Group:
-                                            addString = " + Constants.RECORD_LENGTH";
+                                            addString = " + Mutagen.Bethesda.Constants.RECORD_LENGTH";
                                             break;
                                         default:
                                             throw new NotImplementedException();
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (field is DataType set)
             {
-                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
                 fg.AppendLine($"using (var dataFrame = {frameAccessor}.SpawnWithLength(contentLength))");
                 using (new BraceWrapper(fg))
                 {
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("frame = frame.SpawnWithLength(customLen + Constants.SUBRECORD_LENGTH);");
+                            fg.AppendLine("frame = frame.SpawnWithLength(customLen + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH);");
                             fg.AppendLine("using (frame)");
                             using (new BraceWrapper(fg))
                             {

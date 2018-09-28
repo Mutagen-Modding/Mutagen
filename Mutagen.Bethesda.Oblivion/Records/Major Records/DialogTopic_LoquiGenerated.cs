@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: FormIDBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)DialogTopic_FieldIndex.DialogType);

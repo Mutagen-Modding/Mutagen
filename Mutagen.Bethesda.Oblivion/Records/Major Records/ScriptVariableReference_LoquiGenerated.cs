@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x56524353: // SCRV
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);

@@ -1498,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 case 0x44484353: // SCHD
-                    using (var subFrame = frame.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                    using (var subFrame = frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_MetadataSummaryOld_Custom(
                             frame: subFrame,
@@ -1508,7 +1508,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed(lastParsed);
                 case 0x41444353: // SCDA
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)ScriptFields_FieldIndex.CompiledScript);
@@ -1536,7 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 case 0x58544353: // SCTX
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.SourceCode) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)ScriptFields_FieldIndex.SourceCode);

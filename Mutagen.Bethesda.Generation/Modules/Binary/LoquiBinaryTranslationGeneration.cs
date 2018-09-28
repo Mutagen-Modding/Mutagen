@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Generation
                 if (loquiGen.TryGetFieldData(out var data)
                     && data.MarkerType.HasValue)
                 {
-                    fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
+                    fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
                 }
 
                 if (loquiGen.SingletonType == SingletonLevel.Singleton)

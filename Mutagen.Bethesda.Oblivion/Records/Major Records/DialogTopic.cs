@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position -= 16;
                 return;
             }
-            using (var subFrame = frame.SpawnWithLength(len - Constants.RECORD_HEADER_LENGTH))
+            using (var subFrame = frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH))
             {
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
                     frame: subFrame,

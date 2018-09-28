@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4D414E46: // FNAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
                 case 0x4C4C5546: // FULL
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Name) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
                 case 0x4D414E54: // TNAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Types,

@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
 
             TranslationGeneration.WrapParseCall(
