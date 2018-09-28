@@ -13,13 +13,11 @@ namespace Mutagen.Bethesda.Tests
 {
     public static class ModList_Tests
     {
-        public static async Task Oblivion_Modlist(TestingSettings testingSettings)
+        public static async Task ModList_Test(
+            TestingSettings testingSettings,
+            List<ModKey> loadOrder,
+            Func<ILink, bool> unlinkedIgnoreTest = null)
         {
-            List<ModKey> loadOrder = new List<ModKey>()
-            {
-                new ModKey("Oblivion", master: true),
-                new ModKey("Knights", master: false)
-            };
             ModList<OblivionMod> modList = new ModList<OblivionMod>();
             FormIDLinkTesterHelper.Active = true;
             await modList.Import(
@@ -39,9 +37,27 @@ namespace Mutagen.Bethesda.Tests
             var unlinked = FormIDLinkTesterHelper.CreatedLinks
                 .Where(l => !l.Linked)
                 .Where(l => l.FormID != FormID.NULL)
+                .Where(l => (!unlinkedIgnoreTest?.Invoke(l)) ?? true)
                 .ToArray();
 
             Assert.Empty(unlinked);
+        }
+
+        public static async Task Oblivion_Modlist(TestingSettings testingSettings)
+        {
+            List<ModKey> loadOrder = new List<ModKey>()
+            {
+                new ModKey("Oblivion", master: true),
+                new ModKey("Knights", master: false)
+            }; 
+            await ModList_Test(
+                testingSettings,
+                loadOrder,
+                unlinkedIgnoreTest: (link) =>
+                {
+                    if (link.FormID == Mutagen.Bethesda.Oblivion.Constants.Player) return true;
+                    return false;
+                });
         }
     }
 }
