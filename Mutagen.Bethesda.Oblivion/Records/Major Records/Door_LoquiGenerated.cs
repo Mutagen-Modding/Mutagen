@@ -227,19 +227,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RandomTeleportDestinations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<Worldspace>> _RandomTeleportDestinations = new NotifyingList<FormIDSetLink<Worldspace>>();
-        public INotifyingList<FormIDSetLink<Worldspace>> RandomTeleportDestinations => _RandomTeleportDestinations;
+        private readonly INotifyingList<FormIDSetLink<Place>> _RandomTeleportDestinations = new NotifyingList<FormIDSetLink<Place>>();
+        public INotifyingList<FormIDSetLink<Place>> RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDSetLink<Worldspace>> RandomTeleportDestinationsEnumerable
+        public IEnumerable<FormIDSetLink<Place>> RandomTeleportDestinationsEnumerable
         {
             get => _RandomTeleportDestinations;
             set => _RandomTeleportDestinations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<Worldspace>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
+        INotifyingList<FormIDSetLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<Worldspace>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
+        INotifyingListGetter<FormIDSetLink<Place>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 
         #endregion
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
-                        if (ListXmlTranslation<FormIDSetLink<Worldspace>>.Instance.Parse(
+                        if (ListXmlTranslation<FormIDSetLink<Place>>.Instance.Parse(
                             root: root,
                             enumer: out var RandomTeleportDestinationsItem,
                             transl: FormIDXmlTranslation.Instance.Parse,
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Flags);
                 case 0x4D414E54: // TNAM
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Place>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Door_Registration.TNAM_HEADER,
                         item: item.RandomTeleportDestinations,
@@ -1794,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds: cmds);
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    this._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)obj, cmds);
+                    this._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Place>>)obj, cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1863,7 +1863,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds: null);
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    obj._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)pair.Value, null);
+                    obj._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Place>>)pair.Value, null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1893,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Door.DoorFlag Flags { get; set; }
         new INotifyingSetItem<Door.DoorFlag> Flags_Property { get; }
 
-        new INotifyingList<FormIDSetLink<Worldspace>> RandomTeleportDestinations { get; }
+        new INotifyingList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
     }
 
     public partial interface IDoorGetter : IMajorRecordGetter
@@ -1934,7 +1934,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RandomTeleportDestinations
-        INotifyingListGetter<FormIDSetLink<Worldspace>> RandomTeleportDestinations { get; }
+        INotifyingListGetter<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
         #endregion
 
     }
@@ -2172,7 +2172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.Flags:
                     return typeof(Door.DoorFlag);
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    return typeof(NotifyingList<FormIDSetLink<Worldspace>>);
+                    return typeof(NotifyingList<FormIDSetLink<Place>>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
@@ -2601,7 +2601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.RandomTeleportDestinations.HasBeenSet)
                 {
                     ret.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.RandomTeleportDestinations.Specific = item.RandomTeleportDestinations.SelectAgainst<FormIDSetLink<Worldspace>, bool>(rhs.RandomTeleportDestinations, ((l, r) => object.Equals(l, r)), out ret.RandomTeleportDestinations.Overall);
+                    ret.RandomTeleportDestinations.Specific = item.RandomTeleportDestinations.SelectAgainst<FormIDSetLink<Place>, bool>(rhs.RandomTeleportDestinations, ((l, r) => object.Equals(l, r)), out ret.RandomTeleportDestinations.Overall);
                     ret.RandomTeleportDestinations.Overall = ret.RandomTeleportDestinations.Overall && ret.RandomTeleportDestinations.Specific.All((b) => b);
                 }
                 else
@@ -2857,14 +2857,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.RandomTeleportDestinations.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
             {
-                ListXmlTranslation<FormIDSetLink<Worldspace>>.Instance.Write(
+                ListXmlTranslation<FormIDSetLink<Place>>.Instance.Write(
                     node: elem,
                     name: nameof(item.RandomTeleportDestinations),
                     item: item.RandomTeleportDestinations,
                     fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.RandomTeleportDestinations),
-                    transl: (XElement subNode, FormIDSetLink<Worldspace> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, FormIDSetLink<Place> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2980,7 +2980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Door_Registration.FNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>>.Instance.WriteListOfRecords(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Place>>.Instance.WriteListOfRecords(
                 writer: writer,
                 items: item.RandomTeleportDestinations,
                 fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,

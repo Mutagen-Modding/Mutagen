@@ -35,7 +35,7 @@
   </Object>
   <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">
     <Fields>
-      <FormIDLink name="Door" refName="Door" />
+      <FormIDLink name="Destination" refName="Placed" />
       <P3Float name="Position" />
       <P3Float name="Rotation" />
     </Fields>

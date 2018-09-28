@@ -1717,7 +1717,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
-        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
         public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
         public static readonly RecordType INFO_HEADER = new RecordType("INFO");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
@@ -1733,10 +1732,8 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
-        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
@@ -1744,7 +1741,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
@@ -1753,6 +1749,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
@@ -1769,6 +1766,8 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
+        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
+        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType LAND_HEADER = new RecordType("LAND");
@@ -1776,6 +1775,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
         public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
+        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1793,7 +1793,6 @@ namespace Mutagen.Bethesda.Internals
                         CLMT_HEADER,
                         CSTY_HEADER,
                         CONT_HEADER,
-                        CREA_HEADER,
                         DIAL_HEADER,
                         INFO_HEADER,
                         DOOR_HEADER,
@@ -1809,10 +1808,8 @@ namespace Mutagen.Bethesda.Internals
                         HAIR_HEADER,
                         IDLE_HEADER,
                         LTEX_HEADER,
-                        LVSP_HEADER,
                         LSCR_HEADER,
                         MGEF_HEADER,
-                        NPC__HEADER,
                         QUST_HEADER,
                         RACE_HEADER,
                         REGN_HEADER,
@@ -1820,7 +1817,6 @@ namespace Mutagen.Bethesda.Internals
                         SCPT_HEADER,
                         SKIL_HEADER,
                         SOUN_HEADER,
-                        FULL_HEADER,
                         STAT_HEADER,
                         SBSP_HEADER,
                         TREE_HEADER,
@@ -1829,6 +1825,7 @@ namespace Mutagen.Bethesda.Internals
                         APPA_HEADER,
                         AMMO_HEADER,
                         BOOK_HEADER,
+                        FULL_HEADER,
                         SCRI_HEADER,
                         ENAM_HEADER,
                         ANAM_HEADER,
@@ -1845,6 +1842,8 @@ namespace Mutagen.Bethesda.Internals
                         ARMO_HEADER,
                         CLOT_HEADER,
                         LVLC_HEADER,
+                        CREA_HEADER,
+                        NPC__HEADER,
                         CELL_HEADER,
                         WRLD_HEADER,
                         LAND_HEADER,
@@ -1852,6 +1851,7 @@ namespace Mutagen.Bethesda.Internals
                         ACRE_HEADER,
                         ACHR_HEADER,
                         REFR_HEADER,
+                        LVSP_HEADER,
                         SPEL_HEADER
                     })
             );

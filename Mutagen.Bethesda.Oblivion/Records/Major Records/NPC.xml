@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NPC" baseClass="Bethesda.MajorRecord" objType="Record" recordType="NPC_" GUID="96396343-a32a-4165-b745-e038c5e06eeb" ID="84">
+  <Object name="NPC" baseClass="NPCAbstract" objType="Record" recordType="NPC_" GUID="96396343-a32a-4165-b745-e038c5e06eeb" ID="84">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
@@ -22,7 +22,7 @@
       <FormIDLink name="DeathItem" refName="ItemAbstract" recordType="INAM" />
       <FormIDLink name="Race" refName="Race" recordType="RNAM" />
       <List name="Spells">
-        <FormIDLink refName="Spell" recordType="SPLO" />
+        <FormIDLink refName="SpellAbstract" recordType="SPLO" />
       </List>
       <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <List name="Items">

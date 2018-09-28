@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         INPCAbstract,
         ILoquiObject<NPCAbstract>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<NPCAbstract>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -364,6 +365,31 @@ namespace Mutagen.Bethesda.Oblivion
                         translationMask: translationMask);
                     break;
             }
+        }
+
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
         }
 
         #endregion
@@ -734,6 +760,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
+        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        CREA_HEADER,
+                        NPC__HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         #region Interface

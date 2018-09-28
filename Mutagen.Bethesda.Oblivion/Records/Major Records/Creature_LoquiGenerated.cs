@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Creature : 
-        MajorRecord,
+        NPCAbstract,
         ICreature,
         ILoquiObject<Creature>,
         ILoquiObjectSetter,
@@ -179,19 +179,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
-        public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        private readonly INotifyingList<FormIDSetLink<SpellAbstract>> _Spells = new NotifyingList<FormIDSetLink<SpellAbstract>>();
+        public INotifyingList<FormIDSetLink<SpellAbstract>> Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
+        public IEnumerable<FormIDSetLink<SpellAbstract>> SpellsEnumerable
         {
             get => _Spells;
             set => _Spells.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<Spell>> ICreature.Spells => _Spells;
+        INotifyingList<FormIDSetLink<SpellAbstract>> ICreature.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<Spell>> ICreatureGetter.Spells => _Spells;
+        INotifyingListGetter<FormIDSetLink<SpellAbstract>> ICreatureGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -2545,6 +2545,38 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
+            out NPCAbstract_ErrorMask errorMask,
+            NPCAbstract_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement root,
+            out NPCSpawn_ErrorMask errorMask,
+            NPCSpawn_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -2613,6 +2645,38 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
+        public override void Write_Xml(
+            XElement node,
+            out NPCAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            NPCAbstract_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
+            out NPCSpawn_ErrorMask errorMask,
+            bool doMasks = true,
+            NPCSpawn_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
         public override void Write_Xml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -2740,7 +2804,7 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
-                        if (ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Parse(
+                        if (ListXmlTranslation<FormIDSetLink<SpellAbstract>>.Instance.Parse(
                             root: root,
                             enumer: out var SpellsItem,
                             transl: FormIDXmlTranslation.Instance.Parse,
@@ -3869,7 +3933,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    NPCAbstract.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -6242,6 +6306,32 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            out NPCAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            out NPCSpawn_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -6273,7 +6363,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            NPCAbstract.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -6356,7 +6446,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<ItemEntry>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
                 case 0x4F4C5053: // SPLO
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<SpellAbstract>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Creature_Registration.SPLO_HEADER,
                         item: item.Spells,
@@ -7384,7 +7474,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<CreatureSound>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return NPCAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -7516,7 +7606,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Items.SetTo((IEnumerable<ItemEntry>)obj, cmds);
                     break;
                 case Creature_FieldIndex.Spells:
-                    this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj, cmds);
+                    this._Spells.SetTo((IEnumerable<FormIDSetLink<SpellAbstract>>)obj, cmds);
                     break;
                 case Creature_FieldIndex.Models:
                     this._Models.SetTo((IEnumerable<String>)obj, cmds);
@@ -7760,7 +7850,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Creature_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_NPCAbstract(obj, pair);
             }
             switch (enu)
             {
@@ -7778,7 +7868,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Items.SetTo((IEnumerable<ItemEntry>)pair.Value, null);
                     break;
                 case Creature_FieldIndex.Spells:
-                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value, null);
+                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<SpellAbstract>>)pair.Value, null);
                     break;
                 case Creature_FieldIndex.Models:
                     obj._Models.SetTo((IEnumerable<String>)pair.Value, null);
@@ -8008,7 +8098,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ICreature : ICreatureGetter, IMajorRecord, ILoquiClass<ICreature, ICreatureGetter>, ILoquiClass<Creature, ICreatureGetter>
+    public partial interface ICreature : ICreatureGetter, INPCAbstract, ILoquiClass<ICreature, ICreatureGetter>, ILoquiClass<Creature, ICreatureGetter>
     {
         new String Name { get; set; }
         new INotifyingSetItem<String> Name_Property { get; }
@@ -8017,7 +8107,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<Model> Model_Property { get; }
 
         new INotifyingList<ItemEntry> Items { get; }
-        new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
+        new INotifyingList<FormIDSetLink<SpellAbstract>> Spells { get; }
         new INotifyingList<String> Models { get; }
         new Byte[] NIFT { get; set; }
         new INotifyingSetItem<Byte[]> NIFT_Property { get; }
@@ -8137,7 +8227,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<CreatureSound> Sounds { get; }
     }
 
-    public partial interface ICreatureGetter : IMajorRecordGetter
+    public partial interface ICreatureGetter : INPCAbstractGetter
     {
         #region Name
         String Name { get; }
@@ -8153,7 +8243,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingListGetter<ItemEntry> Items { get; }
         #endregion
         #region Spells
-        INotifyingListGetter<FormIDSetLink<Spell>> Spells { get; }
+        INotifyingListGetter<FormIDSetLink<SpellAbstract>> Spells { get; }
         #endregion
         #region Models
         INotifyingListGetter<String> Models { get; }
@@ -8643,7 +8733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return NPCAbstract_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -8704,7 +8794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return NPCAbstract_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -8764,7 +8854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Sounds:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return NPCAbstract_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -8872,7 +8962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Sounds:
                     return "Sounds";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return NPCAbstract_Registration.GetNthName(index);
             }
         }
 
@@ -8932,7 +9022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Sounds:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return NPCAbstract_Registration.IsNthDerivative(index);
             }
         }
 
@@ -8992,7 +9082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Sounds:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return NPCAbstract_Registration.IsProtected(index);
             }
         }
 
@@ -9008,7 +9098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Items:
                     return typeof(NotifyingList<ItemEntry>);
                 case Creature_FieldIndex.Spells:
-                    return typeof(NotifyingList<FormIDSetLink<Spell>>);
+                    return typeof(NotifyingList<FormIDSetLink<SpellAbstract>>);
                 case Creature_FieldIndex.Models:
                     return typeof(NotifyingList<String>);
                 case Creature_FieldIndex.NIFT:
@@ -9100,7 +9190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Sounds:
                     return typeof(NotifyingList<CreatureSound>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return NPCAbstract_Registration.GetNthType(index);
             }
         }
 
@@ -9175,7 +9265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Creature_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            NPCAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -10307,7 +10397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Sounds.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    NPCAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -10468,7 +10558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Sounds.Unset(cmds);
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    NPCAbstractCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -10551,7 +10641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Sounds:
                     return obj.Sounds.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return NPCAbstractCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -10661,7 +10751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Sounds:
                     return obj.Sounds;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return NPCAbstractCommon.GetNthObject(index, obj);
             }
         }
 
@@ -10767,7 +10857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.Spells.HasBeenSet)
                 {
                     ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Spells.Specific = item.Spells.SelectAgainst<FormIDSetLink<Spell>, bool>(rhs.Spells, ((l, r) => object.Equals(l, r)), out ret.Spells.Overall);
+                    ret.Spells.Specific = item.Spells.SelectAgainst<FormIDSetLink<SpellAbstract>, bool>(rhs.Spells, ((l, r) => object.Equals(l, r)), out ret.Spells.Overall);
                     ret.Spells.Overall = ret.Spells.Overall && ret.Spells.Specific.All((b) => b);
                 }
                 else
@@ -10928,7 +11018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, CreatureSound_Mask<bool>>>>();
                 ret.Sounds.Overall = false;
             }
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            NPCAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -11339,6 +11429,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Creature_FieldIndex? ConvertFieldIndex(NPCAbstract_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Creature_FieldIndex ConvertFieldIndex(NPCAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NPCAbstract_FieldIndex.MajorRecordFlags:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.FormID:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.Version:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.EditorID:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.RecordType:
+                    return (Creature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Creature_FieldIndex? ConvertFieldIndex(NPCSpawn_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Creature_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NPCSpawn_FieldIndex.MajorRecordFlags:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.FormID:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.Version:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.EditorID:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.RecordType:
+                    return (Creature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Creature_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -11442,14 +11582,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Spells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
             {
-                ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Write(
+                ListXmlTranslation<FormIDSetLink<SpellAbstract>>.Instance.Write(
                     node: elem,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)Creature_FieldIndex.Spells,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Spells),
-                    transl: (XElement subNode, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, FormIDSetLink<SpellAbstract> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
                         FormIDXmlTranslation.Instance.Write(
                             node: subNode,
@@ -12008,7 +12148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)Creature_FieldIndex.Items,
                 errorMask: errorMask,
                 transl: LoquiBinaryTranslation<ItemEntry>.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.WriteListOfRecords(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<SpellAbstract>>.Instance.WriteListOfRecords(
                 writer: writer,
                 items: item.Spells,
                 fieldIndex: (int)Creature_FieldIndex.Spells,
@@ -12303,7 +12443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Creature_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Creature_Mask<T>>
+    public class Creature_Mask<T> : NPCAbstract_Mask<T>, IMask<T>, IEquatable<Creature_Mask<T>>
     {
         #region Ctors
         public Creature_Mask()
@@ -13253,7 +13393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Creature_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Creature_ErrorMask>
+    public class Creature_ErrorMask : NPCAbstract_ErrorMask, IErrorMask<Creature_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -14089,7 +14229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Creature_CopyMask : MajorRecord_CopyMask
+    public class Creature_CopyMask : NPCAbstract_CopyMask
     {
         #region Members
         public bool Name;
@@ -14144,7 +14284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Creature_TranslationMask : MajorRecord_TranslationMask
+    public class Creature_TranslationMask : NPCAbstract_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;
