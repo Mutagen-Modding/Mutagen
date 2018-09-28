@@ -2099,6 +2099,13 @@ namespace Mutagen.Bethesda.Oblivion
                     yield return item;
                 }
             }
+            if (Grasses != null)
+            {
+                foreach (var item in Grasses.Links)
+                {
+                    yield return item;
+                }
+            }
             if (Sounds != null)
             {
                 foreach (var item in Sounds.Links)
@@ -2133,6 +2140,13 @@ namespace Mutagen.Bethesda.Oblivion
             if (Weather != null)
             {
                 Weather?.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            if (Grasses != null)
+            {
+                Grasses?.Link(
                     modList,
                     sourceMod,
                     cmds);

@@ -1427,6 +1427,18 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return Quest_Property;
             yield return PreviousTopic_Property;
+            foreach (var item in Topics)
+            {
+                yield return item;
+            }
+            foreach (var item in Choices)
+            {
+                yield return item;
+            }
+            foreach (var item in LinkFrom)
+            {
+                yield return item;
+            }
             if (Script is ILinkSubContainer ScriptlinkCont)
             {
                 foreach (var item in ScriptlinkCont.Links)
@@ -1455,6 +1467,27 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in Topics)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in Choices)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in LinkFrom)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
             if (Script is ILinkSubContainer ScriptlinkCont)
             {
                 ScriptlinkCont?.Link(

@@ -1016,6 +1016,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            foreach (var item in Quests)
+            {
+                yield return item;
+            }
             foreach (var item in Items.SelectMany(f => f.Links))
             {
                 yield return item;
@@ -1033,6 +1037,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in Quests)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
             foreach (var item in Items)
             {
                 item.Link(

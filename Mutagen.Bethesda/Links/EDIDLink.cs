@@ -116,6 +116,9 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
+#if DEBUG
+            link.AttemptedLink = true;
+#endif
             if (TryLinkToMod(link, sourceMod, cmds)) return true;
             if (modList == null) return false;
             foreach (var listing in modList)

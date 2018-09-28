@@ -2798,6 +2798,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            foreach (var item in Regions)
+            {
+                yield return item;
+            }
             yield return Climate_Property;
             yield return Water_Property;
             yield return Owner_Property;
@@ -2844,6 +2848,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in Regions)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
             Climate_Property.Link(
                 modList,
                 sourceMod,

@@ -6014,12 +6014,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            foreach (var item in Spells)
+            {
+                yield return item;
+            }
             foreach (var item in Factions.SelectMany(f => f.Links))
             {
                 yield return item;
             }
             yield return DeathItem_Property;
             yield return Script_Property;
+            foreach (var item in AIPackages)
+            {
+                yield return item;
+            }
             yield return CombatStyle_Property;
             yield return InheritsSoundFrom_Property;
             foreach (var item in Sounds.SelectMany(f => f.Links))
@@ -6046,6 +6054,13 @@ namespace Mutagen.Bethesda.Oblivion
                     sourceMod,
                     cmds);
             }
+            foreach (var item in Spells)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
             foreach (var item in Factions)
             {
                 item.Link(
@@ -6061,6 +6076,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in AIPackages)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
             CombatStyle_Property.Link(
                 modList,
                 sourceMod,

@@ -2992,11 +2992,19 @@ namespace Mutagen.Bethesda.Oblivion
                     yield return item;
                 }
             }
+            foreach (var item in LandTextures.Links)
+            {
+                yield return item;
+            }
             foreach (var item in Enchantments.Links)
             {
                 yield return item;
             }
             foreach (var item in Spells.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Birthsigns.Links)
             {
                 yield return item;
             }
@@ -3008,7 +3016,15 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            foreach (var item in Armors.Links)
+            {
+                yield return item;
+            }
             foreach (var item in Books.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Clothes.Links)
             {
                 yield return item;
             }
@@ -3108,6 +3124,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            foreach (var item in IdleAnimations.Links)
+            {
+                yield return item;
+            }
             foreach (var item in AIPackages.Links)
             {
                 yield return item;
@@ -3154,11 +3174,19 @@ namespace Mutagen.Bethesda.Oblivion
                     this,
                     cmds);
             }
+            LandTextures?.Link(
+                modList,
+                this,
+                cmds);
             Enchantments?.Link(
                 modList,
                 this,
                 cmds);
             Spells?.Link(
+                modList,
+                this,
+                cmds);
+            Birthsigns?.Link(
                 modList,
                 this,
                 cmds);
@@ -3170,7 +3198,15 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 this,
                 cmds);
+            Armors?.Link(
+                modList,
+                this,
+                cmds);
             Books?.Link(
+                modList,
+                this,
+                cmds);
+            Clothes?.Link(
                 modList,
                 this,
                 cmds);
@@ -3267,6 +3303,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this,
                 cmds);
             Quests?.Link(
+                modList,
+                this,
+                cmds);
+            IdleAnimations?.Link(
                 modList,
                 this,
                 cmds);

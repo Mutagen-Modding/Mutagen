@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter,
         IPropertySupporter<Model>,
         IPropertySupporter<IdleAnimation.AnimationGroupSectionEnum>,
+        ILinkSubContainer,
         IEquatable<IdleAnimation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1001,6 +1002,39 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = IdleAnimation_Registration.TRIGGERING_RECORD_TYPE;
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in RelatedIdleAnimations)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in RelatedIdleAnimations)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation

@@ -3757,6 +3757,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            foreach (var item in Spells)
+            {
+                yield return item;
+            }
             foreach (var item in Relations.SelectMany(f => f.Links))
             {
                 yield return item;
@@ -3775,6 +3779,14 @@ namespace Mutagen.Bethesda.Oblivion
                     yield return item;
                 }
             }
+            foreach (var item in Hairs)
+            {
+                yield return item;
+            }
+            foreach (var item in Eyes)
+            {
+                yield return item;
+            }
             yield break;
         }
 
@@ -3788,6 +3800,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in Spells)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
             foreach (var item in Relations)
             {
                 item.Link(
@@ -3805,6 +3824,20 @@ namespace Mutagen.Bethesda.Oblivion
             if (DefaultHair != null)
             {
                 DefaultHair?.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in Hairs)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in Eyes)
+            {
+                item.Link(
                     modList,
                     sourceMod,
                     cmds);

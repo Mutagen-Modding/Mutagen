@@ -7207,13 +7207,25 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return DeathItem_Property;
             yield return Race_Property;
+            foreach (var item in Spells)
+            {
+                yield return item;
+            }
             yield return Script_Property;
             foreach (var item in Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
+            foreach (var item in AIPackages)
+            {
+                yield return item;
+            }
             yield return Class_Property;
             yield return Hair_Property;
+            foreach (var item in Eyes)
+            {
+                yield return item;
+            }
             yield return CombatStyle_Property;
             yield break;
         }
@@ -7243,11 +7255,25 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in Spells)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
             Script_Property.Link(
                 modList,
                 sourceMod,
                 cmds);
             foreach (var item in Items)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in AIPackages)
             {
                 item.Link(
                     modList,
@@ -7262,6 +7288,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in Eyes)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
             CombatStyle_Property.Link(
                 modList,
                 sourceMod,

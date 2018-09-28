@@ -1283,6 +1283,10 @@ namespace Mutagen.Bethesda.Oblivion
             yield return OpenSound_Property;
             yield return CloseSound_Property;
             yield return LoopSound_Property;
+            foreach (var item in RandomTeleportDestinations)
+            {
+                yield return item;
+            }
             yield break;
         }
 
@@ -1312,6 +1316,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in RandomTeleportDestinations)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
         }
 
         #endregion

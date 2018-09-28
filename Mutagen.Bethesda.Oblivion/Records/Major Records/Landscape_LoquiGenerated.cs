@@ -1114,6 +1114,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            foreach (var item in Textures)
+            {
+                yield return item;
+            }
             yield break;
         }
 
@@ -1128,6 +1132,13 @@ namespace Mutagen.Bethesda.Oblivion
                 sourceMod,
                 cmds);
             foreach (var item in Layers)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in Textures)
             {
                 item.Link(
                     modList,

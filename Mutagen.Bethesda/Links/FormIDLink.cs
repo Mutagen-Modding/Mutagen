@@ -16,6 +16,9 @@ namespace Mutagen.Bethesda
         public bool Linked => this.Item != null;
         public FormID? UnlinkedForm { get; private set; }
         public FormID FormID => LinkExt.GetFormID(this);
+#if DEBUG
+        public bool AttemptedLink { get; set; }
+#endif
 
         public FormIDLink()
         {
@@ -120,6 +123,9 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
+#if DEBUG
+            this.AttemptedLink = true;
+#endif
             if (!TryGetLink(
                 this.UnlinkedForm,
                 modList,

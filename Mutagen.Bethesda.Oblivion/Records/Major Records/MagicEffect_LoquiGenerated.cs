@@ -2787,6 +2787,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            foreach (var item in CounterEffects)
+            {
+                yield return item;
+            }
             yield break;
         }
 
@@ -2812,6 +2816,13 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
+            foreach (var item in CounterEffects)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
         }
 
         #endregion

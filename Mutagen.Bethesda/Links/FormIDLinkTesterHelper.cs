@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public static bool Active = false;
         public static List<ILink> CreatedLinks = new List<ILink>();
+        public static HashSet<ILink> LinkedLinks = new HashSet<ILink>(EqualityComparerExt<ILink>.ReferenceEquality);
 
         public static void Add(ILink link)
         {

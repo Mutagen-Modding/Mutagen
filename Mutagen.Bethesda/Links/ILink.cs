@@ -16,6 +16,9 @@ namespace Mutagen.Bethesda
             M sourceMod,
             NotifyingFireParameters cmds = null)
             where M : IMod<M>;
+#if DEBUG
+        bool AttemptedLink { get; set; }
+#endif
     }
 
     public interface ILink<T> : ILink, INotifyingItem<T>
