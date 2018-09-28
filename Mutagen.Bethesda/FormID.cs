@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda
 
         public string IDString()
         {
-            return ID.ToString("X8");
+            return ID.ToString("X6");
         }
 
         public override bool Equals(object obj)
