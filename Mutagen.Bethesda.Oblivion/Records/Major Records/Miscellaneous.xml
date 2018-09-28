@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Miscellaneous" objType="Record" baseClass="Bethesda.MajorRecord" recordType="MISC" GUID="b894fd9b-01a7-4f5c-803f-44167e7d5b71" ID="77">
+  <Object name="Miscellaneous" objType="Record" baseClass="ItemAbstract" recordType="MISC" GUID="b894fd9b-01a7-4f5c-803f-44167e7d5b71" ID="77">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />

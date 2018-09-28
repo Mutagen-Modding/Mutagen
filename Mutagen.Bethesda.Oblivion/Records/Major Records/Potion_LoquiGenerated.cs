@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Potion : 
-        MajorRecord,
+        ItemAbstract,
         IPotion,
         ILoquiObject<Potion>,
         ILoquiObjectSetter,
@@ -691,6 +691,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
+            out ItemAbstract_ErrorMask errorMask,
+            ItemAbstract_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -759,6 +775,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
+        public override void Write_Xml(
+            XElement node,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            ItemAbstract_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
+        }
+
         public override void Write_Xml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -994,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    ItemAbstract.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -1910,6 +1942,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1941,7 +1986,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            ItemAbstract.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -2145,7 +2190,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<Effect>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Potion_FieldIndex.Effects);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return ItemAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -2328,7 +2373,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Potion_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_ItemAbstract(obj, pair);
             }
             switch (enu)
             {
@@ -2383,7 +2428,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IPotion : IPotionGetter, IMajorRecord, ILoquiClass<IPotion, IPotionGetter>, ILoquiClass<Potion, IPotionGetter>
+    public partial interface IPotion : IPotionGetter, IItemAbstract, ILoquiClass<IPotion, IPotionGetter>, ILoquiClass<Potion, IPotionGetter>
     {
         new String Name { get; set; }
         new INotifyingSetItem<String> Name_Property { get; }
@@ -2407,7 +2452,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<Effect> Effects { get; }
     }
 
-    public partial interface IPotionGetter : IMajorRecordGetter
+    public partial interface IPotionGetter : IItemAbstractGetter
     {
         #region Name
         String Name { get; }
@@ -2556,7 +2601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ItemAbstract_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -2576,7 +2621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return ItemAbstract_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -2595,7 +2640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return ItemAbstract_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -2621,7 +2666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return "Effects";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return ItemAbstract_Registration.GetNthName(index);
             }
         }
 
@@ -2640,7 +2685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return ItemAbstract_Registration.IsNthDerivative(index);
             }
         }
 
@@ -2659,7 +2704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return ItemAbstract_Registration.IsProtected(index);
             }
         }
 
@@ -2685,7 +2730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return typeof(NotifyingList<Effect>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return ItemAbstract_Registration.GetNthType(index);
             }
         }
 
@@ -2742,7 +2787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Potion_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            ItemAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2983,7 +3028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Effects.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -3021,7 +3066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Effects.Unset(cmds);
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    ItemAbstractCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -3049,7 +3094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return obj.Effects.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -3077,7 +3122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return obj.Effects;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return ItemAbstractCommon.GetNthObject(index, obj);
             }
         }
 
@@ -3142,7 +3187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
                 ret.Effects.Overall = false;
             }
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -3248,6 +3293,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = true;
             ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, Effect_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
+        }
+
+        public static Potion_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Potion_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ItemAbstract_FieldIndex.MajorRecordFlags:
+                    return (Potion_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.FormID:
+                    return (Potion_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.Version:
+                    return (Potion_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.EditorID:
+                    return (Potion_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.RecordType:
+                    return (Potion_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         public static Potion_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -3521,7 +3591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Potion_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Potion_Mask<T>>
+    public class Potion_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<Potion_Mask<T>>
     {
         #region Ctors
         public Potion_Mask()
@@ -3761,7 +3831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Potion_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Potion_ErrorMask>
+    public class Potion_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<Potion_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -3979,7 +4049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Potion_CopyMask : MajorRecord_CopyMask
+    public class Potion_CopyMask : ItemAbstract_CopyMask
     {
         #region Members
         public bool Name;
@@ -3993,7 +4063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Potion_TranslationMask : MajorRecord_TranslationMask
+    public class Potion_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;

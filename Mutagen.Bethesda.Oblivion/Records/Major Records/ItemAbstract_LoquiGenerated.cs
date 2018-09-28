@@ -714,8 +714,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
+        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
+        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
+        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
+        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
+        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
+        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
+        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
+        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
+        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
+        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
+        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
+        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
+        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -723,8 +740,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
+                        APPA_HEADER,
                         AMMO_HEADER,
-                        WEAP_HEADER
+                        BOOK_HEADER,
+                        FULL_HEADER,
+                        SCRI_HEADER,
+                        ENAM_HEADER,
+                        ANAM_HEADER,
+                        BMDT_HEADER,
+                        INGR_HEADER,
+                        KEYM_HEADER,
+                        LVLI_HEADER,
+                        LIGH_HEADER,
+                        MISC_HEADER,
+                        ALCH_HEADER,
+                        SGST_HEADER,
+                        SLGM_HEADER,
+                        WEAP_HEADER,
+                        ARMO_HEADER,
+                        CLOT_HEADER
                     })
             );
         });

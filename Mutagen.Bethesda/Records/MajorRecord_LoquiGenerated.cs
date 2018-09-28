@@ -1711,17 +1711,10 @@ namespace Mutagen.Bethesda.Internals
 
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
-        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
-        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType CREA_HEADER = new RecordType("CREA");
@@ -1739,35 +1732,42 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
-        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
-        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
-        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
-        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
-        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
-        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
-        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType WATR_HEADER = new RecordType("WATR");
         public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
+        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
+        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
+        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
+        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
+        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
+        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
+        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
+        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
+        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
+        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
+        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
+        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
+        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
-        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
-        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
@@ -1787,17 +1787,10 @@ namespace Mutagen.Bethesda.Internals
                     {
                         ACTI_HEADER,
                         PACK_HEADER,
-                        APPA_HEADER,
                         ANIO_HEADER,
                         BSGN_HEADER,
-                        BOOK_HEADER,
                         CLAS_HEADER,
                         CLMT_HEADER,
-                        FULL_HEADER,
-                        SCRI_HEADER,
-                        ENAM_HEADER,
-                        ANAM_HEADER,
-                        BMDT_HEADER,
                         CSTY_HEADER,
                         CONT_HEADER,
                         CREA_HEADER,
@@ -1815,35 +1808,42 @@ namespace Mutagen.Bethesda.Internals
                         GRAS_HEADER,
                         HAIR_HEADER,
                         IDLE_HEADER,
-                        INGR_HEADER,
-                        KEYM_HEADER,
                         LTEX_HEADER,
-                        LVLI_HEADER,
                         LVSP_HEADER,
-                        LIGH_HEADER,
                         LSCR_HEADER,
                         MGEF_HEADER,
-                        MISC_HEADER,
                         NPC__HEADER,
-                        ALCH_HEADER,
                         QUST_HEADER,
                         RACE_HEADER,
                         REGN_HEADER,
                         ROAD_HEADER,
                         SCPT_HEADER,
-                        SGST_HEADER,
                         SKIL_HEADER,
-                        SLGM_HEADER,
                         SOUN_HEADER,
+                        FULL_HEADER,
                         STAT_HEADER,
                         SBSP_HEADER,
                         TREE_HEADER,
                         WATR_HEADER,
                         WTHR_HEADER,
+                        APPA_HEADER,
+                        AMMO_HEADER,
+                        BOOK_HEADER,
+                        SCRI_HEADER,
+                        ENAM_HEADER,
+                        ANAM_HEADER,
+                        BMDT_HEADER,
+                        INGR_HEADER,
+                        KEYM_HEADER,
+                        LVLI_HEADER,
+                        LIGH_HEADER,
+                        MISC_HEADER,
+                        ALCH_HEADER,
+                        SGST_HEADER,
+                        SLGM_HEADER,
+                        WEAP_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER,
-                        AMMO_HEADER,
-                        WEAP_HEADER,
                         LVLC_HEADER,
                         CELL_HEADER,
                         WRLD_HEADER,

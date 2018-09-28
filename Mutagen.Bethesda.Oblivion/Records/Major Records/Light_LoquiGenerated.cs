@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Light : 
-        MajorRecord,
+        ItemAbstract,
         ILight,
         ILoquiObject<Light>,
         ILoquiObjectSetter,
@@ -986,6 +986,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
+            out ItemAbstract_ErrorMask errorMask,
+            ItemAbstract_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -1054,6 +1070,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
+        public override void Write_Xml(
+            XElement node,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            ItemAbstract_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+        }
+
         public override void Write_Xml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -1424,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    ItemAbstract.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -2655,6 +2687,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -2686,7 +2731,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            ItemAbstract.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -3037,7 +3082,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Light_FieldIndex.Sound);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return ItemAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -3252,7 +3297,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Light_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_ItemAbstract(obj, pair);
             }
             switch (enu)
             {
@@ -3339,7 +3384,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ILight : ILightGetter, IMajorRecord, ILoquiClass<ILight, ILightGetter>, ILoquiClass<Light, ILightGetter>
+    public partial interface ILight : ILightGetter, IItemAbstract, ILoquiClass<ILight, ILightGetter>, ILoquiClass<Light, ILightGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -3381,7 +3426,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Sound Sound { get; set; }
     }
 
-    public partial interface ILightGetter : IMajorRecordGetter
+    public partial interface ILightGetter : IItemAbstractGetter
     {
         #region Model
         Model Model { get; }
@@ -3585,7 +3630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ItemAbstract_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -3611,7 +3656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return ItemAbstract_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -3636,7 +3681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return ItemAbstract_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -3674,7 +3719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Sound:
                     return "Sound";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return ItemAbstract_Registration.GetNthName(index);
             }
         }
 
@@ -3699,7 +3744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return ItemAbstract_Registration.IsNthDerivative(index);
             }
         }
 
@@ -3724,7 +3769,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return ItemAbstract_Registration.IsProtected(index);
             }
         }
 
@@ -3762,7 +3807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Sound:
                     return typeof(FormIDSetLink<Sound>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return ItemAbstract_Registration.GetNthType(index);
             }
         }
 
@@ -3819,7 +3864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            ItemAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -4163,7 +4208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Sound_Property.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -4219,7 +4264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Sound_Property.Unset(cmds);
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    ItemAbstractCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -4253,7 +4298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Sound:
                     return obj.Sound_Property.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -4293,7 +4338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Sound:
                     return obj.Sound;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return ItemAbstractCommon.GetNthObject(index, obj);
             }
         }
 
@@ -4346,7 +4391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Weight = item.Weight == rhs.Weight;
             ret.Fade = item.Fade_Property.Equals(rhs.Fade_Property, (l, r) => l == r);
             ret.Sound = item.Sound_Property.Equals(rhs.Sound_Property, (l, r) => l == r);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -4468,6 +4513,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Fade = item.Fade_Property.HasBeenSet;
             ret.Sound = item.Sound_Property.HasBeenSet;
             return ret;
+        }
+
+        public static Light_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Light_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ItemAbstract_FieldIndex.MajorRecordFlags:
+                    return (Light_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.FormID:
+                    return (Light_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.Version:
+                    return (Light_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.EditorID:
+                    return (Light_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.RecordType:
+                    return (Light_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         public static Light_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -4819,7 +4889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Light_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Light_Mask<T>>
+    public class Light_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<Light_Mask<T>>
     {
         #region Ctors
         public Light_Mask()
@@ -5063,7 +5133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Light_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Light_ErrorMask>
+    public class Light_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<Light_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, Model_ErrorMask> Model;
@@ -5332,7 +5402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Light_CopyMask : MajorRecord_CopyMask
+    public class Light_CopyMask : ItemAbstract_CopyMask
     {
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
@@ -5352,7 +5422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Light_TranslationMask : MajorRecord_TranslationMask
+    public class Light_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;
