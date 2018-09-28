@@ -52,6 +52,9 @@ namespace Mutagen.Bethesda.Tests
             };
             Dictionary<Type, HashSet<FormID>> knownUnlinked = new Dictionary<Type, HashSet<FormID>>();
             knownUnlinked.TryCreateValue(typeof(Region)).Add(FormID.Factory(0x00078856));
+            knownUnlinked.TryCreateValue(typeof(Script)).Add(FormID.Factory(0x01020AE4));
+            knownUnlinked.TryCreateValue(typeof(Script)).Add(FormID.Factory(0x01020AE2));
+            knownUnlinked.TryCreateValue(typeof(Weather)).Add(FormID.Factory(0x01010B5F));
             await ModList_Test(
                 testingSettings,
                 loadOrder,
