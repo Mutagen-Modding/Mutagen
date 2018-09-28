@@ -32,10 +32,16 @@ namespace Mutagen.Bethesda.Tests
 
             var failedLinks = FormIDLinkTesterHelper.CreatedLinks
                 .Where(l => !l.AttemptedLink)
-                .Where(l => l.FormID != FormID.NULL)
                 .ToArray();
 
             Assert.Empty(failedLinks);
+
+            var unlinked = FormIDLinkTesterHelper.CreatedLinks
+                .Where(l => !l.Linked)
+                .Where(l => l.FormID != FormID.NULL)
+                .ToArray();
+
+            Assert.Empty(unlinked);
         }
     }
 }
