@@ -75,5 +75,15 @@ namespace Mutagen.Bethesda
                 master: master);
             return true;
         }
+
+        public static bool operator ==(ModKey a, ModKey b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(ModKey a, ModKey b)
+        {
+            return !a.Equals(b);
+        }
     }
 }

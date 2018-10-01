@@ -178,6 +178,7 @@
         <xs:group ref="NamedFieldOptions"/>
         <xs:element name="FormIDLink" type="NFormIDLink"/>
         <xs:element name="FormID" type="NFormID"/>
+        <xs:element name="ModKey" type="NModKey"/>
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
         <xs:element name="SpecialParse" type="NSpecialParse"/>
@@ -192,7 +193,7 @@
       <xs:choice>
         <xs:group ref="FieldOptions"/>
         <xs:element name="FormIDLink" type="FormIDLink"/>
-        <xs:element name="FormID" type="FormID"/>
+        <xs:element name="ModKey" type="ModKey"/>
         <xs:element name="Buffer" type="Buffer"/>
         <xs:element name="SpecialParse" type="SpecialParse"/>
         <xs:element name="Zero" type="ZeroType"/>
@@ -296,6 +297,20 @@
   <xs:complexType name="NFormID" >
     <xs:complexContent>
       <xs:extension base="FormID">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ModKey" >
+    <xs:complexContent>
+      <xs:extension base="Field" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NModKey" >
+    <xs:complexContent>
+      <xs:extension base="ModKey">
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>

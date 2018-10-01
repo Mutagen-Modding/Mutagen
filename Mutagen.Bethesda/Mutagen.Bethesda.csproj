@@ -109,6 +109,7 @@
     <Compile Include="Translators\Binary\EnumBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\ModKeyBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P2Int16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P2IntBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P3FloatBinaryTranslation.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Records\ListGroup_LoquiGenerated.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Translators\XML\ModKeyXmlTranslation.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

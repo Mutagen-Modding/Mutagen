@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Generation
             gen.XmlTranslation.ExportWithIGetter = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
             gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
+            gen.XmlTranslation.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
             gen.XmlTranslation.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
             gen.MaskModule.AddTypeAssociation<FormIDLinkType>(MaskModule.TypicalField);
             gen.GenerationModules.Add(new MutagenModule());
@@ -39,6 +40,7 @@ namespace Mutagen.Bethesda.Generation
             gen.Add(new ObservableModModule());
             gen.AddTypeAssociation<FormIDLinkType>("FormIDLink");
             gen.AddTypeAssociation<FormIDType>("FormID");
+            gen.AddTypeAssociation<ModKeyType>("ModKey");
             gen.AddTypeAssociation<BufferType>("Buffer");
             gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<ZeroType>("Zero");

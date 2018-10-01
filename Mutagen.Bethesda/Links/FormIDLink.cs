@@ -91,8 +91,7 @@ namespace Mutagen.Bethesda
                 && unlinkedForm.Value.ModID.ID < sourceMod.MasterReferences.Count)
             {
                 if (!sourceMod.MasterReferences.TryGet(unlinkedForm.Value.ModID.ID, out var masterRef)
-                    || !ModKey.TryFactory(masterRef.Master, out var modKey)
-                    || !modList.TryGetMod(modKey, out var modListing))
+                    || !modList.TryGetMod(masterRef.Master, out var modListing))
                 {
                     item = default(T);
                     return false;

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda
         IMasterReference,
         ILoquiObject<MasterReference>,
         ILoquiObjectSetter,
-        IPropertySupporter<String>,
+        IPropertySupporter<ModKey>,
         IPropertySupporter<UInt64>,
         IEquatable<MasterReference>
     {
@@ -49,17 +49,17 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Master
-        protected String _Master;
-        protected PropertyForwarder<MasterReference, String> _MasterForwarder;
-        public INotifyingSetItem<String> Master_Property => _MasterForwarder ?? (_MasterForwarder = new PropertyForwarder<MasterReference, String>(this, (int)MasterReference_FieldIndex.Master));
+        protected ModKey _Master;
+        protected PropertyForwarder<MasterReference, ModKey> _MasterForwarder;
+        public INotifyingSetItem<ModKey> Master_Property => _MasterForwarder ?? (_MasterForwarder = new PropertyForwarder<MasterReference, ModKey>(this, (int)MasterReference_FieldIndex.Master));
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public String Master
+        public ModKey Master
         {
             get => this._Master;
             set => this.SetMaster(value);
         }
         protected void SetMaster(
-            String item,
+            ModKey item,
             bool hasBeenSet = true,
             NotifyingFireParameters cmds = null)
         {
@@ -69,11 +69,11 @@ namespace Mutagen.Bethesda
             {
                 _hasBeenSetTracker[(int)MasterReference_FieldIndex.Master] = hasBeenSet;
             }
-            if (_String_subscriptions != null)
+            if (_ModKey_subscriptions != null)
             {
                 var tmp = Master;
                 _Master = item;
-                _String_subscriptions.FireSubscriptions(
+                _ModKey_subscriptions.FireSubscriptions(
                     index: (int)MasterReference_FieldIndex.Master,
                     oldHasBeenSet: oldHasBeenSet,
                     newHasBeenSet: hasBeenSet,
@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda
         protected void UnsetMaster()
         {
             _hasBeenSetTracker[(int)MasterReference_FieldIndex.Master] = false;
-            Master = default(String);
+            Master = default(ModKey);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> IMasterReference.Master_Property => this.Master_Property;
+        INotifyingSetItem<ModKey> IMasterReference.Master_Property => this.Master_Property;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
+        INotifyingSetItemGetter<ModKey> IMasterReferenceGetter.Master_Property => this.Master_Property;
         #endregion
         #region FileSize
         protected UInt64 _FileSize;
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda
             if (Master_Property.HasBeenSet != rhs.Master_Property.HasBeenSet) return false;
             if (Master_Property.HasBeenSet)
             {
-                if (!object.Equals(this.Master, rhs.Master)) return false;
+                if (this.Master != rhs.Master) return false;
             }
             if (FileSize_Property.HasBeenSet != rhs.FileSize_Property.HasBeenSet) return false;
             if (FileSize_Property.HasBeenSet)
@@ -546,9 +546,9 @@ namespace Mutagen.Bethesda
                     try
                     {
                         errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
-                        if (StringXmlTranslation.Instance.Parse(
+                        if (ModKeyXmlTranslation.Instance.Parse(
                             root: root,
-                            item: out String MasterParse,
+                            item: out ModKey MasterParse,
                             errorMask: errorMask))
                         {
                             item.Master = MasterParse;
@@ -614,40 +614,40 @@ namespace Mutagen.Bethesda
             }
         }
 
-        #region IPropertySupporter String
-        protected ObjectCentralizationSubscriptions<String> _String_subscriptions;
-        String IPropertySupporter<String>.Get(int index)
+        #region IPropertySupporter ModKey
+        protected ObjectCentralizationSubscriptions<ModKey> _ModKey_subscriptions;
+        ModKey IPropertySupporter<ModKey>.Get(int index)
         {
-            return GetString(index: index);
+            return GetModKey(index: index);
         }
 
-        protected String GetString(int index)
+        protected ModKey GetModKey(int index)
         {
             switch ((MasterReference_FieldIndex)index)
             {
                 case MasterReference_FieldIndex.Master:
                     return Master;
                 default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
+                    throw new ArgumentException($"Unknown index for field type ModKey: {index}");
             }
         }
 
-        void IPropertySupporter<String>.Set(
+        void IPropertySupporter<ModKey>.Set(
             int index,
-            String item,
+            ModKey item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
-            SetString(
+            SetModKey(
                 index: index,
                 item: item,
                 hasBeenSet: hasBeenSet,
                 cmds: cmds);
         }
 
-        protected void SetString(
+        protected void SetModKey(
             int index,
-            String item,
+            ModKey item,
             bool hasBeenSet,
             NotifyingFireParameters cmds)
         {
@@ -657,32 +657,32 @@ namespace Mutagen.Bethesda
                     SetMaster(item, hasBeenSet, cmds);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
+                    throw new ArgumentException($"Unknown index for field type ModKey: {index}");
             }
         }
 
-        bool IPropertySupporter<String>.GetHasBeenSet(int index)
+        bool IPropertySupporter<ModKey>.GetHasBeenSet(int index)
         {
             return this.GetHasBeenSet(index: index);
         }
 
-        void IPropertySupporter<String>.SetHasBeenSet(
+        void IPropertySupporter<ModKey>.SetHasBeenSet(
             int index,
             bool on)
         {
             _hasBeenSetTracker[index] = on;
         }
 
-        void IPropertySupporter<String>.Unset(
+        void IPropertySupporter<ModKey>.Unset(
             int index,
             NotifyingUnsetParameters cmds)
         {
-            UnsetString(
+            UnsetModKey(
                 index: index,
                 cmds: cmds);
         }
 
-        protected void UnsetString(
+        protected void UnsetModKey(
             int index,
             NotifyingUnsetParameters cmds)
         {
@@ -690,26 +690,26 @@ namespace Mutagen.Bethesda
             {
                 case MasterReference_FieldIndex.Master:
                     SetMaster(
-                        item: default(String),
+                        item: default(ModKey),
                         hasBeenSet: false);
                     break;
                 default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
+                    throw new ArgumentException($"Unknown index for field type ModKey: {index}");
             }
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<String>.Subscribe(
+        void IPropertySupporter<ModKey>.Subscribe(
             int index,
             object owner,
-            NotifyingSetItemInternalCallback<String> callback,
+            NotifyingSetItemInternalCallback<ModKey> callback,
             NotifyingSubscribeParameters cmds)
         {
-            if (_String_subscriptions == null)
+            if (_ModKey_subscriptions == null)
             {
-                _String_subscriptions = new ObjectCentralizationSubscriptions<String>();
+                _ModKey_subscriptions = new ObjectCentralizationSubscriptions<ModKey>();
             }
-            _String_subscriptions.Subscribe(
+            _ModKey_subscriptions.Subscribe(
                 index: index,
                 owner: owner,
                 prop: this,
@@ -718,31 +718,31 @@ namespace Mutagen.Bethesda
         }
 
         [DebuggerStepThrough]
-        void IPropertySupporter<String>.Unsubscribe(
+        void IPropertySupporter<ModKey>.Unsubscribe(
             int index,
             object owner)
         {
-            _String_subscriptions?.Unsubscribe(index, owner);
+            _ModKey_subscriptions?.Unsubscribe(index, owner);
         }
 
-        void IPropertySupporter<String>.SetCurrentAsDefault(int index)
+        void IPropertySupporter<ModKey>.SetCurrentAsDefault(int index)
         {
             throw new NotImplementedException();
         }
 
-        String IPropertySupporter<String>.DefaultValue(int index)
+        ModKey IPropertySupporter<ModKey>.DefaultValue(int index)
         {
-            return DefaultValueString(index: index);
+            return DefaultValueModKey(index: index);
         }
 
-        protected String DefaultValueString(int index)
+        protected ModKey DefaultValueModKey(int index)
         {
             switch ((MasterReference_FieldIndex)index)
             {
                 case MasterReference_FieldIndex.Master:
-                    return default(String);
+                    return default(ModKey);
                 default:
-                    throw new ArgumentException($"Unknown index for field type String: {index}");
+                    throw new ArgumentException($"Unknown index for field type ModKey: {index}");
             }
         }
 
@@ -1117,10 +1117,9 @@ namespace Mutagen.Bethesda
                     try
                     {
                         errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        if (Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String MasterParse,
+                            item: out ModKey MasterParse,
                             errorMask: errorMask))
                         {
                             item.Master = MasterParse;
@@ -1299,7 +1298,7 @@ namespace Mutagen.Bethesda
             {
                 case MasterReference_FieldIndex.Master:
                     this.SetMaster(
-                        (String)obj,
+                        (ModKey)obj,
                         cmds: cmds);
                     break;
                 case MasterReference_FieldIndex.FileSize:
@@ -1346,7 +1345,7 @@ namespace Mutagen.Bethesda
             {
                 case MasterReference_FieldIndex.Master:
                     obj.SetMaster(
-                        (String)pair.Value,
+                        (ModKey)pair.Value,
                         cmds: null);
                     break;
                 case MasterReference_FieldIndex.FileSize:
@@ -1369,8 +1368,8 @@ namespace Mutagen.Bethesda
     #region Interface
     public partial interface IMasterReference : IMasterReferenceGetter, ILoquiClass<IMasterReference, IMasterReferenceGetter>, ILoquiClass<MasterReference, IMasterReferenceGetter>
     {
-        new String Master { get; set; }
-        new INotifyingSetItem<String> Master_Property { get; }
+        new ModKey Master { get; set; }
+        new INotifyingSetItem<ModKey> Master_Property { get; }
 
         new UInt64 FileSize { get; set; }
         new INotifyingSetItem<UInt64> FileSize_Property { get; }
@@ -1380,8 +1379,8 @@ namespace Mutagen.Bethesda
     public partial interface IMasterReferenceGetter : ILoquiObject
     {
         #region Master
-        String Master { get; }
-        INotifyingSetItemGetter<String> Master_Property { get; }
+        ModKey Master { get; }
+        INotifyingSetItemGetter<ModKey> Master_Property { get; }
 
         #endregion
         #region FileSize
@@ -1544,7 +1543,7 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    return typeof(String);
+                    return typeof(ModKey);
                 case MasterReference_FieldIndex.FileSize:
                     return typeof(UInt64);
                 default:
@@ -1746,7 +1745,7 @@ namespace Mutagen.Bethesda.Internals
             MasterReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Master = item.Master_Property.Equals(rhs.Master_Property, (l, r) => object.Equals(l, r));
+            ret.Master = item.Master_Property.Equals(rhs.Master_Property, (l, r) => l == r);
             ret.FileSize = item.FileSize_Property.Equals(rhs.FileSize_Property, (l, r) => l == r);
         }
 
@@ -1842,7 +1841,7 @@ namespace Mutagen.Bethesda.Internals
             if (item.Master_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                ModKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Master),
                     item: item.Master_Property,
@@ -1904,7 +1903,7 @@ namespace Mutagen.Bethesda.Internals
         {
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Master_Property,
+                item: item.Master_Property.ToString(),
                 fieldIndex: (int)MasterReference_FieldIndex.Master,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.MAST_HEADER),

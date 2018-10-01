@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Binary
             long length, 
             ErrorMaskBuilder errorMask);
         bool Parse(
-            MutagenFrame reader,
+            MutagenFrame frame,
             out T item,
             ErrorMaskBuilder errorMask);
     }

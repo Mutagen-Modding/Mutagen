@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Binary
                 nullTerminate: nullTerminate);
         }
 
-        void IBinaryTranslation<string>.Write(MutagenWriter writer, string item, long length, ErrorMaskBuilder errorMask)
+        public void Write(MutagenWriter writer, string item, long length, ErrorMaskBuilder errorMask)
         {
             if (length != item.Length)
             {
