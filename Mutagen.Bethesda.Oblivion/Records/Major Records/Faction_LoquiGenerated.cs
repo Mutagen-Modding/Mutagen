@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -79,19 +80,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Relation> _Relations = new NotifyingList<Relation>();
-        public INotifyingList<Relation> Relations => _Relations;
+        private readonly SourceSetList<Relation> _Relations = new SourceSetList<Relation>();
+        public ISourceSetList<Relation> Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Relation> RelationsEnumerable
         {
-            get => _Relations;
+            get => _Relations.Items;
             set => _Relations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Relation> IFaction.Relations => _Relations;
+        ISourceSetList<Relation> IFaction.Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Relation> IFactionGetter.Relations => _Relations;
+        IObservableSetList<Relation> IFactionGetter.Relations => _Relations;
         #endregion
 
         #endregion
@@ -149,19 +150,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Rank> _Ranks = new NotifyingList<Rank>();
-        public INotifyingList<Rank> Ranks => _Ranks;
+        private readonly SourceSetList<Rank> _Ranks = new SourceSetList<Rank>();
+        public ISourceSetList<Rank> Ranks => _Ranks;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Rank> RanksEnumerable
         {
-            get => _Ranks;
+            get => _Ranks.Items;
             set => _Ranks.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Rank> IFaction.Ranks => _Ranks;
+        ISourceSetList<Rank> IFaction.Ranks => _Ranks;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Rank> IFactionGetter.Ranks => _Ranks;
+        IObservableSetList<Rank> IFactionGetter.Ranks => _Ranks;
         #endregion
 
         #endregion
@@ -1188,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Name = (String)obj;
                     break;
                 case Faction_FieldIndex.Relations:
-                    this._Relations.SetTo((IEnumerable<Relation>)obj, cmds);
+                    this._Relations.SetTo((IEnumerable<Relation>)obj);
                     break;
                 case Faction_FieldIndex.Flags:
                     this.Flags = (Faction.FactionFlag)obj;
@@ -1197,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CrimeGoldMultiplier = (Single)obj;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    this._Ranks.SetTo((IEnumerable<Rank>)obj, cmds);
+                    this._Ranks.SetTo((IEnumerable<Rank>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1234,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Name = (String)pair.Value;
                     break;
                 case Faction_FieldIndex.Relations:
-                    obj._Relations.SetTo((IEnumerable<Relation>)pair.Value, null);
+                    obj._Relations.SetTo((IEnumerable<Relation>)pair.Value);
                     break;
                 case Faction_FieldIndex.Flags:
                     obj.Flags = (Faction.FactionFlag)pair.Value;
@@ -1243,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.CrimeGoldMultiplier = (Single)pair.Value;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    obj._Ranks.SetTo((IEnumerable<Rank>)pair.Value, null);
+                    obj._Ranks.SetTo((IEnumerable<Rank>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1265,7 +1266,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Name_Set(String item, bool hasBeenSet = true);
         void Name_Unset();
 
-        new INotifyingList<Relation> Relations { get; }
+        new ISourceSetList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
         new bool Flags_IsSet { get; set; }
         void Flags_Set(Faction.FactionFlag item, bool hasBeenSet = true);
@@ -1276,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion
         void CrimeGoldMultiplier_Set(Single item, bool hasBeenSet = true);
         void CrimeGoldMultiplier_Unset();
 
-        new INotifyingList<Rank> Ranks { get; }
+        new ISourceSetList<Rank> Ranks { get; }
     }
 
     public partial interface IFactionGetter : IMajorRecordGetter
@@ -1287,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Relations
-        INotifyingListGetter<Relation> Relations { get; }
+        IObservableSetList<Relation> Relations { get; }
         #endregion
         #region Flags
         Faction.FactionFlag Flags { get; }
@@ -1300,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Ranks
-        INotifyingListGetter<Rank> Ranks { get; }
+        IObservableSetList<Rank> Ranks { get; }
         #endregion
 
     }
@@ -1607,7 +1608,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Relations.SetToWithDefault(
                         rhs: rhs.Relations,
                         def: def?.Relations,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Relations.Overall ?? CopyOption.Reference)
@@ -1703,7 +1703,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Ranks.SetToWithDefault(
                         rhs: rhs.Ranks,
                         def: def?.Ranks,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Ranks.Overall ?? CopyOption.Reference)
@@ -1777,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Name_Unset();
                     break;
                 case Faction_FieldIndex.Relations:
-                    obj.Relations.Unset(cmds);
+                    obj.Relations.Unset();
                     break;
                 case Faction_FieldIndex.Flags:
                     obj.Flags_Unset();
@@ -1786,7 +1785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.CrimeGoldMultiplier_Unset();
                     break;
                 case Faction_FieldIndex.Ranks:
-                    obj.Ranks.Unset(cmds);
+                    obj.Ranks.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1843,10 +1842,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Name_Unset();
-            item.Relations.Unset(cmds.ToUnsetParams());
+            item.Relations.Unset();
             item.Flags_Unset();
             item.CrimeGoldMultiplier_Unset();
-            item.Ranks.Unset(cmds.ToUnsetParams());
+            item.Ranks.Unset();
         }
 
         public static Faction_Mask<bool> GetEqualsMask(

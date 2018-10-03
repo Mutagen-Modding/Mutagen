@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -51,19 +53,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDLink<Grass>> _Grasses = new NotifyingList<FormIDLink<Grass>>();
-        public INotifyingList<FormIDLink<Grass>> Grasses => _Grasses;
+        private readonly SourceSetList<FormIDLink<Grass>> _Grasses = new SourceSetList<FormIDLink<Grass>>();
+        public ISourceSetList<FormIDLink<Grass>> Grasses => _Grasses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDLink<Grass>> GrassesEnumerable
         {
-            get => _Grasses;
+            get => _Grasses.Items;
             set => _Grasses.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDLink<Grass>> IRegionDataGrasses.Grasses => _Grasses;
+        ISourceSetList<FormIDLink<Grass>> IRegionDataGrasses.Grasses => _Grasses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDLink<Grass>> IRegionDataGrassesGetter.Grasses => _Grasses;
+        IObservableSetList<FormIDLink<Grass>> IRegionDataGrassesGetter.Grasses => _Grasses;
         #endregion
 
         #endregion
@@ -838,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    this._Grasses.SetTo((IEnumerable<FormIDLink<Grass>>)obj, cmds);
+                    this._Grasses.SetTo((IEnumerable<FormIDLink<Grass>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -872,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    obj._Grasses.SetTo((IEnumerable<FormIDLink<Grass>>)pair.Value, null);
+                    obj._Grasses.SetTo((IEnumerable<FormIDLink<Grass>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -889,13 +891,13 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRegionDataGrasses : IRegionDataGrassesGetter, IRegionData, ILoquiClass<IRegionDataGrasses, IRegionDataGrassesGetter>, ILoquiClass<RegionDataGrasses, IRegionDataGrassesGetter>
     {
-        new INotifyingList<FormIDLink<Grass>> Grasses { get; }
+        new ISourceSetList<FormIDLink<Grass>> Grasses { get; }
     }
 
     public partial interface IRegionDataGrassesGetter : IRegionDataGetter
     {
         #region Grasses
-        INotifyingListGetter<FormIDLink<Grass>> Grasses { get; }
+        IObservableSetList<FormIDLink<Grass>> Grasses { get; }
         #endregion
 
     }
@@ -1112,8 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Grasses.SetToWithDefault(
                         rhs.Grasses,
-                        def?.Grasses,
-                        cmds);
+                        def?.Grasses);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1156,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    obj.Grasses.Unset(cmds);
+                    obj.Grasses.Unset();
                     break;
                 default:
                     RegionDataCommon.UnsetNthObject(index, obj);
@@ -1196,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGrasses item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Grasses.Unset(cmds.ToUnsetParams());
+            item.Grasses.Unset();
         }
 
         public static RegionDataGrasses_Mask<bool> GetEqualsMask(

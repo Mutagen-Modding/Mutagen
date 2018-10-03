@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -57,19 +59,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Int16> _Points = new NotifyingList<Int16>();
-        public INotifyingList<Int16> Points => _Points;
+        private readonly SourceSetList<Int16> _Points = new SourceSetList<Int16>();
+        public ISourceSetList<Int16> Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Int16> PointsEnumerable
         {
-            get => _Points;
+            get => _Points.Items;
             set => _Points.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Int16> IPointToReferenceMapping.Points => _Points;
+        ISourceSetList<Int16> IPointToReferenceMapping.Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Int16> IPointToReferenceMappingGetter.Points => _Points;
+        IObservableSetList<Int16> IPointToReferenceMappingGetter.Points => _Points;
         #endregion
 
         #endregion
@@ -863,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    this._Points.SetTo((IEnumerable<Int16>)obj, cmds);
+                    this._Points.SetTo((IEnumerable<Int16>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -908,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    obj._Points.SetTo((IEnumerable<Int16>)pair.Value, null);
+                    obj._Points.SetTo((IEnumerable<Int16>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -926,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPointToReferenceMapping : IPointToReferenceMappingGetter, ILoquiClass<IPointToReferenceMapping, IPointToReferenceMappingGetter>, ILoquiClass<PointToReferenceMapping, IPointToReferenceMappingGetter>
     {
         new Placed Reference { get; set; }
-        new INotifyingList<Int16> Points { get; }
+        new ISourceSetList<Int16> Points { get; }
     }
 
     public partial interface IPointToReferenceMappingGetter : ILoquiObject
@@ -937,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Points
-        INotifyingListGetter<Int16> Points { get; }
+        IObservableSetList<Int16> Points { get; }
         #endregion
 
     }
@@ -1175,8 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Points.SetToWithDefault(
                         rhs.Points,
-                        def?.Points,
-                        cmds);
+                        def?.Points);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1222,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Reference_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    obj.Points.Unset(cmds);
+                    obj.Points.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1265,7 +1266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Reference_Property.Unset(cmds.ToUnsetParams());
-            item.Points.Unset(cmds.ToUnsetParams());
+            item.Points.Unset();
         }
 
         public static PointToReferenceMapping_Mask<bool> GetEqualsMask(

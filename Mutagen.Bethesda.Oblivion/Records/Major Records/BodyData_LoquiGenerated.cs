@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -79,19 +81,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<BodyPart> _BodyParts = new NotifyingList<BodyPart>();
-        public INotifyingList<BodyPart> BodyParts => _BodyParts;
+        private readonly SourceSetList<BodyPart> _BodyParts = new SourceSetList<BodyPart>();
+        public ISourceSetList<BodyPart> BodyParts => _BodyParts;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<BodyPart> BodyPartsEnumerable
         {
-            get => _BodyParts;
+            get => _BodyParts.Items;
             set => _BodyParts.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<BodyPart> IBodyData.BodyParts => _BodyParts;
+        ISourceSetList<BodyPart> IBodyData.BodyParts => _BodyParts;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<BodyPart> IBodyDataGetter.BodyParts => _BodyParts;
+        IObservableSetList<BodyPart> IBodyDataGetter.BodyParts => _BodyParts;
         #endregion
 
         #endregion
@@ -975,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    this._BodyParts.SetTo((IEnumerable<BodyPart>)obj, cmds);
+                    this._BodyParts.SetTo((IEnumerable<BodyPart>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1018,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    obj._BodyParts.SetTo((IEnumerable<BodyPart>)pair.Value, null);
+                    obj._BodyParts.SetTo((IEnumerable<BodyPart>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1040,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new INotifyingList<BodyPart> BodyParts { get; }
+        new ISourceSetList<BodyPart> BodyParts { get; }
     }
 
     public partial interface IBodyDataGetter : ILoquiObject
@@ -1051,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region BodyParts
-        INotifyingListGetter<BodyPart> BodyParts { get; }
+        IObservableSetList<BodyPart> BodyParts { get; }
         #endregion
 
     }
@@ -1338,7 +1340,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.BodyParts.SetToWithDefault(
                         rhs: rhs.BodyParts,
                         def: def?.BodyParts,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.BodyParts.Overall ?? CopyOption.Reference)
@@ -1402,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case BodyData_FieldIndex.BodyParts:
-                    obj.BodyParts.Unset(cmds);
+                    obj.BodyParts.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1446,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Model_Unset();
-            item.BodyParts.Unset(cmds.ToUnsetParams());
+            item.BodyParts.Unset();
         }
 
         public static BodyData_Mask<bool> GetEqualsMask(

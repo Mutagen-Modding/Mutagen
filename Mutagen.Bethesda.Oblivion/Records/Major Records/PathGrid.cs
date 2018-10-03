@@ -82,8 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     for (int j = 0; j < numConn; j++)
                                     {
                                         pt.Connections.Add(
-                                            connectionReader.ReadInt16(),
-                                            cmds: null);
+                                            connectionReader.ReadInt16());
                                     }
                                     item.PointToPointConnections.Add(pt);
                                 }

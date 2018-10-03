@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -339,19 +341,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<WorldspaceBlock> _SubCells = new NotifyingList<WorldspaceBlock>();
-        public INotifyingList<WorldspaceBlock> SubCells => _SubCells;
+        private readonly SourceSetList<WorldspaceBlock> _SubCells = new SourceSetList<WorldspaceBlock>();
+        public ISourceSetList<WorldspaceBlock> SubCells => _SubCells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<WorldspaceBlock> SubCellsEnumerable
         {
-            get => _SubCells;
+            get => _SubCells.Items;
             set => _SubCells.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
+        ISourceSetList<WorldspaceBlock> IWorldspace.SubCells => _SubCells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<WorldspaceBlock> IWorldspaceGetter.SubCells => _SubCells;
+        IObservableSetList<WorldspaceBlock> IWorldspaceGetter.SubCells => _SubCells;
         #endregion
 
         #endregion
@@ -1945,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.TopCell = (Cell)obj;
                     break;
                 case Worldspace_FieldIndex.SubCells:
-                    this._SubCells.SetTo((IEnumerable<WorldspaceBlock>)obj, cmds);
+                    this._SubCells.SetTo((IEnumerable<WorldspaceBlock>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -2024,7 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.TopCell = (Cell)pair.Value;
                     break;
                 case Worldspace_FieldIndex.SubCells:
-                    obj._SubCells.SetTo((IEnumerable<WorldspaceBlock>)pair.Value, null);
+                    obj._SubCells.SetTo((IEnumerable<WorldspaceBlock>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2094,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion
         void TopCell_Set(Cell item, bool hasBeenSet = true);
         void TopCell_Unset();
 
-        new INotifyingList<WorldspaceBlock> SubCells { get; }
+        new ISourceSetList<WorldspaceBlock> SubCells { get; }
     }
 
     public partial interface IWorldspaceGetter : IPlaceGetter
@@ -2165,7 +2167,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SubCells
-        INotifyingListGetter<WorldspaceBlock> SubCells { get; }
+        IObservableSetList<WorldspaceBlock> SubCells { get; }
         #endregion
 
     }
@@ -2986,7 +2988,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.SubCells.SetToWithDefault(
                         rhs: rhs.SubCells,
                         def: def?.SubCells,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.SubCells.Overall ?? CopyOption.Reference)
@@ -3123,7 +3124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.TopCell_Unset();
                     break;
                 case Worldspace_FieldIndex.SubCells:
-                    obj.SubCells.Unset(cmds);
+                    obj.SubCells.Unset();
                     break;
                 default:
                     PlaceCommon.UnsetNthObject(index, obj);
@@ -3228,7 +3229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.OffsetData_Unset();
             item.Road_Unset();
             item.TopCell_Unset();
-            item.SubCells.Unset(cmds.ToUnsetParams());
+            item.SubCells.Unset();
         }
 
         public static Worldspace_Mask<bool> GetEqualsMask(

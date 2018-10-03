@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -116,37 +118,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LocalVariables
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<LocalVariable> _LocalVariables = new NotifyingList<LocalVariable>();
-        public INotifyingList<LocalVariable> LocalVariables => _LocalVariables;
+        private readonly SourceSetList<LocalVariable> _LocalVariables = new SourceSetList<LocalVariable>();
+        public ISourceSetList<LocalVariable> LocalVariables => _LocalVariables;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<LocalVariable> LocalVariablesEnumerable
         {
-            get => _LocalVariables;
+            get => _LocalVariables.Items;
             set => _LocalVariables.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<LocalVariable> IScriptFields.LocalVariables => _LocalVariables;
+        ISourceSetList<LocalVariable> IScriptFields.LocalVariables => _LocalVariables;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<LocalVariable> IScriptFieldsGetter.LocalVariables => _LocalVariables;
+        IObservableSetList<LocalVariable> IScriptFieldsGetter.LocalVariables => _LocalVariables;
         #endregion
 
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<ScriptReference> _References = new NotifyingList<ScriptReference>();
-        public INotifyingList<ScriptReference> References => _References;
+        private readonly SourceSetList<ScriptReference> _References = new SourceSetList<ScriptReference>();
+        public ISourceSetList<ScriptReference> References => _References;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ScriptReference> ReferencesEnumerable
         {
-            get => _References;
+            get => _References.Items;
             set => _References.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<ScriptReference> IScriptFields.References => _References;
+        ISourceSetList<ScriptReference> IScriptFields.References => _References;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<ScriptReference> IScriptFieldsGetter.References => _References;
+        IObservableSetList<ScriptReference> IScriptFieldsGetter.References => _References;
         #endregion
 
         #endregion
@@ -1251,10 +1253,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SourceCode = (String)obj;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
-                    this._LocalVariables.SetTo((IEnumerable<LocalVariable>)obj, cmds);
+                    this._LocalVariables.SetTo((IEnumerable<LocalVariable>)obj);
                     break;
                 case ScriptFields_FieldIndex.References:
-                    this._References.SetTo((IEnumerable<ScriptReference>)obj, cmds);
+                    this._References.SetTo((IEnumerable<ScriptReference>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1303,10 +1305,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SourceCode = (String)pair.Value;
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
-                    obj._LocalVariables.SetTo((IEnumerable<LocalVariable>)pair.Value, null);
+                    obj._LocalVariables.SetTo((IEnumerable<LocalVariable>)pair.Value);
                     break;
                 case ScriptFields_FieldIndex.References:
-                    obj._References.SetTo((IEnumerable<ScriptReference>)pair.Value, null);
+                    obj._References.SetTo((IEnumerable<ScriptReference>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1333,8 +1335,8 @@ namespace Mutagen.Bethesda.Oblivion
         void SourceCode_Set(String item, bool hasBeenSet = true);
         void SourceCode_Unset();
 
-        new INotifyingList<LocalVariable> LocalVariables { get; }
-        new INotifyingList<ScriptReference> References { get; }
+        new ISourceSetList<LocalVariable> LocalVariables { get; }
+        new ISourceSetList<ScriptReference> References { get; }
     }
 
     public partial interface IScriptFieldsGetter : ILoquiObject
@@ -1355,10 +1357,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LocalVariables
-        INotifyingListGetter<LocalVariable> LocalVariables { get; }
+        IObservableSetList<LocalVariable> LocalVariables { get; }
         #endregion
         #region References
-        INotifyingListGetter<ScriptReference> References { get; }
+        IObservableSetList<ScriptReference> References { get; }
         #endregion
 
     }
@@ -1723,7 +1725,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.LocalVariables.SetToWithDefault(
                         rhs: rhs.LocalVariables,
                         def: def?.LocalVariables,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.LocalVariables.Overall ?? CopyOption.Reference)
@@ -1759,7 +1760,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.References.SetToWithDefault(
                         rhs: rhs.References,
                         def: def?.References,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.References.Overall ?? CopyOption.Reference)
@@ -1836,10 +1836,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SourceCode_Unset();
                     break;
                 case ScriptFields_FieldIndex.LocalVariables:
-                    obj.LocalVariables.Unset(cmds);
+                    obj.LocalVariables.Unset();
                     break;
                 case ScriptFields_FieldIndex.References:
-                    obj.References.Unset(cmds);
+                    obj.References.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1896,8 +1896,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.CompiledScript_Unset();
             item.SourceCode_Unset();
-            item.LocalVariables.Unset(cmds.ToUnsetParams());
-            item.References.Unset(cmds.ToUnsetParams());
+            item.LocalVariables.Unset();
+            item.References.Unset();
         }
 
         public static ScriptFields_Mask<bool> GetEqualsMask(

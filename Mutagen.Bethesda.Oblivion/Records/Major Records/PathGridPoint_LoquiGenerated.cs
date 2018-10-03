@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -74,19 +76,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Int16> _Connections = new NotifyingList<Int16>();
-        public INotifyingList<Int16> Connections => _Connections;
+        private readonly SourceSetList<Int16> _Connections = new SourceSetList<Int16>();
+        public ISourceSetList<Int16> Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Int16> ConnectionsEnumerable
         {
-            get => _Connections;
+            get => _Connections.Items;
             set => _Connections.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Int16> IPathGridPoint.Connections => _Connections;
+        ISourceSetList<Int16> IPathGridPoint.Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Int16> IPathGridPointGetter.Connections => _Connections;
+        IObservableSetList<Int16> IPathGridPointGetter.Connections => _Connections;
         #endregion
 
         #endregion
@@ -972,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.NumConnectionsFluffBytes = (Byte[])obj;
                     break;
                 case PathGridPoint_FieldIndex.Connections:
-                    this._Connections.SetTo((IEnumerable<Int16>)obj, cmds);
+                    this._Connections.SetTo((IEnumerable<Int16>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1018,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.NumConnectionsFluffBytes = (Byte[])pair.Value;
                     break;
                 case PathGridPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((IEnumerable<Int16>)pair.Value, null);
+                    obj._Connections.SetTo((IEnumerable<Int16>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1039,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] NumConnectionsFluffBytes { get; set; }
 
-        new INotifyingList<Int16> Connections { get; }
+        new ISourceSetList<Int16> Connections { get; }
     }
 
     public partial interface IPathGridPointGetter : ILoquiObject
@@ -1053,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Connections
-        INotifyingListGetter<Int16> Connections { get; }
+        IObservableSetList<Int16> Connections { get; }
         #endregion
 
     }
@@ -1316,8 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Connections.SetToWithDefault(
                         rhs.Connections,
-                        def?.Connections,
-                        cmds);
+                        def?.Connections);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1367,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.NumConnectionsFluffBytes = default(Byte[]);
                     break;
                 case PathGridPoint_FieldIndex.Connections:
-                    obj.Connections.Unset(cmds);
+                    obj.Connections.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1414,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Point = default(P3Float);
             item.NumConnectionsFluffBytes = default(Byte[]);
-            item.Connections.Unset(cmds.ToUnsetParams());
+            item.Connections.Unset();
         }
 
         public static PathGridPoint_Mask<bool> GetEqualsMask(

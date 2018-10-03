@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -128,55 +129,55 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Condition> _Conditions = new NotifyingList<Condition>();
-        public INotifyingList<Condition> Conditions => _Conditions;
+        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
+        public ISourceSetList<Condition> Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Condition> ConditionsEnumerable
         {
-            get => _Conditions;
+            get => _Conditions.Items;
             set => _Conditions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Condition> IQuest.Conditions => _Conditions;
+        ISourceSetList<Condition> IQuest.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Condition> IQuestGetter.Conditions => _Conditions;
+        IObservableSetList<Condition> IQuestGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<QuestStage> _Stages = new NotifyingList<QuestStage>();
-        public INotifyingList<QuestStage> Stages => _Stages;
+        private readonly SourceSetList<QuestStage> _Stages = new SourceSetList<QuestStage>();
+        public ISourceSetList<QuestStage> Stages => _Stages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<QuestStage> StagesEnumerable
         {
-            get => _Stages;
+            get => _Stages.Items;
             set => _Stages.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<QuestStage> IQuest.Stages => _Stages;
+        ISourceSetList<QuestStage> IQuest.Stages => _Stages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<QuestStage> IQuestGetter.Stages => _Stages;
+        IObservableSetList<QuestStage> IQuestGetter.Stages => _Stages;
         #endregion
 
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<QuestTarget> _Targets = new NotifyingList<QuestTarget>();
-        public INotifyingList<QuestTarget> Targets => _Targets;
+        private readonly SourceSetList<QuestTarget> _Targets = new SourceSetList<QuestTarget>();
+        public ISourceSetList<QuestTarget> Targets => _Targets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<QuestTarget> TargetsEnumerable
         {
-            get => _Targets;
+            get => _Targets.Items;
             set => _Targets.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<QuestTarget> IQuest.Targets => _Targets;
+        ISourceSetList<QuestTarget> IQuest.Targets => _Targets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<QuestTarget> IQuestGetter.Targets => _Targets;
+        IObservableSetList<QuestTarget> IQuestGetter.Targets => _Targets;
         #endregion
 
         #endregion
@@ -1352,13 +1353,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Priority = (Byte)obj;
                     break;
                 case Quest_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
+                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
                     break;
                 case Quest_FieldIndex.Stages:
-                    this._Stages.SetTo((IEnumerable<QuestStage>)obj, cmds);
+                    this._Stages.SetTo((IEnumerable<QuestStage>)obj);
                     break;
                 case Quest_FieldIndex.Targets:
-                    this._Targets.SetTo((IEnumerable<QuestTarget>)obj, cmds);
+                    this._Targets.SetTo((IEnumerable<QuestTarget>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1409,13 +1410,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Priority = (Byte)pair.Value;
                     break;
                 case Quest_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
+                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
                     break;
                 case Quest_FieldIndex.Stages:
-                    obj._Stages.SetTo((IEnumerable<QuestStage>)pair.Value, null);
+                    obj._Stages.SetTo((IEnumerable<QuestStage>)pair.Value);
                     break;
                 case Quest_FieldIndex.Targets:
-                    obj._Targets.SetTo((IEnumerable<QuestTarget>)pair.Value, null);
+                    obj._Targets.SetTo((IEnumerable<QuestTarget>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1447,9 +1448,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte Priority { get; set; }
 
-        new INotifyingList<Condition> Conditions { get; }
-        new INotifyingList<QuestStage> Stages { get; }
-        new INotifyingList<QuestTarget> Targets { get; }
+        new ISourceSetList<Condition> Conditions { get; }
+        new ISourceSetList<QuestStage> Stages { get; }
+        new ISourceSetList<QuestTarget> Targets { get; }
     }
 
     public partial interface IQuestGetter : IMajorRecordGetter
@@ -1478,13 +1479,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        INotifyingListGetter<Condition> Conditions { get; }
+        IObservableSetList<Condition> Conditions { get; }
         #endregion
         #region Stages
-        INotifyingListGetter<QuestStage> Stages { get; }
+        IObservableSetList<QuestStage> Stages { get; }
         #endregion
         #region Targets
-        INotifyingListGetter<QuestTarget> Targets { get; }
+        IObservableSetList<QuestTarget> Targets { get; }
         #endregion
 
     }
@@ -1911,7 +1912,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Conditions.SetToWithDefault(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
@@ -1947,7 +1947,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Stages.SetToWithDefault(
                         rhs: rhs.Stages,
                         def: def?.Stages,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Stages.Overall ?? CopyOption.Reference)
@@ -1983,7 +1982,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Targets.SetToWithDefault(
                         rhs: rhs.Targets,
                         def: def?.Targets,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Targets.Overall ?? CopyOption.Reference)
@@ -2076,13 +2074,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Priority = default(Byte);
                     break;
                 case Quest_FieldIndex.Conditions:
-                    obj.Conditions.Unset(cmds);
+                    obj.Conditions.Unset();
                     break;
                 case Quest_FieldIndex.Stages:
-                    obj.Stages.Unset(cmds);
+                    obj.Stages.Unset();
                     break;
                 case Quest_FieldIndex.Targets:
-                    obj.Targets.Unset(cmds);
+                    obj.Targets.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -2154,9 +2152,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
             item.Flags = default(Quest.Flag);
             item.Priority = default(Byte);
-            item.Conditions.Unset(cmds.ToUnsetParams());
-            item.Stages.Unset(cmds.ToUnsetParams());
-            item.Targets.Unset(cmds.ToUnsetParams());
+            item.Conditions.Unset();
+            item.Stages.Unset();
+            item.Targets.Unset();
         }
 
         public static Quest_Mask<bool> GetEqualsMask(

@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -79,19 +81,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Condition> _Conditions = new NotifyingList<Condition>();
-        public INotifyingList<Condition> Conditions => _Conditions;
+        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
+        public ISourceSetList<Condition> Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Condition> ConditionsEnumerable
         {
-            get => _Conditions;
+            get => _Conditions.Items;
             set => _Conditions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Condition> IIdleAnimation.Conditions => _Conditions;
+        ISourceSetList<Condition> IIdleAnimation.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Condition> IIdleAnimationGetter.Conditions => _Conditions;
+        IObservableSetList<Condition> IIdleAnimationGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -123,19 +125,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RelatedIdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDLink<IdleAnimation>> _RelatedIdleAnimations = new NotifyingList<FormIDLink<IdleAnimation>>();
-        public INotifyingList<FormIDLink<IdleAnimation>> RelatedIdleAnimations => _RelatedIdleAnimations;
+        private readonly SourceSetList<FormIDLink<IdleAnimation>> _RelatedIdleAnimations = new SourceSetList<FormIDLink<IdleAnimation>>();
+        public ISourceSetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations => _RelatedIdleAnimations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDLink<IdleAnimation>> RelatedIdleAnimationsEnumerable
         {
-            get => _RelatedIdleAnimations;
+            get => _RelatedIdleAnimations.Items;
             set => _RelatedIdleAnimations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDLink<IdleAnimation>> IIdleAnimation.RelatedIdleAnimations => _RelatedIdleAnimations;
+        ISourceSetList<FormIDLink<IdleAnimation>> IIdleAnimation.RelatedIdleAnimations => _RelatedIdleAnimations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDLink<IdleAnimation>> IIdleAnimationGetter.RelatedIdleAnimations => _RelatedIdleAnimations;
+        IObservableSetList<FormIDLink<IdleAnimation>> IIdleAnimationGetter.RelatedIdleAnimations => _RelatedIdleAnimations;
         #endregion
 
         #endregion
@@ -1083,13 +1085,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case IdleAnimation_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
+                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
                     break;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     this.AnimationGroupSection = (IdleAnimation.AnimationGroupSectionEnum)obj;
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    this._RelatedIdleAnimations.SetTo((IEnumerable<FormIDLink<IdleAnimation>>)obj, cmds);
+                    this._RelatedIdleAnimations.SetTo((IEnumerable<FormIDLink<IdleAnimation>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1126,13 +1128,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case IdleAnimation_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
+                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
                     break;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     obj.AnimationGroupSection = (IdleAnimation.AnimationGroupSectionEnum)pair.Value;
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    obj._RelatedIdleAnimations.SetTo((IEnumerable<FormIDLink<IdleAnimation>>)pair.Value, null);
+                    obj._RelatedIdleAnimations.SetTo((IEnumerable<FormIDLink<IdleAnimation>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1154,13 +1156,13 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new INotifyingList<Condition> Conditions { get; }
+        new ISourceSetList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection { get; set; }
         new bool AnimationGroupSection_IsSet { get; set; }
         void AnimationGroupSection_Set(IdleAnimation.AnimationGroupSectionEnum item, bool hasBeenSet = true);
         void AnimationGroupSection_Unset();
 
-        new INotifyingList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
+        new ISourceSetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
     }
 
     public partial interface IIdleAnimationGetter : IMajorRecordGetter
@@ -1171,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        INotifyingListGetter<Condition> Conditions { get; }
+        IObservableSetList<Condition> Conditions { get; }
         #endregion
         #region AnimationGroupSection
         IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection { get; }
@@ -1179,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RelatedIdleAnimations
-        INotifyingListGetter<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
+        IObservableSetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
         #endregion
 
     }
@@ -1494,7 +1496,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Conditions.SetToWithDefault(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
@@ -1559,8 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.RelatedIdleAnimations.SetToWithDefault(
                         rhs.RelatedIdleAnimations,
-                        def?.RelatedIdleAnimations,
-                        cmds);
+                        def?.RelatedIdleAnimations);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1615,13 +1615,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case IdleAnimation_FieldIndex.Conditions:
-                    obj.Conditions.Unset(cmds);
+                    obj.Conditions.Unset();
                     break;
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     obj.AnimationGroupSection_Unset();
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    obj.RelatedIdleAnimations.Unset(cmds);
+                    obj.RelatedIdleAnimations.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1674,9 +1674,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Model_Unset();
-            item.Conditions.Unset(cmds.ToUnsetParams());
+            item.Conditions.Unset();
             item.AnimationGroupSection_Unset();
-            item.RelatedIdleAnimations.Unset(cmds.ToUnsetParams());
+            item.RelatedIdleAnimations.Unset();
         }
 
         public static IdleAnimation_Mask<bool> GetEqualsMask(

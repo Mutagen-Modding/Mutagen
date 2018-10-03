@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -60,19 +61,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<LogEntry> _LogEntries = new NotifyingList<LogEntry>();
-        public INotifyingList<LogEntry> LogEntries => _LogEntries;
+        private readonly SourceSetList<LogEntry> _LogEntries = new SourceSetList<LogEntry>();
+        public ISourceSetList<LogEntry> LogEntries => _LogEntries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<LogEntry> LogEntriesEnumerable
         {
-            get => _LogEntries;
+            get => _LogEntries.Items;
             set => _LogEntries.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<LogEntry> IQuestStage.LogEntries => _LogEntries;
+        ISourceSetList<LogEntry> IQuestStage.LogEntries => _LogEntries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<LogEntry> IQuestStageGetter.LogEntries => _LogEntries;
+        IObservableSetList<LogEntry> IQuestStageGetter.LogEntries => _LogEntries;
         #endregion
 
         #endregion
@@ -961,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Stage = (UInt16)obj;
                     break;
                 case QuestStage_FieldIndex.LogEntries:
-                    this._LogEntries.SetTo((IEnumerable<LogEntry>)obj, cmds);
+                    this._LogEntries.SetTo((IEnumerable<LogEntry>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1004,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Stage = (UInt16)pair.Value;
                     break;
                 case QuestStage_FieldIndex.LogEntries:
-                    obj._LogEntries.SetTo((IEnumerable<LogEntry>)pair.Value, null);
+                    obj._LogEntries.SetTo((IEnumerable<LogEntry>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new UInt16 Stage { get; set; }
 
-        new INotifyingList<LogEntry> LogEntries { get; }
+        new ISourceSetList<LogEntry> LogEntries { get; }
     }
 
     public partial interface IQuestStageGetter : ILoquiObject
@@ -1033,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LogEntries
-        INotifyingListGetter<LogEntry> LogEntries { get; }
+        IObservableSetList<LogEntry> LogEntries { get; }
         #endregion
 
     }
@@ -1282,7 +1283,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.LogEntries.SetToWithDefault(
                         rhs: rhs.LogEntries,
                         def: def?.LogEntries,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.LogEntries.Overall ?? CopyOption.Reference)
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Stage = default(UInt16);
                     break;
                 case QuestStage_FieldIndex.LogEntries:
-                    obj.LogEntries.Unset(cmds);
+                    obj.LogEntries.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Stage = default(UInt16);
-            item.LogEntries.Unset(cmds.ToUnsetParams());
+            item.LogEntries.Unset();
         }
 
         public static QuestStage_Mask<bool> GetEqualsMask(

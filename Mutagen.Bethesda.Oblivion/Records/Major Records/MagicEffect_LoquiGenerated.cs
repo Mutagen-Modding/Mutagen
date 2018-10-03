@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -244,19 +246,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<EDIDLink<MagicEffect>> _CounterEffects = new NotifyingList<EDIDLink<MagicEffect>>();
-        public INotifyingList<EDIDLink<MagicEffect>> CounterEffects => _CounterEffects;
+        private readonly SourceSetList<EDIDLink<MagicEffect>> _CounterEffects = new SourceSetList<EDIDLink<MagicEffect>>();
+        public ISourceSetList<EDIDLink<MagicEffect>> CounterEffects => _CounterEffects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<EDIDLink<MagicEffect>> CounterEffectsEnumerable
         {
-            get => _CounterEffects;
+            get => _CounterEffects.Items;
             set => _CounterEffects.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<EDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
+        ISourceSetList<EDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<EDIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;
+        IObservableSetList<EDIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -1819,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SubData = (MagicEffectSubData)obj;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    this._CounterEffects.SetTo((IEnumerable<EDIDLink<MagicEffect>>)obj, cmds);
+                    this._CounterEffects.SetTo((IEnumerable<EDIDLink<MagicEffect>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1899,7 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SubData = (MagicEffectSubData)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    obj._CounterEffects.SetTo((IEnumerable<EDIDLink<MagicEffect>>)pair.Value, null);
+                    obj._CounterEffects.SetTo((IEnumerable<EDIDLink<MagicEffect>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1954,7 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion
         new EffectShader EffectShader { get; set; }
         new MagicEffectSubData SubData { get; set; }
 
-        new INotifyingList<EDIDLink<MagicEffect>> CounterEffects { get; }
+        new ISourceSetList<EDIDLink<MagicEffect>> CounterEffects { get; }
     }
 
     public partial interface IMagicEffectGetter : IMajorRecordGetter
@@ -2022,7 +2024,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region CounterEffects
-        INotifyingListGetter<EDIDLink<MagicEffect>> CounterEffects { get; }
+        IObservableSetList<EDIDLink<MagicEffect>> CounterEffects { get; }
         #endregion
 
     }
@@ -2762,8 +2764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.CounterEffects.SetToWithDefault(
                         rhs.CounterEffects,
-                        def?.CounterEffects,
-                        cmds);
+                        def?.CounterEffects);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2872,7 +2873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SubData = default(MagicEffectSubData);
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    obj.CounterEffects.Unset(cmds);
+                    obj.CounterEffects.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -2973,7 +2974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ProjectileSpeed = default(Single);
             item.EffectShader_Property.Unset(cmds.ToUnsetParams());
             item.SubData = default(MagicEffectSubData);
-            item.CounterEffects.Unset(cmds.ToUnsetParams());
+            item.CounterEffects.Unset();
         }
 
         public static MagicEffect_Mask<bool> GetEqualsMask(

@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -51,19 +53,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<WeatherChance> _Weathers = new NotifyingList<WeatherChance>();
-        public INotifyingList<WeatherChance> Weathers => _Weathers;
+        private readonly SourceSetList<WeatherChance> _Weathers = new SourceSetList<WeatherChance>();
+        public ISourceSetList<WeatherChance> Weathers => _Weathers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<WeatherChance> WeathersEnumerable
         {
-            get => _Weathers;
+            get => _Weathers.Items;
             set => _Weathers.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<WeatherChance> IRegionDataWeather.Weathers => _Weathers;
+        ISourceSetList<WeatherChance> IRegionDataWeather.Weathers => _Weathers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<WeatherChance> IRegionDataWeatherGetter.Weathers => _Weathers;
+        IObservableSetList<WeatherChance> IRegionDataWeatherGetter.Weathers => _Weathers;
         #endregion
 
         #endregion
@@ -847,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    this._Weathers.SetTo((IEnumerable<WeatherChance>)obj, cmds);
+                    this._Weathers.SetTo((IEnumerable<WeatherChance>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -881,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((IEnumerable<WeatherChance>)pair.Value, null);
+                    obj._Weathers.SetTo((IEnumerable<WeatherChance>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -898,13 +900,13 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRegionDataWeather : IRegionDataWeatherGetter, IRegionData, ILoquiClass<IRegionDataWeather, IRegionDataWeatherGetter>, ILoquiClass<RegionDataWeather, IRegionDataWeatherGetter>
     {
-        new INotifyingList<WeatherChance> Weathers { get; }
+        new ISourceSetList<WeatherChance> Weathers { get; }
     }
 
     public partial interface IRegionDataWeatherGetter : IRegionDataGetter
     {
         #region Weathers
-        INotifyingListGetter<WeatherChance> Weathers { get; }
+        IObservableSetList<WeatherChance> Weathers { get; }
         #endregion
 
     }
@@ -1122,7 +1124,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Weathers.SetToWithDefault(
                         rhs: rhs.Weathers,
                         def: def?.Weathers,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Weathers.Overall ?? CopyOption.Reference)
@@ -1181,7 +1182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    obj.Weathers.Unset(cmds);
+                    obj.Weathers.Unset();
                     break;
                 default:
                     RegionDataCommon.UnsetNthObject(index, obj);
@@ -1221,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataWeather item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Weathers.Unset(cmds.ToUnsetParams());
+            item.Weathers.Unset();
         }
 
         public static RegionDataWeather_Mask<bool> GetEqualsMask(

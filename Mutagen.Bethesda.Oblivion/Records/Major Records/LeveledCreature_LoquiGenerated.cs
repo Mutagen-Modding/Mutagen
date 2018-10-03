@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -104,19 +106,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<LeveledEntry<NPCSpawn>> _Entries = new NotifyingList<LeveledEntry<NPCSpawn>>();
-        public INotifyingList<LeveledEntry<NPCSpawn>> Entries => _Entries;
+        private readonly SourceSetList<LeveledEntry<NPCSpawn>> _Entries = new SourceSetList<LeveledEntry<NPCSpawn>>();
+        public ISourceSetList<LeveledEntry<NPCSpawn>> Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<LeveledEntry<NPCSpawn>> EntriesEnumerable
         {
-            get => _Entries;
+            get => _Entries.Items;
             set => _Entries.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<LeveledEntry<NPCSpawn>> ILeveledCreature.Entries => _Entries;
+        ISourceSetList<LeveledEntry<NPCSpawn>> ILeveledCreature.Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<LeveledEntry<NPCSpawn>> ILeveledCreatureGetter.Entries => _Entries;
+        IObservableSetList<LeveledEntry<NPCSpawn>> ILeveledCreatureGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -1143,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LeveledFlag)obj;
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    this._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)obj, cmds);
+                    this._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)obj);
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -1193,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LeveledFlag)pair.Value;
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    obj._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)pair.Value, null);
+                    obj._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)pair.Value);
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -1230,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(LeveledFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new INotifyingList<LeveledEntry<NPCSpawn>> Entries { get; }
+        new ISourceSetList<LeveledEntry<NPCSpawn>> Entries { get; }
         new Script Script { get; set; }
         new NPCAbstract Template { get; set; }
     }
@@ -1248,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        INotifyingListGetter<LeveledEntry<NPCSpawn>> Entries { get; }
+        IObservableSetList<LeveledEntry<NPCSpawn>> Entries { get; }
         #endregion
         #region Script
         Script Script { get; }
@@ -1592,7 +1594,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Entries.SetToWithDefault(
                         rhs: rhs.Entries,
                         def: def?.Entries,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Entries.Overall ?? CopyOption.Reference)
@@ -1709,7 +1710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags_Unset();
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    obj.Entries.Unset(cmds);
+                    obj.Entries.Unset();
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     obj.Script_Property.Unset(cmds.ToUnsetParams());
@@ -1773,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.ChanceNone_Unset();
             item.Flags_Unset();
-            item.Entries.Unset(cmds.ToUnsetParams());
+            item.Entries.Unset();
             item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Template_Property.Unset(cmds.ToUnsetParams());
         }

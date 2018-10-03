@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -88,19 +90,19 @@ namespace Mutagen.Bethesda
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<T> _Items = new NotifyingList<T>();
-        public INotifyingList<T> Items => _Items;
+        private readonly SourceSetList<T> _Items = new SourceSetList<T>();
+        public ISourceSetList<T> Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<T> ItemsEnumerable
         {
-            get => _Items;
+            get => _Items.Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<T> IListGroup<T>.Items => _Items;
+        ISourceSetList<T> IListGroup<T>.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<T> IListGroupGetter<T>.Items => _Items;
+        IObservableSetList<T> IListGroupGetter<T>.Items => _Items;
         #endregion
 
         #endregion
@@ -1011,7 +1013,7 @@ namespace Mutagen.Bethesda
                     this.LastModified = (Byte[])obj;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<T>)obj, cmds);
+                    this._Items.SetTo((IEnumerable<T>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1057,7 +1059,7 @@ namespace Mutagen.Bethesda
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case ListGroup_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<T>)pair.Value, null);
+                    obj._Items.SetTo((IEnumerable<T>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1079,7 +1081,7 @@ namespace Mutagen.Bethesda
 
         new Byte[] LastModified { get; set; }
 
-        new INotifyingList<T> Items { get; }
+        new ISourceSetList<T> Items { get; }
     }
 
     public partial interface IListGroupGetter<T> : ILoquiObject
@@ -1098,7 +1100,7 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region Items
-        INotifyingListGetter<T> Items { get; }
+        IObservableSetList<T> Items { get; }
         #endregion
 
     }
@@ -1390,7 +1392,6 @@ namespace Mutagen.Bethesda.Internals
                     item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
@@ -1460,7 +1461,7 @@ namespace Mutagen.Bethesda.Internals
                     obj.LastModified = default(Byte[]);
                     break;
                 case ListGroup_FieldIndex.Items:
-                    obj.Items.Unset(cmds);
+                    obj.Items.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1513,7 +1514,7 @@ namespace Mutagen.Bethesda.Internals
         {
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
-            item.Items.Unset(cmds.ToUnsetParams());
+            item.Items.Unset();
         }
 
         public static ListGroup_Mask<bool> GetEqualsMask<T>(

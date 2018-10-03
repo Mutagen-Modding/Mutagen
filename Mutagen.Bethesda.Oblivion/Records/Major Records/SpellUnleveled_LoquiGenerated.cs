@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -84,19 +86,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
-        public INotifyingList<Effect> Effects => _Effects;
+        private readonly SourceSetList<Effect> _Effects = new SourceSetList<Effect>();
+        public ISourceSetList<Effect> Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Effect> EffectsEnumerable
         {
-            get => _Effects;
+            get => _Effects.Items;
             set => _Effects.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Effect> ISpellUnleveled.Effects => _Effects;
+        ISourceSetList<Effect> ISpellUnleveled.Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Effect> ISpellUnleveledGetter.Effects => _Effects;
+        IObservableSetList<Effect> ISpellUnleveledGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -1163,7 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flag = (Spell.SpellFlag)obj;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
-                    this._Effects.SetTo((IEnumerable<Effect>)obj, cmds);
+                    this._Effects.SetTo((IEnumerable<Effect>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1209,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flag = (Spell.SpellFlag)pair.Value;
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
-                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value, null);
+                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1234,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Spell.SpellFlag Flag { get; set; }
 
-        new INotifyingList<Effect> Effects { get; }
+        new ISourceSetList<Effect> Effects { get; }
     }
 
     public partial interface ISpellUnleveledGetter : ISpellGetter
@@ -1256,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        INotifyingListGetter<Effect> Effects { get; }
+        IObservableSetList<Effect> Effects { get; }
         #endregion
 
     }
@@ -1596,7 +1598,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Effects.SetToWithDefault(
                         rhs: rhs.Effects,
                         def: def?.Effects,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
@@ -1673,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flag = default(Spell.SpellFlag);
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
-                    obj.Effects.Unset(cmds);
+                    obj.Effects.Unset();
                     break;
                 default:
                     SpellCommon.UnsetNthObject(index, obj);
@@ -1730,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Cost = default(UInt32);
             item.Level = default(Spell.SpellLevel);
             item.Flag = default(Spell.SpellFlag);
-            item.Effects.Unset(cmds.ToUnsetParams());
+            item.Effects.Unset();
         }
 
         public static SpellUnleveled_Mask<bool> GetEqualsMask(

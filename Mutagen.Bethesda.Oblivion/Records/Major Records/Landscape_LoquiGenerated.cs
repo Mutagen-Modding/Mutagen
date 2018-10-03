@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -164,37 +166,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<BaseLayer> _Layers = new NotifyingList<BaseLayer>();
-        public INotifyingList<BaseLayer> Layers => _Layers;
+        private readonly SourceSetList<BaseLayer> _Layers = new SourceSetList<BaseLayer>();
+        public ISourceSetList<BaseLayer> Layers => _Layers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<BaseLayer> LayersEnumerable
         {
-            get => _Layers;
+            get => _Layers.Items;
             set => _Layers.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<BaseLayer> ILandscape.Layers => _Layers;
+        ISourceSetList<BaseLayer> ILandscape.Layers => _Layers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<BaseLayer> ILandscapeGetter.Layers => _Layers;
+        IObservableSetList<BaseLayer> ILandscapeGetter.Layers => _Layers;
         #endregion
 
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDLink<LandTexture>> _Textures = new NotifyingList<FormIDLink<LandTexture>>();
-        public INotifyingList<FormIDLink<LandTexture>> Textures => _Textures;
+        private readonly SourceSetList<FormIDLink<LandTexture>> _Textures = new SourceSetList<FormIDLink<LandTexture>>();
+        public ISourceSetList<FormIDLink<LandTexture>> Textures => _Textures;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDLink<LandTexture>> TexturesEnumerable
         {
-            get => _Textures;
+            get => _Textures.Items;
             set => _Textures.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDLink<LandTexture>> ILandscape.Textures => _Textures;
+        ISourceSetList<FormIDLink<LandTexture>> ILandscape.Textures => _Textures;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDLink<LandTexture>> ILandscapeGetter.Textures => _Textures;
+        IObservableSetList<FormIDLink<LandTexture>> ILandscapeGetter.Textures => _Textures;
         #endregion
 
         #endregion
@@ -1353,10 +1355,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.VertexColors = (Byte[])obj;
                     break;
                 case Landscape_FieldIndex.Layers:
-                    this._Layers.SetTo((IEnumerable<BaseLayer>)obj, cmds);
+                    this._Layers.SetTo((IEnumerable<BaseLayer>)obj);
                     break;
                 case Landscape_FieldIndex.Textures:
-                    this._Textures.SetTo((IEnumerable<FormIDLink<LandTexture>>)obj, cmds);
+                    this._Textures.SetTo((IEnumerable<FormIDLink<LandTexture>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1402,10 +1404,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.VertexColors = (Byte[])pair.Value;
                     break;
                 case Landscape_FieldIndex.Layers:
-                    obj._Layers.SetTo((IEnumerable<BaseLayer>)pair.Value, null);
+                    obj._Layers.SetTo((IEnumerable<BaseLayer>)pair.Value);
                     break;
                 case Landscape_FieldIndex.Textures:
-                    obj._Textures.SetTo((IEnumerable<FormIDLink<LandTexture>>)pair.Value, null);
+                    obj._Textures.SetTo((IEnumerable<FormIDLink<LandTexture>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1442,8 +1444,8 @@ namespace Mutagen.Bethesda.Oblivion
         void VertexColors_Set(Byte[] item, bool hasBeenSet = true);
         void VertexColors_Unset();
 
-        new INotifyingList<BaseLayer> Layers { get; }
-        new INotifyingList<FormIDLink<LandTexture>> Textures { get; }
+        new ISourceSetList<BaseLayer> Layers { get; }
+        new ISourceSetList<FormIDLink<LandTexture>> Textures { get; }
     }
 
     public partial interface ILandscapeGetter : IPlacedGetter
@@ -1469,10 +1471,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Layers
-        INotifyingListGetter<BaseLayer> Layers { get; }
+        IObservableSetList<BaseLayer> Layers { get; }
         #endregion
         #region Textures
-        INotifyingListGetter<FormIDLink<LandTexture>> Textures { get; }
+        IObservableSetList<FormIDLink<LandTexture>> Textures { get; }
         #endregion
 
     }
@@ -1880,7 +1882,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Layers.SetToWithDefault(
                         rhs: rhs.Layers,
                         def: def?.Layers,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Layers.Overall ?? CopyOption.Reference)
@@ -1915,8 +1916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Textures.SetToWithDefault(
                         rhs.Textures,
-                        def?.Textures,
-                        cmds);
+                        def?.Textures);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1986,10 +1986,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.VertexColors_Unset();
                     break;
                 case Landscape_FieldIndex.Layers:
-                    obj.Layers.Unset(cmds);
+                    obj.Layers.Unset();
                     break;
                 case Landscape_FieldIndex.Textures:
-                    obj.Textures.Unset(cmds);
+                    obj.Textures.Unset();
                     break;
                 default:
                     PlacedCommon.UnsetNthObject(index, obj);
@@ -2053,8 +2053,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.VertexNormals_Unset();
             item.VertexHeightMap_Unset();
             item.VertexColors_Unset();
-            item.Layers.Unset(cmds.ToUnsetParams());
-            item.Textures.Unset(cmds.ToUnsetParams());
+            item.Layers.Unset();
+            item.Textures.Unset();
         }
 
         public static Landscape_Mask<bool> GetEqualsMask(

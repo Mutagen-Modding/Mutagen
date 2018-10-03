@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -131,19 +133,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PotentialGrass
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<Grass>> _PotentialGrass = new NotifyingList<FormIDSetLink<Grass>>();
-        public INotifyingList<FormIDSetLink<Grass>> PotentialGrass => _PotentialGrass;
+        private readonly SourceSetList<FormIDSetLink<Grass>> _PotentialGrass = new SourceSetList<FormIDSetLink<Grass>>();
+        public ISourceSetList<FormIDSetLink<Grass>> PotentialGrass => _PotentialGrass;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Grass>> PotentialGrassEnumerable
         {
-            get => _PotentialGrass;
+            get => _PotentialGrass.Items;
             set => _PotentialGrass.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
+        ISourceSetList<FormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
+        IObservableSetList<FormIDSetLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
         #endregion
 
         #endregion
@@ -1111,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.TextureSpecularExponent = (Byte)obj;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    this._PotentialGrass.SetTo((IEnumerable<FormIDSetLink<Grass>>)obj, cmds);
+                    this._PotentialGrass.SetTo((IEnumerable<FormIDSetLink<Grass>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1154,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.TextureSpecularExponent = (Byte)pair.Value;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    obj._PotentialGrass.SetTo((IEnumerable<FormIDSetLink<Grass>>)pair.Value, null);
+                    obj._PotentialGrass.SetTo((IEnumerable<FormIDSetLink<Grass>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1186,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
         void TextureSpecularExponent_Set(Byte item, bool hasBeenSet = true);
         void TextureSpecularExponent_Unset();
 
-        new INotifyingList<FormIDSetLink<Grass>> PotentialGrass { get; }
+        new ISourceSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
     }
 
     public partial interface ILandTextureGetter : IMajorRecordGetter
@@ -1207,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PotentialGrass
-        INotifyingListGetter<FormIDSetLink<Grass>> PotentialGrass { get; }
+        IObservableSetList<FormIDSetLink<Grass>> PotentialGrass { get; }
         #endregion
 
     }
@@ -1580,8 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.PotentialGrass.SetToWithDefault(
                         rhs.PotentialGrass,
-                        def?.PotentialGrass,
-                        cmds);
+                        def?.PotentialGrass);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1642,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.TextureSpecularExponent_Unset();
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    obj.PotentialGrass.Unset(cmds);
+                    obj.PotentialGrass.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1697,7 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
             item.Havok_Unset();
             item.TextureSpecularExponent_Unset();
-            item.PotentialGrass.Unset(cmds.ToUnsetParams());
+            item.PotentialGrass.Unset();
         }
 
         public static LandTexture_Mask<bool> GetEqualsMask(

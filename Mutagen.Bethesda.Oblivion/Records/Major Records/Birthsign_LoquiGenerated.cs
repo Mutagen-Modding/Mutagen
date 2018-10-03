@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -130,19 +132,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
-        public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        private readonly SourceSetList<FormIDSetLink<Spell>> _Spells = new SourceSetList<FormIDSetLink<Spell>>();
+        public ISourceSetList<FormIDSetLink<Spell>> Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
         {
-            get => _Spells;
+            get => _Spells.Items;
             set => _Spells.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
+        ISourceSetList<FormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<Spell>> IBirthsignGetter.Spells => _Spells;
+        IObservableSetList<FormIDSetLink<Spell>> IBirthsignGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -1112,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj, cmds);
+                    this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1155,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value, null);
+                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1187,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Set(String item, bool hasBeenSet = true);
         void Description_Unset();
 
-        new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
+        new ISourceSetList<FormIDSetLink<Spell>> Spells { get; }
     }
 
     public partial interface IBirthsignGetter : IMajorRecordGetter
@@ -1208,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        INotifyingListGetter<FormIDSetLink<Spell>> Spells { get; }
+        IObservableSetList<FormIDSetLink<Spell>> Spells { get; }
         #endregion
 
     }
@@ -1557,8 +1559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetToWithDefault(
                         rhs.Spells,
-                        def?.Spells,
-                        cmds);
+                        def?.Spells);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1619,7 +1620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Description_Unset();
                     break;
                 case Birthsign_FieldIndex.Spells:
-                    obj.Spells.Unset(cmds);
+                    obj.Spells.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1674,7 +1675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Icon_Unset();
             item.Description_Unset();
-            item.Spells.Unset(cmds.ToUnsetParams());
+            item.Spells.Unset();
         }
 
         public static Birthsign_Mask<bool> GetEqualsMask(

@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -139,19 +141,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
-        public INotifyingList<Effect> Effects => _Effects;
+        private readonly SourceSetList<Effect> _Effects = new SourceSetList<Effect>();
+        public ISourceSetList<Effect> Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Effect> EffectsEnumerable
         {
-            get => _Effects;
+            get => _Effects.Items;
             set => _Effects.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Effect> ISigilStone.Effects => _Effects;
+        ISourceSetList<Effect> ISigilStone.Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Effect> ISigilStoneGetter.Effects => _Effects;
+        IObservableSetList<Effect> ISigilStoneGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -1365,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case SigilStone_FieldIndex.Effects:
-                    this._Effects.SetTo((IEnumerable<Effect>)obj, cmds);
+                    this._Effects.SetTo((IEnumerable<Effect>)obj);
                     break;
                 case SigilStone_FieldIndex.Uses:
                     this.Uses = (Byte)obj;
@@ -1422,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case SigilStone_FieldIndex.Effects:
-                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value, null);
+                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value);
                     break;
                 case SigilStone_FieldIndex.Uses:
                     obj.Uses = (Byte)pair.Value;
@@ -1464,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Unset();
 
         new Script Script { get; set; }
-        new INotifyingList<Effect> Effects { get; }
+        new ISourceSetList<Effect> Effects { get; }
         new Byte Uses { get; set; }
 
         new UInt32 Value { get; set; }
@@ -1496,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        INotifyingListGetter<Effect> Effects { get; }
+        IObservableSetList<Effect> Effects { get; }
         #endregion
         #region Uses
         Byte Uses { get; }
@@ -1952,7 +1954,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Effects.SetToWithDefault(
                         rhs: rhs.Effects,
                         def: def?.Effects,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
@@ -2091,7 +2092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Script_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case SigilStone_FieldIndex.Effects:
-                    obj.Effects.Unset(cmds);
+                    obj.Effects.Unset();
                     break;
                 case SigilStone_FieldIndex.Uses:
                     obj.Uses = default(Byte);
@@ -2170,7 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Model_Unset();
             item.Icon_Unset();
             item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Effects.Unset(cmds.ToUnsetParams());
+            item.Effects.Unset();
             item.Uses = default(Byte);
             item.Value = default(UInt32);
             item.Weight = default(Single);

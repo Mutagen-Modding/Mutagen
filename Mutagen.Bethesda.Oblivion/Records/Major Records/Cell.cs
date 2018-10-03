@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSharpExt.Rx;
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
@@ -105,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Cell obj,
             int fieldIndex,
-            INotifyingCollection<Placed> coll,
+            ISourceSetList<Placed> coll,
             ErrorMaskBuilder errorMask,
             bool persistentParse)
         {

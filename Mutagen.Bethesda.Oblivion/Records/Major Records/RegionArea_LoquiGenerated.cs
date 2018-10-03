@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -77,19 +79,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RegionPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<P2Float> _RegionPoints = new NotifyingList<P2Float>();
-        public INotifyingList<P2Float> RegionPoints => _RegionPoints;
+        private readonly SourceSetList<P2Float> _RegionPoints = new SourceSetList<P2Float>();
+        public ISourceSetList<P2Float> RegionPoints => _RegionPoints;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<P2Float> RegionPointsEnumerable
         {
-            get => _RegionPoints;
+            get => _RegionPoints.Items;
             set => _RegionPoints.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<P2Float> IRegionArea.RegionPoints => _RegionPoints;
+        ISourceSetList<P2Float> IRegionArea.RegionPoints => _RegionPoints;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<P2Float> IRegionAreaGetter.RegionPoints => _RegionPoints;
+        IObservableSetList<P2Float> IRegionAreaGetter.RegionPoints => _RegionPoints;
         #endregion
 
         #endregion
@@ -972,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.EdgeFallOff = (UInt32)obj;
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
-                    this._RegionPoints.SetTo((IEnumerable<P2Float>)obj, cmds);
+                    this._RegionPoints.SetTo((IEnumerable<P2Float>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1015,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.EdgeFallOff = (UInt32)pair.Value;
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
-                    obj._RegionPoints.SetTo((IEnumerable<P2Float>)pair.Value, null);
+                    obj._RegionPoints.SetTo((IEnumerable<P2Float>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1037,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion
         void EdgeFallOff_Set(UInt32 item, bool hasBeenSet = true);
         void EdgeFallOff_Unset();
 
-        new INotifyingList<P2Float> RegionPoints { get; }
+        new ISourceSetList<P2Float> RegionPoints { get; }
     }
 
     public partial interface IRegionAreaGetter : ILoquiObject
@@ -1048,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RegionPoints
-        INotifyingListGetter<P2Float> RegionPoints { get; }
+        IObservableSetList<P2Float> RegionPoints { get; }
         #endregion
 
     }
@@ -1309,8 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.RegionPoints.SetToWithDefault(
                         rhs.RegionPoints,
-                        def?.RegionPoints,
-                        cmds);
+                        def?.RegionPoints);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1358,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.EdgeFallOff_Unset();
                     break;
                 case RegionArea_FieldIndex.RegionPoints:
-                    obj.RegionPoints.Unset(cmds);
+                    obj.RegionPoints.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1402,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.EdgeFallOff_Unset();
-            item.RegionPoints.Unset(cmds.ToUnsetParams());
+            item.RegionPoints.Unset();
         }
 
         public static RegionArea_Mask<bool> GetEqualsMask(

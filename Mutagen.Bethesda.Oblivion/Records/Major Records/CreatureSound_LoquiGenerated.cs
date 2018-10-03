@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -78,19 +79,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<SoundItem> _Sounds = new NotifyingList<SoundItem>();
-        public INotifyingList<SoundItem> Sounds => _Sounds;
+        private readonly SourceSetList<SoundItem> _Sounds = new SourceSetList<SoundItem>();
+        public ISourceSetList<SoundItem> Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<SoundItem> SoundsEnumerable
         {
-            get => _Sounds;
+            get => _Sounds.Items;
             set => _Sounds.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<SoundItem> ICreatureSound.Sounds => _Sounds;
+        ISourceSetList<SoundItem> ICreatureSound.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<SoundItem> ICreatureSoundGetter.Sounds => _Sounds;
+        IObservableSetList<SoundItem> ICreatureSoundGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -986,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.SoundType = (CreatureSound.CreatureSoundType)obj;
                     break;
                 case CreatureSound_FieldIndex.Sounds:
-                    this._Sounds.SetTo((IEnumerable<SoundItem>)obj, cmds);
+                    this._Sounds.SetTo((IEnumerable<SoundItem>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1029,7 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.SoundType = (CreatureSound.CreatureSoundType)pair.Value;
                     break;
                 case CreatureSound_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((IEnumerable<SoundItem>)pair.Value, null);
+                    obj._Sounds.SetTo((IEnumerable<SoundItem>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1051,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion
         void SoundType_Set(CreatureSound.CreatureSoundType item, bool hasBeenSet = true);
         void SoundType_Unset();
 
-        new INotifyingList<SoundItem> Sounds { get; }
+        new ISourceSetList<SoundItem> Sounds { get; }
     }
 
     public partial interface ICreatureSoundGetter : ILoquiObject
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        INotifyingListGetter<SoundItem> Sounds { get; }
+        IObservableSetList<SoundItem> Sounds { get; }
         #endregion
 
     }
@@ -1327,7 +1328,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sounds.SetToWithDefault(
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SoundType_Unset();
                     break;
                 case CreatureSound_FieldIndex.Sounds:
-                    obj.Sounds.Unset(cmds);
+                    obj.Sounds.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.SoundType_Unset();
-            item.Sounds.Unset(cmds.ToUnsetParams());
+            item.Sounds.Unset();
         }
 
         public static CreatureSound_Mask<bool> GetEqualsMask(

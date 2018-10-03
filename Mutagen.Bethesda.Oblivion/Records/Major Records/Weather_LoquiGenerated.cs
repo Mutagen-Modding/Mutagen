@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Windows.Media;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -132,19 +134,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region WeatherTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<WeatherType> _WeatherTypes = new NotifyingList<WeatherType>();
-        public INotifyingList<WeatherType> WeatherTypes => _WeatherTypes;
+        private readonly SourceSetList<WeatherType> _WeatherTypes = new SourceSetList<WeatherType>();
+        public ISourceSetList<WeatherType> WeatherTypes => _WeatherTypes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<WeatherType> WeatherTypesEnumerable
         {
-            get => _WeatherTypes;
+            get => _WeatherTypes.Items;
             set => _WeatherTypes.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<WeatherType> IWeather.WeatherTypes => _WeatherTypes;
+        ISourceSetList<WeatherType> IWeather.WeatherTypes => _WeatherTypes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<WeatherType> IWeatherGetter.WeatherTypes => _WeatherTypes;
+        IObservableSetList<WeatherType> IWeatherGetter.WeatherTypes => _WeatherTypes;
         #endregion
 
         #endregion
@@ -398,19 +400,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<WeatherSound> _Sounds = new NotifyingList<WeatherSound>();
-        public INotifyingList<WeatherSound> Sounds => _Sounds;
+        private readonly SourceSetList<WeatherSound> _Sounds = new SourceSetList<WeatherSound>();
+        public ISourceSetList<WeatherSound> Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<WeatherSound> SoundsEnumerable
         {
-            get => _Sounds;
+            get => _Sounds.Items;
             set => _Sounds.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<WeatherSound> IWeather.Sounds => _Sounds;
+        ISourceSetList<WeatherSound> IWeather.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<WeatherSound> IWeatherGetter.Sounds => _Sounds;
+        IObservableSetList<WeatherSound> IWeatherGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -3133,7 +3135,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Weather_FieldIndex.WeatherTypes:
-                    this._WeatherTypes.SetTo((IEnumerable<WeatherType>)obj, cmds);
+                    this._WeatherTypes.SetTo((IEnumerable<WeatherType>)obj);
                     break;
                 case Weather_FieldIndex.FogDayNear:
                     this.FogDayNear = (Single)obj;
@@ -3229,7 +3231,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LightningColor = (Color)obj;
                     break;
                 case Weather_FieldIndex.Sounds:
-                    this._Sounds.SetTo((IEnumerable<WeatherSound>)obj, cmds);
+                    this._Sounds.SetTo((IEnumerable<WeatherSound>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -3272,7 +3274,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Weather_FieldIndex.WeatherTypes:
-                    obj._WeatherTypes.SetTo((IEnumerable<WeatherType>)pair.Value, null);
+                    obj._WeatherTypes.SetTo((IEnumerable<WeatherType>)pair.Value);
                     break;
                 case Weather_FieldIndex.FogDayNear:
                     obj.FogDayNear = (Single)pair.Value;
@@ -3368,7 +3370,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LightningColor = (Color)pair.Value;
                     break;
                 case Weather_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((IEnumerable<WeatherSound>)pair.Value, null);
+                    obj._Sounds.SetTo((IEnumerable<WeatherSound>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -3400,7 +3402,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new INotifyingList<WeatherType> WeatherTypes { get; }
+        new ISourceSetList<WeatherType> WeatherTypes { get; }
         new Single FogDayNear { get; set; }
 
         new Single FogDayFar { get; set; }
@@ -3463,7 +3465,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Color LightningColor { get; set; }
 
-        new INotifyingList<WeatherSound> Sounds { get; }
+        new ISourceSetList<WeatherSound> Sounds { get; }
     }
 
     public partial interface IWeatherGetter : IMajorRecordGetter
@@ -3484,7 +3486,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region WeatherTypes
-        INotifyingListGetter<WeatherType> WeatherTypes { get; }
+        IObservableSetList<WeatherType> WeatherTypes { get; }
         #endregion
         #region FogDayNear
         Single FogDayNear { get; }
@@ -3611,7 +3613,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        INotifyingListGetter<WeatherSound> Sounds { get; }
+        IObservableSetList<WeatherSound> Sounds { get; }
         #endregion
 
     }
@@ -4373,7 +4375,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.WeatherTypes.SetToWithDefault(
                         rhs: rhs.WeatherTypes,
                         def: def?.WeatherTypes,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.WeatherTypes.Overall ?? CopyOption.Reference)
@@ -4936,7 +4937,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sounds.SetToWithDefault(
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
@@ -5049,7 +5049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case Weather_FieldIndex.WeatherTypes:
-                    obj.WeatherTypes.Unset(cmds);
+                    obj.WeatherTypes.Unset();
                     break;
                 case Weather_FieldIndex.FogDayNear:
                     obj.FogDayNear = default(Single);
@@ -5145,7 +5145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.LightningColor = default(Color);
                     break;
                 case Weather_FieldIndex.Sounds:
-                    obj.Sounds.Unset(cmds);
+                    obj.Sounds.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -5298,7 +5298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TextureLowerLayer_Unset();
             item.TextureUpperLayer_Unset();
             item.Model_Unset();
-            item.WeatherTypes.Unset(cmds.ToUnsetParams());
+            item.WeatherTypes.Unset();
             item.FogDayNear = default(Single);
             item.FogDayFar = default(Single);
             item.FogNightNear = default(Single);
@@ -5330,7 +5330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThunderLightningFrequency = default(Byte);
             item.Classification = default(Weather.WeatherClassification);
             item.LightningColor = default(Color);
-            item.Sounds.Unset(cmds.ToUnsetParams());
+            item.Sounds.Unset();
         }
 
         public static Weather_Mask<bool> GetEqualsMask(

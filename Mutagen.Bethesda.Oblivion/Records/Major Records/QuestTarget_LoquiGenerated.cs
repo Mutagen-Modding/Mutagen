@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -67,19 +68,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Condition> _Conditions = new NotifyingList<Condition>();
-        public INotifyingList<Condition> Conditions => _Conditions;
+        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
+        public ISourceSetList<Condition> Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Condition> ConditionsEnumerable
         {
-            get => _Conditions;
+            get => _Conditions.Items;
             set => _Conditions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Condition> IQuestTarget.Conditions => _Conditions;
+        ISourceSetList<Condition> IQuestTarget.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Condition> IQuestTargetGetter.Conditions => _Conditions;
+        IObservableSetList<Condition> IQuestTargetGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -998,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (QuestTarget.Flag)obj;
                     break;
                 case QuestTarget_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
+                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1046,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (QuestTarget.Flag)pair.Value;
                     break;
                 case QuestTarget_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
+                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1066,7 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Placed Target { get; set; }
         new QuestTarget.Flag Flags { get; set; }
 
-        new INotifyingList<Condition> Conditions { get; }
+        new ISourceSetList<Condition> Conditions { get; }
     }
 
     public partial interface IQuestTargetGetter : ILoquiObject
@@ -1081,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        INotifyingListGetter<Condition> Conditions { get; }
+        IObservableSetList<Condition> Conditions { get; }
         #endregion
 
     }
@@ -1352,7 +1353,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Conditions.SetToWithDefault(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
@@ -1420,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags = default(QuestTarget.Flag);
                     break;
                 case QuestTarget_FieldIndex.Conditions:
-                    obj.Conditions.Unset(cmds);
+                    obj.Conditions.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Target_Property.Unset(cmds.ToUnsetParams());
             item.Flags = default(QuestTarget.Flag);
-            item.Conditions.Unset(cmds.ToUnsetParams());
+            item.Conditions.Unset();
         }
 
         public static QuestTarget_Mask<bool> GetEqualsMask(

@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -105,19 +107,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SpeedTreeSeeds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<UInt32> _SpeedTreeSeeds = new NotifyingList<UInt32>();
-        public INotifyingList<UInt32> SpeedTreeSeeds => _SpeedTreeSeeds;
+        private readonly SourceSetList<UInt32> _SpeedTreeSeeds = new SourceSetList<UInt32>();
+        public ISourceSetList<UInt32> SpeedTreeSeeds => _SpeedTreeSeeds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<UInt32> SpeedTreeSeedsEnumerable
         {
-            get => _SpeedTreeSeeds;
+            get => _SpeedTreeSeeds.Items;
             set => _SpeedTreeSeeds.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<UInt32> ITree.SpeedTreeSeeds => _SpeedTreeSeeds;
+        ISourceSetList<UInt32> ITree.SpeedTreeSeeds => _SpeedTreeSeeds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<UInt32> ITreeGetter.SpeedTreeSeeds => _SpeedTreeSeeds;
+        IObservableSetList<UInt32> ITreeGetter.SpeedTreeSeeds => _SpeedTreeSeeds;
         #endregion
 
         #endregion
@@ -1662,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    this._SpeedTreeSeeds.SetTo((IEnumerable<UInt32>)obj, cmds);
+                    this._SpeedTreeSeeds.SetTo((IEnumerable<UInt32>)obj);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
                     this.LeafCurvature = (Single)obj;
@@ -1732,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    obj._SpeedTreeSeeds.SetTo((IEnumerable<UInt32>)pair.Value, null);
+                    obj._SpeedTreeSeeds.SetTo((IEnumerable<UInt32>)pair.Value);
                     break;
                 case Tree_FieldIndex.LeafCurvature:
                     obj.LeafCurvature = (Single)pair.Value;
@@ -1789,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Set(String item, bool hasBeenSet = true);
         void Icon_Unset();
 
-        new INotifyingList<UInt32> SpeedTreeSeeds { get; }
+        new ISourceSetList<UInt32> SpeedTreeSeeds { get; }
         new Single LeafCurvature { get; set; }
 
         new Single MinimumLeafAngle { get; set; }
@@ -1825,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region SpeedTreeSeeds
-        INotifyingListGetter<UInt32> SpeedTreeSeeds { get; }
+        IObservableSetList<UInt32> SpeedTreeSeeds { get; }
         #endregion
         #region LeafCurvature
         Single LeafCurvature { get; }
@@ -2317,8 +2319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.SpeedTreeSeeds.SetToWithDefault(
                         rhs.SpeedTreeSeeds,
-                        def?.SpeedTreeSeeds,
-                        cmds);
+                        def?.SpeedTreeSeeds);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2555,7 +2556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    obj.SpeedTreeSeeds.Unset(cmds);
+                    obj.SpeedTreeSeeds.Unset();
                     break;
                 case Tree_FieldIndex.LeafCurvature:
                     obj.LeafCurvature = default(Single);
@@ -2666,7 +2667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Model_Unset();
             item.Icon_Unset();
-            item.SpeedTreeSeeds.Unset(cmds.ToUnsetParams());
+            item.SpeedTreeSeeds.Unset();
             item.LeafCurvature = default(Single);
             item.MinimumLeafAngle = default(Single);
             item.MaximumLeafAngle = default(Single);

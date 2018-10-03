@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>3939116a9b4bd9a95a5150dea3ea25d69615b2df</Sha>
+         <Sha>9559177c6f18f84e2cd6f0c820b8693a913daf2e</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>08-27-2018 08:14:09</CommitDate>
-         <Description>INotifyingItem.Unset with cmds</Description>
+         <CommitDate>09-21-2018 22:30:54</CommitDate>
+         <Description>sdf</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>46ce2b98b5f9082a475dd34c1e7274ce1bbc7f38</Sha>
+         <Sha>2c490d78ec979c971e1c927f9bccb0469d024586</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-27-2018 08:14:40</CommitDate>
-         <Description>NotifyingItem generation fixes</Description>
+         <CommitDate>10-03-2018 17:21:32</CommitDate>
+         <Description>Some SourceList refactoring</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

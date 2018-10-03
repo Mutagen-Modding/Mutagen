@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -111,19 +112,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
-        public INotifyingList<Effect> Effects => _Effects;
+        private readonly SourceSetList<Effect> _Effects = new SourceSetList<Effect>();
+        public ISourceSetList<Effect> Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Effect> EffectsEnumerable
         {
-            get => _Effects;
+            get => _Effects.Items;
             set => _Effects.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Effect> IEnchantment.Effects => _Effects;
+        ISourceSetList<Effect> IEnchantment.Effects => _Effects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Effect> IEnchantmentGetter.Effects => _Effects;
+        IObservableSetList<Effect> IEnchantmentGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -1213,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (Enchantment.Flag)obj;
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    this._Effects.SetTo((IEnumerable<Effect>)obj, cmds);
+                    this._Effects.SetTo((IEnumerable<Effect>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1262,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (Enchantment.Flag)pair.Value;
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value, null);
+                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1292,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Enchantment.Flag Flags { get; set; }
 
-        new INotifyingList<Effect> Effects { get; }
+        new ISourceSetList<Effect> Effects { get; }
     }
 
     public partial interface IEnchantmentGetter : IMajorRecordGetter
@@ -1319,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        INotifyingListGetter<Effect> Effects { get; }
+        IObservableSetList<Effect> Effects { get; }
         #endregion
 
     }
@@ -1701,7 +1702,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Effects.SetToWithDefault(
                         rhs: rhs.Effects,
                         def: def?.Effects,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
@@ -1784,7 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags = default(Enchantment.Flag);
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    obj.Effects.Unset(cmds);
+                    obj.Effects.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ChargeAmount = default(UInt32);
             item.EnchantCost = default(UInt32);
             item.Flags = default(Enchantment.Flag);
-            item.Effects.Unset(cmds.ToUnsetParams());
+            item.Effects.Unset();
         }
 
         public static Enchantment_Mask<bool> GetEqualsMask(

@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -158,19 +160,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDLink<Region>> _Regions = new NotifyingList<FormIDLink<Region>>();
-        public INotifyingList<FormIDLink<Region>> Regions => _Regions;
+        private readonly SourceSetList<FormIDLink<Region>> _Regions = new SourceSetList<FormIDLink<Region>>();
+        public ISourceSetList<FormIDLink<Region>> Regions => _Regions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDLink<Region>> RegionsEnumerable
         {
-            get => _Regions;
+            get => _Regions.Items;
             set => _Regions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDLink<Region>> ICell.Regions => _Regions;
+        ISourceSetList<FormIDLink<Region>> ICell.Regions => _Regions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDLink<Region>> ICellGetter.Regions => _Regions;
+        IObservableSetList<FormIDLink<Region>> ICellGetter.Regions => _Regions;
         #endregion
 
         #endregion
@@ -336,55 +338,55 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Placed> _Persistent = new NotifyingList<Placed>();
-        public INotifyingList<Placed> Persistent => _Persistent;
+        private readonly SourceSetList<Placed> _Persistent = new SourceSetList<Placed>();
+        public ISourceSetList<Placed> Persistent => _Persistent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Placed> PersistentEnumerable
         {
-            get => _Persistent;
+            get => _Persistent.Items;
             set => _Persistent.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Placed> ICell.Persistent => _Persistent;
+        ISourceSetList<Placed> ICell.Persistent => _Persistent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Placed> ICellGetter.Persistent => _Persistent;
+        IObservableSetList<Placed> ICellGetter.Persistent => _Persistent;
         #endregion
 
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Placed> _Temporary = new NotifyingList<Placed>();
-        public INotifyingList<Placed> Temporary => _Temporary;
+        private readonly SourceSetList<Placed> _Temporary = new SourceSetList<Placed>();
+        public ISourceSetList<Placed> Temporary => _Temporary;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Placed> TemporaryEnumerable
         {
-            get => _Temporary;
+            get => _Temporary.Items;
             set => _Temporary.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Placed> ICell.Temporary => _Temporary;
+        ISourceSetList<Placed> ICell.Temporary => _Temporary;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Placed> ICellGetter.Temporary => _Temporary;
+        IObservableSetList<Placed> ICellGetter.Temporary => _Temporary;
         #endregion
 
         #endregion
         #region VisibleWhenDistant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Placed> _VisibleWhenDistant = new NotifyingList<Placed>();
-        public INotifyingList<Placed> VisibleWhenDistant => _VisibleWhenDistant;
+        private readonly SourceSetList<Placed> _VisibleWhenDistant = new SourceSetList<Placed>();
+        public ISourceSetList<Placed> VisibleWhenDistant => _VisibleWhenDistant;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Placed> VisibleWhenDistantEnumerable
         {
-            get => _VisibleWhenDistant;
+            get => _VisibleWhenDistant.Items;
             set => _VisibleWhenDistant.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Placed> ICell.VisibleWhenDistant => _VisibleWhenDistant;
+        ISourceSetList<Placed> ICell.VisibleWhenDistant => _VisibleWhenDistant;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Placed> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
+        IObservableSetList<Placed> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
         #endregion
 
         #endregion
@@ -2005,7 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Lighting = (CellLighting)obj;
                     break;
                 case Cell_FieldIndex.Regions:
-                    this._Regions.SetTo((IEnumerable<FormIDLink<Region>>)obj, cmds);
+                    this._Regions.SetTo((IEnumerable<FormIDLink<Region>>)obj);
                     break;
                 case Cell_FieldIndex.MusicType:
                     this.MusicType = (MusicType)obj;
@@ -2043,13 +2045,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Landscape = (Landscape)obj;
                     break;
                 case Cell_FieldIndex.Persistent:
-                    this._Persistent.SetTo((IEnumerable<Placed>)obj, cmds);
+                    this._Persistent.SetTo((IEnumerable<Placed>)obj);
                     break;
                 case Cell_FieldIndex.Temporary:
-                    this._Temporary.SetTo((IEnumerable<Placed>)obj, cmds);
+                    this._Temporary.SetTo((IEnumerable<Placed>)obj);
                     break;
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    this._VisibleWhenDistant.SetTo((IEnumerable<Placed>)obj, cmds);
+                    this._VisibleWhenDistant.SetTo((IEnumerable<Placed>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -2095,7 +2097,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Lighting = (CellLighting)pair.Value;
                     break;
                 case Cell_FieldIndex.Regions:
-                    obj._Regions.SetTo((IEnumerable<FormIDLink<Region>>)pair.Value, null);
+                    obj._Regions.SetTo((IEnumerable<FormIDLink<Region>>)pair.Value);
                     break;
                 case Cell_FieldIndex.MusicType:
                     obj.MusicType = (MusicType)pair.Value;
@@ -2133,13 +2135,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Landscape = (Landscape)pair.Value;
                     break;
                 case Cell_FieldIndex.Persistent:
-                    obj._Persistent.SetTo((IEnumerable<Placed>)pair.Value, null);
+                    obj._Persistent.SetTo((IEnumerable<Placed>)pair.Value);
                     break;
                 case Cell_FieldIndex.Temporary:
-                    obj._Temporary.SetTo((IEnumerable<Placed>)pair.Value, null);
+                    obj._Temporary.SetTo((IEnumerable<Placed>)pair.Value);
                     break;
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    obj._VisibleWhenDistant.SetTo((IEnumerable<Placed>)pair.Value, null);
+                    obj._VisibleWhenDistant.SetTo((IEnumerable<Placed>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2176,7 +2178,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Lighting_Set(CellLighting item, bool hasBeenSet = true);
         void Lighting_Unset();
 
-        new INotifyingList<FormIDLink<Region>> Regions { get; }
+        new ISourceSetList<FormIDLink<Region>> Regions { get; }
         new MusicType MusicType { get; set; }
         new bool MusicType_IsSet { get; set; }
         void MusicType_Set(MusicType item, bool hasBeenSet = true);
@@ -2206,9 +2208,9 @@ namespace Mutagen.Bethesda.Oblivion
         void Landscape_Set(Landscape item, bool hasBeenSet = true);
         void Landscape_Unset();
 
-        new INotifyingList<Placed> Persistent { get; }
-        new INotifyingList<Placed> Temporary { get; }
-        new INotifyingList<Placed> VisibleWhenDistant { get; }
+        new ISourceSetList<Placed> Persistent { get; }
+        new ISourceSetList<Placed> Temporary { get; }
+        new ISourceSetList<Placed> VisibleWhenDistant { get; }
     }
 
     public partial interface ICellGetter : IPlaceGetter
@@ -2234,7 +2236,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Regions
-        INotifyingListGetter<FormIDLink<Region>> Regions { get; }
+        IObservableSetList<FormIDLink<Region>> Regions { get; }
         #endregion
         #region MusicType
         MusicType MusicType { get; }
@@ -2282,13 +2284,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Persistent
-        INotifyingListGetter<Placed> Persistent { get; }
+        IObservableSetList<Placed> Persistent { get; }
         #endregion
         #region Temporary
-        INotifyingListGetter<Placed> Temporary { get; }
+        IObservableSetList<Placed> Temporary { get; }
         #endregion
         #region VisibleWhenDistant
-        INotifyingListGetter<Placed> VisibleWhenDistant { get; }
+        IObservableSetList<Placed> VisibleWhenDistant { get; }
         #endregion
 
     }
@@ -2860,8 +2862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Regions.SetToWithDefault(
                         rhs.Regions,
-                        def?.Regions,
-                        cmds);
+                        def?.Regions);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3157,7 +3158,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Persistent.SetToWithDefault(
                         rhs: rhs.Persistent,
                         def: def?.Persistent,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Persistent.Overall ?? CopyOption.Reference)
@@ -3193,7 +3193,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Temporary.SetToWithDefault(
                         rhs: rhs.Temporary,
                         def: def?.Temporary,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Temporary.Overall ?? CopyOption.Reference)
@@ -3229,7 +3228,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.VisibleWhenDistant.SetToWithDefault(
                         rhs: rhs.VisibleWhenDistant,
                         def: def?.VisibleWhenDistant,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.VisibleWhenDistant.Overall ?? CopyOption.Reference)
@@ -3348,7 +3346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Lighting_Unset();
                     break;
                 case Cell_FieldIndex.Regions:
-                    obj.Regions.Unset(cmds);
+                    obj.Regions.Unset();
                     break;
                 case Cell_FieldIndex.MusicType:
                     obj.MusicType_Unset();
@@ -3378,13 +3376,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Landscape_Unset();
                     break;
                 case Cell_FieldIndex.Persistent:
-                    obj.Persistent.Unset(cmds);
+                    obj.Persistent.Unset();
                     break;
                 case Cell_FieldIndex.Temporary:
-                    obj.Temporary.Unset(cmds);
+                    obj.Temporary.Unset();
                     break;
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    obj.VisibleWhenDistant.Unset(cmds);
+                    obj.VisibleWhenDistant.Unset();
                     break;
                 default:
                     PlaceCommon.UnsetNthObject(index, obj);
@@ -3492,7 +3490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags_Unset();
             item.Grid_Unset();
             item.Lighting_Unset();
-            item.Regions.Unset(cmds.ToUnsetParams());
+            item.Regions.Unset();
             item.MusicType_Unset();
             item.WaterHeight_Unset();
             item.Climate_Property.Unset(cmds.ToUnsetParams());
@@ -3502,9 +3500,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
             item.PathGrid_Unset();
             item.Landscape_Unset();
-            item.Persistent.Unset(cmds.ToUnsetParams());
-            item.Temporary.Unset(cmds.ToUnsetParams());
-            item.VisibleWhenDistant.Unset(cmds.ToUnsetParams());
+            item.Persistent.Unset();
+            item.Temporary.Unset();
+            item.VisibleWhenDistant.Unset();
         }
 
         public static Cell_Mask<bool> GetEqualsMask(

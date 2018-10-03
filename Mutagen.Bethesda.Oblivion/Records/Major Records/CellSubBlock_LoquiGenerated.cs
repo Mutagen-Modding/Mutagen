@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -90,19 +91,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Cell> _Items = new NotifyingList<Cell>();
-        public INotifyingList<Cell> Items => _Items;
+        private readonly SourceSetList<Cell> _Items = new SourceSetList<Cell>();
+        public ISourceSetList<Cell> Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Cell> ItemsEnumerable
         {
-            get => _Items;
+            get => _Items.Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Cell> ICellSubBlock.Items => _Items;
+        ISourceSetList<Cell> ICellSubBlock.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Cell> ICellSubBlockGetter.Items => _Items;
+        IObservableSetList<Cell> ICellSubBlockGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LastModified = (Byte[])obj;
                     break;
                 case CellSubBlock_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<Cell>)obj, cmds);
+                    this._Items.SetTo((IEnumerable<Cell>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1146,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case CellSubBlock_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<Cell>)pair.Value, null);
+                    obj._Items.SetTo((IEnumerable<Cell>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] LastModified { get; set; }
 
-        new INotifyingList<Cell> Items { get; }
+        new ISourceSetList<Cell> Items { get; }
     }
 
     public partial interface ICellSubBlockGetter : ILoquiObject
@@ -1187,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        INotifyingListGetter<Cell> Items { get; }
+        IObservableSetList<Cell> Items { get; }
         #endregion
 
     }
@@ -1484,7 +1485,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.LastModified = default(Byte[]);
                     break;
                 case CellSubBlock_FieldIndex.Items:
-                    obj.Items.Unset(cmds);
+                    obj.Items.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BlockNumber = default(Byte[]);
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
-            item.Items.Unset(cmds.ToUnsetParams());
+            item.Items.Unset();
         }
 
         public static CellSubBlock_Mask<bool> GetEqualsMask(

@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -90,19 +91,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<WorldspaceSubBlock> _Items = new NotifyingList<WorldspaceSubBlock>();
-        public INotifyingList<WorldspaceSubBlock> Items => _Items;
+        private readonly SourceSetList<WorldspaceSubBlock> _Items = new SourceSetList<WorldspaceSubBlock>();
+        public ISourceSetList<WorldspaceSubBlock> Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<WorldspaceSubBlock> ItemsEnumerable
         {
-            get => _Items;
+            get => _Items.Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<WorldspaceSubBlock> IWorldspaceBlock.Items => _Items;
+        ISourceSetList<WorldspaceSubBlock> IWorldspaceBlock.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<WorldspaceSubBlock> IWorldspaceBlockGetter.Items => _Items;
+        IObservableSetList<WorldspaceSubBlock> IWorldspaceBlockGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LastModified = (Byte[])obj;
                     break;
                 case WorldspaceBlock_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<WorldspaceSubBlock>)obj, cmds);
+                    this._Items.SetTo((IEnumerable<WorldspaceSubBlock>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1146,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LastModified = (Byte[])pair.Value;
                     break;
                 case WorldspaceBlock_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<WorldspaceSubBlock>)pair.Value, null);
+                    obj._Items.SetTo((IEnumerable<WorldspaceSubBlock>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] LastModified { get; set; }
 
-        new INotifyingList<WorldspaceSubBlock> Items { get; }
+        new ISourceSetList<WorldspaceSubBlock> Items { get; }
     }
 
     public partial interface IWorldspaceBlockGetter : ILoquiObject
@@ -1187,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        INotifyingListGetter<WorldspaceSubBlock> Items { get; }
+        IObservableSetList<WorldspaceSubBlock> Items { get; }
         #endregion
 
     }
@@ -1483,7 +1484,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.LastModified = default(Byte[]);
                     break;
                 case WorldspaceBlock_FieldIndex.Items:
-                    obj.Items.Unset(cmds);
+                    obj.Items.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1607,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BlockNumber = default(Byte[]);
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
-            item.Items.Unset(cmds.ToUnsetParams());
+            item.Items.Unset();
         }
 
         public static WorldspaceBlock_Mask<bool> GetEqualsMask(

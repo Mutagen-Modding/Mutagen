@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -160,19 +162,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RandomTeleportDestinations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<Worldspace>> _RandomTeleportDestinations = new NotifyingList<FormIDSetLink<Worldspace>>();
-        public INotifyingList<FormIDSetLink<Worldspace>> RandomTeleportDestinations => _RandomTeleportDestinations;
+        private readonly SourceSetList<FormIDSetLink<Worldspace>> _RandomTeleportDestinations = new SourceSetList<FormIDSetLink<Worldspace>>();
+        public ISourceSetList<FormIDSetLink<Worldspace>> RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Worldspace>> RandomTeleportDestinationsEnumerable
         {
-            get => _RandomTeleportDestinations;
+            get => _RandomTeleportDestinations.Items;
             set => _RandomTeleportDestinations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<Worldspace>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
+        ISourceSetList<FormIDSetLink<Worldspace>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<Worldspace>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
+        IObservableSetList<FormIDSetLink<Worldspace>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 
         #endregion
@@ -1277,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (Door.DoorFlag)obj;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    this._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)obj, cmds);
+                    this._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1340,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (Door.DoorFlag)pair.Value;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    obj._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)pair.Value, null);
+                    obj._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1376,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(Door.DoorFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new INotifyingList<FormIDSetLink<Worldspace>> RandomTeleportDestinations { get; }
+        new ISourceSetList<FormIDSetLink<Worldspace>> RandomTeleportDestinations { get; }
     }
 
     public partial interface IDoorGetter : IMajorRecordGetter
@@ -1417,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RandomTeleportDestinations
-        INotifyingListGetter<FormIDSetLink<Worldspace>> RandomTeleportDestinations { get; }
+        IObservableSetList<FormIDSetLink<Worldspace>> RandomTeleportDestinations { get; }
         #endregion
 
     }
@@ -1922,8 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.RandomTeleportDestinations.SetToWithDefault(
                         rhs.RandomTeleportDestinations,
-                        def?.RandomTeleportDestinations,
-                        cmds);
+                        def?.RandomTeleportDestinations);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2008,7 +2009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags_Unset();
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    obj.RandomTeleportDestinations.Unset(cmds);
+                    obj.RandomTeleportDestinations.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -2083,7 +2084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CloseSound_Property.Unset(cmds.ToUnsetParams());
             item.LoopSound_Property.Unset(cmds.ToUnsetParams());
             item.Flags_Unset();
-            item.RandomTeleportDestinations.Unset(cmds.ToUnsetParams());
+            item.RandomTeleportDestinations.Unset();
         }
 
         public static Door_Mask<bool> GetEqualsMask(

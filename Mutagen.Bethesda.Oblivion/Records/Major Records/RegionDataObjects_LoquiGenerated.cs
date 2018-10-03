@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -51,19 +53,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<RegionDataObject> _Objects = new NotifyingList<RegionDataObject>();
-        public INotifyingList<RegionDataObject> Objects => _Objects;
+        private readonly SourceSetList<RegionDataObject> _Objects = new SourceSetList<RegionDataObject>();
+        public ISourceSetList<RegionDataObject> Objects => _Objects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RegionDataObject> ObjectsEnumerable
         {
-            get => _Objects;
+            get => _Objects.Items;
             set => _Objects.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<RegionDataObject> IRegionDataObjects.Objects => _Objects;
+        ISourceSetList<RegionDataObject> IRegionDataObjects.Objects => _Objects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<RegionDataObject> IRegionDataObjectsGetter.Objects => _Objects;
+        IObservableSetList<RegionDataObject> IRegionDataObjectsGetter.Objects => _Objects;
         #endregion
 
         #endregion
@@ -847,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    this._Objects.SetTo((IEnumerable<RegionDataObject>)obj, cmds);
+                    this._Objects.SetTo((IEnumerable<RegionDataObject>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -881,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    obj._Objects.SetTo((IEnumerable<RegionDataObject>)pair.Value, null);
+                    obj._Objects.SetTo((IEnumerable<RegionDataObject>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -898,13 +900,13 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRegionDataObjects : IRegionDataObjectsGetter, IRegionData, ILoquiClass<IRegionDataObjects, IRegionDataObjectsGetter>, ILoquiClass<RegionDataObjects, IRegionDataObjectsGetter>
     {
-        new INotifyingList<RegionDataObject> Objects { get; }
+        new ISourceSetList<RegionDataObject> Objects { get; }
     }
 
     public partial interface IRegionDataObjectsGetter : IRegionDataGetter
     {
         #region Objects
-        INotifyingListGetter<RegionDataObject> Objects { get; }
+        IObservableSetList<RegionDataObject> Objects { get; }
         #endregion
 
     }
@@ -1122,7 +1124,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Objects.SetToWithDefault(
                         rhs: rhs.Objects,
                         def: def?.Objects,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Objects.Overall ?? CopyOption.Reference)
@@ -1181,7 +1182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    obj.Objects.Unset(cmds);
+                    obj.Objects.Unset();
                     break;
                 default:
                     RegionDataCommon.UnsetNthObject(index, obj);
@@ -1221,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObjects item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Objects.Unset(cmds.ToUnsetParams());
+            item.Objects.Unset();
         }
 
         public static RegionDataObjects_Mask<bool> GetEqualsMask(

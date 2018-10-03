@@ -8,13 +8,14 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using Noggog;
 using Noggog.Notifying;
+using CSharpExt.Rx;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionMod : IMod, ILinkContainer
     {
         private static readonly object _subscribeObject = new object();
-        public INotifyingListGetter<MasterReference> MasterReferences => this.TES4.MasterReferences;
+        public IObservableSetList<MasterReference> MasterReferences => this.TES4.MasterReferences;
 
         partial void CustomCtor()
         {

@@ -9,6 +9,8 @@ using Mutagen.Bethesda.Binary;
 using Loqui;
 using System.IO;
 using Loqui.Internal;
+using DynamicData;
+using CSharpExt.Rx;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -72,7 +74,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingCollection<T> item,
+            ISourceSetList<T> item,
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
@@ -95,7 +97,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    item.Unset();
+                    item.Clear();
                 }
             }
             catch (Exception ex)
@@ -159,7 +161,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingCollection<T> item,
+            ISourceSetList<T> item,
             long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseDelegate<T> transl,
@@ -179,7 +181,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingCollection<T> item,
+            ISourceSetList<T> item,
             long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseRecordDelegate<T> transl,
@@ -200,7 +202,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    item.Unset();
+                    item.Clear();
                 }
             }
             catch (Exception ex)
@@ -254,7 +256,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingCollection<T> item,
+            ISourceSetList<T> item,
             long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseDelegate<T> transl)
@@ -273,7 +275,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    item.Unset();
+                    item.Clear();
                 }
             }
             catch (Exception ex)
@@ -323,7 +325,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingCollection<T> item,
+            ISourceSetList<T> item,
             int amount,
             ErrorMaskBuilder errorMask,
             BinarySubParseDelegate<T> transl)
@@ -342,7 +344,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    item.Unset();
+                    item.Clear();
                 }
             }
             catch (Exception ex)
@@ -398,7 +400,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem<K>(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingKeyedCollection<K, T> item,
+            ISourceSetCache<T, K> item,
             int lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseRecordDelegate<T> transl,
@@ -419,7 +421,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    item.Unset();
+                    item.Clear();
                 }
             }
             catch (Exception ex)
@@ -508,7 +510,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            INotifyingCollection<T> items,
+            ISourceSetList<T> items,
             int fieldIndex,
             RecordType recordType,
             ErrorMaskBuilder errorMask,
@@ -593,7 +595,7 @@ namespace Mutagen.Bethesda.Binary
 
         private void Write(
             MutagenWriter writer,
-            INotifyingCollection<T> items,
+            ISourceSetList<T> items,
             RecordType recordType,
             int fieldIndex,
             ErrorMaskBuilder errorMask,
@@ -622,16 +624,15 @@ namespace Mutagen.Bethesda.Binary
 
         private void WriteRecordList(
             MutagenWriter writer,
-            INotifyingCollection<T> items,
+            ISourceSetList<T> items,
             RecordType recordType,
             ErrorMaskBuilder errorMask,
             BinarySubWriteDelegate<T> transl)
         {
-            if (!items.HasBeenSet) return;
             using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
             {
                 int i = 0;
-                foreach (var item in items)
+                foreach (var item in items.Items)
                 {
                     try
                     {

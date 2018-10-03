@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -77,19 +79,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<RegionSound> _Sounds = new NotifyingList<RegionSound>();
-        public INotifyingList<RegionSound> Sounds => _Sounds;
+        private readonly SourceSetList<RegionSound> _Sounds = new SourceSetList<RegionSound>();
+        public ISourceSetList<RegionSound> Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RegionSound> SoundsEnumerable
         {
-            get => _Sounds;
+            get => _Sounds.Items;
             set => _Sounds.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<RegionSound> IRegionDataSounds.Sounds => _Sounds;
+        ISourceSetList<RegionSound> IRegionDataSounds.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<RegionSound> IRegionDataSoundsGetter.Sounds => _Sounds;
+        IObservableSetList<RegionSound> IRegionDataSoundsGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -951,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MusicType = (MusicType)obj;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
-                    this._Sounds.SetTo((IEnumerable<RegionSound>)obj, cmds);
+                    this._Sounds.SetTo((IEnumerable<RegionSound>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -988,7 +990,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MusicType = (MusicType)pair.Value;
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((IEnumerable<RegionSound>)pair.Value, null);
+                    obj._Sounds.SetTo((IEnumerable<RegionSound>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1010,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
         void MusicType_Set(MusicType item, bool hasBeenSet = true);
         void MusicType_Unset();
 
-        new INotifyingList<RegionSound> Sounds { get; }
+        new ISourceSetList<RegionSound> Sounds { get; }
     }
 
     public partial interface IRegionDataSoundsGetter : IRegionDataGetter
@@ -1021,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        INotifyingListGetter<RegionSound> Sounds { get; }
+        IObservableSetList<RegionSound> Sounds { get; }
         #endregion
 
     }
@@ -1284,7 +1286,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sounds.SetToWithDefault(
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
@@ -1349,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.MusicType_Unset();
                     break;
                 case RegionDataSounds_FieldIndex.Sounds:
-                    obj.Sounds.Unset(cmds);
+                    obj.Sounds.Unset();
                     break;
                 default:
                     RegionDataCommon.UnsetNthObject(index, obj);
@@ -1394,7 +1395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.MusicType_Unset();
-            item.Sounds.Unset(cmds.ToUnsetParams());
+            item.Sounds.Unset();
         }
 
         public static RegionDataSounds_Mask<bool> GetEqualsMask(

@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -74,19 +76,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<P3Float> _Connections = new NotifyingList<P3Float>();
-        public INotifyingList<P3Float> Connections => _Connections;
+        private readonly SourceSetList<P3Float> _Connections = new SourceSetList<P3Float>();
+        public ISourceSetList<P3Float> Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<P3Float> ConnectionsEnumerable
         {
-            get => _Connections;
+            get => _Connections.Items;
             set => _Connections.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<P3Float> IRoadPoint.Connections => _Connections;
+        ISourceSetList<P3Float> IRoadPoint.Connections => _Connections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<P3Float> IRoadPointGetter.Connections => _Connections;
+        IObservableSetList<P3Float> IRoadPointGetter.Connections => _Connections;
         #endregion
 
         #endregion
@@ -972,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.NumConnectionsFluffBytes = (Byte[])obj;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    this._Connections.SetTo((IEnumerable<P3Float>)obj, cmds);
+                    this._Connections.SetTo((IEnumerable<P3Float>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1018,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.NumConnectionsFluffBytes = (Byte[])pair.Value;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    obj._Connections.SetTo((IEnumerable<P3Float>)pair.Value, null);
+                    obj._Connections.SetTo((IEnumerable<P3Float>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1039,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] NumConnectionsFluffBytes { get; set; }
 
-        new INotifyingList<P3Float> Connections { get; }
+        new ISourceSetList<P3Float> Connections { get; }
     }
 
     public partial interface IRoadPointGetter : ILoquiObject
@@ -1053,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Connections
-        INotifyingListGetter<P3Float> Connections { get; }
+        IObservableSetList<P3Float> Connections { get; }
         #endregion
 
     }
@@ -1316,8 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Connections.SetToWithDefault(
                         rhs.Connections,
-                        def?.Connections,
-                        cmds);
+                        def?.Connections);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1367,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.NumConnectionsFluffBytes = default(Byte[]);
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    obj.Connections.Unset(cmds);
+                    obj.Connections.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1414,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Point = default(P3Float);
             item.NumConnectionsFluffBytes = default(Byte[]);
-            item.Connections.Unset(cmds.ToUnsetParams());
+            item.Connections.Unset();
         }
 
         public static RoadPoint_Mask<bool> GetEqualsMask(

@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -104,19 +105,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<LeveledEntry<ItemAbstract>> _Entries = new NotifyingList<LeveledEntry<ItemAbstract>>();
-        public INotifyingList<LeveledEntry<ItemAbstract>> Entries => _Entries;
+        private readonly SourceSetList<LeveledEntry<ItemAbstract>> _Entries = new SourceSetList<LeveledEntry<ItemAbstract>>();
+        public ISourceSetList<LeveledEntry<ItemAbstract>> Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<LeveledEntry<ItemAbstract>> EntriesEnumerable
         {
-            get => _Entries;
+            get => _Entries.Items;
             set => _Entries.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<LeveledEntry<ItemAbstract>> ILeveledItem.Entries => _Entries;
+        ISourceSetList<LeveledEntry<ItemAbstract>> ILeveledItem.Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<LeveledEntry<ItemAbstract>> ILeveledItemGetter.Entries => _Entries;
+        IObservableSetList<LeveledEntry<ItemAbstract>> ILeveledItemGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -1054,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LeveledFlag)obj;
                     break;
                 case LeveledItem_FieldIndex.Entries:
-                    this._Entries.SetTo((IEnumerable<LeveledEntry<ItemAbstract>>)obj, cmds);
+                    this._Entries.SetTo((IEnumerable<LeveledEntry<ItemAbstract>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1094,7 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LeveledFlag)pair.Value;
                     break;
                 case LeveledItem_FieldIndex.Entries:
-                    obj._Entries.SetTo((IEnumerable<LeveledEntry<ItemAbstract>>)pair.Value, null);
+                    obj._Entries.SetTo((IEnumerable<LeveledEntry<ItemAbstract>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1121,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(LeveledFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new INotifyingList<LeveledEntry<ItemAbstract>> Entries { get; }
+        new ISourceSetList<LeveledEntry<ItemAbstract>> Entries { get; }
     }
 
     public partial interface ILeveledItemGetter : IMajorRecordGetter
@@ -1137,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        INotifyingListGetter<LeveledEntry<ItemAbstract>> Entries { get; }
+        IObservableSetList<LeveledEntry<ItemAbstract>> Entries { get; }
         #endregion
 
     }
@@ -1446,7 +1447,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Entries.SetToWithDefault(
                         rhs: rhs.Entries,
                         def: def?.Entries,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Entries.Overall ?? CopyOption.Reference)
@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags_Unset();
                     break;
                 case LeveledItem_FieldIndex.Entries:
-                    obj.Entries.Unset(cmds);
+                    obj.Entries.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.ChanceNone_Unset();
             item.Flags_Unset();
-            item.Entries.Unset(cmds.ToUnsetParams());
+            item.Entries.Unset();
         }
 
         public static LeveledItem_Mask<bool> GetEqualsMask(

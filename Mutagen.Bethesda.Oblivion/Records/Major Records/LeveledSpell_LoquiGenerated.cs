@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -104,19 +105,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<LeveledEntry<Spell>> _Entries = new NotifyingList<LeveledEntry<Spell>>();
-        public INotifyingList<LeveledEntry<Spell>> Entries => _Entries;
+        private readonly SourceSetList<LeveledEntry<Spell>> _Entries = new SourceSetList<LeveledEntry<Spell>>();
+        public ISourceSetList<LeveledEntry<Spell>> Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<LeveledEntry<Spell>> EntriesEnumerable
         {
-            get => _Entries;
+            get => _Entries.Items;
             set => _Entries.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<LeveledEntry<Spell>> ILeveledSpell.Entries => _Entries;
+        ISourceSetList<LeveledEntry<Spell>> ILeveledSpell.Entries => _Entries;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<LeveledEntry<Spell>> ILeveledSpellGetter.Entries => _Entries;
+        IObservableSetList<LeveledEntry<Spell>> ILeveledSpellGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -1030,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LeveledFlag)obj;
                     break;
                 case LeveledSpell_FieldIndex.Entries:
-                    this._Entries.SetTo((IEnumerable<LeveledEntry<Spell>>)obj, cmds);
+                    this._Entries.SetTo((IEnumerable<LeveledEntry<Spell>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1070,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LeveledFlag)pair.Value;
                     break;
                 case LeveledSpell_FieldIndex.Entries:
-                    obj._Entries.SetTo((IEnumerable<LeveledEntry<Spell>>)pair.Value, null);
+                    obj._Entries.SetTo((IEnumerable<LeveledEntry<Spell>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(LeveledFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new INotifyingList<LeveledEntry<Spell>> Entries { get; }
+        new ISourceSetList<LeveledEntry<Spell>> Entries { get; }
     }
 
     public partial interface ILeveledSpellGetter : IMajorRecordGetter
@@ -1113,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        INotifyingListGetter<LeveledEntry<Spell>> Entries { get; }
+        IObservableSetList<LeveledEntry<Spell>> Entries { get; }
         #endregion
 
     }
@@ -1421,7 +1422,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Entries.SetToWithDefault(
                         rhs: rhs.Entries,
                         def: def?.Entries,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Entries.Overall ?? CopyOption.Reference)
@@ -1492,7 +1492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags_Unset();
                     break;
                 case LeveledSpell_FieldIndex.Entries:
-                    obj.Entries.Unset(cmds);
+                    obj.Entries.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.ChanceNone_Unset();
             item.Flags_Unset();
-            item.Entries.Unset(cmds.ToUnsetParams());
+            item.Entries.Unset();
         }
 
         public static LeveledSpell_Mask<bool> GetEqualsMask(

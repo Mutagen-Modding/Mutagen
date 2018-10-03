@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -78,19 +80,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Condition> _Conditions = new NotifyingList<Condition>();
-        public INotifyingList<Condition> Conditions => _Conditions;
+        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
+        public ISourceSetList<Condition> Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Condition> ConditionsEnumerable
         {
-            get => _Conditions;
+            get => _Conditions.Items;
             set => _Conditions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Condition> ILogEntry.Conditions => _Conditions;
+        ISourceSetList<Condition> ILogEntry.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Condition> ILogEntryGetter.Conditions => _Conditions;
+        IObservableSetList<Condition> ILogEntryGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -1162,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (LogEntry.Flag)obj;
                     break;
                 case LogEntry_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
+                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
                     break;
                 case LogEntry_FieldIndex.Entry:
                     this.Entry = (String)obj;
@@ -1211,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (LogEntry.Flag)pair.Value;
                     break;
                 case LogEntry_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
+                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
                     break;
                 case LogEntry_FieldIndex.Entry:
                     obj.Entry = (String)pair.Value;
@@ -1239,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(LogEntry.Flag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new INotifyingList<Condition> Conditions { get; }
+        new ISourceSetList<Condition> Conditions { get; }
         new String Entry { get; set; }
         new bool Entry_IsSet { get; set; }
         void Entry_Set(String item, bool hasBeenSet = true);
@@ -1260,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        INotifyingListGetter<Condition> Conditions { get; }
+        IObservableSetList<Condition> Conditions { get; }
         #endregion
         #region Entry
         String Entry { get; }
@@ -1575,7 +1577,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Conditions.SetToWithDefault(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
@@ -1728,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags_Unset();
                     break;
                 case LogEntry_FieldIndex.Conditions:
-                    obj.Conditions.Unset(cmds);
+                    obj.Conditions.Unset();
                     break;
                 case LogEntry_FieldIndex.Entry:
                     obj.Entry_Unset();
@@ -1786,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Flags_Unset();
-            item.Conditions.Unset(cmds.ToUnsetParams());
+            item.Conditions.Unset();
             item.Entry_Unset();
             item.ResultScript_Unset();
         }

@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -104,19 +105,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Locations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<LoadScreenLocation> _Locations = new NotifyingList<LoadScreenLocation>();
-        public INotifyingList<LoadScreenLocation> Locations => _Locations;
+        private readonly SourceSetList<LoadScreenLocation> _Locations = new SourceSetList<LoadScreenLocation>();
+        public ISourceSetList<LoadScreenLocation> Locations => _Locations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<LoadScreenLocation> LocationsEnumerable
         {
-            get => _Locations;
+            get => _Locations.Items;
             set => _Locations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<LoadScreenLocation> ILoadScreen.Locations => _Locations;
+        ISourceSetList<LoadScreenLocation> ILoadScreen.Locations => _Locations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<LoadScreenLocation> ILoadScreenGetter.Locations => _Locations;
+        IObservableSetList<LoadScreenLocation> ILoadScreenGetter.Locations => _Locations;
         #endregion
 
         #endregion
@@ -1032,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case LoadScreen_FieldIndex.Locations:
-                    this._Locations.SetTo((IEnumerable<LoadScreenLocation>)obj, cmds);
+                    this._Locations.SetTo((IEnumerable<LoadScreenLocation>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1072,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case LoadScreen_FieldIndex.Locations:
-                    obj._Locations.SetTo((IEnumerable<LoadScreenLocation>)pair.Value, null);
+                    obj._Locations.SetTo((IEnumerable<LoadScreenLocation>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1099,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Set(String item, bool hasBeenSet = true);
         void Description_Unset();
 
-        new INotifyingList<LoadScreenLocation> Locations { get; }
+        new ISourceSetList<LoadScreenLocation> Locations { get; }
     }
 
     public partial interface ILoadScreenGetter : IMajorRecordGetter
@@ -1115,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Locations
-        INotifyingListGetter<LoadScreenLocation> Locations { get; }
+        IObservableSetList<LoadScreenLocation> Locations { get; }
         #endregion
 
     }
@@ -1423,7 +1424,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Locations.SetToWithDefault(
                         rhs: rhs.Locations,
                         def: def?.Locations,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Locations.Overall ?? CopyOption.Reference)
@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Description_Unset();
                     break;
                 case LoadScreen_FieldIndex.Locations:
-                    obj.Locations.Unset(cmds);
+                    obj.Locations.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1544,7 +1544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Icon_Unset();
             item.Description_Unset();
-            item.Locations.Unset(cmds.ToUnsetParams());
+            item.Locations.Unset();
         }
 
         public static LoadScreen_Mask<bool> GetEqualsMask(

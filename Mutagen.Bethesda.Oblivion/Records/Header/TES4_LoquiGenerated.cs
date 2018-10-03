@@ -16,8 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.Internals;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -27,6 +27,7 @@ using Loqui.Internal;
 using System.Diagnostics;
 using System.Collections.Specialized;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -203,19 +204,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<MasterReference> _MasterReferences = new NotifyingList<MasterReference>();
-        public INotifyingList<MasterReference> MasterReferences => _MasterReferences;
+        private readonly SourceSetList<MasterReference> _MasterReferences = new SourceSetList<MasterReference>();
+        public ISourceSetList<MasterReference> MasterReferences => _MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<MasterReference> MasterReferencesEnumerable
         {
-            get => _MasterReferences;
+            get => _MasterReferences.Items;
             set => _MasterReferences.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<MasterReference> ITES4.MasterReferences => _MasterReferences;
+        ISourceSetList<MasterReference> ITES4.MasterReferences => _MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<MasterReference> ITES4Getter.MasterReferences => _MasterReferences;
+        IObservableSetList<MasterReference> ITES4Getter.MasterReferences => _MasterReferences;
         #endregion
 
         #endregion
@@ -1435,7 +1436,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Description = (String)obj;
                     break;
                 case TES4_FieldIndex.MasterReferences:
-                    this._MasterReferences.SetTo((IEnumerable<MasterReference>)obj, cmds);
+                    this._MasterReferences.SetTo((IEnumerable<MasterReference>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1493,7 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Description = (String)pair.Value;
                     break;
                 case TES4_FieldIndex.MasterReferences:
-                    obj._MasterReferences.SetTo((IEnumerable<MasterReference>)pair.Value, null);
+                    obj._MasterReferences.SetTo((IEnumerable<MasterReference>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1537,7 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Set(String item, bool hasBeenSet = true);
         void Description_Unset();
 
-        new INotifyingList<MasterReference> MasterReferences { get; }
+        new ISourceSetList<MasterReference> MasterReferences { get; }
     }
 
     public partial interface ITES4Getter : ILoquiObject
@@ -1572,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MasterReferences
-        INotifyingListGetter<MasterReference> MasterReferences { get; }
+        IObservableSetList<MasterReference> MasterReferences { get; }
         #endregion
 
     }
@@ -2050,7 +2051,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.MasterReferences.SetToWithDefault(
                         rhs: rhs.MasterReferences,
                         def: def?.MasterReferences,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.MasterReferences.Overall ?? CopyOption.Reference)
@@ -2144,7 +2144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Description_Unset();
                     break;
                 case TES4_FieldIndex.MasterReferences:
-                    obj.MasterReferences.Unset(cmds);
+                    obj.MasterReferences.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Deleted_Unset();
             item.Author_Unset();
             item.Description_Unset();
-            item.MasterReferences.Unset(cmds.ToUnsetParams());
+            item.MasterReferences.Unset();
         }
 
         public static TES4_Mask<bool> GetEqualsMask(

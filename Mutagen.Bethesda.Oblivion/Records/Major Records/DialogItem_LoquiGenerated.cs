@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -83,91 +85,91 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<DialogTopic>> _Topics = new NotifyingList<FormIDSetLink<DialogTopic>>();
-        public INotifyingList<FormIDSetLink<DialogTopic>> Topics => _Topics;
+        private readonly SourceSetList<FormIDSetLink<DialogTopic>> _Topics = new SourceSetList<FormIDSetLink<DialogTopic>>();
+        public ISourceSetList<FormIDSetLink<DialogTopic>> Topics => _Topics;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<DialogTopic>> TopicsEnumerable
         {
-            get => _Topics;
+            get => _Topics.Items;
             set => _Topics.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<DialogTopic>> IDialogItem.Topics => _Topics;
+        ISourceSetList<FormIDSetLink<DialogTopic>> IDialogItem.Topics => _Topics;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<DialogTopic>> IDialogItemGetter.Topics => _Topics;
+        IObservableSetList<FormIDSetLink<DialogTopic>> IDialogItemGetter.Topics => _Topics;
         #endregion
 
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<DialogResponse> _Responses = new NotifyingList<DialogResponse>();
-        public INotifyingList<DialogResponse> Responses => _Responses;
+        private readonly SourceSetList<DialogResponse> _Responses = new SourceSetList<DialogResponse>();
+        public ISourceSetList<DialogResponse> Responses => _Responses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<DialogResponse> ResponsesEnumerable
         {
-            get => _Responses;
+            get => _Responses.Items;
             set => _Responses.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<DialogResponse> IDialogItem.Responses => _Responses;
+        ISourceSetList<DialogResponse> IDialogItem.Responses => _Responses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<DialogResponse> IDialogItemGetter.Responses => _Responses;
+        IObservableSetList<DialogResponse> IDialogItemGetter.Responses => _Responses;
         #endregion
 
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Condition> _Conditions = new NotifyingList<Condition>();
-        public INotifyingList<Condition> Conditions => _Conditions;
+        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
+        public ISourceSetList<Condition> Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Condition> ConditionsEnumerable
         {
-            get => _Conditions;
+            get => _Conditions.Items;
             set => _Conditions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Condition> IDialogItem.Conditions => _Conditions;
+        ISourceSetList<Condition> IDialogItem.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Condition> IDialogItemGetter.Conditions => _Conditions;
+        IObservableSetList<Condition> IDialogItemGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
         #region Choices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<DialogTopic>> _Choices = new NotifyingList<FormIDSetLink<DialogTopic>>();
-        public INotifyingList<FormIDSetLink<DialogTopic>> Choices => _Choices;
+        private readonly SourceSetList<FormIDSetLink<DialogTopic>> _Choices = new SourceSetList<FormIDSetLink<DialogTopic>>();
+        public ISourceSetList<FormIDSetLink<DialogTopic>> Choices => _Choices;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<DialogTopic>> ChoicesEnumerable
         {
-            get => _Choices;
+            get => _Choices.Items;
             set => _Choices.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<DialogTopic>> IDialogItem.Choices => _Choices;
+        ISourceSetList<FormIDSetLink<DialogTopic>> IDialogItem.Choices => _Choices;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<DialogTopic>> IDialogItemGetter.Choices => _Choices;
+        IObservableSetList<FormIDSetLink<DialogTopic>> IDialogItemGetter.Choices => _Choices;
         #endregion
 
         #endregion
         #region LinkFrom
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<DialogTopic>> _LinkFrom = new NotifyingList<FormIDSetLink<DialogTopic>>();
-        public INotifyingList<FormIDSetLink<DialogTopic>> LinkFrom => _LinkFrom;
+        private readonly SourceSetList<FormIDSetLink<DialogTopic>> _LinkFrom = new SourceSetList<FormIDSetLink<DialogTopic>>();
+        public ISourceSetList<FormIDSetLink<DialogTopic>> LinkFrom => _LinkFrom;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<DialogTopic>> LinkFromEnumerable
         {
-            get => _LinkFrom;
+            get => _LinkFrom.Items;
             set => _LinkFrom.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<DialogTopic>> IDialogItem.LinkFrom => _LinkFrom;
+        ISourceSetList<FormIDSetLink<DialogTopic>> IDialogItem.LinkFrom => _LinkFrom;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<DialogTopic>> IDialogItemGetter.LinkFrom => _LinkFrom;
+        IObservableSetList<FormIDSetLink<DialogTopic>> IDialogItemGetter.LinkFrom => _LinkFrom;
         #endregion
 
         #endregion
@@ -1406,19 +1408,19 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case DialogItem_FieldIndex.Topics:
-                    this._Topics.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)obj, cmds);
+                    this._Topics.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)obj);
                     break;
                 case DialogItem_FieldIndex.Responses:
-                    this._Responses.SetTo((IEnumerable<DialogResponse>)obj, cmds);
+                    this._Responses.SetTo((IEnumerable<DialogResponse>)obj);
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
+                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
                     break;
                 case DialogItem_FieldIndex.Choices:
-                    this._Choices.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)obj, cmds);
+                    this._Choices.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)obj);
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
-                    this._LinkFrom.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)obj, cmds);
+                    this._LinkFrom.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)obj);
                     break;
                 case DialogItem_FieldIndex.Script:
                     this.Script.CopyFieldsFrom(rhs: (ScriptFields)obj);
@@ -1471,19 +1473,19 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case DialogItem_FieldIndex.Topics:
-                    obj._Topics.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)pair.Value, null);
+                    obj._Topics.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Responses:
-                    obj._Responses.SetTo((IEnumerable<DialogResponse>)pair.Value, null);
+                    obj._Responses.SetTo((IEnumerable<DialogResponse>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
+                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Choices:
-                    obj._Choices.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)pair.Value, null);
+                    obj._Choices.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
-                    obj._LinkFrom.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)pair.Value, null);
+                    obj._LinkFrom.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Script:
                     obj.Script.CopyFieldsFrom(rhs: (ScriptFields)pair.Value);
@@ -1509,11 +1511,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Quest Quest { get; set; }
         new DialogItem PreviousTopic { get; set; }
-        new INotifyingList<FormIDSetLink<DialogTopic>> Topics { get; }
-        new INotifyingList<DialogResponse> Responses { get; }
-        new INotifyingList<Condition> Conditions { get; }
-        new INotifyingList<FormIDSetLink<DialogTopic>> Choices { get; }
-        new INotifyingList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
+        new ISourceSetList<FormIDSetLink<DialogTopic>> Topics { get; }
+        new ISourceSetList<DialogResponse> Responses { get; }
+        new ISourceSetList<Condition> Conditions { get; }
+        new ISourceSetList<FormIDSetLink<DialogTopic>> Choices { get; }
+        new ISourceSetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
     }
 
     public partial interface IDialogItemGetter : IMajorRecordGetter
@@ -1537,19 +1539,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Topics
-        INotifyingListGetter<FormIDSetLink<DialogTopic>> Topics { get; }
+        IObservableSetList<FormIDSetLink<DialogTopic>> Topics { get; }
         #endregion
         #region Responses
-        INotifyingListGetter<DialogResponse> Responses { get; }
+        IObservableSetList<DialogResponse> Responses { get; }
         #endregion
         #region Conditions
-        INotifyingListGetter<Condition> Conditions { get; }
+        IObservableSetList<Condition> Conditions { get; }
         #endregion
         #region Choices
-        INotifyingListGetter<FormIDSetLink<DialogTopic>> Choices { get; }
+        IObservableSetList<FormIDSetLink<DialogTopic>> Choices { get; }
         #endregion
         #region LinkFrom
-        INotifyingListGetter<FormIDSetLink<DialogTopic>> LinkFrom { get; }
+        IObservableSetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
         #endregion
         #region Script
         ScriptFields Script { get; }
@@ -1974,8 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Topics.SetToWithDefault(
                         rhs.Topics,
-                        def?.Topics,
-                        cmds);
+                        def?.Topics);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1995,7 +1996,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Responses.SetToWithDefault(
                         rhs: rhs.Responses,
                         def: def?.Responses,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Responses.Overall ?? CopyOption.Reference)
@@ -2031,7 +2031,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Conditions.SetToWithDefault(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
@@ -2066,8 +2065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Choices.SetToWithDefault(
                         rhs.Choices,
-                        def?.Choices,
-                        cmds);
+                        def?.Choices);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2086,8 +2084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LinkFrom.SetToWithDefault(
                         rhs.LinkFrom,
-                        def?.LinkFrom,
-                        cmds);
+                        def?.LinkFrom);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2189,19 +2186,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.PreviousTopic_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case DialogItem_FieldIndex.Topics:
-                    obj.Topics.Unset(cmds);
+                    obj.Topics.Unset();
                     break;
                 case DialogItem_FieldIndex.Responses:
-                    obj.Responses.Unset(cmds);
+                    obj.Responses.Unset();
                     break;
                 case DialogItem_FieldIndex.Conditions:
-                    obj.Conditions.Unset(cmds);
+                    obj.Conditions.Unset();
                     break;
                 case DialogItem_FieldIndex.Choices:
-                    obj.Choices.Unset(cmds);
+                    obj.Choices.Unset();
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
-                    obj.LinkFrom.Unset(cmds);
+                    obj.LinkFrom.Unset();
                     break;
                 case DialogItem_FieldIndex.Script:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
@@ -2282,11 +2279,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(DialogItem.Flag);
             item.Quest_Property.Unset(cmds.ToUnsetParams());
             item.PreviousTopic_Property.Unset(cmds.ToUnsetParams());
-            item.Topics.Unset(cmds.ToUnsetParams());
-            item.Responses.Unset(cmds.ToUnsetParams());
-            item.Conditions.Unset(cmds.ToUnsetParams());
-            item.Choices.Unset(cmds.ToUnsetParams());
-            item.LinkFrom.Unset(cmds.ToUnsetParams());
+            item.Topics.Unset();
+            item.Responses.Unset();
+            item.Conditions.Unset();
+            item.Choices.Unset();
+            item.LinkFrom.Unset();
         }
 
         public static DialogItem_Mask<bool> GetEqualsMask(

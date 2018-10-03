@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -106,55 +108,55 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<ItemEntry> _Items = new NotifyingList<ItemEntry>();
-        public INotifyingList<ItemEntry> Items => _Items;
+        private readonly SourceSetList<ItemEntry> _Items = new SourceSetList<ItemEntry>();
+        public ISourceSetList<ItemEntry> Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ItemEntry> ItemsEnumerable
         {
-            get => _Items;
+            get => _Items.Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<ItemEntry> ICreature.Items => _Items;
+        ISourceSetList<ItemEntry> ICreature.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<ItemEntry> ICreatureGetter.Items => _Items;
+        IObservableSetList<ItemEntry> ICreatureGetter.Items => _Items;
         #endregion
 
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
-        public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        private readonly SourceSetList<FormIDSetLink<Spell>> _Spells = new SourceSetList<FormIDSetLink<Spell>>();
+        public ISourceSetList<FormIDSetLink<Spell>> Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
         {
-            get => _Spells;
+            get => _Spells.Items;
             set => _Spells.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<Spell>> ICreature.Spells => _Spells;
+        ISourceSetList<FormIDSetLink<Spell>> ICreature.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<Spell>> ICreatureGetter.Spells => _Spells;
+        IObservableSetList<FormIDSetLink<Spell>> ICreatureGetter.Spells => _Spells;
         #endregion
 
         #endregion
         #region Models
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<String> _Models = new NotifyingList<String>();
-        public INotifyingList<String> Models => _Models;
+        private readonly SourceSetList<String> _Models = new SourceSetList<String>();
+        public ISourceSetList<String> Models => _Models;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<String> ModelsEnumerable
         {
-            get => _Models;
+            get => _Models.Items;
             set => _Models.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<String> ICreature.Models => _Models;
+        ISourceSetList<String> ICreature.Models => _Models;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<String> ICreatureGetter.Models => _Models;
+        IObservableSetList<String> ICreatureGetter.Models => _Models;
         #endregion
 
         #endregion
@@ -244,19 +246,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<RankPlacement> _Factions = new NotifyingList<RankPlacement>();
-        public INotifyingList<RankPlacement> Factions => _Factions;
+        private readonly SourceSetList<RankPlacement> _Factions = new SourceSetList<RankPlacement>();
+        public ISourceSetList<RankPlacement> Factions => _Factions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RankPlacement> FactionsEnumerable
         {
-            get => _Factions;
+            get => _Factions.Items;
             set => _Factions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<RankPlacement> ICreature.Factions => _Factions;
+        ISourceSetList<RankPlacement> ICreature.Factions => _Factions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<RankPlacement> ICreatureGetter.Factions => _Factions;
+        IObservableSetList<RankPlacement> ICreatureGetter.Factions => _Factions;
         #endregion
 
         #endregion
@@ -332,37 +334,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<AIPackage>> _AIPackages = new NotifyingList<FormIDSetLink<AIPackage>>();
-        public INotifyingList<FormIDSetLink<AIPackage>> AIPackages => _AIPackages;
+        private readonly SourceSetList<FormIDSetLink<AIPackage>> _AIPackages = new SourceSetList<FormIDSetLink<AIPackage>>();
+        public ISourceSetList<FormIDSetLink<AIPackage>> AIPackages => _AIPackages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<AIPackage>> AIPackagesEnumerable
         {
-            get => _AIPackages;
+            get => _AIPackages.Items;
             set => _AIPackages.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<AIPackage>> ICreature.AIPackages => _AIPackages;
+        ISourceSetList<FormIDSetLink<AIPackage>> ICreature.AIPackages => _AIPackages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<AIPackage>> ICreatureGetter.AIPackages => _AIPackages;
+        IObservableSetList<FormIDSetLink<AIPackage>> ICreatureGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<String> _Animations = new NotifyingList<String>();
-        public INotifyingList<String> Animations => _Animations;
+        private readonly SourceSetList<String> _Animations = new SourceSetList<String>();
+        public ISourceSetList<String> Animations => _Animations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<String> AnimationsEnumerable
         {
-            get => _Animations;
+            get => _Animations.Items;
             set => _Animations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<String> ICreature.Animations => _Animations;
+        ISourceSetList<String> ICreature.Animations => _Animations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<String> ICreatureGetter.Animations => _Animations;
+        IObservableSetList<String> ICreatureGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -658,19 +660,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<CreatureSound> _Sounds = new NotifyingList<CreatureSound>();
-        public INotifyingList<CreatureSound> Sounds => _Sounds;
+        private readonly SourceSetList<CreatureSound> _Sounds = new SourceSetList<CreatureSound>();
+        public ISourceSetList<CreatureSound> Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<CreatureSound> SoundsEnumerable
         {
-            get => _Sounds;
+            get => _Sounds.Items;
             set => _Sounds.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<CreatureSound> ICreature.Sounds => _Sounds;
+        ISourceSetList<CreatureSound> ICreature.Sounds => _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<CreatureSound> ICreatureGetter.Sounds => _Sounds;
+        IObservableSetList<CreatureSound> ICreatureGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
@@ -4043,13 +4045,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Creature_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<ItemEntry>)obj, cmds);
+                    this._Items.SetTo((IEnumerable<ItemEntry>)obj);
                     break;
                 case Creature_FieldIndex.Spells:
-                    this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj, cmds);
+                    this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj);
                     break;
                 case Creature_FieldIndex.Models:
-                    this._Models.SetTo((IEnumerable<String>)obj, cmds);
+                    this._Models.SetTo((IEnumerable<String>)obj);
                     break;
                 case Creature_FieldIndex.NIFT:
                     this.NIFT = (Byte[])obj;
@@ -4076,7 +4078,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CalcMax = (UInt16)obj;
                     break;
                 case Creature_FieldIndex.Factions:
-                    this._Factions.SetTo((IEnumerable<RankPlacement>)obj, cmds);
+                    this._Factions.SetTo((IEnumerable<RankPlacement>)obj);
                     break;
                 case Creature_FieldIndex.DeathItem:
                     this.DeathItem_Property.Set(
@@ -4110,10 +4112,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MaximumTrainingLevel = (Byte)obj;
                     break;
                 case Creature_FieldIndex.AIPackages:
-                    this._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)obj, cmds);
+                    this._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)obj);
                     break;
                 case Creature_FieldIndex.Animations:
-                    this._Animations.SetTo((IEnumerable<String>)obj, cmds);
+                    this._Animations.SetTo((IEnumerable<String>)obj);
                     break;
                 case Creature_FieldIndex.CreatureType:
                     this.CreatureType = (Creature.CreatureTypeEnum)obj;
@@ -4189,7 +4191,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Creature_FieldIndex.Sounds:
-                    this._Sounds.SetTo((IEnumerable<CreatureSound>)obj, cmds);
+                    this._Sounds.SetTo((IEnumerable<CreatureSound>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -4229,13 +4231,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Creature_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<ItemEntry>)pair.Value, null);
+                    obj._Items.SetTo((IEnumerable<ItemEntry>)pair.Value);
                     break;
                 case Creature_FieldIndex.Spells:
-                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value, null);
+                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value);
                     break;
                 case Creature_FieldIndex.Models:
-                    obj._Models.SetTo((IEnumerable<String>)pair.Value, null);
+                    obj._Models.SetTo((IEnumerable<String>)pair.Value);
                     break;
                 case Creature_FieldIndex.NIFT:
                     obj.NIFT = (Byte[])pair.Value;
@@ -4262,7 +4264,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.CalcMax = (UInt16)pair.Value;
                     break;
                 case Creature_FieldIndex.Factions:
-                    obj._Factions.SetTo((IEnumerable<RankPlacement>)pair.Value, null);
+                    obj._Factions.SetTo((IEnumerable<RankPlacement>)pair.Value);
                     break;
                 case Creature_FieldIndex.DeathItem:
                     obj.DeathItem_Property.Set(
@@ -4296,10 +4298,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MaximumTrainingLevel = (Byte)pair.Value;
                     break;
                 case Creature_FieldIndex.AIPackages:
-                    obj._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)pair.Value, null);
+                    obj._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)pair.Value);
                     break;
                 case Creature_FieldIndex.Animations:
-                    obj._Animations.SetTo((IEnumerable<String>)pair.Value, null);
+                    obj._Animations.SetTo((IEnumerable<String>)pair.Value);
                     break;
                 case Creature_FieldIndex.CreatureType:
                     obj.CreatureType = (Creature.CreatureTypeEnum)pair.Value;
@@ -4375,7 +4377,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Creature_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((IEnumerable<CreatureSound>)pair.Value, null);
+                    obj._Sounds.SetTo((IEnumerable<CreatureSound>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -4402,9 +4404,9 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new INotifyingList<ItemEntry> Items { get; }
-        new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
-        new INotifyingList<String> Models { get; }
+        new ISourceSetList<ItemEntry> Items { get; }
+        new ISourceSetList<FormIDSetLink<Spell>> Spells { get; }
+        new ISourceSetList<String> Models { get; }
         new Byte[] NIFT { get; set; }
         new bool NIFT_IsSet { get; set; }
         void NIFT_Set(Byte[] item, bool hasBeenSet = true);
@@ -4424,7 +4426,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new UInt16 CalcMax { get; set; }
 
-        new INotifyingList<RankPlacement> Factions { get; }
+        new ISourceSetList<RankPlacement> Factions { get; }
         new ItemAbstract DeathItem { get; set; }
         new Script Script { get; set; }
         new Byte Aggression { get; set; }
@@ -4441,8 +4443,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte MaximumTrainingLevel { get; set; }
 
-        new INotifyingList<FormIDSetLink<AIPackage>> AIPackages { get; }
-        new INotifyingList<String> Animations { get; }
+        new ISourceSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
+        new ISourceSetList<String> Animations { get; }
         new Creature.CreatureTypeEnum CreatureType { get; set; }
 
         new Byte CombatSKill { get; set; }
@@ -4505,7 +4507,7 @@ namespace Mutagen.Bethesda.Oblivion
         void BloodDecal_Unset();
 
         new Creature InheritsSoundFrom { get; set; }
-        new INotifyingList<CreatureSound> Sounds { get; }
+        new ISourceSetList<CreatureSound> Sounds { get; }
     }
 
     public partial interface ICreatureGetter : IMajorRecordGetter
@@ -4521,13 +4523,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        INotifyingListGetter<ItemEntry> Items { get; }
+        IObservableSetList<ItemEntry> Items { get; }
         #endregion
         #region Spells
-        INotifyingListGetter<FormIDSetLink<Spell>> Spells { get; }
+        IObservableSetList<FormIDSetLink<Spell>> Spells { get; }
         #endregion
         #region Models
-        INotifyingListGetter<String> Models { get; }
+        IObservableSetList<String> Models { get; }
         #endregion
         #region NIFT
         Byte[] NIFT { get; }
@@ -4563,7 +4565,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Factions
-        INotifyingListGetter<RankPlacement> Factions { get; }
+        IObservableSetList<RankPlacement> Factions { get; }
         #endregion
         #region DeathItem
         ItemAbstract DeathItem { get; }
@@ -4604,10 +4606,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region AIPackages
-        INotifyingListGetter<FormIDSetLink<AIPackage>> AIPackages { get; }
+        IObservableSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
         #endregion
         #region Animations
-        INotifyingListGetter<String> Animations { get; }
+        IObservableSetList<String> Animations { get; }
         #endregion
         #region CreatureType
         Creature.CreatureTypeEnum CreatureType { get; }
@@ -4710,7 +4712,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Sounds
-        INotifyingListGetter<CreatureSound> Sounds { get; }
+        IObservableSetList<CreatureSound> Sounds { get; }
         #endregion
 
     }
@@ -5615,7 +5617,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
@@ -5650,8 +5651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetToWithDefault(
                         rhs.Spells,
-                        def?.Spells,
-                        cmds);
+                        def?.Spells);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5670,8 +5670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Models.SetToWithDefault(
                         rhs.Models,
-                        def?.Models,
-                        cmds);
+                        def?.Models);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5840,7 +5839,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Factions.SetToWithDefault(
                         rhs: rhs.Factions,
                         def: def?.Factions,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Factions.Overall ?? CopyOption.Reference)
@@ -6034,8 +6032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AIPackages.SetToWithDefault(
                         rhs.AIPackages,
-                        def?.AIPackages,
-                        cmds);
+                        def?.AIPackages);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6054,8 +6051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Animations.SetToWithDefault(
                         rhs.Animations,
-                        def?.Animations,
-                        cmds);
+                        def?.Animations);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6550,7 +6546,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sounds.SetToWithDefault(
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
@@ -6703,13 +6698,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case Creature_FieldIndex.Items:
-                    obj.Items.Unset(cmds);
+                    obj.Items.Unset();
                     break;
                 case Creature_FieldIndex.Spells:
-                    obj.Spells.Unset(cmds);
+                    obj.Spells.Unset();
                     break;
                 case Creature_FieldIndex.Models:
-                    obj.Models.Unset(cmds);
+                    obj.Models.Unset();
                     break;
                 case Creature_FieldIndex.NIFT:
                     obj.NIFT_Unset();
@@ -6736,7 +6731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.CalcMax = default(UInt16);
                     break;
                 case Creature_FieldIndex.Factions:
-                    obj.Factions.Unset(cmds);
+                    obj.Factions.Unset();
                     break;
                 case Creature_FieldIndex.DeathItem:
                     obj.DeathItem_Property.Unset(cmds.ToUnsetParams());
@@ -6766,10 +6761,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.MaximumTrainingLevel = default(Byte);
                     break;
                 case Creature_FieldIndex.AIPackages:
-                    obj.AIPackages.Unset(cmds);
+                    obj.AIPackages.Unset();
                     break;
                 case Creature_FieldIndex.Animations:
-                    obj.Animations.Unset(cmds);
+                    obj.Animations.Unset();
                     break;
                 case Creature_FieldIndex.CreatureType:
                     obj.CreatureType = default(Creature.CreatureTypeEnum);
@@ -6841,7 +6836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.InheritsSoundFrom_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Creature_FieldIndex.Sounds:
-                    obj.Sounds.Unset(cmds);
+                    obj.Sounds.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -7047,9 +7042,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Items.Unset(cmds.ToUnsetParams());
-            item.Spells.Unset(cmds.ToUnsetParams());
-            item.Models.Unset(cmds.ToUnsetParams());
+            item.Items.Unset();
+            item.Spells.Unset();
+            item.Models.Unset();
             item.NIFT_Unset();
             item.Flags = default(Creature.CreatureFlag);
             item.BaseSpellPoints = default(UInt16);
@@ -7058,7 +7053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LevelOffset = default(Int16);
             item.CalcMin = default(UInt16);
             item.CalcMax = default(UInt16);
-            item.Factions.Unset(cmds.ToUnsetParams());
+            item.Factions.Unset();
             item.DeathItem_Property.Unset(cmds.ToUnsetParams());
             item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Aggression = default(Byte);
@@ -7068,8 +7063,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BuySellServices = default(NPC.BuySellServiceFlag);
             item.Teaches = default(Skill);
             item.MaximumTrainingLevel = default(Byte);
-            item.AIPackages.Unset(cmds.ToUnsetParams());
-            item.Animations.Unset(cmds.ToUnsetParams());
+            item.AIPackages.Unset();
+            item.Animations.Unset();
             item.CreatureType = default(Creature.CreatureTypeEnum);
             item.CombatSKill = default(Byte);
             item.MagicSKill = default(Byte);
@@ -7093,7 +7088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BloodSpray_Unset();
             item.BloodDecal_Unset();
             item.InheritsSoundFrom_Property.Unset(cmds.ToUnsetParams());
-            item.Sounds.Unset(cmds.ToUnsetParams());
+            item.Sounds.Unset();
         }
 
         public static Creature_Mask<bool> GetEqualsMask(

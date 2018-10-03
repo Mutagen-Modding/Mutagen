@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Windows.Media;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -163,19 +165,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<RankPlacement> _Factions = new NotifyingList<RankPlacement>();
-        public INotifyingList<RankPlacement> Factions => _Factions;
+        private readonly SourceSetList<RankPlacement> _Factions = new SourceSetList<RankPlacement>();
+        public ISourceSetList<RankPlacement> Factions => _Factions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RankPlacement> FactionsEnumerable
         {
-            get => _Factions;
+            get => _Factions.Items;
             set => _Factions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<RankPlacement> INPC.Factions => _Factions;
+        ISourceSetList<RankPlacement> INPC.Factions => _Factions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<RankPlacement> INPCGetter.Factions => _Factions;
+        IObservableSetList<RankPlacement> INPCGetter.Factions => _Factions;
         #endregion
 
         #endregion
@@ -195,19 +197,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
-        public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        private readonly SourceSetList<FormIDSetLink<Spell>> _Spells = new SourceSetList<FormIDSetLink<Spell>>();
+        public ISourceSetList<FormIDSetLink<Spell>> Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
         {
-            get => _Spells;
+            get => _Spells.Items;
             set => _Spells.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<Spell>> INPC.Spells => _Spells;
+        ISourceSetList<FormIDSetLink<Spell>> INPC.Spells => _Spells;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<Spell>> INPCGetter.Spells => _Spells;
+        IObservableSetList<FormIDSetLink<Spell>> INPCGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -220,19 +222,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<ItemEntry> _Items = new NotifyingList<ItemEntry>();
-        public INotifyingList<ItemEntry> Items => _Items;
+        private readonly SourceSetList<ItemEntry> _Items = new SourceSetList<ItemEntry>();
+        public ISourceSetList<ItemEntry> Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ItemEntry> ItemsEnumerable
         {
-            get => _Items;
+            get => _Items.Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<ItemEntry> INPC.Items => _Items;
+        ISourceSetList<ItemEntry> INPC.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<ItemEntry> INPCGetter.Items => _Items;
+        IObservableSetList<ItemEntry> INPCGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -309,37 +311,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<AIPackage>> _AIPackages = new NotifyingList<FormIDSetLink<AIPackage>>();
-        public INotifyingList<FormIDSetLink<AIPackage>> AIPackages => _AIPackages;
+        private readonly SourceSetList<FormIDSetLink<AIPackage>> _AIPackages = new SourceSetList<FormIDSetLink<AIPackage>>();
+        public ISourceSetList<FormIDSetLink<AIPackage>> AIPackages => _AIPackages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<AIPackage>> AIPackagesEnumerable
         {
-            get => _AIPackages;
+            get => _AIPackages.Items;
             set => _AIPackages.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<AIPackage>> INPC.AIPackages => _AIPackages;
+        ISourceSetList<FormIDSetLink<AIPackage>> INPC.AIPackages => _AIPackages;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<AIPackage>> INPCGetter.AIPackages => _AIPackages;
+        IObservableSetList<FormIDSetLink<AIPackage>> INPCGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<String> _Animations = new NotifyingList<String>();
-        public INotifyingList<String> Animations => _Animations;
+        private readonly SourceSetList<String> _Animations = new SourceSetList<String>();
+        public ISourceSetList<String> Animations => _Animations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<String> AnimationsEnumerable
         {
-            get => _Animations;
+            get => _Animations.Items;
             set => _Animations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<String> INPC.Animations => _Animations;
+        ISourceSetList<String> INPC.Animations => _Animations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<String> INPCGetter.Animations => _Animations;
+        IObservableSetList<String> INPCGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -625,19 +627,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDLink<Eye>> _Eyes = new NotifyingList<FormIDLink<Eye>>();
-        public INotifyingList<FormIDLink<Eye>> Eyes => _Eyes;
+        private readonly SourceSetList<FormIDLink<Eye>> _Eyes = new SourceSetList<FormIDLink<Eye>>();
+        public ISourceSetList<FormIDLink<Eye>> Eyes => _Eyes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDLink<Eye>> EyesEnumerable
         {
-            get => _Eyes;
+            get => _Eyes.Items;
             set => _Eyes.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDLink<Eye>> INPC.Eyes => _Eyes;
+        ISourceSetList<FormIDLink<Eye>> INPC.Eyes => _Eyes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDLink<Eye>> INPCGetter.Eyes => _Eyes;
+        IObservableSetList<FormIDLink<Eye>> INPCGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
@@ -4950,7 +4952,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CalcMax = (UInt16)obj;
                     break;
                 case NPC_FieldIndex.Factions:
-                    this._Factions.SetTo((IEnumerable<RankPlacement>)obj, cmds);
+                    this._Factions.SetTo((IEnumerable<RankPlacement>)obj);
                     break;
                 case NPC_FieldIndex.DeathItem:
                     this.DeathItem_Property.Set(
@@ -4963,7 +4965,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case NPC_FieldIndex.Spells:
-                    this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj, cmds);
+                    this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj);
                     break;
                 case NPC_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -4971,7 +4973,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case NPC_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<ItemEntry>)obj, cmds);
+                    this._Items.SetTo((IEnumerable<ItemEntry>)obj);
                     break;
                 case NPC_FieldIndex.Aggression:
                     this.Aggression = (Byte)obj;
@@ -4998,10 +5000,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Fluff = (Byte[])obj;
                     break;
                 case NPC_FieldIndex.AIPackages:
-                    this._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)obj, cmds);
+                    this._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)obj);
                     break;
                 case NPC_FieldIndex.Animations:
-                    this._Animations.SetTo((IEnumerable<String>)obj, cmds);
+                    this._Animations.SetTo((IEnumerable<String>)obj);
                     break;
                 case NPC_FieldIndex.Class:
                     this.Class_Property.Set(
@@ -5107,7 +5109,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.HairLength = (Single)obj;
                     break;
                 case NPC_FieldIndex.Eyes:
-                    this._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)obj, cmds);
+                    this._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)obj);
                     break;
                 case NPC_FieldIndex.HairColor:
                     this.HairColor = (Color)obj;
@@ -5188,7 +5190,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.CalcMax = (UInt16)pair.Value;
                     break;
                 case NPC_FieldIndex.Factions:
-                    obj._Factions.SetTo((IEnumerable<RankPlacement>)pair.Value, null);
+                    obj._Factions.SetTo((IEnumerable<RankPlacement>)pair.Value);
                     break;
                 case NPC_FieldIndex.DeathItem:
                     obj.DeathItem_Property.Set(
@@ -5201,7 +5203,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case NPC_FieldIndex.Spells:
-                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value, null);
+                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value);
                     break;
                 case NPC_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -5209,7 +5211,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case NPC_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<ItemEntry>)pair.Value, null);
+                    obj._Items.SetTo((IEnumerable<ItemEntry>)pair.Value);
                     break;
                 case NPC_FieldIndex.Aggression:
                     obj.Aggression = (Byte)pair.Value;
@@ -5236,10 +5238,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Fluff = (Byte[])pair.Value;
                     break;
                 case NPC_FieldIndex.AIPackages:
-                    obj._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)pair.Value, null);
+                    obj._AIPackages.SetTo((IEnumerable<FormIDSetLink<AIPackage>>)pair.Value);
                     break;
                 case NPC_FieldIndex.Animations:
-                    obj._Animations.SetTo((IEnumerable<String>)pair.Value, null);
+                    obj._Animations.SetTo((IEnumerable<String>)pair.Value);
                     break;
                 case NPC_FieldIndex.Class:
                     obj.Class_Property.Set(
@@ -5345,7 +5347,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.HairLength = (Single)pair.Value;
                     break;
                 case NPC_FieldIndex.Eyes:
-                    obj._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)pair.Value, null);
+                    obj._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)pair.Value);
                     break;
                 case NPC_FieldIndex.HairColor:
                     obj.HairColor = (Color)pair.Value;
@@ -5406,12 +5408,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         new UInt16 CalcMax { get; set; }
 
-        new INotifyingList<RankPlacement> Factions { get; }
+        new ISourceSetList<RankPlacement> Factions { get; }
         new ItemAbstract DeathItem { get; set; }
         new Race Race { get; set; }
-        new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
+        new ISourceSetList<FormIDSetLink<Spell>> Spells { get; }
         new Script Script { get; set; }
-        new INotifyingList<ItemEntry> Items { get; }
+        new ISourceSetList<ItemEntry> Items { get; }
         new Byte Aggression { get; set; }
 
         new Byte Confidence { get; set; }
@@ -5428,8 +5430,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] Fluff { get; set; }
 
-        new INotifyingList<FormIDSetLink<AIPackage>> AIPackages { get; }
-        new INotifyingList<String> Animations { get; }
+        new ISourceSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
+        new ISourceSetList<String> Animations { get; }
         new Class Class { get; set; }
         new Byte Armorer { get; set; }
 
@@ -5497,7 +5499,7 @@ namespace Mutagen.Bethesda.Oblivion
         void HairLength_Set(Single item, bool hasBeenSet = true);
         void HairLength_Unset();
 
-        new INotifyingList<FormIDLink<Eye>> Eyes { get; }
+        new ISourceSetList<FormIDLink<Eye>> Eyes { get; }
         new Color HairColor { get; set; }
         new bool HairColor_IsSet { get; set; }
         void HairColor_Set(Color item, bool hasBeenSet = true);
@@ -5567,7 +5569,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Factions
-        INotifyingListGetter<RankPlacement> Factions { get; }
+        IObservableSetList<RankPlacement> Factions { get; }
         #endregion
         #region DeathItem
         ItemAbstract DeathItem { get; }
@@ -5580,7 +5582,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        INotifyingListGetter<FormIDSetLink<Spell>> Spells { get; }
+        IObservableSetList<FormIDSetLink<Spell>> Spells { get; }
         #endregion
         #region Script
         Script Script { get; }
@@ -5588,7 +5590,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        INotifyingListGetter<ItemEntry> Items { get; }
+        IObservableSetList<ItemEntry> Items { get; }
         #endregion
         #region Aggression
         Byte Aggression { get; }
@@ -5623,10 +5625,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region AIPackages
-        INotifyingListGetter<FormIDSetLink<AIPackage>> AIPackages { get; }
+        IObservableSetList<FormIDSetLink<AIPackage>> AIPackages { get; }
         #endregion
         #region Animations
-        INotifyingListGetter<String> Animations { get; }
+        IObservableSetList<String> Animations { get; }
         #endregion
         #region Class
         Class Class { get; }
@@ -5764,7 +5766,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Eyes
-        INotifyingListGetter<FormIDLink<Eye>> Eyes { get; }
+        IObservableSetList<FormIDLink<Eye>> Eyes { get; }
         #endregion
         #region HairColor
         Color HairColor { get; }
@@ -7008,7 +7010,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Factions.SetToWithDefault(
                         rhs: rhs.Factions,
                         def: def?.Factions,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Factions.Overall ?? CopyOption.Reference)
@@ -7083,8 +7084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetToWithDefault(
                         rhs.Spells,
-                        def?.Spells,
-                        cmds);
+                        def?.Spells);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7124,7 +7124,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
@@ -7295,8 +7294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AIPackages.SetToWithDefault(
                         rhs.AIPackages,
-                        def?.AIPackages,
-                        cmds);
+                        def?.AIPackages);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7315,8 +7313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Animations.SetToWithDefault(
                         rhs.Animations,
-                        def?.Animations,
-                        cmds);
+                        def?.Animations);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7915,8 +7912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Eyes.SetToWithDefault(
                         rhs.Eyes,
-                        def?.Eyes,
-                        cmds);
+                        def?.Eyes);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -8260,7 +8256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.CalcMax = default(UInt16);
                     break;
                 case NPC_FieldIndex.Factions:
-                    obj.Factions.Unset(cmds);
+                    obj.Factions.Unset();
                     break;
                 case NPC_FieldIndex.DeathItem:
                     obj.DeathItem_Property.Unset(cmds.ToUnsetParams());
@@ -8269,13 +8265,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Race_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case NPC_FieldIndex.Spells:
-                    obj.Spells.Unset(cmds);
+                    obj.Spells.Unset();
                     break;
                 case NPC_FieldIndex.Script:
                     obj.Script_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case NPC_FieldIndex.Items:
-                    obj.Items.Unset(cmds);
+                    obj.Items.Unset();
                     break;
                 case NPC_FieldIndex.Aggression:
                     obj.Aggression = default(Byte);
@@ -8302,10 +8298,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Fluff = default(Byte[]);
                     break;
                 case NPC_FieldIndex.AIPackages:
-                    obj.AIPackages.Unset(cmds);
+                    obj.AIPackages.Unset();
                     break;
                 case NPC_FieldIndex.Animations:
-                    obj.Animations.Unset(cmds);
+                    obj.Animations.Unset();
                     break;
                 case NPC_FieldIndex.Class:
                     obj.Class_Property.Unset(cmds.ToUnsetParams());
@@ -8407,7 +8403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.HairLength_Unset();
                     break;
                 case NPC_FieldIndex.Eyes:
-                    obj.Eyes.Unset(cmds);
+                    obj.Eyes.Unset();
                     break;
                 case NPC_FieldIndex.HairColor:
                     obj.HairColor_Unset();
@@ -8686,12 +8682,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LevelOffset = default(Int16);
             item.CalcMin = default(UInt16);
             item.CalcMax = default(UInt16);
-            item.Factions.Unset(cmds.ToUnsetParams());
+            item.Factions.Unset();
             item.DeathItem_Property.Unset(cmds.ToUnsetParams());
             item.Race_Property.Unset(cmds.ToUnsetParams());
-            item.Spells.Unset(cmds.ToUnsetParams());
+            item.Spells.Unset();
             item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Items.Unset(cmds.ToUnsetParams());
+            item.Items.Unset();
             item.Aggression = default(Byte);
             item.Confidence = default(Byte);
             item.EnergyLevel = default(Byte);
@@ -8700,8 +8696,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Teaches = default(Skill);
             item.MaximumTrainingLevel = default(Byte);
             item.Fluff = default(Byte[]);
-            item.AIPackages.Unset(cmds.ToUnsetParams());
-            item.Animations.Unset(cmds.ToUnsetParams());
+            item.AIPackages.Unset();
+            item.Animations.Unset();
             item.Class_Property.Unset(cmds.ToUnsetParams());
             item.Armorer = default(Byte);
             item.Athletics = default(Byte);
@@ -8735,7 +8731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Luck = default(Byte);
             item.Hair_Property.Unset(cmds.ToUnsetParams());
             item.HairLength_Unset();
-            item.Eyes.Unset(cmds.ToUnsetParams());
+            item.Eyes.Unset();
             item.HairColor_Unset();
             item.CombatStyle_Property.Unset(cmds.ToUnsetParams());
             item.FaceGenGeometrySymmetric_Unset();

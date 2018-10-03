@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -52,19 +54,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region PointToPointConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<PathGridPoint> _PointToPointConnections = new NotifyingList<PathGridPoint>();
-        public INotifyingList<PathGridPoint> PointToPointConnections => _PointToPointConnections;
+        private readonly SourceSetList<PathGridPoint> _PointToPointConnections = new SourceSetList<PathGridPoint>();
+        public ISourceSetList<PathGridPoint> PointToPointConnections => _PointToPointConnections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<PathGridPoint> PointToPointConnectionsEnumerable
         {
-            get => _PointToPointConnections;
+            get => _PointToPointConnections.Items;
             set => _PointToPointConnections.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<PathGridPoint> IPathGrid.PointToPointConnections => _PointToPointConnections;
+        ISourceSetList<PathGridPoint> IPathGrid.PointToPointConnections => _PointToPointConnections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<PathGridPoint> IPathGridGetter.PointToPointConnections => _PointToPointConnections;
+        IObservableSetList<PathGridPoint> IPathGridGetter.PointToPointConnections => _PointToPointConnections;
         #endregion
 
         #endregion
@@ -98,37 +100,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region InterCellConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<InterCellPoint> _InterCellConnections = new NotifyingList<InterCellPoint>();
-        public INotifyingList<InterCellPoint> InterCellConnections => _InterCellConnections;
+        private readonly SourceSetList<InterCellPoint> _InterCellConnections = new SourceSetList<InterCellPoint>();
+        public ISourceSetList<InterCellPoint> InterCellConnections => _InterCellConnections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<InterCellPoint> InterCellConnectionsEnumerable
         {
-            get => _InterCellConnections;
+            get => _InterCellConnections.Items;
             set => _InterCellConnections.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<InterCellPoint> IPathGrid.InterCellConnections => _InterCellConnections;
+        ISourceSetList<InterCellPoint> IPathGrid.InterCellConnections => _InterCellConnections;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<InterCellPoint> IPathGridGetter.InterCellConnections => _InterCellConnections;
+        IObservableSetList<InterCellPoint> IPathGridGetter.InterCellConnections => _InterCellConnections;
         #endregion
 
         #endregion
         #region PointToReferenceMappings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<PointToReferenceMapping> _PointToReferenceMappings = new NotifyingList<PointToReferenceMapping>();
-        public INotifyingList<PointToReferenceMapping> PointToReferenceMappings => _PointToReferenceMappings;
+        private readonly SourceSetList<PointToReferenceMapping> _PointToReferenceMappings = new SourceSetList<PointToReferenceMapping>();
+        public ISourceSetList<PointToReferenceMapping> PointToReferenceMappings => _PointToReferenceMappings;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<PointToReferenceMapping> PointToReferenceMappingsEnumerable
         {
-            get => _PointToReferenceMappings;
+            get => _PointToReferenceMappings.Items;
             set => _PointToReferenceMappings.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<PointToReferenceMapping> IPathGrid.PointToReferenceMappings => _PointToReferenceMappings;
+        ISourceSetList<PointToReferenceMapping> IPathGrid.PointToReferenceMappings => _PointToReferenceMappings;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<PointToReferenceMapping> IPathGridGetter.PointToReferenceMappings => _PointToReferenceMappings;
+        IObservableSetList<PointToReferenceMapping> IPathGridGetter.PointToReferenceMappings => _PointToReferenceMappings;
         #endregion
 
         #endregion
@@ -1139,16 +1141,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    this._PointToPointConnections.SetTo((IEnumerable<PathGridPoint>)obj, cmds);
+                    this._PointToPointConnections.SetTo((IEnumerable<PathGridPoint>)obj);
                     break;
                 case PathGrid_FieldIndex.Unknown:
                     this.Unknown = (Byte[])obj;
                     break;
                 case PathGrid_FieldIndex.InterCellConnections:
-                    this._InterCellConnections.SetTo((IEnumerable<InterCellPoint>)obj, cmds);
+                    this._InterCellConnections.SetTo((IEnumerable<InterCellPoint>)obj);
                     break;
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    this._PointToReferenceMappings.SetTo((IEnumerable<PointToReferenceMapping>)obj, cmds);
+                    this._PointToReferenceMappings.SetTo((IEnumerable<PointToReferenceMapping>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1182,16 +1184,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    obj._PointToPointConnections.SetTo((IEnumerable<PathGridPoint>)pair.Value, null);
+                    obj._PointToPointConnections.SetTo((IEnumerable<PathGridPoint>)pair.Value);
                     break;
                 case PathGrid_FieldIndex.Unknown:
                     obj.Unknown = (Byte[])pair.Value;
                     break;
                 case PathGrid_FieldIndex.InterCellConnections:
-                    obj._InterCellConnections.SetTo((IEnumerable<InterCellPoint>)pair.Value, null);
+                    obj._InterCellConnections.SetTo((IEnumerable<InterCellPoint>)pair.Value);
                     break;
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    obj._PointToReferenceMappings.SetTo((IEnumerable<PointToReferenceMapping>)pair.Value, null);
+                    obj._PointToReferenceMappings.SetTo((IEnumerable<PointToReferenceMapping>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1208,20 +1210,20 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IPathGrid : IPathGridGetter, IPlaced, ILoquiClass<IPathGrid, IPathGridGetter>, ILoquiClass<PathGrid, IPathGridGetter>
     {
-        new INotifyingList<PathGridPoint> PointToPointConnections { get; }
+        new ISourceSetList<PathGridPoint> PointToPointConnections { get; }
         new Byte[] Unknown { get; set; }
         new bool Unknown_IsSet { get; set; }
         void Unknown_Set(Byte[] item, bool hasBeenSet = true);
         void Unknown_Unset();
 
-        new INotifyingList<InterCellPoint> InterCellConnections { get; }
-        new INotifyingList<PointToReferenceMapping> PointToReferenceMappings { get; }
+        new ISourceSetList<InterCellPoint> InterCellConnections { get; }
+        new ISourceSetList<PointToReferenceMapping> PointToReferenceMappings { get; }
     }
 
     public partial interface IPathGridGetter : IPlacedGetter
     {
         #region PointToPointConnections
-        INotifyingListGetter<PathGridPoint> PointToPointConnections { get; }
+        IObservableSetList<PathGridPoint> PointToPointConnections { get; }
         #endregion
         #region Unknown
         Byte[] Unknown { get; }
@@ -1229,10 +1231,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region InterCellConnections
-        INotifyingListGetter<InterCellPoint> InterCellConnections { get; }
+        IObservableSetList<InterCellPoint> InterCellConnections { get; }
         #endregion
         #region PointToReferenceMappings
-        INotifyingListGetter<PointToReferenceMapping> PointToReferenceMappings { get; }
+        IObservableSetList<PointToReferenceMapping> PointToReferenceMappings { get; }
         #endregion
 
     }
@@ -1493,7 +1495,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.PointToPointConnections.SetToWithDefault(
                         rhs: rhs.PointToPointConnections,
                         def: def?.PointToPointConnections,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.PointToPointConnections.Overall ?? CopyOption.Reference)
@@ -1559,7 +1560,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.InterCellConnections.SetToWithDefault(
                         rhs: rhs.InterCellConnections,
                         def: def?.InterCellConnections,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.InterCellConnections.Overall ?? CopyOption.Reference)
@@ -1595,7 +1595,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.PointToReferenceMappings.SetToWithDefault(
                         rhs: rhs.PointToReferenceMappings,
                         def: def?.PointToReferenceMappings,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.PointToReferenceMappings.Overall ?? CopyOption.Reference)
@@ -1663,16 +1662,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    obj.PointToPointConnections.Unset(cmds);
+                    obj.PointToPointConnections.Unset();
                     break;
                 case PathGrid_FieldIndex.Unknown:
                     obj.Unknown_Unset();
                     break;
                 case PathGrid_FieldIndex.InterCellConnections:
-                    obj.InterCellConnections.Unset(cmds);
+                    obj.InterCellConnections.Unset();
                     break;
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    obj.PointToReferenceMappings.Unset(cmds);
+                    obj.PointToReferenceMappings.Unset();
                     break;
                 default:
                     PlacedCommon.UnsetNthObject(index, obj);
@@ -1724,10 +1723,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGrid item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.PointToPointConnections.Unset(cmds.ToUnsetParams());
+            item.PointToPointConnections.Unset();
             item.Unknown_Unset();
-            item.InterCellConnections.Unset(cmds.ToUnsetParams());
-            item.PointToReferenceMappings.Unset(cmds.ToUnsetParams());
+            item.InterCellConnections.Unset();
+            item.PointToReferenceMappings.Unset();
         }
 
         public static PathGrid_Mask<bool> GetEqualsMask(

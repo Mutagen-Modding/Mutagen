@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -52,19 +53,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<RoadPoint> _Points = new NotifyingList<RoadPoint>();
-        public INotifyingList<RoadPoint> Points => _Points;
+        private readonly SourceSetList<RoadPoint> _Points = new SourceSetList<RoadPoint>();
+        public ISourceSetList<RoadPoint> Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RoadPoint> PointsEnumerable
         {
-            get => _Points;
+            get => _Points.Items;
             set => _Points.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<RoadPoint> IRoad.Points => _Points;
+        ISourceSetList<RoadPoint> IRoad.Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<RoadPoint> IRoadGetter.Points => _Points;
+        IObservableSetList<RoadPoint> IRoadGetter.Points => _Points;
         #endregion
 
         #endregion
@@ -841,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    this._Points.SetTo((IEnumerable<RoadPoint>)obj, cmds);
+                    this._Points.SetTo((IEnumerable<RoadPoint>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -875,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    obj._Points.SetTo((IEnumerable<RoadPoint>)pair.Value, null);
+                    obj._Points.SetTo((IEnumerable<RoadPoint>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -892,13 +893,13 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRoad : IRoadGetter, IMajorRecord, ILoquiClass<IRoad, IRoadGetter>, ILoquiClass<Road, IRoadGetter>
     {
-        new INotifyingList<RoadPoint> Points { get; }
+        new ISourceSetList<RoadPoint> Points { get; }
     }
 
     public partial interface IRoadGetter : IMajorRecordGetter
     {
         #region Points
-        INotifyingListGetter<RoadPoint> Points { get; }
+        IObservableSetList<RoadPoint> Points { get; }
         #endregion
 
     }
@@ -1118,7 +1119,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Points.SetToWithDefault(
                         rhs: rhs.Points,
                         def: def?.Points,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Points.Overall ?? CopyOption.Reference)
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    obj.Points.Unset(cmds);
+                    obj.Points.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoad item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Points.Unset(cmds.ToUnsetParams());
+            item.Points.Unset();
         }
 
         public static Road_Mask<bool> GetEqualsMask(

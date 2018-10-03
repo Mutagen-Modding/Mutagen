@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -131,19 +133,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PrimaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<ActorValue> _PrimaryAttributes = new NotifyingListBounded<ActorValue>(max: 2);
-        public INotifyingList<ActorValue> PrimaryAttributes => _PrimaryAttributes;
+        private readonly SourceSetList<ActorValue> _PrimaryAttributes = new SourceBoundedSetList<ActorValue>(max: 2);
+        public ISourceSetList<ActorValue> PrimaryAttributes => _PrimaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ActorValue> PrimaryAttributesEnumerable
         {
-            get => _PrimaryAttributes;
+            get => _PrimaryAttributes.Items;
             set => _PrimaryAttributes.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<ActorValue> IClass.PrimaryAttributes => _PrimaryAttributes;
+        ISourceSetList<ActorValue> IClass.PrimaryAttributes => _PrimaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
+        IObservableSetList<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
         #endregion
 
         #endregion
@@ -157,19 +159,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SecondaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<ActorValue> _SecondaryAttributes = new NotifyingListBounded<ActorValue>(max: 7);
-        public INotifyingList<ActorValue> SecondaryAttributes => _SecondaryAttributes;
+        private readonly SourceSetList<ActorValue> _SecondaryAttributes = new SourceBoundedSetList<ActorValue>(max: 7);
+        public ISourceSetList<ActorValue> SecondaryAttributes => _SecondaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ActorValue> SecondaryAttributesEnumerable
         {
-            get => _SecondaryAttributes;
+            get => _SecondaryAttributes.Items;
             set => _SecondaryAttributes.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<ActorValue> IClass.SecondaryAttributes => _SecondaryAttributes;
+        ISourceSetList<ActorValue> IClass.SecondaryAttributes => _SecondaryAttributes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;
+        IObservableSetList<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;
         #endregion
 
         #endregion
@@ -1441,13 +1443,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    this._PrimaryAttributes.SetTo((IEnumerable<ActorValue>)obj, cmds);
+                    this._PrimaryAttributes.SetTo((IEnumerable<ActorValue>)obj);
                     break;
                 case Class_FieldIndex.Specialization:
                     this.Specialization = (Class.SpecializationFlag)obj;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    this._SecondaryAttributes.SetTo((IEnumerable<ActorValue>)obj, cmds);
+                    this._SecondaryAttributes.SetTo((IEnumerable<ActorValue>)obj);
                     break;
                 case Class_FieldIndex.Flags:
                     this.Flags = (ClassFlag)obj;
@@ -1499,13 +1501,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    obj._PrimaryAttributes.SetTo((IEnumerable<ActorValue>)pair.Value, null);
+                    obj._PrimaryAttributes.SetTo((IEnumerable<ActorValue>)pair.Value);
                     break;
                 case Class_FieldIndex.Specialization:
                     obj.Specialization = (Class.SpecializationFlag)pair.Value;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    obj._SecondaryAttributes.SetTo((IEnumerable<ActorValue>)pair.Value, null);
+                    obj._SecondaryAttributes.SetTo((IEnumerable<ActorValue>)pair.Value);
                     break;
                 case Class_FieldIndex.Flags:
                     obj.Flags = (ClassFlag)pair.Value;
@@ -1546,10 +1548,10 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Set(String item, bool hasBeenSet = true);
         void Icon_Unset();
 
-        new INotifyingList<ActorValue> PrimaryAttributes { get; }
+        new ISourceSetList<ActorValue> PrimaryAttributes { get; }
         new Class.SpecializationFlag Specialization { get; set; }
 
-        new INotifyingList<ActorValue> SecondaryAttributes { get; }
+        new ISourceSetList<ActorValue> SecondaryAttributes { get; }
         new ClassFlag Flags { get; set; }
 
         new ClassService ClassServices { get; set; }
@@ -1576,14 +1578,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PrimaryAttributes
-        INotifyingListGetter<ActorValue> PrimaryAttributes { get; }
+        IObservableSetList<ActorValue> PrimaryAttributes { get; }
         #endregion
         #region Specialization
         Class.SpecializationFlag Specialization { get; }
 
         #endregion
         #region SecondaryAttributes
-        INotifyingListGetter<ActorValue> SecondaryAttributes { get; }
+        IObservableSetList<ActorValue> SecondaryAttributes { get; }
         #endregion
         #region Flags
         ClassFlag Flags { get; }
@@ -2005,8 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.PrimaryAttributes.SetToWithDefault(
                         rhs.PrimaryAttributes,
-                        def?.PrimaryAttributes,
-                        cmds);
+                        def?.PrimaryAttributes);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2042,8 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.SecondaryAttributes.SetToWithDefault(
                         rhs.SecondaryAttributes,
-                        def?.SecondaryAttributes,
-                        cmds);
+                        def?.SecondaryAttributes);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2189,13 +2189,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    obj.PrimaryAttributes.Unset(cmds);
+                    obj.PrimaryAttributes.Unset();
                     break;
                 case Class_FieldIndex.Specialization:
                     obj.Specialization = default(Class.SpecializationFlag);
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    obj.SecondaryAttributes.Unset(cmds);
+                    obj.SecondaryAttributes.Unset();
                     break;
                 case Class_FieldIndex.Flags:
                     obj.Flags = default(ClassFlag);
@@ -2274,9 +2274,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Description_Unset();
             item.Icon_Unset();
-            item.PrimaryAttributes.Unset(cmds.ToUnsetParams());
+            item.PrimaryAttributes.Unset();
             item.Specialization = default(Class.SpecializationFlag);
-            item.SecondaryAttributes.Unset(cmds.ToUnsetParams());
+            item.SecondaryAttributes.Unset();
             item.Flags = default(ClassFlag);
             item.ClassServices = default(ClassService);
             item.Training = default(ClassTraining);

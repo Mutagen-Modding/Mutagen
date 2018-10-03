@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -52,19 +54,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<WeatherChance> _Weathers = new NotifyingList<WeatherChance>();
-        public INotifyingList<WeatherChance> Weathers => _Weathers;
+        private readonly SourceSetList<WeatherChance> _Weathers = new SourceSetList<WeatherChance>();
+        public ISourceSetList<WeatherChance> Weathers => _Weathers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<WeatherChance> WeathersEnumerable
         {
-            get => _Weathers;
+            get => _Weathers.Items;
             set => _Weathers.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<WeatherChance> IClimate.Weathers => _Weathers;
+        ISourceSetList<WeatherChance> IClimate.Weathers => _Weathers;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<WeatherChance> IClimateGetter.Weathers => _Weathers;
+        IObservableSetList<WeatherChance> IClimateGetter.Weathers => _Weathers;
         #endregion
 
         #endregion
@@ -1570,7 +1572,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    this._Weathers.SetTo((IEnumerable<WeatherChance>)obj, cmds);
+                    this._Weathers.SetTo((IEnumerable<WeatherChance>)obj);
                     break;
                 case Climate_FieldIndex.SunTexture:
                     this.SunTexture = (String)obj;
@@ -1634,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    obj._Weathers.SetTo((IEnumerable<WeatherChance>)pair.Value, null);
+                    obj._Weathers.SetTo((IEnumerable<WeatherChance>)pair.Value);
                     break;
                 case Climate_FieldIndex.SunTexture:
                     obj.SunTexture = (String)pair.Value;
@@ -1681,7 +1683,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IClimate : IClimateGetter, IMajorRecord, ILoquiClass<IClimate, IClimateGetter>, ILoquiClass<Climate, IClimateGetter>
     {
-        new INotifyingList<WeatherChance> Weathers { get; }
+        new ISourceSetList<WeatherChance> Weathers { get; }
         new String SunTexture { get; set; }
         new bool SunTexture_IsSet { get; set; }
         void SunTexture_Set(String item, bool hasBeenSet = true);
@@ -1716,7 +1718,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClimateGetter : IMajorRecordGetter
     {
         #region Weathers
-        INotifyingListGetter<WeatherChance> Weathers { get; }
+        IObservableSetList<WeatherChance> Weathers { get; }
         #endregion
         #region SunTexture
         String SunTexture { get; }
@@ -2105,7 +2107,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Weathers.SetToWithDefault(
                         rhs: rhs.Weathers,
                         def: def?.Weathers,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Weathers.Overall ?? CopyOption.Reference)
@@ -2414,7 +2415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    obj.Weathers.Unset(cmds);
+                    obj.Weathers.Unset();
                     break;
                 case Climate_FieldIndex.SunTexture:
                     obj.SunTexture_Unset();
@@ -2518,7 +2519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimate item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Weathers.Unset(cmds.ToUnsetParams());
+            item.Weathers.Unset();
             item.SunTexture_Unset();
             item.SunGlareTexture_Unset();
             item.Model_Unset();

@@ -44,8 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         new P3Float(
                                             x: connectionReader.ReadFloat(),
                                             y: connectionReader.ReadFloat(),
-                                            z: connectionReader.ReadFloat()),
-                                        cmds: null);
+                                            z: connectionReader.ReadFloat()));
                                 }
                                 item.Points.Add(pt);
                             }

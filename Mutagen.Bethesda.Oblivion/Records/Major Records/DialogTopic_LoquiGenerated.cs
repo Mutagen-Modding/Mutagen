@@ -15,7 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -53,19 +54,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<FormIDSetLink<Quest>> _Quests = new NotifyingList<FormIDSetLink<Quest>>();
-        public INotifyingList<FormIDSetLink<Quest>> Quests => _Quests;
+        private readonly SourceSetList<FormIDSetLink<Quest>> _Quests = new SourceSetList<FormIDSetLink<Quest>>();
+        public ISourceSetList<FormIDSetLink<Quest>> Quests => _Quests;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Quest>> QuestsEnumerable
         {
-            get => _Quests;
+            get => _Quests.Items;
             set => _Quests.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<FormIDSetLink<Quest>> IDialogTopic.Quests => _Quests;
+        ISourceSetList<FormIDSetLink<Quest>> IDialogTopic.Quests => _Quests;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<FormIDSetLink<Quest>> IDialogTopicGetter.Quests => _Quests;
+        IObservableSetList<FormIDSetLink<Quest>> IDialogTopicGetter.Quests => _Quests;
         #endregion
 
         #endregion
@@ -123,19 +124,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<DialogItem> _Items = new NotifyingList<DialogItem>();
-        public INotifyingList<DialogItem> Items => _Items;
+        private readonly SourceSetList<DialogItem> _Items = new SourceSetList<DialogItem>();
+        public ISourceSetList<DialogItem> Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<DialogItem> ItemsEnumerable
         {
-            get => _Items;
+            get => _Items.Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<DialogItem> IDialogTopic.Items => _Items;
+        ISourceSetList<DialogItem> IDialogTopic.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<DialogItem> IDialogTopicGetter.Items => _Items;
+        IObservableSetList<DialogItem> IDialogTopicGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -1114,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    this._Quests.SetTo((IEnumerable<FormIDSetLink<Quest>>)obj, cmds);
+                    this._Quests.SetTo((IEnumerable<FormIDSetLink<Quest>>)obj);
                     break;
                 case DialogTopic_FieldIndex.Name:
                     this.Name = (String)obj;
@@ -1123,7 +1124,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.DialogType = (DialogType)obj;
                     break;
                 case DialogTopic_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<DialogItem>)obj, cmds);
+                    this._Items.SetTo((IEnumerable<DialogItem>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1157,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    obj._Quests.SetTo((IEnumerable<FormIDSetLink<Quest>>)pair.Value, null);
+                    obj._Quests.SetTo((IEnumerable<FormIDSetLink<Quest>>)pair.Value);
                     break;
                 case DialogTopic_FieldIndex.Name:
                     obj.Name = (String)pair.Value;
@@ -1166,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.DialogType = (DialogType)pair.Value;
                     break;
                 case DialogTopic_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<DialogItem>)pair.Value, null);
+                    obj._Items.SetTo((IEnumerable<DialogItem>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1183,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IDialogTopic : IDialogTopicGetter, IMajorRecord, ILoquiClass<IDialogTopic, IDialogTopicGetter>, ILoquiClass<DialogTopic, IDialogTopicGetter>
     {
-        new INotifyingList<FormIDSetLink<Quest>> Quests { get; }
+        new ISourceSetList<FormIDSetLink<Quest>> Quests { get; }
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
         void Name_Set(String item, bool hasBeenSet = true);
@@ -1194,13 +1195,13 @@ namespace Mutagen.Bethesda.Oblivion
         void DialogType_Set(DialogType item, bool hasBeenSet = true);
         void DialogType_Unset();
 
-        new INotifyingList<DialogItem> Items { get; }
+        new ISourceSetList<DialogItem> Items { get; }
     }
 
     public partial interface IDialogTopicGetter : IMajorRecordGetter
     {
         #region Quests
-        INotifyingListGetter<FormIDSetLink<Quest>> Quests { get; }
+        IObservableSetList<FormIDSetLink<Quest>> Quests { get; }
         #endregion
         #region Name
         String Name { get; }
@@ -1213,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        INotifyingListGetter<DialogItem> Items { get; }
+        IObservableSetList<DialogItem> Items { get; }
         #endregion
 
     }
@@ -1473,8 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Quests.SetToWithDefault(
                         rhs.Quests,
-                        def?.Quests,
-                        cmds);
+                        def?.Quests);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1554,7 +1554,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
@@ -1622,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    obj.Quests.Unset(cmds);
+                    obj.Quests.Unset();
                     break;
                 case DialogTopic_FieldIndex.Name:
                     obj.Name_Unset();
@@ -1631,7 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.DialogType_Unset();
                     break;
                 case DialogTopic_FieldIndex.Items:
-                    obj.Items.Unset(cmds);
+                    obj.Items.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1683,10 +1682,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogTopic item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Quests.Unset(cmds.ToUnsetParams());
+            item.Quests.Unset();
             item.Name_Unset();
             item.DialogType_Unset();
-            item.Items.Unset(cmds.ToUnsetParams());
+            item.Items.Unset();
         }
 
         public static DialogTopic_Mask<bool> GetEqualsMask(

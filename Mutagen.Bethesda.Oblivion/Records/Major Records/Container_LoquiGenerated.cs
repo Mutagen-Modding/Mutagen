@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -113,19 +115,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<ContainerItem> _Items = new NotifyingList<ContainerItem>();
-        public INotifyingList<ContainerItem> Items => _Items;
+        private readonly SourceSetList<ContainerItem> _Items = new SourceSetList<ContainerItem>();
+        public ISourceSetList<ContainerItem> Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ContainerItem> ItemsEnumerable
         {
-            get => _Items;
+            get => _Items.Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<ContainerItem> IContainer.Items => _Items;
+        ISourceSetList<ContainerItem> IContainer.Items => _Items;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<ContainerItem> IContainerGetter.Items => _Items;
+        IObservableSetList<ContainerItem> IContainerGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -1279,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Container_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<ContainerItem>)obj, cmds);
+                    this._Items.SetTo((IEnumerable<ContainerItem>)obj);
                     break;
                 case Container_FieldIndex.Flags:
                     this.Flags = (Container.ContainerFlag)obj;
@@ -1340,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Container_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<ContainerItem>)pair.Value, null);
+                    obj._Items.SetTo((IEnumerable<ContainerItem>)pair.Value);
                     break;
                 case Container_FieldIndex.Flags:
                     obj.Flags = (Container.ContainerFlag)pair.Value;
@@ -1384,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Unset();
 
         new Script Script { get; set; }
-        new INotifyingList<ContainerItem> Items { get; }
+        new ISourceSetList<ContainerItem> Items { get; }
         new Container.ContainerFlag Flags { get; set; }
 
         new Single Weight { get; set; }
@@ -1411,7 +1413,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Items
-        INotifyingListGetter<ContainerItem> Items { get; }
+        IObservableSetList<ContainerItem> Items { get; }
         #endregion
         #region Flags
         Container.ContainerFlag Flags { get; }
@@ -1844,7 +1846,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
@@ -2005,7 +2006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Script_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Container_FieldIndex.Items:
-                    obj.Items.Unset(cmds);
+                    obj.Items.Unset();
                     break;
                 case Container_FieldIndex.Flags:
                     obj.Flags = default(Container.ContainerFlag);
@@ -2087,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Items.Unset(cmds.ToUnsetParams());
+            item.Items.Unset();
             item.Flags = default(Container.ContainerFlag);
             item.Weight = default(Single);
             item.OpenSound_Property.Unset(cmds.ToUnsetParams());

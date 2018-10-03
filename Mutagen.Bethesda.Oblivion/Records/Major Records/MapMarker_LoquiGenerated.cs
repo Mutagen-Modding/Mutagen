@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -104,19 +106,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Types
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<MapMarker.Type> _Types = new NotifyingList<MapMarker.Type>();
-        public INotifyingList<MapMarker.Type> Types => _Types;
+        private readonly SourceSetList<MapMarker.Type> _Types = new SourceSetList<MapMarker.Type>();
+        public ISourceSetList<MapMarker.Type> Types => _Types;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<MapMarker.Type> TypesEnumerable
         {
-            get => _Types;
+            get => _Types.Items;
             set => _Types.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<MapMarker.Type> IMapMarker.Types => _Types;
+        ISourceSetList<MapMarker.Type> IMapMarker.Types => _Types;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<MapMarker.Type> IMapMarkerGetter.Types => _Types;
+        IObservableSetList<MapMarker.Type> IMapMarkerGetter.Types => _Types;
         #endregion
 
         #endregion
@@ -1074,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Name = (String)obj;
                     break;
                 case MapMarker_FieldIndex.Types:
-                    this._Types.SetTo((IEnumerable<MapMarker.Type>)obj, cmds);
+                    this._Types.SetTo((IEnumerable<MapMarker.Type>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1120,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Name = (String)pair.Value;
                     break;
                 case MapMarker_FieldIndex.Types:
-                    obj._Types.SetTo((IEnumerable<MapMarker.Type>)pair.Value, null);
+                    obj._Types.SetTo((IEnumerable<MapMarker.Type>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1147,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Name_Set(String item, bool hasBeenSet = true);
         void Name_Unset();
 
-        new INotifyingList<MapMarker.Type> Types { get; }
+        new ISourceSetList<MapMarker.Type> Types { get; }
     }
 
     public partial interface IMapMarkerGetter : ILoquiObject
@@ -1163,7 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Types
-        INotifyingListGetter<MapMarker.Type> Types { get; }
+        IObservableSetList<MapMarker.Type> Types { get; }
         #endregion
 
     }
@@ -1468,8 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Types.SetToWithDefault(
                         rhs.Types,
-                        def?.Types,
-                        cmds);
+                        def?.Types);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1523,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Name_Unset();
                     break;
                 case MapMarker_FieldIndex.Types:
-                    obj.Types.Unset(cmds);
+                    obj.Types.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1572,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Flags_Unset();
             item.Name_Unset();
-            item.Types.Unset(cmds.ToUnsetParams());
+            item.Types.Unset();
         }
 
         public static MapMarker_Mask<bool> GetEqualsMask(

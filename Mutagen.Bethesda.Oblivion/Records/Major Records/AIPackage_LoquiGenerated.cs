@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -149,19 +151,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Condition> _Conditions = new NotifyingList<Condition>();
-        public INotifyingList<Condition> Conditions => _Conditions;
+        private readonly SourceSetList<Condition> _Conditions = new SourceSetList<Condition>();
+        public ISourceSetList<Condition> Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Condition> ConditionsEnumerable
         {
-            get => _Conditions;
+            get => _Conditions.Items;
             set => _Conditions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Condition> IAIPackage.Conditions => _Conditions;
+        ISourceSetList<Condition> IAIPackage.Conditions => _Conditions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Condition> IAIPackageGetter.Conditions => _Conditions;
+        IObservableSetList<Condition> IAIPackageGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -1276,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Target = (AIPackageTarget)obj;
                     break;
                 case AIPackage_FieldIndex.Conditions:
-                    this._Conditions.SetTo((IEnumerable<Condition>)obj, cmds);
+                    this._Conditions.SetTo((IEnumerable<Condition>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1325,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Target = (AIPackageTarget)pair.Value;
                     break;
                 case AIPackage_FieldIndex.Conditions:
-                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value, null);
+                    obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1361,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Target_Set(AIPackageTarget item, bool hasBeenSet = true);
         void Target_Unset();
 
-        new INotifyingList<Condition> Conditions { get; }
+        new ISourceSetList<Condition> Conditions { get; }
     }
 
     public partial interface IAIPackageGetter : IMajorRecordGetter
@@ -1390,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Conditions
-        INotifyingListGetter<Condition> Conditions { get; }
+        IObservableSetList<Condition> Conditions { get; }
         #endregion
 
     }
@@ -1870,7 +1872,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Conditions.SetToWithDefault(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
@@ -1957,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Target_Unset();
                     break;
                 case AIPackage_FieldIndex.Conditions:
-                    obj.Conditions.Unset(cmds);
+                    obj.Conditions.Unset();
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -2021,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Location_Unset();
             item.Schedule_Unset();
             item.Target_Unset();
-            item.Conditions.Unset(cmds.ToUnsetParams());
+            item.Conditions.Unset();
         }
 
         public static AIPackage_Mask<bool> GetEqualsMask(

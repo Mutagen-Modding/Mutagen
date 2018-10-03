@@ -16,6 +16,8 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Media;
+using DynamicData;
+using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -112,19 +114,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<RegionArea> _Areas = new NotifyingList<RegionArea>();
-        public INotifyingList<RegionArea> Areas => _Areas;
+        private readonly SourceSetList<RegionArea> _Areas = new SourceSetList<RegionArea>();
+        public ISourceSetList<RegionArea> Areas => _Areas;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RegionArea> AreasEnumerable
         {
-            get => _Areas;
+            get => _Areas.Items;
             set => _Areas.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<RegionArea> IRegion.Areas => _Areas;
+        ISourceSetList<RegionArea> IRegion.Areas => _Areas;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<RegionArea> IRegionGetter.Areas => _Areas;
+        IObservableSetList<RegionArea> IRegionGetter.Areas => _Areas;
         #endregion
 
         #endregion
@@ -1440,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Region_FieldIndex.Areas:
-                    this._Areas.SetTo((IEnumerable<RegionArea>)obj, cmds);
+                    this._Areas.SetTo((IEnumerable<RegionArea>)obj);
                     break;
                 case Region_FieldIndex.Objects:
                     this.Objects = (RegionDataObjects)obj;
@@ -1500,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Region_FieldIndex.Areas:
-                    obj._Areas.SetTo((IEnumerable<RegionArea>)pair.Value, null);
+                    obj._Areas.SetTo((IEnumerable<RegionArea>)pair.Value);
                     break;
                 case Region_FieldIndex.Objects:
                     obj.Objects = (RegionDataObjects)pair.Value;
@@ -1543,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion
         void MapColor_Unset();
 
         new Worldspace Worldspace { get; set; }
-        new INotifyingList<RegionArea> Areas { get; }
+        new ISourceSetList<RegionArea> Areas { get; }
         new RegionDataObjects Objects { get; set; }
         new bool Objects_IsSet { get; set; }
         void Objects_Set(RegionDataObjects item, bool hasBeenSet = true);
@@ -1589,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Areas
-        INotifyingListGetter<RegionArea> Areas { get; }
+        IObservableSetList<RegionArea> Areas { get; }
         #endregion
         #region Objects
         RegionDataObjects Objects { get; }
@@ -2017,7 +2019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Areas.SetToWithDefault(
                         rhs: rhs.Areas,
                         def: def?.Areas,
-                        cmds: cmds,
                         converter: (r, d) =>
                         {
                             switch (copyMask?.Areas.Overall ?? CopyOption.Reference)
@@ -2374,7 +2375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Worldspace_Property.Unset(cmds.ToUnsetParams());
                     break;
                 case Region_FieldIndex.Areas:
-                    obj.Areas.Unset(cmds);
+                    obj.Areas.Unset();
                     break;
                 case Region_FieldIndex.Objects:
                     obj.Objects_Unset();
@@ -2464,7 +2465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
             item.MapColor_Unset();
             item.Worldspace_Property.Unset(cmds.ToUnsetParams());
-            item.Areas.Unset(cmds.ToUnsetParams());
+            item.Areas.Unset();
             item.Objects_Unset();
             item.Weather_Unset();
             item.MapName_Unset();
