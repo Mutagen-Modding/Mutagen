@@ -112,14 +112,17 @@ namespace Mutagen.Bethesda.Generation
             }
 
             TranslationGeneration.WrapParseCall(
-                fg: fg,
-                typeGen: typeGen,
-                translatorLine: $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
-                maskAccessor: maskAccessor,
-                itemAccessor: itemAccessor,
-                translationMaskAccessor: null,
-                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                extraargs: extraArgs.ToArray());
+                new TranslationWrapParseArgs()
+                {
+                    FG = fg,
+                    TypeGen = typeGen,
+                    TranslatorLine = $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
+                    MaskAccessor = maskAccessor,
+                    ItemAccessor = itemAccessor,
+                    TranslationMaskAccessor = null,
+                    IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                    ExtraArgs = extraArgs.ToArray()
+                });
         }
 
         protected virtual IEnumerable<string> AdditionalCopyInParameters(

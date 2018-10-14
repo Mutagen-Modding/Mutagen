@@ -57,14 +57,16 @@ namespace Mutagen.Bethesda.Generation
             }
 
             TranslationGeneration.WrapParseCall(
-                fg: fg,
-                typeGen: typeGen,
-                translatorLine: $"{this.Namespace}ByteArrayBinaryTranslation.Instance",
-                maskAccessor: maskAccessor,
-                itemAccessor: itemAccessor,
-                translationMaskAccessor: null,
-                indexAccessor: typeGen.IndexEnumInt,
-                extraargs: $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({data.Length.Value})")}");
+                new TranslationWrapParseArgs()
+                {
+                    FG = fg,
+                    TypeGen = typeGen,
+                    TranslatorLine = $"{this.Namespace}ByteArrayBinaryTranslation.Instance",
+                    MaskAccessor = maskAccessor,
+                    ItemAccessor = itemAccessor,
+                    IndexAccessor = typeGen.IndexEnumInt,
+                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({data.Length.Value})")}".Single()
+                });
         }
 
         public override void GenerateCopyInRet(

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>76174b7df4e5bb57c676d5813fa1ad6588cda696</Sha>
+         <Sha>70788938666b364c127403534545143fbcc0d1d6</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-10-2018 18:03:38</CommitDate>
-         <Description>Missing CustomAPI generation added</Description>
+         <CommitDate>10-14-2018 14:10:24</CommitDate>
+         <Description>Merge fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

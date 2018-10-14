@@ -140,14 +140,17 @@ namespace Mutagen.Bethesda.Generation
                     }
                     extraArgs.Add($"masterReferences: masterReferences");
                     TranslationGeneration.WrapParseCall(
-                        fg: fg,
-                        typeGen: typeGen,
-                        translatorLine: $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance",
-                        maskAccessor: maskAccessor,
-                        itemAccessor: itemAccessor,
-                        translationMaskAccessor: null,
-                        indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                        extraargs: extraArgs.ToArray());
+                        new TranslationWrapParseArgs()
+                        {
+                            FG = fg,
+                            TypeGen = typeGen,
+                            TranslatorLine = $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance",
+                            MaskAccessor = maskAccessor,
+                            ItemAccessor = itemAccessor,
+                            TranslationMaskAccessor = null,
+                            IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                            ExtraArgs = extraArgs.ToArray(),
+                        });
                 }
             }
             else
