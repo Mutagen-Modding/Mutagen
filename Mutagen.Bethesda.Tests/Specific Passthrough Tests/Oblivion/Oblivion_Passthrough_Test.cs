@@ -18,10 +18,12 @@ namespace Mutagen.Bethesda.Tests
     {
         public abstract string Nickname { get; }
         public string FilePath { get; set; }
+        public byte NumMasters { get; }
 
-        public Oblivion_Passthrough_Test(string path = null)
+        public Oblivion_Passthrough_Test(byte numMasters, string path = null)
         {
             this.FilePath = path;
+            this.NumMasters = numMasters;
         }
 
         public async Task ImportExport(
@@ -185,6 +187,7 @@ namespace Mutagen.Bethesda.Tests
          */
         protected virtual void AddDynamicProcessorInstructions(
             BinaryReadStream stream,
+            byte numMasters,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -204,6 +207,8 @@ namespace Mutagen.Bethesda.Tests
             ProcessAIPackages(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessCombatStyle(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessWater(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessSpell(stream, formID, recType, instr, loc, fileLocs, numMasters, lengthTracker);
+            ProcessMisindexedRecords(stream, formID, instr, loc, numMasters);
         }
 
         private void ProcessLengths(
@@ -920,6 +925,58 @@ namespace Mutagen.Bethesda.Tests
                 lengthTracker);
         }
 
+        private void ProcessSpell(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            byte numMasters,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!SpellUnleveled_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            foreach (var scitIndex in IterateTypes(str, new RecordType("SCIT")))
+            {
+                stream.Position = loc.Min + scitIndex + 4;
+                var len = stream.ReadUInt16();
+                ProcessFormID(
+                    stream,
+                    instr,
+                    pos: loc.Min + scitIndex + 6,
+                    numMasters: numMasters);
+            }
+        }
+
+        private void ProcessFormIDList(
+            BinaryReadStream stream,
+            BinaryFileProcessor.Config instr,
+            RecordType recordType, 
+            string str,
+            RangeInt64 loc,
+            byte numMasters)
+        {
+            var dataIndex = str.IndexOf(recordType.Type);
+            if (dataIndex != -1)
+            {
+                stream.Position = loc.Min + dataIndex + 4;
+                var len = stream.ReadUInt16();
+                var formIDIndex = stream.Position;
+                while (len > 0)
+                {
+                    ProcessFormID(
+                        stream,
+                        instr,
+                        formIDIndex,
+                        numMasters);
+                    len -= 4;
+                    formIDIndex += 4;
+                }
+            }
+        }
+
         private bool DynamicMove(
             string str,
             BinaryFileProcessor.Config instr,
@@ -1034,6 +1091,45 @@ namespace Mutagen.Bethesda.Tests
             loc = MathExt.Min(indices) + offset;
             return true;
         }
+
+        private void ProcessMisindexedRecords(
+            BinaryReadStream stream,
+            FormID formID,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            byte numMasters)
+        {
+            ProcessFormID(
+                stream,
+                instr,
+                loc.Min + 12,
+                numMasters);
+        }
+
+        private void ProcessFormID(
+            BinaryReadStream stream,
+            BinaryFileProcessor.Config instr,
+            long pos,
+            byte numMasters)
+        {
+            stream.Position = pos;
+            FormID formID = new FormID(stream.ReadUInt32());
+            if (formID.ModID.ID <= numMasters) return;
+            instr.SetSubstitution(
+                pos + 3,
+                numMasters);
+        }
+
+        private IEnumerable<int> IterateTypes(string str, RecordType type)
+        {
+            int index = 0;
+            int dataIndex;
+            while ((dataIndex = str.IndexOf(type.Type, index)) != -1)
+            {
+                yield return dataIndex;
+                index = dataIndex + 4;
+            }
+        }
         #endregion
 
         public async Task BinaryPassthroughTest(
@@ -1111,7 +1207,8 @@ namespace Mutagen.Bethesda.Tests
                                 instr: instructions,
                                 loc: alignedFileLocs[rec.Value.FormID],
                                 fileLocs: alignedFileLocs,
-                                lengthTracker: lengthTracker);
+                                lengthTracker: lengthTracker,
+                                numMasters: this.NumMasters);
                         }
                     }
 

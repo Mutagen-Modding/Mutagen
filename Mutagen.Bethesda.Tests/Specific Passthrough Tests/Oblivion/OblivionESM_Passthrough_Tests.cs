@@ -20,7 +20,9 @@ namespace Mutagen.Bethesda.Tests
         public override string Nickname => TestingConstants.OBLIVION_ESM;
 
         public OblivionESM_Passthrough_Tests(TestingSettings settings)
-            : base(Path.Combine(settings.DataFolder, settings.OblivionESM.Path))
+            : base(
+                  numMasters: 0,
+                  path: Path.Combine(settings.DataFolder, settings.OblivionESM.Path))
         {
         }
 
