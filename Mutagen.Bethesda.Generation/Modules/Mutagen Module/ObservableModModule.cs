@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void GenerateWhere(ObjectGeneration obj, FileGeneration fg)
         {
-            fg.AppendLine($"public {obj.Name}_Observable Where(Func<KeyValuePair<FormID, IObservable<MajorRecord>>, bool> selector)");
+            fg.AppendLine($"public {obj.Name}_Observable Where(Func<KeyValuePair<FormKey, IObservable<MajorRecord>>, bool> selector)");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"return new {obj.Name}_Observable()");

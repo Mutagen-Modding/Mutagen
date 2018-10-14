@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Texture":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Texture_Property,
                         fieldIndex: (int)BaseLayer_FieldIndex.Texture,
@@ -916,10 +916,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static BaseLayer Create_Binary(MutagenFrame frame)
+        public static BaseLayer Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -927,12 +930,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static BaseLayer Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out BaseLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
@@ -941,6 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BaseLayer Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -952,6 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     int? lastParsed = null;
                     while (!frame.Complete)
@@ -960,6 +967,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -975,17 +983,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static BaseLayer Create_Binary(string path)
+        public static BaseLayer Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static BaseLayer Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out BaseLayer_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -993,21 +1006,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static BaseLayer Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static BaseLayer Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static BaseLayer Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out BaseLayer_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -1015,6 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -1024,12 +1044,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out BaseLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
@@ -1037,6 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out BaseLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1046,6 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -1059,6 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out BaseLayer_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1066,20 +1091,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public virtual void Write_Binary(MutagenWriter writer)
+        public virtual void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public virtual void Write_Binary(string path)
+        public virtual void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -1087,6 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -1098,12 +1130,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public virtual void Write_Binary(Stream stream)
+        public virtual void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -1111,12 +1146,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected virtual void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             BaseLayerCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -1125,6 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             BaseLayer item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
         }
@@ -1133,6 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion
             BaseLayer item,
             MutagenFrame frame,
             int? lastParsed,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1151,8 +1190,9 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             item.BTXTDataTypeState = BTXTDataType.Has;
                         }
-                        Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: item.Texture_Property,
                             fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                             errorMask: errorMask);
@@ -1912,10 +1952,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Texture) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Texture),
-                    item: item.Texture_Property?.FormID,
+                    item: item.Texture_Property?.FormKey,
                     fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                     errorMask: errorMask);
             }
@@ -1947,6 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             BaseLayer item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out BaseLayer_ErrorMask errorMask)
@@ -1954,6 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1963,6 +2005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             BaseLayer item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1970,7 +2013,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
@@ -1978,17 +2022,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BaseLayer item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             if (item.BTXTDataTypeState.HasFlag(BaseLayer.BTXTDataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(BaseLayer_Registration.BTXT_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Texture_Property,
                         fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
                         writer,
                         item.Quadrant_Property,

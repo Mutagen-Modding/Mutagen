@@ -12,6 +12,16 @@ namespace Mutagen.Bethesda.Generation
     {
         public string ModNickname;
 
+        public override bool AllowDirectParse(ObjectGeneration objGen, TypeGeneration typeGen, bool squashedRepeatedList)
+        {
+            return false;
+        }
+
+        public override bool AllowDirectWrite(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            return false;
+        }
+
         public override string GetTranslatorInstance(TypeGeneration typeGen)
         {
             var loquiGen = typeGen as LoquiType;
@@ -60,6 +70,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                     }
                     args.Add($"errorMask: {maskAccessor}");
+                    args.Add($"masterReferences: masterReferences");
                     if (data?.RecordTypeConverter != null
                         && data.RecordTypeConverter.FromConversions.Count > 0)
                     {
@@ -105,6 +116,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"frame: {frameAccessor}");
                             args.Add($"errorMask: {maskAccessor}");
                             args.Add($"recordTypeConverter: null");
+                            args.Add($"masterReferences: masterReferences");
                         }
                         using (var args = new ArgsWrapper(fg,
                             $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Copy)}"))
@@ -126,6 +138,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         extraArgs.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                     }
+                    extraArgs.Add($"masterReferences: masterReferences");
                     TranslationGeneration.WrapParseCall(
                         fg: fg,
                         typeGen: typeGen,
@@ -168,6 +181,14 @@ namespace Mutagen.Bethesda.Generation
                 }
                 args.Add($"item: out {outItemAccessor.DirectAccess}");
                 args.Add($"errorMask: {maskAccessor}");
+                if (objGen.GetObjectType() == ObjectType.Mod)
+                {
+                    args.Add($"masterReferences: item.TES4.MasterReferences");
+                }
+                else
+                {
+                    args.Add($"masterReferences: masterReferences");
+                }
                 if (data?.RecordTypeConverter != null
                     && data.RecordTypeConverter.FromConversions.Count > 0)
                 {

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -724,9 +724,6 @@
     </Compile>
     <Compile Include="Records\Major Records\RelatedWaters_LoquiGenerated.cs">
       <DependentUpon>Water.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\OblivionMod_Observable_LoquiGenerated.cs">
-      <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\RaceRelation_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>

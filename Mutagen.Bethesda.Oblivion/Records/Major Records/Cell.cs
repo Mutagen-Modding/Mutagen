@@ -32,18 +32,18 @@ namespace Mutagen.Bethesda.Oblivion
             BehaveLikeExteriod = 0x0080,
         }
 
-        static partial void CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, ErrorMaskBuilder errorMask)
+        static partial void CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
             if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
-            var id = FormID.Factory(frame.Reader.ReadUInt32());
+            var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
             if (grupType == GroupTypeEnum.CellChildren)
             {
                 obj._overallTimeStamp = frame.Reader.ReadBytes(4);
-                if (id != obj.FormID)
+                if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
@@ -74,6 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     frame: itemFrame, 
                                     obj: obj,
                                     fieldIndex: (int)Cell_FieldIndex.Persistent,
+                                    masterReferences: masterReferences,
                                     coll: obj.Persistent,
                                     errorMask: errorMask, 
                                     persistentParse: true);
@@ -82,6 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 ParseTemporary(
                                     itemFrame, 
                                     obj,
+                                    masterReferences,
                                     errorMask);
                                 break;
                             case GroupTypeEnum.CellVisibleDistantChildren:
@@ -89,6 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     frame: itemFrame, 
                                     obj: obj, 
                                     fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
+                                    masterReferences: masterReferences,
                                     coll: obj.VisibleWhenDistant,
                                     errorMask: errorMask, 
                                     persistentParse: false);
@@ -105,13 +108,14 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Cell obj,
             int fieldIndex,
+            MasterReferences masterReferences,
             INotifyingCollection<Placed> coll,
             ErrorMaskBuilder errorMask,
             bool persistentParse)
         {
             frame.Reader.Position += 8;
-            var id = FormID.Factory(frame.Reader.ReadUInt32());
-            if (id != obj.FormID)
+            var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
+            if (formKey != obj.FormKey)
             {
                 throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
             }
@@ -138,6 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
                             if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
                                 frame: r,
                                 item: out var placedCrea,
+                                masterReferences: masterReferences,
                                 errorMask: errMaskInternal))
                             {
                                 placed = placedCrea;
@@ -148,6 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
                             if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
                                 frame: r,
                                 item: out var placedNPC,
+                                masterReferences: masterReferences,
                                 errorMask: errMaskInternal))
                             {
                                 placed = placedNPC;
@@ -158,6 +164,7 @@ namespace Mutagen.Bethesda.Oblivion
                             if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
                                 frame: r,
                                 item: out var placedObj,
+                                masterReferences: masterReferences,
                                 errorMask: errMaskInternal))
                             {
                                 placed = placedObj;
@@ -173,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
                 );
         }
 
-        static bool ParseTemporaryOutliers(MutagenFrame frame, Cell obj, ErrorMaskBuilder errorMask)
+        static bool ParseTemporaryOutliers(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var nextHeader = HeaderTranslation.GetNextRecordType(frame.Reader, out var pathLen);
             if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
@@ -185,6 +192,7 @@ namespace Mutagen.Bethesda.Oblivion
                         obj.PathGrid = PathGrid.Create_Binary(
                             subFrame,
                             errorMask: errorMask,
+                            masterReferences: masterReferences,
                             recordTypeConverter: null);
                     }
                 }
@@ -199,6 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
                         obj.Landscape = Landscape.Create_Binary(
                             subFrame,
                             errorMask: errorMask,
+                            masterReferences: masterReferences,
                             recordTypeConverter: null);
                     }
                 }
@@ -207,11 +216,11 @@ namespace Mutagen.Bethesda.Oblivion
             return false;
         }
 
-        static void ParseTemporary(MutagenFrame frame, Cell obj, ErrorMaskBuilder errorMask)
+        static void ParseTemporary(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             frame.Reader.Position += 8;
-            var id = FormID.Factory(frame.Reader.ReadUInt32());
-            if (id != obj.FormID)
+            var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
+            if (formKey != obj.FormKey)
             {
                 throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
             }
@@ -231,6 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
                             if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
                                 frame: r,
                                 item: out var placedCrea,
+                                masterReferences: masterReferences,
                                 errorMask: errorMask))
                             {
                                 placed = placedCrea;
@@ -241,6 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
                             if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
                                 frame: r,
                                 item: out var placedNPC,
+                                masterReferences: masterReferences,
                                 errorMask: errorMask))
                             {
                                 placed = placedNPC;
@@ -251,6 +262,7 @@ namespace Mutagen.Bethesda.Oblivion
                             if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
                                 frame: r,
                                 item: out var placedObj,
+                                masterReferences: masterReferences,
                                 errorMask: errorMask))
                             {
                                 placed = placedObj;
@@ -258,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             break;
                         default:
-                            if (ParseTemporaryOutliers(frame, obj, errorMask))
+                            if (ParseTemporaryOutliers(frame, obj, masterReferences, errorMask))
                             {
                                 listSubMask = null;
                                 placed = null;
@@ -271,7 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
                 });
         }
 
-        static partial void CustomBinaryEnd_Export(MutagenWriter writer, Cell obj, ErrorMaskBuilder errorMask)
+        static partial void CustomBinaryEnd_Export(MutagenWriter writer, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (obj.Persistent.Count == 0
                 && obj.Temporary.Count == 0
@@ -280,9 +292,10 @@ namespace Mutagen.Bethesda.Oblivion
                 && !obj.Landscape_Property.HasBeenSet) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
-                FormIDBinaryTranslation.Instance.Write(
+                FormKeyBinaryTranslation.Instance.Write(
                     writer, 
-                    obj.FormID, 
+                    obj.FormKey,
+                    masterReferences,
                     errorMask);
                 writer.Write((int)GroupTypeEnum.CellChildren);
                 if (obj._overallTimeStamp != null)
@@ -297,9 +310,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
-                        FormIDBinaryTranslation.Instance.Write(
+                        FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormID,
+                            obj.FormKey,
+                            masterReferences,
                             errorMask);
                         writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                         if (obj._persistentTimeStamp != null)
@@ -315,7 +329,14 @@ namespace Mutagen.Bethesda.Oblivion
                             items: obj.Persistent,
                             fieldIndex: (int)Cell_FieldIndex.Persistent,
                             errorMask: errorMask,
-                            transl: LoquiBinaryTranslation<Placed>.Instance.Write);
+                            transl: (r, item, subErr) =>
+                            {
+                                LoquiBinaryTranslation<Placed>.Instance.Write(
+                                    r,
+                                    item,
+                                    masterReferences,
+                                    errorMask);
+                            });
                     }
                 }
                 if (obj.Temporary.Count > 0
@@ -324,9 +345,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
-                        FormIDBinaryTranslation.Instance.Write(
+                        FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormID,
+                            obj.FormKey,
+                            masterReferences,
                             errorMask);
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
                         if (obj._temporaryTimeStamp != null)
@@ -341,33 +363,43 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             LoquiBinaryTranslation<Landscape>.Instance.Write(
                                 writer,
-                                obj.Landscape,
-                                (int)Cell_FieldIndex.Landscape,
-                                errorMask);
+                                item: obj.Landscape,
+                                masterReferences: masterReferences,
+                                fieldIndex: (int)Cell_FieldIndex.Landscape,
+                                errorMask: errorMask);
                         }
                         if (obj.PathGrid_Property.HasBeenSet)
                         {
                             LoquiBinaryTranslation<PathGrid>.Instance.Write(
                                 writer,
-                                obj.PathGrid,
-                                (int)Cell_FieldIndex.PathGrid,
-                                errorMask);
+                                item: obj.PathGrid,
+                                masterReferences: masterReferences,
+                                fieldIndex: (int)Cell_FieldIndex.PathGrid,
+                                errorMask: errorMask);
                         }
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.Write(
                             writer: writer,
                             items: obj.Temporary,
                             fieldIndex: (int)Cell_FieldIndex.Temporary,
                             errorMask: errorMask,
-                            transl: LoquiBinaryTranslation<Placed>.Instance.Write);
+                            transl: (r, item, subErr) =>
+                            {
+                                LoquiBinaryTranslation<Placed>.Instance.Write(
+                                    r,
+                                    item,
+                                    masterReferences,
+                                    errorMask);
+                            });
                     }
                 }
                 if (obj.VisibleWhenDistant.Count > 0)
                 {
                     using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                     {
-                        FormIDBinaryTranslation.Instance.Write(
+                        FormKeyBinaryTranslation.Instance.Write(
                             writer,
-                            obj.FormID,
+                            obj.FormKey,
+                            masterReferences,
                             errorMask);
                         writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
                         if (obj._visibleWhenDistantTimeStamp != null)
@@ -383,7 +415,14 @@ namespace Mutagen.Bethesda.Oblivion
                             items: obj.VisibleWhenDistant,
                             fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
                             errorMask: errorMask,
-                            transl: LoquiBinaryTranslation<Placed>.Instance.Write);
+                            transl: (r, item, subErr) =>
+                            {
+                                LoquiBinaryTranslation<Placed>.Instance.Write(
+                                    r,
+                                    item,
+                                    masterReferences,
+                                    errorMask);
+                            });
                     }
                 }
             }

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
             return (bool)obj;
         }
 
-        protected override IEnumerable<string> AdditionWriteParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor)
+        protected override IEnumerable<string> AdditionalWriteParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor)
         {
             if (ExtraByte(typeGen))
             {
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected override IEnumerable<string> AdditionCopyInParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, Accessor itemAccessor, string maskAccessor)
+        protected override IEnumerable<string> AdditionalCopyInParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, Accessor itemAccessor, string maskAccessor)
         {
             if (ExtraByte(typeGen))
             {
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected override IEnumerable<string> AdditionCopyInRetParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, string retAccessor, Accessor outItemAccessor, string maskAccessor)
+        protected override IEnumerable<string> AdditionalCopyInRetParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, string retAccessor, Accessor outItemAccessor, string maskAccessor)
         {
             if (ExtraByte(typeGen))
             {

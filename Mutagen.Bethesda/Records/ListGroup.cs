@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda
         static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame, 
             ListGroup<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask) 
         {
             frame.Reader.Position += 4;
@@ -24,6 +25,7 @@ namespace Mutagen.Bethesda
         static partial void WriteBinary_ContainedRecordType_Custom(
             MutagenWriter writer,
             ListGroup<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask) 
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(

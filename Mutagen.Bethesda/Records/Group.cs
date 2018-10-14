@@ -13,11 +13,12 @@ using Loqui.Internal;
 namespace Mutagen.Bethesda
 {
     public partial class Group<T>
-        where T : ILoquiObject<T>, IFormID
+        where T : ILoquiObject<T>, IFormKey
     {
         static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame,
-            Group<T> item,
+            Group<T> item, 
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             frame.Reader.Position += 4;
@@ -25,7 +26,8 @@ namespace Mutagen.Bethesda
 
         static partial void WriteBinary_ContainedRecordType_Custom(
             MutagenWriter writer,
-            Group<T> item,
+            Group<T> item, 
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
@@ -43,7 +45,7 @@ namespace Mutagen.Bethesda
             Func<IErrorMask> errMaskFunc,
             int index,
             bool doMasks)
-            where T : MajorRecord, ILoquiObject<T>, IFormID
+            where T : MajorRecord, ILoquiObject<T>, IFormKey
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             Group_ErrorMask<T_ErrMask> grupErrMask = null;
@@ -57,7 +59,7 @@ namespace Mutagen.Bethesda
                     writeTasks.Add(Task.Run(() =>
                     {
                         item.Write_Xml_Folder(
-                            path: Path.Combine(dir.Path, $"{counter++} - {item.FormID.IDString()} - {item.EditorID}.xml"),
+                            path: Path.Combine(dir.Path, $"{counter++} - {item.FormKey.IDString()} - {item.EditorID}.xml"),
                             errorMask: out var itemErrMask,
                             doMasks: doMasks);
                         return itemErrMask;

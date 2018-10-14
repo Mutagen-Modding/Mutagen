@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BinaryProcessor_Tests.cs" />
     <Compile Include="ComparisonStream.cs" />
+    <Compile Include="FlattenedMod_Tests.cs" />
     <Compile Include="ModList_Tests.cs" />
     <Compile Include="Specific Passthrough Tests\Oblivion\Knights_Passthrough_Tests.cs" />
     <Compile Include="Misc_Tests.cs" />

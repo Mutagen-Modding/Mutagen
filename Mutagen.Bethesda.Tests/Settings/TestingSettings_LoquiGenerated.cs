@@ -71,6 +71,10 @@ namespace Mutagen.Bethesda.Tests
         private Boolean _TestModList;
         public Boolean TestModList { get => _TestModList; set => _TestModList = value; }
         #endregion
+        #region TestFlattenedMod
+        private Boolean _TestFlattenedMod;
+        public Boolean TestFlattenedMod { get => _TestFlattenedMod; set => _TestFlattenedMod = value; }
+        #endregion
         #region DataFolder
         private String _DataFolder;
         public String DataFolder { get => _DataFolder; set => _DataFolder = value; }
@@ -150,6 +154,7 @@ namespace Mutagen.Bethesda.Tests
             if (this.DeleteCachesAfter != rhs.DeleteCachesAfter) return false;
             if (this.TestGroupMasks != rhs.TestGroupMasks) return false;
             if (this.TestModList != rhs.TestModList) return false;
+            if (this.TestFlattenedMod != rhs.TestFlattenedMod) return false;
             if (!object.Equals(this.DataFolder, rhs.DataFolder)) return false;
             if (!object.Equals(this.OblivionESM, rhs.OblivionESM)) return false;
             if (!object.Equals(this.KnightsESP, rhs.KnightsESP)) return false;
@@ -166,6 +171,7 @@ namespace Mutagen.Bethesda.Tests
             ret = HashHelper.GetHashCode(DeleteCachesAfter).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestGroupMasks).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestModList).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(TestFlattenedMod).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(DataFolder).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(OblivionESM).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(KnightsESP).CombineHashCode(ret);
@@ -668,6 +674,32 @@ namespace Mutagen.Bethesda.Tests
                         errorMask?.PopIndex();
                     }
                     break;
+                case "TestFlattenedMod":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Boolean TestFlattenedModParse,
+                            errorMask: errorMask))
+                        {
+                            item.TestFlattenedMod = TestFlattenedModParse;
+                        }
+                        else
+                        {
+                            item.TestFlattenedMod = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "DataFolder":
                     try
                     {
@@ -898,6 +930,9 @@ namespace Mutagen.Bethesda.Tests
                 case TestingSettings_FieldIndex.TestModList:
                     this._TestModList = (Boolean)obj;
                     break;
+                case TestingSettings_FieldIndex.TestFlattenedMod:
+                    this._TestFlattenedMod = (Boolean)obj;
+                    break;
                 case TestingSettings_FieldIndex.DataFolder:
                     this._DataFolder = (String)obj;
                     break;
@@ -965,6 +1000,9 @@ namespace Mutagen.Bethesda.Tests
                 case TestingSettings_FieldIndex.TestModList:
                     obj._TestModList = (Boolean)pair.Value;
                     break;
+                case TestingSettings_FieldIndex.TestFlattenedMod:
+                    obj._TestFlattenedMod = (Boolean)pair.Value;
+                    break;
                 case TestingSettings_FieldIndex.DataFolder:
                     obj._DataFolder = (String)pair.Value;
                     break;
@@ -1002,6 +1040,8 @@ namespace Mutagen.Bethesda.Tests
         new Boolean TestGroupMasks { get; set; }
 
         new Boolean TestModList { get; set; }
+
+        new Boolean TestFlattenedMod { get; set; }
 
         new String DataFolder { get; set; }
 
@@ -1041,6 +1081,10 @@ namespace Mutagen.Bethesda.Tests
         Boolean TestModList { get; }
 
         #endregion
+        #region TestFlattenedMod
+        Boolean TestFlattenedMod { get; }
+
+        #endregion
         #region DataFolder
         String DataFolder { get; }
 
@@ -1070,9 +1114,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         DeleteCachesAfter = 4,
         TestGroupMasks = 5,
         TestModList = 6,
-        DataFolder = 7,
-        OblivionESM = 8,
-        KnightsESP = 9,
+        TestFlattenedMod = 7,
+        DataFolder = 8,
+        OblivionESM = 9,
+        KnightsESP = 10,
     }
     #endregion
 
@@ -1090,9 +1135,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "8238bf49-028c-4e0b-b914-3ade480308ec";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(TestingSettings_Mask<>);
 
@@ -1134,6 +1179,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)TestingSettings_FieldIndex.TestGroupMasks;
                 case "TESTMODLIST":
                     return (ushort)TestingSettings_FieldIndex.TestModList;
+                case "TESTFLATTENEDMOD":
+                    return (ushort)TestingSettings_FieldIndex.TestFlattenedMod;
                 case "DATAFOLDER":
                     return (ushort)TestingSettings_FieldIndex.DataFolder;
                 case "OBLIVIONESM":
@@ -1157,6 +1204,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
+                case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.DataFolder:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
@@ -1181,6 +1229,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
+                case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.DataFolder:
                     return false;
                 default:
@@ -1200,6 +1249,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
+                case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.DataFolder:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
@@ -1228,6 +1278,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "TestGroupMasks";
                 case TestingSettings_FieldIndex.TestModList:
                     return "TestModList";
+                case TestingSettings_FieldIndex.TestFlattenedMod:
+                    return "TestFlattenedMod";
                 case TestingSettings_FieldIndex.DataFolder:
                     return "DataFolder";
                 case TestingSettings_FieldIndex.OblivionESM:
@@ -1251,6 +1303,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
+                case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.DataFolder:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
@@ -1272,6 +1325,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
+                case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.DataFolder:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
@@ -1299,6 +1353,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     return typeof(Boolean);
                 case TestingSettings_FieldIndex.TestModList:
+                    return typeof(Boolean);
+                case TestingSettings_FieldIndex.TestFlattenedMod:
                     return typeof(Boolean);
                 case TestingSettings_FieldIndex.DataFolder:
                     return typeof(String);
@@ -1393,6 +1449,12 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestModList);
                 item.TestModList = rhs.TestModList;
+                errorMask?.PopIndex();
+            }
+            if (copyMask?.TestFlattenedMod ?? true)
+            {
+                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
+                item.TestFlattenedMod = rhs.TestFlattenedMod;
                 errorMask?.PopIndex();
             }
             if (copyMask?.DataFolder ?? true)
@@ -1513,6 +1575,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
+                case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.DataFolder:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
@@ -1552,6 +1615,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestModList:
                     obj.TestModList = default(Boolean);
                     break;
+                case TestingSettings_FieldIndex.TestFlattenedMod:
+                    obj.TestFlattenedMod = default(Boolean);
+                    break;
                 case TestingSettings_FieldIndex.DataFolder:
                     obj.DataFolder = default(String);
                     break;
@@ -1580,6 +1646,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.DeleteCachesAfter:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
+                case TestingSettings_FieldIndex.TestFlattenedMod:
                 case TestingSettings_FieldIndex.DataFolder:
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.KnightsESP:
@@ -1610,6 +1677,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return obj.TestGroupMasks;
                 case TestingSettings_FieldIndex.TestModList:
                     return obj.TestModList;
+                case TestingSettings_FieldIndex.TestFlattenedMod:
+                    return obj.TestFlattenedMod;
                 case TestingSettings_FieldIndex.DataFolder:
                     return obj.DataFolder;
                 case TestingSettings_FieldIndex.OblivionESM:
@@ -1632,6 +1701,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.DeleteCachesAfter = default(Boolean);
             item.TestGroupMasks = default(Boolean);
             item.TestModList = default(Boolean);
+            item.TestFlattenedMod = default(Boolean);
             item.DataFolder = default(String);
             item.OblivionESM = default(Passthrough);
             item.KnightsESP = default(Passthrough);
@@ -1659,6 +1729,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.DeleteCachesAfter = item.DeleteCachesAfter == rhs.DeleteCachesAfter;
             ret.TestGroupMasks = item.TestGroupMasks == rhs.TestGroupMasks;
             ret.TestModList = item.TestModList == rhs.TestModList;
+            ret.TestFlattenedMod = item.TestFlattenedMod == rhs.TestFlattenedMod;
             ret.DataFolder = object.Equals(item.DataFolder, rhs.DataFolder);
             ret.OblivionESM = new MaskItem<bool, Passthrough_Mask<bool>>();
             ret.OblivionESM.Specific = PassthroughCommon.GetEqualsMask(item.OblivionESM, rhs.OblivionESM);
@@ -1723,6 +1794,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestModList => {item.TestModList}");
                 }
+                if (printMask?.TestFlattenedMod ?? true)
+                {
+                    fg.AppendLine($"TestFlattenedMod => {item.TestFlattenedMod}");
+                }
                 if (printMask?.DataFolder ?? true)
                 {
                     fg.AppendLine($"DataFolder => {item.DataFolder}");
@@ -1756,6 +1831,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.DeleteCachesAfter = true;
             ret.TestGroupMasks = true;
             ret.TestModList = true;
+            ret.TestFlattenedMod = true;
             ret.DataFolder = true;
             ret.OblivionESM = new MaskItem<bool, Passthrough_Mask<bool>>(true, PassthroughCommon.GetHasBeenSetMask(item.OblivionESM));
             ret.KnightsESP = new MaskItem<bool, Passthrough_Mask<bool>>(true, PassthroughCommon.GetHasBeenSetMask(item.KnightsESP));
@@ -1858,6 +1934,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     fieldIndex: (int)TestingSettings_FieldIndex.TestModList,
                     errorMask: errorMask);
             }
+            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestFlattenedMod) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.TestFlattenedMod),
+                    item: item.TestFlattenedMod,
+                    fieldIndex: (int)TestingSettings_FieldIndex.TestFlattenedMod,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DataFolder) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1913,6 +1998,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.DeleteCachesAfter = initialValue;
             this.TestGroupMasks = initialValue;
             this.TestModList = initialValue;
+            this.TestFlattenedMod = initialValue;
             this.DataFolder = initialValue;
             this.OblivionESM = new MaskItem<T, Passthrough_Mask<T>>(initialValue, new Passthrough_Mask<T>(initialValue));
             this.KnightsESP = new MaskItem<T, Passthrough_Mask<T>>(initialValue, new Passthrough_Mask<T>(initialValue));
@@ -1927,6 +2013,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T DeleteCachesAfter;
         public T TestGroupMasks;
         public T TestModList;
+        public T TestFlattenedMod;
         public T DataFolder;
         public MaskItem<T, Passthrough_Mask<T>> OblivionESM { get; set; }
         public MaskItem<T, Passthrough_Mask<T>> KnightsESP { get; set; }
@@ -1949,6 +2036,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!object.Equals(this.DeleteCachesAfter, rhs.DeleteCachesAfter)) return false;
             if (!object.Equals(this.TestGroupMasks, rhs.TestGroupMasks)) return false;
             if (!object.Equals(this.TestModList, rhs.TestModList)) return false;
+            if (!object.Equals(this.TestFlattenedMod, rhs.TestFlattenedMod)) return false;
             if (!object.Equals(this.DataFolder, rhs.DataFolder)) return false;
             if (!object.Equals(this.OblivionESM, rhs.OblivionESM)) return false;
             if (!object.Equals(this.KnightsESP, rhs.KnightsESP)) return false;
@@ -1964,6 +2052,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = ret.CombineHashCode(this.DeleteCachesAfter?.GetHashCode());
             ret = ret.CombineHashCode(this.TestGroupMasks?.GetHashCode());
             ret = ret.CombineHashCode(this.TestModList?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestFlattenedMod?.GetHashCode());
             ret = ret.CombineHashCode(this.DataFolder?.GetHashCode());
             ret = ret.CombineHashCode(this.OblivionESM?.GetHashCode());
             ret = ret.CombineHashCode(this.KnightsESP?.GetHashCode());
@@ -1982,6 +2071,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!eval(this.DeleteCachesAfter)) return false;
             if (!eval(this.TestGroupMasks)) return false;
             if (!eval(this.TestModList)) return false;
+            if (!eval(this.TestFlattenedMod)) return false;
             if (!eval(this.DataFolder)) return false;
             if (OblivionESM != null)
             {
@@ -2014,6 +2104,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.DeleteCachesAfter = eval(this.DeleteCachesAfter);
             obj.TestGroupMasks = eval(this.TestGroupMasks);
             obj.TestModList = eval(this.TestModList);
+            obj.TestFlattenedMod = eval(this.TestFlattenedMod);
             obj.DataFolder = eval(this.DataFolder);
             if (this.OblivionESM != null)
             {
@@ -2089,6 +2180,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestModList => {TestModList}");
                 }
+                if (printMask?.TestFlattenedMod ?? true)
+                {
+                    fg.AppendLine($"TestFlattenedMod => {TestFlattenedMod}");
+                }
                 if (printMask?.DataFolder ?? true)
                 {
                     fg.AppendLine($"DataFolder => {DataFolder}");
@@ -2131,6 +2226,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Exception DeleteCachesAfter;
         public Exception TestGroupMasks;
         public Exception TestModList;
+        public Exception TestFlattenedMod;
         public Exception DataFolder;
         public MaskItem<Exception, Passthrough_ErrorMask> OblivionESM;
         public MaskItem<Exception, Passthrough_ErrorMask> KnightsESP;
@@ -2156,6 +2252,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return TestGroupMasks;
                 case TestingSettings_FieldIndex.TestModList:
                     return TestModList;
+                case TestingSettings_FieldIndex.TestFlattenedMod:
+                    return TestFlattenedMod;
                 case TestingSettings_FieldIndex.DataFolder:
                     return DataFolder;
                 case TestingSettings_FieldIndex.OblivionESM:
@@ -2192,6 +2290,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case TestingSettings_FieldIndex.TestModList:
                     this.TestModList = ex;
+                    break;
+                case TestingSettings_FieldIndex.TestFlattenedMod:
+                    this.TestFlattenedMod = ex;
                     break;
                 case TestingSettings_FieldIndex.DataFolder:
                     this.DataFolder = ex;
@@ -2233,6 +2334,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.TestModList:
                     this.TestModList = (Exception)obj;
                     break;
+                case TestingSettings_FieldIndex.TestFlattenedMod:
+                    this.TestFlattenedMod = (Exception)obj;
+                    break;
                 case TestingSettings_FieldIndex.DataFolder:
                     this.DataFolder = (Exception)obj;
                     break;
@@ -2257,6 +2361,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (DeleteCachesAfter != null) return true;
             if (TestGroupMasks != null) return true;
             if (TestModList != null) return true;
+            if (TestFlattenedMod != null) return true;
             if (DataFolder != null) return true;
             if (OblivionESM != null) return true;
             if (KnightsESP != null) return true;
@@ -2301,6 +2406,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
             fg.AppendLine($"TestGroupMasks => {TestGroupMasks}");
             fg.AppendLine($"TestModList => {TestModList}");
+            fg.AppendLine($"TestFlattenedMod => {TestFlattenedMod}");
             fg.AppendLine($"DataFolder => {DataFolder}");
             OblivionESM?.ToString(fg);
             KnightsESP?.ToString(fg);
@@ -2318,6 +2424,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.DeleteCachesAfter = this.DeleteCachesAfter.Combine(rhs.DeleteCachesAfter);
             ret.TestGroupMasks = this.TestGroupMasks.Combine(rhs.TestGroupMasks);
             ret.TestModList = this.TestModList.Combine(rhs.TestModList);
+            ret.TestFlattenedMod = this.TestFlattenedMod.Combine(rhs.TestFlattenedMod);
             ret.DataFolder = this.DataFolder.Combine(rhs.DataFolder);
             ret.OblivionESM = new MaskItem<Exception, Passthrough_ErrorMask>(this.OblivionESM.Overall.Combine(rhs.OblivionESM.Overall), ((IErrorMask<Passthrough_ErrorMask>)this.OblivionESM.Specific).Combine(rhs.OblivionESM.Specific));
             ret.KnightsESP = new MaskItem<Exception, Passthrough_ErrorMask>(this.KnightsESP.Overall.Combine(rhs.KnightsESP.Overall), ((IErrorMask<Passthrough_ErrorMask>)this.KnightsESP.Specific).Combine(rhs.KnightsESP.Specific));
@@ -2349,6 +2456,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool DeleteCachesAfter;
         public bool TestGroupMasks;
         public bool TestModList;
+        public bool TestFlattenedMod;
         public bool DataFolder;
         public MaskItem<CopyOption, Passthrough_CopyMask> OblivionESM;
         public MaskItem<CopyOption, Passthrough_CopyMask> KnightsESP;
@@ -2366,6 +2474,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool DeleteCachesAfter;
         public bool TestGroupMasks;
         public bool TestModList;
+        public bool TestFlattenedMod;
         public bool DataFolder;
         public MaskItem<bool, Passthrough_TranslationMask> OblivionESM;
         public MaskItem<bool, Passthrough_TranslationMask> KnightsESP;
@@ -2392,6 +2501,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((DeleteCachesAfter, null));
             ret.Add((TestGroupMasks, null));
             ret.Add((TestModList, null));
+            ret.Add((TestFlattenedMod, null));
             ret.Add((DataFolder, null));
             ret.Add((OblivionESM?.Overall ?? true, OblivionESM?.Specific?.GetCrystal()));
             ret.Add((KnightsESP?.Overall ?? true, KnightsESP?.Specific?.GetCrystal()));

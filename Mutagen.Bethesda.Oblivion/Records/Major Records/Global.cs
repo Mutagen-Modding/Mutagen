@@ -18,6 +18,7 @@ namespace Mutagen.Bethesda.Oblivion
         
         public static Global Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -73,6 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
                 MajorRecord.Fill_Binary(
                     subFrame,
                     g,
+                    masterReferences,
                     errorMask);
 
                 // Skip to and read data
@@ -90,7 +92,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void WriteBinary_TypeChar_Custom(
             MutagenWriter writer, 
-            Global item, 
+            Global item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(

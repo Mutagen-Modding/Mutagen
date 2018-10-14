@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>d69b794e4a7c84c81a44b41b156a7f9915165611</Sha>
+         <Sha>ab44fc6fe696b16785c1297a85c360f94c70957c</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-30-2018 22:08:07</CommitDate>
-         <Description>Removed extra Unset in INotifyingSetItem</Description>
+         <CommitDate>10-08-2018 19:12:40</CommitDate>
+         <Description>NotifyingList implements IReadOnlyList</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b791b898a2b31f8fb0f8e28a912cbca2da11d1d4</Sha>
+         <Sha>76174b7df4e5bb57c676d5813fa1ad6588cda696</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-28-2018 12:35:46</CommitDate>
-         <Description>ObjectGeneration.IterateFields includeBaseClass bool missing on one function</Description>
+         <CommitDate>10-10-2018 18:03:38</CommitDate>
+         <Description>Missing CustomAPI generation added</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

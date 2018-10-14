@@ -14,8 +14,8 @@ namespace Mutagen.Bethesda
        where T : MajorRecord
     {
         public bool Linked => this.Item != null;
-        public FormID? UnlinkedForm { get; private set; }
-        public FormID FormID => LinkExt.GetFormID(this);
+        public FormKey? UnlinkedForm { get; private set; }
+        public FormKey FormKey => LinkExt.GetFormKey(this);
         Type ILink.TargetType => typeof(T);
 #if DEBUG
         public bool AttemptedLink { get; set; }
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
 #endif
         }
 
-        public FormIDLink(FormID unlinkedForm)
+        public FormIDLink(FormKey unlinkedForm)
         {
             this.UnlinkedForm = unlinkedForm;
 #if DEBUG
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda
 
         private void UpdateUnlinkedForm(T change)
         {
-            this.UnlinkedForm = change?.FormID ?? UnlinkedForm;
+            this.UnlinkedForm = change?.FormKey ?? UnlinkedForm;
         }
 
         public override void Set(T value, NotifyingFireParameters cmds = null)
@@ -47,51 +47,44 @@ namespace Mutagen.Bethesda
             base.Set(value, cmds);
         }
 
-        public void SetIfSucceeded(TryGet<FormID> formID)
+        public void SetIfSucceeded(TryGet<FormKey> formKey)
         {
-            if (formID.Failed) return;
-            this.Set(formID.Value);
+            if (formKey.Failed) return;
+            this.Set(formKey.Value);
         }
 
-        public void Set(FormID id)
+        public void Set(FormKey id)
         {
             this.UnlinkedForm = id;
         }
 
-        public void SetIfSucceededOrDefault(TryGet<FormID> formID)
+        public void SetIfSucceededOrDefault(TryGet<FormKey> formKey)
         {
-            if (formID.Failed)
+            if (formKey.Failed)
             {
                 this.Unset();
                 return;
             }
-            this.UnlinkedForm = formID.Value;
+            this.UnlinkedForm = formKey.Value;
         }
 
         public static bool TryGetLink<M>(
-            FormID? unlinkedForm,
+            FormKey? unlinkedForm,
             ModList<M> modList,
             M sourceMod,
             out T item)
             where M : IMod<M>
         {
             if (!unlinkedForm.HasValue
-                || unlinkedForm.Equals(FormID.NULL))
+                || unlinkedForm.Equals(FormKey.NULL))
             {
                 item = default(T);
                 return false;
             }
-            if (unlinkedForm.Value.ModID != ModID.Zero
-                && unlinkedForm.Value.ModID.ID > sourceMod.MasterReferences.Count)
-            {
-                unlinkedForm = new FormID(ModID.Zero, unlinkedForm.Value.ID);
-            }
             M mod;
-            if (modList != null 
-                && unlinkedForm.Value.ModID.ID < sourceMod.MasterReferences.Count)
+            if (modList != null)
             {
-                if (!sourceMod.MasterReferences.TryGet(unlinkedForm.Value.ModID.ID, out var masterRef)
-                    || !modList.TryGetMod(masterRef.Master, out var modListing))
+                if (!modList.TryGetMod(unlinkedForm.Value.ModKey, out var modListing))
                 {
                     item = default(T);
                     return false;
@@ -140,12 +133,12 @@ namespace Mutagen.Bethesda
 
         public static bool operator ==(FormIDLink<T> lhs, IFormIDLink<T> rhs)
         {
-            return lhs.FormID.Equals(rhs.FormID);
+            return lhs.FormKey.Equals(rhs.FormKey);
         }
 
         public static bool operator !=(FormIDLink<T> lhs, IFormIDLink<T> rhs)
         {
-            return !lhs.FormID.Equals(rhs.FormID);
+            return !lhs.FormKey.Equals(rhs.FormKey);
         }
 
         public override bool Equals(object obj)

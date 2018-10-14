@@ -80,8 +80,11 @@ namespace Mutagen.Bethesda.Generation
 
             ListBinaryType listBinaryType = GetListType(list, data, subData);
 
+            var allowDirectWrite = subTransl.AllowDirectWrite(objGen, typeGen);
             var isLoqui = list.SubTypeGeneration is LoquiType;
-            var listOfRecords = !isLoqui && listBinaryType == ListBinaryType.SubTrigger;
+            var listOfRecords = !isLoqui 
+                && listBinaryType == ListBinaryType.SubTrigger
+                && allowDirectWrite;
 
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
@@ -102,7 +105,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"translationMask: {translationMaskAccessor}");
                 }
-                if (subTransl.AllowDirectWrite(objGen, typeGen))
+                if (allowDirectWrite)
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Write");
                 }
@@ -180,6 +183,10 @@ namespace Mutagen.Bethesda.Generation
                 else
                 {
                     throw new NotImplementedException();
+                }
+                if (list.SubTypeGeneration is FormIDLinkType)
+                {
+                    args.Add($"masterReferences: masterReferences");
                 }
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");

@@ -16,26 +16,26 @@ namespace Mutagen.Bethesda
             string name)
             where T : MajorRecord
         {
-            fg.AppendLine($"{name} [{typeof(T).Name}] ({link.FormID})");
+            fg.AppendLine($"{name} [{typeof(T).Name}] ({link.FormKey})");
         }
 
         public static string ToString<T>(
             this ILink<T> link)
             where T : MajorRecord
         {
-            return $"{(link.Linked ? link.Item.EditorID : "UNLINKED")} [{typeof(T).Name}] ({link.FormID})";
+            return $"{(link.Linked ? link.Item.EditorID : "UNLINKED")} [{typeof(T).Name}] ({link.FormKey})";
         }
 
         public static string ToString<T>(
             this IEDIDLink<T> link)
             where T : MajorRecord
         {
-            return $"{(link.Linked ? link.Item.EditorID : "UNLINKED")} [{typeof(T).Name}] ({link.FormID}) ({link.EDID})";
+            return $"{(link.Linked ? link.Item.EditorID : "UNLINKED")} [{typeof(T).Name}] ({link.FormKey}) ({link.EDID})";
         }
 
         public static bool Equals(this ILink lhs, ILink rhs)
         {
-            return lhs.FormID.Equals(rhs.FormID);
+            return lhs.FormKey.Equals(rhs.FormKey);
         }
 
         public static bool Equals<T, R>(this ILink<T> lhs, object rhs)
@@ -47,14 +47,14 @@ namespace Mutagen.Bethesda
 
         public static int HashCode(this ILink lhs)
         {
-            return lhs.FormID.GetHashCode();
+            return lhs.FormKey.GetHashCode();
         }
 
-        public static FormID GetFormID<T>(IFormIDLink<T> link)
+        public static FormKey GetFormKey<T>(IFormIDLink<T> link)
             where T : MajorRecord
         {
-            FormID? ret = link.Item?.FormID ?? link.UnlinkedForm;
-            return ret ?? FormID.NULL;
+            FormKey? ret = link.Item?.FormKey ?? link.UnlinkedForm;
+            return ret ?? FormKey.NULL;
         }
     }
 }

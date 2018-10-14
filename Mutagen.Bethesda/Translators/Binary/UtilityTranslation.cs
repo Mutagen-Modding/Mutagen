@@ -18,8 +18,9 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMask,
             RecordType recType,
             RecordTypeConverter recordTypeConverter,
-            Action<M, MutagenFrame, ErrorMaskBuilder> fillStructs,
-            Func<M, MutagenFrame, ErrorMaskBuilder, RecordTypeConverter, TryGet<int?>> fillTyped)
+            MasterReferences masterReferences,
+            Action<M, MutagenFrame, MasterReferences, ErrorMaskBuilder> fillStructs,
+            Func<M, MutagenFrame, MasterReferences, ErrorMaskBuilder, RecordTypeConverter, TryGet<int?>> fillTyped)
             where M : MajorRecord
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
@@ -28,6 +29,7 @@ namespace Mutagen.Bethesda
             fillStructs(
                 record,
                 frame,
+                masterReferences,
                 errorMask);
             if (fillTyped == null) return record;
             if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
@@ -42,6 +44,7 @@ namespace Mutagen.Bethesda
                             var parsed = fillTyped(
                                 record,
                                 decompressed,
+                                masterReferences,
                                 errorMask,
                                 recordTypeConverter);
                             if (parsed.Failed) break;
@@ -58,6 +61,7 @@ namespace Mutagen.Bethesda
                         var parsed = fillTyped(
                             record,
                             frame,
+                            masterReferences,
                             errorMask,
                             recordTypeConverter);
                         if (parsed.Failed) break;

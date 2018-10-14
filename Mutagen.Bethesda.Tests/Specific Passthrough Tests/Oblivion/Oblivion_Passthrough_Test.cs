@@ -35,7 +35,8 @@ namespace Mutagen.Bethesda.Tests
             if (settings.TestNormal)
             {
                 var mod = OblivionMod.Create_Binary(
-                    inputPath);
+                    inputPath,
+                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 
                 foreach (var record in mod.MajorRecords.Values)
                 {
@@ -44,32 +45,32 @@ namespace Mutagen.Bethesda.Tests
                         record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
                     }
                 }
-                mod.Write_Binary(outputPathStraight);
+                mod.Write_Binary(outputPathStraight, Mutagen.Bethesda.Oblivion.Constants.Oblivion);
             }
 
             // Do Observable
             if (settings.TestObservable)
             {
-                var observableOutputPathTmp = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExportUnsorted");
-                var sourceObv = Observable.Return(inputPath)
-                    .Replay();
-                var obv = new OblivionMod_Observable(sourceObv)
-                    .Do((MajorRecord m) =>
-                    {
-                        if (m.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
-                        {
-                            m.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
-                        }
-                    })
-                    .Write_Binary(observableOutputPathTmp);
-                sourceObv.Connect();
+                //var observableOutputPathTmp = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExportUnsorted");
+                //var sourceObv = Observable.Return(inputPath)
+                //    .Replay();
+                //var obv = new OblivionMod_Observable(sourceObv)
+                //    .Do((MajorRecord m) =>
+                //    {
+                //        if (m.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                //        {
+                //            m.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                //        }
+                //    })
+                //    .Write_Binary(observableOutputPathTmp);
+                //sourceObv.Connect();
 
-                await obv;
+                //await obv;
 
-                ModRecordSorter.Sort(
-                    inputPath: observableOutputPathTmp,
-                    outputPath: outputPathObservable,
-                    temp: tmp);
+                //ModRecordSorter.Sort(
+                //    inputPath: observableOutputPathTmp,
+                //    outputPath: outputPathObservable,
+                //    temp: tmp);
             }
         }
 

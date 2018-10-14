@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                     args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
-                foreach (var arg in AdditionWriteParameters(
+                foreach (var arg in AdditionalWriteParameters(
                     fg: fg,
                     objGen: objGen,
                     typeGen: typeGen,
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected virtual IEnumerable<string> AdditionWriteParameters(
+        protected virtual IEnumerable<string> AdditionalWriteParameters(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Generation
 
             List<string> extraArgs = new List<string>();
             extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : ".Spawn(snapToFinalPosition: false)")}");
-            foreach (var arg in AdditionCopyInParameters(
+            foreach (var arg in AdditionalCopyInParameters(
                 fg: fg,
                 objGen: objGen,
                 typeGen: typeGen,
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Generation
                 extraargs: extraArgs.ToArray());
         }
 
-        protected virtual IEnumerable<string> AdditionCopyInParameters(
+        protected virtual IEnumerable<string> AdditionalCopyInParameters(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add(nodeAccessor);
                 args.Add($"errorMask: {maskAccessor}");
                 args.Add($"translationMask: {translationMaskAccessor}");
-                foreach (var arg in AdditionCopyInRetParameters(
+                foreach (var arg in AdditionalCopyInRetParameters(
                     fg: fg,
                     objGen: objGen,
                     typeGen: typeGen,
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected virtual IEnumerable<string> AdditionCopyInRetParameters(
+        protected virtual IEnumerable<string> AdditionalCopyInRetParameters(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

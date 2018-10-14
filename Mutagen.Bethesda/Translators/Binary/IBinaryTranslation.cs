@@ -8,6 +8,11 @@ namespace Mutagen.Bethesda.Binary
         MutagenFrame reader,
         out T item,
         ErrorMaskBuilder errorMask);
+    public delegate bool BinaryMasterParseDelegate<T>(
+        MutagenFrame reader,
+        out T item,
+        MasterReferences masterReferences,
+        ErrorMaskBuilder errorMask);
     public delegate bool BinarySubParseRecordDelegate<T>(
         MutagenFrame reader,
         RecordType header, 
@@ -15,7 +20,12 @@ namespace Mutagen.Bethesda.Binary
         ErrorMaskBuilder errorMask);
     public delegate void BinarySubWriteDelegate<in T>(
         MutagenWriter writer,
-        T item, 
+        T item,
+        ErrorMaskBuilder errorMask);
+    public delegate void BinaryMasterWriteDelegate<in T>(
+        MutagenWriter writer,
+        T item,
+        MasterReferences masterReferences,
         ErrorMaskBuilder errorMask);
 
     public interface IBinaryTranslation<T>

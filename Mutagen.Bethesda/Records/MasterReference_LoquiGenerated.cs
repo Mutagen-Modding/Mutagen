@@ -885,10 +885,13 @@ namespace Mutagen.Bethesda
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(MutagenFrame frame)
+        public static MasterReference Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -896,12 +899,14 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static MasterReference Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
@@ -910,6 +915,7 @@ namespace Mutagen.Bethesda
 
         public static MasterReference Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -921,6 +927,7 @@ namespace Mutagen.Bethesda
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     int? lastParsed = null;
                     while (!frame.Complete)
@@ -929,6 +936,7 @@ namespace Mutagen.Bethesda
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -944,17 +952,22 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static MasterReference Create_Binary(string path)
+        public static MasterReference Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static MasterReference Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out MasterReference_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -962,21 +975,27 @@ namespace Mutagen.Bethesda
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static MasterReference Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static MasterReference Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static MasterReference Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out MasterReference_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -984,6 +1003,7 @@ namespace Mutagen.Bethesda
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -993,12 +1013,14 @@ namespace Mutagen.Bethesda
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
@@ -1006,6 +1028,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1015,6 +1038,7 @@ namespace Mutagen.Bethesda
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -1028,6 +1052,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out MasterReference_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1035,20 +1060,26 @@ namespace Mutagen.Bethesda
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -1056,6 +1087,7 @@ namespace Mutagen.Bethesda
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -1067,12 +1099,15 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -1080,12 +1115,14 @@ namespace Mutagen.Bethesda
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             MasterReferenceCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -1094,6 +1131,7 @@ namespace Mutagen.Bethesda
         protected static void Fill_Binary_Structs(
             MasterReference item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
         }
@@ -1102,6 +1140,7 @@ namespace Mutagen.Bethesda
             MasterReference item,
             MutagenFrame frame,
             int? lastParsed,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1868,6 +1907,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             MasterReference item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out MasterReference_ErrorMask errorMask)
@@ -1875,6 +1915,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1884,6 +1925,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             MasterReference item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1891,7 +1933,8 @@ namespace Mutagen.Bethesda.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
@@ -1899,11 +1942,12 @@ namespace Mutagen.Bethesda.Internals
             MasterReference item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Master_Property.ToString(),
+                item: item.Master_Property,
                 fieldIndex: (int)MasterReference_FieldIndex.Master,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.MAST_HEADER),

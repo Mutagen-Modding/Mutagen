@@ -26,18 +26,23 @@ namespace Mutagen.Bethesda.Tests
             bool reuseCaches = true,
             bool deleteCaches = false)
         {
-            if (settings.KnightsESP?.Do ?? false)
+            var obliv = new OblivionESM_Passthrough_Tests(settings);
+
+            if (settings.TestNormal
+                || settings.TestObservable)
             {
-                yield return new Knights_Passthrough_Tests(settings).BinaryPassthroughTest(
-                    settings: settings);
+                if (settings.KnightsESP?.Do ?? false)
+                {
+                    yield return new Knights_Passthrough_Tests(settings).BinaryPassthroughTest(
+                        settings: settings);
+                }
+                if (settings.OblivionESM?.Do ?? false)
+                {
+                    yield return obliv.BinaryPassthroughTest(
+                        settings: settings);
+                }
             }
 
-            var obliv = new OblivionESM_Passthrough_Tests(settings);
-            if (settings.OblivionESM?.Do ?? false)
-            {
-                yield return obliv.BinaryPassthroughTest(
-                    settings: settings);
-            }
             if (settings.TestGroupMasks)
             {
                 yield return obliv.OblivionESM_GroupMask_Import();
@@ -50,6 +55,10 @@ namespace Mutagen.Bethesda.Tests
             if (settings.TestModList)
             {
                 yield return ModList_Tests.Oblivion_Modlist(settings);
+            }
+            if (settings.TestFlattenedMod)
+            {
+                yield return FlattenedMod_Tests.Oblivion_FlattenMod(settings);
             }
         }
     }

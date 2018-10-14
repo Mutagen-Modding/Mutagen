@@ -23,6 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             RecordType recordType, 
             RecordTypeConverter recordTypeConverter,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             byte[] bytes = frame.ReadBytes(0x1A);
@@ -34,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: new MutagenFrame(new BinaryMemoryReadStream(newBytes)),
                 item: out var item,
                 errorMask: errorMask,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter);
             return item;
         }

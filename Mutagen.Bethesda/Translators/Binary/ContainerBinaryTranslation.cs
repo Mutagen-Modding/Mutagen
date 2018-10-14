@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Binary
 
         public bool ParseRepeatedItem(
             MutagenFrame frame,
-            out IEnumerable<T> enumer,
+            out IEnumerable<T> item,
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
@@ -65,10 +65,10 @@ namespace Mutagen.Bethesda.Binary
                     errorMask?.PopIndex();
                 }
             }
-            enumer = ret;
+            item = ret;
             return true;
         }
-
+        
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
@@ -107,6 +107,31 @@ namespace Mutagen.Bethesda.Binary
             {
                 errorMask?.PopIndex();
             }
+        }
+
+        public void ParseRepeatedItem(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingCollection<T> item,
+            RecordType triggeringRecord,
+            int lengthLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            BinaryMasterParseDelegate<T> transl,
+            bool parseIndefinitely = false)
+        {
+            ParseRepeatedItem(
+                frame: frame,
+                fieldIndex: fieldIndex,
+                item: item,
+                triggeringRecord: triggeringRecord,
+                lengthLength: lengthLength,
+                errorMask: errorMask,
+                transl: (MutagenFrame r, out T i, ErrorMaskBuilder err) =>
+                {
+                    return transl(r, out i, masterReferences, err);
+                },
+                parseIndefinitely: parseIndefinitely);
         }
 
         public bool ParseRepeatedItem(
@@ -163,7 +188,7 @@ namespace Mutagen.Bethesda.Binary
             long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseDelegate<T> transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
+            ICollectionGetter<RecordType> triggeringRecord)
         {
             this.ParseRepeatedItem(
                 frame: frame,
@@ -212,6 +237,29 @@ namespace Mutagen.Bethesda.Binary
             {
                 errorMask?.PopIndex();
             }
+        }
+
+        public void ParseRepeatedItem(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingCollection<T> item,
+            long lengthLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            BinaryMasterParseDelegate<T> transl,
+            ICollectionGetter<RecordType> triggeringRecord = null)
+        {
+            this.ParseRepeatedItem(
+                frame: frame,
+                fieldIndex: fieldIndex,
+                item: item,
+                lengthLength: lengthLength,
+                errorMask: errorMask,
+                triggeringRecord: triggeringRecord,
+                transl: (MutagenFrame r, out T i, ErrorMaskBuilder err) =>
+                {
+                    return transl(r, out i, masterReferences, err);
+                });
         }
 
         public bool ParseRepeatedItem(
@@ -287,6 +335,27 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public void ParseRepeatedItem(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingCollection<T> item,
+            long lengthLength,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            BinaryMasterParseDelegate<T> transl)
+        {
+            ParseRepeatedItem(
+                frame: frame,
+                fieldIndex: fieldIndex,
+                item: item,
+                lengthLength: lengthLength,
+                errorMask: errorMask,
+                transl: (MutagenFrame r, out T i, ErrorMaskBuilder err) =>
+                {
+                    return transl(r, out i, masterReferences, err);
+                });
+        }
+
         public bool ParseRepeatedItem(
             MutagenFrame frame,
             out IEnumerable<T> enumer,
@@ -354,6 +423,27 @@ namespace Mutagen.Bethesda.Binary
             {
                 errorMask?.PopIndex();
             }
+        }
+
+        public void ParseRepeatedItem(
+            MutagenFrame frame,
+            int fieldIndex,
+            INotifyingCollection<T> item,
+            int amount,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            BinaryMasterParseDelegate<T> transl)
+        {
+            this.ParseRepeatedItem(
+                frame: frame,
+                fieldIndex: fieldIndex,
+                item: item,
+                amount: amount,
+                errorMask: errorMask,
+                transl: (MutagenFrame r, out T i, ErrorMaskBuilder err) =>
+                {
+                    return transl(r, out i, masterReferences, err);
+                });
         }
 
         #region NotifyingKeyedCollection Helpers
@@ -435,9 +525,9 @@ namespace Mutagen.Bethesda.Binary
         #endregion
 
         void IBinaryTranslation<IEnumerable<T>>.Write(
-            MutagenWriter writer, 
+            MutagenWriter writer,
             IEnumerable<T> item,
-            long length, 
+            long length,
             ErrorMaskBuilder errorMask)
         {
             Write(writer, item, errorMask);
@@ -458,11 +548,11 @@ namespace Mutagen.Bethesda.Binary
                 writer: writer,
                 items: items,
                 errorMask: errorMask,
-                transl: (MutagenWriter subWriter, T item1, ErrorMaskBuilder errMask2) 
+                transl: (MutagenWriter subWriter, T item1, ErrorMaskBuilder errMask2)
                     => transl.Item.Value.Write(
-                        writer: subWriter, 
-                        item: item1, 
-                        length: -1, 
+                        writer: subWriter,
+                        item: item1,
+                        length: -1,
                         errorMask: errMask2));
         }
 
@@ -689,14 +779,14 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public abstract void WriteSingleItem(
-            MutagenWriter writer, 
+            MutagenWriter writer,
             BinarySubWriteDelegate<T> transl,
             T item,
             ErrorMaskBuilder errorMask);
 
         bool IBinaryTranslation<IEnumerable<T>>.Parse(
-            MutagenFrame reader, 
-            out IEnumerable<T> item, 
+            MutagenFrame reader,
+            out IEnumerable<T> item,
             ErrorMaskBuilder errorMask)
         {
             throw new NotImplementedException();

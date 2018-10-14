@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (ListXmlTranslation<FormIDLink<Region>>.Instance.Parse(
                             root: root,
                             enumer: out var RegionsItem,
-                            transl: FormIDXmlTranslation.Instance.Parse,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -1337,21 +1337,21 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Climate":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Climate_Property,
                         fieldIndex: (int)Cell_FieldIndex.Climate,
                         errorMask: errorMask);
                     break;
                 case "Water":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Water_Property,
                         fieldIndex: (int)Cell_FieldIndex.Water,
                         errorMask: errorMask);
                     break;
                 case "Owner":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Owner_Property,
                         fieldIndex: (int)Cell_FieldIndex.Owner,
@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "GlobalVariable":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.GlobalVariable_Property,
                         fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
@@ -2913,10 +2913,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Cell Create_Binary(MutagenFrame frame)
+        public new static Cell Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -2924,12 +2927,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Cell Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out Cell_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
@@ -2938,6 +2943,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Cell Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2947,6 +2953,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: Cell_Registration.CELL_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
             try
@@ -2954,6 +2961,7 @@ namespace Mutagen.Bethesda.Oblivion
                 CustomBinaryEnd_Import(
                     frame: frame,
                     obj: ret,
+                    masterReferences: masterReferences,
                     errorMask: errorMask);
             }
             catch (Exception ex)
@@ -2964,17 +2972,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Cell Create_Binary(string path)
+        public static Cell Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static Cell Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out Cell_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -2982,21 +2995,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static Cell Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static Cell Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static Cell Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out Cell_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -3004,6 +3023,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -3013,12 +3033,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Cell_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
@@ -3026,6 +3048,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out Cell_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -3035,6 +3058,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -3048,6 +3072,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out Cell_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -3055,6 +3080,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -3063,12 +3089,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Place_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
@@ -3076,12 +3104,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
@@ -3091,12 +3121,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             CellCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -3105,17 +3137,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             Cell item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             Place.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Cell item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -3213,6 +3248,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
                         if (LoquiBinaryTranslation<CellLighting>.Instance.Parse(
                             frame: frame,
+                            masterReferences: masterReferences,
                             item: out CellLighting LightingParse,
                             errorMask: errorMask))
                         {
@@ -3237,11 +3273,12 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Region>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Regions,
                         fieldIndex: (int)Cell_FieldIndex.Regions,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormIDBinaryTranslation.Instance.Parse);
+                        transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);
                 case 0x544D4358: // XCMT
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
@@ -3299,24 +3336,27 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
                 case 0x4D434358: // XCCM
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Climate_Property,
                         fieldIndex: (int)Cell_FieldIndex.Climate,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Climate);
                 case 0x54574358: // XCWT
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Water_Property,
                         fieldIndex: (int)Cell_FieldIndex.Water,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
                 case 0x4E574F58: // XOWN
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Owner_Property,
                         fieldIndex: (int)Cell_FieldIndex.Owner,
                         errorMask: errorMask);
@@ -3350,8 +3390,9 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.FactionRank);
                 case 0x424C4758: // XGLB
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.GlobalVariable_Property,
                         fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
                         errorMask: errorMask);
@@ -3361,6 +3402,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -3368,19 +3410,23 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void CustomBinaryEnd_Import(
             MutagenFrame frame,
             Cell obj,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
         static partial void CustomBinaryEnd_Export(
             MutagenWriter writer,
             Cell obj,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
         public static void CustomBinaryEnd_ExportInternal(
             MutagenWriter writer,
             Cell obj,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             CustomBinaryEnd_Export(
                 writer: writer,
                 obj: obj,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
         #endregion
@@ -3822,7 +3868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum Cell_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -5284,7 +5330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Place_FieldIndex.MajorRecordFlags:
                     return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.FormID:
+                case Place_FieldIndex.FormKey:
                     return (Cell_FieldIndex)((int)index);
                 case Place_FieldIndex.Version:
                     return (Cell_FieldIndex)((int)index);
@@ -5309,7 +5355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (Cell_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (Cell_FieldIndex)((int)index);
@@ -5408,10 +5454,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Regions),
                     transl: (XElement subNode, FormIDLink<Region> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        FormIDXmlTranslation.Instance.Write(
+                        FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: "Item",
-                            item: subItem?.FormID,
+                            item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
                     );
@@ -5439,30 +5485,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Climate_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Climate),
-                    item: item.Climate_Property?.FormID,
+                    item: item.Climate_Property?.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.Climate,
                     errorMask: errorMask);
             }
             if (item.Water_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Water),
-                    item: item.Water_Property?.FormID,
+                    item: item.Water_Property?.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.Water,
                     errorMask: errorMask);
             }
             if (item.Owner_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Owner),
-                    item: item.Owner_Property?.FormID,
+                    item: item.Owner_Property?.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.Owner,
                     errorMask: errorMask);
             }
@@ -5479,10 +5525,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.GlobalVariable_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable_Property?.FormID,
+                    item: item.GlobalVariable_Property?.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }
@@ -5581,6 +5627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Cell item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Cell_ErrorMask errorMask)
@@ -5588,6 +5635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -5597,6 +5645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Cell item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -5608,17 +5657,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             Cell.CustomBinaryEnd_ExportInternal(
                 writer: writer,
                 obj: item,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
@@ -5626,13 +5678,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Cell item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name_Property,
@@ -5659,14 +5713,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Lighting_Property,
                 fieldIndex: (int)Cell_FieldIndex.Lighting,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Region>>.Instance.Write(
                 writer: writer,
                 items: item.Regions,
                 fieldIndex: (int)Cell_FieldIndex.Regions,
                 recordType: Cell_Registration.XCLR_HEADER,
                 errorMask: errorMask,
-                transl: FormIDBinaryTranslation.Instance.Write);
+                transl: (MutagenWriter subWriter, FormIDLink<Region> subItem, ErrorMaskBuilder listErrorMask) =>
+                {
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        errorMask: listErrorMask,
+                        masterReferences: masterReferences);
+                }
+                );
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
                 writer,
                 item.MusicType_Property,
@@ -5682,27 +5745,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLW_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Climate_Property,
                 fieldIndex: (int)Cell_FieldIndex.Climate,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCCM_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                nullable: false,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Water_Property,
                 fieldIndex: (int)Cell_FieldIndex.Water,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCWT_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                nullable: false,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Owner_Property,
                 fieldIndex: (int)Cell_FieldIndex.Owner,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XOWN_HEADER),
-                nullable: false);
+                nullable: false,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FactionRank_Property,
@@ -5710,13 +5776,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XRNK_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GlobalVariable_Property,
                 fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XGLB_HEADER),
-                nullable: false);
+                nullable: false,
+                masterReferences: masterReferences);
         }
 
         #endregion

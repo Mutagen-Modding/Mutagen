@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda
     public interface ILink
     {
         bool Linked { get; }
-        FormID FormID { get; }
+        FormKey FormKey { get; }
         Type TargetType { get; }
         bool Link<M>(
             ModList<M> modList,

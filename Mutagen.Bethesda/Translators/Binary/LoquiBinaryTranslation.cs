@@ -14,34 +14,24 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class LoquiBinaryTranslation<T> : IBinaryTranslation<T>
+    public class LoquiBinaryTranslation<T>
         where T : ILoquiObjectGetter
     {
         public static readonly LoquiBinaryTranslation<T> Instance = new LoquiBinaryTranslation<T>();
         private static readonly ILoquiRegistration Registration = LoquiRegistration.GetRegister(typeof(T));
         public delegate T CREATE_FUNC(
-            MutagenFrame reader, 
-            RecordTypeConverter recordTypeConverter, 
+            MutagenFrame reader,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask);
         public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
         public delegate void WRITE_FUNC(
             MutagenWriter writer,
             T item,
             RecordTypeConverter recordTypeConverter,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
         public static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
-
-        private IEnumerable<KeyValuePair<ushort, object>> EnumerateObjects(
-            ILoquiRegistration registration,
-            MutagenFrame reader,
-            bool skipProtected,
-            ErrorMaskBuilder errorMask)
-        {
-            var ret = new List<KeyValuePair<ushort, object>>();
-            errorMask.ReportExceptionOrThrow(
-                new NotImplementedException());
-            return ret;
-        }
 
         #region Parse
         public static CREATE_FUNC GetCreateFunc()
@@ -52,10 +42,11 @@ namespace Mutagen.Bethesda.Binary
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
                 .Where((methodInfo) => methodInfo.ReturnType.Equals(tType))
-                .Where((methodInfo) => methodInfo.GetParameters().Length == 3)
+                .Where((methodInfo) => methodInfo.GetParameters().Length == 4)
                 .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
-                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(RecordTypeConverter)))
-                .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(ErrorMaskBuilder)))
+                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(MasterReferences)))
+                .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(RecordTypeConverter)))
+                .Where((methodInfo) => methodInfo.GetParameters()[3].ParameterType.Equals(typeof(ErrorMaskBuilder)))
                 .ToArray();
             var method = options
                 .FirstOrDefault();
@@ -73,6 +64,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             IHasItem<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             try
@@ -81,6 +73,7 @@ namespace Mutagen.Bethesda.Binary
                 if (Parse(
                     frame,
                     item: out T subItem,
+                    masterReferences: masterReferences,
                     errorMask: errorMask))
                 {
                     item.Item = subItem;
@@ -105,12 +98,14 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             out T item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             return Parse(
                 frame: frame,
                 item: out item,
                 errorMask: errorMask,
+                masterReferences: masterReferences,
                 recordTypeConverter: null);
         }
 
@@ -118,6 +113,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             IHasItem<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
@@ -128,6 +124,7 @@ namespace Mutagen.Bethesda.Binary
                     frame,
                     out T subItem,
                     errorMask: errorMask,
+                    masterReferences: masterReferences,
                     recordTypeConverter: recordTypeConverter))
                 {
                     item.Item = subItem;
@@ -152,12 +149,14 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             out T item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
             item = CREATE.Value(
                 reader: frame,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
             return true;
         }
@@ -171,15 +170,15 @@ namespace Mutagen.Bethesda.Binary
                 .First();
             if (!method.IsGenericMethod)
             {
-                var f = DelegateBuilder.BuildDelegate<Action<T, MutagenWriter, RecordTypeConverter, ErrorMaskBuilder>>(method);
-                return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, ErrorMaskBuilder errorMask) =>
+                var f = DelegateBuilder.BuildDelegate<Action<T, MutagenWriter, MasterReferences, RecordTypeConverter, ErrorMaskBuilder>>(method);
+                return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, MasterReferences masterReferences, ErrorMaskBuilder errorMask) =>
                 {
                     if (item == null)
                     {
                         errorMask.ReportExceptionOrThrow(
                             new NullReferenceException("Cannot write for a null item."));
                     }
-                    f(item, writer, recordTypeConverter, errorMask);
+                    f(item, writer, masterReferences, recordTypeConverter, errorMask);
                 };
             }
             else
@@ -188,28 +187,17 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        bool IBinaryTranslation<T>.Parse(MutagenFrame reader, out T item, ErrorMaskBuilder errorMask)
-        {
-            return this.Parse(
-                frame: reader,
-                item: out item,
-                errorMask: errorMask);
-        }
-
-        void IBinaryTranslation<T>.Write(MutagenWriter writer, T item, long length, ErrorMaskBuilder errorMask)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Write(
             MutagenWriter writer,
             T item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
             WRITE.Value(
                 writer: writer,
                 item: item,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -217,11 +205,13 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             T item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             WRITE.Value(
                 writer: writer,
                 item: item,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMask);
         }
@@ -230,6 +220,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             T item,
             int fieldIndex,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -239,6 +230,7 @@ namespace Mutagen.Bethesda.Binary
                 WRITE.Value(
                     writer: writer,
                     item: item,
+                    masterReferences: masterReferences,
                     recordTypeConverter: recordTypeConverter,
                     errorMask: errorMask);
             }
@@ -257,6 +249,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasBeenSetItemGetter<T> item,
             int fieldIndex,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -265,6 +258,7 @@ namespace Mutagen.Bethesda.Binary
                 writer: writer,
                 item: item.Item,
                 fieldIndex: fieldIndex,
+                masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -273,6 +267,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasItemGetter<T> item,
             int fieldIndex,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -280,6 +275,7 @@ namespace Mutagen.Bethesda.Binary
                 writer,
                 item.Item,
                 fieldIndex,
+                masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -293,6 +289,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             IHasItem<B> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
             where T : ILoquiObjectGetter, B
         {
@@ -302,7 +299,8 @@ namespace Mutagen.Bethesda.Binary
                 if (loquiTrans.Parse(
                     frame,
                     out T subItem,
-                    errorMask))
+                    masterReferences: masterReferences,
+                    errorMask: errorMask))
                 {
                     item.Item = subItem;
                 }
@@ -327,12 +325,14 @@ namespace Mutagen.Bethesda.Binary
             this LoquiBinaryTranslation<T> loquiTrans,
             MutagenFrame frame,
             out B item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
             where T : ILoquiObjectGetter, B
         {
             if (loquiTrans.Parse(
                 frame: frame,
                 item: out T tItem,
+                masterReferences: masterReferences,
                 errorMask: errorMask))
             {
                 item = tItem;

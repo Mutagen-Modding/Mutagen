@@ -52,7 +52,9 @@
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Extensions\NoggogRxExt.cs" />
-    <Compile Include="INamed.cs" />
+    <Compile Include="FormKey.cs" />
+    <Compile Include="Interfaces\IFormKey.cs" />
+    <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Links\EDIDSetLink.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormIDLinkTesterHelper.cs" />
@@ -65,10 +67,9 @@
     <Compile Include="Links\NamedFormID.cs" />
     <Compile Include="FormID.cs" />
     <Compile Include="Links\FormIDLink.cs" />
-    <Compile Include="IMod.cs" />
+    <Compile Include="Interfaces\IMod.cs" />
+    <Compile Include="MasterReferences.cs" />
     <Compile Include="ModRecordSorter.cs" />
-    <Compile Include="Observable\GroupObservable.cs" />
-    <Compile Include="Observable\ObservableModBase.cs" />
     <Compile Include="RecordLocator.cs" />
     <Compile Include="ModRecordAligner.cs" />
     <Compile Include="ModID.cs" />
@@ -116,7 +117,7 @@
     <Compile Include="Translators\Binary\P3UInt16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P2FloatBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\RecordTypeBinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\FormIDBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\FormKeyBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\HeaderExport.cs" />
     <Compile Include="Translators\Binary\HeaderTranslation.cs" />
     <Compile Include="Translators\Binary\IBinaryTranslation.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Translators\Binary\UInt32BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UInt64BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UtilityTranslation.cs" />
-    <Compile Include="Translators\XML\FormIDXmlTranslation.cs" />
+    <Compile Include="Translators\XML\FormKeyXmlTranslation.cs" />
     <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
@@ -190,5 +191,6 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

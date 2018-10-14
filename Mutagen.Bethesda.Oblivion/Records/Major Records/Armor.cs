@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Armor
     {
-        static partial void FillBinary_ArmorValue_Custom(MutagenFrame frame, Armor item, ErrorMaskBuilder errorMask)
+        static partial void FillBinary_ArmorValue_Custom(MutagenFrame frame, Armor item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (UInt16BinaryTranslation.Instance.Parse(
                 frame.Spawn(snapToFinalPosition: false),
@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void WriteBinary_ArmorValue_Custom(MutagenWriter writer, Armor item, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_ArmorValue_Custom(MutagenWriter writer, Armor item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             UInt16BinaryTranslation.Instance.Write(
                 writer,

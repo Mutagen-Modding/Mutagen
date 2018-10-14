@@ -13,11 +13,12 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public partial interface IMajorRecord : IFormID
+    public partial interface IMajorRecord : IFormKey
     {
+        new FormKey FormKey { get; }
     }
 
-    [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormID.ToString()}")]
+    [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
     public partial class MajorRecord : ILinkSubContainer
     {
         [Flags]
@@ -38,22 +39,25 @@ namespace Mutagen.Bethesda
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public string TitleString => $"{this.EditorID} - {this.FormID.IDString()}";
+        public string TitleString => $"{this.EditorID} - {this.FormKey.ToString()}";
 
         public static void Fill_Binary(
             MutagenFrame frame,
             MajorRecord record,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             Fill_Binary_Structs(
                 record,
                 frame,
+                masterReferences,
                 errorMask);
             for (int i = 0; i < MajorRecord_Registration.NumTypedFields; i++)
             {
                 Fill_Binary_RecordTypes(
                     record,
                     frame,
+                    masterReferences,
                     errorMask: errorMask);
             }
         }

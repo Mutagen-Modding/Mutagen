@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
         IPropertySupporter<Byte[]>,
         ILinkSubContainer,
         IEquatable<Group<T>>
-        where T : IFormID, ILoquiObject<T>
+        where T : IFormKey, ILoquiObject<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
@@ -205,11 +205,11 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<Byte[]> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
         #endregion
         #region Items
-        private readonly INotifyingKeyedCollection<FormID, T> _Items = new NotifyingKeyedCollection<FormID, T>((item) => item.FormID);
-        public INotifyingKeyedCollection<FormID, T> Items => _Items;
+        private readonly INotifyingKeyedCollection<FormKey, T> _Items = new NotifyingKeyedCollection<FormKey, T>((item) => item.FormKey);
+        public INotifyingKeyedCollection<FormKey, T> Items => _Items;
         #region Interface Members
-        INotifyingKeyedCollection<FormID, T> IGroup<T>.Items => _Items;
-        INotifyingKeyedCollectionGetter<FormID, T> IGroupGetter<T>.Items => _Items;
+        INotifyingKeyedCollection<FormKey, T> IGroup<T>.Items => _Items;
+        INotifyingKeyedCollectionGetter<FormKey, T> IGroupGetter<T>.Items => _Items;
         #endregion
 
         #endregion
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda
                     }
                     break;
                 case "Items":
-                    KeyedDictXmlTranslation<FormID, T>.Instance.ParseInto(
+                    KeyedDictXmlTranslation<FormKey, T>.Instance.ParseInto(
                         root: root,
                         item: item.Items,
                         fieldIndex: (int)Group_FieldIndex.Items,
@@ -1088,6 +1088,7 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static Group<T> Create_Binary<T_ErrMask>(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -1095,6 +1096,7 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
@@ -1103,6 +1105,7 @@ namespace Mutagen.Bethesda
 
         public static Group<T> Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1115,12 +1118,14 @@ namespace Mutagen.Bethesda
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -1137,6 +1142,7 @@ namespace Mutagen.Bethesda
 
         public static Group<T> Create_Binary<T_ErrMask>(
             string path,
+            MasterReferences masterReferences,
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
@@ -1145,12 +1151,14 @@ namespace Mutagen.Bethesda
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
 
         public static Group<T> Create_Binary<T_ErrMask>(
             Stream stream,
+            MasterReferences masterReferences,
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
@@ -1159,6 +1167,7 @@ namespace Mutagen.Bethesda
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -1168,6 +1177,7 @@ namespace Mutagen.Bethesda
         #region Binary Write
         public virtual void Write_Binary<T_ErrMask>(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -1175,6 +1185,7 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
@@ -1182,6 +1193,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary<T_ErrMask>(
             string path,
+            MasterReferences masterReferences,
             out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -1192,6 +1204,7 @@ namespace Mutagen.Bethesda
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -1205,6 +1218,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary<T_ErrMask>(
             Stream stream,
+            MasterReferences masterReferences,
             out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -1213,21 +1227,27 @@ namespace Mutagen.Bethesda
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary<T_ErrMask>(MutagenWriter writer)
+        public void Write_Binary<T_ErrMask>(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -1235,6 +1255,7 @@ namespace Mutagen.Bethesda
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -1246,12 +1267,15 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -1259,12 +1283,14 @@ namespace Mutagen.Bethesda
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             GroupCommon.Write_Binary<T>(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -1273,32 +1299,38 @@ namespace Mutagen.Bethesda
         static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame,
             Group<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_ContainedRecordType_Custom(
             MutagenWriter writer,
             Group<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_ContainedRecordType(
             MutagenWriter writer,
             Group<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             WriteBinary_ContainedRecordType_Custom(
                 writer: writer,
                 item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static void Fill_Binary_Structs(
             Group<T> item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             FillBinary_ContainedRecordType_Custom(
                 frame: frame,
                 item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
             try
             {
@@ -1353,6 +1385,7 @@ namespace Mutagen.Bethesda
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Group<T> item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1372,7 +1405,15 @@ namespace Mutagen.Bethesda
                             fieldIndex: (int)Group_FieldIndex.Items,
                             lengthLength: 4,
                             errorMask: errorMask,
-                            transl: LoquiBinaryTranslation<T>.Instance.Parse);
+                            transl: (MutagenFrame r, out T dictSubItem, ErrorMaskBuilder dictSubMask) =>
+                            {
+                                    return LoquiBinaryTranslation<T>.Instance.Parse(
+                                        frame: r.Spawn(snapToFinalPosition: false),
+                                        item: out dictSubItem,
+                                        errorMask: dictSubMask,
+                                        masterReferences: masterReferences);
+                            }
+                            );
                         return TryGet<int?>.Failure;
                     }
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
@@ -1527,7 +1568,7 @@ namespace Mutagen.Bethesda
                     break;
                 case Group_FieldIndex.Items:
                     this.Items.SetTo(
-                        ((IEnumerable<T>)(NotifyingDictionary<FormID, T>)obj),
+                        ((IEnumerable<T>)(NotifyingDictionary<FormKey, T>)obj),
                         cmds);
                     break;
                 default:
@@ -1579,7 +1620,7 @@ namespace Mutagen.Bethesda
                     break;
                 case Group_FieldIndex.Items:
                     obj.Items.SetTo(
-                        ((IEnumerable<T>)(NotifyingDictionary<FormID, T>)pair.Value),
+                        ((IEnumerable<T>)(NotifyingDictionary<FormKey, T>)pair.Value),
                         null);
                     break;
                 default:
@@ -1596,7 +1637,7 @@ namespace Mutagen.Bethesda
 
     #region Interface
     public partial interface IGroup<T> : IGroupGetter<T>, ILoquiClass<IGroup<T>, IGroupGetter<T>>, ILoquiClass<Group<T>, IGroupGetter<T>>
-        where T : IFormID, ILoquiObject<T>
+        where T : IFormKey, ILoquiObject<T>
     {
         new GroupTypeEnum GroupType { get; set; }
         new INotifyingItem<GroupTypeEnum> GroupType_Property { get; }
@@ -1604,11 +1645,11 @@ namespace Mutagen.Bethesda
         new Byte[] LastModified { get; set; }
         new INotifyingItem<Byte[]> LastModified_Property { get; }
 
-        new INotifyingKeyedCollection<FormID, T> Items { get; }
+        new INotifyingKeyedCollection<FormKey, T> Items { get; }
     }
 
     public partial interface IGroupGetter<T> : ILoquiObject
-        where T : IFormID, ILoquiObject<T>
+        where T : IFormKey, ILoquiObject<T>
     {
         #region ContainedRecordType
         String ContainedRecordType { get; }
@@ -1626,7 +1667,7 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region Items
-        INotifyingKeyedCollectionGetter<FormID, T> Items { get; }
+        INotifyingKeyedCollectionGetter<FormKey, T> Items { get; }
         #endregion
 
     }
@@ -1835,7 +1876,7 @@ namespace Mutagen.Bethesda.Internals
     }
 
     public class Group_Registration<T> : Group_Registration
-        where T : IFormID, ILoquiObject<T>
+        where T : IFormKey, ILoquiObject<T>
     {
         public static readonly Group_Registration<T> GenericInstance = new Group_Registration<T>();
 
@@ -1851,7 +1892,7 @@ namespace Mutagen.Bethesda.Internals
                 case Group_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case Group_FieldIndex.Items:
-                    return typeof(NotifyingDictionary<FormID, T>);
+                    return typeof(NotifyingDictionary<FormKey, T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1871,7 +1912,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             Group_CopyMask<T_CopyMask> copyMask,
             NotifyingFireParameters cmds = null)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
             where T_CopyMask : class, new()
         {
             if (copyMask?.GroupType ?? true)
@@ -1956,7 +1997,7 @@ namespace Mutagen.Bethesda.Internals
             bool on,
             IGroup<T> obj,
             NotifyingFireParameters cmds = null)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1979,7 +2020,7 @@ namespace Mutagen.Bethesda.Internals
             ushort index,
             IGroup<T> obj,
             NotifyingUnsetParameters cmds = null)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -2003,7 +2044,7 @@ namespace Mutagen.Bethesda.Internals
         public static bool GetNthObjectHasBeenSet<T>(
             ushort index,
             IGroup<T> obj)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -2022,7 +2063,7 @@ namespace Mutagen.Bethesda.Internals
         public static object GetNthObject<T>(
             ushort index,
             IGroupGetter<T> obj)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -2043,7 +2084,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Clear<T>(
             IGroup<T> item,
             NotifyingUnsetParameters cmds = null)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
@@ -2053,7 +2094,7 @@ namespace Mutagen.Bethesda.Internals
         public static Group_Mask<bool> GetEqualsMask<T>(
             this IGroupGetter<T> item,
             IGroupGetter<T> rhs)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             var ret = new Group_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
@@ -2064,7 +2105,7 @@ namespace Mutagen.Bethesda.Internals
             IGroupGetter<T> item,
             IGroupGetter<T> rhs,
             Group_Mask<bool> ret)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             if (rhs == null) return;
             ret.ContainedRecordType = object.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
@@ -2085,7 +2126,7 @@ namespace Mutagen.Bethesda.Internals
             this IGroupGetter<T> item,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -2097,7 +2138,7 @@ namespace Mutagen.Bethesda.Internals
             FileGeneration fg,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             if (name == null)
             {
@@ -2147,14 +2188,14 @@ namespace Mutagen.Bethesda.Internals
         public static bool HasBeenSet<T>(
             this IGroupGetter<T> item,
             Group_Mask<bool?> checkMask)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             return true;
         }
 
         public static Group_Mask<bool> GetHasBeenSetMask<T>(IGroupGetter<T> item)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             var ret = new Group_Mask<bool>();
             ret.ContainedRecordType = true;
@@ -2173,7 +2214,7 @@ namespace Mutagen.Bethesda.Internals
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask,
             string name = null)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : class, ITranslationMask, new()
         {
@@ -2193,7 +2234,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Group");
             node.Add(elem);
@@ -2225,7 +2266,7 @@ namespace Mutagen.Bethesda.Internals
                 try
                 {
                     errorMask?.PushIndex((int)Group_FieldIndex.Items);
-                    KeyedDictXmlTranslation<FormID, T>.Instance.Write(
+                    KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
                         node: elem,
                         name: nameof(item.Items),
                         items: item.Items.Values,
@@ -2262,15 +2303,17 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary<T, T_ErrMask>(
             MutagenWriter writer,
             Group<T> item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary<T>(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2280,9 +2323,10 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary<T>(
             MutagenWriter writer,
             Group<T> item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
-            where T : IFormID, ILoquiObject<T>
+            where T : IFormKey, ILoquiObject<T>
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2292,12 +2336,14 @@ namespace Mutagen.Bethesda.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2305,12 +2351,14 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary_Embedded<T>(
             Group<T> item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
-            where T : IFormID, ILoquiObject<T>
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+            where T : IFormKey, ILoquiObject<T>
         {
             Group<T>.WriteBinary_ContainedRecordType(
                 writer: writer,
                 item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
@@ -2329,15 +2377,24 @@ namespace Mutagen.Bethesda.Internals
             Group<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-            where T : IFormID, ILoquiObject<T>
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+            where T : IFormKey, ILoquiObject<T>
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
                 items: item.Items.Values,
                 fieldIndex: (int)Group_FieldIndex.Items,
                 errorMask: errorMask,
-                transl: LoquiBinaryTranslation<T>.Instance.Write);
+                transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>
+                {
+                        LoquiBinaryTranslation<T>.Instance.Write(
+                            writer: r,
+                            item: dictSubItem,
+                            errorMask: dictSubMask,
+                            masterReferences: masterReferences);
+                }
+                );
         }
 
         #endregion

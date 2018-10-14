@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Base":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Base_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
@@ -1743,7 +1743,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Owner":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Owner_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Owner,
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "GlobalVariable":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
@@ -1810,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Target":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Target_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Target,
@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Unknown":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Unknown_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
@@ -2112,7 +2112,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "ContainedSoul":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.ContainedSoul_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
@@ -4017,10 +4017,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static PlacedObject Create_Binary(MutagenFrame frame)
+        public new static PlacedObject Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -4028,12 +4031,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static PlacedObject Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out PlacedObject_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
@@ -4042,6 +4047,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PlacedObject Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -4051,21 +4057,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: PlacedObject_Registration.REFR_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static PlacedObject Create_Binary(string path)
+        public static PlacedObject Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static PlacedObject Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out PlacedObject_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -4073,21 +4085,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static PlacedObject Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static PlacedObject Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static PlacedObject Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out PlacedObject_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -4095,6 +4113,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -4104,12 +4123,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out PlacedObject_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
@@ -4117,6 +4138,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out PlacedObject_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -4126,6 +4148,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -4139,6 +4162,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out PlacedObject_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -4146,6 +4170,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -4154,12 +4179,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Placed_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
@@ -4167,12 +4194,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
@@ -4182,12 +4211,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             PlacedObjectCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -4196,38 +4227,45 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_OpenByDefault_Custom(
             MutagenFrame frame,
             PlacedObject item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_OpenByDefault_Custom(
             MutagenWriter writer,
             PlacedObject item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_OpenByDefault(
             MutagenWriter writer,
             PlacedObject item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             WriteBinary_OpenByDefault_Custom(
                 writer: writer,
                 item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static void Fill_Binary_Structs(
             PlacedObject item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             Placed.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             PlacedObject item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -4239,8 +4277,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x454D414E: // NAME
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Base_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Base,
                         errorMask: errorMask);
@@ -4305,6 +4344,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportDestination);
                         if (LoquiBinaryTranslation<TeleportDestination>.Instance.Parse(
                             frame: frame,
+                            masterReferences: masterReferences,
                             item: out TeleportDestination TeleportDestinationParse,
                             errorMask: errorMask))
                         {
@@ -4331,6 +4371,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lock);
                         if (LoquiBinaryTranslation<LockInformation>.Instance.Parse(
                             frame: frame,
+                            masterReferences: masterReferences,
                             item: out LockInformation LockParse,
                             errorMask: errorMask))
                         {
@@ -4353,8 +4394,9 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
                 case 0x4E574F58: // XOWN
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Owner_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                         errorMask: errorMask);
@@ -4388,8 +4430,9 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FactionRank);
                 case 0x424C4758: // XGLB
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                         errorMask: errorMask);
@@ -4400,6 +4443,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.EnableParent);
                         if (LoquiBinaryTranslation<EnableParent>.Instance.Parse(
                             frame: frame,
+                            masterReferences: masterReferences,
                             item: out EnableParent EnableParentParse,
                             errorMask: errorMask))
                         {
@@ -4422,8 +4466,9 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
                 case 0x47525458: // XTRG
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Target_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Target,
                         errorMask: errorMask);
@@ -4461,6 +4506,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.DistantLODData);
                         if (LoquiBinaryTranslation<DistantLODData>.Instance.Parse(
                             frame: frame,
+                            masterReferences: masterReferences,
                             item: out DistantLODData DistantLODDataParse,
                             errorMask: errorMask))
                         {
@@ -4564,8 +4610,9 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
                 case 0x4D545258: // XRTM
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Unknown_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                         errorMask: errorMask);
@@ -4631,6 +4678,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
                         if (LoquiBinaryTranslation<MapMarker>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out MapMarker MapMarkerParse,
                             errorMask: errorMask))
                         {
@@ -4657,6 +4705,7 @@ namespace Mutagen.Bethesda.Oblivion
                         FillBinary_OpenByDefault_Custom(
                             frame: subFrame,
                             item: item,
+                            masterReferences: masterReferences,
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
@@ -4716,8 +4765,9 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
                 case 0x4C4F5358: // XSOL
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.ContainedSoul_Property,
                         fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                         errorMask: errorMask);
@@ -4785,6 +4835,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -5400,7 +5451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum PlacedObject_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -7108,7 +7159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Placed_FieldIndex.MajorRecordFlags:
                     return (PlacedObject_FieldIndex)((int)index);
-                case Placed_FieldIndex.FormID:
+                case Placed_FieldIndex.FormKey:
                     return (PlacedObject_FieldIndex)((int)index);
                 case Placed_FieldIndex.Version:
                     return (PlacedObject_FieldIndex)((int)index);
@@ -7133,7 +7184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (PlacedObject_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (PlacedObject_FieldIndex)((int)index);
@@ -7182,10 +7233,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Base_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Base),
-                    item: item.Base_Property?.FormID,
+                    item: item.Base_Property?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Base,
                     errorMask: errorMask);
             }
@@ -7234,10 +7285,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Owner_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Owner),
-                    item: item.Owner_Property?.FormID,
+                    item: item.Owner_Property?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                     errorMask: errorMask);
             }
@@ -7254,10 +7305,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.GlobalVariable_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GlobalVariable) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable_Property?.FormID,
+                    item: item.GlobalVariable_Property?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }
@@ -7275,10 +7326,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Target_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Target),
-                    item: item.Target_Property?.FormID,
+                    item: item.Target_Property?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Target,
                     errorMask: errorMask);
             }
@@ -7336,10 +7387,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Unknown_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Unknown),
-                    item: item.Unknown_Property?.FormID,
+                    item: item.Unknown_Property?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
@@ -7406,10 +7457,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.ContainedSoul_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ContainedSoul) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.ContainedSoul),
-                    item: item.ContainedSoul_Property?.FormID,
+                    item: item.ContainedSoul_Property?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                     errorMask: errorMask);
             }
@@ -7441,6 +7492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             PlacedObject item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out PlacedObject_ErrorMask errorMask)
@@ -7448,6 +7500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -7457,6 +7510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             PlacedObject item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -7468,12 +7522,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -7482,20 +7538,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedObject item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Base_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.Base,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.NAME_HEADER),
-                nullable: false);
+                nullable: false,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.XPCIFluff_Property,
@@ -7514,19 +7573,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.TeleportDestination_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             LoquiBinaryTranslation<LockInformation>.Instance.Write(
                 writer: writer,
                 item: item.Lock_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.Lock,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Owner_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XOWN_HEADER),
-                nullable: false);
+                nullable: false,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FactionRank_Property,
@@ -7534,25 +7596,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRNK_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GlobalVariable_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XGLB_HEADER),
-                nullable: false);
+                nullable: false,
+                masterReferences: masterReferences);
             LoquiBinaryTranslation<EnableParent>.Instance.Write(
                 writer: writer,
                 item: item.EnableParent_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Target_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.Target,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XTRG_HEADER),
-                nullable: false);
+                nullable: false,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SpeedTreeSeed_Property,
@@ -7564,7 +7629,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.DistantLODData_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Charge_Property,
@@ -7586,13 +7652,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLCM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRTM_HEADER),
-                nullable: false);
+                nullable: false,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Write(
                 writer,
                 item.ActionFlags_Property,
@@ -7616,10 +7683,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.MapMarker_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             PlacedObject.WriteBinary_OpenByDefault(
                 writer: writer,
                 item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -7635,13 +7704,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSCL_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ContainedSoul_Property,
                 fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSOL_HEADER),
-                nullable: false);
+                nullable: false,
+                masterReferences: masterReferences);
             if (item.DATADataTypeState.HasFlag(PlacedObject.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedObject_Registration.DATA_HEADER)))

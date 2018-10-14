@@ -14,8 +14,8 @@ namespace Mutagen.Bethesda
        where T : MajorRecord
     {
         public bool Linked => this.HasBeenSet && this.Item != null;
-        public FormID? UnlinkedForm { get; private set; }
-        public FormID FormID => LinkExt.GetFormID(this);
+        public FormKey? UnlinkedForm { get; private set; }
+        public FormKey FormKey => LinkExt.GetFormKey(this);
         Type ILink.TargetType => typeof(T);
 #if DEBUG
         public bool AttemptedLink { get; set; }
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
 #endif
         }
 
-        public FormIDSetLink(FormID unlinkedForm)
+        public FormIDSetLink(FormKey unlinkedForm)
             : base(markAsSet: true)
         {
             this.UnlinkedForm = unlinkedForm;
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda
 
         private void UpdateUnlinkedForm(T change)
         {
-            this.UnlinkedForm = change?.FormID ?? UnlinkedForm;
+            this.UnlinkedForm = change?.FormKey ?? UnlinkedForm;
             this._HasBeenSet = this.UnlinkedForm.HasValue;
         }
 
@@ -50,29 +50,29 @@ namespace Mutagen.Bethesda
             base.Set(value, hasBeenSet, cmds);
         }
 
-        public void SetIfSucceeded(TryGet<FormID> formID)
+        public void SetIfSucceeded(TryGet<FormKey> formKey)
         {
-            if (formID.Failed)
+            if (formKey.Failed)
             {
                 return;
             }
-            this.UnlinkedForm = formID.Value;
+            this.UnlinkedForm = formKey.Value;
             this.HasBeenSet = true;
         }
 
-        public void SetIfSucceededOrDefault(TryGet<FormID> formID)
+        public void SetIfSucceededOrDefault(TryGet<FormKey> formKey)
         {
-            if (formID.Failed)
+            if (formKey.Failed)
             {
                 this.Unset();
                 return;
             }
-            this.Set(formID.Value);
+            this.Set(formKey.Value);
         }
 
-        public void Set(FormID formID)
+        public void Set(FormKey formKey)
         {
-            this.UnlinkedForm = formID;
+            this.UnlinkedForm = formKey;
             this.HasBeenSet = true;
         }
 
@@ -100,12 +100,12 @@ namespace Mutagen.Bethesda
 
         public static bool operator ==(FormIDSetLink<T> lhs, IFormIDLink<T> rhs)
         {
-            return lhs.FormID.Equals(rhs.FormID);
+            return lhs.FormKey.Equals(rhs.FormKey);
         }
 
         public static bool operator !=(FormIDSetLink<T> lhs, IFormIDLink<T> rhs)
         {
-            return !lhs.FormID.Equals(rhs.FormID);
+            return !lhs.FormKey.Equals(rhs.FormKey);
         }
 
         public override bool Equals(object obj)

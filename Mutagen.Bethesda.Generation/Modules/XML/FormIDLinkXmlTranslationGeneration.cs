@@ -8,11 +8,11 @@ using Loqui.Generation;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class FormIDLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormID>
+    public class FormIDLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormKey>
     {
         protected override string ItemWriteAccess(Accessor itemAccessor)
         {
-            return $"{itemAccessor.PropertyOrDirectAccess}?.FormID";
+            return $"{itemAccessor.PropertyOrDirectAccess}?.FormKey";
         }
 
         public override void GenerateCopyInRet(

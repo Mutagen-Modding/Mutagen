@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Tests
             await modList.Import(
                 dataFolder: testingSettings.DataFolder,
                 loadOrder: loadOrder,
-                importer: async (filePath) => TryGet<OblivionMod>.Succeed(OblivionMod.Create_Binary(filePath.Path)));
+                importer: async (filePath) => TryGet<OblivionMod>.Succeed(OblivionMod.Create_Binary(filePath.Path, ModKey.Factory(filePath.Path))));
 
             Assert.NotNull(FormIDLinkTesterHelper.CreatedLinks);
             Assert.DoesNotContain(FormIDLinkTesterHelper.CreatedLinks, l => l == null);
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Tests
 
             var unlinked = FormIDLinkTesterHelper.CreatedLinks
                 .Where(l => !l.Linked)
-                .Where(l => l.FormID != FormID.NULL)
+                .Where(l => l.FormKey != FormKey.NULL)
                 .Where(l => (!unlinkedIgnoreTest?.Invoke(l)) ?? true)
                 .ToArray();
 
@@ -45,24 +45,26 @@ namespace Mutagen.Bethesda.Tests
 
         public static async Task Oblivion_Modlist(TestingSettings testingSettings)
         {
+            var obliv = new ModKey("Oblivion", master: true);
+            var knights = new ModKey("Knights", master: false);
             List<ModKey> loadOrder = new List<ModKey>()
             {
-                new ModKey("Oblivion", master: true),
-                new ModKey("Knights", master: false)
+                obliv,
+                knights,
             };
-            Dictionary<Type, HashSet<FormID>> knownUnlinked = new Dictionary<Type, HashSet<FormID>>();
-            knownUnlinked.TryCreateValue(typeof(Region)).Add(FormID.Factory(0x00078856));
-            knownUnlinked.TryCreateValue(typeof(Script)).Add(FormID.Factory(0x01020AE4));
-            knownUnlinked.TryCreateValue(typeof(Script)).Add(FormID.Factory(0x01020AE2));
-            knownUnlinked.TryCreateValue(typeof(Weather)).Add(FormID.Factory(0x01010B5F));
+            Dictionary<Type, HashSet<FormKey>> knownUnlinked = new Dictionary<Type, HashSet<FormKey>>();
+            knownUnlinked.TryCreateValue(typeof(Region)).Add(new FormKey(obliv, 0x078856));
+            knownUnlinked.TryCreateValue(typeof(Script)).Add(new FormKey(knights, 0x020AE4));
+            knownUnlinked.TryCreateValue(typeof(Script)).Add(new FormKey(knights, 0x020AE2));
+            knownUnlinked.TryCreateValue(typeof(Weather)).Add(new FormKey(knights, 0x010B5F));
             await ModList_Test(
                 testingSettings,
                 loadOrder,
                 unlinkedIgnoreTest: (link) =>
                 {
-                    if (link.FormID == Mutagen.Bethesda.Oblivion.Constants.Player) return true;
+                    if (link.FormKey == Mutagen.Bethesda.Oblivion.Constants.Player) return true;
                     if (knownUnlinked.TryGetValue(link.TargetType, out var formIDs)
-                        && formIDs.Contains(link.FormID))
+                        && formIDs.Contains(link.FormKey))
                     {
                         return true;
                     }

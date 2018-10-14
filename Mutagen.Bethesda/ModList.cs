@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class ModList<Mod> : IEnumerable<ModListing<Mod>>
-        where Mod : IMod<Mod>
+    public class ModList<TMod> : IEnumerable<ModListing<TMod>>
+        where TMod : IMod<TMod>
     {
-        private readonly List<ModListing<Mod>> _modsByLoadOrder = new List<ModListing<Mod>>();
+        private readonly List<ModListing<TMod>> _modsByLoadOrder = new List<ModListing<TMod>>();
 
-        public bool TryGetListing(ModKey key, out (ModID Index, ModListing<Mod> Listing) result)
+        public bool TryGetListing(ModKey key, out (ModID Index, ModListing<TMod> Listing) result)
         {
             for (int i = 0; i < _modsByLoadOrder.Count; i++)
             {
@@ -24,50 +24,50 @@ namespace Mutagen.Bethesda
                     return true;
                 }
             }
-            result = default(ValueTuple<ModID, ModListing<Mod>>);
+            result = default(ValueTuple<ModID, ModListing<TMod>>);
             return false;
         }
 
-        public bool TryGetMod(ModKey key, out (ModID Index, Mod Mod) result)
+        public bool TryGetMod(ModKey key, out (ModID Index, TMod Mod) result)
         {
             if (!this.TryGetListing(key, out var listing)
                 || !listing.Listing.Loaded)
             {
-                result = default((ModID, Mod));
+                result = default((ModID, TMod));
                 return false;
             }
             result = (listing.Index, listing.Listing.Mod);
             return true;
         }
 
-        public bool TryGetIndex(ModID index, out ModListing<Mod> result)
+        public bool TryGetIndex(ModID index, out ModListing<TMod> result)
         {
             if (!_modsByLoadOrder.InRange(index.ID))
             {
-                result = default(ModListing<Mod>);
+                result = default(ModListing<TMod>);
                 return false;
             }
             result = _modsByLoadOrder[index.ID];
             return result != null;
         }
 
-        public void Add(ModKey key, Mod mod)
+        public void Add(ModKey key, TMod mod)
         {
             if (this.Contains(key))
             {
                 throw new ArgumentException("Mod was already present on the mod list.");
             }
             _modsByLoadOrder.Add(
-                new ModListing<Mod>(key, mod));
+                new ModListing<TMod>(key, mod));
         }
 
-        public void Add(ModKey key, Mod mod, byte index)
+        public void Add(ModKey key, TMod mod, byte index)
         {
             if (this.Contains(key))
             {
                 throw new ArgumentException("Mod was already present on the mod list.");
             }
-            _modsByLoadOrder.Insert(index, new ModListing<Mod>(key, mod));
+            _modsByLoadOrder.Insert(index, new ModListing<TMod>(key, mod));
         }
 
         public bool Contains(ModKey mod)
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda
         public async Task Import(
             DirectoryPath dataFolder,
             List<ModKey> loadOrder,
-            Func<FilePath, Task<TryGet<Mod>>> importer)
+            Func<FilePath, Task<TryGet<TMod>>> importer)
         {
             this.Clear();
             int index = 0;
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda
                     return Task.Run(async () =>
                     {
                         FilePath modPath = dataFolder.GetFile(modKey.FileName);
-                        if (!modPath.Exists) return (modKey, modIndex, TryGet<Mod>.Failure);
+                        if (!modPath.Exists) return (modKey, modIndex, TryGet<TMod>.Failure);
                         return (modKey, modIndex, await importer(modPath));
                     });
                 }));
@@ -129,14 +129,14 @@ namespace Mutagen.Bethesda
                 if (item.Item3.Succeeded)
                 {
                     this._modsByLoadOrder.Add(
-                        new ModListing<Mod>(
+                        new ModListing<TMod>(
                             item.modKey,
                             item.Item3.Value));
                 }
                 else
                 {
                     this._modsByLoadOrder.Add(
-                        new ModListing<Mod>(item.modKey));
+                        new ModListing<TMod>(item.modKey));
                 }
             }
             foreach (var mod in this._modsByLoadOrder)
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public IEnumerator<ModListing<Mod>> GetEnumerator()
+        public IEnumerator<ModListing<TMod>> GetEnumerator()
         {
             return _modsByLoadOrder.GetEnumerator();
         }

@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
             NoLODWater = 0x10,
         }
 
-        static partial void FillBinary_OffsetLength_Custom(MutagenFrame frame, Worldspace item, ErrorMaskBuilder errorMask)
+        static partial void FillBinary_OffsetLength_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             item.usingOffsetLength = true;
             if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var xLen).Equals(Worldspace_Registration.XXXX_HEADER)
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.OffsetData = frame.Reader.ReadBytes(contentLen);
         }
 
-        static partial void WriteBinary_OffsetLength_Custom(MutagenWriter writer, Worldspace item, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_OffsetLength_Custom(MutagenWriter writer, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (!item.OffsetData_Property.HasBeenSet) return;
             if (!item.usingOffsetLength) return;
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             writer.Write(item.OffsetData);
         }
 
-        static partial void FillBinary_OffsetData_Custom(MutagenFrame frame, Worldspace item, ErrorMaskBuilder errorMask)
+        static partial void FillBinary_OffsetData_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (item.usingOffsetLength) return;
             if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.OffsetData = frame.Reader.ReadBytes(len);
         }
 
-        static partial void WriteBinary_OffsetData_Custom(MutagenWriter writer, Worldspace item, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_OffsetData_Custom(MutagenWriter writer, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (item.usingOffsetLength) return;
             if (!item.OffsetData_Property.HasBeenSet) return;
@@ -77,18 +77,18 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void CustomBinaryEnd_Import(MutagenFrame frame, Worldspace obj, ErrorMaskBuilder errorMask)
+        static partial void CustomBinaryEnd_Import(MutagenFrame frame, Worldspace obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
             if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
-            var id =  FormID.Factory(frame.Reader.ReadUInt32());
+            var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
             if (grupType == GroupTypeEnum.WorldChildren)
             {
                 obj._timeStamp = frame.Reader.ReadBytes(4);
-                if (id != obj.FormID)
+                if (formKey != obj.FormKey)
                 {
                     errorMask.ReportExceptionOrThrow(
                         new ArgumentException("Cell children group did not match the FormID of the parent worldspace."));
@@ -114,6 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 frame: subFrame,
                                 item: obj.Road_Property,
                                 fieldIndex: (int)Worldspace_FieldIndex.Road,
+                                masterReferences: masterReferences,
                                 errorMask: errorMask);
                             break;
                         case 0x4C4C4543: // "CELL":
@@ -121,6 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 frame: subFrame,
                                 item: obj.TopCell_Property,
                                 fieldIndex: (int)Worldspace_FieldIndex.TopCell,
+                                masterReferences: masterReferences,
                                 errorMask: errorMask);
                             break;
                         case 0x50555247: // "GRUP":
@@ -136,6 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     return LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse(
                                         frame: r.Spawn(snapToFinalPosition: false),
                                         item: out block,
+                                        masterReferences: masterReferences,
                                         errorMask: errorMask);
                                 });
                             break;
@@ -146,16 +149,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void CustomBinaryEnd_Export(MutagenWriter writer, Worldspace obj, ErrorMaskBuilder errorMask)
+        static partial void CustomBinaryEnd_Export(MutagenWriter writer, Worldspace obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (obj._SubCells.Count == 0
                 && !obj.Road_Property.HasBeenSet
                 && !obj.TopCell_Property.HasBeenSet) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
-                FormIDBinaryTranslation.Instance.Write(
+                FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormID,
+                    obj.FormKey,
+                    masterReferences,
                     errorMask);
                 writer.Write((int)GroupTypeEnum.WorldChildren);
                 if (obj._timeStamp != null)
@@ -173,7 +177,8 @@ namespace Mutagen.Bethesda.Oblivion
                         writer,
                         obj.Road,
                         (int)Worldspace_FieldIndex.Road,
-                        errorMask);
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
                 }
                 if (obj.TopCell_Property.HasBeenSet)
                 {
@@ -181,7 +186,8 @@ namespace Mutagen.Bethesda.Oblivion
                         writer,
                         obj.TopCell,
                         (int)Worldspace_FieldIndex.TopCell,
-                        errorMask);
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
                 }
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Write(
                     writer: writer,
@@ -193,6 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
                         LoquiBinaryTranslation<WorldspaceBlock>.Instance.Write(
                             writer: subWriter,
                             item: subItem,
+                            masterReferences: masterReferences,
                             errorMask: listSubMask);
                     });
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Loqui.Internal;
+using Noggog.Notifying;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -39,6 +40,26 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryTranslation.Instance.Write(
                 writer,
                 item.ToString(),
+                header,
+                fieldIndex,
+                nullable,
+                errorMask,
+                nullTerminate);
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IHasBeenSetItem<ModKey> item,
+            RecordType header,
+            int fieldIndex,
+            bool nullable,
+            ErrorMaskBuilder errorMask,
+            bool nullTerminate = true)
+        {
+            if (!item.HasBeenSet) return;
+            StringBinaryTranslation.Instance.Write(
+                writer,
+                item.Item.ToString(),
                 header,
                 fieldIndex,
                 nullable,

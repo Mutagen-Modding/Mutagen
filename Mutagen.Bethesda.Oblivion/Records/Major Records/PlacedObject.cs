@@ -20,13 +20,13 @@ namespace Mutagen.Bethesda.Oblivion
             OpenByDefault = 0x008
         }
 
-        static partial void FillBinary_OpenByDefault_Custom(MutagenFrame frame, PlacedObject item, ErrorMaskBuilder errorMask)
+        static partial void FillBinary_OpenByDefault_Custom(MutagenFrame frame, PlacedObject item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             item.OpenByDefault = true;
             frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
         }
 
-        static partial void WriteBinary_OpenByDefault_Custom(MutagenWriter writer, PlacedObject item, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_OpenByDefault_Custom(MutagenWriter writer, PlacedObject item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (item.OpenByDefault)
             {

@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
             this.EDID = unlinkedEDID;
         }
 
-        public EDIDLink(FormID unlinkedForm)
+        public EDIDLink(FormKey unlinkedForm)
             : base(unlinkedForm)
         {
         }

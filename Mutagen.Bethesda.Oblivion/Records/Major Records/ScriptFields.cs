@@ -33,11 +33,12 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: NotifyingSubscribeParameters.NoFire);
         }
 
-        static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, ScriptFields item, ErrorMaskBuilder errorMask)
+        static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, ScriptFields item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
                 frame: frame,
                 errorMask: errorMask,
+                masterReferences: masterReferences,
                 recordTypeConverter: metaConverter);
             item.MetadataSummary.CopyFieldsFrom(
                 rhs: tmpMetadataSummary,
@@ -47,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        static partial void WriteBinary_MetadataSummaryOld_Custom(MutagenWriter writer, ScriptFields item, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_MetadataSummaryOld_Custom(MutagenWriter writer, ScriptFields item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
         }
     }

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda
     public interface IFormIDLink<T> : ILink<T>
        where T : MajorRecord
     {
-        FormID? UnlinkedForm { get; }
+        FormKey? UnlinkedForm { get; }
     }
 
     public interface IFormIDSetLink<T> : IFormIDLink<T>, ISetLink<T>

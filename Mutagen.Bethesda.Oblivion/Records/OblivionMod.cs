@@ -14,6 +14,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         private static readonly object _subscribeObject = new object();
         public INotifyingListGetter<MasterReference> MasterReferences => this.TES4.MasterReferences;
+        private ModKey _modKey;
+        public ModKey ModKey => _modKey;
+
+        public OblivionMod(ModKey modKey)
+        {
+            _modKey = modKey;
+        }
 
         partial void CustomCtor()
         {
@@ -87,30 +94,30 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (r.Old != null)
                 {
-                    _majorRecords.Remove(r.Old.FormID);
+                    _majorRecords.Remove(r.Old.FormKey);
                 }
                 if (r.New != null)
                 {
-                    if (_majorRecords.ContainsKey(r.New.FormID))
+                    if (_majorRecords.ContainsKey(r.New.FormKey))
                     {
-                        throw new ArgumentException($"Cannot add a landscape {r.New.FormID} that exists elsewhere in the same mod.");
+                        throw new ArgumentException($"Cannot add a landscape {r.New.FormKey} that exists elsewhere in the same mod.");
                     }
-                    _majorRecords[r.New.FormID] = r.New;
+                    _majorRecords[r.New.FormKey] = r.New;
                 }
             });
             cell.PathGrid_Property.Subscribe(_subscribeObject, (r) =>
             {
                 if (r.Old != null)
                 {
-                    _majorRecords.Remove(r.Old.FormID);
+                    _majorRecords.Remove(r.Old.FormKey);
                 }
                 if (r.New != null)
                 {
-                    if (_majorRecords.ContainsKey(r.New.FormID))
+                    if (_majorRecords.ContainsKey(r.New.FormKey))
                     {
-                        throw new ArgumentException($"Cannot add a pathgrid {r.New.FormID} that exists elsewhere in the same mod.");
+                        throw new ArgumentException($"Cannot add a pathgrid {r.New.FormKey} that exists elsewhere in the same mod.");
                     }
-                    _majorRecords[r.New.FormID] = r.New;
+                    _majorRecords[r.New.FormKey] = r.New;
                 }
             });
         }
@@ -123,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
                 subBlock.Items.Unsubscribe(_subscribeObject);
                 foreach (var cell in subBlock.Items)
                 {
-                    _majorRecords.Remove(cell.FormID);
+                    _majorRecords.Remove(cell.FormKey);
                 }
             }
         }
@@ -163,28 +170,28 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (r.Old != null)
                 {
-                    _majorRecords.Remove(r.Old.FormID);
+                    _majorRecords.Remove(r.Old.FormKey);
                 }
                 if (r.New != null)
                 {
-                    if (_majorRecords.ContainsKey(r.New.FormID))
+                    if (_majorRecords.ContainsKey(r.New.FormKey))
                     {
                         throw new ArgumentException("Cannot add a road that exists elsewhere in the same mod.");
                     }
-                    _majorRecords[r.New.FormID] = r.New;
+                    _majorRecords[r.New.FormKey] = r.New;
                 }
             });
             worldspace.TopCell_Property.Subscribe(_subscribeObject, (r) =>
             {
                 if (r.Old != null)
                 {
-                    _majorRecords.Remove(r.Old.FormID);
+                    _majorRecords.Remove(r.Old.FormKey);
                     UnsubscribeFromCell(r.Old);
                 }
                 if (r.New != null)
                 {
                     SubscribeToCell(r.New);
-                    _majorRecords[r.New.FormID] = r.New;
+                    _majorRecords[r.New.FormKey] = r.New;
                 }
             });
             worldspace.SubCells.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
@@ -263,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
                     case AddRemove.Remove:
                         foreach (var item in change.Item.Value.Items)
                         {
-                            _majorRecords.Remove(item.FormID);
+                            _majorRecords.Remove(item.FormKey);
                         }
                         change.Item.Value.Items.Unsubscribe(_subscribeObject);
                         break;

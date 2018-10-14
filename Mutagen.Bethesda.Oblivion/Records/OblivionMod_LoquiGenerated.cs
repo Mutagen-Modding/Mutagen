@@ -2556,15 +2556,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        private NotifyingDictionary<FormID, MajorRecord> _majorRecords = new NotifyingDictionary<FormID, MajorRecord>();
-        public INotifyingDictionaryGetter<FormID, MajorRecord> MajorRecords => _majorRecords;
-        public MajorRecord this[FormID id]
+        private NotifyingDictionary<FormKey, MajorRecord> _majorRecords = new NotifyingDictionary<FormKey, MajorRecord>();
+        public INotifyingDictionaryGetter<FormKey, MajorRecord> MajorRecords => _majorRecords;
+        public MajorRecord this[FormKey id]
         {
             get => _majorRecords[id];
             set => SetMajorRecord(id, value);
         }
         protected void SetMajorRecord(
-            FormID id,
+            FormKey id,
             MajorRecord record)
         {
             switch (record)
@@ -2739,233 +2739,233 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public INotifyingKeyedCollection<FormID, T> GetGroup<T>()
+        public INotifyingKeyedCollection<FormKey, T> GetGroup<T>()
             where T : IMajorRecord
         {
             var t = typeof(T);
             if (t.Equals(typeof(GameSetting)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)GameSettings.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)GameSettings.Items;
             }
             if (t.Equals(typeof(Global)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Globals.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Globals.Items;
             }
             if (t.Equals(typeof(Class)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Classes.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Classes.Items;
             }
             if (t.Equals(typeof(Faction)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Factions.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Factions.Items;
             }
             if (t.Equals(typeof(Hair)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Hairs.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Hairs.Items;
             }
             if (t.Equals(typeof(Eye)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Eyes.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Eyes.Items;
             }
             if (t.Equals(typeof(Race)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Races.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Races.Items;
             }
             if (t.Equals(typeof(Sound)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Sounds.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Sounds.Items;
             }
             if (t.Equals(typeof(SkillRecord)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Skills.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Skills.Items;
             }
             if (t.Equals(typeof(MagicEffect)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)MagicEffects.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)MagicEffects.Items;
             }
             if (t.Equals(typeof(Script)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Scripts.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Scripts.Items;
             }
             if (t.Equals(typeof(LandTexture)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)LandTextures.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)LandTextures.Items;
             }
             if (t.Equals(typeof(Enchantment)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Enchantments.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Enchantments.Items;
             }
             if (t.Equals(typeof(SpellUnleveled)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Spells.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Spells.Items;
             }
             if (t.Equals(typeof(Birthsign)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Birthsigns.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Birthsigns.Items;
             }
             if (t.Equals(typeof(Activator)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Activators.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Activators.Items;
             }
             if (t.Equals(typeof(AlchemicalApparatus)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)AlchemicalApparatus.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)AlchemicalApparatus.Items;
             }
             if (t.Equals(typeof(Armor)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Armors.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Armors.Items;
             }
             if (t.Equals(typeof(Book)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Books.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Books.Items;
             }
             if (t.Equals(typeof(Clothing)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Clothes.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Clothes.Items;
             }
             if (t.Equals(typeof(Container)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Containers.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Containers.Items;
             }
             if (t.Equals(typeof(Door)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Doors.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Doors.Items;
             }
             if (t.Equals(typeof(Ingredient)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Ingredients.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Ingredients.Items;
             }
             if (t.Equals(typeof(Light)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Lights.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Lights.Items;
             }
             if (t.Equals(typeof(Miscellaneous)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Miscellaneous.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Miscellaneous.Items;
             }
             if (t.Equals(typeof(Static)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Statics.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Statics.Items;
             }
             if (t.Equals(typeof(Grass)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Grasses.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Grasses.Items;
             }
             if (t.Equals(typeof(Tree)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Trees.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Trees.Items;
             }
             if (t.Equals(typeof(Flora)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Flora.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Flora.Items;
             }
             if (t.Equals(typeof(Furnature)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Furnature.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Furnature.Items;
             }
             if (t.Equals(typeof(Weapon)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Weapons.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Weapons.Items;
             }
             if (t.Equals(typeof(Ammo)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Ammo.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Ammo.Items;
             }
             if (t.Equals(typeof(NPC)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)NPCs.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)NPCs.Items;
             }
             if (t.Equals(typeof(Creature)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Creatures.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Creatures.Items;
             }
             if (t.Equals(typeof(LeveledCreature)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)LeveledCreatures.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)LeveledCreatures.Items;
             }
             if (t.Equals(typeof(SoulGem)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)SoulGems.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)SoulGems.Items;
             }
             if (t.Equals(typeof(Key)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Keys.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Keys.Items;
             }
             if (t.Equals(typeof(Potion)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Potions.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Potions.Items;
             }
             if (t.Equals(typeof(Subspace)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Subspaces.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Subspaces.Items;
             }
             if (t.Equals(typeof(SigilStone)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)SigilStones.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)SigilStones.Items;
             }
             if (t.Equals(typeof(LeveledItem)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)LeveledItems.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)LeveledItems.Items;
             }
             if (t.Equals(typeof(Weather)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Weathers.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Weathers.Items;
             }
             if (t.Equals(typeof(Climate)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Climates.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Climates.Items;
             }
             if (t.Equals(typeof(Region)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Regions.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Regions.Items;
             }
             if (t.Equals(typeof(CellBlock)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Cells.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Cells.Items;
             }
             if (t.Equals(typeof(Worldspace)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Worldspaces.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Worldspaces.Items;
             }
             if (t.Equals(typeof(DialogTopic)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)DialogTopics.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)DialogTopics.Items;
             }
             if (t.Equals(typeof(Quest)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Quests.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Quests.Items;
             }
             if (t.Equals(typeof(IdleAnimation)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)IdleAnimations.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)IdleAnimations.Items;
             }
             if (t.Equals(typeof(AIPackage)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)AIPackages.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)AIPackages.Items;
             }
             if (t.Equals(typeof(CombatStyle)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)CombatStyles.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)CombatStyles.Items;
             }
             if (t.Equals(typeof(LoadScreen)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)LoadScreens.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)LoadScreens.Items;
             }
             if (t.Equals(typeof(LeveledSpell)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)LeveledSpells.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)LeveledSpells.Items;
             }
             if (t.Equals(typeof(AnimatedObject)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)AnimatedObjects.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)AnimatedObjects.Items;
             }
             if (t.Equals(typeof(Water)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)Waters.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)Waters.Items;
             }
             if (t.Equals(typeof(EffectShader)))
             {
-                return (INotifyingKeyedCollection<FormID, T>)EffectShaders.Items;
+                return (INotifyingKeyedCollection<FormKey, T>)EffectShaders.Items;
             }
             throw new ArgumentException($"Unkown group type: {t}");
         }
@@ -3641,10 +3641,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
+            ModKey modKey,
             GroupMask importMask = null)
         {
             return Create_Binary(
                 frame: frame,
+                modKey: modKey,
                 importMask: importMask,
                 recordTypeConverter: null,
                 errorMask: null);
@@ -3653,6 +3655,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
+            ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
             bool doMasks = true,
             GroupMask importMask = null)
@@ -3660,6 +3663,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                modKey: modKey,
                 importMask: importMask,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
@@ -3669,11 +3673,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
+            ModKey modKey,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
             var ret = new OblivionMod();
+            var masterReferences = new MasterReferences(ret.TES4.MasterReferences, modKey);
             try
             {
                 using (frame)
@@ -3681,6 +3687,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
@@ -3688,6 +3695,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item: ret,
                             frame: frame,
                             importMask: importMask,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -3704,6 +3712,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod Create_Binary(
             string path,
+            ModKey modKey,
             GroupMask importMask = null)
         {
             using (var reader = new BinaryReadStream(path))
@@ -3711,12 +3720,14 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    modKey: modKey,
                     importMask: importMask);
             }
         }
 
         public static OblivionMod Create_Binary(
             string path,
+            ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
             GroupMask importMask = null)
         {
@@ -3725,6 +3736,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    modKey: modKey,
                     importMask: importMask,
                     errorMask: out errorMask);
             }
@@ -3732,6 +3744,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod Create_Binary(
             Stream stream,
+            ModKey modKey,
             GroupMask importMask = null)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -3739,12 +3752,14 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    modKey: modKey,
                     importMask: importMask);
             }
         }
 
         public static OblivionMod Create_Binary(
             Stream stream,
+            ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
             GroupMask importMask = null)
         {
@@ -3753,6 +3768,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    modKey: modKey,
                     importMask: importMask,
                     errorMask: out errorMask);
             }
@@ -3763,6 +3779,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
             bool doMasks = true,
             GroupMask importMask = null)
@@ -3770,6 +3787,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                modKey: modKey,
                 importMask: importMask,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
@@ -3778,6 +3796,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
             bool doMasks = true,
             GroupMask importMask = null)
@@ -3788,6 +3807,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        modKey: modKey,
                         importMask: importMask,
                         errorMask: out errorMask,
                         doMasks: doMasks);
@@ -3802,6 +3822,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            ModKey modKey,
             out OblivionMod_ErrorMask errorMask,
             bool doMasks = true,
             GroupMask importMask = null)
@@ -3810,6 +3831,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    modKey: modKey,
                     importMask: importMask,
                     errorMask: out errorMask,
                     doMasks: doMasks);
@@ -3818,10 +3840,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Write_Binary(
             MutagenWriter writer,
+            ModKey modKey,
             GroupMask importMask = null)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                modKey: modKey,
                 importMask: importMask,
                 recordTypeConverter: null,
                 errorMask: null);
@@ -3829,6 +3853,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Write_Binary(
             string path,
+            ModKey modKey,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
@@ -3837,6 +3862,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        modKey: modKey,
                         importMask: importMask,
                         recordTypeConverter: null,
                         errorMask: null);
@@ -3851,12 +3877,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Write_Binary(
             Stream stream,
+            ModKey modKey,
             GroupMask importMask = null)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    modKey: modKey,
                     importMask: importMask,
                     recordTypeConverter: null,
                     errorMask: null);
@@ -3865,6 +3893,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            ModKey modKey,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
@@ -3872,6 +3901,7 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionModCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                modKey: modKey,
                 importMask: importMask,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
@@ -3881,6 +3911,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             OblivionMod item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
         }
@@ -3888,6 +3919,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             OblivionMod item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             GroupMask importMask,
             RecordTypeConverter recordTypeConverter = null)
@@ -3904,7 +3936,8 @@ namespace Mutagen.Bethesda.Oblivion
                         var tmpTES4 = TES4.Create_Binary(
                             frame: frame,
                             errorMask: errorMask,
-                            recordTypeConverter: null);
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
                         item.TES4.CopyFieldsFrom(
                             rhs: tmpTES4,
                             def: null,
@@ -3921,7 +3954,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpGameSettings = Group<GameSetting>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.GameSettings.CopyFieldsFrom<GameSetting_CopyMask>(
                                 rhs: tmpGameSettings,
                                 def: null,
@@ -3943,7 +3977,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpGlobals = Group<Global>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Globals.CopyFieldsFrom<Global_CopyMask>(
                                 rhs: tmpGlobals,
                                 def: null,
@@ -3965,7 +4000,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpClasses = Group<Class>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Classes.CopyFieldsFrom<Class_CopyMask>(
                                 rhs: tmpClasses,
                                 def: null,
@@ -3987,7 +4023,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpFactions = Group<Faction>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Factions.CopyFieldsFrom<Faction_CopyMask>(
                                 rhs: tmpFactions,
                                 def: null,
@@ -4009,7 +4046,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpHairs = Group<Hair>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Hairs.CopyFieldsFrom<Hair_CopyMask>(
                                 rhs: tmpHairs,
                                 def: null,
@@ -4031,7 +4069,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpEyes = Group<Eye>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Eyes.CopyFieldsFrom<Eye_CopyMask>(
                                 rhs: tmpEyes,
                                 def: null,
@@ -4053,7 +4092,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpRaces = Group<Race>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Races.CopyFieldsFrom<Race_CopyMask>(
                                 rhs: tmpRaces,
                                 def: null,
@@ -4075,7 +4115,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpSounds = Group<Sound>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Sounds.CopyFieldsFrom<Sound_CopyMask>(
                                 rhs: tmpSounds,
                                 def: null,
@@ -4097,7 +4138,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpSkills = Group<SkillRecord>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Skills.CopyFieldsFrom<SkillRecord_CopyMask>(
                                 rhs: tmpSkills,
                                 def: null,
@@ -4119,7 +4161,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpMagicEffects = Group<MagicEffect>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.MagicEffects.CopyFieldsFrom<MagicEffect_CopyMask>(
                                 rhs: tmpMagicEffects,
                                 def: null,
@@ -4141,7 +4184,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpScripts = Group<Script>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Scripts.CopyFieldsFrom<Script_CopyMask>(
                                 rhs: tmpScripts,
                                 def: null,
@@ -4163,7 +4207,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpLandTextures = Group<LandTexture>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.LandTextures.CopyFieldsFrom<LandTexture_CopyMask>(
                                 rhs: tmpLandTextures,
                                 def: null,
@@ -4185,7 +4230,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpEnchantments = Group<Enchantment>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Enchantments.CopyFieldsFrom<Enchantment_CopyMask>(
                                 rhs: tmpEnchantments,
                                 def: null,
@@ -4207,7 +4253,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpSpells = Group<SpellUnleveled>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Spells.CopyFieldsFrom<SpellUnleveled_CopyMask>(
                                 rhs: tmpSpells,
                                 def: null,
@@ -4229,7 +4276,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpBirthsigns = Group<Birthsign>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Birthsigns.CopyFieldsFrom<Birthsign_CopyMask>(
                                 rhs: tmpBirthsigns,
                                 def: null,
@@ -4251,7 +4299,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpActivators = Group<Activator>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Activators.CopyFieldsFrom<Activator_CopyMask>(
                                 rhs: tmpActivators,
                                 def: null,
@@ -4273,7 +4322,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpAlchemicalApparatus = Group<AlchemicalApparatus>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.AlchemicalApparatus.CopyFieldsFrom<AlchemicalApparatus_CopyMask>(
                                 rhs: tmpAlchemicalApparatus,
                                 def: null,
@@ -4295,7 +4345,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpArmors = Group<Armor>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Armors.CopyFieldsFrom<Armor_CopyMask>(
                                 rhs: tmpArmors,
                                 def: null,
@@ -4317,7 +4368,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpBooks = Group<Book>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Books.CopyFieldsFrom<Book_CopyMask>(
                                 rhs: tmpBooks,
                                 def: null,
@@ -4339,7 +4391,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpClothes = Group<Clothing>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Clothes.CopyFieldsFrom<Clothing_CopyMask>(
                                 rhs: tmpClothes,
                                 def: null,
@@ -4361,7 +4414,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpContainers = Group<Container>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Containers.CopyFieldsFrom<Container_CopyMask>(
                                 rhs: tmpContainers,
                                 def: null,
@@ -4383,7 +4437,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpDoors = Group<Door>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Doors.CopyFieldsFrom<Door_CopyMask>(
                                 rhs: tmpDoors,
                                 def: null,
@@ -4405,7 +4460,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpIngredients = Group<Ingredient>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Ingredients.CopyFieldsFrom<Ingredient_CopyMask>(
                                 rhs: tmpIngredients,
                                 def: null,
@@ -4427,7 +4483,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpLights = Group<Light>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Lights.CopyFieldsFrom<Light_CopyMask>(
                                 rhs: tmpLights,
                                 def: null,
@@ -4449,7 +4506,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpMiscellaneous = Group<Miscellaneous>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Miscellaneous.CopyFieldsFrom<Miscellaneous_CopyMask>(
                                 rhs: tmpMiscellaneous,
                                 def: null,
@@ -4471,7 +4529,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpStatics = Group<Static>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Statics.CopyFieldsFrom<Static_CopyMask>(
                                 rhs: tmpStatics,
                                 def: null,
@@ -4493,7 +4552,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpGrasses = Group<Grass>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Grasses.CopyFieldsFrom<Grass_CopyMask>(
                                 rhs: tmpGrasses,
                                 def: null,
@@ -4515,7 +4575,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpTrees = Group<Tree>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Trees.CopyFieldsFrom<Tree_CopyMask>(
                                 rhs: tmpTrees,
                                 def: null,
@@ -4537,7 +4598,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpFlora = Group<Flora>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Flora.CopyFieldsFrom<Flora_CopyMask>(
                                 rhs: tmpFlora,
                                 def: null,
@@ -4559,7 +4621,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpFurnature = Group<Furnature>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Furnature.CopyFieldsFrom<Furnature_CopyMask>(
                                 rhs: tmpFurnature,
                                 def: null,
@@ -4581,7 +4644,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpWeapons = Group<Weapon>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Weapons.CopyFieldsFrom<Weapon_CopyMask>(
                                 rhs: tmpWeapons,
                                 def: null,
@@ -4603,7 +4667,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpAmmo = Group<Ammo>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Ammo.CopyFieldsFrom<Ammo_CopyMask>(
                                 rhs: tmpAmmo,
                                 def: null,
@@ -4625,7 +4690,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpNPCs = Group<NPC>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.NPCs.CopyFieldsFrom<NPC_CopyMask>(
                                 rhs: tmpNPCs,
                                 def: null,
@@ -4647,7 +4713,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpCreatures = Group<Creature>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Creatures.CopyFieldsFrom<Creature_CopyMask>(
                                 rhs: tmpCreatures,
                                 def: null,
@@ -4669,7 +4736,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpLeveledCreatures = Group<LeveledCreature>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.LeveledCreatures.CopyFieldsFrom<LeveledCreature_CopyMask>(
                                 rhs: tmpLeveledCreatures,
                                 def: null,
@@ -4691,7 +4759,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpSoulGems = Group<SoulGem>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.SoulGems.CopyFieldsFrom<SoulGem_CopyMask>(
                                 rhs: tmpSoulGems,
                                 def: null,
@@ -4713,7 +4782,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpKeys = Group<Key>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Keys.CopyFieldsFrom<Key_CopyMask>(
                                 rhs: tmpKeys,
                                 def: null,
@@ -4735,7 +4805,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpPotions = Group<Potion>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Potions.CopyFieldsFrom<Potion_CopyMask>(
                                 rhs: tmpPotions,
                                 def: null,
@@ -4757,7 +4828,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpSubspaces = Group<Subspace>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Subspaces.CopyFieldsFrom<Subspace_CopyMask>(
                                 rhs: tmpSubspaces,
                                 def: null,
@@ -4779,7 +4851,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpSigilStones = Group<SigilStone>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.SigilStones.CopyFieldsFrom<SigilStone_CopyMask>(
                                 rhs: tmpSigilStones,
                                 def: null,
@@ -4801,7 +4874,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpLeveledItems = Group<LeveledItem>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.LeveledItems.CopyFieldsFrom<LeveledItem_CopyMask>(
                                 rhs: tmpLeveledItems,
                                 def: null,
@@ -4823,7 +4897,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpWeathers = Group<Weather>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Weathers.CopyFieldsFrom<Weather_CopyMask>(
                                 rhs: tmpWeathers,
                                 def: null,
@@ -4845,7 +4920,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpClimates = Group<Climate>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Climates.CopyFieldsFrom<Climate_CopyMask>(
                                 rhs: tmpClimates,
                                 def: null,
@@ -4867,7 +4943,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpRegions = Group<Region>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Regions.CopyFieldsFrom<Region_CopyMask>(
                                 rhs: tmpRegions,
                                 def: null,
@@ -4889,7 +4966,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpCells = ListGroup<CellBlock>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Cells.CopyFieldsFrom<CellBlock_CopyMask>(
                                 rhs: tmpCells,
                                 def: null,
@@ -4911,7 +4989,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpWorldspaces = Group<Worldspace>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Worldspaces.CopyFieldsFrom<Worldspace_CopyMask>(
                                 rhs: tmpWorldspaces,
                                 def: null,
@@ -4933,7 +5012,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpDialogTopics = Group<DialogTopic>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.DialogTopics.CopyFieldsFrom<DialogTopic_CopyMask>(
                                 rhs: tmpDialogTopics,
                                 def: null,
@@ -4955,7 +5035,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpQuests = Group<Quest>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Quests.CopyFieldsFrom<Quest_CopyMask>(
                                 rhs: tmpQuests,
                                 def: null,
@@ -4977,7 +5058,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpIdleAnimations = Group<IdleAnimation>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.IdleAnimations.CopyFieldsFrom<IdleAnimation_CopyMask>(
                                 rhs: tmpIdleAnimations,
                                 def: null,
@@ -4999,7 +5081,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpAIPackages = Group<AIPackage>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.AIPackages.CopyFieldsFrom<AIPackage_CopyMask>(
                                 rhs: tmpAIPackages,
                                 def: null,
@@ -5021,7 +5104,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpCombatStyles = Group<CombatStyle>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.CombatStyles.CopyFieldsFrom<CombatStyle_CopyMask>(
                                 rhs: tmpCombatStyles,
                                 def: null,
@@ -5043,7 +5127,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpLoadScreens = Group<LoadScreen>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.LoadScreens.CopyFieldsFrom<LoadScreen_CopyMask>(
                                 rhs: tmpLoadScreens,
                                 def: null,
@@ -5065,7 +5150,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpLeveledSpells = Group<LeveledSpell>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.LeveledSpells.CopyFieldsFrom<LeveledSpell_CopyMask>(
                                 rhs: tmpLeveledSpells,
                                 def: null,
@@ -5087,7 +5173,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpAnimatedObjects = Group<AnimatedObject>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.AnimatedObjects.CopyFieldsFrom<AnimatedObject_CopyMask>(
                                 rhs: tmpAnimatedObjects,
                                 def: null,
@@ -5109,7 +5196,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpWaters = Group<Water>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.Waters.CopyFieldsFrom<Water_CopyMask>(
                                 rhs: tmpWaters,
                                 def: null,
@@ -5131,7 +5219,8 @@ namespace Mutagen.Bethesda.Oblivion
                             var tmpEffectShaders = Group<EffectShader>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
-                                recordTypeConverter: null);
+                                recordTypeConverter: null,
+                                masterReferences: masterReferences);
                             item.EffectShaders.CopyFieldsFrom<EffectShader_CopyMask>(
                                 rhs: tmpEffectShaders,
                                 def: null,
@@ -9689,6 +9778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             OblivionMod item,
+            ModKey modKey,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out OblivionMod_ErrorMask errorMask,
@@ -9697,6 +9787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                modKey: modKey,
                 importMask: importMask,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
@@ -9707,6 +9798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             OblivionMod item,
+            ModKey modKey,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
@@ -9727,11 +9819,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
+            MasterReferences masterReferences = new MasterReferences(item.TES4.MasterReferences, item.ModKey);
             LoquiBinaryTranslation<TES4>.Instance.Write(
                 writer: writer,
                 item: item.TES4_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.TES4,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (importMask?.GameSettings ?? true)
             {
                 if (item.GameSettings.Items.Count > 0)
@@ -9740,7 +9834,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.GameSettings,
                         fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Globals ?? true)
@@ -9751,7 +9846,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Globals,
                         fieldIndex: (int)OblivionMod_FieldIndex.Globals,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Classes ?? true)
@@ -9762,7 +9858,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Classes,
                         fieldIndex: (int)OblivionMod_FieldIndex.Classes,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Factions ?? true)
@@ -9773,7 +9870,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Factions,
                         fieldIndex: (int)OblivionMod_FieldIndex.Factions,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Hairs ?? true)
@@ -9784,7 +9882,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Hairs,
                         fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Eyes ?? true)
@@ -9795,7 +9894,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Eyes,
                         fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Races ?? true)
@@ -9806,7 +9906,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Races,
                         fieldIndex: (int)OblivionMod_FieldIndex.Races,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Sounds ?? true)
@@ -9817,7 +9918,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Sounds,
                         fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Skills ?? true)
@@ -9828,7 +9930,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Skills,
                         fieldIndex: (int)OblivionMod_FieldIndex.Skills,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.MagicEffects ?? true)
@@ -9839,7 +9942,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.MagicEffects,
                         fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Scripts ?? true)
@@ -9850,7 +9954,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Scripts,
                         fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.LandTextures ?? true)
@@ -9861,7 +9966,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.LandTextures,
                         fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Enchantments ?? true)
@@ -9872,7 +9978,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Enchantments,
                         fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Spells ?? true)
@@ -9883,7 +9990,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Spells,
                         fieldIndex: (int)OblivionMod_FieldIndex.Spells,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Birthsigns ?? true)
@@ -9894,7 +10002,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Birthsigns,
                         fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Activators ?? true)
@@ -9905,7 +10014,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Activators,
                         fieldIndex: (int)OblivionMod_FieldIndex.Activators,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.AlchemicalApparatus ?? true)
@@ -9916,7 +10026,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.AlchemicalApparatus,
                         fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Armors ?? true)
@@ -9927,7 +10038,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Armors,
                         fieldIndex: (int)OblivionMod_FieldIndex.Armors,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Books ?? true)
@@ -9938,7 +10050,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Books,
                         fieldIndex: (int)OblivionMod_FieldIndex.Books,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Clothes ?? true)
@@ -9949,7 +10062,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Clothes,
                         fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Containers ?? true)
@@ -9960,7 +10074,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Containers,
                         fieldIndex: (int)OblivionMod_FieldIndex.Containers,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Doors ?? true)
@@ -9971,7 +10086,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Doors,
                         fieldIndex: (int)OblivionMod_FieldIndex.Doors,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Ingredients ?? true)
@@ -9982,7 +10098,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Ingredients,
                         fieldIndex: (int)OblivionMod_FieldIndex.Ingredients,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Lights ?? true)
@@ -9993,7 +10110,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Lights,
                         fieldIndex: (int)OblivionMod_FieldIndex.Lights,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Miscellaneous ?? true)
@@ -10004,7 +10122,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Miscellaneous,
                         fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Statics ?? true)
@@ -10015,7 +10134,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Statics,
                         fieldIndex: (int)OblivionMod_FieldIndex.Statics,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Grasses ?? true)
@@ -10026,7 +10146,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Grasses,
                         fieldIndex: (int)OblivionMod_FieldIndex.Grasses,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Trees ?? true)
@@ -10037,7 +10158,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Trees,
                         fieldIndex: (int)OblivionMod_FieldIndex.Trees,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Flora ?? true)
@@ -10048,7 +10170,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Flora,
                         fieldIndex: (int)OblivionMod_FieldIndex.Flora,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Furnature ?? true)
@@ -10059,7 +10182,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Furnature,
                         fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Weapons ?? true)
@@ -10070,7 +10194,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Weapons,
                         fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Ammo ?? true)
@@ -10081,7 +10206,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Ammo,
                         fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.NPCs ?? true)
@@ -10092,7 +10218,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.NPCs,
                         fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Creatures ?? true)
@@ -10103,7 +10230,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Creatures,
                         fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.LeveledCreatures ?? true)
@@ -10114,7 +10242,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.LeveledCreatures,
                         fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.SoulGems ?? true)
@@ -10125,7 +10254,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.SoulGems,
                         fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Keys ?? true)
@@ -10136,7 +10266,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Keys,
                         fieldIndex: (int)OblivionMod_FieldIndex.Keys,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Potions ?? true)
@@ -10147,7 +10278,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Potions,
                         fieldIndex: (int)OblivionMod_FieldIndex.Potions,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Subspaces ?? true)
@@ -10158,7 +10290,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Subspaces,
                         fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.SigilStones ?? true)
@@ -10169,7 +10302,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.SigilStones,
                         fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.LeveledItems ?? true)
@@ -10180,7 +10314,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.LeveledItems,
                         fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Weathers ?? true)
@@ -10191,7 +10326,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Weathers,
                         fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Climates ?? true)
@@ -10202,7 +10338,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Climates,
                         fieldIndex: (int)OblivionMod_FieldIndex.Climates,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Regions ?? true)
@@ -10213,7 +10350,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Regions,
                         fieldIndex: (int)OblivionMod_FieldIndex.Regions,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Cells ?? true)
@@ -10224,7 +10362,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Cells,
                         fieldIndex: (int)OblivionMod_FieldIndex.Cells,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Worldspaces ?? true)
@@ -10235,7 +10374,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Worldspaces,
                         fieldIndex: (int)OblivionMod_FieldIndex.Worldspaces,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.DialogTopics ?? true)
@@ -10246,7 +10386,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.DialogTopics,
                         fieldIndex: (int)OblivionMod_FieldIndex.DialogTopics,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Quests ?? true)
@@ -10257,7 +10398,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Quests,
                         fieldIndex: (int)OblivionMod_FieldIndex.Quests,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.IdleAnimations ?? true)
@@ -10268,7 +10410,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.IdleAnimations,
                         fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.AIPackages ?? true)
@@ -10279,7 +10422,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.AIPackages,
                         fieldIndex: (int)OblivionMod_FieldIndex.AIPackages,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.CombatStyles ?? true)
@@ -10290,7 +10434,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.CombatStyles,
                         fieldIndex: (int)OblivionMod_FieldIndex.CombatStyles,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.LoadScreens ?? true)
@@ -10301,7 +10446,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.LoadScreens,
                         fieldIndex: (int)OblivionMod_FieldIndex.LoadScreens,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.LeveledSpells ?? true)
@@ -10312,7 +10458,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.LeveledSpells,
                         fieldIndex: (int)OblivionMod_FieldIndex.LeveledSpells,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.AnimatedObjects ?? true)
@@ -10323,7 +10470,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.AnimatedObjects,
                         fieldIndex: (int)OblivionMod_FieldIndex.AnimatedObjects,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.Waters ?? true)
@@ -10334,7 +10482,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.Waters,
                         fieldIndex: (int)OblivionMod_FieldIndex.Waters,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
             if (importMask?.EffectShaders ?? true)
@@ -10345,7 +10494,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: writer,
                         item: item.EffectShaders,
                         fieldIndex: (int)OblivionMod_FieldIndex.EffectShaders,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                 }
             }
         }

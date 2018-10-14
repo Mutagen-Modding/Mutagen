@@ -1,6 +1,7 @@
 ﻿using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +10,11 @@ namespace Mutagen.Bethesda
 {
     public struct ModKey : IEquatable<ModKey>
     {
+        public static readonly ModKey NULL = new ModKey(string.Empty, master: true);
         public StringCaseAgnostic Name { get; private set; }
         public bool Master { get; private set; }
         public string FileName => this.ToString();
-
+        
         public ModKey(
             string name,
             bool master)
@@ -23,7 +25,7 @@ namespace Mutagen.Bethesda
 
         public bool Equals(ModKey other)
         {
-            return this.Name.Equals(other.Name)
+            return string.Equals(this.Name, other.Name)
                 && this.Master == other.Master;
         }
 
@@ -74,6 +76,19 @@ namespace Mutagen.Bethesda
                 name: split[0],
                 master: master);
             return true;
+        }
+
+        public static ModKey Factory(string str)
+        {
+            if (TryFactory(str, out var key))
+            {
+                return key;
+            }
+            if (TryFactory(Path.GetFileName(str), out key))
+            {
+                return key;
+            }
+            throw new ArgumentException("Could not construct ModKey.");
         }
 
         public static bool operator ==(ModKey a, ModKey b)
