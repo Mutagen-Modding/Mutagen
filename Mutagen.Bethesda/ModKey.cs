@@ -53,14 +53,17 @@ namespace Mutagen.Bethesda
                 modKey = default(ModKey);
                 return false;
             }
-            var split = str.Split('.');
-            if (split.Length != 2)
+            var index = str.LastIndexOf('.');
+            if (index == -1
+                || index != str.Length - 4)
             {
                 modKey = default(ModKey);
                 return false;
             }
+            var modString = str.Substring(0, index);
+            var endString = str.Substring(index + 1);
             bool master;
-            switch (split[1].ToLower())
+            switch (endString.ToLower())
             {
                 case "esm":
                     master = true;
@@ -73,7 +76,7 @@ namespace Mutagen.Bethesda
                     return false;
             }
             modKey = new ModKey(
-                name: split[0],
+                name: modString,
                 master: master);
             return true;
         }
