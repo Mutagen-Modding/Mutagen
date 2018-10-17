@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Tests
             await modList.Import(
                 dataFolder: testingSettings.DataFolder,
                 loadOrder: loadOrder,
-                importer: async (filePath) => TryGet<OblivionMod>.Succeed(OblivionMod.Create_Binary(filePath.Path, ModKey.Factory(filePath.Path))));
+                importer: async (filePath, modKey) => TryGet<OblivionMod>.Succeed(OblivionMod.Create_Binary(filePath.Path, modKey)));
 
             Assert.NotNull(FormIDLinkTesterHelper.CreatedLinks);
             Assert.DoesNotContain(FormIDLinkTesterHelper.CreatedLinks, l => l == null);

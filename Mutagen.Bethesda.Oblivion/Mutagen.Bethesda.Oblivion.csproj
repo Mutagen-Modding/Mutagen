@@ -21,6 +21,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.1</LangVersion>
+    <NoWarn>CS1998</NoWarn>
+    <WarningsAsErrors>CS4014</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +31,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>CS1998</NoWarn>
+    <WarningsAsErrors>CS4014</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -43,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="ModList.cs" />
     <Compile Include="Records\Common Enums\ActorValue.cs" />
     <Compile Include="Records\Common Enums\ActorValueExtended.cs" />
     <Compile Include="Records\Common Enums\Attribute.cs" />

@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda
         public async Task Import(
             DirectoryPath dataFolder,
             List<ModKey> loadOrder,
-            Func<FilePath, Task<TryGet<TMod>>> importer)
+            Func<FilePath, ModKey, Task<TryGet<TMod>>> importer)
         {
             this.Clear();
             int index = 0;
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda
                     {
                         FilePath modPath = dataFolder.GetFile(modKey.FileName);
                         if (!modPath.Exists) return (modKey, modIndex, TryGet<TMod>.Failure);
-                        return (modKey, modIndex, await importer(modPath));
+                        return (modKey, modIndex, await importer(modPath, modKey));
                     });
                 }));
             foreach (var item in results

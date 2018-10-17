@@ -81,15 +81,15 @@ namespace Mutagen.Bethesda.Oblivion
                     default:
                         break;
                 }
-                Utility.ModifyButThrow(_majorRecords, change);
+                Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change);
             });
         }
 
         protected void SubscribeToCell(Cell cell)
         {
-            cell.Persistent.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
-            cell.Temporary.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
-            cell.VisibleWhenDistant.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
+            cell.Persistent.Subscribe_Enumerable_Single(_subscribeObject, (r) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, r));
+            cell.Temporary.Subscribe_Enumerable_Single(_subscribeObject, (r) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, r));
+            cell.VisibleWhenDistant.Subscribe_Enumerable_Single(_subscribeObject, (r) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, r));
             cell.Landscape_Property.Subscribe(_subscribeObject, (r) =>
             {
                 if (r.Old != null)
