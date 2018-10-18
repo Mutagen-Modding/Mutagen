@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static async Task<TryGet<ModList>> TryImportUsualLoadOrder(DirectoryPath dataFolder, GroupMask importMask = null)
         {
-            if (!LoadOrder.TryGetUsualLoadOrder(out var loadOrder))
+            if (!LoadOrder.TryGetUsualLoadOrder(dataFolder, out var loadOrder))
             {
                 return TryGet<ModList>.Fail(null);
             }

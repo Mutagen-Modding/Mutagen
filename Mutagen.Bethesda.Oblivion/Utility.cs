@@ -21,10 +21,14 @@ namespace Mutagen.Bethesda.Oblivion
             return path.Exists;
         }
 
-        public static bool TryCreateLoadOrder(string path, out List<ModKey> modList)
+        public static bool TryCreateLoadOrder(
+            FilePath pluginListPath,
+            DirectoryPath dataPath,
+            out List<ModKey> modList)
         {
+            List<(ModKey ModKey, DateTime Write)> list = new List<(ModKey ModKey, DateTime Write)>();
             modList = new List<ModKey>();
-            foreach (var item in File.ReadAllLines(path))
+            foreach (var item in File.ReadAllLines(pluginListPath.Path))
             {
                 var str = item;
                 var commentIndex = str.IndexOf('#');
@@ -34,23 +38,26 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (string.IsNullOrWhiteSpace(str)) continue;
                 str = str.Trim();
-                if (!ModKey.TryFactory(str, out var key))
-                {
-                    return false;
-                }
-                modList.Add(key);
+                if (!ModKey.TryFactory(str, out var key)) return false;
+                FilePath file = new FilePath(
+                    Path.Combine(dataPath.Path, str));
+                if (!file.Exists) return false;
+                list.Add((key, file.Info.LastWriteTime));
             }
+            modList.AddRange(list
+                .OrderBy(i => i.Write)
+                .Select(i => i.ModKey));
             return true;
         }
 
-        public static bool TryGetUsualLoadOrder(out List<ModKey> loadOrder)
+        public static bool TryGetUsualLoadOrder(DirectoryPath dataPath, out List<ModKey> loadOrder)
         {
             if (!TryGetPluginsFile(out var path))
             {
                 loadOrder = null;
                 return false;
             }
-            return TryCreateLoadOrder(path.Path, out loadOrder);
+            return TryCreateLoadOrder(path, dataPath, out loadOrder);
         }
     }
 }
