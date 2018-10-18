@@ -23,5 +23,10 @@ namespace Mutagen.Bethesda
         {
             this.Key = key;
         }
+
+        public override string ToString()
+        {
+            return Key.ToString();
+        }
     }
 }

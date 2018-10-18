@@ -35,6 +35,11 @@ namespace Mutagen.Bethesda
                 GRUP_RECORD_TYPE.TypeInt,
                 errorMask: errorMask);
         }
+
+        public override string ToString()
+        {
+            return $"Group<{typeof(T).Name}>({this.Items.Count})";
+        }
     }
 
     public static class GroupExt
