@@ -105,10 +105,10 @@ namespace Mutagen.Bethesda.Generation
                         }
                         else
                         {
-                            fg.AppendLine("if (rhsMod.{field.Name}.Items.Count > 0)");
+                            fg.AppendLine($"if (rhsMod.{field.Name}.Items.Count > 0)");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine("throw new NotImplementedException(\"Cell additions need implementing\")");
+                                fg.AppendLine("throw new NotImplementedException(\"Cell additions need implementing\");");
                             }
                         }
                     }

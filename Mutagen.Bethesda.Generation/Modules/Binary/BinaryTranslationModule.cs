@@ -1049,6 +1049,7 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
                             args.Add($"importMask: importMask");
+                            args.Add($"modKey: modKey");
                         }
                         args.Add($"recordTypeConverter: recordTypeConverter");
                         args.Add($"errorMask: errorMask");
@@ -1162,6 +1163,7 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         args.Add($"GroupMask importMask");
+                        args.Add($"ModKey modKey");
                     }
                     args.Add("RecordTypeConverter recordTypeConverter");
                     args.Add($"ErrorMaskBuilder errorMask");
@@ -1174,7 +1176,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
-                        fg.AppendLine($"MasterReferences masterReferences = new MasterReferences(item.TES4.MasterReferences, item.ModKey);");
+                        fg.AppendLine($"MasterReferences masterReferences = new MasterReferences(item.TES4.MasterReferences, modKey);");
                     }
                     if (obj.HasLoquiBaseObject)
                     {

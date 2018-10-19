@@ -10041,6 +10041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 importMask: importMask,
+                modKey: modKey,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -10050,10 +10051,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod item,
             MutagenWriter writer,
             GroupMask importMask,
+            ModKey modKey,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            MasterReferences masterReferences = new MasterReferences(item.TES4.MasterReferences, item.ModKey);
+            MasterReferences masterReferences = new MasterReferences(item.TES4.MasterReferences, modKey);
             LoquiBinaryTranslation<TES4>.Instance.Write(
                 writer: writer,
                 item: item.TES4_Property,

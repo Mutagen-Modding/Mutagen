@@ -14,13 +14,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         private static readonly object _subscribeObject = new object();
         public INotifyingListGetter<MasterReference> MasterReferences => this.TES4.MasterReferences;
-        private ModKey _modKey;
-        public ModKey ModKey => _modKey;
-
-        public OblivionMod(ModKey modKey)
-        {
-            _modKey = modKey;
-        }
 
         partial void CustomCtor()
         {
