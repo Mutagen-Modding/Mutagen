@@ -62,7 +62,6 @@ namespace Mutagen.Bethesda.Generation
                 "public INotifyingKeyedCollection<FormKey, T> GetGroup<T>",
                 wheres: "where T : IMajorRecord"))
             {
-
             }
             using (new BraceWrapper(fg))
             {
@@ -83,6 +82,39 @@ namespace Mutagen.Bethesda.Generation
                 }
                 fg.AppendLine("throw new ArgumentException($\"Unkown group type: {t}\");");
             }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                "public void AddRecords"))
+            {
+                args.Add($"{obj.Name} rhsMod");
+                args.Add($"GroupMask mask = null");
+            }
+            using (new BraceWrapper(fg))
+            {
+                foreach (var field in obj.IterateFields())
+                {
+                    if (!(field is LoquiType loqui)) continue;
+                    if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                    fg.AppendLine($"if (mask?.{field.Name} ?? true)");
+                    using (new BraceWrapper(fg))
+                    {
+                        if (loqui.TargetObjectGeneration.Name == "Group")
+                        {
+                            fg.AppendLine($"this.{field.Name}.Items.Set(rhsMod.{field.Name}.Items.Values);");
+                        }
+                        else
+                        {
+                            fg.AppendLine("if (rhsMod.{field.Name}.Items.Count > 0)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine("throw new NotImplementedException(\"Cell additions need implementing\")");
+                            }
+                        }
+                    }
+                }
+            }
+            fg.AppendLine();
 
             await base.GenerateInClass(obj, fg);
             fg.AppendLine();

@@ -2970,6 +2970,240 @@ namespace Mutagen.Bethesda.Oblivion
             throw new ArgumentException($"Unkown group type: {t}");
         }
 
+        public void AddRecords(
+            OblivionMod rhsMod,
+            GroupMask mask = null)
+        {
+            if (mask?.GameSettings ?? true)
+            {
+                this.GameSettings.Items.Set(rhsMod.GameSettings.Items.Values);
+            }
+            if (mask?.Globals ?? true)
+            {
+                this.Globals.Items.Set(rhsMod.Globals.Items.Values);
+            }
+            if (mask?.Classes ?? true)
+            {
+                this.Classes.Items.Set(rhsMod.Classes.Items.Values);
+            }
+            if (mask?.Factions ?? true)
+            {
+                this.Factions.Items.Set(rhsMod.Factions.Items.Values);
+            }
+            if (mask?.Hairs ?? true)
+            {
+                this.Hairs.Items.Set(rhsMod.Hairs.Items.Values);
+            }
+            if (mask?.Eyes ?? true)
+            {
+                this.Eyes.Items.Set(rhsMod.Eyes.Items.Values);
+            }
+            if (mask?.Races ?? true)
+            {
+                this.Races.Items.Set(rhsMod.Races.Items.Values);
+            }
+            if (mask?.Sounds ?? true)
+            {
+                this.Sounds.Items.Set(rhsMod.Sounds.Items.Values);
+            }
+            if (mask?.Skills ?? true)
+            {
+                this.Skills.Items.Set(rhsMod.Skills.Items.Values);
+            }
+            if (mask?.MagicEffects ?? true)
+            {
+                this.MagicEffects.Items.Set(rhsMod.MagicEffects.Items.Values);
+            }
+            if (mask?.Scripts ?? true)
+            {
+                this.Scripts.Items.Set(rhsMod.Scripts.Items.Values);
+            }
+            if (mask?.LandTextures ?? true)
+            {
+                this.LandTextures.Items.Set(rhsMod.LandTextures.Items.Values);
+            }
+            if (mask?.Enchantments ?? true)
+            {
+                this.Enchantments.Items.Set(rhsMod.Enchantments.Items.Values);
+            }
+            if (mask?.Spells ?? true)
+            {
+                this.Spells.Items.Set(rhsMod.Spells.Items.Values);
+            }
+            if (mask?.Birthsigns ?? true)
+            {
+                this.Birthsigns.Items.Set(rhsMod.Birthsigns.Items.Values);
+            }
+            if (mask?.Activators ?? true)
+            {
+                this.Activators.Items.Set(rhsMod.Activators.Items.Values);
+            }
+            if (mask?.AlchemicalApparatus ?? true)
+            {
+                this.AlchemicalApparatus.Items.Set(rhsMod.AlchemicalApparatus.Items.Values);
+            }
+            if (mask?.Armors ?? true)
+            {
+                this.Armors.Items.Set(rhsMod.Armors.Items.Values);
+            }
+            if (mask?.Books ?? true)
+            {
+                this.Books.Items.Set(rhsMod.Books.Items.Values);
+            }
+            if (mask?.Clothes ?? true)
+            {
+                this.Clothes.Items.Set(rhsMod.Clothes.Items.Values);
+            }
+            if (mask?.Containers ?? true)
+            {
+                this.Containers.Items.Set(rhsMod.Containers.Items.Values);
+            }
+            if (mask?.Doors ?? true)
+            {
+                this.Doors.Items.Set(rhsMod.Doors.Items.Values);
+            }
+            if (mask?.Ingredients ?? true)
+            {
+                this.Ingredients.Items.Set(rhsMod.Ingredients.Items.Values);
+            }
+            if (mask?.Lights ?? true)
+            {
+                this.Lights.Items.Set(rhsMod.Lights.Items.Values);
+            }
+            if (mask?.Miscellaneous ?? true)
+            {
+                this.Miscellaneous.Items.Set(rhsMod.Miscellaneous.Items.Values);
+            }
+            if (mask?.Statics ?? true)
+            {
+                this.Statics.Items.Set(rhsMod.Statics.Items.Values);
+            }
+            if (mask?.Grasses ?? true)
+            {
+                this.Grasses.Items.Set(rhsMod.Grasses.Items.Values);
+            }
+            if (mask?.Trees ?? true)
+            {
+                this.Trees.Items.Set(rhsMod.Trees.Items.Values);
+            }
+            if (mask?.Flora ?? true)
+            {
+                this.Flora.Items.Set(rhsMod.Flora.Items.Values);
+            }
+            if (mask?.Furnature ?? true)
+            {
+                this.Furnature.Items.Set(rhsMod.Furnature.Items.Values);
+            }
+            if (mask?.Weapons ?? true)
+            {
+                this.Weapons.Items.Set(rhsMod.Weapons.Items.Values);
+            }
+            if (mask?.Ammo ?? true)
+            {
+                this.Ammo.Items.Set(rhsMod.Ammo.Items.Values);
+            }
+            if (mask?.NPCs ?? true)
+            {
+                this.NPCs.Items.Set(rhsMod.NPCs.Items.Values);
+            }
+            if (mask?.Creatures ?? true)
+            {
+                this.Creatures.Items.Set(rhsMod.Creatures.Items.Values);
+            }
+            if (mask?.LeveledCreatures ?? true)
+            {
+                this.LeveledCreatures.Items.Set(rhsMod.LeveledCreatures.Items.Values);
+            }
+            if (mask?.SoulGems ?? true)
+            {
+                this.SoulGems.Items.Set(rhsMod.SoulGems.Items.Values);
+            }
+            if (mask?.Keys ?? true)
+            {
+                this.Keys.Items.Set(rhsMod.Keys.Items.Values);
+            }
+            if (mask?.Potions ?? true)
+            {
+                this.Potions.Items.Set(rhsMod.Potions.Items.Values);
+            }
+            if (mask?.Subspaces ?? true)
+            {
+                this.Subspaces.Items.Set(rhsMod.Subspaces.Items.Values);
+            }
+            if (mask?.SigilStones ?? true)
+            {
+                this.SigilStones.Items.Set(rhsMod.SigilStones.Items.Values);
+            }
+            if (mask?.LeveledItems ?? true)
+            {
+                this.LeveledItems.Items.Set(rhsMod.LeveledItems.Items.Values);
+            }
+            if (mask?.Weathers ?? true)
+            {
+                this.Weathers.Items.Set(rhsMod.Weathers.Items.Values);
+            }
+            if (mask?.Climates ?? true)
+            {
+                this.Climates.Items.Set(rhsMod.Climates.Items.Values);
+            }
+            if (mask?.Regions ?? true)
+            {
+                this.Regions.Items.Set(rhsMod.Regions.Items.Values);
+            }
+            if (mask?.Cells ?? true)
+            {
+                if (rhsMod.Cells.Items.Count > 0)
+                {
+                    throw new NotImplementedException("Cell additions need implementing");
+                }
+            }
+            if (mask?.Worldspaces ?? true)
+            {
+                this.Worldspaces.Items.Set(rhsMod.Worldspaces.Items.Values);
+            }
+            if (mask?.DialogTopics ?? true)
+            {
+                this.DialogTopics.Items.Set(rhsMod.DialogTopics.Items.Values);
+            }
+            if (mask?.Quests ?? true)
+            {
+                this.Quests.Items.Set(rhsMod.Quests.Items.Values);
+            }
+            if (mask?.IdleAnimations ?? true)
+            {
+                this.IdleAnimations.Items.Set(rhsMod.IdleAnimations.Items.Values);
+            }
+            if (mask?.AIPackages ?? true)
+            {
+                this.AIPackages.Items.Set(rhsMod.AIPackages.Items.Values);
+            }
+            if (mask?.CombatStyles ?? true)
+            {
+                this.CombatStyles.Items.Set(rhsMod.CombatStyles.Items.Values);
+            }
+            if (mask?.LoadScreens ?? true)
+            {
+                this.LoadScreens.Items.Set(rhsMod.LoadScreens.Items.Values);
+            }
+            if (mask?.LeveledSpells ?? true)
+            {
+                this.LeveledSpells.Items.Set(rhsMod.LeveledSpells.Items.Values);
+            }
+            if (mask?.AnimatedObjects ?? true)
+            {
+                this.AnimatedObjects.Items.Set(rhsMod.AnimatedObjects.Items.Values);
+            }
+            if (mask?.Waters ?? true)
+            {
+                this.Waters.Items.Set(rhsMod.Waters.Items.Values);
+            }
+            if (mask?.EffectShaders ?? true)
+            {
+                this.EffectShaders.Items.Set(rhsMod.EffectShaders.Items.Values);
+            }
+        }
+
+
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
