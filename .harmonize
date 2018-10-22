@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>ab44fc6fe696b16785c1297a85c360f94c70957c</Sha>
+         <Sha>eede3b05fcc68db0ffd4afecd8e1ec6246280ebf</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-08-2018 19:12:40</CommitDate>
-         <Description>NotifyingList implements IReadOnlyList</Description>
+         <CommitDate>10-22-2018 18:33:51</CommitDate>
+         <Description>NotifyingSetItem.Unset bugfix</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
