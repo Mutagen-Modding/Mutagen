@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Binary
         {
             UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.GetFormID(masterReferences).ID,
+                item: item.GetFormID(masterReferences).Raw,
                 errorMask: errorMask);
         }
 
