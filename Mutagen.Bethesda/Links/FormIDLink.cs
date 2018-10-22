@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda
                 sourceMod,
                 out var item))
             {
-                this.Item = default(T);
+                this.Item = default;
                 return false;
             }
             this.Set(item, cmds);

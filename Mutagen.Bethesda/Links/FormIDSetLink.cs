@@ -85,13 +85,14 @@ namespace Mutagen.Bethesda
 #if DEBUG
             this.AttemptedLink = true;
 #endif
+            if (!this.HasBeenSet) return false;
             if (!FormIDLink<T>.TryGetLink(
                 this.UnlinkedForm,
                 modList,
                 sourceMod,
                 out var item))
             {
-                this.Unset(cmds.ToUnsetParams());
+                this.Item = default;
                 return false;
             }
             this.Set(item, cmds);
