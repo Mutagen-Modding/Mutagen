@@ -1407,11 +1407,11 @@ namespace Mutagen.Bethesda
                             errorMask: errorMask,
                             transl: (MutagenFrame r, out T dictSubItem, ErrorMaskBuilder dictSubMask) =>
                             {
-                                    return LoquiBinaryTranslation<T>.Instance.Parse(
-                                        frame: r.Spawn(snapToFinalPosition: false),
-                                        item: out dictSubItem,
-                                        errorMask: dictSubMask,
-                                        masterReferences: masterReferences);
+                                return LoquiBinaryTranslation<T>.Instance.Parse(
+                                    frame: r.Spawn(snapToFinalPosition: false),
+                                    item: out dictSubItem,
+                                    errorMask: dictSubMask,
+                                    masterReferences: masterReferences);
                             }
                             );
                         return TryGet<int?>.Failure;

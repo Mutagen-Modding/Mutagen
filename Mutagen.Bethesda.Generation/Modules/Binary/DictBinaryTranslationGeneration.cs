@@ -236,20 +236,17 @@ namespace Mutagen.Bethesda.Generation
                         using (new BraceWrapper(gen))
                         {
                             LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
-                            using (new DepthWrapper(gen))
-                            {
-                                subGen.GenerateCopyInRet(
-                                    fg: gen,
-                                    objGen: objGen,
-                                    targetGen: dict.ValueTypeGen,
-                                    typeGen: targetLoqui,
-                                    readerAccessor: "r",
-                                    squashedRepeatedList: false,
-                                    retAccessor: "return ",
-                                    translationAccessor: "dictTranslMask",
-                                    outItemAccessor: new Accessor("dictSubItem"),
-                                    maskAccessor: "dictSubMask");
-                            }
+                            subGen.GenerateCopyInRet(
+                                fg: gen,
+                                objGen: objGen,
+                                targetGen: dict.ValueTypeGen,
+                                typeGen: targetLoqui,
+                                readerAccessor: "r",
+                                squashedRepeatedList: false,
+                                retAccessor: "return ",
+                                translationAccessor: "dictTranslMask",
+                                outItemAccessor: new Accessor("dictSubItem"),
+                                maskAccessor: "dictSubMask");
                         }
                     });
                 }
