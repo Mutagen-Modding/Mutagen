@@ -70,6 +70,7 @@
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="MasterReferences.cs" />
     <Compile Include="ModRecordSorter.cs" />
+    <Compile Include="Pipeline.cs" />
     <Compile Include="RecordLocator.cs" />
     <Compile Include="ModRecordAligner.cs" />
     <Compile Include="ModID.cs" />

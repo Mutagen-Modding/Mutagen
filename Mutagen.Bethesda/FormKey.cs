@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda
         public static readonly FormKey NULL = new FormKey(ModKey.NULL, 0);
         public readonly uint ID;
         public readonly ModKey ModKey;
+        public bool IsNull => this.Equals(NULL);
 
         public FormKey(ModKey modKey, uint id)
         {

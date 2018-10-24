@@ -10,11 +10,14 @@ namespace Mutagen.Bethesda
     public interface IMod<M> : ILinkContainer
         where M : IMod<M>
     {
-        INotifyingListGetter<MasterReference> MasterReferences { get; }
+        INotifyingList<MasterReference> MasterReferences { get; }
         INotifyingDictionaryGetter<FormKey, MajorRecord> MajorRecords { get; }
         INotifyingKeyedCollection<FormKey, T> GetGroup<T>() where T : IMajorRecord;
         void Link(
             ModList<M> modList,
             NotifyingFireParameters cmds = null);
+        void Write_Binary(
+            string path,
+            ModKey modKey);
     }
 }

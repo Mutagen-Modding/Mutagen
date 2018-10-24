@@ -13,7 +13,12 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class OblivionMod : IMod<OblivionMod>, ILinkContainer
     {
         private static readonly object _subscribeObject = new object();
-        public INotifyingListGetter<MasterReference> MasterReferences => this.TES4.MasterReferences;
+        public INotifyingList<MasterReference> MasterReferences => this.TES4.MasterReferences;
+
+        void IMod<OblivionMod>.Write_Binary(string path, ModKey modKey)
+        {
+            this.Write_Binary(path, modKey, importMask: null);
+        }
 
         partial void CustomCtor()
         {
