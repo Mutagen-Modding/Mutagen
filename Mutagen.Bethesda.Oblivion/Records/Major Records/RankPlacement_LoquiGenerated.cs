@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    obj.Faction = default(FormIDLink<Faction>);
+                    obj.Faction = default(Faction);
                     break;
                 case RankPlacement_FieldIndex.Rank:
                     obj.Rank = default(Byte);
@@ -1768,7 +1768,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankPlacement item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Faction = default(FormIDLink<Faction>);
+            item.Faction = default(Faction);
             item.Rank = default(Byte);
             item.Fluff = default(Byte[]);
         }

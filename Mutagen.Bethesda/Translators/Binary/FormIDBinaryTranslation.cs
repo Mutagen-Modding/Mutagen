@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Binary
         public override int? ExpectedLength => 4;
 
         public void ParseInto<T>(MutagenFrame frame, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void ParseInto<T>(MutagenFrame frame, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public bool Parse<T>(MutagenFrame frame, out FormIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (Parse(frame, out FormID id, errorMask))
             {
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public bool Parse<T>(MutagenFrame frame, out FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (Parse(frame, out FormID id, errorMask))
             {
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public bool Parse<T>(MutagenFrame frame, out EDIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (ExpectedLength.HasValue)
             {
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public bool Parse<T>(MutagenFrame frame, out EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (ExpectedLength.HasValue)
             {
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void Write<T>(MutagenWriter writer, FormIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             this.Write(
                 writer,
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void Write<T>(MutagenWriter writer, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             this.Write(
                 writer,
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void Write<T>(MutagenWriter writer, EDIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             Int32BinaryTranslation.Instance.Write(
                 writer,
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void Write<T>(MutagenWriter writer, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             Int32BinaryTranslation.Instance.Write(
                 writer,
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Binary
             FormIDLink<T> item,
             int fieldIndex,
             ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Binary
             FormIDSetLink<T> item,
             int fieldIndex,
             ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Binary
             EDIDLink<T> item,
             int fieldIndex,
             ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Binary
             EDIDSetLink<T> item,
             int fieldIndex,
             ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (!item.HasBeenSet) return;
             this.Write(

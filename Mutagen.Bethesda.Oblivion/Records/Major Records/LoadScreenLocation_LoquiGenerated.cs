@@ -1501,10 +1501,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LoadScreenLocation_FieldIndex.Direct:
-                    obj.Direct = default(FormIDLink<Place>);
+                    obj.Direct = default(Place);
                     break;
                 case LoadScreenLocation_FieldIndex.Indirect:
-                    obj.Indirect = default(FormIDLink<Worldspace>);
+                    obj.Indirect = default(Worldspace);
                     break;
                 case LoadScreenLocation_FieldIndex.GridPoint:
                     obj.GridPoint = default(P2Int16);
@@ -1552,8 +1552,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocation item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Direct = default(FormIDLink<Place>);
-            item.Indirect = default(FormIDLink<Worldspace>);
+            item.Direct = default(Place);
+            item.Indirect = default(Worldspace);
             item.GridPoint = default(P2Int16);
         }
 

@@ -1708,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionSound_FieldIndex.Sound:
-                    obj.Sound = default(FormIDLink<Sound>);
+                    obj.Sound = default(Sound);
                     break;
                 case RegionSound_FieldIndex.Flags:
                     obj.Flags = default(RegionSound.Flag);
@@ -1759,7 +1759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSound item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Sound = default(FormIDLink<Sound>);
+            item.Sound = default(Sound);
             item.Flags = default(RegionSound.Flag);
             item.Chance = default(Single);
         }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Interfaces\IOwner.cs" />
+    <Compile Include="Interfaces\IPlaced.cs" />
     <Compile Include="Records\Common Enums\ActorValue.cs" />
     <Compile Include="Records\Common Enums\ActorValueExtended.cs" />
     <Compile Include="Records\Common Enums\Attribute.cs" />
@@ -623,9 +625,6 @@
     <Compile Include="Records\Major Records\CellSubBlock_LoquiGenerated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Placed_LoquiGenerated.cs">
-      <DependentUpon>Placed.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\InterCellPoint_LoquiGenerated.cs">
       <DependentUpon>PathGrid.xml</DependentUpon>
     </Compile>
@@ -902,9 +901,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Place.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\Major Records\Placed.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\PlacedNPC.xml">

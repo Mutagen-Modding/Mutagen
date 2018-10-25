@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PathGrid : 
-        Placed,
+        MajorRecord,
         IPathGrid,
         ILoquiObject<PathGrid>,
         ILoquiObjectSetter,
@@ -454,22 +454,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
-            out Placed_ErrorMask errorMask,
-            Placed_TranslationMask translationMask = null,
-            bool doMasks = true,
-            NotifyingFireParameters cmds = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyIn_Xml_Internal(
-                root: root,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal(),
-                cmds: cmds);
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void CopyIn_Xml(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -538,22 +522,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out Placed_ErrorMask errorMask,
-            bool doMasks = true,
-            Placed_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
-                node: node,
-                name: name,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
         public override void Write_Xml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -707,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    Placed.Fill_Xml_Internal(
+                    MajorRecord.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -1047,19 +1015,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
-            out Placed_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1133,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             ErrorMaskBuilder errorMask)
         {
-            Placed.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
@@ -1190,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
                 default:
-                    return Placed.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -1349,7 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out PathGrid_FieldIndex enu))
             {
-                CopyInInternal_Placed(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1380,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IPathGrid : IPathGridGetter, IPlaced, ILoquiClass<IPathGrid, IPathGridGetter>, ILoquiClass<PathGrid, IPathGridGetter>
+    public partial interface IPathGrid : IPathGridGetter, IMajorRecord, ILoquiClass<IPathGrid, IPathGridGetter>, ILoquiClass<PathGrid, IPathGridGetter>
     {
         new INotifyingList<PathGridPoint> PointToPointConnections { get; }
         new Byte[] Unknown { get; set; }
@@ -1390,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<PointToReferenceMapping> PointToReferenceMappings { get; }
     }
 
-    public partial interface IPathGridGetter : IPlacedGetter
+    public partial interface IPathGridGetter : IMajorRecordGetter
     {
         #region PointToPointConnections
         INotifyingListGetter<PathGridPoint> PointToPointConnections { get; }
@@ -1499,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.Unknown:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1515,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.Unknown:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1530,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.PointToReferenceMappings:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1548,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.PointToReferenceMappings:
                     return "PointToReferenceMappings";
                 default:
-                    return Placed_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1563,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.PointToReferenceMappings:
                     return false;
                 default:
-                    return Placed_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1578,7 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.PointToReferenceMappings:
                     return false;
                 default:
-                    return Placed_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1596,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.PointToReferenceMappings:
                     return typeof(NotifyingList<PointToReferenceMapping>);
                 default:
-                    return Placed_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1650,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PathGrid_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            PlacedCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1813,7 +1768,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.PointToReferenceMappings.HasBeenSet = on;
                     break;
                 default:
-                    PlacedCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -1839,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.PointToReferenceMappings.Unset(cmds);
                     break;
                 default:
-                    PlacedCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -1860,7 +1815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.PointToReferenceMappings:
                     return obj.PointToReferenceMappings.HasBeenSet;
                 default:
-                    return PlacedCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -1880,7 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.PointToReferenceMappings:
                     return obj.PointToReferenceMappings;
                 default:
-                    return PlacedCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -1989,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.PointToReferenceMappings = new MaskItem<bool, IEnumerable<MaskItem<bool, PointToReferenceMapping_Mask<bool>>>>();
                 ret.PointToReferenceMappings.Overall = false;
             }
-            PlacedCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2100,31 +2055,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.InterCellConnections = new MaskItem<bool, IEnumerable<MaskItem<bool, InterCellPoint_Mask<bool>>>>(item.InterCellConnections.HasBeenSet, item.InterCellConnections.Select((i) => new MaskItem<bool, InterCellPoint_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.PointToReferenceMappings = new MaskItem<bool, IEnumerable<MaskItem<bool, PointToReferenceMapping_Mask<bool>>>>(item.PointToReferenceMappings.HasBeenSet, item.PointToReferenceMappings.Select((i) => new MaskItem<bool, PointToReferenceMapping_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
-        }
-
-        public static PathGrid_FieldIndex? ConvertFieldIndex(Placed_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static PathGrid_FieldIndex ConvertFieldIndex(Placed_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Placed_FieldIndex.MajorRecordFlags:
-                    return (PathGrid_FieldIndex)((int)index);
-                case Placed_FieldIndex.FormID:
-                    return (PathGrid_FieldIndex)((int)index);
-                case Placed_FieldIndex.Version:
-                    return (PathGrid_FieldIndex)((int)index);
-                case Placed_FieldIndex.EditorID:
-                    return (PathGrid_FieldIndex)((int)index);
-                case Placed_FieldIndex.RecordType:
-                    return (PathGrid_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static PathGrid_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -2346,7 +2276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class PathGrid_Mask<T> : Placed_Mask<T>, IMask<T>, IEquatable<PathGrid_Mask<T>>
+    public class PathGrid_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<PathGrid_Mask<T>>
     {
         #region Ctors
         public PathGrid_Mask()
@@ -2646,7 +2576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class PathGrid_ErrorMask : Placed_ErrorMask, IErrorMask<PathGrid_ErrorMask>
+    public class PathGrid_ErrorMask : MajorRecord_ErrorMask, IErrorMask<PathGrid_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, PathGridPoint_ErrorMask>>> PointToPointConnections;
@@ -2858,7 +2788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PathGrid_CopyMask : Placed_CopyMask
+    public class PathGrid_CopyMask : MajorRecord_CopyMask
     {
         #region Members
         public MaskItem<CopyOption, PathGridPoint_CopyMask> PointToPointConnections;
@@ -2868,7 +2798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PathGrid_TranslationMask : Placed_TranslationMask
+    public class PathGrid_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;

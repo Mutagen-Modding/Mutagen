@@ -1731,9 +1731,14 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
+        public static readonly RecordType LAND_HEADER = new RecordType("LAND");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
+        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
+        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
+        public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
+        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
@@ -1770,11 +1775,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
-        public static readonly RecordType LAND_HEADER = new RecordType("LAND");
-        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
-        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
-        public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
-        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
@@ -1807,9 +1807,14 @@ namespace Mutagen.Bethesda.Internals
                         GRAS_HEADER,
                         HAIR_HEADER,
                         IDLE_HEADER,
+                        LAND_HEADER,
                         LTEX_HEADER,
                         LSCR_HEADER,
                         MGEF_HEADER,
+                        PGRD_HEADER,
+                        ACRE_HEADER,
+                        ACHR_HEADER,
+                        REFR_HEADER,
                         QUST_HEADER,
                         RACE_HEADER,
                         REGN_HEADER,
@@ -1846,11 +1851,6 @@ namespace Mutagen.Bethesda.Internals
                         NPC__HEADER,
                         CELL_HEADER,
                         WRLD_HEADER,
-                        LAND_HEADER,
-                        PGRD_HEADER,
-                        ACRE_HEADER,
-                        ACHR_HEADER,
-                        REFR_HEADER,
                         LVSP_HEADER,
                         SPEL_HEADER
                     })

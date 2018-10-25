@@ -1201,10 +1201,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    obj.Male = default(FormIDLink<Race>);
+                    obj.Male = default(Race);
                     break;
                 case RaceVoices_FieldIndex.Female:
-                    obj.Female = default(FormIDLink<Race>);
+                    obj.Female = default(Race);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1246,8 +1246,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceVoices item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Male = default(FormIDLink<Race>);
-            item.Female = default(FormIDLink<Race>);
+            item.Male = default(Race);
+            item.Female = default(Race);
         }
 
         public static RaceVoices_Mask<bool> GetEqualsMask(

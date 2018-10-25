@@ -4480,7 +4480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObject_FieldIndex.Object:
-                    obj.Object = default(FormIDLink<MajorRecord>);
+                    obj.Object = default(MajorRecord);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
                     obj.ParentIndex = default(UInt16);
@@ -4615,7 +4615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObject item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Object = default(FormIDLink<MajorRecord>);
+            item.Object = default(MajorRecord);
             item.ParentIndex = default(UInt16);
             item.Unknown1 = default(Byte[]);
             item.Density = default(Single);

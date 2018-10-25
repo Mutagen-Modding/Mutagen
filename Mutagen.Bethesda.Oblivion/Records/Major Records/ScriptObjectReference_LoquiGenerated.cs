@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    obj.Reference = default(FormIDLink<MajorRecord>);
+                    obj.Reference = default(MajorRecord);
                     break;
                 default:
                     ScriptReferenceCommon.UnsetNthObject(index, obj);
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptObjectReference item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Reference = default(FormIDLink<MajorRecord>);
+            item.Reference = default(MajorRecord);
         }
 
         public static ScriptObjectReference_Mask<bool> GetEqualsMask(

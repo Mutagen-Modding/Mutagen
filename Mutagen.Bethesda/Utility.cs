@@ -10,9 +10,9 @@ namespace Mutagen.Bethesda
     public class Utility
     {
         public static void ModifyButThrow<T>(
-            NotifyingDictionary<FormID, MajorRecord> dict,
+            NotifyingDictionary<FormID, IMajorRecord> dict,
             ChangeAddRem<T> change)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (dict.ContainsKey(change.Item.FormID))
             {
@@ -22,9 +22,9 @@ namespace Mutagen.Bethesda
         }
 
         public static void ModifyButThrow<T>(
-            NotifyingDictionary<FormID, MajorRecord> dict,
+            NotifyingDictionary<FormID, IMajorRecord> dict,
             ChangeAddRem<KeyValuePair<FormID, T>> change)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (dict.ContainsKey(change.Item.Key))
             {
@@ -34,9 +34,9 @@ namespace Mutagen.Bethesda
         }
 
         public static void Modify<T>(
-            NotifyingDictionary<FormID, MajorRecord> dict,
+            NotifyingDictionary<FormID, IMajorRecord> dict,
             ChangeSet<T> change)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (change.Old != null)
             {

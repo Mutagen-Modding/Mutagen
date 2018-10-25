@@ -2556,16 +2556,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        private NotifyingDictionary<FormID, MajorRecord> _majorRecords = new NotifyingDictionary<FormID, MajorRecord>();
-        public INotifyingDictionaryGetter<FormID, MajorRecord> MajorRecords => _majorRecords;
-        public MajorRecord this[FormID id]
+        private NotifyingDictionary<FormID, IMajorRecord> _majorRecords = new NotifyingDictionary<FormID, IMajorRecord>();
+        public INotifyingDictionaryGetter<FormID, IMajorRecord> MajorRecords => _majorRecords;
+        public IMajorRecord this[FormID id]
         {
             get => _majorRecords[id];
             set => SetMajorRecord(id, value);
         }
         protected void SetMajorRecord(
             FormID id,
-            MajorRecord record)
+            IMajorRecord record)
         {
             switch (record)
             {

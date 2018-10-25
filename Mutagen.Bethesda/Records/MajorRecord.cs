@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda
 {
     public partial interface IMajorRecord : IFormID
     {
+        new FormID FormID { get; }
     }
 
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormID.ToString()}")]

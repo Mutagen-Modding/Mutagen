@@ -1420,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherChance_FieldIndex.Weather:
-                    obj.Weather = default(FormIDLink<Weather>);
+                    obj.Weather = default(Weather);
                     break;
                 case WeatherChance_FieldIndex.Chance:
                     obj.Chance = default(Int32);
@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherChance item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Weather = default(FormIDLink<Weather>);
+            item.Weather = default(Weather);
             item.Chance = default(Int32);
         }
 

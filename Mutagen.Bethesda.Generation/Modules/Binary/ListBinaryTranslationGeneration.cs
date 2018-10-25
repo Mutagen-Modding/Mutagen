@@ -189,9 +189,9 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else if (!list.MaxValue.HasValue)
                 {
-                    if (list.SubTypeGeneration is LoquiType loqui)
+                    if (list.SubTypeGeneration is MutagenLoquiType loqui)
                     {
-                        switch (loqui.TargetObjectGeneration.GetObjectType())
+                        switch (loqui.GetObjectType())
                         {
                             case ObjectType.Subrecord:
                                 args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
@@ -218,7 +218,15 @@ namespace Mutagen.Bethesda.Generation
                     typeGen: typeGen,
                     squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
                 {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse");
+                    if (list.SubTypeGeneration is LoquiType loqui
+                        && !loqui.CanStronglyType)
+                    {
+                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse<{loqui.TypeName}>");
+                    }
+                    else
+                    {
+                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse");
+                    }
                 }
                 else
                 {

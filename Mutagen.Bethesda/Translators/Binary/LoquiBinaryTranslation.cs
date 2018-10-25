@@ -18,10 +18,9 @@ namespace Mutagen.Bethesda.Binary
         where T : ILoquiObjectGetter
     {
         public static readonly LoquiBinaryTranslation<T> Instance = new LoquiBinaryTranslation<T>();
-        private static readonly ILoquiRegistration Registration = LoquiRegistration.GetRegister(typeof(T));
         public delegate T CREATE_FUNC(
-            MutagenFrame reader, 
-            RecordTypeConverter recordTypeConverter, 
+            MutagenFrame reader,
+            RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask);
         public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
         public delegate void WRITE_FUNC(
@@ -275,6 +274,138 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
+        {
+            this.Write(
+                writer,
+                item.Item,
+                fieldIndex,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter);
+        }
+        #endregion
+    }
+    
+    public class LoquiBinaryTranslation
+    {
+        public static readonly LoquiBinaryTranslation Instance = new LoquiBinaryTranslation();
+        public delegate void WRITE_FUNC<T>(
+            MutagenWriter writer,
+            T item,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask);
+        private static Dictionary<Type, object> writeDict = new Dictionary<Type, object>();
+
+        public static WRITE_FUNC<T> GetWriteFunc<T>(Type t)
+            where T : ILoquiObjectGetter
+        {
+            if (writeDict.TryGetValue(t, out var writeFunc))
+            {
+                return (WRITE_FUNC<T>)writeFunc;
+            }
+            var method = t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary_Internal"))
+                .First();
+            if (!method.IsGenericMethod)
+            {
+                var f = DelegateBuilder.BuildDelegate<Action<T, MutagenWriter, RecordTypeConverter, ErrorMaskBuilder>>(method);
+                WRITE_FUNC<T> ret = (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, ErrorMaskBuilder errorMask) =>
+                {
+                    if (item == null)
+                    {
+                        errorMask.ReportExceptionOrThrow(
+                            new NullReferenceException("Cannot write for a null item."));
+                    }
+                    f(item, writer, recordTypeConverter, errorMask);
+                };
+                writeDict[t] = ret;
+                return ret;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #region Write
+        public void Write<T>(
+            MutagenWriter writer,
+            T item,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter)
+            where T : ILoquiObjectGetter
+        {
+            GetWriteFunc<T>(item.GetType())(
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            T item,
+            ErrorMaskBuilder errorMask)
+            where T : ILoquiObjectGetter
+        {
+            GetWriteFunc<T>(item.GetType())(
+                writer: writer,
+                item: item,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            T item,
+            int fieldIndex,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+            where T : ILoquiObjectGetter
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                GetWriteFunc<T>(item.GetType())(
+                    writer: writer,
+                    item: item,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<T> item,
+            int fieldIndex,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+            where T : ILoquiObjectGetter
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer: writer,
+                item: item.Item,
+                fieldIndex: fieldIndex,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            IHasItemGetter<T> item,
+            int fieldIndex,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+            where T : ILoquiObjectGetter
         {
             this.Write(
                 writer,

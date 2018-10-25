@@ -48,11 +48,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormIDLink<Placed> Reference_Property { get; } = new FormIDLink<Placed>();
+        public FormIDLink<IPlaced> Reference_Property { get; } = new FormIDLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Placed Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
+        public IPlaced Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Placed> IPointToReferenceMappingGetter.Reference_Property => this.Reference_Property;
+        FormIDLink<IPlaced> IPointToReferenceMappingGetter.Reference_Property => this.Reference_Property;
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
                     this.Reference_Property.Set(
-                        (FormIDLink<Placed>)obj,
+                        (FormIDLink<IPlaced>)obj,
                         cmds);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
                     obj.Reference_Property.Set(
-                        (FormIDLink<Placed>)pair.Value,
+                        (FormIDLink<IPlaced>)pair.Value,
                         null);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
@@ -932,15 +932,15 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IPointToReferenceMapping : IPointToReferenceMappingGetter, ILoquiClass<IPointToReferenceMapping, IPointToReferenceMappingGetter>, ILoquiClass<PointToReferenceMapping, IPointToReferenceMappingGetter>
     {
-        new Placed Reference { get; set; }
+        new IPlaced Reference { get; set; }
         new INotifyingList<Int16> Points { get; }
     }
 
     public partial interface IPointToReferenceMappingGetter : ILoquiObject
     {
         #region Reference
-        Placed Reference { get; }
-        FormIDLink<Placed> Reference_Property { get; }
+        IPlaced Reference { get; }
+        FormIDLink<IPlaced> Reference_Property { get; }
 
         #endregion
         #region Points
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
-                    return typeof(FormIDLink<Placed>);
+                    return typeof(FormIDLink<IPlaced>);
                 case PointToReferenceMapping_FieldIndex.Points:
                     return typeof(NotifyingList<Int16>);
                 default:
@@ -1226,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
-                    obj.Reference = default(FormIDLink<Placed>);
+                    obj.Reference = default(IPlaced);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
                     obj.Points.Unset(cmds);
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMapping item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Reference = default(FormIDLink<Placed>);
+            item.Reference = default(IPlaced);
             item.Points.Unset(cmds.ToUnsetParams());
         }
 

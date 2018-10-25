@@ -15,7 +15,14 @@ namespace Mutagen.Bethesda.Generation
         public override string GetTranslatorInstance(TypeGeneration typeGen)
         {
             var loquiGen = typeGen as LoquiType;
-            return $"LoquiBinaryTranslation<{loquiGen.TypeName}>.Instance";
+            if (loquiGen.CanStronglyType)
+            {
+                return $"LoquiBinaryTranslation<{loquiGen.TypeName}>.Instance";
+            }
+            else
+            {
+                return $"LoquiBinaryTranslation.Instance";
+            }
         }
 
         public LoquiBinaryTranslationGeneration(string modNickname)

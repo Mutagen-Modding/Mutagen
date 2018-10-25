@@ -14,21 +14,21 @@ namespace Mutagen.Bethesda
             this ILink<T> link,
             FileGeneration fg,
             string name)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             fg.AppendLine($"{name} [{typeof(T).Name}] ({link.FormID})");
         }
 
         public static string ToString<T>(
             this ILink<T> link)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             return $"{(link.Linked ? link.Item.EditorID : "UNLINKED")} [{typeof(T).Name}] ({link.FormID})";
         }
 
         public static string ToString<T>(
             this IEDIDLink<T> link)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             return $"{(link.Linked ? link.Item.EditorID : "UNLINKED")} [{typeof(T).Name}] ({link.FormID}) ({link.EDID})";
         }
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda
         }
 
         public static bool Equals<T, R>(this ILink<T> lhs, object rhs)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (!(rhs is ILink rhsLink)) return false;
             return Equals(lhs, rhsLink);
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda
         }
 
         public static FormID GetFormID<T>(IFormIDLink<T> link)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             FormID? ret = link.Item?.FormID ?? link.UnlinkedForm;
             return ret ?? FormID.NULL;

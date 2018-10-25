@@ -99,11 +99,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<AIPackageLocation.LocationType> IAIPackageLocationGetter.Type_Property => this.Type_Property;
         #endregion
         #region LocationReference
-        public FormIDLink<Placed> LocationReference_Property { get; } = new FormIDLink<Placed>();
+        public FormIDLink<IPlaced> LocationReference_Property { get; } = new FormIDLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Placed LocationReference { get => LocationReference_Property.Item; set => LocationReference_Property.Item = value; }
+        public IPlaced LocationReference { get => LocationReference_Property.Item; set => LocationReference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Placed> IAIPackageLocationGetter.LocationReference_Property => this.LocationReference_Property;
+        FormIDLink<IPlaced> IAIPackageLocationGetter.LocationReference_Property => this.LocationReference_Property;
         #endregion
         #region Radius
         protected Single _Radius;
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case AIPackageLocation_FieldIndex.LocationReference:
                     this.LocationReference_Property.Set(
-                        (FormIDLink<Placed>)obj,
+                        (FormIDLink<IPlaced>)obj,
                         cmds);
                     break;
                 case AIPackageLocation_FieldIndex.Radius:
@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case AIPackageLocation_FieldIndex.LocationReference:
                     obj.LocationReference_Property.Set(
-                        (FormIDLink<Placed>)pair.Value,
+                        (FormIDLink<IPlaced>)pair.Value,
                         null);
                     break;
                 case AIPackageLocation_FieldIndex.Radius:
@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion
         new AIPackageLocation.LocationType Type { get; set; }
         new INotifyingItem<AIPackageLocation.LocationType> Type_Property { get; }
 
-        new Placed LocationReference { get; set; }
+        new IPlaced LocationReference { get; set; }
         new Single Radius { get; set; }
         new INotifyingItem<Single> Radius_Property { get; }
 
@@ -1393,8 +1393,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LocationReference
-        Placed LocationReference { get; }
-        FormIDLink<Placed> LocationReference_Property { get; }
+        IPlaced LocationReference { get; }
+        FormIDLink<IPlaced> LocationReference_Property { get; }
 
         #endregion
         #region Radius
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackageLocation_FieldIndex.Type:
                     return typeof(AIPackageLocation.LocationType);
                 case AIPackageLocation_FieldIndex.LocationReference:
-                    return typeof(FormIDLink<Placed>);
+                    return typeof(FormIDLink<IPlaced>);
                 case AIPackageLocation_FieldIndex.Radius:
                     return typeof(Single);
                 default:
@@ -1715,7 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Type = default(AIPackageLocation.LocationType);
                     break;
                 case AIPackageLocation_FieldIndex.LocationReference:
-                    obj.LocationReference = default(FormIDLink<Placed>);
+                    obj.LocationReference = default(IPlaced);
                     break;
                 case AIPackageLocation_FieldIndex.Radius:
                     obj.Radius = default(Single);
@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Type = default(AIPackageLocation.LocationType);
-            item.LocationReference = default(FormIDLink<Placed>);
+            item.LocationReference = default(IPlaced);
             item.Radius = default(Single);
         }
 

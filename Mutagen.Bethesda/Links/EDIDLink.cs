@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class EDIDLink<T> : FormIDLink<T>, IEDIDLink<T>
-       where T : MajorRecord
+       where T : IMajorRecord
     {
         public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
         public RecordType EDID { get; private set; } = UNLINKED;
@@ -36,16 +36,28 @@ namespace Mutagen.Bethesda
             base.Set(value, cmds);
         }
 
+        public void Set(IEDIDLink<T> link, NotifyingFireParameters cmds = null)
+        {
+            if (link.Linked)
+            {
+                this.Set(link.Item, cmds);
+            }
+            else
+            {
+                this.EDID = link.EDID;
+            }
+        }
+
         private void HandleItemChange(Change<T> change)
         {
             this.EDID = EDIDLink<T>.UNLINKED;
             change.Old?.EditorID_Property.Unsubscribe(this);
-            change.New?.EditorID_Property.Subscribe(this, UpdateUnlinked);
+            change.New?.EditorID_Property.Subscribe(this, (c) => UpdateUnlinked(c.New));
         }
 
-        private void UpdateUnlinked(Change<string> change)
+        private void UpdateUnlinked(string change)
         {
-            this.EDID = new RecordType(change.New);
+            this.EDID = new RecordType(change);
         }
 
         public void SetIfSucceeded(TryGet<RecordType> item)

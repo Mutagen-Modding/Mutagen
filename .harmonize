@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>3d90e280f86fe7ae4cdd12c19ec0757138e8934d</Sha>
+         <Sha>ab44fc6fe696b16785c1297a85c360f94c70957c</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-26-2018 19:11:33</CommitDate>
-         <Description>ReferenceEqualityComparer</Description>
+         <CommitDate>10-08-2018 19:12:40</CommitDate>
+         <Description>NotifyingList implements IReadOnlyList</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b791b898a2b31f8fb0f8e28a912cbca2da11d1d4</Sha>
+         <Sha>d1b755db749633e2317a7fd2a53c03226902bd3c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-28-2018 12:35:46</CommitDate>
-         <Description>ObjectGeneration.IterateFields includeBaseClass bool missing on one function</Description>
+         <CommitDate>10-27-2018 13:40:40</CommitDate>
+         <Description>Interface Ref feature fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

@@ -121,6 +121,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="objType" type="MutagenObjectType">
+            <xs:annotation>
+              <xs:documentation>
+                Type of mutagen object this is referencing.  Only needed for interface typed references.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

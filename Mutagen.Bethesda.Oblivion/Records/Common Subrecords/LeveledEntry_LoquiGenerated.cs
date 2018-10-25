@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Fluff = default(Byte[]);
                     break;
                 case LeveledEntry_FieldIndex.Reference:
-                    obj.Reference = default(FormIDLink<T>);
+                    obj.Reference = default(T);
                     break;
                 case LeveledEntry_FieldIndex.Count:
                     obj.Count_Property.Unset(cmds);
@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Level = default(Int16);
             item.Fluff = default(Byte[]);
-            item.Reference = default(FormIDLink<T>);
+            item.Reference = default(T);
             item.Count_Property.Unset(cmds.ToUnsetParams());
             item.Fluff2_Property.Unset(cmds.ToUnsetParams());
         }

@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<NPC>,
         ILoquiObjectSetter,
         INamed,
+        IOwner,
         IPropertySupporter<String>,
         IPropertySupporter<Model>,
         IPropertySupporter<NPC.NPCFlag>,

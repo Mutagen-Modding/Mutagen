@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
-            fg.AppendLine($"private NotifyingDictionary<FormID, MajorRecord> _majorRecords = new NotifyingDictionary<FormID, MajorRecord>();");
-            fg.AppendLine($"public INotifyingDictionaryGetter<FormID, MajorRecord> MajorRecords => _majorRecords;");
-            fg.AppendLine($"public MajorRecord this[FormID id]");
+            fg.AppendLine($"private NotifyingDictionary<FormID, IMajorRecord> _majorRecords = new NotifyingDictionary<FormID, IMajorRecord>();");
+            fg.AppendLine($"public INotifyingDictionaryGetter<FormID, IMajorRecord> MajorRecords => _majorRecords;");
+            fg.AppendLine($"public IMajorRecord this[FormID id]");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("get => _majorRecords[id];");
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Generation
                 "protected void SetMajorRecord"))
             {
                 args.Add("FormID id");
-                args.Add("MajorRecord record");
+                args.Add("IMajorRecord record");
             }
             using (new BraceWrapper(fg))
             {

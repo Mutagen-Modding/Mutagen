@@ -1947,8 +1947,7 @@ namespace Mutagen.Bethesda.Internals
                                     return r;
                                 case CopyOption.MakeCopy:
                                     if (r == null) return default(T);
-                                    var copyFunc = LoquiRegistration.GetCopyFunc<T>();
-                                    return copyFunc(r, null, d);
+                                    return LoquiRegistration.GetCopyFunc<T>()(r, null, d);
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
                             }

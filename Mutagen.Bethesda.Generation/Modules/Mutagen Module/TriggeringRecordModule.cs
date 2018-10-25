@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Generation
             data.FailOnUnknown = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
             data.CustomBinaryEnd = obj.Node.GetAttribute<bool>("customBinaryEnd", defaultVal: false);
 
-            var objType = obj.Node.GetAttribute("objType");
+            var objType = obj.Node.GetAttribute(Mutagen.Bethesda.Generation.Constants.OBJECT_TYPE);
             if (!Enum.TryParse<ObjectType>(objType, out var objTypeEnum))
             {
                 throw new ArgumentException("Must specify object type.");
@@ -262,12 +262,20 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
                     }
+                    await AddLoquiSubTypes(loqui);
                 }
                 else if (loqui.GenericDef != null)
                 {
                     data.TriggeringRecordAccessors.Add($"{loqui.GenericDef.Name}_RecordType");
+                    await AddLoquiSubTypes(loqui);
                 }
-                await AddLoquiSubTypes(loqui);
+                else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
+                {
+                    var implementingObjs = obj.ProtoGen.Gen.ObjectGenerations
+                        .Where(o => o.Interfaces.Contains(loqui.InterfaceName))
+                        .ToArray();
+                    await loqui.AddAsSubLoquiType(implementingObjs);
+                }
             }
             else if (field is ListType listType
                 && !data.RecordType.HasValue)
@@ -339,16 +347,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (loqui.TargetObjectGeneration == null || loqui.GenericDef != null) return;
             var inheritingObjs = await loqui.TargetObjectGeneration.InheritingObjects();
-            var data = loqui.GetFieldData();
-            foreach (var subObj in inheritingObjs)
-            {
-                var subRecs = await subObj.TryGetTriggeringRecordTypes();
-                if (subRecs.Failed) continue;
-                foreach (var subRec in subRecs.Value)
-                {
-                    data.SubLoquiTypes.Add(subRec, subObj);
-                }
-            }
+            await loqui.AddAsSubLoquiType(inheritingObjs);
         }
 
         private async Task SetBasicTriggers(

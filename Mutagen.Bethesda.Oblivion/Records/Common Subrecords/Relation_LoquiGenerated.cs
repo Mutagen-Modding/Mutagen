@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
-                    obj.Faction = default(FormIDLink<Faction>);
+                    obj.Faction = default(Faction);
                     break;
                 case Relation_FieldIndex.Modifier:
                     obj.Modifier = default(Int32);
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelation item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Faction = default(FormIDLink<Faction>);
+            item.Faction = default(Faction);
             item.Modifier = default(Int32);
         }
 

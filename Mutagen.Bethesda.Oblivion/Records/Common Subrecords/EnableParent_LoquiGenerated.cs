@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    obj.Reference = default(FormIDLink<PlacedObject>);
+                    obj.Reference = default(PlacedObject);
                     break;
                 case EnableParent_FieldIndex.Flags:
                     obj.Flags = default(EnableParent.Flag);
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParent item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Reference = default(FormIDLink<PlacedObject>);
+            item.Reference = default(PlacedObject);
             item.Flags = default(EnableParent.Flag);
         }
 
