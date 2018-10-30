@@ -2208,13 +2208,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptEffect_FieldIndex.Script:
-                    obj.Script = default(FormIDLink<Script>);
+                    obj.Script = default(Script);
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
                     obj.MagicSchool = default(MagicSchool);
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
-                    obj.VisualEffect = default(EDIDLink<MagicEffect>);
+                    obj.VisualEffect = default(MagicEffect);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
                     obj.Flags = default(ScriptEffect.Flag);
@@ -2272,9 +2272,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffect item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Script = default(FormIDLink<Script>);
+            item.Script = default(Script);
             item.MagicSchool = default(MagicSchool);
-            item.VisualEffect = default(EDIDLink<MagicEffect>);
+            item.VisualEffect = default(MagicEffect);
             item.Flags = default(ScriptEffect.Flag);
             item.Name_Property.Unset(cmds.ToUnsetParams());
         }

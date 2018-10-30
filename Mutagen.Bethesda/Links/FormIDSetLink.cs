@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class FormIDSetLink<T> : NotifyingSetItem<T>, IFormIDSetLink<T>, IEquatable<ILink<T>>
-       where T : MajorRecord
+       where T : IMajorRecord
     {
         public bool Linked => this.HasBeenSet && this.Item != null;
         public FormKey? UnlinkedForm { get; private set; }
@@ -74,6 +74,31 @@ namespace Mutagen.Bethesda
         {
             this.UnlinkedForm = formKey;
             this.HasBeenSet = true;
+        }
+
+        public void Set(ILink<T> link, NotifyingFireParameters cmds = null)
+        {
+            if (link.Linked)
+            {
+                this.Set(link.Item, cmds);
+            }
+            else
+            {
+                this.UnlinkedForm = link.FormKey;
+            }
+        }
+
+        public void Set<R>(ILink<R> link, NotifyingFireParameters cmds = null)
+            where R : T
+        {
+            if (link.Linked)
+            {
+                this.Set(link.Item, cmds);
+            }
+            else
+            {
+                this.UnlinkedForm = link.FormKey;
+            }
         }
 
         public virtual bool Link<M>(

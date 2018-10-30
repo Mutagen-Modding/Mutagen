@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
             Cell obj,
             int fieldIndex,
             MasterReferences masterReferences,
-            INotifyingCollection<Placed> coll,
+            INotifyingCollection<IPlaced> coll,
             ErrorMaskBuilder errorMask,
             bool persistentParse)
         {
@@ -128,13 +128,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 obj._visibleWhenDistantTimeStamp = frame.Reader.ReadBytes(4);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.ParseRepeatedItem(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                 frame: frame,
                 fieldIndex: fieldIndex,
                 item: coll,
                 lengthLength: 4,
                 errorMask: errorMask,
-                transl: (MutagenFrame r, RecordType header, out Placed placed, ErrorMaskBuilder errMaskInternal) =>
+                transl: (MutagenFrame r, RecordType header, out IPlaced placed, ErrorMaskBuilder errMaskInternal) =>
                 {
                     switch (header.TypeInt)
                     {
@@ -226,13 +226,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             frame.Reader.Position += 4;
             obj._temporaryTimeStamp = frame.Reader.ReadBytes(4);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.ParseRepeatedItem(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                 frame: frame,
                 item: obj.Temporary,
                 fieldIndex: (int)Cell_FieldIndex.Persistent,
                 lengthLength: 4,
                 errorMask: errorMask,
-                transl: (MutagenFrame r, RecordType header, out Placed placed, ErrorMaskBuilder listSubMask) =>
+                transl: (MutagenFrame r, RecordType header, out IPlaced placed, ErrorMaskBuilder listSubMask) =>
                 {
                     switch (header.TypeInt)
                     {
@@ -324,14 +324,14 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             writer.WriteZeros(4);
                         }
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.Write(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
                             writer: writer,
                             items: obj.Persistent,
                             fieldIndex: (int)Cell_FieldIndex.Persistent,
                             errorMask: errorMask,
                             transl: (r, item, subErr) =>
                             {
-                                LoquiBinaryTranslation<Placed>.Instance.Write(
+                                LoquiBinaryTranslation.Instance.Write<IPlaced>(
                                     r,
                                     item,
                                     masterReferences,
@@ -377,14 +377,14 @@ namespace Mutagen.Bethesda.Oblivion
                                 fieldIndex: (int)Cell_FieldIndex.PathGrid,
                                 errorMask: errorMask);
                         }
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.Write(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
                             writer: writer,
                             items: obj.Temporary,
                             fieldIndex: (int)Cell_FieldIndex.Temporary,
                             errorMask: errorMask,
                             transl: (r, item, subErr) =>
                             {
-                                LoquiBinaryTranslation<Placed>.Instance.Write(
+                                LoquiBinaryTranslation.Instance.Write<IPlaced>(
                                     r,
                                     item,
                                     masterReferences,
@@ -410,14 +410,14 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             writer.WriteZeros(4);
                         }
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Placed>.Instance.Write(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
                             writer: writer,
                             items: obj.VisibleWhenDistant,
                             fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
                             errorMask: errorMask,
                             transl: (r, item, subErr) =>
                             {
-                                LoquiBinaryTranslation<Placed>.Instance.Write(
+                                LoquiBinaryTranslation.Instance.Write<IPlaced>(
                                     r,
                                     item,
                                     masterReferences,

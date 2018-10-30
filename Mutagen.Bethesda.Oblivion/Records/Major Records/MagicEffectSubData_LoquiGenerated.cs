@@ -1924,19 +1924,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect = default(FormIDLink<EffectShader>);
+                    obj.EnchantEffect = default(EffectShader);
                     break;
                 case MagicEffectSubData_FieldIndex.CastingSound:
-                    obj.CastingSound = default(FormIDLink<Sound>);
+                    obj.CastingSound = default(Sound);
                     break;
                 case MagicEffectSubData_FieldIndex.BoltSound:
-                    obj.BoltSound = default(FormIDLink<Sound>);
+                    obj.BoltSound = default(Sound);
                     break;
                 case MagicEffectSubData_FieldIndex.HitSound:
-                    obj.HitSound = default(FormIDLink<Sound>);
+                    obj.HitSound = default(Sound);
                     break;
                 case MagicEffectSubData_FieldIndex.AreaSound:
-                    obj.AreaSound = default(FormIDLink<Sound>);
+                    obj.AreaSound = default(Sound);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
                     obj.ConstantEffectEnchantmentFactor = default(Single);
@@ -1999,11 +1999,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectSubData item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.EnchantEffect = default(FormIDLink<EffectShader>);
-            item.CastingSound = default(FormIDLink<Sound>);
-            item.BoltSound = default(FormIDLink<Sound>);
-            item.HitSound = default(FormIDLink<Sound>);
-            item.AreaSound = default(FormIDLink<Sound>);
+            item.EnchantEffect = default(EffectShader);
+            item.CastingSound = default(Sound);
+            item.BoltSound = default(Sound);
+            item.HitSound = default(Sound);
+            item.AreaSound = default(Sound);
             item.ConstantEffectEnchantmentFactor = default(Single);
             item.ConstantEffectBarterFactor = default(Single);
         }

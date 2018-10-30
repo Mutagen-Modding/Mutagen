@@ -17,7 +17,7 @@
   <Object name="AIPackageLocation" objType="Subrecord" recordType="PLDT" GUID="42ac1b95-f8b8-44ff-9f8d-408a2c3df787" ID="157">
     <Fields>
       <Enum name="Type" enumName="AIPackageLocation.LocationType" byteLength="4" />
-      <FormIDLink name="LocationReference" refName="Bethesda.MajorRecord" />
+      <FormIDLink name="LocationReference" interfaceName="IPlaced" objType="Record" />
       <Float name="Radius" />
     </Fields>
   </Object>

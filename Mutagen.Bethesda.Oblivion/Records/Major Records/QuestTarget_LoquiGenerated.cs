@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Target
-        public FormIDLink<Placed> Target_Property { get; } = new FormIDLink<Placed>();
+        public FormIDLink<IPlaced> Target_Property { get; } = new FormIDLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Placed Target { get => Target_Property.Item; set => Target_Property.Item = value; }
+        public IPlaced Target { get => Target_Property.Item; set => Target_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Placed> IQuestTargetGetter.Target_Property => this.Target_Property;
+        FormIDLink<IPlaced> IQuestTargetGetter.Target_Property => this.Target_Property;
         #endregion
         #region Flags
         protected QuestTarget.Flag _Flags;
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case QuestTarget_FieldIndex.Target:
                     this.Target_Property.Set(
-                        (FormIDLink<Placed>)obj,
+                        (FormIDLink<IPlaced>)obj,
                         cmds);
                     break;
                 case QuestTarget_FieldIndex.Flags:
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case QuestTarget_FieldIndex.Target:
                     obj.Target_Property.Set(
-                        (FormIDLink<Placed>)pair.Value,
+                        (FormIDLink<IPlaced>)pair.Value,
                         null);
                     break;
                 case QuestTarget_FieldIndex.Flags:
@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IQuestTarget : IQuestTargetGetter, ILoquiClass<IQuestTarget, IQuestTargetGetter>, ILoquiClass<QuestTarget, IQuestTargetGetter>
     {
-        new Placed Target { get; set; }
+        new IPlaced Target { get; set; }
         new QuestTarget.Flag Flags { get; set; }
         new INotifyingItem<QuestTarget.Flag> Flags_Property { get; }
 
@@ -1307,8 +1307,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IQuestTargetGetter : ILoquiObject
     {
         #region Target
-        Placed Target { get; }
-        FormIDLink<Placed> Target_Property { get; }
+        IPlaced Target { get; }
+        FormIDLink<IPlaced> Target_Property { get; }
 
         #endregion
         #region Flags
@@ -1486,7 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case QuestTarget_FieldIndex.Target:
-                    return typeof(FormIDLink<Placed>);
+                    return typeof(FormIDLink<IPlaced>);
                 case QuestTarget_FieldIndex.Flags:
                     return typeof(QuestTarget.Flag);
                 case QuestTarget_FieldIndex.Conditions:
@@ -1653,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case QuestTarget_FieldIndex.Target:
-                    obj.Target = default(FormIDLink<Placed>);
+                    obj.Target = default(IPlaced);
                     break;
                 case QuestTarget_FieldIndex.Flags:
                     obj.Flags = default(QuestTarget.Flag);
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestTarget item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Target = default(FormIDLink<Placed>);
+            item.Target = default(IPlaced);
             item.Flags = default(QuestTarget.Flag);
             item.Conditions.Unset(cmds.ToUnsetParams());
         }

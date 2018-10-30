@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public interface IFormIDLink<T> : ILink<T>
-       where T : MajorRecord
+       where T : IMajorRecord
     {
         FormKey? UnlinkedForm { get; }
     }
 
     public interface IFormIDSetLink<T> : IFormIDLink<T>, ISetLink<T>
-       where T : MajorRecord
+       where T : IMajorRecord
     {
     }
 }

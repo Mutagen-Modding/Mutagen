@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Destination
-        public FormIDLink<Placed> Destination_Property { get; } = new FormIDLink<Placed>();
+        public FormIDLink<IPlaced> Destination_Property { get; } = new FormIDLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Placed Destination { get => Destination_Property.Item; set => Destination_Property.Item = value; }
+        public IPlaced Destination { get => Destination_Property.Item; set => Destination_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Placed> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;
+        FormIDLink<IPlaced> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;
         #endregion
         #region Position
         protected P3Float _Position;
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case TeleportDestination_FieldIndex.Destination:
                     this.Destination_Property.Set(
-                        (FormIDLink<Placed>)obj,
+                        (FormIDLink<IPlaced>)obj,
                         cmds);
                     break;
                 case TeleportDestination_FieldIndex.Position:
@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case TeleportDestination_FieldIndex.Destination:
                     obj.Destination_Property.Set(
-                        (FormIDLink<Placed>)pair.Value,
+                        (FormIDLink<IPlaced>)pair.Value,
                         null);
                     break;
                 case TeleportDestination_FieldIndex.Position:
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ITeleportDestination : ITeleportDestinationGetter, ILoquiClass<ITeleportDestination, ITeleportDestinationGetter>, ILoquiClass<TeleportDestination, ITeleportDestinationGetter>
     {
-        new Placed Destination { get; set; }
+        new IPlaced Destination { get; set; }
         new P3Float Position { get; set; }
         new INotifyingItem<P3Float> Position_Property { get; }
 
@@ -1302,8 +1302,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ITeleportDestinationGetter : ILoquiObject
     {
         #region Destination
-        Placed Destination { get; }
-        FormIDLink<Placed> Destination_Property { get; }
+        IPlaced Destination { get; }
+        FormIDLink<IPlaced> Destination_Property { get; }
 
         #endregion
         #region Position
@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    return typeof(FormIDLink<Placed>);
+                    return typeof(FormIDLink<IPlaced>);
                 case TeleportDestination_FieldIndex.Position:
                     return typeof(P3Float);
                 case TeleportDestination_FieldIndex.Rotation:
@@ -1626,7 +1626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    obj.Destination = default(FormIDLink<Placed>);
+                    obj.Destination = default(IPlaced);
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     obj.Position = default(P3Float);
@@ -1677,7 +1677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestination item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Destination = default(FormIDLink<Placed>);
+            item.Destination = default(IPlaced);
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
         }

@@ -35,7 +35,7 @@
     <Fields>
       <Data recordType="QSTA">
         <Fields>
-          <FormIDLink name="Target" refName="Placed" />
+          <FormIDLink name="Target" interfaceName="IPlaced" objType="Record" />
           <Enum name="Flags" enumName="QuestTarget.Flag" byteLength="4" />
         </Fields>
       </Data>

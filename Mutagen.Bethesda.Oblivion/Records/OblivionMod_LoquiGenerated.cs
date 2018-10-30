@@ -79,15 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Furnature_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _Weapons_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _Ammo_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _NPCs_Object.Items.Subscribe_Enumerable_Single((change) =>
-            {
-                if (change.Item.Value.EditorID == "AmazonFemale6")
-                {
-                    int wer = 23;
-                    wer++;
-                }
-                Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change);
-            });
+            _NPCs_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _Creatures_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _LeveledCreatures_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
             _SoulGems_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
@@ -2564,16 +2556,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        private NotifyingDictionary<FormKey, MajorRecord> _majorRecords = new NotifyingDictionary<FormKey, MajorRecord>();
-        public INotifyingDictionaryGetter<FormKey, MajorRecord> MajorRecords => _majorRecords;
-        public MajorRecord this[FormKey id]
+        private NotifyingDictionary<FormKey, IMajorRecord> _majorRecords = new NotifyingDictionary<FormKey, IMajorRecord>();
+        public INotifyingDictionaryGetter<FormKey, IMajorRecord> MajorRecords => _majorRecords;
+        public IMajorRecord this[FormKey id]
         {
             get => _majorRecords[id];
             set => SetMajorRecord(id, value);
         }
         protected void SetMajorRecord(
             FormKey id,
-            MajorRecord record)
+            IMajorRecord record)
         {
             switch (record)
             {
@@ -3112,12 +3104,6 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (mask?.NPCs ?? true)
             {
-                var n = rhsMod.NPCs.Items.Values.Where(n2 => n2.EditorID == "KeldoftheIsles").FirstOrDefault();
-                if (n != null)
-                {
-                    int wer = 23;
-                    wer++;
-                }
                 this.NPCs.Items.Set(rhsMod.NPCs.Items.Values);
             }
             if (mask?.Creatures ?? true)

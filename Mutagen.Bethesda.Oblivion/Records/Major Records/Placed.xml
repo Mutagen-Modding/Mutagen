@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Placed" abstract="true" baseClass="Bethesda.MajorRecord" objType="Record" GUID="6be49f7d-548b-4fdc-b2a9-f7290f1811fb" ID="134">
-    <Fields>
-    </Fields>
-  </Object>
-</Loqui>

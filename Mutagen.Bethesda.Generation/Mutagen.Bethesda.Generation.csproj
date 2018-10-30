@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Custom Data\MutagenObjData.cs" />
+    <Compile Include="Extensions\LoquiTypeExt.cs" />
     <Compile Include="Extensions\ObjectGenerationExt.cs" />
     <Compile Include="Extensions\TypeGenerationExt.cs" />
     <Compile Include="Fields\CustomLogic.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Fields\FormIDLinkType.cs" />
     <Compile Include="Custom Data\MutagenFieldData.cs" />
     <Compile Include="Fields\BufferType.cs" />
+    <Compile Include="Fields\MutagenLoquiType.cs" />
     <Compile Include="Fields\SpecialParseType.cs" />
     <Compile Include="Fields\StringType.cs" />
     <Compile Include="Fields\TransferType.cs" />

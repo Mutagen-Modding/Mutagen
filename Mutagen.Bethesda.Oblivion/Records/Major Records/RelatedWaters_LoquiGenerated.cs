@@ -1315,13 +1315,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    obj.RelatedWaterDaytime = default(FormIDLink<Water>);
+                    obj.RelatedWaterDaytime = default(Water);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    obj.RelatedWaterNighttime = default(FormIDLink<Water>);
+                    obj.RelatedWaterNighttime = default(Water);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    obj.RelatedWaterUnderwater = default(FormIDLink<Water>);
+                    obj.RelatedWaterUnderwater = default(Water);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1366,9 +1366,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWaters item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.RelatedWaterDaytime = default(FormIDLink<Water>);
-            item.RelatedWaterNighttime = default(FormIDLink<Water>);
-            item.RelatedWaterUnderwater = default(FormIDLink<Water>);
+            item.RelatedWaterDaytime = default(Water);
+            item.RelatedWaterNighttime = default(Water);
+            item.RelatedWaterUnderwater = default(Water);
         }
 
         public static RelatedWaters_Mask<bool> GetEqualsMask(

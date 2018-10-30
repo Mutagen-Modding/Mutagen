@@ -2774,7 +2774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Effect_FieldIndex.MagicEffect:
-                    obj.MagicEffect = default(EDIDLink<MagicEffect>);
+                    obj.MagicEffect = default(MagicEffect);
                     break;
                 case Effect_FieldIndex.Magnitude:
                     obj.Magnitude = default(UInt32);
@@ -2850,7 +2850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffect item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.MagicEffect = default(EDIDLink<MagicEffect>);
+            item.MagicEffect = default(MagicEffect);
             item.Magnitude = default(UInt32);
             item.Area = default(UInt32);
             item.Duration = default(UInt32);

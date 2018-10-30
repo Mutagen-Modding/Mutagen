@@ -30,10 +30,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Landscape : 
-        Placed,
+        MajorRecord,
         ILandscape,
         ILoquiObject<Landscape>,
         ILoquiObjectSetter,
+        IPlaced,
         IPropertySupporter<Byte[]>,
         ILinkSubContainer,
         IEquatable<Landscape>
@@ -601,22 +602,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
-            out Placed_ErrorMask errorMask,
-            Placed_TranslationMask translationMask = null,
-            bool doMasks = true,
-            NotifyingFireParameters cmds = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyIn_Xml_Internal(
-                root: root,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal(),
-                cmds: cmds);
-            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void CopyIn_Xml(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -685,22 +670,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out Placed_ErrorMask errorMask,
-            bool doMasks = true,
-            Placed_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
-                node: node,
-                name: name,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
-        }
-
         public override void Write_Xml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -904,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    Placed.Fill_Xml_Internal(
+                    MajorRecord.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -1315,21 +1284,6 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            out Placed_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
-                writer: writer,
-                masterReferences: masterReferences,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1365,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Placed.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1536,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
                 default:
-                    return Placed.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -1708,7 +1662,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Landscape_FieldIndex enu))
             {
-                CopyInInternal_Placed(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1751,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface ILandscape : ILandscapeGetter, IPlaced, ILoquiClass<ILandscape, ILandscapeGetter>, ILoquiClass<Landscape, ILandscapeGetter>
+    public partial interface ILandscape : ILandscapeGetter, IMajorRecord, ILoquiClass<ILandscape, ILandscapeGetter>, ILoquiClass<Landscape, ILandscapeGetter>
     {
         new Byte[] Unknown { get; set; }
         new INotifyingSetItem<Byte[]> Unknown_Property { get; }
@@ -1769,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<FormIDLink<LandTexture>> Textures { get; }
     }
 
-    public partial interface ILandscapeGetter : IPlacedGetter
+    public partial interface ILandscapeGetter : IMajorRecordGetter
     {
         #region Unknown
         Byte[] Unknown { get; }
@@ -1898,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.VertexColors:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1916,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Textures:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1933,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Textures:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1955,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Textures:
                     return "Textures";
                 default:
-                    return Placed_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1972,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Textures:
                     return false;
                 default:
-                    return Placed_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1989,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Textures:
                     return false;
                 default:
-                    return Placed_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -2011,7 +1965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Textures:
                     return typeof(NotifyingList<FormIDLink<LandTexture>>);
                 default:
-                    return Placed_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -2068,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Landscape_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            PlacedCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2240,7 +2194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Textures.HasBeenSet = on;
                     break;
                 default:
-                    PlacedCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -2272,7 +2226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Textures.Unset(cmds);
                     break;
                 default:
-                    PlacedCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -2297,7 +2251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Textures:
                     return obj.Textures.HasBeenSet;
                 default:
-                    return PlacedCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -2321,7 +2275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Textures:
                     return obj.Textures;
                 default:
-                    return PlacedCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -2400,7 +2354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Textures = new MaskItem<bool, IEnumerable<bool>>();
                 ret.Textures.Overall = false;
             }
-            PlacedCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2509,31 +2463,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Layers = new MaskItem<bool, IEnumerable<MaskItem<bool, BaseLayer_Mask<bool>>>>(item.Layers.HasBeenSet, item.Layers.Select((i) => new MaskItem<bool, BaseLayer_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Textures = new MaskItem<bool, IEnumerable<bool>>(item.Textures.HasBeenSet, null);
             return ret;
-        }
-
-        public static Landscape_FieldIndex? ConvertFieldIndex(Placed_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static Landscape_FieldIndex ConvertFieldIndex(Placed_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Placed_FieldIndex.MajorRecordFlags:
-                    return (Landscape_FieldIndex)((int)index);
-                case Placed_FieldIndex.FormKey:
-                    return (Landscape_FieldIndex)((int)index);
-                case Placed_FieldIndex.Version:
-                    return (Landscape_FieldIndex)((int)index);
-                case Placed_FieldIndex.EditorID:
-                    return (Landscape_FieldIndex)((int)index);
-                case Placed_FieldIndex.RecordType:
-                    return (Landscape_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static Landscape_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -2806,7 +2735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Landscape_Mask<T> : Placed_Mask<T>, IMask<T>, IEquatable<Landscape_Mask<T>>
+    public class Landscape_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Landscape_Mask<T>>
     {
         #region Ctors
         public Landscape_Mask()
@@ -3061,7 +2990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Landscape_ErrorMask : Placed_ErrorMask, IErrorMask<Landscape_ErrorMask>
+    public class Landscape_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Landscape_ErrorMask>
     {
         #region Members
         public Exception Unknown;
@@ -3276,7 +3205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Landscape_CopyMask : Placed_CopyMask
+    public class Landscape_CopyMask : MajorRecord_CopyMask
     {
         #region Members
         public bool Unknown;
@@ -3288,7 +3217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Landscape_TranslationMask : Placed_TranslationMask
+    public class Landscape_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;

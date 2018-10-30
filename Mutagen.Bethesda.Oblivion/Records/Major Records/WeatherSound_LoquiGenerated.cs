@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    obj.Sound = default(FormIDLink<Sound>);
+                    obj.Sound = default(Sound);
                     break;
                 case WeatherSound_FieldIndex.Type:
                     obj.Type = default(WeatherSound.SoundType);
@@ -1509,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherSound item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Sound = default(FormIDLink<Sound>);
+            item.Sound = default(Sound);
             item.Type = default(WeatherSound.SoundType);
         }
 

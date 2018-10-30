@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>70788938666b364c127403534545143fbcc0d1d6</Sha>
+         <Sha>f85ebcf5604ab2b9e090bed13bc60f607221b5a1</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-14-2018 14:10:24</CommitDate>
-         <Description>Merge fixes</Description>
+         <CommitDate>10-30-2018 14:54:21</CommitDate>
+         <Description>Merge branch 'RefIntefaceDev'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

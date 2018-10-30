@@ -1784,7 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BaseLayer_FieldIndex.Texture:
-                    obj.Texture = default(FormIDLink<LandTexture>);
+                    obj.Texture = default(LandTexture);
                     break;
                 case BaseLayer_FieldIndex.Quadrant:
                     obj.Quadrant = default(AlphaLayer.QuadrantEnum);
@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBaseLayer item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Texture = default(FormIDLink<LandTexture>);
+            item.Texture = default(LandTexture);
             item.Quadrant = default(AlphaLayer.QuadrantEnum);
         }
 

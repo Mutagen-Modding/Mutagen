@@ -9,5 +9,7 @@ namespace Mutagen.Bethesda.Generation
     public class Constants
     {
         public readonly static string DATA_KEY = "MutagenData";
+
+        public readonly static string OBJECT_TYPE = "objType";
     }
 }

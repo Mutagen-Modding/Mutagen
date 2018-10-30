@@ -30,10 +30,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PlacedObject : 
-        Placed,
+        MajorRecord,
         IPlacedObject,
         ILoquiObject<PlacedObject>,
         ILoquiObjectSetter,
+        IPlaced,
         IPropertySupporter<Byte[]>,
         IPropertySupporter<TeleportDestination>,
         IPropertySupporter<LockInformation>,
@@ -263,11 +264,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<LockInformation> IPlacedObjectGetter.Lock_Property => this.Lock_Property;
         #endregion
         #region Owner
-        public FormIDSetLink<Faction> Owner_Property { get; } = new FormIDSetLink<Faction>();
+        public FormIDSetLink<IOwner> Owner_Property { get; } = new FormIDSetLink<IOwner>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Faction Owner { get => Owner_Property.Item; set => Owner_Property.Item = value; }
+        public IOwner Owner { get => Owner_Property.Item; set => Owner_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Faction> IPlacedObjectGetter.Owner_Property => this.Owner_Property;
+        FormIDSetLink<IOwner> IPlacedObjectGetter.Owner_Property => this.Owner_Property;
         #endregion
         #region FactionRank
         protected Int32 _FactionRank;
@@ -373,11 +374,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<EnableParent> IPlacedObjectGetter.EnableParent_Property => this.EnableParent_Property;
         #endregion
         #region Target
-        public FormIDSetLink<Placed> Target_Property { get; } = new FormIDSetLink<Placed>();
+        public FormIDSetLink<IPlaced> Target_Property { get; } = new FormIDSetLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Placed Target { get => Target_Property.Item; set => Target_Property.Item = value; }
+        public IPlaced Target { get => Target_Property.Item; set => Target_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<Placed> IPlacedObjectGetter.Target_Property => this.Target_Property;
+        FormIDSetLink<IPlaced> IPlacedObjectGetter.Target_Property => this.Target_Property;
         #endregion
         #region SpeedTreeSeed
         protected Byte _SpeedTreeSeed;
@@ -1487,22 +1488,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
-            out Placed_ErrorMask errorMask,
-            Placed_TranslationMask translationMask = null,
-            bool doMasks = true,
-            NotifyingFireParameters cmds = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyIn_Xml_Internal(
-                root: root,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal(),
-                cmds: cmds);
-            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void CopyIn_Xml(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -1571,22 +1556,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
-        public override void Write_Xml(
-            XElement node,
-            out Placed_ErrorMask errorMask,
-            bool doMasks = true,
-            Placed_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
-                node: node,
-                name: name,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
-        }
-
         public override void Write_Xml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -2171,7 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    Placed.Fill_Xml_Internal(
+                    MajorRecord.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -4180,21 +4149,6 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            out Placed_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
-                writer: writer,
-                masterReferences: masterReferences,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
-            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -4255,7 +4209,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Placed.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -4831,7 +4785,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
                 default:
-                    return Placed.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -4977,7 +4931,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Owner:
                     this.Owner_Property.Set(
-                        (FormIDSetLink<Faction>)obj,
+                        (FormIDSetLink<IOwner>)obj,
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.FactionRank:
@@ -4997,7 +4951,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Target:
                     this.Target_Property.Set(
-                        (FormIDSetLink<Placed>)obj,
+                        (FormIDSetLink<IPlaced>)obj,
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
@@ -5102,7 +5056,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out PlacedObject_FieldIndex enu))
             {
-                CopyInInternal_Placed(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -5133,7 +5087,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Owner:
                     obj.Owner_Property.Set(
-                        (FormIDSetLink<Faction>)pair.Value,
+                        (FormIDSetLink<IOwner>)pair.Value,
                         null);
                     break;
                 case PlacedObject_FieldIndex.FactionRank:
@@ -5153,7 +5107,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Target:
                     obj.Target_Property.Set(
-                        (FormIDSetLink<Placed>)pair.Value,
+                        (FormIDSetLink<IPlaced>)pair.Value,
                         null);
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
@@ -5244,7 +5198,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IPlacedObject : IPlacedObjectGetter, IPlaced, ILoquiClass<IPlacedObject, IPlacedObjectGetter>, ILoquiClass<PlacedObject, IPlacedObjectGetter>
+    public partial interface IPlacedObject : IPlacedObjectGetter, IMajorRecord, ILoquiClass<IPlacedObject, IPlacedObjectGetter>, ILoquiClass<PlacedObject, IPlacedObjectGetter>
     {
         new MajorRecord Base { get; set; }
         new Byte[] XPCIFluff { get; set; }
@@ -5259,7 +5213,7 @@ namespace Mutagen.Bethesda.Oblivion
         new LockInformation Lock { get; set; }
         new INotifyingSetItem<LockInformation> Lock_Property { get; }
 
-        new Faction Owner { get; set; }
+        new IOwner Owner { get; set; }
         new Int32 FactionRank { get; set; }
         new INotifyingSetItem<Int32> FactionRank_Property { get; }
 
@@ -5267,7 +5221,7 @@ namespace Mutagen.Bethesda.Oblivion
         new EnableParent EnableParent { get; set; }
         new INotifyingSetItem<EnableParent> EnableParent_Property { get; }
 
-        new Placed Target { get; set; }
+        new IPlaced Target { get; set; }
         new Byte SpeedTreeSeed { get; set; }
         new INotifyingSetItem<Byte> SpeedTreeSeed_Property { get; }
 
@@ -5311,7 +5265,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IPlacedObjectGetter : IPlacedGetter
+    public partial interface IPlacedObjectGetter : IMajorRecordGetter
     {
         #region Base
         MajorRecord Base { get; }
@@ -5339,8 +5293,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Owner
-        Faction Owner { get; }
-        FormIDSetLink<Faction> Owner_Property { get; }
+        IOwner Owner { get; }
+        FormIDSetLink<IOwner> Owner_Property { get; }
 
         #endregion
         #region FactionRank
@@ -5359,8 +5313,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Target
-        Placed Target { get; }
-        FormIDSetLink<Placed> Target_Property { get; }
+        IPlaced Target { get; }
+        FormIDSetLink<IPlaced> Target_Property { get; }
 
         #endregion
         #region SpeedTreeSeed
@@ -5614,7 +5568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -5651,7 +5605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -5687,7 +5641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -5747,7 +5701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return "Rotation";
                 default:
-                    return Placed_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -5783,7 +5737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -5819,7 +5773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -5839,7 +5793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Lock:
                     return typeof(LockInformation);
                 case PlacedObject_FieldIndex.Owner:
-                    return typeof(FormIDSetLink<Faction>);
+                    return typeof(FormIDSetLink<IOwner>);
                 case PlacedObject_FieldIndex.FactionRank:
                     return typeof(Int32);
                 case PlacedObject_FieldIndex.GlobalVariable:
@@ -5847,7 +5801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.EnableParent:
                     return typeof(EnableParent);
                 case PlacedObject_FieldIndex.Target:
-                    return typeof(FormIDSetLink<Placed>);
+                    return typeof(FormIDSetLink<IPlaced>);
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
                     return typeof(Byte);
                 case PlacedObject_FieldIndex.DistantLODData:
@@ -5879,7 +5833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return typeof(P3Float);
                 default:
-                    return Placed_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -5953,7 +5907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedObject_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            PlacedCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -6661,7 +6615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.ContainedSoul_Property.HasBeenSet = on;
                     break;
                 default:
-                    PlacedCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -6750,7 +6704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Rotation = default(P3Float);
                     break;
                 default:
-                    PlacedCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -6811,7 +6765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.ContainedSoul:
                     return obj.ContainedSoul_Property.HasBeenSet;
                 default:
-                    return PlacedCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -6873,7 +6827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return obj.Rotation;
                 default:
-                    return PlacedCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -6948,7 +6902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ContainedSoul = item.ContainedSoul_Property.Equals(rhs.ContainedSoul_Property, (l, r) => l == r);
             ret.Position = item.Position == rhs.Position;
             ret.Rotation = item.Rotation == rhs.Rotation;
-            PlacedCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -7145,31 +7099,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Position = true;
             ret.Rotation = true;
             return ret;
-        }
-
-        public static PlacedObject_FieldIndex? ConvertFieldIndex(Placed_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static PlacedObject_FieldIndex ConvertFieldIndex(Placed_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Placed_FieldIndex.MajorRecordFlags:
-                    return (PlacedObject_FieldIndex)((int)index);
-                case Placed_FieldIndex.FormKey:
-                    return (PlacedObject_FieldIndex)((int)index);
-                case Placed_FieldIndex.Version:
-                    return (PlacedObject_FieldIndex)((int)index);
-                case Placed_FieldIndex.EditorID:
-                    return (PlacedObject_FieldIndex)((int)index);
-                case Placed_FieldIndex.RecordType:
-                    return (PlacedObject_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
         }
 
         public static PlacedObject_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -7737,7 +7666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class PlacedObject_Mask<T> : Placed_Mask<T>, IMask<T>, IEquatable<PlacedObject_Mask<T>>
+    public class PlacedObject_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<PlacedObject_Mask<T>>
     {
         #region Ctors
         public PlacedObject_Mask()
@@ -8139,7 +8068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class PlacedObject_ErrorMask : Placed_ErrorMask, IErrorMask<PlacedObject_ErrorMask>
+    public class PlacedObject_ErrorMask : MajorRecord_ErrorMask, IErrorMask<PlacedObject_ErrorMask>
     {
         #region Members
         public Exception Base;
@@ -8540,7 +8469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PlacedObject_CopyMask : Placed_CopyMask
+    public class PlacedObject_CopyMask : MajorRecord_CopyMask
     {
         #region Members
         public bool Base;
@@ -8571,7 +8500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PlacedObject_TranslationMask : Placed_TranslationMask
+    public class PlacedObject_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;

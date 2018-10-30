@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    obj.Item = default(FormIDLink<ItemAbstract>);
+                    obj.Item = default(ItemAbstract);
                     break;
                 case ContainerItem_FieldIndex.Count:
                     obj.Count = default(UInt32);
@@ -1509,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerItem item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Item = default(FormIDLink<ItemAbstract>);
+            item.Item = default(ItemAbstract);
             item.Count = default(UInt32);
         }
 

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda
         where M : IMod<M>
     {
         INotifyingList<MasterReference> MasterReferences { get; }
-        INotifyingDictionaryGetter<FormKey, MajorRecord> MajorRecords { get; }
+        INotifyingDictionaryGetter<FormKey, IMajorRecord> MajorRecords { get; }
         INotifyingKeyedCollection<FormKey, T> GetGroup<T>() where T : IMajorRecord;
         void Link(
             ModList<M> modList,

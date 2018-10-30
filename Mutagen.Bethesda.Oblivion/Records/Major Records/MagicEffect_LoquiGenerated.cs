@@ -4628,13 +4628,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.CounterEffectCount = default(UInt32);
                     break;
                 case MagicEffect_FieldIndex.Light:
-                    obj.Light = default(FormIDLink<Light>);
+                    obj.Light = default(Light);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                     obj.ProjectileSpeed = default(Single);
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
-                    obj.EffectShader = default(FormIDLink<EffectShader>);
+                    obj.EffectShader = default(EffectShader);
                     break;
                 case MagicEffect_FieldIndex.SubData:
                     obj.SubData = default(MagicEffectSubData);
@@ -4737,9 +4737,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MagicSchool = default(MagicSchool);
             item.Resistance = default(Resistance);
             item.CounterEffectCount = default(UInt32);
-            item.Light = default(FormIDLink<Light>);
+            item.Light = default(Light);
             item.ProjectileSpeed = default(Single);
-            item.EffectShader = default(FormIDLink<EffectShader>);
+            item.EffectShader = default(EffectShader);
             item.SubData = default(MagicEffectSubData);
             item.CounterEffects.Unset(cmds.ToUnsetParams());
         }

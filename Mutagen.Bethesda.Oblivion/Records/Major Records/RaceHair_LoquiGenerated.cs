@@ -1240,10 +1240,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    obj.Male = default(FormIDLink<Hair>);
+                    obj.Male = default(Hair);
                     break;
                 case RaceHair_FieldIndex.Female:
-                    obj.Female = default(FormIDLink<Hair>);
+                    obj.Female = default(Hair);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1285,8 +1285,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceHair item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Male = default(FormIDLink<Hair>);
-            item.Female = default(FormIDLink<Hair>);
+            item.Male = default(Hair);
+            item.Female = default(Hair);
         }
 
         public static RaceHair_Mask<bool> GetEqualsMask(
