@@ -24,14 +24,14 @@ namespace Mutagen.Bethesda.Oblivion
             DoNotAcquire = 0x0100,
         }
 
-        static partial void FillBinary_SecondaryFlags_Custom(MutagenFrame frame, CombatStyle item, ErrorMaskBuilder errorMask)
+        static partial void FillBinary_SecondaryFlags_Custom(MutagenFrame frame, CombatStyle item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             int flags = frame.ReadInt32();
             var otherFlag = (CombatStyle.Flag)(flags << 8);
             item.Flags = item.Flags | otherFlag;
         }
 
-        static partial void WriteBinary_SecondaryFlags_Custom(MutagenWriter writer, CombatStyle item, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_SecondaryFlags_Custom(MutagenWriter writer, CombatStyle item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             int flags = (int)item.Flags;
             flags = flags >> 8;

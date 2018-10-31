@@ -16,12 +16,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType PGRR = new RecordType("PGRR");
         public const int POINT_LEN = 16;
 
-        static partial void FillBinary_Points_Custom(MutagenFrame frame, Road item, ErrorMaskBuilder errorMask)
+        static partial void FillBinary_Points_Custom(MutagenFrame frame, Road item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
             if (!nextRec.Equals(PGRP))
             {
-                frame.Reader.Position -= Constants.RECORD_LENGTH;
+                frame.Reader.Position -= Mutagen.Bethesda.Constants.RECORD_LENGTH;
                 return;
             }
             var pointBytes = frame.Reader.ReadBytes(len);
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
+                    frame.Reader.Position -= Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
                     {
                         while (!ptByteReader.Complete)
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
             return pt;
         }
 
-        static partial void WriteBinary_Points_Custom(MutagenWriter writer, Road item, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_Points_Custom(MutagenWriter writer, Road item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             bool anyConnections = false;
             using (HeaderExport.ExportSubRecordHeader(writer, PGRP))

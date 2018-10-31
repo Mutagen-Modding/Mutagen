@@ -1,6 +1,7 @@
 ﻿using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +10,11 @@ namespace Mutagen.Bethesda
 {
     public struct ModKey : IEquatable<ModKey>
     {
+        public static readonly ModKey NULL = new ModKey(string.Empty, master: true);
         public StringCaseAgnostic Name { get; private set; }
         public bool Master { get; private set; }
         public string FileName => this.ToString();
-
+        
         public ModKey(
             string name,
             bool master)
@@ -23,7 +25,7 @@ namespace Mutagen.Bethesda
 
         public bool Equals(ModKey other)
         {
-            return this.Name.Equals(other.Name)
+            return string.Equals(this.Name, other.Name)
                 && this.Master == other.Master;
         }
 
@@ -51,14 +53,17 @@ namespace Mutagen.Bethesda
                 modKey = default(ModKey);
                 return false;
             }
-            var split = str.Split('.');
-            if (split.Length != 2)
+            var index = str.LastIndexOf('.');
+            if (index == -1
+                || index != str.Length - 4)
             {
                 modKey = default(ModKey);
                 return false;
             }
+            var modString = str.Substring(0, index);
+            var endString = str.Substring(index + 1);
             bool master;
-            switch (split[1].ToLower())
+            switch (endString.ToLower())
             {
                 case "esm":
                     master = true;
@@ -71,9 +76,32 @@ namespace Mutagen.Bethesda
                     return false;
             }
             modKey = new ModKey(
-                name: split[0],
+                name: modString,
                 master: master);
             return true;
+        }
+
+        public static ModKey Factory(string str)
+        {
+            if (TryFactory(str, out var key))
+            {
+                return key;
+            }
+            if (TryFactory(Path.GetFileName(str), out key))
+            {
+                return key;
+            }
+            throw new ArgumentException("Could not construct ModKey.");
+        }
+
+        public static bool operator ==(ModKey a, ModKey b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(ModKey a, ModKey b)
+        {
+            return !a.Equals(b);
         }
     }
 }

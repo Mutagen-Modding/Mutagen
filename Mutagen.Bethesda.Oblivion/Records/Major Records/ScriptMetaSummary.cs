@@ -16,12 +16,12 @@ namespace Mutagen.Bethesda.Oblivion
             set => this.CompiledSize = value;
         }
 
-        static partial void FillBinary_CompiledSize_Custom(MutagenFrame frame, ScriptMetaSummary item, ErrorMaskBuilder errorMask)
+        static partial void FillBinary_CompiledSize_Custom(MutagenFrame frame, ScriptMetaSummary item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             frame.Position += 4;
         }
 
-        static partial void WriteBinary_CompiledSize_Custom(MutagenWriter writer, ScriptMetaSummary item, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_CompiledSize_Custom(MutagenWriter writer, ScriptMetaSummary item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             Int32BinaryTranslation.Instance.Write(
                 writer,

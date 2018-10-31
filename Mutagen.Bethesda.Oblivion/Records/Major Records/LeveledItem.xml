@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledItem" baseClass="Bethesda.MajorRecord" objType="Record" recordType="LVLI" GUID="cf615d0b-eccd-4f4d-ac20-6c771930fb98" ID="101">
+  <Object name="LeveledItem" baseClass="ItemAbstract" objType="Record" recordType="LVLI" GUID="cf615d0b-eccd-4f4d-ac20-6c771930fb98" ID="101">
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" />

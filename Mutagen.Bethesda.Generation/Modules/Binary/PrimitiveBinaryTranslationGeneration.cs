@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                     args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
-                foreach (var arg in AdditionWriteParameters(
+                foreach (var arg in AdditionalWriteParameters(
                     fg: fg,
                     objGen: objGen,
                     typeGen: typeGen,
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected virtual IEnumerable<string> AdditionWriteParameters(
+        protected virtual IEnumerable<string> AdditionalWriteParameters(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -94,13 +94,13 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
 
 
             List<string> extraArgs = new List<string>();
             extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : ".Spawn(snapToFinalPosition: false)")}");
-            foreach (var arg in AdditionCopyInParameters(
+            foreach (var arg in AdditionalCopyInParameters(
                 fg: fg,
                 objGen: objGen,
                 typeGen: typeGen,
@@ -112,17 +112,20 @@ namespace Mutagen.Bethesda.Generation
             }
 
             TranslationGeneration.WrapParseCall(
-                fg: fg,
-                typeGen: typeGen,
-                translatorLine: $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
-                maskAccessor: maskAccessor,
-                itemAccessor: itemAccessor,
-                translationMaskAccessor: null,
-                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                extraargs: extraArgs.ToArray());
+                new TranslationWrapParseArgs()
+                {
+                    FG = fg,
+                    TypeGen = typeGen,
+                    TranslatorLine = $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
+                    MaskAccessor = maskAccessor,
+                    ItemAccessor = itemAccessor,
+                    TranslationMaskAccessor = null,
+                    IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                    ExtraArgs = extraArgs.ToArray()
+                });
         }
 
-        protected virtual IEnumerable<string> AdditionCopyInParameters(
+        protected virtual IEnumerable<string> AdditionalCopyInParameters(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -156,7 +159,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add(nodeAccessor);
                 args.Add($"errorMask: {maskAccessor}");
                 args.Add($"translationMask: {translationMaskAccessor}");
-                foreach (var arg in AdditionCopyInRetParameters(
+                foreach (var arg in AdditionalCopyInRetParameters(
                     fg: fg,
                     objGen: objGen,
                     typeGen: typeGen,
@@ -170,7 +173,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected virtual IEnumerable<string> AdditionCopyInRetParameters(
+        protected virtual IEnumerable<string> AdditionalCopyInRetParameters(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

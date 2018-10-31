@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Mutagen.Bethesda.Tests;
 using Noggog;
 using Noggog.Notifying;
 using System;
@@ -10,26 +11,36 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class FormIDSetLink<T> : NotifyingSetItem<T>, IFormIDSetLink<T>, IEquatable<ILink<T>>
-       where T : MajorRecord
+       where T : IMajorRecord
     {
         public bool Linked => this.HasBeenSet && this.Item != null;
-        public FormID? UnlinkedForm { get; private set; }
-        public FormID FormID => LinkExt.GetFormID(this);
+        public FormKey? UnlinkedForm { get; private set; }
+        public FormKey FormKey => LinkExt.GetFormKey(this);
+        Type ILink.TargetType => typeof(T);
+#if DEBUG
+        public bool AttemptedLink { get; set; }
+#endif
 
         public FormIDSetLink()
         {
+#if DEBUG
+            FormIDLinkTesterHelper.Add(this);
+#endif
         }
 
-        public FormIDSetLink(FormID unlinkedForm)
+        public FormIDSetLink(FormKey unlinkedForm)
             : base(markAsSet: true)
         {
             this.UnlinkedForm = unlinkedForm;
             this._HasBeenSet = true;
+#if DEBUG
+            FormIDLinkTesterHelper.Add(this);
+#endif
         }
 
         private void UpdateUnlinkedForm(T change)
         {
-            this.UnlinkedForm = change?.FormID ?? UnlinkedForm;
+            this.UnlinkedForm = change?.FormKey ?? UnlinkedForm;
             this._HasBeenSet = this.UnlinkedForm.HasValue;
         }
 
@@ -39,45 +50,74 @@ namespace Mutagen.Bethesda
             base.Set(value, hasBeenSet, cmds);
         }
 
-        public void SetIfSucceeded(TryGet<FormID> formID)
+        public void SetIfSucceeded(TryGet<FormKey> formKey)
         {
-            if (formID.Failed)
+            if (formKey.Failed)
             {
                 return;
             }
-            this.UnlinkedForm = formID.Value;
+            this.UnlinkedForm = formKey.Value;
             this.HasBeenSet = true;
         }
 
-        public void SetIfSucceededOrDefault(TryGet<FormID> formID)
+        public void SetIfSucceededOrDefault(TryGet<FormKey> formKey)
         {
-            if (formID.Failed)
+            if (formKey.Failed)
             {
                 this.Unset();
                 return;
             }
-            this.Set(formID.Value);
+            this.Set(formKey.Value);
         }
 
-        public void Set(FormID formID)
+        public void Set(FormKey formKey)
         {
-            this.UnlinkedForm = formID;
+            this.UnlinkedForm = formKey;
             this.HasBeenSet = true;
+        }
+
+        public void Set(ILink<T> link, NotifyingFireParameters cmds = null)
+        {
+            if (link.Linked)
+            {
+                this.Set(link.Item, cmds);
+            }
+            else
+            {
+                this.UnlinkedForm = link.FormKey;
+            }
+        }
+
+        public void Set<R>(ILink<R> link, NotifyingFireParameters cmds = null)
+            where R : T
+        {
+            if (link.Linked)
+            {
+                this.Set(link.Item, cmds);
+            }
+            else
+            {
+                this.UnlinkedForm = link.FormKey;
+            }
         }
 
         public virtual bool Link<M>(
             ModList<M> modList,
             M sourceMod,
             NotifyingFireParameters cmds = null)
-            where M : IMod
+            where M : IMod<M>
         {
+#if DEBUG
+            this.AttemptedLink = true;
+#endif
+            if (!this.HasBeenSet) return false;
             if (!FormIDLink<T>.TryGetLink(
                 this.UnlinkedForm,
                 modList,
                 sourceMod,
                 out var item))
             {
-                this.Unset(cmds.ToUnsetParams());
+                this.Item = default;
                 return false;
             }
             this.Set(item, cmds);
@@ -86,12 +126,12 @@ namespace Mutagen.Bethesda
 
         public static bool operator ==(FormIDSetLink<T> lhs, IFormIDLink<T> rhs)
         {
-            return lhs.FormID.Equals(rhs.FormID);
+            return lhs.FormKey.Equals(rhs.FormKey);
         }
 
         public static bool operator !=(FormIDSetLink<T> lhs, IFormIDLink<T> rhs)
         {
-            return !lhs.FormID.Equals(rhs.FormID);
+            return !lhs.FormKey.Equals(rhs.FormKey);
         }
 
         public override bool Equals(object obj)

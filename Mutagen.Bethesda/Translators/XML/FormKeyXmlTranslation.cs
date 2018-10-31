@@ -10,18 +10,18 @@ using System.Xml.Linq;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDXmlTranslation : PrimitiveXmlTranslation<FormID>
+    public class FormKeyXmlTranslation : PrimitiveXmlTranslation<FormKey>
     {
-        public readonly static FormIDXmlTranslation Instance = new FormIDXmlTranslation();
+        public readonly static FormKeyXmlTranslation Instance = new FormKeyXmlTranslation();
 
         public void ParseInto<T>(XElement root, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
                 errorMask?.PushIndex(fieldIndex);
 
-                if (Parse(root, out FormID val, errorMask))
+                if (Parse(root, out FormKey val, errorMask))
                 {
                     item.Set(val);
                 }
@@ -42,13 +42,13 @@ namespace Mutagen.Bethesda
         }
 
         public void ParseInto<T>(XElement root, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
                 errorMask?.PushIndex(fieldIndex);
 
-                if (Parse(root, out FormID val, errorMask))
+                if (Parse(root, out FormKey val, errorMask))
                 {
                     item.Set(val);
                 }
@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda
         }
 
         public void ParseInto<T>(XElement root, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
                 errorMask?.PushIndex(fieldIndex);
 
-                if (Parse(root, out FormID val, errorMask))
+                if (Parse(root, out FormKey val, errorMask))
                 {
                     item.Set(val);
                 }
@@ -96,13 +96,13 @@ namespace Mutagen.Bethesda
         }
 
         public void ParseInto<T>(XElement root, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
                 errorMask?.PushIndex(fieldIndex);
 
-                if (Parse(root, out FormID val, errorMask))
+                if (Parse(root, out FormKey val, errorMask))
                 {
                     item.Set(val);
                 }
@@ -126,9 +126,9 @@ namespace Mutagen.Bethesda
             XElement root, 
             out FormIDLink<T> item, 
             ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
-            if (Parse(root, out FormID id, errorMask))
+            if (Parse(root, out FormKey id, errorMask))
             {
                 item = new FormIDLink<T>(id);
                 return true;
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda
             out FormIDLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             return this.Parse(
                 root: root,
@@ -154,9 +154,9 @@ namespace Mutagen.Bethesda
             XElement root, 
             out FormIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
-            if (Parse(root, out FormID id, errorMask))
+            if (Parse(root, out FormKey id, errorMask))
             {
                 item = new FormIDSetLink<T>(id);
                 return true;
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda
             out FormIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             return this.Parse(
                 root: root,
@@ -182,9 +182,9 @@ namespace Mutagen.Bethesda
             XElement root, 
             out EDIDLink<T> item,
             ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
-            if (Parse(root, out FormID id, errorMask))
+            if (Parse(root, out FormKey id, errorMask))
             {
                 item = new EDIDLink<T>(id);
                 return true;
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda
             out EDIDLink<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             return this.Parse(
                 root: root,
@@ -210,9 +210,9 @@ namespace Mutagen.Bethesda
             XElement root,
             out EDIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
-            if (Parse(root, out FormID id, errorMask))
+            if (Parse(root, out FormKey id, errorMask))
             {
                 item = new EDIDSetLink<T>(id);
                 return true;
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda
             out EDIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             return this.Parse(
                 root: root,
@@ -234,16 +234,16 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
         }
 
-        protected override bool ParseNonNullString(string str, out FormID value, ErrorMaskBuilder errorMask)
+        protected override bool ParseNonNullString(string str, out FormKey value, ErrorMaskBuilder errorMask)
         {
-            if (FormID.TryFactory(str, out FormID parsed))
+            if (FormKey.TryFactory(str, out FormKey parsed))
             {
                 value = parsed;
                 return true;
             }
             errorMask.ReportExceptionOrThrow(
                 new ArgumentException($"Could not convert to {NullableName}"));
-            value = FormID.NULL;
+            value = FormKey.NULL;
             return false;
         }
     }

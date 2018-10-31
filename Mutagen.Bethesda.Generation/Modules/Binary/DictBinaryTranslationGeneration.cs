@@ -79,7 +79,32 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                 }
                 args.Add($"errorMask: {maskAccessor}");
-                args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen)}.Write");
+                if (subTransl.AllowDirectWrite(objGen, typeGen))
+                {
+                    args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen)}.Write");
+                }
+                else
+                {
+                    args.Add((gen) =>
+                    {
+                        gen.AppendLine($"transl: (MutagenWriter r, {dict.ValueTypeGen.TypeName} dictSubItem, ErrorMaskBuilder dictSubMask) =>");
+                        using (new BraceWrapper(gen))
+                        {
+                            LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
+                            using (new DepthWrapper(gen))
+                            {
+                                subTransl.GenerateWrite(
+                                    fg: gen,
+                                    objGen: objGen,
+                                    typeGen: targetLoqui,
+                                    itemAccessor: new Accessor("dictSubItem"),
+                                    writerAccessor: "r",
+                                    translationAccessor: "dictTranslMask",
+                                    maskAccessor: "dictSubMask");
+                            }
+                        }
+                    });
+                }
             }
         }
 
@@ -156,15 +181,16 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"errorMask: {maskAccessor}");
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(dict.ValueTypeGen.GetType());
-                if (subGenTypes.Count <= 1)
+                if (subGenTypes.Count <= 1
+                    && subTransl.AllowDirectParse(objGen, typeGen, squashedRepeatedList: false))
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen)}.Parse");
                 }
-                else
+                else if (subGenTypes.Count > 1)
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, out {dict.ValueTypeGen.TypeName} dictSubItem, ErrorMaskBuilder dictSubMask) =>");
+                        gen.AppendLine($"transl: (MutagenFrame r, RecordType header, out {dict.ValueTypeGen.TypeName} dictSubItem, ErrorMaskBuilder dictSubMask) =>");
                         using (new BraceWrapper(gen))
                         {
                             gen.AppendLine("switch (header.Type)");
@@ -199,6 +225,28 @@ namespace Mutagen.Bethesda.Generation
                                     gen.AppendLine("throw new NotImplementedException();");
                                 }
                             }
+                        }
+                    });
+                }
+                else
+                {
+                    args.Add((gen) =>
+                    {
+                        gen.AppendLine($"transl: (MutagenFrame r, out {dict.ValueTypeGen.TypeName} dictSubItem, ErrorMaskBuilder dictSubMask) =>");
+                        using (new BraceWrapper(gen))
+                        {
+                            LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
+                            subGen.GenerateCopyInRet(
+                                fg: gen,
+                                objGen: objGen,
+                                targetGen: dict.ValueTypeGen,
+                                typeGen: targetLoqui,
+                                readerAccessor: "r",
+                                squashedRepeatedList: false,
+                                retAccessor: "return ",
+                                translationAccessor: "dictTranslMask",
+                                outItemAccessor: new Accessor("dictSubItem"),
+                                maskAccessor: "dictSubMask");
                         }
                     });
                 }

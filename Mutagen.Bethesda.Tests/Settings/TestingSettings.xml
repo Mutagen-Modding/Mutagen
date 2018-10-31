@@ -7,7 +7,10 @@
       <Bool name="TestFolder"/>
       <Bool name="ReuseCaches" />
       <Bool name="DeleteCachesAfter" default="true" />
-      <Bool name="TestGroupMasks" default="true" />
+      <Bool name="TestGroupMasks" />
+      <Bool name="TestModList" />
+      <Bool name="TestFlattenedMod" />
+      <String name="DataFolder" />
       <RefDirect name="OblivionESM" refName="Passthrough" />
       <RefDirect name="KnightsESP" refName="Passthrough" />
     </Fields>

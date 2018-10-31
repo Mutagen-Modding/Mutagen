@@ -24,20 +24,25 @@ namespace Mutagen.Bethesda.Generation
                 RaisePropertyChangedDefault = false,
                 NotifyingDefault = NotifyingType.ReactiveUI,
                 ObjectCentralizedDefault = true,
-                HasBeenSetDefault = true
+                HasBeenSetDefault = true,
+                ToStringDefault = false,
             };
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
             gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.XmlTranslation.ExportWithIGetter = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
             gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
+            gen.XmlTranslation.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
+            gen.XmlTranslation.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
             gen.XmlTranslation.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
             gen.MaskModule.AddTypeAssociation<FormIDLinkType>(MaskModule.TypicalField);
             gen.GenerationModules.Add(new MutagenModule());
             gen.Add(new BinaryTranslationModule(gen));
-            gen.Add(new ObservableModModule());
+            //gen.Add(new ObservableModModule());
             gen.AddTypeAssociation<FormIDLinkType>("FormIDLink");
             gen.AddTypeAssociation<FormIDType>("FormID");
+            gen.AddTypeAssociation<FormKeyType>("FormKey");
+            gen.AddTypeAssociation<ModKeyType>("ModKey");
             gen.AddTypeAssociation<BufferType>("Buffer");
             gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<ZeroType>("Zero");
@@ -47,6 +52,7 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<SpecialParseType>("SpecialParse");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Bethesda.Generation.MutagenLoquiType>();
             Loqui.Generation.Presentation.Utility.AddToLoquiGenerator(gen);
 
             var bethesdaProto = gen.AddProtocol(

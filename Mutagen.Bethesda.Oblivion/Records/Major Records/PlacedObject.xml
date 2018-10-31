@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedObject" baseClass="Placed" recordType="REFR" objType="Record" GUID="7a559a46-7ef9-49e9-98c1-ec16c3df81f2" ID="121">
+  <Object name="PlacedObject" baseClass="Bethesda.MajorRecord" recordType="REFR" objType="Record" GUID="7a559a46-7ef9-49e9-98c1-ec16c3df81f2" ID="121">
+    <Interface>IPlaced</Interface>
     <Fields>
       <FormIDLink name="Base" recordType="NAME" refName="Bethesda.MajorRecord" />
       <ByteArray name="XPCIFluff" recordType="XPCI" />
       <ByteArray name="FULLFluff" recordType="FULL" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <RefDirect name="Lock" refName="LockInformation" />
-      <FormIDLink name="Owner" recordType="XOWN" refName="Faction" />
+      <FormIDLink name="Owner" recordType="XOWN" interfaceName="IOwner" objType="Record" />
       <Int32 name="FactionRank" recordType="XRNK" />
       <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <FormIDLink name="Target" recordType="XTRG" refName="PlacedObject" />
+      <FormIDLink name="Target" recordType="XTRG" objType="Record" interfaceName="IPlaced" />
       <UInt8 name="SpeedTreeSeed" recordType="XSED" />
       <RefDirect name="DistantLODData" refName="DistantLODData" />
       <Float name="Charge" recordType="XCHG" />
@@ -35,7 +36,7 @@
   </Object>
   <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">
     <Fields>
-      <FormIDLink name="Door" refName="Door" />
+      <FormIDLink name="Destination" interfaceName="IPlaced" objType="Record" />
       <P3Float name="Position" />
       <P3Float name="Rotation" />
     </Fields>

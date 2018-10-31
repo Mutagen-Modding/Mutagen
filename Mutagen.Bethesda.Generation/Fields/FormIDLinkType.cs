@@ -19,8 +19,8 @@ namespace Mutagen.Bethesda.Generation
 
         public override string ProtectedProperty => base.Property;
         public override string ProtectedName => base.ProtectedName;
-        private FormIDType _rawFormID = new FormIDType();
-        private LoquiType loquiType = new LoquiType();
+        private FormIDType _rawFormID;
+        private LoquiType loquiType;
         public FormIDTypeEnum FormIDType;
 
         public override string TypeName => $"{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName}>";
@@ -30,6 +30,8 @@ namespace Mutagen.Bethesda.Generation
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
+            loquiType =  this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
+            _rawFormID = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<FormIDType>();
             this.NotifyingProperty.Set(NotifyingType.NotifyingItem);
             this.ObjectCentralizedProperty.Set(false);
             loquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
@@ -131,6 +133,57 @@ namespace Mutagen.Bethesda.Generation
         {
             if (!this.IntegrateField) return;
             fg.AppendLine($"{fgAccessor}.AppendLine($\"{name} => {{{accessor.PropertyOrDirectAccess}}}\");");
+        }
+
+        public override void GenerateUnsetNth(FileGeneration fg, string identifier, string cmdsAccessor)
+        {
+            if (!this.IntegrateField) return;
+            if (!this.ReadOnly)
+            {
+                if (this.HasBeenSet)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"{identifier}.{this.GetName(internalUse: false, property: true)}.Unset"))
+                    {
+                        if (this.NotifyingType != NotifyingType.None)
+                        {
+                            args.Add(cmdsAccessor);
+                        }
+                    }
+                }
+                else
+                {
+                    fg.AppendLine($"{identifier}.{this.Name} = default({loquiType.TypeName});");
+                }
+            }
+            fg.AppendLine("break;");
+        }
+
+        public override void GenerateClear(FileGeneration fg, string accessorPrefix, string cmdAccessor)
+        {
+            if (this.ReadOnly || !this.IntegrateField) return;
+            if (this.NotifyingType != NotifyingType.None)
+            {
+                if (this.HasBeenSet)
+                {
+                    fg.AppendLine($"{accessorPrefix}.{this.Property}.Unset({cmdAccessor}.ToUnsetParams());");
+                }
+                else
+                {
+                    fg.AppendLine($"{accessorPrefix}.{this.Name} = default({loquiType.TypeName});");
+                }
+            }
+            else
+            {
+                if (this.HasBeenSet)
+                {
+                    fg.AppendLine($"{accessorPrefix}.{this.Property}.Unset();");
+                }
+                else
+                {
+                    fg.AppendLine($"{accessorPrefix}.{this.Name} = default({loquiType.TypeName});");
+                }
+            }
         }
     }
 }

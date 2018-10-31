@@ -85,6 +85,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"{nameof(MutagenFrame)} frame");
                 args.Add($"{obj.ObjectName} item");
+                args.Add($"MasterReferences masterReferences");
                 args.Add($"ErrorMaskBuilder errorMask");
             }
             fg.AppendLine();
@@ -96,6 +97,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.ObjectName} item");
+                args.Add($"MasterReferences masterReferences");
                 args.Add($"ErrorMaskBuilder errorMask");
             }
             fg.AppendLine();
@@ -104,6 +106,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.ObjectName} item");
+                args.Add($"MasterReferences masterReferences");
                 args.Add($"ErrorMaskBuilder errorMask");
             }
             using (new BraceWrapper(fg))
@@ -113,6 +116,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("writer: writer");
                     args.Add("item: item");
+                    args.Add($"masterReferences: masterReferences");
                     args.Add($"errorMask: errorMask");
                 }
             }
@@ -130,6 +134,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add("item: item");
+                args.Add($"masterReferences: masterReferences");
                 args.Add("errorMask: errorMask");
             }
         }
@@ -142,7 +147,7 @@ namespace Mutagen.Bethesda.Generation
             var data = field.GetFieldData();
             if (data.HasTrigger)
             {
-                fg.AppendLine($"using (var subFrame = {frameAccessor}.SpawnWithLength(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))");
+                fg.AppendLine($"using (var subFrame = {frameAccessor}.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))");
             }
             using (new BraceWrapper(fg, doIt: data.HasTrigger))
             {
@@ -151,6 +156,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"frame: {(data.HasTrigger ? "subFrame" : frameAccessor)}");
                     args.Add("item: item");
+                    args.Add($"masterReferences: masterReferences");
                     args.Add($"errorMask: errorMask");
                 }
             }

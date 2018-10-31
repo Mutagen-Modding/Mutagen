@@ -53,16 +53,20 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Custom Data\MutagenObjData.cs" />
+    <Compile Include="Extensions\LoquiTypeExt.cs" />
     <Compile Include="Extensions\ObjectGenerationExt.cs" />
     <Compile Include="Extensions\TypeGenerationExt.cs" />
     <Compile Include="Fields\CustomLogic.cs" />
     <Compile Include="Fields\DataType.cs" />
     <Compile Include="Fields\EnumType.cs" />
+    <Compile Include="Fields\FormKeyType.cs" />
+    <Compile Include="Fields\ModKeyType.cs" />
     <Compile Include="Fields\GroupType.cs" />
     <Compile Include="Fields\FormIDType.cs" />
     <Compile Include="Fields\FormIDLinkType.cs" />
     <Compile Include="Custom Data\MutagenFieldData.cs" />
     <Compile Include="Fields\BufferType.cs" />
+    <Compile Include="Fields\MutagenLoquiType.cs" />
     <Compile Include="Fields\SpecialParseType.cs" />
     <Compile Include="Fields\StringType.cs" />
     <Compile Include="Fields\TransferType.cs" />
@@ -76,6 +80,7 @@
     <Compile Include="Modules\Binary\FilePathBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\FormIDLinkBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\DictBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\FormKeyBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ListBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\LoquiBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BufferBinaryTranslationGeneration.cs" />

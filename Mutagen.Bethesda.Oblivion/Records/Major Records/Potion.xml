@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Potion" objType="Record" recordType="ALCH" baseClass="Bethesda.MajorRecord" GUID="f28ef4d6-1e08-4aab-a73e-af679ad7a30f" ID="98">
+  <Object name="Potion" objType="Record" recordType="ALCH" baseClass="ItemAbstract" GUID="f28ef4d6-1e08-4aab-a73e-af679ad7a30f" ID="98">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />

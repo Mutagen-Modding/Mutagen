@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"{frameAccessor}.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
 
             List<string> extraArgs = new List<string>();
@@ -80,14 +80,17 @@ namespace Mutagen.Bethesda.Generation
             extraArgs.Add($"parseWhole: true");
 
             TranslationGeneration.WrapParseCall(
-                fg: fg,
-                typeGen: typeGen,
-                translatorLine: $"{this.Namespace}StringBinaryTranslation.Instance",
-                maskAccessor: maskAccessor,
-                itemAccessor: itemAccessor,
-                translationMaskAccessor: null,
-                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                extraargs: extraArgs.ToArray());
+                new TranslationWrapParseArgs()
+                {
+                    FG = fg,
+                    TypeGen = typeGen,
+                    TranslatorLine = $"{this.Namespace}StringBinaryTranslation.Instance",
+                    MaskAccessor = maskAccessor,
+                    ItemAccessor = itemAccessor,
+                    TranslationMaskAccessor = null,
+                    IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                    ExtraArgs = extraArgs.ToArray(),
+                });
         }
 
         public override void GenerateCopyInRet(

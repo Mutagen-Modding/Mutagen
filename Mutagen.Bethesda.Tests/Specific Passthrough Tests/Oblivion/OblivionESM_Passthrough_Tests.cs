@@ -18,9 +18,12 @@ namespace Mutagen.Bethesda.Tests
     public class OblivionESM_Passthrough_Tests : Oblivion_Passthrough_Test
     {
         public override string Nickname => TestingConstants.OBLIVION_ESM;
+        public override ModKey ModKey => ModKey.Factory(TestingConstants.OBLIVION_ESM);
 
         public OblivionESM_Passthrough_Tests(TestingSettings settings)
-            : base(settings?.OblivionESM?.Path)
+            : base(
+                  numMasters: 0,
+                  path: Path.Combine(settings.DataFolder, settings.OblivionESM.Path))
         {
         }
 
@@ -28,7 +31,8 @@ namespace Mutagen.Bethesda.Tests
         {
             var mod = OblivionMod.Create_Binary(
                 this.FilePath,
-                out var inputErrMask,
+                modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                errorMask: out var inputErrMask,
                 importMask: new GroupMask()
                 {
                     NPCs = true
@@ -40,7 +44,8 @@ namespace Mutagen.Bethesda.Tests
                 var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
                 mod.Write_Binary(
                     oblivionOutputPath,
-                    out var outputErrMask);
+                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    errorMask: out var outputErrMask);
                 Assert.False(outputErrMask?.IsInError() ?? false);
                 var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath);
                 using (var reader = new BinaryReadStream(oblivionOutputPath))
@@ -62,7 +67,8 @@ namespace Mutagen.Bethesda.Tests
         {
             var mod = OblivionMod.Create_Binary(
                 this.FilePath,
-                out var inputErrMask);
+                modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                errorMask: out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
 
             using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Export"))
@@ -70,7 +76,8 @@ namespace Mutagen.Bethesda.Tests
                 var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
                 mod.Write_Binary(
                     oblivionOutputPath,
-                    out var outputErrMask,
+                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    errorMask: out var outputErrMask,
                     importMask: new GroupMask()
                     {
                         NPCs = true
@@ -91,19 +98,23 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
         }
-        
+
         public async Task OblivionESM_Folder_Reimport()
         {
             var mod = OblivionMod.Create_Binary(
                 this.FilePath,
-                out var inputErrMask);
+                modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                errorMask: out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
             using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
             {
-                mod[FormID.Factory("0006371E")].Write_Xml(Path.Combine(tmp.Dir.Path, "Test"));
-                var exportMask = await mod.Write_XmlFolder(
-                    tmp.Dir);
-                Assert.False(exportMask?.IsInError() ?? false);
+                // ToDO
+                // Upgrade XML to work on IMajorRecord interface
+                //mod[FormID.Factory("0006371E")].Write_Xml(Path.Combine(tmp.Dir.Path, "Test"));
+                //var exportMask = await mod.Write_XmlFolder(
+                //    tmp.Dir);
+                //Assert.False(exportMask?.IsInError() ?? false);
+                throw new NotImplementedException();
             }
         }
     }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledSpell" objType="Record" recordType="LVSP" baseClass="Bethesda.MajorRecord" GUID="ebf4d53e-7995-458e-b9a8-5521f7d86bd5" ID="164">
+  <Object name="LeveledSpell" objType="Record" recordType="LVSP" baseClass="SpellAbstract" GUID="ebf4d53e-7995-458e-b9a8-5521f7d86bd5" ID="164">
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" />
       <RefList name="Entries" refName="LeveledEntry">
-        <GenericSpecification TypeToSpecify="T" Definition="Spell" />
+        <GenericSpecification TypeToSpecify="T" Definition="SpellAbstract" />
       </RefList>
     </Fields>
   </Object>

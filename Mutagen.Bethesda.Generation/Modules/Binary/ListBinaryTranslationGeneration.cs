@@ -80,8 +80,11 @@ namespace Mutagen.Bethesda.Generation
 
             ListBinaryType listBinaryType = GetListType(list, data, subData);
 
+            var allowDirectWrite = subTransl.AllowDirectWrite(objGen, typeGen);
             var isLoqui = list.SubTypeGeneration is LoquiType;
-            var listOfRecords = !isLoqui && listBinaryType == ListBinaryType.SubTrigger;
+            var listOfRecords = !isLoqui 
+                && listBinaryType == ListBinaryType.SubTrigger
+                && allowDirectWrite;
 
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
@@ -102,7 +105,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"translationMask: {translationMaskAccessor}");
                 }
-                if (subTransl.AllowDirectWrite(objGen, typeGen))
+                if (allowDirectWrite)
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Write");
                 }
@@ -149,11 +152,11 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.MarkerType.HasValue)
             {
-                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
+                fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
             }
             else if (listBinaryType == ListBinaryType.Trigger)
             {
-                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
 
             using (var args = new ArgsWrapper(fg,
@@ -181,6 +184,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     throw new NotImplementedException();
                 }
+                if (list.SubTypeGeneration is FormIDLinkType)
+                {
+                    args.Add($"masterReferences: masterReferences");
+                }
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (list.CustomData.TryGetValue("lengthLength", out object len))
@@ -189,9 +196,9 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else if (!list.MaxValue.HasValue)
                 {
-                    if (list.SubTypeGeneration is LoquiType loqui)
+                    if (list.SubTypeGeneration is MutagenLoquiType loqui)
                     {
-                        switch (loqui.TargetObjectGeneration.GetObjectType())
+                        switch (loqui.GetObjectType())
                         {
                             case ObjectType.Subrecord:
                                 args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
@@ -218,7 +225,15 @@ namespace Mutagen.Bethesda.Generation
                     typeGen: typeGen,
                     squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
                 {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse");
+                    if (list.SubTypeGeneration is LoquiType loqui
+                        && !loqui.CanStronglyType)
+                    {
+                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse<{loqui.TypeName}>");
+                    }
+                    else
+                    {
+                        args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration)}.Parse");
+                    }
                 }
                 else
                 {

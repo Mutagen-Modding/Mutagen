@@ -15,18 +15,18 @@ namespace Mutagen.Bethesda.Oblivion
     {
         private byte[] _overallTimeStamp;
 
-        static partial void CustomBinaryEnd_Import(MutagenFrame frame, DialogTopic obj, ErrorMaskBuilder errorMask)
+        static partial void CustomBinaryEnd_Import(MutagenFrame frame, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
             if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
-            var id = FormID.Factory(frame.Reader.ReadUInt32());
+            var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
             if (grupType == GroupTypeEnum.TopicChildren)
             {
                 obj._overallTimeStamp = frame.Reader.ReadBytes(4);
-                if (id != obj.FormID)
+                if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position -= 16;
                 return;
             }
-            using (var subFrame = frame.SpawnWithLength(len - Constants.RECORD_HEADER_LENGTH))
+            using (var subFrame = frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH))
             {
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
                     frame: subFrame,
@@ -49,20 +49,22 @@ namespace Mutagen.Bethesda.Oblivion
                         return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
                             frame: r,
                             item: out listItem,
+                            masterReferences: masterReferences,
                             errorMask: listErrorMask);
                     }
                     );
             }
         }
 
-        static partial void CustomBinaryEnd_Export(MutagenWriter writer, DialogTopic obj, ErrorMaskBuilder errorMask)
+        static partial void CustomBinaryEnd_Export(MutagenWriter writer, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (obj.Items.Count == 0) return;
             using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
             {
-                FormIDBinaryTranslation.Instance.Write(
+                FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormID,
+                    obj.FormKey,
+                    masterReferences,
                     errorMask);
                 writer.Write((int)GroupTypeEnum.TopicChildren);
                 if (obj._overallTimeStamp != null)
@@ -83,6 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
                         LoquiBinaryTranslation<DialogItem>.Instance.Write(
                             writer: subWriter,
                             item: subItem,
+                            masterReferences: masterReferences,
                             errorMask: listErrMask);
                     });
             }

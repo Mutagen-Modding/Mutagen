@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public interface IFormID
-    {
-        FormID FormID { get; }
-    }
-
     public struct FormID : IEquatable<FormID>
     {
         public static readonly FormID NULL = new FormID();
@@ -104,7 +99,7 @@ namespace Mutagen.Bethesda
 
         public string IDString()
         {
-            return ID.ToString("X8");
+            return ID.ToString("X6");
         }
 
         public override bool Equals(object obj)

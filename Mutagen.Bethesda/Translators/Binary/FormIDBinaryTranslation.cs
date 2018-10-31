@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Binary
         public override int? ExpectedLength => 4;
 
         public void ParseInto<T>(MutagenFrame frame, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void ParseInto<T>(MutagenFrame frame, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public bool Parse<T>(MutagenFrame frame, out FormIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (Parse(frame, out FormID id, errorMask))
             {
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public bool Parse<T>(MutagenFrame frame, out FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (Parse(frame, out FormID id, errorMask))
             {
@@ -95,27 +95,39 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public bool Parse<T>(MutagenFrame frame, out EDIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
-            if (Parse(frame, out FormID id, errorMask))
+            if (ExpectedLength.HasValue)
             {
-                item = new EDIDLink<T>(id);
-                return true;
+                if (!frame.TryCheckUpcomingRead(this.ExpectedLength.Value, out var ex))
+                {
+                    frame.Position = frame.FinalLocation;
+                    errorMask.ReportExceptionOrThrow(ex);
+                    item = new EDIDLink<T>();
+                    return false;
+                }
             }
-            item = new EDIDLink<T>();
-            return false;
+            
+            item = new EDIDLink<T>(HeaderTranslation.ReadNextRecordType(frame));
+            return true;
         }
 
         public bool Parse<T>(MutagenFrame frame, out EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
-            if (Parse(frame, out FormID id, errorMask))
+            if (ExpectedLength.HasValue)
             {
-                item = new EDIDSetLink<T>(id);
-                return true;
+                if (!frame.TryCheckUpcomingRead(this.ExpectedLength.Value, out var ex))
+                {
+                    frame.Position = frame.FinalLocation;
+                    errorMask.ReportExceptionOrThrow(ex);
+                    item = new EDIDSetLink<T>();
+                    return false;
+                }
             }
-            item = new EDIDSetLink<T>();
-            return false;
+
+            item = new EDIDSetLink<T>(HeaderTranslation.ReadNextRecordType(frame));
+            return true;
         }
 
         public override FormID ParseValue(MutagenFrame reader)
@@ -128,8 +140,8 @@ namespace Mutagen.Bethesda.Binary
             writer.Write(item.ToBytes());
         }
 
-        public void Write<T>(MutagenWriter writer, ILink<T> item, ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+        public void Write<T>(MutagenWriter writer, FormIDLink<T> item, ErrorMaskBuilder errorMask)
+            where T : IMajorRecord
         {
             this.Write(
                 writer,
@@ -137,12 +149,39 @@ namespace Mutagen.Bethesda.Binary
                 errorMask: errorMask);
         }
 
+        public void Write<T>(MutagenWriter writer, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
+            where T : IMajorRecord
+        {
+            this.Write(
+                writer,
+                item.FormID,
+                errorMask: errorMask);
+        }
+
+        public void Write<T>(MutagenWriter writer, EDIDLink<T> item, ErrorMaskBuilder errorMask)
+            where T : IMajorRecord
+        {
+            Int32BinaryTranslation.Instance.Write(
+                writer,
+                item.EDID.TypeInt,
+                errorMask: errorMask);
+        }
+
+        public void Write<T>(MutagenWriter writer, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
+            where T : IMajorRecord
+        {
+            Int32BinaryTranslation.Instance.Write(
+                writer,
+                item.EDID.TypeInt,
+                errorMask: errorMask);
+        }
+
         public void Write<T>(
             MutagenWriter writer,
-            ILink<T> item,
+            FormIDLink<T> item,
             int fieldIndex,
             ErrorMaskBuilder errorMask)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -165,12 +204,90 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            ILink<T> item,
+            FormIDSetLink<T> item,
+            int fieldIndex,
+            ErrorMaskBuilder errorMask)
+            where T : IMajorRecord
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer,
+                    item,
+                    errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            EDIDLink<T> item,
+            int fieldIndex,
+            ErrorMaskBuilder errorMask)
+            where T : IMajorRecord
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer,
+                    item,
+                    errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            EDIDSetLink<T> item,
+            int fieldIndex,
+            ErrorMaskBuilder errorMask)
+            where T : IMajorRecord
+        {
+            try
+            {
+                errorMask?.PushIndex(fieldIndex);
+                this.Write(
+                    writer,
+                    item,
+                    errorMask);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            FormIDLink<T> item,
             RecordType header,
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             try
             {
@@ -200,7 +317,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : MajorRecord
+            where T : IMajorRecord
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -209,42 +326,6 @@ namespace Mutagen.Bethesda.Binary
                 header,
                 nullable: nullable,
                 errorMask: errorMask);
-        }
-
-        public void Write<T>(
-            MutagenWriter writer,
-            ILink<T> item,
-            RecordType header,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
-            where T : MajorRecord
-        {
-            this.Write(
-                writer,
-                item.FormID,
-                header,
-                nullable,
-                errorMask);
-        }
-
-        public void Write<T>(
-            MutagenWriter writer,
-            FormIDSetLink<T> item,
-            RecordType header,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
-            where T : MajorRecord
-        {
-            if (!item.HasBeenSet)
-            {
-                return;
-            }
-            this.Write(
-                writer,
-                item.FormID,
-                header,
-                nullable,
-                errorMask);
         }
     }
 }

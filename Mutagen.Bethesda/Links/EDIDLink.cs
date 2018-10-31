@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class EDIDLink<T> : FormIDLink<T>, IEDIDLink<T>
-       where T : MajorRecord
+       where T : IMajorRecord
     {
         public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
         private IDisposable edidSub;
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda
             this.EDID = unlinkedEDID;
         }
 
-        public EDIDLink(FormID unlinkedForm)
+        public EDIDLink(FormKey unlinkedForm)
             : base(unlinkedForm)
         {
         }
@@ -36,6 +36,18 @@ namespace Mutagen.Bethesda
         {
             HandleItemChange(new Change<T>(this.Item, value));
             base.Set(value, cmds);
+        }
+
+        public void Set(IEDIDLink<T> link, NotifyingFireParameters cmds = null)
+        {
+            if (link.Linked)
+            {
+                this.Set(link.Item, cmds);
+            }
+            else
+            {
+                this.EDID = link.EDID;
+            }
         }
 
         private void HandleItemChange(Change<T> change)
@@ -97,7 +109,7 @@ namespace Mutagen.Bethesda
             IEDIDLink<T> link,
             M mod,
             NotifyingFireParameters cmds = null)
-            where M : IMod
+            where M : IMod<M>
         {
             if (string.IsNullOrWhiteSpace(link.EDID.Type)) return false;
             var group = mod.GetGroup<T>();
@@ -117,8 +129,11 @@ namespace Mutagen.Bethesda
             ModList<M> modList, 
             M sourceMod,
             NotifyingFireParameters cmds = null)
-            where M : IMod
+            where M : IMod<M>
         {
+#if DEBUG
+            link.AttemptedLink = true;
+#endif
             if (TryLinkToMod(link, sourceMod, cmds)) return true;
             if (modList == null) return false;
             foreach (var listing in modList)

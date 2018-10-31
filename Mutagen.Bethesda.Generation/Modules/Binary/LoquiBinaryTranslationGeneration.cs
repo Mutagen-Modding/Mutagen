@@ -12,10 +12,27 @@ namespace Mutagen.Bethesda.Generation
     {
         public string ModNickname;
 
+        public override bool AllowDirectParse(ObjectGeneration objGen, TypeGeneration typeGen, bool squashedRepeatedList)
+        {
+            return false;
+        }
+
+        public override bool AllowDirectWrite(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            return false;
+        }
+
         public override string GetTranslatorInstance(TypeGeneration typeGen)
         {
             var loquiGen = typeGen as LoquiType;
-            return $"LoquiBinaryTranslation<{loquiGen.TypeName}>.Instance";
+            if (loquiGen.CanStronglyType)
+            {
+                return $"LoquiBinaryTranslation<{loquiGen.TypeName}>.Instance";
+            }
+            else
+            {
+                return $"LoquiBinaryTranslation.Instance";
+            }
         }
 
         public LoquiBinaryTranslationGeneration(string modNickname)
@@ -56,6 +73,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                     }
                     args.Add($"errorMask: {maskAccessor}");
+                    args.Add($"masterReferences: masterReferences");
                     if (data?.RecordTypeConverter != null
                         && data.RecordTypeConverter.FromConversions.Count > 0)
                     {
@@ -86,7 +104,7 @@ namespace Mutagen.Bethesda.Generation
                 if (loquiGen.TryGetFieldData(out var data)
                     && data.MarkerType.HasValue)
                 {
-                    fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
+                    fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
                 }
 
                 if (loquiGen.SingletonType == SingletonLevel.Singleton)
@@ -101,6 +119,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"frame: {frameAccessor}");
                             args.Add($"errorMask: {maskAccessor}");
                             args.Add($"recordTypeConverter: null");
+                            args.Add($"masterReferences: masterReferences");
                         }
                         using (var args = new ArgsWrapper(fg,
                             $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Copy)}"))
@@ -122,15 +141,19 @@ namespace Mutagen.Bethesda.Generation
                     {
                         extraArgs.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                     }
+                    extraArgs.Add($"masterReferences: masterReferences");
                     TranslationGeneration.WrapParseCall(
-                        fg: fg,
-                        typeGen: typeGen,
-                        translatorLine: $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance",
-                        maskAccessor: maskAccessor,
-                        itemAccessor: itemAccessor,
-                        translationMaskAccessor: null,
-                        indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                        extraargs: extraArgs.ToArray());
+                        new TranslationWrapParseArgs()
+                        {
+                            FG = fg,
+                            TypeGen = typeGen,
+                            TranslatorLine = $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance",
+                            MaskAccessor = maskAccessor,
+                            ItemAccessor = itemAccessor,
+                            TranslationMaskAccessor = null,
+                            IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                            ExtraArgs = extraArgs.ToArray(),
+                        });
                 }
             }
             else
@@ -164,6 +187,14 @@ namespace Mutagen.Bethesda.Generation
                 }
                 args.Add($"item: out {outItemAccessor.DirectAccess}");
                 args.Add($"errorMask: {maskAccessor}");
+                if (objGen.GetObjectType() == ObjectType.Mod)
+                {
+                    args.Add($"masterReferences: item.TES4.MasterReferences");
+                }
+                else
+                {
+                    args.Add($"masterReferences: masterReferences");
+                }
                 if (data?.RecordTypeConverter != null
                     && data.RecordTypeConverter.FromConversions.Count > 0)
                 {

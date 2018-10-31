@@ -11,7 +11,7 @@
       <FormIDLink name="LoopSound" refName="Sound" recordType="BNAM" />
       <Enum name="Flags" enumName="Door.DoorFlag" byteLength="1" recordType="FNAM" />
       <List name="RandomTeleportDestinations">
-        <FormIDLink recordType="TNAM" refName="Worldspace" />
+        <FormIDLink recordType="TNAM" refName="Place" />
       </List>
     </Fields>
   </Object>

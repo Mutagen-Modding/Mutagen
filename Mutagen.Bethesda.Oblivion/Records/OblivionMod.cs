@@ -12,10 +12,15 @@ using CSharpExt.Rx;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionMod : IMod, ILinkContainer
+    public partial class OblivionMod : IMod<OblivionMod>, ILinkContainer
     {
         private static readonly object _subscribeObject = new object();
         public IObservableSetList<MasterReference> MasterReferences => this.TES4.MasterReferences;
+
+        void IMod<OblivionMod>.Write_Binary(string path, ModKey modKey)
+        {
+            this.Write_Binary(path, modKey, importMask: null);
+        }
 
         partial void CustomCtor()
         {
@@ -76,15 +81,30 @@ namespace Mutagen.Bethesda.Oblivion
                     default:
                         break;
                 }
-                Utility.ModifyButThrow(_majorRecords, change);
+                Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change);
             });
         }
 
         protected void SubscribeToCell(Cell cell)
         {
-            cell.Persistent.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
-            cell.Temporary.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
-            cell.VisibleWhenDistant.Subscribe_Enumerable_Single(_subscribeObject, (r) => Utility.ModifyButThrow(_majorRecords, r));
+            cell.Persistent.Subscribe_Enumerable_Single(_subscribeObject, (r) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, r));
+            cell.Temporary.Subscribe_Enumerable_Single(_subscribeObject, (r) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, r));
+            cell.VisibleWhenDistant.Subscribe_Enumerable_Single(_subscribeObject, (r) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, r));
+            cell.Landscape_Property.Subscribe(_subscribeObject, (r) =>
+            {
+                if (r.Old != null)
+                {
+                    _majorRecords.Remove(r.Old.FormKey);
+                }
+                if (r.New != null)
+                {
+                    if (_majorRecords.ContainsKey(r.New.FormKey))
+                    {
+                        throw new ArgumentException($"Cannot add a landscape {r.New.FormKey} that exists elsewhere in the same mod.");
+                    }
+                    _majorRecords[r.New.FormKey] = r.New;
+                }
+            });
 
             // ToDo
             // Unsubscribe mechanics, add back in remove
@@ -92,15 +112,15 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 //if (r.Old != null)
                 //{
-                //    _majorRecords.Remove(r.Old.FormID);
+                //    _majorRecords.Remove(r.Old.FormKey);
                 //}
                 if (r != null)
                 {
-                    if (_majorRecords.ContainsKey(r.FormID))
+                    if (_majorRecords.ContainsKey(r.FormKey))
                     {
-                        throw new ArgumentException($"Cannot add a pathgrid {r.FormID} that exists elsewhere in the same mod.");
+                        throw new ArgumentException($"Cannot add a pathgrid {r.FormKey} that exists elsewhere in the same mod.");
                     }
-                    _majorRecords[r.FormID] = r;
+                    _majorRecords[r.FormKey] = r;
                 }
             });
         }
@@ -113,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
                 subBlock.Items.Unsubscribe(_subscribeObject);
                 foreach (var cell in subBlock.Items)
                 {
-                    _majorRecords.Remove(cell.FormID);
+                    _majorRecords.Remove(cell.FormKey);
                 }
             }
         }
@@ -160,11 +180,11 @@ namespace Mutagen.Bethesda.Oblivion
                 //}
                 if (r != null)
                 {
-                    if (_majorRecords.ContainsKey(r.FormID))
+                    if (_majorRecords.ContainsKey(r.FormKey))
                     {
                         throw new ArgumentException("Cannot add a road that exists elsewhere in the same mod.");
                     }
-                    _majorRecords[r.FormID] = r;
+                    _majorRecords[r.FormKey] = r;
                 }
             });
             // ToDo
@@ -179,7 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (r != null)
                 {
                     SubscribeToCell(r);
-                    _majorRecords[r.FormID] = r;
+                    _majorRecords[r.FormKey] = r;
                 }
             });
             worldspace.SubCells.Subscribe_Enumerable_Single(_subscribeObject, (change) =>

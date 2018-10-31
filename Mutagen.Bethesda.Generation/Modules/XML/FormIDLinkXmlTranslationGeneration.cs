@@ -8,11 +8,11 @@ using Loqui.Generation;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class FormIDLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormID>
+    public class FormIDLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormKey>
     {
         protected override string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
         {
-            return $"{itemAccessor.PropertyOrDirectAccess}?.FormID";
+            return $"{itemAccessor.PropertyOrDirectAccess}?.FormKey";
         }
 
         public override void GenerateCopyInRet(
@@ -45,14 +45,16 @@ namespace Mutagen.Bethesda.Generation
             string translationMaskAccessor)
         {
             TranslationGeneration.WrapParseCall(
-                fg: fg,
-                typeGen: typeGen,
-                translatorLine: $"{this.TypeName}XmlTranslation.Instance",
-                maskAccessor: maskAccessor,
-                itemAccessor: itemAccessor,
-                translationMaskAccessor: null,
-                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                extraargs: $"root: {frameAccessor}");
+                new TranslationWrapParseArgs()
+                {
+                    FG = fg,
+                    TypeGen = typeGen,
+                    TranslatorLine = $"{this.TypeName}XmlTranslation.Instance",
+                    MaskAccessor = maskAccessor,
+                    ItemAccessor = itemAccessor,
+                    IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                    ExtraArgs = $"root: {frameAccessor}".Single(),
+                });
         }
     }
 }

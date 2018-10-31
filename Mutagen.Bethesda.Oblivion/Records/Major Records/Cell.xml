@@ -35,9 +35,9 @@
       <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="PathGrid" noBinary="true" refName="PathGrid" />
       <RefDirect name="Landscape" noBinary="true" refName="Landscape" />
-      <RefList name="Persistent" noBinary="true" refName="Placed" />
-      <RefList name="Temporary" noBinary="true" refName="Placed" />
-      <RefList name="VisibleWhenDistant" noBinary="true" refName="Placed" />
+      <RefList name="Persistent" noBinary="true" interfaceName="IPlaced" objType="Record" />
+      <RefList name="Temporary" noBinary="true" interfaceName="IPlaced" objType="Record" />
+      <RefList name="VisibleWhenDistant" noBinary="true" interfaceName="IPlaced" objType="Record" />
     </Fields>
   </Object>
   <Object name="CellLighting" recordType="XCLL" objType="Subrecord" GUID="31acbf65-e6be-4373-9fb4-d0f1ab97c089" ID="138">

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog.Notifying;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,15 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    public interface ILinkSubContainer : ILinkContainer
+    {
+        void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>;
+    }
+
     public interface ILinkContainer
     {
         IEnumerable<ILink> Links { get; }

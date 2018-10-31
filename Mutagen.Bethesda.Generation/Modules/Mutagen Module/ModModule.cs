@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
-            fg.AppendLine($"private NotifyingDictionary<FormID, MajorRecord> _majorRecords = new NotifyingDictionary<FormID, MajorRecord>();");
-            fg.AppendLine($"public INotifyingDictionaryGetter<FormID, MajorRecord> MajorRecords => _majorRecords;");
-            fg.AppendLine($"public MajorRecord this[FormID id]");
+            fg.AppendLine($"private NotifyingDictionary<FormKey, IMajorRecord> _majorRecords = new NotifyingDictionary<FormKey, IMajorRecord>();");
+            fg.AppendLine($"public INotifyingDictionaryGetter<FormKey, IMajorRecord> MajorRecords => _majorRecords;");
+            fg.AppendLine($"public IMajorRecord this[FormKey id]");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("get => _majorRecords[id];");
@@ -25,8 +25,8 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 "protected void SetMajorRecord"))
             {
-                args.Add("FormID id");
-                args.Add("MajorRecord record");
+                args.Add("FormKey id");
+                args.Add("IMajorRecord record");
             }
             using (new BraceWrapper(fg))
             {
@@ -59,10 +59,9 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public INotifyingKeyedCollection<FormID, T> GetGroup<T>",
+                "public INotifyingKeyedCollection<FormKey, T> GetGroup<T>",
                 wheres: "where T : IMajorRecord"))
             {
-
             }
             using (new BraceWrapper(fg))
             {
@@ -78,11 +77,44 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"if (t.Equals(typeof({subObj.Name})))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"return (INotifyingKeyedCollection<FormID, T>){field.Name}.Items;");
+                        fg.AppendLine($"return (INotifyingKeyedCollection<FormKey, T>){field.Name}.Items;");
                     }
                 }
                 fg.AppendLine("throw new ArgumentException($\"Unkown group type: {t}\");");
             }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                "public void AddRecords"))
+            {
+                args.Add($"{obj.Name} rhsMod");
+                args.Add($"GroupMask mask = null");
+            }
+            using (new BraceWrapper(fg))
+            {
+                foreach (var field in obj.IterateFields())
+                {
+                    if (!(field is LoquiType loqui)) continue;
+                    if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                    fg.AppendLine($"if (mask?.{field.Name} ?? true)");
+                    using (new BraceWrapper(fg))
+                    {
+                        if (loqui.TargetObjectGeneration.Name == "Group")
+                        {
+                            fg.AppendLine($"this.{field.Name}.Items.Set(rhsMod.{field.Name}.Items.Values);");
+                        }
+                        else
+                        {
+                            fg.AppendLine($"if (rhsMod.{field.Name}.Items.Count > 0)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine("throw new NotImplementedException(\"Cell additions need implementing\");");
+                            }
+                        }
+                    }
+                }
+            }
+            fg.AppendLine();
 
             await base.GenerateInClass(obj, fg);
             fg.AppendLine();

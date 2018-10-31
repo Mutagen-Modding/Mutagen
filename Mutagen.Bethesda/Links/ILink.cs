@@ -10,12 +10,16 @@ namespace Mutagen.Bethesda
     public interface ILink
     {
         bool Linked { get; }
-        FormID FormID { get; }
+        FormKey FormKey { get; }
+        Type TargetType { get; }
         bool Link<M>(
             ModList<M> modList,
             M sourceMod,
             NotifyingFireParameters cmds = null)
-            where M : IMod;
+            where M : IMod<M>;
+#if DEBUG
+        bool AttemptedLink { get; set; }
+#endif
     }
 
     public interface ILink<T> : ILink, INotifyingItem<T>
