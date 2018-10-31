@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPointToReferenceMapping,
         ILoquiObject<PointToReferenceMapping>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<PointToReferenceMapping>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -51,11 +52,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormIDLink<Placed> Reference_Property { get; } = new FormIDLink<Placed>();
+        public FormIDLink<IPlaced> Reference_Property { get; } = new FormIDLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Placed Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
+        public IPlaced Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Placed> IPointToReferenceMappingGetter.Reference_Property => this.Reference_Property;
+        FormIDLink<IPlaced> IPointToReferenceMappingGetter.Reference_Property => this.Reference_Property;
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -101,11 +102,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<PointToReferenceMapping>.GetEqualsMask(PointToReferenceMapping rhs) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IPointToReferenceMappingGetter>.GetEqualsMask(IPointToReferenceMappingGetter rhs) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return PointToReferenceMappingCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             PointToReferenceMapping_Mask<bool> printMask = null)
@@ -465,7 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Reference":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Reference_Property,
                         fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
@@ -514,15 +510,31 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Reference_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Reference_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static PointToReferenceMapping Create_Binary(MutagenFrame frame)
+        public static PointToReferenceMapping Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -530,12 +542,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static PointToReferenceMapping Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out PointToReferenceMapping_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
@@ -544,6 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PointToReferenceMapping Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -558,6 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                 }
             }
@@ -569,17 +585,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PointToReferenceMapping Create_Binary(string path)
+        public static PointToReferenceMapping Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static PointToReferenceMapping Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out PointToReferenceMapping_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -587,21 +608,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static PointToReferenceMapping Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static PointToReferenceMapping Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static PointToReferenceMapping Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out PointToReferenceMapping_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -609,6 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -618,12 +646,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out PointToReferenceMapping_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
@@ -631,6 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out PointToReferenceMapping_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -640,6 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -653,6 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out PointToReferenceMapping_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -660,20 +693,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -681,6 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -692,12 +732,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -705,12 +748,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             PointToReferenceMappingCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -719,10 +764,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             PointToReferenceMapping item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                masterReferences: masterReferences,
                 item: item.Reference_Property,
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
                 errorMask: errorMask);
@@ -861,7 +908,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
                     this.Reference_Property.Set(
-                        (FormIDLink<Placed>)obj,
+                        (FormIDLink<IPlaced>)obj,
                         cmds);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
@@ -906,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
                     obj.Reference_Property.Set(
-                        (FormIDLink<Placed>)pair.Value,
+                        (FormIDLink<IPlaced>)pair.Value,
                         null);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
@@ -927,15 +974,15 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IPointToReferenceMapping : IPointToReferenceMappingGetter, ILoquiClass<IPointToReferenceMapping, IPointToReferenceMappingGetter>, ILoquiClass<PointToReferenceMapping, IPointToReferenceMappingGetter>
     {
-        new Placed Reference { get; set; }
+        new IPlaced Reference { get; set; }
         new ISourceSetList<Int16> Points { get; }
     }
 
     public partial interface IPointToReferenceMappingGetter : ILoquiObject
     {
         #region Reference
-        Placed Reference { get; }
-        FormIDLink<Placed> Reference_Property { get; }
+        IPlaced Reference { get; }
+        FormIDLink<IPlaced> Reference_Property { get; }
 
         #endregion
         #region Points
@@ -1097,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
-                    return typeof(FormIDLink<Placed>);
+                    return typeof(FormIDLink<IPlaced>);
                 case PointToReferenceMapping_FieldIndex.Points:
                     return typeof(NotifyingList<Int16>);
                 default:
@@ -1220,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
-                    obj.Reference_Property.Unset(cmds.ToUnsetParams());
+                    obj.Reference.Reference = default(IPlaced);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
                     obj.Points.Unset();
@@ -1265,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMapping item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Reference_Property.Unset(cmds.ToUnsetParams());
+            item.Reference = default(IPlaced);
             item.Points.Unset();
         }
 
@@ -1394,10 +1441,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Reference),
-                    item: item.Reference_Property?.FormID,
+                    item: item.Reference_Property?.FormKey,
                     fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
                     errorMask: errorMask);
             }
@@ -1430,6 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             PointToReferenceMapping item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out PointToReferenceMapping_ErrorMask errorMask)
@@ -1437,6 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1446,6 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             PointToReferenceMapping item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1457,7 +1507,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -1465,13 +1516,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             PointToReferenceMapping item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference_Property,
                 fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Write(
                 writer: writer,
                 items: item.Points,

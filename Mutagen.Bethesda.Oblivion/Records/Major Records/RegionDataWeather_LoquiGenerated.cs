@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataWeather,
         ILoquiObject<RegionDataWeather>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RegionDataWeather>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -91,11 +92,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RegionDataWeather>.GetEqualsMask(RegionDataWeather rhs) => RegionDataWeatherCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRegionDataWeatherGetter>.GetEqualsMask(IRegionDataWeatherGetter rhs) => RegionDataWeatherCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RegionDataWeatherCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RegionDataWeather_Mask<bool> printMask = null)
@@ -501,24 +497,51 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RegionDataWeather_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
+        public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
             foreach (var item in Weathers.SelectMany(f => f.Links))
             {
                 yield return item;
             }
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in Weathers)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static RegionDataWeather Create_Binary(MutagenFrame frame)
+        public new static RegionDataWeather Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -526,12 +549,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionDataWeather Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out RegionDataWeather_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
@@ -540,6 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataWeather Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -551,6 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     int? lastParsed = null;
                     while (!frame.Complete)
@@ -559,6 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -574,17 +602,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionDataWeather Create_Binary(string path)
+        public static RegionDataWeather Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static RegionDataWeather Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out RegionDataWeather_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -592,21 +625,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static RegionDataWeather Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static RegionDataWeather Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static RegionDataWeather Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out RegionDataWeather_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -614,6 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -623,12 +663,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out RegionDataWeather_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
@@ -636,6 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out RegionDataWeather_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -645,6 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -658,6 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out RegionDataWeather_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -665,6 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -673,12 +719,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out RegionData_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
@@ -688,12 +736,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             RegionDataWeatherCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -702,6 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             RegionDataWeather item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
         }
@@ -710,6 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataWeather item,
             MutagenFrame frame,
             int? lastParsed,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -720,20 +772,29 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x54574452: // RDWT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Weathers,
                         fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<WeatherChance>.Instance.Parse);
+                        transl: (MutagenFrame r, out WeatherChance listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     return TryGet<int?>.Succeed((int)RegionDataWeather_FieldIndex.Weathers);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1419,6 +1480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RegionDataWeather item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out RegionDataWeather_ErrorMask errorMask)
@@ -1426,6 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1435,6 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RegionDataWeather item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1442,7 +1506,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
@@ -1450,13 +1515,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionDataWeather item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             RegionDataCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Weathers.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.Write(
@@ -1465,7 +1532,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
                     recordType: RegionDataWeather_Registration.RDWT_HEADER,
                     errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<WeatherChance>.Instance.Write);
+                    transl: (MutagenWriter subWriter, WeatherChance subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<WeatherChance>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
         }
 

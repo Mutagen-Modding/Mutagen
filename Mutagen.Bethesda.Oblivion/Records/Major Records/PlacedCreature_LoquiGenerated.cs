@@ -32,10 +32,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PlacedCreature : 
-        Placed,
+        MajorRecord,
         IPlacedCreature,
         ILoquiObject<PlacedCreature>,
         ILoquiObjectSetter,
+        IPlaced,
+        ILinkSubContainer,
         IEquatable<PlacedCreature>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -216,11 +218,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<PlacedCreature>.GetEqualsMask(PlacedCreature rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IPlacedCreatureGetter>.GetEqualsMask(IPlacedCreatureGetter rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return PlacedCreatureCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             PlacedCreature_Mask<bool> printMask = null)
@@ -531,22 +528,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
-            out Placed_ErrorMask errorMask,
-            Placed_TranslationMask translationMask = null,
-            bool doMasks = true,
-            NotifyingFireParameters cmds = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyIn_Xml_Internal(
-                root: root,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal(),
-                cmds: cmds);
-            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void CopyIn_Xml(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -617,22 +598,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
-            out Placed_ErrorMask errorMask,
-            bool doMasks = true,
-            Placed_TranslationMask translationMask = null,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
-                node: node,
-                name: name,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Xml(
-            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -674,14 +639,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Base":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Base_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                         errorMask: errorMask);
                     break;
                 case "Owner":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Owner_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
@@ -714,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "GlobalVariable":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
@@ -852,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    Placed.Fill_Xml_Internal(
+                    MajorRecord.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -914,15 +879,50 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Base_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Owner_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            GlobalVariable_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            if (EnableParent != null)
+            {
+                EnableParent?.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static PlacedCreature Create_Binary(MutagenFrame frame)
+        public new static PlacedCreature Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -930,12 +930,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static PlacedCreature Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out PlacedCreature_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
@@ -944,6 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PlacedCreature Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -953,21 +956,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: PlacedCreature_Registration.ACRE_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static PlacedCreature Create_Binary(string path)
+        public static PlacedCreature Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static PlacedCreature Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out PlacedCreature_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -975,21 +984,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static PlacedCreature Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static PlacedCreature Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static PlacedCreature Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out PlacedCreature_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -997,6 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -1006,12 +1022,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out PlacedCreature_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
@@ -1019,6 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out PlacedCreature_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1028,6 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -1041,6 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out PlacedCreature_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1048,6 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -1056,25 +1078,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
-            out Placed_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
-                writer: writer,
-                errorMask: errorMaskBuilder,
-                recordTypeConverter: null);
-            errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public override void Write_Binary(
-            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
@@ -1084,12 +1095,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             PlacedCreatureCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -1098,17 +1111,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             PlacedCreature item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Placed.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             PlacedCreature item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1119,23 +1135,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x454D414E: // NAME
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Base_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Base);
                 case 0x4E574F58: // XOWN
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Owner_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Owner);
                 case 0x4B4E5258: // XRNK
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)PlacedCreature_FieldIndex.FactionRank);
@@ -1162,9 +1180,10 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.FactionRank);
                 case 0x424C4758: // XGLB
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.GlobalVariable_Property,
                         fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
                         errorMask: errorMask);
@@ -1175,6 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
                         if (LoquiBinaryTranslation<EnableParent>.Instance.Parse(
                             frame: frame,
+                            masterReferences: masterReferences,
                             item: out EnableParent EnableParentParse,
                             errorMask: errorMask))
                         {
@@ -1196,7 +1216,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.EnableParent);
                 case 0x44475258: // XRGD
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)PlacedCreature_FieldIndex.RagdollData);
@@ -1223,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.RagdollData);
                 case 0x4C435358: // XSCL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Scale);
@@ -1250,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Scale);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -1308,10 +1328,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Rotation);
                 default:
-                    return Placed.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1486,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out PlacedCreature_FieldIndex enu))
             {
-                CopyInInternal_Placed(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1536,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IPlacedCreature : IPlacedCreatureGetter, IPlaced, ILoquiClass<IPlacedCreature, IPlacedCreatureGetter>, ILoquiClass<PlacedCreature, IPlacedCreatureGetter>
+    public partial interface IPlacedCreature : IPlacedCreatureGetter, IMajorRecord, ILoquiClass<IPlacedCreature, IPlacedCreatureGetter>, ILoquiClass<PlacedCreature, IPlacedCreatureGetter>
     {
         new Creature Base { get; set; }
         new Faction Owner { get; set; }
@@ -1567,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IPlacedCreatureGetter : IPlacedGetter
+    public partial interface IPlacedCreatureGetter : IMajorRecordGetter
     {
         #region Base
         Creature Base { get; }
@@ -1625,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum PlacedCreature_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -1724,7 +1745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1745,7 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1765,7 +1786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1793,7 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return "Rotation";
                 default:
-                    return Placed_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1813,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1833,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return false;
                 default:
-                    return Placed_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1861,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return typeof(P3Float);
                 default:
-                    return Placed_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1919,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedCreature_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            PlacedCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2202,7 +2223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Scale_IsSet = on;
                     break;
                 default:
-                    PlacedCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -2216,16 +2237,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedCreature_FieldIndex.Base:
-                    obj.Base_Property.Unset(cmds.ToUnsetParams());
+                    obj.Base_Property.Base_Property.Unset(cmds);
                     break;
                 case PlacedCreature_FieldIndex.Owner:
-                    obj.Owner_Property.Unset(cmds.ToUnsetParams());
+                    obj.Owner_Property.Owner_Property.Unset(cmds);
                     break;
                 case PlacedCreature_FieldIndex.FactionRank:
                     obj.FactionRank_Unset();
                     break;
                 case PlacedCreature_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
+                    obj.GlobalVariable_Property.GlobalVariable_Property.Unset(cmds);
                     break;
                 case PlacedCreature_FieldIndex.EnableParent:
                     obj.EnableParent_Unset();
@@ -2243,7 +2264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Rotation = default(P3Float);
                     break;
                 default:
-                    PlacedCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -2273,7 +2294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Scale:
                     return obj.Scale_IsSet;
                 default:
-                    return PlacedCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -2303,7 +2324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.Rotation:
                     return obj.Rotation;
                 default:
-                    return PlacedCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -2311,10 +2332,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedCreature item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Base_Property.Unset(cmds.ToUnsetParams());
-            item.Owner_Property.Unset(cmds.ToUnsetParams());
+            item.Base_Property.Base_Property.Unset(cmds.ToUnsetParams());
+            item.Owner_Property.Owner_Property.Unset(cmds.ToUnsetParams());
             item.FactionRank_Unset();
-            item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
+            item.GlobalVariable_Property.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
             item.EnableParent_Unset();
             item.RagdollData_Unset();
             item.Scale_Unset();
@@ -2346,7 +2367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale == rhs.Scale;
             ret.Position = item.Position == rhs.Position;
             ret.Rotation = item.Rotation == rhs.Rotation;
-            PlacedCommon.FillEqualsMask(item, rhs, ret);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2446,31 +2467,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static PlacedCreature_FieldIndex? ConvertFieldIndex(Placed_FieldIndex? index)
-        {
-            if (!index.HasValue) return null;
-            return ConvertFieldIndex(index: index.Value);
-        }
-
-        public static PlacedCreature_FieldIndex ConvertFieldIndex(Placed_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Placed_FieldIndex.MajorRecordFlags:
-                    return (PlacedCreature_FieldIndex)((int)index);
-                case Placed_FieldIndex.FormID:
-                    return (PlacedCreature_FieldIndex)((int)index);
-                case Placed_FieldIndex.Version:
-                    return (PlacedCreature_FieldIndex)((int)index);
-                case Placed_FieldIndex.EditorID:
-                    return (PlacedCreature_FieldIndex)((int)index);
-                case Placed_FieldIndex.RecordType:
-                    return (PlacedCreature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-
         public static PlacedCreature_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2483,7 +2479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (PlacedCreature_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (PlacedCreature_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (PlacedCreature_FieldIndex)((int)index);
@@ -2532,20 +2528,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Base_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Base) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Base),
-                    item: item.Base_Property?.FormID,
+                    item: item.Base_Property?.FormKey,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                     errorMask: errorMask);
             }
             if (item.Owner_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Owner) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Owner),
-                    item: item.Owner_Property?.FormID,
+                    item: item.Owner_Property?.FormKey,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
                     errorMask: errorMask);
             }
@@ -2562,10 +2558,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.GlobalVariable_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.GlobalVariable) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable_Property?.FormID,
+                    item: item.GlobalVariable_Property?.FormKey,
                     fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }
@@ -2628,6 +2624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             PlacedCreature item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out PlacedCreature_ErrorMask errorMask)
@@ -2635,6 +2632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2644,6 +2642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             PlacedCreature item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2655,12 +2654,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2669,32 +2670,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedCreature item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Base_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Base_Property,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Base,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.NAME_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.Owner_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Owner_Property,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XOWN_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.FactionRank_IsSet)
             {
@@ -2708,13 +2713,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.GlobalVariable_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.GlobalVariable_Property,
                     fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XGLB_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.EnableParent_IsSet)
             {
@@ -2722,7 +2728,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.EnableParent,
                     fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.RagdollData_IsSet)
             {
@@ -2769,7 +2776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class PlacedCreature_Mask<T> : Placed_Mask<T>, IMask<T>, IEquatable<PlacedCreature_Mask<T>>
+    public class PlacedCreature_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<PlacedCreature_Mask<T>>
     {
         #region Ctors
         public PlacedCreature_Mask()
@@ -2963,7 +2970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class PlacedCreature_ErrorMask : Placed_ErrorMask, IErrorMask<PlacedCreature_ErrorMask>
+    public class PlacedCreature_ErrorMask : MajorRecord_ErrorMask, IErrorMask<PlacedCreature_ErrorMask>
     {
         #region Members
         public Exception Base;
@@ -3172,7 +3179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PlacedCreature_CopyMask : Placed_CopyMask
+    public class PlacedCreature_CopyMask : MajorRecord_CopyMask
     {
         #region Members
         public bool Base;
@@ -3187,7 +3194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PlacedCreature_TranslationMask : Placed_TranslationMask
+    public class PlacedCreature_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;

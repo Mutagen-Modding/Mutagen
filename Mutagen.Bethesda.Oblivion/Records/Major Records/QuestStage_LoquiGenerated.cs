@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         IQuestStage,
         ILoquiObject<QuestStage>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<QuestStage>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -103,11 +104,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<QuestStage>.GetEqualsMask(QuestStage rhs) => QuestStageCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IQuestStageGetter>.GetEqualsMask(IQuestStageGetter rhs) => QuestStageCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return QuestStageCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             QuestStage_Mask<bool> printMask = null)
@@ -550,15 +546,44 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = QuestStage_Registration.TRIGGERING_RECORD_TYPE;
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in LogEntries.WhereCastable<LogEntry, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            foreach (var item in LogEntries.WhereCastable<LogEntry, ILinkSubContainer>())
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static QuestStage Create_Binary(MutagenFrame frame)
+        public static QuestStage Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -566,12 +591,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static QuestStage Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out QuestStage_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = QuestStage_ErrorMask.Factory(errorMaskBuilder);
@@ -580,6 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestStage Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -591,6 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     int? lastParsed = null;
                     while (!frame.Complete)
@@ -599,6 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -614,17 +644,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static QuestStage Create_Binary(string path)
+        public static QuestStage Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static QuestStage Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out QuestStage_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -632,21 +667,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static QuestStage Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static QuestStage Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static QuestStage Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out QuestStage_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -654,6 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -663,12 +705,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out QuestStage_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = QuestStage_ErrorMask.Factory(errorMaskBuilder);
@@ -676,6 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out QuestStage_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -685,6 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -698,6 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out QuestStage_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -705,20 +752,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -726,6 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -737,12 +791,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -750,12 +807,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             QuestStageCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -764,6 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             QuestStage item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
         }
@@ -772,6 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
             QuestStage item,
             MutagenFrame frame,
             int? lastParsed,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -783,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x58444E49: // INDX
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
@@ -827,7 +888,15 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)QuestStage_FieldIndex.LogEntries,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<LogEntry>.Instance.Parse);
+                        transl: (MutagenFrame r, out LogEntry listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<LogEntry>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
                 default:
                     return TryGet<int?>.Failure;
@@ -1578,6 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             QuestStage item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out QuestStage_ErrorMask errorMask)
@@ -1585,6 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1594,6 +1665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             QuestStage item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1601,7 +1673,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
@@ -1609,7 +1682,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             QuestStage item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1625,7 +1699,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     items: item.LogEntries,
                     fieldIndex: (int)QuestStage_FieldIndex.LogEntries,
                     errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<LogEntry>.Instance.Write);
+                    transl: (MutagenWriter subWriter, LogEntry subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<LogEntry>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
         }
 

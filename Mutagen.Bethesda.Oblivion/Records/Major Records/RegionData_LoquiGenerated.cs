@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionData,
         ILoquiObject<RegionData>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RegionData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,11 +100,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RegionData>.GetEqualsMask(RegionData rhs) => RegionDataCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRegionDataGetter>.GetEqualsMask(IRegionDataGetter rhs) => RegionDataCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RegionDataCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RegionData_Mask<bool> printMask = null)
@@ -471,18 +467,34 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        public virtual IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield break;
+        }
+
+        public virtual void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out RegionData_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
@@ -490,6 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out RegionData_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -499,6 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -512,6 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out RegionData_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -519,20 +534,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public virtual void Write_Binary(MutagenWriter writer)
+        public virtual void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public virtual void Write_Binary(string path)
+        public virtual void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -540,6 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -551,12 +573,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public virtual void Write_Binary(Stream stream)
+        public virtual void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -564,12 +589,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected virtual void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             RegionDataCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -578,6 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             RegionData item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -588,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x54414452: // RDAT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -1354,6 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RegionData item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out RegionData_ErrorMask errorMask)
@@ -1361,6 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1370,6 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RegionData item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1382,7 +1413,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -1391,7 +1423,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             if (item.RDATDataTypeState.HasFlag(RegionData.RDATDataType.Has))
             {

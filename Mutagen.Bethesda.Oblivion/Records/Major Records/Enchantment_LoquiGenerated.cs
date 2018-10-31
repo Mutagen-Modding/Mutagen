@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Enchantment>,
         ILoquiObjectSetter,
         INamed,
+        ILinkSubContainer,
         IEquatable<Enchantment>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -150,11 +151,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Enchantment>.GetEqualsMask(Enchantment rhs) => EnchantmentCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IEnchantmentGetter>.GetEqualsMask(IEnchantmentGetter rhs) => EnchantmentCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return EnchantmentCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Enchantment_Mask<bool> printMask = null)
@@ -744,15 +740,38 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in Effects)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Enchantment Create_Binary(MutagenFrame frame)
+        public new static Enchantment Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -760,12 +779,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Enchantment Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out Enchantment_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
@@ -774,6 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Enchantment Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -783,21 +805,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: Enchantment_Registration.ENCH_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static Enchantment Create_Binary(string path)
+        public static Enchantment Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static Enchantment Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out Enchantment_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -805,21 +833,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static Enchantment Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static Enchantment Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static Enchantment Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out Enchantment_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -827,6 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -836,12 +871,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Enchantment_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
@@ -849,6 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out Enchantment_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -858,6 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -871,6 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out Enchantment_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -878,6 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -886,12 +927,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
@@ -901,12 +944,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             EnchantmentCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -915,17 +960,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             Enchantment item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Enchantment item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -936,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
@@ -964,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
                 case 0x54494E45: // ENIT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -1077,13 +1125,22 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<Effect>.Instance.Parse);
+                        transl: (MutagenFrame r, out Effect listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<Effect>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1335,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum Enchantment_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -1999,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (Enchantment_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (Enchantment_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (Enchantment_FieldIndex)((int)index);
@@ -2122,6 +2179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Enchantment item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Enchantment_ErrorMask errorMask)
@@ -2129,6 +2187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2138,6 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Enchantment item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2149,12 +2209,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2163,13 +2225,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -2215,7 +2279,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     items: item.Effects,
                     fieldIndex: (int)Enchantment_FieldIndex.Effects,
                     errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<Effect>.Instance.Write);
+                    transl: (MutagenWriter subWriter, Effect subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<Effect>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
         }
 

@@ -32,11 +32,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class AlchemicalApparatus : 
-        MajorRecord,
+        ItemAbstract,
         IAlchemicalApparatus,
         ILoquiObject<AlchemicalApparatus>,
         ILoquiObjectSetter,
         INamed,
+        ILinkSubContainer,
         IEquatable<AlchemicalApparatus>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -195,11 +196,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<AlchemicalApparatus>.GetEqualsMask(AlchemicalApparatus rhs) => AlchemicalApparatusCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IAlchemicalApparatusGetter>.GetEqualsMask(IAlchemicalApparatusGetter rhs) => AlchemicalApparatusCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return AlchemicalApparatusCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             AlchemicalApparatus_Mask<bool> printMask = null)
@@ -487,6 +483,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
+            out ItemAbstract_ErrorMask errorMask,
+            ItemAbstract_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -555,6 +567,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
+        public override void Write_Xml(
+            XElement node,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            ItemAbstract_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
+        }
+
         public override void Write_Xml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -677,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Script":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Script_Property,
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
@@ -788,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    ItemAbstract.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -838,15 +866,35 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Script_Property;
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static AlchemicalApparatus Create_Binary(MutagenFrame frame)
+        public new static AlchemicalApparatus Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -854,12 +902,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AlchemicalApparatus Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out AlchemicalApparatus_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
@@ -868,6 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlchemicalApparatus Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -877,21 +928,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: AlchemicalApparatus_Registration.APPA_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static AlchemicalApparatus Create_Binary(string path)
+        public static AlchemicalApparatus Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static AlchemicalApparatus Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out AlchemicalApparatus_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -899,21 +956,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static AlchemicalApparatus Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static AlchemicalApparatus Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static AlchemicalApparatus Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out AlchemicalApparatus_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -921,6 +984,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -930,12 +994,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out AlchemicalApparatus_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
@@ -943,6 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out AlchemicalApparatus_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -952,6 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -965,6 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out AlchemicalApparatus_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -972,6 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -980,12 +1050,29 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
+                writer: writer,
+                masterReferences: masterReferences,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
@@ -995,12 +1082,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             AlchemicalApparatusCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -1009,17 +1098,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             AlchemicalApparatus item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            ItemAbstract.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             AlchemicalApparatus item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1030,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
@@ -1063,6 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
                         {
@@ -1084,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Model);
                 case 0x4E4F4349: // ICON
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Icon);
@@ -1112,15 +1205,16 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Icon);
                 case 0x49524353: // SCRI
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Script_Property,
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Script);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -1226,10 +1320,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Quality);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return ItemAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1397,7 +1492,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out AlchemicalApparatus_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_ItemAbstract(obj, pair);
             }
             switch (enu)
             {
@@ -1440,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IAlchemicalApparatus : IAlchemicalApparatusGetter, IMajorRecord, ILoquiClass<IAlchemicalApparatus, IAlchemicalApparatusGetter>, ILoquiClass<AlchemicalApparatus, IAlchemicalApparatusGetter>
+    public partial interface IAlchemicalApparatus : IAlchemicalApparatusGetter, IItemAbstract, ILoquiClass<IAlchemicalApparatus, IAlchemicalApparatusGetter>, ILoquiClass<AlchemicalApparatus, IAlchemicalApparatusGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1468,7 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IAlchemicalApparatusGetter : IMajorRecordGetter
+    public partial interface IAlchemicalApparatusGetter : IItemAbstractGetter
     {
         #region Name
         String Name { get; }
@@ -1519,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum AlchemicalApparatus_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -1614,7 +1709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ItemAbstract_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1634,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return ItemAbstract_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1653,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return ItemAbstract_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1679,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return "Quality";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return ItemAbstract_Registration.GetNthName(index);
             }
         }
 
@@ -1698,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return ItemAbstract_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1717,7 +1812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return ItemAbstract_Registration.IsProtected(index);
             }
         }
 
@@ -1743,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return typeof(Single);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return ItemAbstract_Registration.GetNthType(index);
             }
         }
 
@@ -1798,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            ItemAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2038,7 +2133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Script_Property.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -2061,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case AlchemicalApparatus_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds.ToUnsetParams());
+                    obj.Script_Property.Script_Property.Unset(cmds);
                     break;
                 case AlchemicalApparatus_FieldIndex.Type:
                     obj.Type = default(AlchemicalApparatus.ApparatusType);
@@ -2076,7 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Quality = default(Single);
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    ItemAbstractCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -2102,7 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -2130,7 +2225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return obj.Quality;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return ItemAbstractCommon.GetNthObject(index, obj);
             }
         }
 
@@ -2141,7 +2236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
             item.Type = default(AlchemicalApparatus.ApparatusType);
             item.Value = default(UInt32);
             item.Weight = default(Single);
@@ -2171,7 +2266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight == rhs.Weight;
             ret.Quality = item.Quality == rhs.Quality;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2263,6 +2358,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static AlchemicalApparatus_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static AlchemicalApparatus_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ItemAbstract_FieldIndex.MajorRecordFlags:
+                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.FormKey:
+                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.Version:
+                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.EditorID:
+                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.RecordType:
+                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static AlchemicalApparatus_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2275,7 +2395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (AlchemicalApparatus_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (AlchemicalApparatus_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (AlchemicalApparatus_FieldIndex)((int)index);
@@ -2355,10 +2475,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Script_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Script) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script_Property?.FormID,
+                    item: item.Script_Property?.FormKey,
                     fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2408,6 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             AlchemicalApparatus item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out AlchemicalApparatus_ErrorMask errorMask)
@@ -2415,6 +2536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2424,6 +2546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             AlchemicalApparatus item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2435,12 +2558,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2449,13 +2574,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -2472,7 +2599,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Model,
                     fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.Icon_IsSet)
             {
@@ -2486,13 +2614,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Script_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
                     fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.SCRI_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.DATADataTypeState.HasFlag(AlchemicalApparatus.DATADataType.Has))
             {
@@ -2530,7 +2659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class AlchemicalApparatus_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<AlchemicalApparatus_Mask<T>>
+    public class AlchemicalApparatus_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<AlchemicalApparatus_Mask<T>>
     {
         #region Ctors
         public AlchemicalApparatus_Mask()
@@ -2714,7 +2843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class AlchemicalApparatus_ErrorMask : MajorRecord_ErrorMask, IErrorMask<AlchemicalApparatus_ErrorMask>
+    public class AlchemicalApparatus_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<AlchemicalApparatus_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -2911,7 +3040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class AlchemicalApparatus_CopyMask : MajorRecord_CopyMask
+    public class AlchemicalApparatus_CopyMask : ItemAbstract_CopyMask
     {
         #region Members
         public bool Name;
@@ -2925,7 +3054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class AlchemicalApparatus_TranslationMask : MajorRecord_TranslationMask
+    public class AlchemicalApparatus_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;

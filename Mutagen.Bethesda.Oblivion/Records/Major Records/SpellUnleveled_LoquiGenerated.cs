@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISpellUnleveled,
         ILoquiObject<SpellUnleveled>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<SpellUnleveled>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -124,11 +125,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<SpellUnleveled>.GetEqualsMask(SpellUnleveled rhs) => SpellUnleveledCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ISpellUnleveledGetter>.GetEqualsMask(ISpellUnleveledGetter rhs) => SpellUnleveledCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return SpellUnleveledCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             SpellUnleveled_Mask<bool> printMask = null)
@@ -405,6 +401,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
+            out SpellAbstract_ErrorMask errorMask,
+            SpellAbstract_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -478,6 +490,22 @@ namespace Mutagen.Bethesda.Oblivion
             out Spell_ErrorMask errorMask,
             bool doMasks = true,
             Spell_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
+            out SpellAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            SpellAbstract_TranslationMask translationMask = null,
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -713,15 +741,38 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in Effects)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static SpellUnleveled Create_Binary(MutagenFrame frame)
+        public new static SpellUnleveled Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -729,12 +780,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SpellUnleveled Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out SpellUnleveled_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
@@ -743,6 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SpellUnleveled Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -752,21 +806,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: SpellUnleveled_Registration.SPEL_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static SpellUnleveled Create_Binary(string path)
+        public static SpellUnleveled Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static SpellUnleveled Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out SpellUnleveled_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -774,21 +834,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static SpellUnleveled Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static SpellUnleveled Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static SpellUnleveled Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out SpellUnleveled_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -796,6 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -805,12 +872,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out SpellUnleveled_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
@@ -818,6 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out SpellUnleveled_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -827,6 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -840,6 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out SpellUnleveled_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -847,6 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -855,12 +928,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Spell_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
@@ -868,12 +943,29 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
+            out SpellAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
+                writer: writer,
+                masterReferences: masterReferences,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
@@ -883,12 +975,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             SpellUnleveledCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -897,17 +991,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             SpellUnleveled item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             Spell.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             SpellUnleveled item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -918,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x54495053: // SPIT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -1031,13 +1128,22 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<Effect>.Instance.Parse);
+                        transl: (MutagenFrame r, out Effect listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<Effect>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
                 default:
                     return Spell.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1273,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum SpellUnleveled_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -1877,7 +1983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Spell_FieldIndex.MajorRecordFlags:
                     return (SpellUnleveled_FieldIndex)((int)index);
-                case Spell_FieldIndex.FormID:
+                case Spell_FieldIndex.FormKey:
                     return (SpellUnleveled_FieldIndex)((int)index);
                 case Spell_FieldIndex.Version:
                     return (SpellUnleveled_FieldIndex)((int)index);
@@ -1886,6 +1992,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Spell_FieldIndex.RecordType:
                     return (SpellUnleveled_FieldIndex)((int)index);
                 case Spell_FieldIndex.Name:
+                    return (SpellUnleveled_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static SpellUnleveled_FieldIndex? ConvertFieldIndex(SpellAbstract_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static SpellUnleveled_FieldIndex ConvertFieldIndex(SpellAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case SpellAbstract_FieldIndex.MajorRecordFlags:
+                    return (SpellUnleveled_FieldIndex)((int)index);
+                case SpellAbstract_FieldIndex.FormKey:
+                    return (SpellUnleveled_FieldIndex)((int)index);
+                case SpellAbstract_FieldIndex.Version:
+                    return (SpellUnleveled_FieldIndex)((int)index);
+                case SpellAbstract_FieldIndex.EditorID:
+                    return (SpellUnleveled_FieldIndex)((int)index);
+                case SpellAbstract_FieldIndex.RecordType:
                     return (SpellUnleveled_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1904,7 +2035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (SpellUnleveled_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (SpellUnleveled_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (SpellUnleveled_FieldIndex)((int)index);
@@ -2017,6 +2148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             SpellUnleveled item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out SpellUnleveled_ErrorMask errorMask)
@@ -2024,6 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2033,6 +2166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             SpellUnleveled item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2044,12 +2178,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2058,13 +2194,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SpellUnleveled item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             SpellCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.SPITDataTypeState.HasFlag(SpellUnleveled.SPITDataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(SpellUnleveled_Registration.SPIT_HEADER)))
@@ -2101,7 +2239,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     items: item.Effects,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
                     errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<Effect>.Instance.Write);
+                    transl: (MutagenWriter subWriter, Effect subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<Effect>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
         }
 

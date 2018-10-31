@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataGrasses,
         ILoquiObject<RegionDataGrasses>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RegionDataGrasses>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -91,11 +92,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RegionDataGrasses>.GetEqualsMask(RegionDataGrasses rhs) => RegionDataGrassesCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRegionDataGrassesGetter>.GetEqualsMask(IRegionDataGrassesGetter rhs) => RegionDataGrassesCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RegionDataGrassesCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RegionDataGrasses_Mask<bool> printMask = null)
@@ -465,7 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (ListXmlTranslation<FormIDLink<Grass>>.Instance.Parse(
                             root: root,
                             enumer: out var GrassesItem,
-                            transl: FormIDXmlTranslation.Instance.Parse,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -501,15 +497,51 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RegionDataGrasses_Registration.TRIGGERING_RECORD_TYPE;
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Grasses)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in Grasses)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static RegionDataGrasses Create_Binary(MutagenFrame frame)
+        public new static RegionDataGrasses Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -517,12 +549,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionDataGrasses Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out RegionDataGrasses_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
@@ -531,6 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataGrasses Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -542,6 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     int? lastParsed = null;
                     while (!frame.Complete)
@@ -550,6 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -565,17 +602,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionDataGrasses Create_Binary(string path)
+        public static RegionDataGrasses Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static RegionDataGrasses Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out RegionDataGrasses_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -583,21 +625,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static RegionDataGrasses Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static RegionDataGrasses Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static RegionDataGrasses Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out RegionDataGrasses_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -605,6 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -614,12 +663,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out RegionDataGrasses_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
@@ -627,6 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out RegionDataGrasses_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -636,6 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -649,6 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out RegionDataGrasses_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -656,6 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -664,12 +719,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out RegionData_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
@@ -679,12 +736,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             RegionDataGrassesCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -693,6 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             RegionDataGrasses item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
         }
@@ -701,6 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataGrasses item,
             MutagenFrame frame,
             int? lastParsed,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -711,20 +772,22 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x53474452: // RDGS
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Grasses,
                         fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormIDBinaryTranslation.Instance.Parse);
+                        transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)RegionDataGrasses_FieldIndex.Grasses);
                 default:
                     return RegionData.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1367,10 +1430,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)RegionDataGrasses_FieldIndex.Grasses),
                     transl: (XElement subNode, FormIDLink<Grass> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        FormIDXmlTranslation.Instance.Write(
+                        FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: "Item",
-                            item: subItem?.FormID,
+                            item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
                     );
@@ -1385,6 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RegionDataGrasses item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out RegionDataGrasses_ErrorMask errorMask)
@@ -1392,6 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1401,6 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RegionDataGrasses item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1408,7 +1474,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
@@ -1416,13 +1483,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionDataGrasses item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             RegionDataCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Grasses.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>>.Instance.Write(
@@ -1431,7 +1500,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                     recordType: RegionDataGrasses_Registration.RDGS_HEADER,
                     errorMask: errorMask,
-                    transl: FormIDBinaryTranslation.Instance.Write);
+                    transl: (MutagenWriter subWriter, FormIDLink<Grass> subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
         }
 

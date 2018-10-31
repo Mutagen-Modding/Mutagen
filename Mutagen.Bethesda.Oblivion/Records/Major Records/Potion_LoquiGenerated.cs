@@ -34,11 +34,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Potion : 
-        MajorRecord,
+        ItemAbstract,
         IPotion,
         ILoquiObject<Potion>,
         ILoquiObjectSetter,
         INamed,
+        ILinkSubContainer,
         IEquatable<Potion>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -221,11 +222,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Potion>.GetEqualsMask(Potion rhs) => PotionCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IPotionGetter>.GetEqualsMask(IPotionGetter rhs) => PotionCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return PotionCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Potion_Mask<bool> printMask = null)
@@ -527,6 +523,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
+            out ItemAbstract_ErrorMask errorMask,
+            ItemAbstract_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -595,6 +607,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
+        public override void Write_Xml(
+            XElement node,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            ItemAbstract_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
+        }
+
         public override void Write_Xml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -717,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Script":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Script_Property,
                         fieldIndex: (int)Potion_FieldIndex.Script,
@@ -830,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    ItemAbstract.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -885,15 +913,42 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in Effects)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Potion Create_Binary(MutagenFrame frame)
+        public new static Potion Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -901,12 +956,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Potion Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out Potion_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
@@ -915,6 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Potion Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -924,21 +982,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: Potion_Registration.ALCH_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static Potion Create_Binary(string path)
+        public static Potion Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static Potion Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out Potion_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -946,21 +1010,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static Potion Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static Potion Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static Potion Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out Potion_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -968,6 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -977,12 +1048,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Potion_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
@@ -990,6 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out Potion_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -999,6 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -1012,6 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out Potion_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1019,6 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -1027,12 +1104,29 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
+                writer: writer,
+                masterReferences: masterReferences,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
@@ -1042,12 +1136,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             PotionCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -1056,17 +1152,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             Potion item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            ItemAbstract.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Potion item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1077,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Potion_FieldIndex.Name);
@@ -1110,6 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)Potion_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
                         {
@@ -1131,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Potion_FieldIndex.Model);
                 case 0x4E4F4349: // ICON
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Potion_FieldIndex.Icon);
@@ -1159,15 +1259,16 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Potion_FieldIndex.Icon);
                 case 0x49524353: // SCRI
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Script_Property,
                         fieldIndex: (int)Potion_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Potion_FieldIndex.Script);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Potion_FieldIndex.Weight);
@@ -1194,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Potion_FieldIndex.Weight);
                 case 0x54494E45: // ENIT
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -1259,13 +1360,22 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Potion_FieldIndex.Effects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<Effect>.Instance.Parse);
+                        transl: (MutagenFrame r, out Effect listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<Effect>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     return TryGet<int?>.Succeed((int)Potion_FieldIndex.Effects);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return ItemAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1433,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Potion_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_ItemAbstract(obj, pair);
             }
             switch (enu)
             {
@@ -1476,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IPotion : IPotionGetter, IMajorRecord, ILoquiClass<IPotion, IPotionGetter>, ILoquiClass<Potion, IPotionGetter>
+    public partial interface IPotion : IPotionGetter, IItemAbstract, ILoquiClass<IPotion, IPotionGetter>, ILoquiClass<Potion, IPotionGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1506,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<Effect> Effects { get; }
     }
 
-    public partial interface IPotionGetter : IMajorRecordGetter
+    public partial interface IPotionGetter : IItemAbstractGetter
     {
         #region Name
         String Name { get; }
@@ -1557,7 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum Potion_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -1653,7 +1763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ItemAbstract_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1673,7 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return ItemAbstract_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1692,7 +1802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return ItemAbstract_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1718,7 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return "Effects";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return ItemAbstract_Registration.GetNthName(index);
             }
         }
 
@@ -1737,7 +1847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return ItemAbstract_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1756,7 +1866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return ItemAbstract_Registration.IsProtected(index);
             }
         }
 
@@ -1782,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return typeof(NotifyingList<Effect>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return ItemAbstract_Registration.GetNthType(index);
             }
         }
 
@@ -1839,7 +1949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Potion_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            ItemAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2114,7 +2224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Effects.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -2137,7 +2247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case Potion_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds.ToUnsetParams());
+                    obj.Script_Property.Script_Property.Unset(cmds);
                     break;
                 case Potion_FieldIndex.Weight:
                     obj.Weight_Unset();
@@ -2152,7 +2262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Effects.Unset();
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    ItemAbstractCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -2180,7 +2290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return obj.Effects.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -2208,7 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     return obj.Effects;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return ItemAbstractCommon.GetNthObject(index, obj);
             }
         }
 
@@ -2219,7 +2329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
             item.Weight_Unset();
             item.Value = default(UInt32);
             item.Flags = default(IngredientFlag);
@@ -2273,7 +2383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
                 ret.Effects.Overall = false;
             }
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2381,6 +2491,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Potion_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Potion_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ItemAbstract_FieldIndex.MajorRecordFlags:
+                    return (Potion_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.FormKey:
+                    return (Potion_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.Version:
+                    return (Potion_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.EditorID:
+                    return (Potion_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.RecordType:
+                    return (Potion_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Potion_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2393,7 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (Potion_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (Potion_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (Potion_FieldIndex)((int)index);
@@ -2473,10 +2608,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Script_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Script) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script_Property?.FormID,
+                    item: item.Script_Property?.FormKey,
                     fieldIndex: (int)Potion_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2539,6 +2674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Potion item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Potion_ErrorMask errorMask)
@@ -2546,6 +2682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2555,6 +2692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Potion item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2566,12 +2704,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2580,13 +2720,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Potion item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -2603,7 +2745,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Model,
                     fieldIndex: (int)Potion_FieldIndex.Model,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.Icon_IsSet)
             {
@@ -2617,13 +2760,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Script_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
                     fieldIndex: (int)Potion_FieldIndex.Script,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Potion_Registration.SCRI_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.Weight_IsSet)
             {
@@ -2659,7 +2803,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     items: item.Effects,
                     fieldIndex: (int)Potion_FieldIndex.Effects,
                     errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<Effect>.Instance.Write);
+                    transl: (MutagenWriter subWriter, Effect subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<Effect>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
         }
 
@@ -2670,7 +2822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Potion_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Potion_Mask<T>>
+    public class Potion_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<Potion_Mask<T>>
     {
         #region Ctors
         public Potion_Mask()
@@ -2910,7 +3062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Potion_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Potion_ErrorMask>
+    public class Potion_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<Potion_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -3128,7 +3280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Potion_CopyMask : MajorRecord_CopyMask
+    public class Potion_CopyMask : ItemAbstract_CopyMask
     {
         #region Members
         public bool Name;
@@ -3142,7 +3294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Potion_TranslationMask : MajorRecord_TranslationMask
+    public class Potion_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;

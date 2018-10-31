@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoadScreenLocation,
         ILoquiObject<LoadScreenLocation>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<LoadScreenLocation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -97,11 +98,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<LoadScreenLocation>.GetEqualsMask(LoadScreenLocation rhs) => LoadScreenLocationCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ILoadScreenLocationGetter>.GetEqualsMask(ILoadScreenLocationGetter rhs) => LoadScreenLocationCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return LoadScreenLocationCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             LoadScreenLocation_Mask<bool> printMask = null)
@@ -463,14 +459,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Direct":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Direct_Property,
                         fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                         errorMask: errorMask);
                     break;
                 case "Indirect":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Indirect_Property,
                         fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
@@ -532,15 +528,35 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Indirect_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Direct_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Indirect_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static LoadScreenLocation Create_Binary(MutagenFrame frame)
+        public static LoadScreenLocation Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -548,12 +564,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LoadScreenLocation Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out LoadScreenLocation_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
@@ -562,6 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LoadScreenLocation Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -576,6 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                 }
             }
@@ -587,17 +607,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LoadScreenLocation Create_Binary(string path)
+        public static LoadScreenLocation Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static LoadScreenLocation Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out LoadScreenLocation_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -605,21 +630,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static LoadScreenLocation Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static LoadScreenLocation Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static LoadScreenLocation Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out LoadScreenLocation_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -627,6 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -636,12 +668,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out LoadScreenLocation_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
@@ -649,6 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out LoadScreenLocation_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -658,6 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -671,6 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out LoadScreenLocation_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -678,20 +715,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -699,6 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -710,12 +754,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -723,12 +770,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             LoadScreenLocationCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -737,15 +786,18 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             LoadScreenLocation item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                masterReferences: masterReferences,
                 item: item.Direct_Property,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                masterReferences: masterReferences,
                 item: item.Indirect_Property,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
                 errorMask: errorMask);
@@ -1307,10 +1359,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LoadScreenLocation_FieldIndex.Direct:
-                    obj.Direct_Property.Unset(cmds.ToUnsetParams());
+                    obj.Direct.Direct = default(Place);
                     break;
                 case LoadScreenLocation_FieldIndex.Indirect:
-                    obj.Indirect_Property.Unset(cmds.ToUnsetParams());
+                    obj.Indirect.Indirect = default(Worldspace);
                     break;
                 case LoadScreenLocation_FieldIndex.GridPoint:
                     obj.GridPoint = default(P2Int16);
@@ -1358,8 +1410,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocation item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Direct_Property.Unset(cmds.ToUnsetParams());
-            item.Indirect_Property.Unset(cmds.ToUnsetParams());
+            item.Direct = default(Place);
+            item.Indirect = default(Worldspace);
             item.GridPoint = default(P2Int16);
         }
 
@@ -1477,19 +1529,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Direct),
-                    item: item.Direct_Property?.FormID,
+                    item: item.Direct_Property?.FormKey,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Indirect),
-                    item: item.Indirect_Property?.FormID,
+                    item: item.Indirect_Property?.FormKey,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
                     errorMask: errorMask);
             }
@@ -1512,6 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             LoadScreenLocation item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out LoadScreenLocation_ErrorMask errorMask)
@@ -1519,6 +1572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1528,6 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             LoadScreenLocation item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1539,7 +1594,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -1547,18 +1603,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             LoadScreenLocation item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Direct_Property,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Indirect_Property,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GridPoint,

@@ -39,6 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Race>,
         ILoquiObjectSetter,
         INamed,
+        ILinkSubContainer,
         IEquatable<Race>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -125,19 +126,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<Relation> _Relations = new SourceSetList<Relation>();
-        public ISourceSetList<Relation> Relations => _Relations;
+        private readonly SourceSetList<RaceRelation> _Relations = new SourceSetList<RaceRelation>();
+        public ISourceSetList<RaceRelation> Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Relation> RelationsEnumerable
+        public IEnumerable<RaceRelation> RelationsEnumerable
         {
             get => _Relations.Items;
             set => _Relations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<Relation> IRace.Relations => _Relations;
+        ISourceSetList<RaceRelation> IRace.Relations => _Relations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<Relation> IRaceGetter.Relations => _Relations;
+        IObservableSetList<RaceRelation> IRaceGetter.Relations => _Relations;
         #endregion
 
         #endregion
@@ -531,11 +532,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Race>.GetEqualsMask(Race rhs) => RaceCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRaceGetter>.GetEqualsMask(IRaceGetter rhs) => RaceCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RaceCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Race_Mask<bool> printMask = null)
@@ -1106,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Parse(
                             root: root,
                             enumer: out var SpellsItem,
-                            transl: FormIDXmlTranslation.Instance.Parse,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -1131,10 +1127,10 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.Relations);
-                        if (ListXmlTranslation<Relation>.Instance.Parse(
+                        if (ListXmlTranslation<RaceRelation>.Instance.Parse(
                             root: root,
                             enumer: out var RelationsItem,
-                            transl: LoquiXmlTranslation<Relation>.Instance.Parse,
+                            transl: LoquiXmlTranslation<RaceRelation>.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -1560,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (ListXmlTranslation<FormIDLink<Hair>>.Instance.Parse(
                             root: root,
                             enumer: out var HairsItem,
-                            transl: FormIDXmlTranslation.Instance.Parse,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -1588,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (ListXmlTranslation<FormIDLink<Eye>>.Instance.Parse(
                             root: root,
                             enumer: out var EyesItem,
-                            transl: FormIDXmlTranslation.Instance.Parse,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -1729,6 +1725,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
+            foreach (var item in Spells)
+            {
+                yield return item;
+            }
             foreach (var item in Relations.SelectMany(f => f.Links))
             {
                 yield return item;
@@ -1747,17 +1747,83 @@ namespace Mutagen.Bethesda.Oblivion
                     yield return item;
                 }
             }
+            foreach (var item in Hairs)
+            {
+                yield return item;
+            }
+            foreach (var item in Eyes)
+            {
+                yield return item;
+            }
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in Spells)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in Relations)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            if (Voices != null)
+            {
+                Voices?.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            if (DefaultHair != null)
+            {
+                DefaultHair?.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in Hairs)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+            foreach (var item in Eyes)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Race Create_Binary(MutagenFrame frame)
+        public new static Race Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -1765,12 +1831,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Race Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out Race_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
@@ -1779,6 +1847,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Race Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1788,21 +1857,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: Race_Registration.RACE_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static Race Create_Binary(string path)
+        public static Race Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static Race Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out Race_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -1810,21 +1885,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static Race Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static Race Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static Race Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out Race_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -1832,6 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -1841,12 +1923,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Race_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
@@ -1854,6 +1938,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out Race_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1863,6 +1948,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -1876,6 +1962,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out Race_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1883,6 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -1891,12 +1979,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
@@ -1906,12 +1996,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             RaceCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -1920,17 +2012,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             Race item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Race item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1941,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.Name);
@@ -1969,7 +2064,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
                 case 0x43534544: // DESC
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.Description);
@@ -2000,24 +2095,33 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Race_Registration.SPLO_HEADER,
+                        masterReferences: masterReferences,
                         item: item.Spells,
                         fieldIndex: (int)Race_FieldIndex.Spells,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormIDBinaryTranslation.Instance.Parse);
+                        transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
                 case 0x4D414E58: // XNAM
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Race_Registration.XNAM_HEADER,
                         item: item.Relations,
                         fieldIndex: (int)Race_FieldIndex.Relations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<Relation>.Instance.Parse);
+                        transl: (MutagenFrame r, out RaceRelation listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<RaceRelation>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -2030,7 +2134,15 @@ namespace Mutagen.Bethesda.Oblivion
                             item: item.SkillBoosts,
                             fieldIndex: (int)Race_FieldIndex.SkillBoosts,
                             errorMask: errorMask,
-                            transl: LoquiBinaryTranslation<SkillBoost>.Instance.Parse);
+                            transl: (MutagenFrame r, out SkillBoost listSubItem, ErrorMaskBuilder listErrMask) =>
+                            {
+                                return LoquiBinaryTranslation<SkillBoost>.Instance.Parse(
+                                    frame: r.Spawn(snapToFinalPosition: false),
+                                    item: out listSubItem,
+                                    errorMask: listErrMask,
+                                    masterReferences: masterReferences);
+                            }
+                            );
                         try
                         {
                             errorMask?.PushIndex((int)Race_FieldIndex.Fluff);
@@ -2183,6 +2295,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)Race_FieldIndex.Voices);
                         if (LoquiBinaryTranslation<RaceVoices>.Instance.Parse(
                             frame: frame,
+                            masterReferences: masterReferences,
                             item: out RaceVoices VoicesParse,
                             errorMask: errorMask))
                         {
@@ -2209,6 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
                         if (LoquiBinaryTranslation<RaceHair>.Instance.Parse(
                             frame: frame,
+                            masterReferences: masterReferences,
                             item: out RaceHair DefaultHairParse,
                             errorMask: errorMask))
                         {
@@ -2230,7 +2344,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
                 case 0x4D414E43: // CNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColor);
@@ -2257,7 +2371,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColor);
                 case 0x4D414E50: // PNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.FaceGenMainClamp);
@@ -2284,7 +2398,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenMainClamp);
                 case 0x4D414E55: // UNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.FaceGenFaceClamp);
@@ -2316,6 +2430,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
                         if (LoquiBinaryTranslation<RaceStatsGendered>.Instance.Parse(
                             frame: frame,
+                            masterReferences: masterReferences,
                             item: out RaceStatsGendered RaceStatsParse,
                             errorMask: errorMask))
                         {
@@ -2337,7 +2452,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 case 0x304D414E: // NAM0
-                    frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
@@ -2345,15 +2460,24 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Race_FieldIndex.FaceData,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<FacePart>.Instance.Parse);
+                        transl: (MutagenFrame r, out FacePart listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<FacePart>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
                 case 0x314D414E: // NAM1
-                    frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
                         if (LoquiBinaryTranslation<GenderedBodyData>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out GenderedBodyData BodyDataParse,
                             errorMask: errorMask))
                         {
@@ -2375,24 +2499,26 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 case 0x4D414E48: // HNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Hairs,
                         fieldIndex: (int)Race_FieldIndex.Hairs,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormIDBinaryTranslation.Instance.Parse);
+                        transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
                 case 0x4D414E45: // ENAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Eyes,
                         fieldIndex: (int)Race_FieldIndex.Eyes,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormIDBinaryTranslation.Instance.Parse);
+                        transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
                 case 0x53474746: // FGGS
                 case 0x41474746: // FGGA
@@ -2402,6 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
                         if (LoquiBinaryTranslation<FaceGenData>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out FaceGenData FaceGenDataParse,
                             errorMask: errorMask))
                         {
@@ -2423,7 +2550,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
                 case 0x4D414E53: // SNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.Unknown);
@@ -2454,6 +2581,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -2578,7 +2706,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj);
                     break;
                 case Race_FieldIndex.Relations:
-                    this._Relations.SetTo((IEnumerable<Relation>)obj);
+                    this._Relations.SetTo((IEnumerable<RaceRelation>)obj);
                     break;
                 case Race_FieldIndex.SkillBoosts:
                     this._SkillBoosts.SetTo((IEnumerable<SkillBoost>)obj);
@@ -2678,7 +2806,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value);
                     break;
                 case Race_FieldIndex.Relations:
-                    obj._Relations.SetTo((IEnumerable<Relation>)pair.Value);
+                    obj._Relations.SetTo((IEnumerable<RaceRelation>)pair.Value);
                     break;
                 case Race_FieldIndex.SkillBoosts:
                     obj._SkillBoosts.SetTo((IEnumerable<SkillBoost>)pair.Value);
@@ -2763,7 +2891,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Description_Unset();
 
         new ISourceSetList<FormIDSetLink<Spell>> Spells { get; }
-        new ISourceSetList<Relation> Relations { get; }
+        new ISourceSetList<RaceRelation> Relations { get; }
         new ISourceSetList<SkillBoost> SkillBoosts { get; }
         new Byte[] Fluff { get; set; }
 
@@ -2843,7 +2971,7 @@ namespace Mutagen.Bethesda.Oblivion
         IObservableSetList<FormIDSetLink<Spell>> Spells { get; }
         #endregion
         #region Relations
-        IObservableSetList<Relation> Relations { get; }
+        IObservableSetList<RaceRelation> Relations { get; }
         #endregion
         #region SkillBoosts
         IObservableSetList<SkillBoost> SkillBoosts { get; }
@@ -2939,7 +3067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum Race_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -3304,7 +3432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Spells:
                     return typeof(NotifyingList<FormIDSetLink<Spell>>);
                 case Race_FieldIndex.Relations:
-                    return typeof(NotifyingList<Relation>);
+                    return typeof(NotifyingList<RaceRelation>);
                 case Race_FieldIndex.SkillBoosts:
                     return typeof(NotifyingList<SkillBoost>);
                 case Race_FieldIndex.Fluff:
@@ -3517,7 +3645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    return Relation.Copy(
+                                    return RaceRelation.Copy(
                                         r,
                                         copyMask?.Relations?.Specific,
                                         def: d);
@@ -4470,10 +4598,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Relations.HasBeenSet)
                 {
-                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
-                    ret.Relations.Specific = item.Relations.SelectAgainst<Relation, MaskItem<bool, Relation_Mask<bool>>>(rhs.Relations, ((l, r) =>
+                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>();
+                    ret.Relations.Specific = item.Relations.SelectAgainst<RaceRelation, MaskItem<bool, RaceRelation_Mask<bool>>>(rhs.Relations, ((l, r) =>
                     {
-                        MaskItem<bool, Relation_Mask<bool>> itemRet;
+                        MaskItem<bool, RaceRelation_Mask<bool>> itemRet;
                         itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
                         return itemRet;
                     }
@@ -4482,13 +4610,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 else
                 {
-                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
+                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>();
                     ret.Relations.Overall = true;
                 }
             }
             else
             {
-                ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
+                ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>();
                 ret.Relations.Overall = false;
             }
             ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
@@ -4825,7 +4953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = item.Name_IsSet;
             ret.Description = item.Description_IsSet;
             ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
-            ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, Relation_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, RaceRelation_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>(item.SkillBoosts.HasBeenSet, item.SkillBoosts.Select((i) => new MaskItem<bool, SkillBoost_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Fluff = true;
             ret.MaleHeight = true;
@@ -4860,7 +4988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (Race_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (Race_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (Race_FieldIndex)((int)index);
@@ -4938,10 +5066,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Spells),
                     transl: (XElement subNode, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        FormIDXmlTranslation.Instance.Write(
+                        FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: "Item",
-                            item: subItem?.FormID,
+                            item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
                     );
@@ -4949,16 +5077,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Relations.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
             {
-                ListXmlTranslation<Relation>.Instance.Write(
+                ListXmlTranslation<RaceRelation>.Instance.Write(
                     node: elem,
                     name: nameof(item.Relations),
                     item: item.Relations,
                     fieldIndex: (int)Race_FieldIndex.Relations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Relations),
-                    transl: (XElement subNode, Relation subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, RaceRelation subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        LoquiXmlTranslation<Relation>.Instance.Write(
+                        LoquiXmlTranslation<RaceRelation>.Instance.Write(
                             node: subNode,
                             item: subItem,
                             name: "Item",
@@ -5148,10 +5276,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Hairs),
                     transl: (XElement subNode, FormIDLink<Hair> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        FormIDXmlTranslation.Instance.Write(
+                        FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: "Item",
-                            item: subItem?.FormID,
+                            item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
                     );
@@ -5168,10 +5296,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Eyes),
                     transl: (XElement subNode, FormIDLink<Eye> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        FormIDXmlTranslation.Instance.Write(
+                        FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: "Item",
-                            item: subItem?.FormID,
+                            item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
                     );
@@ -5207,6 +5335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Race item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Race_ErrorMask errorMask)
@@ -5214,6 +5343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -5223,6 +5353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Race item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -5234,12 +5365,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -5248,13 +5381,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -5277,22 +5412,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Spells.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.WriteListOfRecords(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>>.Instance.Write(
                     writer: writer,
                     items: item.Spells,
                     fieldIndex: (int)Race_FieldIndex.Spells,
-                    recordType: Race_Registration.SPLO_HEADER,
                     errorMask: errorMask,
-                    transl: FormIDBinaryTranslation.Instance.Write);
+                    transl: (MutagenWriter subWriter, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            header: recordTypeConverter.ConvertToCustom(Race_Registration.SPLO_HEADER),
+                            nullable: false,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
             if (item.Relations.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Write(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.Write(
                     writer: writer,
                     items: item.Relations,
                     fieldIndex: (int)Race_FieldIndex.Relations,
                     errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<Relation>.Instance.Write);
+                    transl: (MutagenWriter subWriter, RaceRelation subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<RaceRelation>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
             if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
             {
@@ -5303,7 +5455,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: item.SkillBoosts,
                         fieldIndex: (int)Race_FieldIndex.SkillBoosts,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<SkillBoost>.Instance.Write);
+                        transl: (MutagenWriter subWriter, SkillBoost subItem, ErrorMaskBuilder listErrorMask) =>
+                        {
+                            LoquiBinaryTranslation<SkillBoost>.Instance.Write(
+                                writer: subWriter,
+                                item: subItem,
+                                errorMask: listErrorMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Fluff,
@@ -5343,7 +5503,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Voices,
                     fieldIndex: (int)Race_FieldIndex.Voices,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.DefaultHair_IsSet)
             {
@@ -5351,7 +5512,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.DefaultHair,
                     fieldIndex: (int)Race_FieldIndex.DefaultHair,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.DefaultHairColor_IsSet)
             {
@@ -5389,7 +5551,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.RaceStats,
                     fieldIndex: (int)Race_FieldIndex.RaceStats,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.FaceData.HasBeenSet)
             {
@@ -5399,7 +5562,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     items: item.FaceData,
                     fieldIndex: (int)Race_FieldIndex.FaceData,
                     errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<FacePart>.Instance.Write);
+                    transl: (MutagenWriter subWriter, FacePart subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<FacePart>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
             if (item.BodyData_IsSet)
             {
@@ -5408,7 +5579,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.BodyData,
                     fieldIndex: (int)Race_FieldIndex.BodyData,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.Hairs.HasBeenSet)
             {
@@ -5418,7 +5590,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Race_FieldIndex.Hairs,
                     recordType: Race_Registration.HNAM_HEADER,
                     errorMask: errorMask,
-                    transl: FormIDBinaryTranslation.Instance.Write);
+                    transl: (MutagenWriter subWriter, FormIDLink<Hair> subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
             if (item.Eyes.HasBeenSet)
             {
@@ -5428,7 +5608,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Race_FieldIndex.Eyes,
                     recordType: Race_Registration.ENAM_HEADER,
                     errorMask: errorMask,
-                    transl: FormIDBinaryTranslation.Instance.Write);
+                    transl: (MutagenWriter subWriter, FormIDLink<Eye> subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
             if (item.FaceGenData_IsSet)
             {
@@ -5436,7 +5624,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.FaceGenData,
                     fieldIndex: (int)Race_FieldIndex.FaceGenData,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.Unknown_IsSet)
             {
@@ -5469,7 +5658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Name = initialValue;
             this.Description = initialValue;
             this.Spells = new MaskItem<T, IEnumerable<T>>(initialValue, null);
-            this.Relations = new MaskItem<T, IEnumerable<MaskItem<T, Relation_Mask<T>>>>(initialValue, null);
+            this.Relations = new MaskItem<T, IEnumerable<MaskItem<T, RaceRelation_Mask<T>>>>(initialValue, null);
             this.SkillBoosts = new MaskItem<T, IEnumerable<MaskItem<T, SkillBoost_Mask<T>>>>(initialValue, null);
             this.Fluff = initialValue;
             this.MaleHeight = initialValue;
@@ -5496,7 +5685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Name;
         public T Description;
         public MaskItem<T, IEnumerable<T>> Spells;
-        public MaskItem<T, IEnumerable<MaskItem<T, Relation_Mask<T>>>> Relations;
+        public MaskItem<T, IEnumerable<MaskItem<T, RaceRelation_Mask<T>>>> Relations;
         public MaskItem<T, IEnumerable<MaskItem<T, SkillBoost_Mask<T>>>> SkillBoosts;
         public T Fluff;
         public T MaleHeight;
@@ -5731,18 +5920,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Relations != null)
             {
-                obj.Relations = new MaskItem<R, IEnumerable<MaskItem<R, Relation_Mask<R>>>>();
+                obj.Relations = new MaskItem<R, IEnumerable<MaskItem<R, RaceRelation_Mask<R>>>>();
                 obj.Relations.Overall = eval(this.Relations.Overall);
                 if (Relations.Specific != null)
                 {
-                    List<MaskItem<R, Relation_Mask<R>>> l = new List<MaskItem<R, Relation_Mask<R>>>();
+                    List<MaskItem<R, RaceRelation_Mask<R>>> l = new List<MaskItem<R, RaceRelation_Mask<R>>>();
                     obj.Relations.Specific = l;
                     foreach (var item in Relations.Specific)
                     {
-                        MaskItem<R, Relation_Mask<R>> mask = default(MaskItem<R, Relation_Mask<R>>);
+                        MaskItem<R, RaceRelation_Mask<R>> mask = default(MaskItem<R, RaceRelation_Mask<R>>);
                         if (item != null)
                         {
-                            mask = new MaskItem<R, Relation_Mask<R>>();
+                            mask = new MaskItem<R, RaceRelation_Mask<R>>();
                             mask.Overall = eval(item.Overall);
                             if (item.Specific != null)
                             {
@@ -6154,7 +6343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Name;
         public Exception Description;
         public MaskItem<Exception, IEnumerable<Exception>> Spells;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> Relations;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>> Relations;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>> SkillBoosts;
         public Exception Fluff;
         public Exception MaleHeight;
@@ -6248,7 +6437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Spells = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
                     break;
                 case Race_FieldIndex.Relations:
-                    this.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(ex, null);
+                    this.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>>(ex, null);
                     break;
                 case Race_FieldIndex.SkillBoosts:
                     this.SkillBoosts = new MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>(ex, null);
@@ -6328,7 +6517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Spells = (MaskItem<Exception, IEnumerable<Exception>>)obj;
                     break;
                 case Race_FieldIndex.Relations:
-                    this.Relations = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>)obj;
+                    this.Relations = (MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>>)obj;
                     break;
                 case Race_FieldIndex.SkillBoosts:
                     this.SkillBoosts = (MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>)obj;
@@ -6613,7 +6802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = this.Name.Combine(rhs.Name);
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Spells = new MaskItem<Exception, IEnumerable<Exception>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<Exception>(this.Spells.Specific.And(rhs.Spells.Specific)));
-            ret.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(this.Relations.Overall.Combine(rhs.Relations.Overall), new List<MaskItem<Exception, Relation_ErrorMask>>(this.Relations.Specific.And(rhs.Relations.Specific)));
+            ret.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>>(this.Relations.Overall.Combine(rhs.Relations.Overall), new List<MaskItem<Exception, RaceRelation_ErrorMask>>(this.Relations.Specific.And(rhs.Relations.Specific)));
             ret.SkillBoosts = new MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>(this.SkillBoosts.Overall.Combine(rhs.SkillBoosts.Overall), new List<MaskItem<Exception, SkillBoost_ErrorMask>>(this.SkillBoosts.Specific.And(rhs.SkillBoosts.Specific)));
             ret.Fluff = this.Fluff.Combine(rhs.Fluff);
             ret.MaleHeight = this.MaleHeight.Combine(rhs.MaleHeight);
@@ -6657,7 +6846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Name;
         public bool Description;
         public CopyOption Spells;
-        public MaskItem<CopyOption, Relation_CopyMask> Relations;
+        public MaskItem<CopyOption, RaceRelation_CopyMask> Relations;
         public MaskItem<CopyOption, SkillBoost_CopyMask> SkillBoosts;
         public bool Fluff;
         public bool MaleHeight;
@@ -6687,7 +6876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Name;
         public bool Description;
         public bool Spells;
-        public MaskItem<bool, Relation_TranslationMask> Relations;
+        public MaskItem<bool, RaceRelation_TranslationMask> Relations;
         public MaskItem<bool, SkillBoost_TranslationMask> SkillBoosts;
         public bool Fluff;
         public bool MaleHeight;

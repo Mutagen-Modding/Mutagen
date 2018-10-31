@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"{fgAccessor}.AppendLine($\"{name} => {{{accessor.PropertyOrDirectAccess}}}\");");
         }
 
-        public override void GenerateUnsetNth(FileGeneration fg, string identifier, string cmdsAccessor)
+        public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier, string cmdsAccessor)
         {
             if (!this.IntegrateField) return;
             if (!this.ReadOnly)
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Generation
                 if (this.HasBeenSet)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{identifier}.{this.GetName(internalUse: false, property: true)}.Unset"))
+                        $"{identifier.PropertyAccess}.{this.GetName(internalUse: false, property: true)}.Unset"))
                     {
                         if (this.NotifyingType != NotifyingType.None)
                         {
@@ -153,35 +153,35 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    fg.AppendLine($"{identifier}.{this.Name} = default({loquiType.TypeName});");
+                    fg.AppendLine($"{identifier.DirectAccess}.{this.Name} = default({loquiType.TypeName});");
                 }
             }
             fg.AppendLine("break;");
         }
 
-        public override void GenerateClear(FileGeneration fg, string accessorPrefix, string cmdAccessor)
+        public override void GenerateClear(FileGeneration fg, Accessor identifier, string cmdAccessor)
         {
             if (this.ReadOnly || !this.IntegrateField) return;
             if (this.NotifyingType != NotifyingType.None)
             {
                 if (this.HasBeenSet)
                 {
-                    fg.AppendLine($"{accessorPrefix}.{this.Property}.Unset({cmdAccessor}.ToUnsetParams());");
+                    fg.AppendLine($"{identifier.PropertyAccess}.{this.Property}.Unset({cmdAccessor}.ToUnsetParams());");
                 }
                 else
                 {
-                    fg.AppendLine($"{accessorPrefix}.{this.Name} = default({loquiType.TypeName});");
+                    fg.AppendLine($"{identifier.DirectAccess} = default({loquiType.TypeName});");
                 }
             }
             else
             {
                 if (this.HasBeenSet)
                 {
-                    fg.AppendLine($"{accessorPrefix}.{this.Property}.Unset();");
+                    fg.AppendLine($"{identifier.PropertyAccess}.Unset();");
                 }
                 else
                 {
-                    fg.AppendLine($"{accessorPrefix}.{this.Name} = default({loquiType.TypeName});");
+                    fg.AppendLine($"{identifier.DirectAccess} = default({loquiType.TypeName});");
                 }
             }
         }

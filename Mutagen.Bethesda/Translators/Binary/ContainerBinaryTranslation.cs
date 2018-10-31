@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingCollection<T> item,
+            ISourceSetList<T> item,
             RecordType triggeringRecord,
             int lengthLength,
             MasterReferences masterReferences,
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingCollection<T> item,
+            ISourceSetList<T> item,
             long lengthLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingCollection<T> item,
+            ISourceSetList<T> item,
             long lengthLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingCollection<T> item,
+            ISourceSetList<T> item,
             int amount,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
@@ -448,11 +448,11 @@ namespace Mutagen.Bethesda.Binary
                 });
         }
 
-        #region NotifyingKeyedCollection Helpers
+        #region Cache Helpers
         public void ParseRepeatedItem<K>(
             MutagenFrame frame,
             int fieldIndex,
-            INotifyingKeyedCollection<K, T> item,
+            ISourceSetCache<K, T> item,
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,

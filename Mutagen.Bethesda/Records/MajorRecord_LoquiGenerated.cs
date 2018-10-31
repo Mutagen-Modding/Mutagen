@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda
         IMajorRecord,
         ILoquiObject<MajorRecord>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<MajorRecord>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -56,12 +57,12 @@ namespace Mutagen.Bethesda
             set => this.RaiseAndSetIfChanged(ref this._MajorRecordFlags, value, nameof(MajorRecordFlags));
         }
         #endregion
-        #region FormID
-        public FormID FormID { get; protected set; }
-        protected void UnsetFormID()
+        #region FormKey
+        public FormKey FormKey { get; protected set; }
+        protected void UnsetFormKey()
         {
-            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.FormID] = false;
-            FormID = default(FormID);
+            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.FormKey] = false;
+            FormKey = default(FormKey);
         }
         #endregion
         #region Version
@@ -132,11 +133,6 @@ namespace Mutagen.Bethesda
         IMask<bool> IEqualsMask<MajorRecord>.GetEqualsMask(MajorRecord rhs) => MajorRecordCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IMajorRecordGetter>.GetEqualsMask(IMajorRecordGetter rhs) => MajorRecordCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return MajorRecordCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             MajorRecord_Mask<bool> printMask = null)
@@ -169,7 +165,7 @@ namespace Mutagen.Bethesda
         {
             if (rhs == null) return false;
             if (this.MajorRecordFlags != rhs.MajorRecordFlags) return false;
-            if (this.FormID != rhs.FormID) return false;
+            if (this.FormKey != rhs.FormKey) return false;
             if (this.Version != rhs.Version) return false;
             if (EditorID_IsSet != rhs.EditorID_IsSet) return false;
             if (EditorID_IsSet)
@@ -184,7 +180,7 @@ namespace Mutagen.Bethesda
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(MajorRecordFlags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FormID).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(FormKey).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
             if (EditorID_IsSet)
             {
@@ -434,20 +430,20 @@ namespace Mutagen.Bethesda
                         errorMask?.PopIndex();
                     }
                     break;
-                case "FormID":
+                case "FormKey":
                     try
                     {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormID);
-                        if (FormIDXmlTranslation.Instance.Parse(
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
+                        if (FormKeyXmlTranslation.Instance.Parse(
                             root: root,
-                            item: out FormID FormIDParse,
+                            item: out FormKey FormKeyParse,
                             errorMask: errorMask))
                         {
-                            item.FormID = FormIDParse;
+                            item.FormKey = FormKeyParse;
                         }
                         else
                         {
-                            item.FormID = default(FormID);
+                            item.FormKey = default(FormKey);
                         }
                     }
                     catch (Exception ex)
@@ -527,7 +523,7 @@ namespace Mutagen.Bethesda
                 case MajorRecord_FieldIndex.EditorID:
                     return _hasBeenSetTracker[index];
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
@@ -542,6 +538,15 @@ namespace Mutagen.Bethesda
         {
             yield break;
         }
+
+        public virtual void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+        }
+
         public virtual void Write_Xml_Folder(
             string path,
             out MajorRecord_ErrorMask errorMask,
@@ -558,12 +563,14 @@ namespace Mutagen.Bethesda
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
@@ -571,6 +578,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -580,6 +588,7 @@ namespace Mutagen.Bethesda
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -593,6 +602,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -600,20 +610,26 @@ namespace Mutagen.Bethesda
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public virtual void Write_Binary(MutagenWriter writer)
+        public virtual void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public virtual void Write_Binary(string path)
+        public virtual void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -621,6 +637,7 @@ namespace Mutagen.Bethesda
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -632,12 +649,15 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public virtual void Write_Binary(Stream stream)
+        public virtual void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -645,12 +665,14 @@ namespace Mutagen.Bethesda
 
         protected virtual void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             MajorRecordCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -659,6 +681,7 @@ namespace Mutagen.Bethesda
         protected static void Fill_Binary_Structs(
             MajorRecord item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             try
@@ -687,17 +710,18 @@ namespace Mutagen.Bethesda
             }
             try
             {
-                errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormID);
-                if (Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
+                if (Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
                     frame: frame.Spawn(snapToFinalPosition: false),
-                    item: out FormID FormIDParse,
+                    masterReferences: masterReferences,
+                    item: out FormKey FormKeyParse,
                     errorMask: errorMask))
                 {
-                    item.FormID = FormIDParse;
+                    item.FormKey = FormKeyParse;
                 }
                 else
                 {
-                    item.FormID = default(FormID);
+                    item.FormKey = default(FormKey);
                 }
             }
             catch (Exception ex)
@@ -738,6 +762,7 @@ namespace Mutagen.Bethesda
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             MajorRecord item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -748,7 +773,7 @@ namespace Mutagen.Bethesda
             switch (nextRecordType.TypeInt)
             {
                 case 0x44494445: // EDID
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
@@ -777,7 +802,7 @@ namespace Mutagen.Bethesda
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
+                    frame.Position += contentLength + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }
         }
@@ -895,8 +920,8 @@ namespace Mutagen.Bethesda
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     this.MajorRecordFlags = (MajorRecord.MajorRecordFlag)obj;
                     break;
-                case MajorRecord_FieldIndex.FormID:
-                    this.FormID = (FormID)obj;
+                case MajorRecord_FieldIndex.FormKey:
+                    this.FormKey = (FormKey)obj;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     this.Version = (UInt32)obj;
@@ -934,8 +959,8 @@ namespace Mutagen.Bethesda
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     obj.MajorRecordFlags = (MajorRecord.MajorRecordFlag)pair.Value;
                     break;
-                case MajorRecord_FieldIndex.FormID:
-                    obj.FormID = (FormID)pair.Value;
+                case MajorRecord_FieldIndex.FormKey:
+                    obj.FormKey = (FormKey)pair.Value;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     obj.Version = (UInt32)pair.Value;
@@ -975,8 +1000,8 @@ namespace Mutagen.Bethesda
         MajorRecord.MajorRecordFlag MajorRecordFlags { get; }
 
         #endregion
-        #region FormID
-        FormID FormID { get; }
+        #region FormKey
+        FormKey FormKey { get; }
 
         #endregion
         #region Version
@@ -1005,7 +1030,7 @@ namespace Mutagen.Bethesda.Internals
     public enum MajorRecord_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -1058,8 +1083,8 @@ namespace Mutagen.Bethesda.Internals
             {
                 case "MAJORRECORDFLAGS":
                     return (ushort)MajorRecord_FieldIndex.MajorRecordFlags;
-                case "FORMID":
-                    return (ushort)MajorRecord_FieldIndex.FormID;
+                case "FORMKEY":
+                    return (ushort)MajorRecord_FieldIndex.FormKey;
                 case "VERSION":
                     return (ushort)MajorRecord_FieldIndex.Version;
                 case "EDITORID":
@@ -1077,7 +1102,7 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
                 case MajorRecord_FieldIndex.RecordType:
@@ -1093,7 +1118,7 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
                 case MajorRecord_FieldIndex.RecordType:
@@ -1109,7 +1134,7 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
                 case MajorRecord_FieldIndex.RecordType:
@@ -1126,8 +1151,8 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return "MajorRecordFlags";
-                case MajorRecord_FieldIndex.FormID:
-                    return "FormID";
+                case MajorRecord_FieldIndex.FormKey:
+                    return "FormKey";
                 case MajorRecord_FieldIndex.Version:
                     return "Version";
                 case MajorRecord_FieldIndex.EditorID:
@@ -1147,7 +1172,7 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
@@ -1161,7 +1186,7 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
                 case MajorRecord_FieldIndex.MajorRecordFlags:
@@ -1180,8 +1205,8 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return typeof(MajorRecord.MajorRecordFlag);
-                case MajorRecord_FieldIndex.FormID:
-                    return typeof(FormID);
+                case MajorRecord_FieldIndex.FormKey:
+                    return typeof(FormKey);
                 case MajorRecord_FieldIndex.Version:
                     return typeof(UInt32);
                 case MajorRecord_FieldIndex.EditorID:
@@ -1195,20 +1220,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
-        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
-        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
-        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
         public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
         public static readonly RecordType INFO_HEADER = new RecordType("INFO");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
@@ -1223,43 +1240,51 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
-        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
-        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
+        public static readonly RecordType LAND_HEADER = new RecordType("LAND");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
-        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
-        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
-        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
-        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
+        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
+        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
+        public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
+        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
-        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
-        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType WATR_HEADER = new RecordType("WATR");
-        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
+        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
+        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
+        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
+        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
+        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
+        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
+        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
+        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
+        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
+        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
+        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
+        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
-        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
+        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
+        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
-        public static readonly RecordType LAND_HEADER = new RecordType("LAND");
-        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
-        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
-        public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
-        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
+        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1271,20 +1296,12 @@ namespace Mutagen.Bethesda.Internals
                     {
                         ACTI_HEADER,
                         PACK_HEADER,
-                        APPA_HEADER,
                         ANIO_HEADER,
                         BSGN_HEADER,
-                        BOOK_HEADER,
                         CLAS_HEADER,
                         CLMT_HEADER,
-                        FULL_HEADER,
-                        SCRI_HEADER,
-                        ENAM_HEADER,
-                        ANAM_HEADER,
-                        BMDT_HEADER,
                         CSTY_HEADER,
                         CONT_HEADER,
-                        CREA_HEADER,
                         DIAL_HEADER,
                         INFO_HEADER,
                         DOOR_HEADER,
@@ -1299,43 +1316,51 @@ namespace Mutagen.Bethesda.Internals
                         GRAS_HEADER,
                         HAIR_HEADER,
                         IDLE_HEADER,
-                        INGR_HEADER,
-                        KEYM_HEADER,
+                        LAND_HEADER,
                         LTEX_HEADER,
-                        LVLI_HEADER,
-                        LVSP_HEADER,
-                        LIGH_HEADER,
                         LSCR_HEADER,
                         MGEF_HEADER,
-                        MISC_HEADER,
-                        NPC__HEADER,
-                        ALCH_HEADER,
+                        PGRD_HEADER,
+                        ACRE_HEADER,
+                        ACHR_HEADER,
+                        REFR_HEADER,
                         QUST_HEADER,
                         RACE_HEADER,
                         REGN_HEADER,
                         ROAD_HEADER,
                         SCPT_HEADER,
-                        SGST_HEADER,
                         SKIL_HEADER,
-                        SLGM_HEADER,
                         SOUN_HEADER,
                         STAT_HEADER,
                         SBSP_HEADER,
                         TREE_HEADER,
                         WATR_HEADER,
-                        WEAP_HEADER,
                         WTHR_HEADER,
+                        APPA_HEADER,
+                        AMMO_HEADER,
+                        BOOK_HEADER,
+                        FULL_HEADER,
+                        SCRI_HEADER,
+                        ENAM_HEADER,
+                        ANAM_HEADER,
+                        BMDT_HEADER,
+                        INGR_HEADER,
+                        KEYM_HEADER,
+                        LVLI_HEADER,
+                        LIGH_HEADER,
+                        MISC_HEADER,
+                        ALCH_HEADER,
+                        SGST_HEADER,
+                        SLGM_HEADER,
+                        WEAP_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER,
-                        AMMO_HEADER,
                         LVLC_HEADER,
+                        CREA_HEADER,
+                        NPC__HEADER,
                         CELL_HEADER,
                         WRLD_HEADER,
-                        LAND_HEADER,
-                        PGRD_HEADER,
-                        ACRE_HEADER,
-                        ACHR_HEADER,
-                        REFR_HEADER,
+                        LVSP_HEADER,
                         SPEL_HEADER
                     })
             );
@@ -1464,7 +1489,7 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.RecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
@@ -1489,7 +1514,7 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     obj.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
                     break;
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
                 case MajorRecord_FieldIndex.Version:
                     obj.Version = default(UInt32);
@@ -1510,7 +1535,7 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
@@ -1530,8 +1555,8 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return obj.MajorRecordFlags;
-                case MajorRecord_FieldIndex.FormID:
-                    return obj.FormID;
+                case MajorRecord_FieldIndex.FormKey:
+                    return obj.FormKey;
                 case MajorRecord_FieldIndex.Version:
                     return obj.Version;
                 case MajorRecord_FieldIndex.EditorID:
@@ -1568,7 +1593,7 @@ namespace Mutagen.Bethesda.Internals
         {
             if (rhs == null) return;
             ret.MajorRecordFlags = item.MajorRecordFlags == rhs.MajorRecordFlags;
-            ret.FormID = item.FormID == rhs.FormID;
+            ret.FormKey = item.FormKey == rhs.FormKey;
             ret.Version = item.Version == rhs.Version;
             ret.EditorID = item.EditorID_IsSet == rhs.EditorID_IsSet && object.Equals(item.EditorID, rhs.EditorID);
             ret.RecordType = object.Equals(item.RecordType, rhs.RecordType);
@@ -1605,9 +1630,9 @@ namespace Mutagen.Bethesda.Internals
                 {
                     fg.AppendLine($"MajorRecordFlags => {item.MajorRecordFlags}");
                 }
-                if (printMask?.FormID ?? true)
+                if (printMask?.FormKey ?? true)
                 {
-                    fg.AppendLine($"FormID => {item.FormID}");
+                    fg.AppendLine($"FormKey => {item.FormKey}");
                 }
                 if (printMask?.Version ?? true)
                 {
@@ -1637,7 +1662,7 @@ namespace Mutagen.Bethesda.Internals
         {
             var ret = new MajorRecord_Mask<bool>();
             ret.MajorRecordFlags = true;
-            ret.FormID = true;
+            ret.FormKey = true;
             ret.Version = true;
             ret.EditorID = item.EditorID_IsSet;
             ret.RecordType = true;
@@ -1686,13 +1711,13 @@ namespace Mutagen.Bethesda.Internals
                     fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormID) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.FormID),
-                    item: item.FormID,
-                    fieldIndex: (int)MajorRecord_FieldIndex.FormID,
+                    name: nameof(item.FormKey),
+                    item: item.FormKey,
+                    fieldIndex: (int)MajorRecord_FieldIndex.FormKey,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.Version) ?? true))
@@ -1724,6 +1749,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             MajorRecord item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out MajorRecord_ErrorMask errorMask)
@@ -1731,6 +1757,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1740,25 +1767,29 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             MajorRecord item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             Write_Binary_Embedded(
                 item: item,
                 writer: writer,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
         public static void Write_Binary_Embedded(
             MajorRecord item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
                 writer,
@@ -1766,11 +1797,12 @@ namespace Mutagen.Bethesda.Internals
                 length: 4,
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FormID,
-                fieldIndex: (int)MajorRecord_FieldIndex.FormID,
-                errorMask: errorMask);
+                item: item.FormKey,
+                fieldIndex: (int)MajorRecord_FieldIndex.FormKey,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Version,
@@ -1782,7 +1814,8 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             if (item.EditorID_IsSet)
             {
@@ -1813,7 +1846,7 @@ namespace Mutagen.Bethesda.Internals
         public MajorRecord_Mask(T initialValue)
         {
             this.MajorRecordFlags = initialValue;
-            this.FormID = initialValue;
+            this.FormKey = initialValue;
             this.Version = initialValue;
             this.EditorID = initialValue;
             this.RecordType = initialValue;
@@ -1822,7 +1855,7 @@ namespace Mutagen.Bethesda.Internals
 
         #region Members
         public T MajorRecordFlags;
-        public T FormID;
+        public T FormKey;
         public T Version;
         public T EditorID;
         public T RecordType;
@@ -1839,7 +1872,7 @@ namespace Mutagen.Bethesda.Internals
         {
             if (rhs == null) return false;
             if (!object.Equals(this.MajorRecordFlags, rhs.MajorRecordFlags)) return false;
-            if (!object.Equals(this.FormID, rhs.FormID)) return false;
+            if (!object.Equals(this.FormKey, rhs.FormKey)) return false;
             if (!object.Equals(this.Version, rhs.Version)) return false;
             if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
             if (!object.Equals(this.RecordType, rhs.RecordType)) return false;
@@ -1849,7 +1882,7 @@ namespace Mutagen.Bethesda.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.MajorRecordFlags?.GetHashCode());
-            ret = ret.CombineHashCode(this.FormID?.GetHashCode());
+            ret = ret.CombineHashCode(this.FormKey?.GetHashCode());
             ret = ret.CombineHashCode(this.Version?.GetHashCode());
             ret = ret.CombineHashCode(this.EditorID?.GetHashCode());
             ret = ret.CombineHashCode(this.RecordType?.GetHashCode());
@@ -1862,7 +1895,7 @@ namespace Mutagen.Bethesda.Internals
         public virtual bool AllEqual(Func<T, bool> eval)
         {
             if (!eval(this.MajorRecordFlags)) return false;
-            if (!eval(this.FormID)) return false;
+            if (!eval(this.FormKey)) return false;
             if (!eval(this.Version)) return false;
             if (!eval(this.EditorID)) return false;
             if (!eval(this.RecordType)) return false;
@@ -1881,7 +1914,7 @@ namespace Mutagen.Bethesda.Internals
         protected void Translate_InternalFill<R>(MajorRecord_Mask<R> obj, Func<T, R> eval)
         {
             obj.MajorRecordFlags = eval(this.MajorRecordFlags);
-            obj.FormID = eval(this.FormID);
+            obj.FormKey = eval(this.FormKey);
             obj.Version = eval(this.Version);
             obj.EditorID = eval(this.EditorID);
             obj.RecordType = eval(this.RecordType);
@@ -1917,9 +1950,9 @@ namespace Mutagen.Bethesda.Internals
                 {
                     fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags}");
                 }
-                if (printMask?.FormID ?? true)
+                if (printMask?.FormKey ?? true)
                 {
-                    fg.AppendLine($"FormID => {FormID}");
+                    fg.AppendLine($"FormKey => {FormKey}");
                 }
                 if (printMask?.Version ?? true)
                 {
@@ -1957,7 +1990,7 @@ namespace Mutagen.Bethesda.Internals
             }
         }
         public Exception MajorRecordFlags;
-        public Exception FormID;
+        public Exception FormKey;
         public Exception Version;
         public Exception EditorID;
         public object RecordType;
@@ -1971,8 +2004,8 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return MajorRecordFlags;
-                case MajorRecord_FieldIndex.FormID:
-                    return FormID;
+                case MajorRecord_FieldIndex.FormKey:
+                    return FormKey;
                 case MajorRecord_FieldIndex.Version:
                     return Version;
                 case MajorRecord_FieldIndex.EditorID:
@@ -1992,8 +2025,8 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     this.MajorRecordFlags = ex;
                     break;
-                case MajorRecord_FieldIndex.FormID:
-                    this.FormID = ex;
+                case MajorRecord_FieldIndex.FormKey:
+                    this.FormKey = ex;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     this.Version = ex;
@@ -2017,8 +2050,8 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     this.MajorRecordFlags = (Exception)obj;
                     break;
-                case MajorRecord_FieldIndex.FormID:
-                    this.FormID = (Exception)obj;
+                case MajorRecord_FieldIndex.FormKey:
+                    this.FormKey = (Exception)obj;
                     break;
                 case MajorRecord_FieldIndex.Version:
                     this.Version = (Exception)obj;
@@ -2038,7 +2071,7 @@ namespace Mutagen.Bethesda.Internals
         {
             if (Overall != null) return true;
             if (MajorRecordFlags != null) return true;
-            if (FormID != null) return true;
+            if (FormKey != null) return true;
             if (Version != null) return true;
             if (EditorID != null) return true;
             if (RecordType != null) return true;
@@ -2077,7 +2110,7 @@ namespace Mutagen.Bethesda.Internals
         protected virtual void ToString_FillInternal(FileGeneration fg)
         {
             fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags}");
-            fg.AppendLine($"FormID => {FormID}");
+            fg.AppendLine($"FormKey => {FormKey}");
             fg.AppendLine($"Version => {Version}");
             fg.AppendLine($"EditorID => {EditorID}");
             fg.AppendLine($"RecordType => {RecordType}");
@@ -2089,7 +2122,7 @@ namespace Mutagen.Bethesda.Internals
         {
             var ret = new MajorRecord_ErrorMask();
             ret.MajorRecordFlags = this.MajorRecordFlags.Combine(rhs.MajorRecordFlags);
-            ret.FormID = this.FormID.Combine(rhs.FormID);
+            ret.FormKey = this.FormKey.Combine(rhs.FormKey);
             ret.Version = this.Version.Combine(rhs.Version);
             ret.EditorID = this.EditorID.Combine(rhs.EditorID);
             ret.RecordType = this.RecordType ?? rhs.RecordType;
@@ -2115,7 +2148,7 @@ namespace Mutagen.Bethesda.Internals
     {
         #region Members
         public bool MajorRecordFlags;
-        public bool FormID;
+        public bool FormKey;
         public bool Version;
         public bool EditorID;
         public bool RecordType;
@@ -2127,7 +2160,7 @@ namespace Mutagen.Bethesda.Internals
         #region Members
         private TranslationCrystal _crystal;
         public bool MajorRecordFlags;
-        public bool FormID;
+        public bool FormKey;
         public bool Version;
         public bool EditorID;
         public bool RecordType;
@@ -2148,7 +2181,7 @@ namespace Mutagen.Bethesda.Internals
         protected virtual void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
             ret.Add((MajorRecordFlags, null));
-            ret.Add((FormID, null));
+            ret.Add((FormKey, null));
             ret.Add((Version, null));
             ret.Add((EditorID, null));
             ret.Add((RecordType, null));

@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         IIdleAnimation,
         ILoquiObject<IdleAnimation>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<IdleAnimation>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -163,11 +164,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<IdleAnimation>.GetEqualsMask(IdleAnimation rhs) => IdleAnimationCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IIdleAnimationGetter>.GetEqualsMask(IIdleAnimationGetter rhs) => IdleAnimationCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return IdleAnimationCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             IdleAnimation_Mask<bool> printMask = null)
@@ -645,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (ListXmlTranslation<FormIDLink<IdleAnimation>>.Instance.Parse(
                             root: root,
                             enumer: out var RelatedIdleAnimationsItem,
-                            transl: FormIDXmlTranslation.Instance.Parse,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -697,15 +693,51 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = IdleAnimation_Registration.TRIGGERING_RECORD_TYPE;
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in RelatedIdleAnimations)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in RelatedIdleAnimations)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static IdleAnimation Create_Binary(MutagenFrame frame)
+        public new static IdleAnimation Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -713,12 +745,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IdleAnimation Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out IdleAnimation_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
@@ -727,6 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static IdleAnimation Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -736,21 +771,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: IdleAnimation_Registration.IDLE_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static IdleAnimation Create_Binary(string path)
+        public static IdleAnimation Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static IdleAnimation Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out IdleAnimation_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -758,21 +799,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static IdleAnimation Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static IdleAnimation Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static IdleAnimation Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out IdleAnimation_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -780,6 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -789,12 +837,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out IdleAnimation_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
@@ -802,6 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out IdleAnimation_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -811,6 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -824,6 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out IdleAnimation_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -831,6 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -839,12 +893,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
@@ -854,12 +910,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             IdleAnimationCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -868,17 +926,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             IdleAnimation item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             IdleAnimation item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -894,6 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
                         {
@@ -923,10 +985,18 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<Condition>.Instance.Parse);
+                        transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
                 case 0x4D414E41: // ANAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
@@ -953,20 +1023,22 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<IdleAnimation>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.RelatedIdleAnimations,
                         fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdleAnimations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormIDBinaryTranslation.Instance.Parse);
+                        transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1196,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum IdleAnimation_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -1852,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (IdleAnimation_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (IdleAnimation_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (IdleAnimation_FieldIndex)((int)index);
@@ -1952,10 +2024,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.RelatedIdleAnimations),
                     transl: (XElement subNode, FormIDLink<IdleAnimation> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        FormIDXmlTranslation.Instance.Write(
+                        FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: "Item",
-                            item: subItem?.FormID,
+                            item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
                     );
@@ -1970,6 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IdleAnimation item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out IdleAnimation_ErrorMask errorMask)
@@ -1977,6 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1986,6 +2060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IdleAnimation item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1997,12 +2072,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2011,20 +2088,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IdleAnimation item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Model_IsSet)
             {
                 LoquiBinaryTranslation<Model>.Instance.Write(
                     writer: writer,
                     item: item.Model,
                     fieldIndex: (int)IdleAnimation_FieldIndex.Model,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.Conditions.HasBeenSet)
             {
@@ -2033,7 +2113,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     items: item.Conditions,
                     fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<Condition>.Instance.Write);
+                    transl: (MutagenWriter subWriter, Condition subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<Condition>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
             if (item.AnimationGroupSection_IsSet)
             {
@@ -2054,7 +2142,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdleAnimations,
                     recordType: IdleAnimation_Registration.DATA_HEADER,
                     errorMask: errorMask,
-                    transl: FormIDBinaryTranslation.Instance.Write);
+                    transl: (MutagenWriter subWriter, FormIDLink<IdleAnimation> subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
         }
 

@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Ammo>,
         ILoquiObjectSetter,
         INamed,
+        ILinkSubContainer,
         IEquatable<Ammo>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -225,11 +226,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Ammo>.GetEqualsMask(Ammo rhs) => AmmoCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IAmmoGetter>.GetEqualsMask(IAmmoGetter rhs) => AmmoCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return AmmoCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Ammo_Mask<bool> printMask = null)
@@ -750,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Enchantment":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Enchantment_Property,
                         fieldIndex: (int)Ammo_FieldIndex.Enchantment,
@@ -965,15 +961,35 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Enchantment_Property;
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Enchantment_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Ammo Create_Binary(MutagenFrame frame)
+        public new static Ammo Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -981,12 +997,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Ammo Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out Ammo_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
@@ -995,6 +1013,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Ammo Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1004,21 +1023,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: Ammo_Registration.AMMO_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static Ammo Create_Binary(string path)
+        public static Ammo Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static Ammo Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out Ammo_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -1026,21 +1051,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static Ammo Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static Ammo Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static Ammo Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out Ammo_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -1048,6 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -1057,12 +1089,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Ammo_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
@@ -1070,6 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out Ammo_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1079,6 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -1092,6 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out Ammo_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1099,6 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -1107,12 +1145,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out ItemAbstract_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
@@ -1120,12 +1160,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
@@ -1135,12 +1177,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             AmmoCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -1149,17 +1193,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             Ammo item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             ItemAbstract.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Ammo item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1170,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Ammo_FieldIndex.Name);
@@ -1203,6 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)Ammo_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
                         {
@@ -1224,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Model);
                 case 0x4E4F4349: // ICON
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Ammo_FieldIndex.Icon);
@@ -1252,15 +1300,16 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Icon);
                 case 0x4D414E45: // ENAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Enchantment_Property,
                         fieldIndex: (int)Ammo_FieldIndex.Enchantment,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Enchantment);
                 case 0x4D414E41: // ANAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Ammo_FieldIndex.EnchantmentPoints);
@@ -1287,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.EnchantmentPoints);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -1421,6 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1738,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum Ammo_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -2356,7 +2406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case Ammo_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Unset(cmds.ToUnsetParams());
+                    obj.Enchantment_Property.Enchantment_Property.Unset(cmds);
                     break;
                 case Ammo_FieldIndex.EnchantmentPoints:
                     obj.EnchantmentPoints_Unset();
@@ -2449,7 +2499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Enchantment_Property.Unset(cmds.ToUnsetParams());
+            item.Enchantment_Property.Enchantment_Property.Unset(cmds.ToUnsetParams());
             item.EnchantmentPoints_Unset();
             item.Speed = default(Single);
             item.Flags = default(Ammo.AmmoFlag);
@@ -2598,7 +2648,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ItemAbstract_FieldIndex.MajorRecordFlags:
                     return (Ammo_FieldIndex)((int)index);
-                case ItemAbstract_FieldIndex.FormID:
+                case ItemAbstract_FieldIndex.FormKey:
                     return (Ammo_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
                     return (Ammo_FieldIndex)((int)index);
@@ -2623,7 +2673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (Ammo_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (Ammo_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (Ammo_FieldIndex)((int)index);
@@ -2703,10 +2753,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Enchantment_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Enchantment) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Enchantment),
-                    item: item.Enchantment_Property?.FormID,
+                    item: item.Enchantment_Property?.FormKey,
                     fieldIndex: (int)Ammo_FieldIndex.Enchantment,
                     errorMask: errorMask);
             }
@@ -2775,6 +2825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Ammo item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Ammo_ErrorMask errorMask)
@@ -2782,6 +2833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2791,6 +2843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Ammo item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2802,12 +2855,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2816,13 +2871,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Ammo item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -2839,7 +2896,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Model,
                     fieldIndex: (int)Ammo_FieldIndex.Model,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.Icon_IsSet)
             {
@@ -2853,13 +2911,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Enchantment_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Enchantment_Property,
                     fieldIndex: (int)Ammo_FieldIndex.Enchantment,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Ammo_Registration.ENAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.EnchantmentPoints_IsSet)
             {

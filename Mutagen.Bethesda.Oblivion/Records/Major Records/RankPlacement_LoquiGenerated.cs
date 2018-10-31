@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRankPlacement,
         ILoquiObject<RankPlacement>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RankPlacement>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -105,11 +106,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RankPlacement>.GetEqualsMask(RankPlacement rhs) => RankPlacementCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRankPlacementGetter>.GetEqualsMask(IRankPlacementGetter rhs) => RankPlacementCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RankPlacementCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RankPlacement_Mask<bool> printMask = null)
@@ -471,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Faction":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Faction_Property,
                         fieldIndex: (int)RankPlacement_FieldIndex.Faction,
@@ -558,15 +554,31 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Faction_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Faction_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static RankPlacement Create_Binary(MutagenFrame frame)
+        public static RankPlacement Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -574,12 +586,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RankPlacement Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out RankPlacement_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RankPlacement_ErrorMask.Factory(errorMaskBuilder);
@@ -588,6 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RankPlacement Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -602,6 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                 }
             }
@@ -613,17 +629,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RankPlacement Create_Binary(string path)
+        public static RankPlacement Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static RankPlacement Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out RankPlacement_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -631,21 +652,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static RankPlacement Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static RankPlacement Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static RankPlacement Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out RankPlacement_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -653,6 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -662,12 +690,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out RankPlacement_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RankPlacement_ErrorMask.Factory(errorMaskBuilder);
@@ -675,6 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out RankPlacement_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -684,6 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -697,6 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out RankPlacement_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -704,20 +737,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -725,6 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -736,12 +776,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -749,12 +792,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             RankPlacementCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -763,10 +808,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             RankPlacement item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                masterReferences: masterReferences,
                 item: item.Faction_Property,
                 fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                 errorMask: errorMask);
@@ -1346,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    obj.Faction_Property.Unset(cmds.ToUnsetParams());
+                    obj.Faction.Faction = default(Faction);
                     break;
                 case RankPlacement_FieldIndex.Rank:
                     obj.Rank = default(Byte);
@@ -1397,7 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankPlacement item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Faction_Property.Unset(cmds.ToUnsetParams());
+            item.Faction = default(Faction);
             item.Rank = default(Byte);
             item.Fluff = default(Byte[]);
         }
@@ -1516,10 +1563,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Faction),
-                    item: item.Faction_Property?.FormID,
+                    item: item.Faction_Property?.FormKey,
                     fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                     errorMask: errorMask);
             }
@@ -1551,6 +1598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RankPlacement item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out RankPlacement_ErrorMask errorMask)
@@ -1558,6 +1606,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1567,6 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RankPlacement item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1578,7 +1628,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -1586,13 +1637,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             RankPlacement item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction_Property,
                 fieldIndex: (int)RankPlacement_FieldIndex.Faction,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Rank,

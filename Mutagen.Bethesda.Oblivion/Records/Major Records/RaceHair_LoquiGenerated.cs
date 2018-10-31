@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceHair,
         ILoquiObject<RaceHair>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RaceHair>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -88,11 +89,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RaceHair>.GetEqualsMask(RaceHair rhs) => RaceHairCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRaceHairGetter>.GetEqualsMask(IRaceHairGetter rhs) => RaceHairCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RaceHairCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RaceHair_Mask<bool> printMask = null)
@@ -452,14 +448,14 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Male":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Male_Property,
                         fieldIndex: (int)RaceHair_FieldIndex.Male,
                         errorMask: errorMask);
                     break;
                 case "Female":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Female_Property,
                         fieldIndex: (int)RaceHair_FieldIndex.Female,
@@ -481,15 +477,35 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Female_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Male_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Female_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static RaceHair Create_Binary(MutagenFrame frame)
+        public static RaceHair Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -497,12 +513,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RaceHair Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out RaceHair_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RaceHair_ErrorMask.Factory(errorMaskBuilder);
@@ -511,6 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceHair Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -525,6 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                 }
             }
@@ -536,17 +556,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RaceHair Create_Binary(string path)
+        public static RaceHair Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static RaceHair Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out RaceHair_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -554,21 +579,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static RaceHair Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static RaceHair Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static RaceHair Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out RaceHair_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -576,6 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -585,12 +617,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out RaceHair_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RaceHair_ErrorMask.Factory(errorMaskBuilder);
@@ -598,6 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out RaceHair_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -607,6 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -620,6 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out RaceHair_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -627,20 +664,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -648,6 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -659,12 +703,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -672,12 +719,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             RaceHairCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -686,15 +735,18 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             RaceHair item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                masterReferences: masterReferences,
                 item: item.Male_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                masterReferences: masterReferences,
                 item: item.Female_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Female,
                 errorMask: errorMask);
@@ -1190,10 +1242,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    obj.Male_Property.Unset(cmds.ToUnsetParams());
+                    obj.Male.Male = default(Hair);
                     break;
                 case RaceHair_FieldIndex.Female:
-                    obj.Female_Property.Unset(cmds.ToUnsetParams());
+                    obj.Female.Female = default(Hair);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1235,8 +1287,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceHair item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Male_Property.Unset(cmds.ToUnsetParams());
-            item.Female_Property.Unset(cmds.ToUnsetParams());
+            item.Male = default(Hair);
+            item.Female = default(Hair);
         }
 
         public static RaceHair_Mask<bool> GetEqualsMask(
@@ -1347,19 +1399,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceHair_FieldIndex.Male) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Male),
-                    item: item.Male_Property?.FormID,
+                    item: item.Male_Property?.FormKey,
                     fieldIndex: (int)RaceHair_FieldIndex.Male,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)RaceHair_FieldIndex.Female) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Female),
-                    item: item.Female_Property?.FormID,
+                    item: item.Female_Property?.FormKey,
                     fieldIndex: (int)RaceHair_FieldIndex.Female,
                     errorMask: errorMask);
             }
@@ -1373,6 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RaceHair item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out RaceHair_ErrorMask errorMask)
@@ -1380,6 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1389,6 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RaceHair item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1400,7 +1455,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -1408,18 +1464,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             RaceHair item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Male_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Female_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Female,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
 
         #endregion

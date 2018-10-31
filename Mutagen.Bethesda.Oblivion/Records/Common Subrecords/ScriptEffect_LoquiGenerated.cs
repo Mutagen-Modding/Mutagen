@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ScriptEffect>,
         ILoquiObjectSetter,
         INamed,
+        ILinkSubContainer,
         IEquatable<ScriptEffect>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -132,11 +133,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<ScriptEffect>.GetEqualsMask(ScriptEffect rhs) => ScriptEffectCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IScriptEffectGetter>.GetEqualsMask(IScriptEffectGetter rhs) => ScriptEffectCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return ScriptEffectCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             ScriptEffect_Mask<bool> printMask = null)
@@ -509,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Script":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Script_Property,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Script,
@@ -542,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "VisualEffect":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.VisualEffect_Property,
                         fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
@@ -641,15 +637,35 @@ namespace Mutagen.Bethesda.Oblivion
             yield return VisualEffect_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            VisualEffect_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static ScriptEffect Create_Binary(MutagenFrame frame)
+        public static ScriptEffect Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -657,12 +673,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ScriptEffect Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out ScriptEffect_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
@@ -671,6 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptEffect Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -682,6 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     int? lastParsed = null;
                     while (!frame.Complete)
@@ -690,6 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -726,17 +747,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ScriptEffect Create_Binary(string path)
+        public static ScriptEffect Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static ScriptEffect Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out ScriptEffect_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -744,21 +770,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static ScriptEffect Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static ScriptEffect Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static ScriptEffect Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out ScriptEffect_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -766,6 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -775,12 +808,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out ScriptEffect_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
@@ -788,6 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out ScriptEffect_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -797,6 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -810,6 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out ScriptEffect_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -817,20 +855,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -838,6 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -849,12 +894,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -862,12 +910,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             ScriptEffectCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -876,6 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             ScriptEffect item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
         }
@@ -884,6 +935,7 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptEffect item,
             MutagenFrame frame,
             int? lastParsed,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -895,15 +947,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x54494353: // SCIT
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
                         {
                             item.SCITDataTypeState = SCITDataType.Has;
                         }
-                        Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: item.Script_Property,
                             fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                             errorMask: errorMask);
@@ -973,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Flags);
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
@@ -1641,13 +1694,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptEffect_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds.ToUnsetParams());
+                    obj.Script.Script = default(Script);
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
                     obj.MagicSchool = default(MagicSchool);
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
-                    obj.VisualEffect_Property.Unset(cmds.ToUnsetParams());
+                    obj.VisualEffect.VisualEffect = default(MagicEffect);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
                     obj.Flags = default(ScriptEffect.Flag);
@@ -1705,9 +1758,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffect item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script = default(Script);
             item.MagicSchool = default(MagicSchool);
-            item.VisualEffect_Property.Unset(cmds.ToUnsetParams());
+            item.VisualEffect = default(MagicEffect);
             item.Flags = default(ScriptEffect.Flag);
             item.Name_Unset();
         }
@@ -1839,10 +1892,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script_Property?.FormID,
+                    item: item.Script_Property?.FormKey,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -1857,10 +1910,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.VisualEffect),
-                    item: item.VisualEffect_Property?.FormID,
+                    item: item.VisualEffect_Property?.FormKey,
                     fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
                     errorMask: errorMask);
             }
@@ -1893,6 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             ScriptEffect item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out ScriptEffect_ErrorMask errorMask)
@@ -1900,6 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1909,6 +1964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             ScriptEffect item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1916,7 +1972,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
@@ -1924,17 +1981,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffect item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Script_Property,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                        errorMask: errorMask);
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
                     if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
                     {
                         Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(

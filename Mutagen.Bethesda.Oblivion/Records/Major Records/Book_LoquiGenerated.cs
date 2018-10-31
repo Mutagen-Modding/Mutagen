@@ -32,11 +32,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Book : 
-        MajorRecord,
+        ItemAbstract,
         IBook,
         ILoquiObject<Book>,
         ILoquiObjectSetter,
         INamed,
+        ILinkSubContainer,
         IEquatable<Book>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -250,11 +251,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Book>.GetEqualsMask(Book rhs) => BookCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IBookGetter>.GetEqualsMask(IBookGetter rhs) => BookCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return BookCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Book_Mask<bool> printMask = null)
@@ -569,6 +565,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement root,
+            out ItemAbstract_ErrorMask errorMask,
+            ItemAbstract_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                root: root,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement root,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -637,6 +649,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
+        public override void Write_Xml(
+            XElement node,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            ItemAbstract_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml_Internal(
+                node: node,
+                name: name,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
+        }
+
         public override void Write_Xml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
@@ -759,14 +787,14 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Script":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Script_Property,
                         fieldIndex: (int)Book_FieldIndex.Script,
                         errorMask: errorMask);
                     break;
                 case "Enchantment":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Enchantment_Property,
                         fieldIndex: (int)Book_FieldIndex.Enchantment,
@@ -929,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    ItemAbstract.Fill_Xml_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -984,15 +1012,39 @@ namespace Mutagen.Bethesda.Oblivion
             yield return Enchantment_Property;
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Enchantment_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Book Create_Binary(MutagenFrame frame)
+        public new static Book Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -1000,12 +1052,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Book Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out Book_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
@@ -1014,6 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Book Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1023,21 +1078,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: Book_Registration.BOOK_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static Book Create_Binary(string path)
+        public static Book Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static Book Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out Book_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -1045,21 +1106,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static Book Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static Book Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static Book Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out Book_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -1067,6 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -1076,12 +1144,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Book_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
@@ -1089,6 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out Book_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1098,6 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -1111,6 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out Book_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1118,6 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -1126,12 +1200,29 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
+            out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary_Internal(
+                writer: writer,
+                masterReferences: masterReferences,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
@@ -1141,12 +1232,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             BookCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -1155,17 +1248,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             Book item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            ItemAbstract.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Book item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1176,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Book_FieldIndex.Name);
@@ -1209,6 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)Book_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
                         {
@@ -1230,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.Model);
                 case 0x4E4F4349: // ICON
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Book_FieldIndex.Icon);
@@ -1258,23 +1355,25 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.Icon);
                 case 0x49524353: // SCRI
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Script_Property,
                         fieldIndex: (int)Book_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.Script);
                 case 0x4D414E45: // ENAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Enchantment_Property,
                         fieldIndex: (int)Book_FieldIndex.Enchantment,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.Enchantment);
                 case 0x4D414E41: // ANAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Book_FieldIndex.EnchantmentPoints);
@@ -1301,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.EnchantmentPoints);
                 case 0x43534544: // DESC
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Book_FieldIndex.Description);
@@ -1329,7 +1428,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.Description);
                 case 0x41544144: // DATA
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.SpawnWithLength(contentLength))
                     {
                         if (!dataFrame.Complete)
@@ -1435,10 +1534,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return ItemAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1617,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Book_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_ItemAbstract(obj, pair);
             }
             switch (enu)
             {
@@ -1671,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IBook : IBookGetter, IMajorRecord, ILoquiClass<IBook, IBookGetter>, ILoquiClass<Book, IBookGetter>
+    public partial interface IBook : IBookGetter, IItemAbstract, ILoquiClass<IBook, IBookGetter>, ILoquiClass<Book, IBookGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1710,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IBookGetter : IMajorRecordGetter
+    public partial interface IBookGetter : IItemAbstractGetter
     {
         #region Name
         String Name { get; }
@@ -1776,7 +1876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum Book_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -1883,7 +1983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Weight:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ItemAbstract_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1906,7 +2006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Weight:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return ItemAbstract_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1928,7 +2028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Weight:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return ItemAbstract_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1960,7 +2060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Weight:
                     return "Weight";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return ItemAbstract_Registration.GetNthName(index);
             }
         }
 
@@ -1982,7 +2082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Weight:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return ItemAbstract_Registration.IsNthDerivative(index);
             }
         }
 
@@ -2004,7 +2104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Weight:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return ItemAbstract_Registration.IsProtected(index);
             }
         }
 
@@ -2036,7 +2136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Weight:
                     return typeof(Single);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return ItemAbstract_Registration.GetNthType(index);
             }
         }
 
@@ -2094,7 +2194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Book_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            ItemAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2423,7 +2523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Description_IsSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -2446,10 +2546,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case Book_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds.ToUnsetParams());
+                    obj.Script_Property.Script_Property.Unset(cmds);
                     break;
                 case Book_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Unset(cmds.ToUnsetParams());
+                    obj.Enchantment_Property.Enchantment_Property.Unset(cmds);
                     break;
                 case Book_FieldIndex.EnchantmentPoints:
                     obj.EnchantmentPoints_Unset();
@@ -2470,7 +2570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Weight = default(Single);
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    ItemAbstractCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -2502,7 +2602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Description:
                     return obj.Description_IsSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -2536,7 +2636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Book_FieldIndex.Weight:
                     return obj.Weight;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return ItemAbstractCommon.GetNthObject(index, obj);
             }
         }
 
@@ -2547,8 +2647,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Enchantment_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Enchantment_Property.Enchantment_Property.Unset(cmds.ToUnsetParams());
             item.EnchantmentPoints_Unset();
             item.Description_Unset();
             item.Flags = default(Book.BookFlag);
@@ -2583,7 +2683,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight == rhs.Weight;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2693,6 +2793,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Book_FieldIndex? ConvertFieldIndex(ItemAbstract_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Book_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ItemAbstract_FieldIndex.MajorRecordFlags:
+                    return (Book_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.FormKey:
+                    return (Book_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.Version:
+                    return (Book_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.EditorID:
+                    return (Book_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.RecordType:
+                    return (Book_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Book_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2705,7 +2830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (Book_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (Book_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (Book_FieldIndex)((int)index);
@@ -2785,20 +2910,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Script_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Script) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script_Property?.FormID,
+                    item: item.Script_Property?.FormKey,
                     fieldIndex: (int)Book_FieldIndex.Script,
                     errorMask: errorMask);
             }
             if (item.Enchantment_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Enchantment) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Enchantment),
-                    item: item.Enchantment_Property?.FormID,
+                    item: item.Enchantment_Property?.FormKey,
                     fieldIndex: (int)Book_FieldIndex.Enchantment,
                     errorMask: errorMask);
             }
@@ -2868,6 +2993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Book item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Book_ErrorMask errorMask)
@@ -2875,6 +3001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2884,6 +3011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Book item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2895,12 +3023,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2909,13 +3039,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Book item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -2932,7 +3064,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Model,
                     fieldIndex: (int)Book_FieldIndex.Model,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.Icon_IsSet)
             {
@@ -2946,23 +3079,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Script_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
                     fieldIndex: (int)Book_FieldIndex.Script,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Book_Registration.SCRI_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.Enchantment_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Enchantment_Property,
                     fieldIndex: (int)Book_FieldIndex.Enchantment,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Book_Registration.ENAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.EnchantmentPoints_IsSet)
             {
@@ -3021,7 +3156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Book_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Book_Mask<T>>
+    public class Book_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<Book_Mask<T>>
     {
         #region Ctors
         public Book_Mask()
@@ -3235,7 +3370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Book_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Book_ErrorMask>
+    public class Book_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<Book_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -3468,7 +3603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Book_CopyMask : MajorRecord_CopyMask
+    public class Book_CopyMask : ItemAbstract_CopyMask
     {
         #region Members
         public bool Name;
@@ -3485,7 +3620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Book_TranslationMask : MajorRecord_TranslationMask
+    public class Book_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
         private TranslationCrystal _crystal;

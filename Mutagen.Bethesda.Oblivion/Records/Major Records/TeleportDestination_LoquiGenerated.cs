@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         ITeleportDestination,
         ILoquiObject<TeleportDestination>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<TeleportDestination>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -49,12 +50,12 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region Door
-        public FormIDLink<Door> Door_Property { get; } = new FormIDLink<Door>();
+        #region Destination
+        public FormIDLink<IPlaced> Destination_Property { get; } = new FormIDLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Door Door { get => Door_Property.Item; set => Door_Property.Item = value; }
+        public IPlaced Destination { get => Destination_Property.Item; set => Destination_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<Door> ITeleportDestinationGetter.Door_Property => this.Door_Property;
+        FormIDLink<IPlaced> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;
         #endregion
         #region Position
         private P3Float _Position;
@@ -98,11 +99,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<TeleportDestination>.GetEqualsMask(TeleportDestination rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ITeleportDestinationGetter>.GetEqualsMask(ITeleportDestinationGetter rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return TeleportDestinationCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             TeleportDestination_Mask<bool> printMask = null)
@@ -134,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(TeleportDestination rhs)
         {
             if (rhs == null) return false;
-            if (!this.Door_Property.Equals(rhs.Door_Property)) return false;
+            if (!this.Destination_Property.Equals(rhs.Destination_Property)) return false;
             if (this.Position != rhs.Position) return false;
             if (this.Rotation != rhs.Rotation) return false;
             return true;
@@ -143,7 +139,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Door).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Destination).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Position).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Rotation).CombineHashCode(ret);
             return ret;
@@ -463,11 +459,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Door":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                case "Destination":
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
-                        item: item.Door_Property,
-                        fieldIndex: (int)TeleportDestination_FieldIndex.Door,
+                        item: item.Destination_Property,
+                        fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
                         errorMask: errorMask);
                     break;
                 case "Position":
@@ -534,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((TeleportDestination_FieldIndex)index)
             {
-                case TeleportDestination_FieldIndex.Door:
+                case TeleportDestination_FieldIndex.Destination:
                 case TeleportDestination_FieldIndex.Position:
                 case TeleportDestination_FieldIndex.Rotation:
                     return true;
@@ -548,18 +544,34 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            yield return Door_Property;
+            yield return Destination_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            Destination_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static TeleportDestination Create_Binary(MutagenFrame frame)
+        public static TeleportDestination Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -567,12 +579,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static TeleportDestination Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out TeleportDestination_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
@@ -581,6 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static TeleportDestination Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -595,6 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                 }
             }
@@ -606,17 +622,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static TeleportDestination Create_Binary(string path)
+        public static TeleportDestination Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static TeleportDestination Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out TeleportDestination_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -624,21 +645,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static TeleportDestination Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static TeleportDestination Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static TeleportDestination Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out TeleportDestination_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -646,6 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -655,12 +683,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out TeleportDestination_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
@@ -668,6 +698,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out TeleportDestination_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -677,6 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -690,6 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out TeleportDestination_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -697,20 +730,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -718,6 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -729,12 +769,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -742,12 +785,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             TeleportDestinationCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -756,12 +801,14 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             TeleportDestination item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                item: item.Door_Property,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Door,
+                masterReferences: masterReferences,
+                item: item.Destination_Property,
+                fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
                 errorMask: errorMask);
             try
             {
@@ -937,9 +984,9 @@ namespace Mutagen.Bethesda.Oblivion
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    this.Door_Property.Set(
-                        (FormIDLink<Door>)obj,
+                case TeleportDestination_FieldIndex.Destination:
+                    this.Destination_Property.Set(
+                        (FormIDLink<IPlaced>)obj,
                         cmds);
                     break;
                 case TeleportDestination_FieldIndex.Position:
@@ -985,9 +1032,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    obj.Door_Property.Set(
-                        (FormIDLink<Door>)pair.Value,
+                case TeleportDestination_FieldIndex.Destination:
+                    obj.Destination_Property.Set(
+                        (FormIDLink<IPlaced>)pair.Value,
                         null);
                     break;
                 case TeleportDestination_FieldIndex.Position:
@@ -1011,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ITeleportDestination : ITeleportDestinationGetter, ILoquiClass<ITeleportDestination, ITeleportDestinationGetter>, ILoquiClass<TeleportDestination, ITeleportDestinationGetter>
     {
-        new Door Door { get; set; }
+        new IPlaced Destination { get; set; }
         new P3Float Position { get; set; }
 
         new P3Float Rotation { get; set; }
@@ -1020,9 +1067,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ITeleportDestinationGetter : ILoquiObject
     {
-        #region Door
-        Door Door { get; }
-        FormIDLink<Door> Door_Property { get; }
+        #region Destination
+        IPlaced Destination { get; }
+        FormIDLink<IPlaced> Destination_Property { get; }
 
         #endregion
         #region Position
@@ -1045,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum TeleportDestination_FieldIndex
     {
-        Door = 0,
+        Destination = 0,
         Position = 1,
         Rotation = 2,
     }
@@ -1095,8 +1142,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "DOOR":
-                    return (ushort)TeleportDestination_FieldIndex.Door;
+                case "DESTINATION":
+                    return (ushort)TeleportDestination_FieldIndex.Destination;
                 case "POSITION":
                     return (ushort)TeleportDestination_FieldIndex.Position;
                 case "ROTATION":
@@ -1111,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
+                case TeleportDestination_FieldIndex.Destination:
                 case TeleportDestination_FieldIndex.Position:
                 case TeleportDestination_FieldIndex.Rotation:
                     return false;
@@ -1125,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
+                case TeleportDestination_FieldIndex.Destination:
                 case TeleportDestination_FieldIndex.Position:
                 case TeleportDestination_FieldIndex.Rotation:
                     return false;
@@ -1139,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
+                case TeleportDestination_FieldIndex.Destination:
                 case TeleportDestination_FieldIndex.Position:
                 case TeleportDestination_FieldIndex.Rotation:
                     return false;
@@ -1153,8 +1200,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    return "Door";
+                case TeleportDestination_FieldIndex.Destination:
+                    return "Destination";
                 case TeleportDestination_FieldIndex.Position:
                     return "Position";
                 case TeleportDestination_FieldIndex.Rotation:
@@ -1169,7 +1216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
+                case TeleportDestination_FieldIndex.Destination:
                 case TeleportDestination_FieldIndex.Position:
                 case TeleportDestination_FieldIndex.Rotation:
                     return false;
@@ -1183,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
+                case TeleportDestination_FieldIndex.Destination:
                 case TeleportDestination_FieldIndex.Position:
                 case TeleportDestination_FieldIndex.Rotation:
                     return false;
@@ -1197,8 +1244,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    return typeof(FormIDLink<Door>);
+                case TeleportDestination_FieldIndex.Destination:
+                    return typeof(FormIDLink<IPlaced>);
                 case TeleportDestination_FieldIndex.Position:
                     return typeof(P3Float);
                 case TeleportDestination_FieldIndex.Rotation:
@@ -1254,13 +1301,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            if (copyMask?.Door ?? true)
+            if (copyMask?.Destination ?? true)
             {
-                errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Door);
+                errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Destination);
                 try
                 {
-                    item.Door_Property.Set(
-                        value: rhs.Door,
+                    item.Destination_Property.Set(
+                        value: rhs.Destination,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1320,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
+                case TeleportDestination_FieldIndex.Destination:
                 case TeleportDestination_FieldIndex.Position:
                 case TeleportDestination_FieldIndex.Rotation:
                     if (on) break;
@@ -1338,8 +1385,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    obj.Door_Property.Unset(cmds.ToUnsetParams());
+                case TeleportDestination_FieldIndex.Destination:
+                    obj.Destination.Destination = default(IPlaced);
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     obj.Position = default(P3Float);
@@ -1359,7 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
+                case TeleportDestination_FieldIndex.Destination:
                 case TeleportDestination_FieldIndex.Position:
                 case TeleportDestination_FieldIndex.Rotation:
                     return true;
@@ -1375,8 +1422,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    return obj.Door;
+                case TeleportDestination_FieldIndex.Destination:
+                    return obj.Destination;
                 case TeleportDestination_FieldIndex.Position:
                     return obj.Position;
                 case TeleportDestination_FieldIndex.Rotation:
@@ -1390,7 +1437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestination item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Door_Property.Unset(cmds.ToUnsetParams());
+            item.Destination = default(IPlaced);
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
         }
@@ -1410,7 +1457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Door = item.Door == rhs.Door;
+            ret.Destination = item.Destination == rhs.Destination;
             ret.Position = item.Position == rhs.Position;
             ret.Rotation = item.Rotation == rhs.Rotation;
         }
@@ -1442,9 +1489,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Door ?? true)
+                if (printMask?.Destination ?? true)
                 {
-                    fg.AppendLine($"Door => {item.Door_Property}");
+                    fg.AppendLine($"Destination => {item.Destination_Property}");
                 }
                 if (printMask?.Position ?? true)
                 {
@@ -1468,7 +1515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static TeleportDestination_Mask<bool> GetHasBeenSetMask(ITeleportDestinationGetter item)
         {
             var ret = new TeleportDestination_Mask<bool>();
-            ret.Door = true;
+            ret.Destination = true;
             ret.Position = true;
             ret.Rotation = true;
             return ret;
@@ -1507,13 +1554,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TeleportDestination");
             }
-            if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Door) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.Door),
-                    item: item.Door_Property?.FormID,
-                    fieldIndex: (int)TeleportDestination_FieldIndex.Door,
+                    name: nameof(item.Destination),
+                    item: item.Destination_Property?.FormKey,
+                    fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
@@ -1544,6 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             TeleportDestination item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out TeleportDestination_ErrorMask errorMask)
@@ -1551,6 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1560,6 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             TeleportDestination item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1571,7 +1621,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -1579,13 +1630,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             TeleportDestination item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Door_Property,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Door,
-                errorMask: errorMask);
+                item: item.Destination_Property,
+                fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Position,
@@ -1614,14 +1667,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TeleportDestination_Mask(T initialValue)
         {
-            this.Door = initialValue;
+            this.Destination = initialValue;
             this.Position = initialValue;
             this.Rotation = initialValue;
         }
         #endregion
 
         #region Members
-        public T Door;
+        public T Destination;
         public T Position;
         public T Rotation;
         #endregion
@@ -1636,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Equals(TeleportDestination_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.Door, rhs.Door)) return false;
+            if (!object.Equals(this.Destination, rhs.Destination)) return false;
             if (!object.Equals(this.Position, rhs.Position)) return false;
             if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
             return true;
@@ -1644,7 +1697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Door?.GetHashCode());
+            ret = ret.CombineHashCode(this.Destination?.GetHashCode());
             ret = ret.CombineHashCode(this.Position?.GetHashCode());
             ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
             return ret;
@@ -1655,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.Door)) return false;
+            if (!eval(this.Destination)) return false;
             if (!eval(this.Position)) return false;
             if (!eval(this.Rotation)) return false;
             return true;
@@ -1672,7 +1725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void Translate_InternalFill<R>(TeleportDestination_Mask<R> obj, Func<T, R> eval)
         {
-            obj.Door = eval(this.Door);
+            obj.Destination = eval(this.Destination);
             obj.Position = eval(this.Position);
             obj.Rotation = eval(this.Rotation);
         }
@@ -1703,9 +1756,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Door ?? true)
+                if (printMask?.Destination ?? true)
                 {
-                    fg.AppendLine($"Door => {Door}");
+                    fg.AppendLine($"Destination => {Destination}");
                 }
                 if (printMask?.Position ?? true)
                 {
@@ -1738,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Door;
+        public Exception Destination;
         public Exception Position;
         public Exception Rotation;
         #endregion
@@ -1749,8 +1802,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    return Door;
+                case TeleportDestination_FieldIndex.Destination:
+                    return Destination;
                 case TeleportDestination_FieldIndex.Position:
                     return Position;
                 case TeleportDestination_FieldIndex.Rotation:
@@ -1765,8 +1818,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    this.Door = ex;
+                case TeleportDestination_FieldIndex.Destination:
+                    this.Destination = ex;
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     this.Position = ex;
@@ -1784,8 +1837,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
             switch (enu)
             {
-                case TeleportDestination_FieldIndex.Door:
-                    this.Door = (Exception)obj;
+                case TeleportDestination_FieldIndex.Destination:
+                    this.Destination = (Exception)obj;
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     this.Position = (Exception)obj;
@@ -1801,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
-            if (Door != null) return true;
+            if (Destination != null) return true;
             if (Position != null) return true;
             if (Rotation != null) return true;
             return false;
@@ -1838,7 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"Door => {Door}");
+            fg.AppendLine($"Destination => {Destination}");
             fg.AppendLine($"Position => {Position}");
             fg.AppendLine($"Rotation => {Rotation}");
         }
@@ -1848,7 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TeleportDestination_ErrorMask Combine(TeleportDestination_ErrorMask rhs)
         {
             var ret = new TeleportDestination_ErrorMask();
-            ret.Door = this.Door.Combine(rhs.Door);
+            ret.Destination = this.Destination.Combine(rhs.Destination);
             ret.Position = this.Position.Combine(rhs.Position);
             ret.Rotation = this.Rotation.Combine(rhs.Rotation);
             return ret;
@@ -1872,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class TeleportDestination_CopyMask
     {
         #region Members
-        public bool Door;
+        public bool Destination;
         public bool Position;
         public bool Rotation;
         #endregion
@@ -1882,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool Door;
+        public bool Destination;
         public bool Position;
         public bool Rotation;
         #endregion
@@ -1901,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((Door, null));
+            ret.Add((Destination, null));
             ret.Add((Position, null));
             ret.Add((Rotation, null));
         }

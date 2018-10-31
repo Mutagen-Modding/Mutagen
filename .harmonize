@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>eede3b05fcc68db0ffd4afecd8e1ec6246280ebf</Sha>
+         <Sha>89b092afab3ba9041194470091e64e7513eba882</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-22-2018 18:33:51</CommitDate>
-         <Description>NotifyingSetItem.Unset bugfix</Description>
+         <CommitDate>10-30-2018 21:27:04</CommitDate>
+         <Description>Some SourceSetList/Cache systems, and some Has interface refactoring</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>f85ebcf5604ab2b9e090bed13bc60f607221b5a1</Sha>
+         <Sha>a4f0de59585d1f0e55b779aee5ad92236883e484</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-30-2018 14:54:21</CommitDate>
-         <Description>Merge branch 'RefIntefaceDev'</Description>
+         <CommitDate>10-30-2018 21:33:23</CommitDate>
+         <Description>Merge fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

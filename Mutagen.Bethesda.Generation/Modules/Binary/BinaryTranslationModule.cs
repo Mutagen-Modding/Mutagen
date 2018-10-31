@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Generation
             obj.RequiredNamespaces.Add("System.Reactive.Disposables");
             obj.RequiredNamespaces.Add("System.Reactive.Linq");
         }
-
+        
         public override async Task<IEnumerable<string>> RequiredUsingStatements(ObjectGeneration obj)
         {
             return (await base.RequiredUsingStatements(obj)).And("Mutagen.Bethesda.Binary");

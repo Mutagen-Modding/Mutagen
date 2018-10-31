@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILogEntry,
         ILoquiObject<LogEntry>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<LogEntry>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -175,11 +176,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<LogEntry>.GetEqualsMask(LogEntry rhs) => LogEntryCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<ILogEntryGetter>.GetEqualsMask(ILogEntryGetter rhs) => LogEntryCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return LogEntryCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             LogEntry_Mask<bool> printMask = null)
@@ -700,13 +696,47 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        #region Mutagen
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            if (ResultScript is ILinkSubContainer ResultScriptlinkCont)
+            {
+                foreach (var item in ResultScriptlinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            if (ResultScript is ILinkSubContainer ResultScriptlinkCont)
+            {
+                ResultScriptlinkCont?.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static LogEntry Create_Binary(MutagenFrame frame)
+        public static LogEntry Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -714,12 +744,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LogEntry Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out LogEntry_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
@@ -728,6 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LogEntry Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -739,6 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     int? lastParsed = null;
                     while (!frame.Complete)
@@ -747,6 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -762,17 +797,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LogEntry Create_Binary(string path)
+        public static LogEntry Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static LogEntry Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out LogEntry_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -780,21 +820,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static LogEntry Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static LogEntry Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static LogEntry Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out LogEntry_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -802,6 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -811,12 +858,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out LogEntry_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
@@ -824,6 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out LogEntry_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -833,6 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -846,6 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out LogEntry_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -853,20 +905,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -874,6 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -885,12 +944,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -898,12 +960,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             LogEntryCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -912,6 +976,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             LogEntry item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
         }
@@ -920,6 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
             LogEntry item,
             MutagenFrame frame,
             int? lastParsed,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -931,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x54445351: // QSDT
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.Flags);
@@ -967,11 +1033,19 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)LogEntry_FieldIndex.Conditions,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: LoquiBinaryTranslation<Condition>.Instance.Parse);
+                        transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                item: out listSubItem,
+                                errorMask: listErrMask,
+                                masterReferences: masterReferences);
+                        }
+                        );
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
                 case 0x4D414E43: // CNAM
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.Entry);
@@ -1011,6 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
                         if (LoquiBinaryTranslation<ScriptFields>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out ScriptFields ResultScriptParse,
                             errorMask: errorMask))
                         {
@@ -2015,6 +2090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             LogEntry item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out LogEntry_ErrorMask errorMask)
@@ -2022,6 +2098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2031,6 +2108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             LogEntry item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2038,7 +2116,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
@@ -2046,7 +2125,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LogEntry item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             if (item.Flags_IsSet)
             {
@@ -2066,7 +2146,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     items: item.Conditions,
                     fieldIndex: (int)LogEntry_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    transl: LoquiBinaryTranslation<Condition>.Instance.Write);
+                    transl: (MutagenWriter subWriter, Condition subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<Condition>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
             if (item.Entry_IsSet)
             {
@@ -2084,7 +2172,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.ResultScript,
                     fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
 

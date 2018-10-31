@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda
         IListGroup<T>,
         ILoquiObject<ListGroup<T>>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<ListGroup<T>>
         where T : ILoquiObject<T>
     {
@@ -132,11 +133,6 @@ namespace Mutagen.Bethesda
         IMask<bool> IEqualsMask<ListGroup<T>>.GetEqualsMask(ListGroup<T> rhs) => ListGroupCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IListGroupGetter<T>>.GetEqualsMask(IListGroupGetter<T> rhs) => ListGroupCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return ListGroupCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             ListGroup_Mask<bool> printMask = null)
@@ -565,13 +561,29 @@ namespace Mutagen.Bethesda
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.SelectWhere((f) => TryGet<ILinkContainer>.Create(successful: f is ILinkContainer, val: f as ILinkContainer))
+            foreach (var item in Items.WhereCastable<T, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
             }
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            foreach (var item in Items.WhereCastable<T, ILinkSubContainer>())
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
@@ -579,6 +591,7 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static ListGroup<T> Create_Binary<T_ErrMask>(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -586,6 +599,7 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
@@ -594,6 +608,7 @@ namespace Mutagen.Bethesda
 
         public static ListGroup<T> Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -606,12 +621,14 @@ namespace Mutagen.Bethesda
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
+                            masterReferences: masterReferences,
                             errorMask: errorMask,
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
@@ -628,6 +645,7 @@ namespace Mutagen.Bethesda
 
         public static ListGroup<T> Create_Binary<T_ErrMask>(
             string path,
+            MasterReferences masterReferences,
             out ListGroup_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
@@ -636,12 +654,14 @@ namespace Mutagen.Bethesda
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
 
         public static ListGroup<T> Create_Binary<T_ErrMask>(
             Stream stream,
+            MasterReferences masterReferences,
             out ListGroup_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
@@ -650,6 +670,7 @@ namespace Mutagen.Bethesda
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -659,6 +680,7 @@ namespace Mutagen.Bethesda
         #region Binary Write
         public virtual void Write_Binary<T_ErrMask>(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -666,6 +688,7 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
@@ -673,6 +696,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary<T_ErrMask>(
             string path,
+            MasterReferences masterReferences,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -683,6 +707,7 @@ namespace Mutagen.Bethesda
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -696,6 +721,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary<T_ErrMask>(
             Stream stream,
+            MasterReferences masterReferences,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -704,21 +730,27 @@ namespace Mutagen.Bethesda
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary<T_ErrMask>(MutagenWriter writer)
+        public void Write_Binary<T_ErrMask>(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -726,6 +758,7 @@ namespace Mutagen.Bethesda
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -737,12 +770,15 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -750,12 +786,14 @@ namespace Mutagen.Bethesda
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             ListGroupCommon.Write_Binary<T>(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -764,32 +802,38 @@ namespace Mutagen.Bethesda
         static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame,
             ListGroup<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         static partial void WriteBinary_ContainedRecordType_Custom(
             MutagenWriter writer,
             ListGroup<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
 
         public static void WriteBinary_ContainedRecordType(
             MutagenWriter writer,
             ListGroup<T> item,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             WriteBinary_ContainedRecordType_Custom(
                 writer: writer,
                 item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static void Fill_Binary_Structs(
             ListGroup<T> item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             FillBinary_ContainedRecordType_Custom(
                 frame: frame,
                 item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
             try
             {
@@ -844,6 +888,7 @@ namespace Mutagen.Bethesda
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             ListGroup<T> item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -863,11 +908,19 @@ namespace Mutagen.Bethesda
                             fieldIndex: (int)ListGroup_FieldIndex.Items,
                             lengthLength: 4,
                             errorMask: errorMask,
-                            transl: LoquiBinaryTranslation<T>.Instance.Parse);
+                            transl: (MutagenFrame r, out T listSubItem, ErrorMaskBuilder listErrMask) =>
+                            {
+                                return LoquiBinaryTranslation<T>.Instance.Parse(
+                                    frame: r.Spawn(snapToFinalPosition: false),
+                                    item: out listSubItem,
+                                    errorMask: listErrMask,
+                                    masterReferences: masterReferences);
+                            }
+                            );
                         return TryGet<int?>.Failure;
                     }
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
-                    frame.Position += contentLength + Constants.RECORD_LENGTH;
+                    frame.Position += contentLength + Mutagen.Bethesda.Constants.RECORD_LENGTH;
                     return TryGet<int?>.Succeed(null);
             }
         }
@@ -1399,8 +1452,7 @@ namespace Mutagen.Bethesda.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    var copyFunc = LoquiRegistration.GetCopyFunc<T>();
-                                    return copyFunc(r, null, d);
+                                    return LoquiRegistration.GetCopyFunc<T>()(r, null, d);
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
                             }
@@ -1716,6 +1768,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary<T, T_ErrMask>(
             MutagenWriter writer,
             ListGroup<T> item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out ListGroup_ErrorMask<T_ErrMask> errorMask)
@@ -1725,6 +1778,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary<T>(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1734,6 +1788,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary<T>(
             MutagenWriter writer,
             ListGroup<T> item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
             where T : ILoquiObject<T>
@@ -1746,12 +1801,14 @@ namespace Mutagen.Bethesda.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -1759,12 +1816,14 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary_Embedded<T>(
             ListGroup<T> item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
             where T : ILoquiObject<T>
         {
             ListGroup<T>.WriteBinary_ContainedRecordType(
                 writer: writer,
                 item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
@@ -1783,7 +1842,8 @@ namespace Mutagen.Bethesda.Internals
             ListGroup<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
             where T : ILoquiObject<T>
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
@@ -1791,7 +1851,15 @@ namespace Mutagen.Bethesda.Internals
                 items: item.Items,
                 fieldIndex: (int)ListGroup_FieldIndex.Items,
                 errorMask: errorMask,
-                transl: LoquiBinaryTranslation<T>.Instance.Write);
+                transl: (MutagenWriter subWriter, T subItem, ErrorMaskBuilder listErrorMask) =>
+                {
+                    LoquiBinaryTranslation<T>.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        errorMask: listErrorMask,
+                        masterReferences: masterReferences);
+                }
+                );
         }
 
         #endregion

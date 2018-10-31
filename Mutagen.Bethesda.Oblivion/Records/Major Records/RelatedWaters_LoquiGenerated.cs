@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRelatedWaters,
         ILoquiObject<RelatedWaters>,
         ILoquiObjectSetter,
+        ILinkSubContainer,
         IEquatable<RelatedWaters>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -95,11 +96,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<RelatedWaters>.GetEqualsMask(RelatedWaters rhs) => RelatedWatersCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IRelatedWatersGetter>.GetEqualsMask(IRelatedWatersGetter rhs) => RelatedWatersCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return RelatedWatersCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             RelatedWaters_Mask<bool> printMask = null)
@@ -461,21 +457,21 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "RelatedWaterDaytime":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.RelatedWaterDaytime_Property,
                         fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
                         errorMask: errorMask);
                     break;
                 case "RelatedWaterNighttime":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.RelatedWaterNighttime_Property,
                         fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
                         errorMask: errorMask);
                     break;
                 case "RelatedWaterUnderwater":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.RelatedWaterUnderwater_Property,
                         fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
@@ -498,15 +494,39 @@ namespace Mutagen.Bethesda.Oblivion
             yield return RelatedWaterUnderwater_Property;
             yield break;
         }
+
+        public void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+            RelatedWaterDaytime_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            RelatedWaterNighttime_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            RelatedWaterUnderwater_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static RelatedWaters Create_Binary(MutagenFrame frame)
+        public static RelatedWaters Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -514,12 +534,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RelatedWaters Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out RelatedWaters_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
@@ -528,6 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RelatedWaters Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -542,6 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
                 }
             }
@@ -553,17 +577,22 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RelatedWaters Create_Binary(string path)
+        public static RelatedWaters Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static RelatedWaters Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out RelatedWaters_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -571,21 +600,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static RelatedWaters Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static RelatedWaters Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static RelatedWaters Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out RelatedWaters_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -593,6 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -602,12 +638,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out RelatedWaters_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
@@ -615,6 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out RelatedWaters_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -624,6 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -637,6 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out RelatedWaters_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -644,20 +685,26 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences)
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
 
-        public void Write_Binary(string path)
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var memStream = new MemoryTributary())
             {
@@ -665,6 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary_Internal(
                         writer: writer,
+                        masterReferences: masterReferences,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -676,12 +724,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences)
         {
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary_Internal(
                     writer: writer,
+                    masterReferences: masterReferences,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -689,12 +740,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             RelatedWatersCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -703,20 +756,24 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             RelatedWaters item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                masterReferences: masterReferences,
                 item: item.RelatedWaterDaytime_Property,
                 fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                masterReferences: masterReferences,
                 item: item.RelatedWaterNighttime_Property,
                 fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                 frame: frame.Spawn(snapToFinalPosition: false),
+                masterReferences: masterReferences,
                 item: item.RelatedWaterUnderwater_Property,
                 fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
                 errorMask: errorMask);
@@ -1260,13 +1317,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    obj.RelatedWaterDaytime_Property.Unset(cmds.ToUnsetParams());
+                    obj.RelatedWaterDaytime.RelatedWaterDaytime = default(Water);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    obj.RelatedWaterNighttime_Property.Unset(cmds.ToUnsetParams());
+                    obj.RelatedWaterNighttime.RelatedWaterNighttime = default(Water);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    obj.RelatedWaterUnderwater_Property.Unset(cmds.ToUnsetParams());
+                    obj.RelatedWaterUnderwater.RelatedWaterUnderwater = default(Water);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1311,9 +1368,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWaters item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.RelatedWaterDaytime_Property.Unset(cmds.ToUnsetParams());
-            item.RelatedWaterNighttime_Property.Unset(cmds.ToUnsetParams());
-            item.RelatedWaterUnderwater_Property.Unset(cmds.ToUnsetParams());
+            item.RelatedWaterDaytime = default(Water);
+            item.RelatedWaterNighttime = default(Water);
+            item.RelatedWaterUnderwater = default(Water);
         }
 
         public static RelatedWaters_Mask<bool> GetEqualsMask(
@@ -1430,28 +1487,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterDaytime) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RelatedWaterDaytime),
-                    item: item.RelatedWaterDaytime_Property?.FormID,
+                    item: item.RelatedWaterDaytime_Property?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterNighttime) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RelatedWaterNighttime),
-                    item: item.RelatedWaterNighttime_Property?.FormID,
+                    item: item.RelatedWaterNighttime_Property?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.RelatedWaterUnderwater),
-                    item: item.RelatedWaterUnderwater_Property?.FormID,
+                    item: item.RelatedWaterUnderwater_Property?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
                     errorMask: errorMask);
             }
@@ -1465,6 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RelatedWaters item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out RelatedWaters_ErrorMask errorMask)
@@ -1472,6 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -1481,6 +1540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             RelatedWaters item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -1492,7 +1552,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -1500,23 +1561,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_Embedded(
             RelatedWaters item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RelatedWaterDaytime_Property,
                 fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RelatedWaterNighttime_Property,
                 fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RelatedWaterUnderwater_Property,
                 fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
 
         #endregion

@@ -39,6 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<Door>,
         ILoquiObjectSetter,
         INamed,
+        ILinkSubContainer,
         IEquatable<Door>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -162,19 +163,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RandomTeleportDestinations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly SourceSetList<FormIDSetLink<Worldspace>> _RandomTeleportDestinations = new SourceSetList<FormIDSetLink<Worldspace>>();
-        public ISourceSetList<FormIDSetLink<Worldspace>> RandomTeleportDestinations => _RandomTeleportDestinations;
+        private readonly SourceSetList<FormIDSetLink<Place>> _RandomTeleportDestinations = new SourceSetList<FormIDSetLink<Place>>();
+        public ISourceSetList<FormIDSetLink<Place>> RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<FormIDSetLink<Worldspace>> RandomTeleportDestinationsEnumerable
+        public IEnumerable<FormIDSetLink<Place>> RandomTeleportDestinationsEnumerable
         {
             get => _RandomTeleportDestinations.Items;
             set => _RandomTeleportDestinations.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISourceSetList<FormIDSetLink<Worldspace>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
+        ISourceSetList<FormIDSetLink<Place>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObservableSetList<FormIDSetLink<Worldspace>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
+        IObservableSetList<FormIDSetLink<Place>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 
         #endregion
@@ -200,11 +201,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMask<bool> IEqualsMask<Door>.GetEqualsMask(Door rhs) => DoorCommon.GetEqualsMask(this, rhs);
         IMask<bool> IEqualsMask<IDoorGetter>.GetEqualsMask(IDoorGetter rhs) => DoorCommon.GetEqualsMask(this, rhs);
         #region To String
-        public override string ToString()
-        {
-            return DoorCommon.ToString(this, printMask: null);
-        }
-
         public string ToString(
             string name = null,
             Door_Mask<bool> printMask = null)
@@ -684,28 +680,28 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 case "Script":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.Script_Property,
                         fieldIndex: (int)Door_FieldIndex.Script,
                         errorMask: errorMask);
                     break;
                 case "OpenSound":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.OpenSound_Property,
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
                         errorMask: errorMask);
                     break;
                 case "CloseSound":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.CloseSound_Property,
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
                         errorMask: errorMask);
                     break;
                 case "LoopSound":
-                    FormIDXmlTranslation.Instance.ParseInto(
+                    FormKeyXmlTranslation.Instance.ParseInto(
                         root: root,
                         item: item.LoopSound_Property,
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
@@ -741,10 +737,10 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
-                        if (ListXmlTranslation<FormIDSetLink<Worldspace>>.Instance.Parse(
+                        if (ListXmlTranslation<FormIDSetLink<Place>>.Instance.Parse(
                             root: root,
                             enumer: out var RandomTeleportDestinationsItem,
-                            transl: FormIDXmlTranslation.Instance.Parse,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -814,17 +810,60 @@ namespace Mutagen.Bethesda.Oblivion
             yield return OpenSound_Property;
             yield return CloseSound_Property;
             yield return LoopSound_Property;
+            foreach (var item in RandomTeleportDestinations)
+            {
+                yield return item;
+            }
             yield break;
         }
+
+        public override void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            
+        {
+            base.Link(
+                modList,
+                sourceMod,
+                cmds);
+            Script_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            OpenSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            CloseSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            LoopSound_Property.Link(
+                modList,
+                sourceMod,
+                cmds);
+            foreach (var item in RandomTeleportDestinations)
+            {
+                item.Link(
+                    modList,
+                    sourceMod,
+                    cmds);
+            }
+        }
+
         #endregion
 
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Door Create_Binary(MutagenFrame frame)
+        public new static Door Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
         {
             return Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -832,12 +871,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Door Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             out Door_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
                 frame: frame,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
@@ -846,6 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Door Create_Binary(
             MutagenFrame frame,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -855,21 +897,27 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recType: Door_Registration.DOOR_HEADER,
                 recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
-        public static Door Create_Binary(string path)
+        public static Door Create_Binary(
+            string path,
+            MasterReferences masterReferences)
         {
             using (var reader = new BinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
             }
         }
 
         public static Door Create_Binary(
             string path,
+            MasterReferences masterReferences,
             out Door_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(path))
@@ -877,21 +925,27 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
-            }
-        }
-
-        public static Door Create_Binary(Stream stream)
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
             }
         }
 
         public static Door Create_Binary(
             Stream stream,
+            MasterReferences masterReferences)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        public static Door Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
             out Door_ErrorMask errorMask)
         {
             using (var reader = new BinaryReadStream(stream))
@@ -899,6 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
                     frame: frame,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask);
             }
         }
@@ -908,12 +963,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out Door_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
@@ -921,6 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
+            MasterReferences masterReferences,
             out Door_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -930,6 +988,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Write_Binary(
                         writer: writer,
+                        masterReferences: masterReferences,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -943,6 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
+            MasterReferences masterReferences,
             out Door_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -950,6 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 Write_Binary(
                     writer: writer,
+                    masterReferences: masterReferences,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -958,12 +1019,14 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary_Internal(
                 writer: writer,
+                masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
@@ -973,12 +1036,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void Write_Binary_Internal(
             MutagenWriter writer,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             DoorCommon.Write_Binary(
                 item: this,
                 writer: writer,
+                masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -987,17 +1052,20 @@ namespace Mutagen.Bethesda.Oblivion
         protected static void Fill_Binary_Structs(
             Door item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Door item,
             MutagenFrame frame,
+            MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1008,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.Name);
@@ -1041,6 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PushIndex((int)Door_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
                             frame: frame.Spawn(snapToFinalPosition: false),
+                            masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
                         {
@@ -1062,39 +1131,43 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Model);
                 case 0x49524353: // SCRI
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.Script_Property,
                         fieldIndex: (int)Door_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
                 case 0x4D414E53: // SNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.OpenSound_Property,
                         fieldIndex: (int)Door_FieldIndex.OpenSound,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
                 case 0x4D414E41: // ANAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.CloseSound_Property,
                         fieldIndex: (int)Door_FieldIndex.CloseSound,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
                 case 0x4D414E42: // BNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.ParseInto(
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
+                        masterReferences: masterReferences,
                         item: item.LoopSound_Property,
                         fieldIndex: (int)Door_FieldIndex.LoopSound,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
                 case 0x4D414E46: // FNAM
-                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.Flags);
@@ -1121,20 +1194,22 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Flags);
                 case 0x4D414E54: // TNAM
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>>.Instance.ParseRepeatedItem(
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Place>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Door_Registration.TNAM_HEADER,
+                        masterReferences: masterReferences,
                         item: item.RandomTeleportDestinations,
                         fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormIDBinaryTranslation.Instance.Parse);
+                        transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
                         errorMask: errorMask);
             }
         }
@@ -1279,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (Door.DoorFlag)obj;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    this._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)obj);
+                    this._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Place>>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1342,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (Door.DoorFlag)pair.Value;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    obj._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Worldspace>>)pair.Value);
+                    obj._RandomTeleportDestinations.SetTo((IEnumerable<FormIDSetLink<Place>>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1378,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Set(Door.DoorFlag item, bool hasBeenSet = true);
         void Flags_Unset();
 
-        new ISourceSetList<FormIDSetLink<Worldspace>> RandomTeleportDestinations { get; }
+        new ISourceSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
     }
 
     public partial interface IDoorGetter : IMajorRecordGetter
@@ -1419,7 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region RandomTeleportDestinations
-        IObservableSetList<FormIDSetLink<Worldspace>> RandomTeleportDestinations { get; }
+        IObservableSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
         #endregion
 
     }
@@ -1434,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum Door_FieldIndex
     {
         MajorRecordFlags = 0,
-        FormID = 1,
+        FormKey = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
@@ -1657,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.Flags:
                     return typeof(Door.DoorFlag);
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    return typeof(NotifyingList<FormIDSetLink<Worldspace>>);
+                    return typeof(NotifyingList<FormIDSetLink<Place>>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
@@ -1994,16 +2069,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case Door_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds.ToUnsetParams());
+                    obj.Script_Property.Script_Property.Unset(cmds);
                     break;
                 case Door_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.Unset(cmds.ToUnsetParams());
+                    obj.OpenSound_Property.OpenSound_Property.Unset(cmds);
                     break;
                 case Door_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.Unset(cmds.ToUnsetParams());
+                    obj.CloseSound_Property.CloseSound_Property.Unset(cmds);
                     break;
                 case Door_FieldIndex.LoopSound:
-                    obj.LoopSound_Property.Unset(cmds.ToUnsetParams());
+                    obj.LoopSound_Property.LoopSound_Property.Unset(cmds);
                     break;
                 case Door_FieldIndex.Flags:
                     obj.Flags_Unset();
@@ -2079,10 +2154,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.OpenSound_Property.Unset(cmds.ToUnsetParams());
-            item.CloseSound_Property.Unset(cmds.ToUnsetParams());
-            item.LoopSound_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.OpenSound_Property.OpenSound_Property.Unset(cmds.ToUnsetParams());
+            item.CloseSound_Property.CloseSound_Property.Unset(cmds.ToUnsetParams());
+            item.LoopSound_Property.LoopSound_Property.Unset(cmds.ToUnsetParams());
             item.Flags_Unset();
             item.RandomTeleportDestinations.Unset();
         }
@@ -2114,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.RandomTeleportDestinations.HasBeenSet)
                 {
                     ret.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.RandomTeleportDestinations.Specific = item.RandomTeleportDestinations.SelectAgainst<FormIDSetLink<Worldspace>, bool>(rhs.RandomTeleportDestinations, ((l, r) => object.Equals(l, r)), out ret.RandomTeleportDestinations.Overall);
+                    ret.RandomTeleportDestinations.Specific = item.RandomTeleportDestinations.SelectAgainst<FormIDSetLink<Place>, bool>(rhs.RandomTeleportDestinations, ((l, r) => object.Equals(l, r)), out ret.RandomTeleportDestinations.Overall);
                     ret.RandomTeleportDestinations.Overall = ret.RandomTeleportDestinations.Overall && ret.RandomTeleportDestinations.Specific.All((b) => b);
                 }
                 else
@@ -2250,7 +2325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return (Door_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
+                case MajorRecord_FieldIndex.FormKey:
                     return (Door_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
                     return (Door_FieldIndex)((int)index);
@@ -2320,40 +2395,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.Script_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Script) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.Script),
-                    item: item.Script_Property?.FormID,
+                    item: item.Script_Property?.FormKey,
                     fieldIndex: (int)Door_FieldIndex.Script,
                     errorMask: errorMask);
             }
             if (item.OpenSound_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.OpenSound),
-                    item: item.OpenSound_Property?.FormID,
+                    item: item.OpenSound_Property?.FormKey,
                     fieldIndex: (int)Door_FieldIndex.OpenSound,
                     errorMask: errorMask);
             }
             if (item.CloseSound_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.CloseSound),
-                    item: item.CloseSound_Property?.FormID,
+                    item: item.CloseSound_Property?.FormKey,
                     fieldIndex: (int)Door_FieldIndex.CloseSound,
                     errorMask: errorMask);
             }
             if (item.LoopSound_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
-                FormIDXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.LoopSound),
-                    item: item.LoopSound_Property?.FormID,
+                    item: item.LoopSound_Property?.FormKey,
                     fieldIndex: (int)Door_FieldIndex.LoopSound,
                     errorMask: errorMask);
             }
@@ -2370,19 +2445,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (item.RandomTeleportDestinations.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
             {
-                ListXmlTranslation<FormIDSetLink<Worldspace>>.Instance.Write(
+                ListXmlTranslation<FormIDSetLink<Place>>.Instance.Write(
                     node: elem,
                     name: nameof(item.RandomTeleportDestinations),
                     item: item.RandomTeleportDestinations,
                     fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.RandomTeleportDestinations),
-                    transl: (XElement subNode, FormIDSetLink<Worldspace> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, FormIDSetLink<Place> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        FormIDXmlTranslation.Instance.Write(
+                        FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: "Item",
-                            item: subItem?.FormID,
+                            item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
                     );
@@ -2397,6 +2472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Door item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Door_ErrorMask errorMask)
@@ -2404,6 +2480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
                 writer: writer,
+                masterReferences: masterReferences,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
@@ -2413,6 +2490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             Door item,
+            MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
@@ -2424,12 +2502,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
         #endregion
@@ -2438,13 +2518,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Door item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -2461,47 +2543,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Model,
                     fieldIndex: (int)Door_FieldIndex.Model,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
             if (item.Script_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
                     fieldIndex: (int)Door_FieldIndex.Script,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Door_Registration.SCRI_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.OpenSound_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.OpenSound_Property,
                     fieldIndex: (int)Door_FieldIndex.OpenSound,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Door_Registration.SNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.CloseSound_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CloseSound_Property,
                     fieldIndex: (int)Door_FieldIndex.CloseSound,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Door_Registration.ANAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.LoopSound_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LoopSound_Property,
                     fieldIndex: (int)Door_FieldIndex.LoopSound,
                     errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Door_Registration.BNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    masterReferences: masterReferences);
             }
             if (item.Flags_IsSet)
             {
@@ -2516,13 +2603,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.RandomTeleportDestinations.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>>.Instance.WriteListOfRecords(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Place>>.Instance.Write(
                     writer: writer,
                     items: item.RandomTeleportDestinations,
                     fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
-                    recordType: Door_Registration.TNAM_HEADER,
                     errorMask: errorMask,
-                    transl: FormIDBinaryTranslation.Instance.Write);
+                    transl: (MutagenWriter subWriter, FormIDSetLink<Place> subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            header: recordTypeConverter.ConvertToCustom(Door_Registration.TNAM_HEADER),
+                            nullable: false,
+                            masterReferences: masterReferences);
+                    }
+                    );
             }
         }
 
