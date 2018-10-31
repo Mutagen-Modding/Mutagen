@@ -18,6 +18,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public abstract string Nickname { get; }
         public string FilePath { get; set; }
+        public abstract ModKey ModKey { get; }
         public byte NumMasters { get; }
 
         public Oblivion_Passthrough_Test(byte numMasters, string path = null)
@@ -38,7 +39,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 var mod = OblivionMod.Create_Binary(
                     inputPath,
-                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                    modKey: this.ModKey);
 
                 foreach (var record in mod.MajorRecords.Values)
                 {
