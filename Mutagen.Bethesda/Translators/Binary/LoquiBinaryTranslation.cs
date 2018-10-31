@@ -287,8 +287,8 @@ namespace Mutagen.Bethesda.Binary
         public delegate void WRITE_FUNC<T>(
             MutagenWriter writer,
             T item,
-            RecordTypeConverter recordTypeConverter,
             MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask);
         private static Dictionary<Type, object> writeDict = new Dictionary<Type, object>();
 
@@ -304,15 +304,15 @@ namespace Mutagen.Bethesda.Binary
                 .First();
             if (!method.IsGenericMethod)
             {
-                var f = DelegateBuilder.BuildDelegate<Action<T, MutagenWriter, RecordTypeConverter, MasterReferences, ErrorMaskBuilder>>(method);
-                WRITE_FUNC<T> ret = (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, MasterReferences masterReferences, ErrorMaskBuilder errorMask) =>
+                var f = DelegateBuilder.BuildDelegate<Action<T, MutagenWriter, MasterReferences, RecordTypeConverter, ErrorMaskBuilder>>(method);
+                WRITE_FUNC<T> ret = (MutagenWriter writer, T item, MasterReferences masterReferences, RecordTypeConverter recordTypeConverter, ErrorMaskBuilder errorMask) =>
                 {
                     if (item == null)
                     {
                         errorMask.ReportExceptionOrThrow(
                             new NullReferenceException("Cannot write for a null item."));
                     }
-                    f(item, writer, recordTypeConverter, masterReferences, errorMask);
+                    f(item, writer, masterReferences, recordTypeConverter, errorMask);
                 };
                 writeDict[t] = ret;
                 return ret;
