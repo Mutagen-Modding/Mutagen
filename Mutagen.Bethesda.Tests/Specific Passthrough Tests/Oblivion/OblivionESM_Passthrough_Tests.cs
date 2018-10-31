@@ -18,6 +18,7 @@ namespace Mutagen.Bethesda.Tests
     public class OblivionESM_Passthrough_Tests : Oblivion_Passthrough_Test
     {
         public override string Nickname => TestingConstants.OBLIVION_ESM;
+        public override ModKey ModKey => ModKey.Factory(TestingConstants.OBLIVION_ESM);
 
         public OblivionESM_Passthrough_Tests(TestingSettings settings)
             : base(
