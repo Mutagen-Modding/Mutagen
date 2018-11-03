@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
                     return typeof(Byte[]);
                 case PathGridPoint_FieldIndex.Connections:
-                    return typeof(NotifyingList<Int16>);
+                    return typeof(SourceSetList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

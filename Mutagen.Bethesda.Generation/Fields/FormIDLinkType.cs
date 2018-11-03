@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Generation
                 if (this.HasBeenSet)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{identifier.PropertyAccess}.{this.GetName(internalUse: false, property: true)}.Unset"))
+                        $"{identifier.PropertyAccess}.Unset"))
                     {
                         if (this.NotifyingType != NotifyingType.None)
                         {
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (this.HasBeenSet)
                 {
-                    fg.AppendLine($"{identifier.PropertyAccess}.{this.Property}.Unset({cmdAccessor}.ToUnsetParams());");
+                    fg.AppendLine($"{identifier.PropertyAccess}.Unset({cmdAccessor}.ToUnsetParams());");
                 }
                 else
                 {

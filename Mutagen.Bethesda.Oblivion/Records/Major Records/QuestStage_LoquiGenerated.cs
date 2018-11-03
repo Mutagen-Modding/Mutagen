@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestStage_FieldIndex.Stage:
                     return typeof(UInt16);
                 case QuestStage_FieldIndex.LogEntries:
-                    return typeof(NotifyingList<LogEntry>);
+                    return typeof(SourceSetList<LogEntry>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

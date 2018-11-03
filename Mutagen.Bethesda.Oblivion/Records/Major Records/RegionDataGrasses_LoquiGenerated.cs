@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    return typeof(NotifyingList<FormIDLink<Grass>>);
+                    return typeof(SourceSetList<FormIDLink<Grass>>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

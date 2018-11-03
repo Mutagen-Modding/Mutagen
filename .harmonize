@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>89b092afab3ba9041194470091e64e7513eba882</Sha>
+         <Sha>a20ac431775d0eb396800de9a168c36147571ed1</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-30-2018 21:27:04</CommitDate>
-         <Description>Some SourceSetList/Cache systems, and some Has interface refactoring</Description>
+         <CommitDate>11-02-2018 20:41:16</CommitDate>
+         <Description>Some DynamicData customization fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a4f0de59585d1f0e55b779aee5ad92236883e484</Sha>
+         <Sha>8a337ed3c9e84fdce0d00c603c73adad5951d27f</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-30-2018 21:33:23</CommitDate>
-         <Description>Merge fixes</Description>
+         <CommitDate>11-02-2018 20:41:59</CommitDate>
+         <Description>DynamicData generation fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

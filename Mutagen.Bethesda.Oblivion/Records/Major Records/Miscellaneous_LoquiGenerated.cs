@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case Miscellaneous_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Miscellaneous_FieldIndex.Value:
                     obj.Value = default(Int32);
@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Value = default(Int32);
             item.Weight = default(Single);
         }

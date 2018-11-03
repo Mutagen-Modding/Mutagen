@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    return typeof(NotifyingList<WeatherChance>);
+                    return typeof(SourceSetList<WeatherChance>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

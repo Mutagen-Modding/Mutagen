@@ -2744,7 +2744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Lighting:
                     return typeof(CellLighting);
                 case Cell_FieldIndex.Regions:
-                    return typeof(NotifyingList<FormIDLink<Region>>);
+                    return typeof(SourceSetList<FormIDLink<Region>>);
                 case Cell_FieldIndex.MusicType:
                     return typeof(MusicType);
                 case Cell_FieldIndex.WaterHeight:
@@ -2764,11 +2764,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Landscape:
                     return typeof(Landscape);
                 case Cell_FieldIndex.Persistent:
-                    return typeof(NotifyingList<IPlaced>);
+                    return typeof(SourceSetList<IPlaced>);
                 case Cell_FieldIndex.Temporary:
-                    return typeof(NotifyingList<IPlaced>);
+                    return typeof(SourceSetList<IPlaced>);
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    return typeof(NotifyingList<IPlaced>);
+                    return typeof(SourceSetList<IPlaced>);
                 default:
                     return Place_Registration.GetNthType(index);
             }
@@ -3478,19 +3478,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.WaterHeight_Unset();
                     break;
                 case Cell_FieldIndex.Climate:
-                    obj.Climate_Property.Climate_Property.Unset(cmds);
+                    obj.Climate_Property.Unset(cmds);
                     break;
                 case Cell_FieldIndex.Water:
-                    obj.Water_Property.Water_Property.Unset(cmds);
+                    obj.Water_Property.Unset(cmds);
                     break;
                 case Cell_FieldIndex.Owner:
-                    obj.Owner_Property.Owner_Property.Unset(cmds);
+                    obj.Owner_Property.Unset(cmds);
                     break;
                 case Cell_FieldIndex.FactionRank:
                     obj.FactionRank_Unset();
                     break;
                 case Cell_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.GlobalVariable_Property.Unset(cmds);
+                    obj.GlobalVariable_Property.Unset(cmds);
                     break;
                 case Cell_FieldIndex.PathGrid:
                     obj.PathGrid_Unset();
@@ -3616,11 +3616,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Regions.Unset();
             item.MusicType_Unset();
             item.WaterHeight_Unset();
-            item.Climate_Property.Climate_Property.Unset(cmds.ToUnsetParams());
-            item.Water_Property.Water_Property.Unset(cmds.ToUnsetParams());
-            item.Owner_Property.Owner_Property.Unset(cmds.ToUnsetParams());
+            item.Climate_Property.Unset(cmds.ToUnsetParams());
+            item.Water_Property.Unset(cmds.ToUnsetParams());
+            item.Owner_Property.Unset(cmds.ToUnsetParams());
             item.FactionRank_Unset();
-            item.GlobalVariable_Property.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
+            item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
             item.PathGrid_Unset();
             item.Landscape_Unset();
             item.Persistent.Unset();

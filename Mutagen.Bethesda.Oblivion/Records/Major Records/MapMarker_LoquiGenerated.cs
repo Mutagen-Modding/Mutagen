@@ -1371,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MapMarker_FieldIndex.Name:
                     return typeof(String);
                 case MapMarker_FieldIndex.Types:
-                    return typeof(NotifyingList<MapMarker.Type>);
+                    return typeof(SourceSetList<MapMarker.Type>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

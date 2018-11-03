@@ -2103,7 +2103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    return typeof(NotifyingList<WeatherChance>);
+                    return typeof(SourceSetList<WeatherChance>);
                 case Climate_FieldIndex.SunTexture:
                     return typeof(String);
                 case Climate_FieldIndex.SunGlareTexture:

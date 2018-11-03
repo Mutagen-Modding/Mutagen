@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Flags:
                     return typeof(IngredientFlag);
                 case Potion_FieldIndex.Effects:
-                    return typeof(NotifyingList<Effect>);
+                    return typeof(SourceSetList<Effect>);
                 default:
                     return ItemAbstract_Registration.GetNthType(index);
             }
@@ -2247,7 +2247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case Potion_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Potion_FieldIndex.Weight:
                     obj.Weight_Unset();
@@ -2329,7 +2329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Weight_Unset();
             item.Value = default(UInt32);
             item.Flags = default(IngredientFlag);

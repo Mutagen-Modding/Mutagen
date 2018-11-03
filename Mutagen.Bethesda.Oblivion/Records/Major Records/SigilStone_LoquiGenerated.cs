@@ -1852,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SigilStone_FieldIndex.Script:
                     return typeof(FormIDSetLink<Script>);
                 case SigilStone_FieldIndex.Effects:
-                    return typeof(NotifyingList<Effect>);
+                    return typeof(SourceSetList<Effect>);
                 case SigilStone_FieldIndex.Uses:
                     return typeof(Byte);
                 case SigilStone_FieldIndex.Value:
@@ -2199,7 +2199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case SigilStone_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case SigilStone_FieldIndex.Effects:
                     obj.Effects.Unset();
@@ -2280,7 +2280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Effects.Unset();
             item.Uses = default(Byte);
             item.Value = default(UInt32);

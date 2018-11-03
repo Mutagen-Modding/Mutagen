@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObjects_FieldIndex.Objects:
-                    return typeof(NotifyingList<RegionDataObject>);
+                    return typeof(SourceSetList<RegionDataObject>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

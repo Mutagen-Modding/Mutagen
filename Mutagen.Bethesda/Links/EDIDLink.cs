@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda
         {
             if (string.IsNullOrWhiteSpace(link.EDID.Type)) return false;
             var group = mod.GetGroup<T>();
-            foreach (var rec in group.Values)
+            foreach (var rec in group.Items)
             {
                 if (link.EDID.Type.Equals(rec.EditorID))
                 {

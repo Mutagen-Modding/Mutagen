@@ -2566,7 +2566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                     return typeof(Cell);
                 case Worldspace_FieldIndex.SubCells:
-                    return typeof(NotifyingList<WorldspaceBlock>);
+                    return typeof(SourceSetList<WorldspaceBlock>);
                 default:
                     return Place_Registration.GetNthType(index);
             }
@@ -3177,13 +3177,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Name_Unset();
                     break;
                 case Worldspace_FieldIndex.Parent:
-                    obj.Parent_Property.Parent_Property.Unset(cmds);
+                    obj.Parent_Property.Unset(cmds);
                     break;
                 case Worldspace_FieldIndex.Climate:
-                    obj.Climate_Property.Climate_Property.Unset(cmds);
+                    obj.Climate_Property.Unset(cmds);
                     break;
                 case Worldspace_FieldIndex.Water:
-                    obj.Water_Property.Water_Property.Unset(cmds);
+                    obj.Water_Property.Unset(cmds);
                     break;
                 case Worldspace_FieldIndex.Icon:
                     obj.Icon_Unset();
@@ -3306,9 +3306,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Name_Unset();
-            item.Parent_Property.Parent_Property.Unset(cmds.ToUnsetParams());
-            item.Climate_Property.Climate_Property.Unset(cmds.ToUnsetParams());
-            item.Water_Property.Water_Property.Unset(cmds.ToUnsetParams());
+            item.Parent_Property.Unset(cmds.ToUnsetParams());
+            item.Climate_Property.Unset(cmds.ToUnsetParams());
+            item.Water_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Unset();
             item.MapData_Unset();
             item.Flags_Unset();

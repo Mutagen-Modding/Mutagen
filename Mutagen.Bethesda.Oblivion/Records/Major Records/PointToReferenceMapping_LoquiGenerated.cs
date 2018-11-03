@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PointToReferenceMapping_FieldIndex.Reference:
                     return typeof(FormIDLink<IPlaced>);
                 case PointToReferenceMapping_FieldIndex.Points:
-                    return typeof(NotifyingList<Int16>);
+                    return typeof(SourceSetList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

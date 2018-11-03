@@ -2568,7 +2568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedNPC_FieldIndex.Base:
-                    obj.Base_Property.Base_Property.Unset(cmds);
+                    obj.Base_Property.Unset(cmds);
                     break;
                 case PlacedNPC_FieldIndex.XPCIFluff:
                     obj.XPCIFluff_Unset();
@@ -2583,10 +2583,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.EnableParent_Unset();
                     break;
                 case PlacedNPC_FieldIndex.MerchantContainer:
-                    obj.MerchantContainer_Property.MerchantContainer_Property.Unset(cmds);
+                    obj.MerchantContainer_Property.Unset(cmds);
                     break;
                 case PlacedNPC_FieldIndex.Horse:
-                    obj.Horse_Property.Horse_Property.Unset(cmds);
+                    obj.Horse_Property.Unset(cmds);
                     break;
                 case PlacedNPC_FieldIndex.RagdollData:
                     obj.RagdollData_Unset();
@@ -2677,13 +2677,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedNPC item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Base_Property.Base_Property.Unset(cmds.ToUnsetParams());
+            item.Base_Property.Unset(cmds.ToUnsetParams());
             item.XPCIFluff_Unset();
             item.FULLFluff_Unset();
             item.DistantLODData_Unset();
             item.EnableParent_Unset();
-            item.MerchantContainer_Property.MerchantContainer_Property.Unset(cmds.ToUnsetParams());
-            item.Horse_Property.Horse_Property.Unset(cmds.ToUnsetParams());
+            item.MerchantContainer_Property.Unset(cmds.ToUnsetParams());
+            item.Horse_Property.Unset(cmds.ToUnsetParams());
             item.RagdollData_Unset();
             item.Scale_Unset();
             item.Position = default(P3Float);

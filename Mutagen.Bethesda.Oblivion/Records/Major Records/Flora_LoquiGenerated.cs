@@ -2041,10 +2041,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case Flora_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Flora_FieldIndex.Ingredient:
-                    obj.Ingredient_Property.Ingredient_Property.Unset(cmds);
+                    obj.Ingredient_Property.Unset(cmds);
                     break;
                 case Flora_FieldIndex.Spring:
                     obj.Spring = default(Byte);
@@ -2123,8 +2123,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Ingredient_Property.Ingredient_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Ingredient_Property.Unset(cmds.ToUnsetParams());
             item.Spring = default(Byte);
             item.Summer = default(Byte);
             item.Fall = default(Byte);

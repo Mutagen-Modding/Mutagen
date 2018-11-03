@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestTarget_FieldIndex.Flags:
                     return typeof(QuestTarget.Flag);
                 case QuestTarget_FieldIndex.Conditions:
-                    return typeof(NotifyingList<Condition>);
+                    return typeof(SourceSetList<Condition>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

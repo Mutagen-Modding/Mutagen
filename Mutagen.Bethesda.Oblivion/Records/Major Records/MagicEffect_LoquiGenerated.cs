@@ -2416,7 +2416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.SubData:
                     return typeof(MagicEffectSubData);
                 case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(NotifyingList<EDIDLink<MagicEffect>>);
+                    return typeof(SourceSetList<EDIDLink<MagicEffect>>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

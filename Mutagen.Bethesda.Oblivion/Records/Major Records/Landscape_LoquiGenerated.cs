@@ -1704,9 +1704,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.VertexColors:
                     return typeof(Byte[]);
                 case Landscape_FieldIndex.Layers:
-                    return typeof(NotifyingList<BaseLayer>);
+                    return typeof(SourceSetList<BaseLayer>);
                 case Landscape_FieldIndex.Textures:
-                    return typeof(NotifyingList<FormIDLink<LandTexture>>);
+                    return typeof(SourceSetList<FormIDLink<LandTexture>>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

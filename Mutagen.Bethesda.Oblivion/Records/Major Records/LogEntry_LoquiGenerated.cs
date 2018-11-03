@@ -1528,7 +1528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LogEntry_FieldIndex.Flags:
                     return typeof(LogEntry.Flag);
                 case LogEntry_FieldIndex.Conditions:
-                    return typeof(NotifyingList<Condition>);
+                    return typeof(SourceSetList<Condition>);
                 case LogEntry_FieldIndex.Entry:
                     return typeof(String);
                 case LogEntry_FieldIndex.ResultScript:

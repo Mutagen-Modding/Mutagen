@@ -1637,9 +1637,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptFields_FieldIndex.SourceCode:
                     return typeof(String);
                 case ScriptFields_FieldIndex.LocalVariables:
-                    return typeof(NotifyingList<LocalVariable>);
+                    return typeof(SourceSetList<LocalVariable>);
                 case ScriptFields_FieldIndex.References:
-                    return typeof(NotifyingList<ScriptReference>);
+                    return typeof(SourceSetList<ScriptReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

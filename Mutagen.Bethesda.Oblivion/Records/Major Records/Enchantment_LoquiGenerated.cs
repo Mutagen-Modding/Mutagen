@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Flags:
                     return typeof(Enchantment.Flag);
                 case Enchantment_FieldIndex.Effects:
-                    return typeof(NotifyingList<Effect>);
+                    return typeof(SourceSetList<Effect>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

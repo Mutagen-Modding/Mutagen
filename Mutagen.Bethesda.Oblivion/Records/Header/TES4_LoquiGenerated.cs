@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case TES4_FieldIndex.Description:
                     return typeof(String);
                 case TES4_FieldIndex.MasterReferences:
-                    return typeof(NotifyingList<MasterReference>);
+                    return typeof(SourceSetList<MasterReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

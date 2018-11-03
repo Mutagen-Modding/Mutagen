@@ -3430,11 +3430,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Description:
                     return typeof(String);
                 case Race_FieldIndex.Spells:
-                    return typeof(NotifyingList<FormIDSetLink<Spell>>);
+                    return typeof(SourceSetList<FormIDSetLink<Spell>>);
                 case Race_FieldIndex.Relations:
-                    return typeof(NotifyingList<RaceRelation>);
+                    return typeof(SourceSetList<RaceRelation>);
                 case Race_FieldIndex.SkillBoosts:
-                    return typeof(NotifyingList<SkillBoost>);
+                    return typeof(SourceSetList<SkillBoost>);
                 case Race_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case Race_FieldIndex.MaleHeight:
@@ -3460,13 +3460,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.RaceStats:
                     return typeof(RaceStatsGendered);
                 case Race_FieldIndex.FaceData:
-                    return typeof(NotifyingList<FacePart>);
+                    return typeof(SourceSetList<FacePart>);
                 case Race_FieldIndex.BodyData:
                     return typeof(GenderedBodyData);
                 case Race_FieldIndex.Hairs:
-                    return typeof(NotifyingList<FormIDLink<Hair>>);
+                    return typeof(SourceSetList<FormIDLink<Hair>>);
                 case Race_FieldIndex.Eyes:
-                    return typeof(NotifyingList<FormIDLink<Eye>>);
+                    return typeof(SourceSetList<FormIDLink<Eye>>);
                 case Race_FieldIndex.FaceGenData:
                     return typeof(FaceGenData);
                 case Race_FieldIndex.Unknown:

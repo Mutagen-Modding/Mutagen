@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SoundItem_FieldIndex.Sound:
-                    obj.Sound_Property.Sound_Property.Unset(cmds);
+                    obj.Sound_Property.Unset(cmds);
                     break;
                 case SoundItem_FieldIndex.Chance:
                     obj.Chance_Unset();
@@ -1430,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundItem item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Sound_Property.Sound_Property.Unset(cmds.ToUnsetParams());
+            item.Sound_Property.Unset(cmds.ToUnsetParams());
             item.Chance_Unset();
         }
 

@@ -1447,13 +1447,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    return typeof(NotifyingList<PathGridPoint>);
+                    return typeof(SourceSetList<PathGridPoint>);
                 case PathGrid_FieldIndex.Unknown:
                     return typeof(Byte[]);
                 case PathGrid_FieldIndex.InterCellConnections:
-                    return typeof(NotifyingList<InterCellPoint>);
+                    return typeof(SourceSetList<InterCellPoint>);
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return typeof(NotifyingList<PointToReferenceMapping>);
+                    return typeof(SourceSetList<PointToReferenceMapping>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

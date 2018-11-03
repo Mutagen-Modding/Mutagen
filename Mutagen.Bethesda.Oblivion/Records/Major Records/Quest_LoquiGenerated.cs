@@ -1809,11 +1809,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Quest_FieldIndex.Priority:
                     return typeof(Byte);
                 case Quest_FieldIndex.Conditions:
-                    return typeof(NotifyingList<Condition>);
+                    return typeof(SourceSetList<Condition>);
                 case Quest_FieldIndex.Stages:
-                    return typeof(NotifyingList<QuestStage>);
+                    return typeof(SourceSetList<QuestStage>);
                 case Quest_FieldIndex.Targets:
-                    return typeof(NotifyingList<QuestTarget>);
+                    return typeof(SourceSetList<QuestTarget>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
@@ -2149,7 +2149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Quest_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Quest_FieldIndex.Name:
                     obj.Name_Unset();
@@ -2237,7 +2237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuest item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Name_Unset();
             item.Icon_Unset();
             item.Flags = default(Quest.Flag);

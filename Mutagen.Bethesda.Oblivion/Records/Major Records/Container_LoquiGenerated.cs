@@ -1734,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Container_FieldIndex.Script:
                     return typeof(FormIDSetLink<Script>);
                 case Container_FieldIndex.Items:
-                    return typeof(NotifyingList<ContainerItem>);
+                    return typeof(SourceSetList<ContainerItem>);
                 case Container_FieldIndex.Flags:
                     return typeof(Container.ContainerFlag);
                 case Container_FieldIndex.Weight:
@@ -2076,7 +2076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case Container_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Container_FieldIndex.Items:
                     obj.Items.Unset();
@@ -2088,10 +2088,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Weight = default(Single);
                     break;
                 case Container_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.OpenSound_Property.Unset(cmds);
+                    obj.OpenSound_Property.Unset(cmds);
                     break;
                 case Container_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.CloseSound_Property.Unset(cmds);
+                    obj.CloseSound_Property.Unset(cmds);
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -2160,12 +2160,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Items.Unset();
             item.Flags = default(Container.ContainerFlag);
             item.Weight = default(Single);
-            item.OpenSound_Property.OpenSound_Property.Unset(cmds.ToUnsetParams());
-            item.CloseSound_Property.CloseSound_Property.Unset(cmds.ToUnsetParams());
+            item.OpenSound_Property.Unset(cmds.ToUnsetParams());
+            item.CloseSound_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Container_Mask<bool> GetEqualsMask(

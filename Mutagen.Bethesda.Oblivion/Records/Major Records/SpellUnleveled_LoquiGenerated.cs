@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SpellUnleveled_FieldIndex.Flag:
                     return typeof(Spell.SpellFlag);
                 case SpellUnleveled_FieldIndex.Effects:
-                    return typeof(NotifyingList<Effect>);
+                    return typeof(SourceSetList<Effect>);
                 default:
                     return Spell_Registration.GetNthType(index);
             }

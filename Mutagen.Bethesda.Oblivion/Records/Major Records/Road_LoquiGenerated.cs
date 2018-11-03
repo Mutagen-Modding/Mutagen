@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    return typeof(NotifyingList<RoadPoint>);
+                    return typeof(SourceSetList<RoadPoint>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

@@ -4570,7 +4570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
-                    obj.Base_Property.Base_Property.Unset(cmds);
+                    obj.Base_Property.Unset(cmds);
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
                     obj.XPCIFluff_Unset();
@@ -4585,19 +4585,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Lock_Unset();
                     break;
                 case PlacedObject_FieldIndex.Owner:
-                    obj.Owner_Property.Owner_Property.Unset(cmds);
+                    obj.Owner_Property.Unset(cmds);
                     break;
                 case PlacedObject_FieldIndex.FactionRank:
                     obj.FactionRank_Unset();
                     break;
                 case PlacedObject_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.GlobalVariable_Property.Unset(cmds);
+                    obj.GlobalVariable_Property.Unset(cmds);
                     break;
                 case PlacedObject_FieldIndex.EnableParent:
                     obj.EnableParent_Unset();
                     break;
                 case PlacedObject_FieldIndex.Target:
-                    obj.Target_Property.Target_Property.Unset(cmds);
+                    obj.Target_Property.Unset(cmds);
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
                     obj.SpeedTreeSeed_Unset();
@@ -4615,7 +4615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.LevelModifier_Unset();
                     break;
                 case PlacedObject_FieldIndex.Unknown:
-                    obj.Unknown_Property.Unknown_Property.Unset(cmds);
+                    obj.Unknown_Property.Unset(cmds);
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
                     obj.ActionFlags_Unset();
@@ -4636,7 +4636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Scale_Unset();
                     break;
                 case PlacedObject_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_Property.ContainedSoul_Property.Unset(cmds);
+                    obj.ContainedSoul_Property.Unset(cmds);
                     break;
                 case PlacedObject_FieldIndex.Position:
                     obj.Position = default(P3Float);
@@ -4776,29 +4776,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedObject item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Base_Property.Base_Property.Unset(cmds.ToUnsetParams());
+            item.Base_Property.Unset(cmds.ToUnsetParams());
             item.XPCIFluff_Unset();
             item.FULLFluff_Unset();
             item.TeleportDestination_Unset();
             item.Lock_Unset();
-            item.Owner_Property.Owner_Property.Unset(cmds.ToUnsetParams());
+            item.Owner_Property.Unset(cmds.ToUnsetParams());
             item.FactionRank_Unset();
-            item.GlobalVariable_Property.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
+            item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
             item.EnableParent_Unset();
-            item.Target_Property.Target_Property.Unset(cmds.ToUnsetParams());
+            item.Target_Property.Unset(cmds.ToUnsetParams());
             item.SpeedTreeSeed_Unset();
             item.DistantLODData_Unset();
             item.Charge_Unset();
             item.Health_Unset();
             item.LevelModifier_Unset();
-            item.Unknown_Property.Unknown_Property.Unset(cmds.ToUnsetParams());
+            item.Unknown_Property.Unset(cmds.ToUnsetParams());
             item.ActionFlags_Unset();
             item.Count_Unset();
             item.MapMarker_Unset();
             item.OpenByDefault = default(Boolean);
             item.RagdollData_Unset();
             item.Scale_Unset();
-            item.ContainedSoul_Property.ContainedSoul_Property.Unset(cmds.ToUnsetParams());
+            item.ContainedSoul_Property.Unset(cmds.ToUnsetParams());
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
         }

@@ -1929,15 +1929,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.PreviousTopic:
                     return typeof(FormIDSetLink<DialogItem>);
                 case DialogItem_FieldIndex.Topics:
-                    return typeof(NotifyingList<FormIDSetLink<DialogTopic>>);
+                    return typeof(SourceSetList<FormIDSetLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Responses:
-                    return typeof(NotifyingList<DialogResponse>);
+                    return typeof(SourceSetList<DialogResponse>);
                 case DialogItem_FieldIndex.Conditions:
-                    return typeof(NotifyingList<Condition>);
+                    return typeof(SourceSetList<Condition>);
                 case DialogItem_FieldIndex.Choices:
-                    return typeof(NotifyingList<FormIDSetLink<DialogTopic>>);
+                    return typeof(SourceSetList<FormIDSetLink<DialogTopic>>);
                 case DialogItem_FieldIndex.LinkFrom:
-                    return typeof(NotifyingList<FormIDSetLink<DialogTopic>>);
+                    return typeof(SourceSetList<FormIDSetLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Script:
                     return typeof(ScriptFields);
                 default:
@@ -2299,10 +2299,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags = default(DialogItem.Flag);
                     break;
                 case DialogItem_FieldIndex.Quest:
-                    obj.Quest_Property.Quest_Property.Unset(cmds);
+                    obj.Quest_Property.Unset(cmds);
                     break;
                 case DialogItem_FieldIndex.PreviousTopic:
-                    obj.PreviousTopic_Property.PreviousTopic_Property.Unset(cmds);
+                    obj.PreviousTopic_Property.Unset(cmds);
                     break;
                 case DialogItem_FieldIndex.Topics:
                     obj.Topics.Unset();
@@ -2396,8 +2396,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.DialogType = default(DialogType);
             item.Flags = default(DialogItem.Flag);
-            item.Quest_Property.Quest_Property.Unset(cmds.ToUnsetParams());
-            item.PreviousTopic_Property.PreviousTopic_Property.Unset(cmds.ToUnsetParams());
+            item.Quest_Property.Unset(cmds.ToUnsetParams());
+            item.PreviousTopic_Property.Unset(cmds.ToUnsetParams());
             item.Topics.Unset();
             item.Responses.Unset();
             item.Conditions.Unset();

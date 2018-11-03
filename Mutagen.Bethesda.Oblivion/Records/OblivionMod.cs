@@ -9,13 +9,14 @@ using ReactiveUI;
 using Noggog;
 using Noggog.Notifying;
 using CSharpExt.Rx;
+using DynamicData;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionMod : IMod<OblivionMod>, ILinkContainer
     {
         private static readonly object _subscribeObject = new object();
-        public IObservableSetList<MasterReference> MasterReferences => this.TES4.MasterReferences;
+        public ISourceList<MasterReference> MasterReferences => this.TES4.MasterReferences;
 
         void IMod<OblivionMod>.Write_Binary(string path, ModKey modKey)
         {

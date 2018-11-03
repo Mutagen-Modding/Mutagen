@@ -1732,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.Flags:
                     return typeof(Door.DoorFlag);
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    return typeof(NotifyingList<FormIDSetLink<Place>>);
+                    return typeof(SourceSetList<FormIDSetLink<Place>>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
@@ -2069,16 +2069,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case Door_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Door_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.OpenSound_Property.Unset(cmds);
+                    obj.OpenSound_Property.Unset(cmds);
                     break;
                 case Door_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.CloseSound_Property.Unset(cmds);
+                    obj.CloseSound_Property.Unset(cmds);
                     break;
                 case Door_FieldIndex.LoopSound:
-                    obj.LoopSound_Property.LoopSound_Property.Unset(cmds);
+                    obj.LoopSound_Property.Unset(cmds);
                     break;
                 case Door_FieldIndex.Flags:
                     obj.Flags_Unset();
@@ -2154,10 +2154,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
-            item.OpenSound_Property.OpenSound_Property.Unset(cmds.ToUnsetParams());
-            item.CloseSound_Property.CloseSound_Property.Unset(cmds.ToUnsetParams());
-            item.LoopSound_Property.LoopSound_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.OpenSound_Property.Unset(cmds.ToUnsetParams());
+            item.CloseSound_Property.Unset(cmds.ToUnsetParams());
+            item.LoopSound_Property.Unset(cmds.ToUnsetParams());
             item.Flags_Unset();
             item.RandomTeleportDestinations.Unset();
         }

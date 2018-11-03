@@ -1462,7 +1462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Description:
                     return typeof(String);
                 case Birthsign_FieldIndex.Spells:
-                    return typeof(NotifyingList<FormIDSetLink<Spell>>);
+                    return typeof(SourceSetList<FormIDSetLink<Spell>>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

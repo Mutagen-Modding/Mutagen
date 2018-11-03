@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionDataSounds_FieldIndex.MusicType:
                     return typeof(MusicType);
                 case RegionDataSounds_FieldIndex.Sounds:
-                    return typeof(NotifyingList<RegionSound>);
+                    return typeof(SourceSetList<RegionSound>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case BodyData_FieldIndex.Model:
                     return typeof(Model);
                 case BodyData_FieldIndex.BodyParts:
-                    return typeof(NotifyingList<BodyPart>);
+                    return typeof(SourceSetList<BodyPart>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

@@ -1362,7 +1362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case AnimatedObject_FieldIndex.IdleAnimation:
-                    obj.IdleAnimation_Property.IdleAnimation_Property.Unset(cmds);
+                    obj.IdleAnimation_Property.Unset(cmds);
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Model_Unset();
-            item.IdleAnimation_Property.IdleAnimation_Property.Unset(cmds.ToUnsetParams());
+            item.IdleAnimation_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static AnimatedObject_Mask<bool> GetEqualsMask(

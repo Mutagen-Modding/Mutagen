@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
                     return typeof(Byte[]);
                 case RoadPoint_FieldIndex.Connections:
-                    return typeof(NotifyingList<P3Float>);
+                    return typeof(SourceSetList<P3Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

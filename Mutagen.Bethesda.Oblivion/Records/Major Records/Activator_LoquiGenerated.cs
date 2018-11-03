@@ -1609,10 +1609,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case Activator_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Activator_FieldIndex.Sound:
-                    obj.Sound_Property.Sound_Property.Unset(cmds);
+                    obj.Sound_Property.Unset(cmds);
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1666,8 +1666,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Sound_Property.Sound_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Sound_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Activator_Mask<bool> GetEqualsMask(

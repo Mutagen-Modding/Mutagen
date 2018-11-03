@@ -1676,7 +1676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.Target:
                     return typeof(AIPackageTarget);
                 case AIPackage_FieldIndex.Conditions:
-                    return typeof(NotifyingList<Condition>);
+                    return typeof(SourceSetList<Condition>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

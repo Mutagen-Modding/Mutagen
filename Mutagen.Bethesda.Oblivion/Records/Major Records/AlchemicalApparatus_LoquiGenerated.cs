@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case AlchemicalApparatus_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case AlchemicalApparatus_FieldIndex.Type:
                     obj.Type = default(AlchemicalApparatus.ApparatusType);
@@ -2236,7 +2236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Type = default(AlchemicalApparatus.ApparatusType);
             item.Value = default(UInt32);
             item.Weight = default(Single);

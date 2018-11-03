@@ -5576,11 +5576,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Model:
                     return typeof(Model);
                 case Creature_FieldIndex.Items:
-                    return typeof(NotifyingList<ItemEntry>);
+                    return typeof(SourceSetList<ItemEntry>);
                 case Creature_FieldIndex.Spells:
-                    return typeof(NotifyingList<FormIDSetLink<SpellAbstract>>);
+                    return typeof(SourceSetList<FormIDSetLink<SpellAbstract>>);
                 case Creature_FieldIndex.Models:
-                    return typeof(NotifyingList<String>);
+                    return typeof(SourceSetList<String>);
                 case Creature_FieldIndex.NIFT:
                     return typeof(Byte[]);
                 case Creature_FieldIndex.Flags:
@@ -5598,7 +5598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CalcMax:
                     return typeof(UInt16);
                 case Creature_FieldIndex.Factions:
-                    return typeof(NotifyingList<RankPlacement>);
+                    return typeof(SourceSetList<RankPlacement>);
                 case Creature_FieldIndex.DeathItem:
                     return typeof(FormIDSetLink<ItemAbstract>);
                 case Creature_FieldIndex.Script:
@@ -5618,9 +5618,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.MaximumTrainingLevel:
                     return typeof(Byte);
                 case Creature_FieldIndex.AIPackages:
-                    return typeof(NotifyingList<FormIDSetLink<AIPackage>>);
+                    return typeof(SourceSetList<FormIDSetLink<AIPackage>>);
                 case Creature_FieldIndex.Animations:
-                    return typeof(NotifyingList<String>);
+                    return typeof(SourceSetList<String>);
                 case Creature_FieldIndex.CreatureType:
                     return typeof(Creature.CreatureTypeEnum);
                 case Creature_FieldIndex.CombatSKill:
@@ -5668,7 +5668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return typeof(FormIDSetLink<Creature>);
                 case Creature_FieldIndex.Sounds:
-                    return typeof(NotifyingList<CreatureSound>);
+                    return typeof(SourceSetList<CreatureSound>);
                 default:
                     return NPCAbstract_Registration.GetNthType(index);
             }
@@ -6960,10 +6960,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Factions.Unset();
                     break;
                 case Creature_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.DeathItem_Property.Unset(cmds);
+                    obj.DeathItem_Property.Unset(cmds);
                     break;
                 case Creature_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Creature_FieldIndex.Aggression:
                     obj.Aggression = default(Byte);
@@ -7041,7 +7041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.AttackReach_Unset();
                     break;
                 case Creature_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.CombatStyle_Property.Unset(cmds);
+                    obj.CombatStyle_Property.Unset(cmds);
                     break;
                 case Creature_FieldIndex.TurningSpeed:
                     obj.TurningSpeed_Unset();
@@ -7059,7 +7059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.BloodDecal_Unset();
                     break;
                 case Creature_FieldIndex.InheritsSoundFrom:
-                    obj.InheritsSoundFrom_Property.InheritsSoundFrom_Property.Unset(cmds);
+                    obj.InheritsSoundFrom_Property.Unset(cmds);
                     break;
                 case Creature_FieldIndex.Sounds:
                     obj.Sounds.Unset();
@@ -7280,8 +7280,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CalcMin = default(UInt16);
             item.CalcMax = default(UInt16);
             item.Factions.Unset();
-            item.DeathItem_Property.DeathItem_Property.Unset(cmds.ToUnsetParams());
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.DeathItem_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Aggression = default(Byte);
             item.Confidence = default(Byte);
             item.EnergyLevel = default(Byte);
@@ -7307,13 +7307,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Personality = default(Byte);
             item.Luck = default(Byte);
             item.AttackReach_Unset();
-            item.CombatStyle_Property.CombatStyle_Property.Unset(cmds.ToUnsetParams());
+            item.CombatStyle_Property.Unset(cmds.ToUnsetParams());
             item.TurningSpeed_Unset();
             item.BaseScale_Unset();
             item.FootWeight_Unset();
             item.BloodSpray_Unset();
             item.BloodDecal_Unset();
-            item.InheritsSoundFrom_Property.InheritsSoundFrom_Property.Unset(cmds.ToUnsetParams());
+            item.InheritsSoundFrom_Property.Unset(cmds.ToUnsetParams());
             item.Sounds.Unset();
         }
 

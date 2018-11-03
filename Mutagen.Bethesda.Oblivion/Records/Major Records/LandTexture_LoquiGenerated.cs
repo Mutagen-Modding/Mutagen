@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LandTexture_FieldIndex.TextureSpecularExponent:
                     return typeof(Byte);
                 case LandTexture_FieldIndex.PotentialGrass:
-                    return typeof(NotifyingList<FormIDSetLink<Grass>>);
+                    return typeof(SourceSetList<FormIDSetLink<Grass>>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledCreature_FieldIndex.Entries:
-                    return typeof(NotifyingList<LeveledEntry<NPCSpawn>>);
+                    return typeof(SourceSetList<LeveledEntry<NPCSpawn>>);
                 case LeveledCreature_FieldIndex.Script:
                     return typeof(FormIDSetLink<Script>);
                 case LeveledCreature_FieldIndex.Template:
@@ -1782,10 +1782,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Entries.Unset();
                     break;
                 case LeveledCreature_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case LeveledCreature_FieldIndex.Template:
-                    obj.Template_Property.Template_Property.Unset(cmds);
+                    obj.Template_Property.Unset(cmds);
                     break;
                 default:
                     NPCSpawnCommon.UnsetNthObject(index, obj);
@@ -1844,8 +1844,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ChanceNone_Unset();
             item.Flags_Unset();
             item.Entries.Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Template_Property.Template_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Template_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static LeveledCreature_Mask<bool> GetEqualsMask(

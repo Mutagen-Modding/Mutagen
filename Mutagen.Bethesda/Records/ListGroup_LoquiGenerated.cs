@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Internals
                 case ListGroup_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case ListGroup_FieldIndex.Items:
-                    return typeof(NotifyingList<T>);
+                    return typeof(SourceSetList<T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

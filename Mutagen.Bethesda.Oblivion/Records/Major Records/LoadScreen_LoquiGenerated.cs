@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LoadScreen_FieldIndex.Description:
                     return typeof(String);
                 case LoadScreen_FieldIndex.Locations:
-                    return typeof(NotifyingList<LoadScreenLocation>);
+                    return typeof(SourceSetList<LoadScreenLocation>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

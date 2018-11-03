@@ -2546,10 +2546,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Unset();
                     break;
                 case Book_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Book_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Enchantment_Property.Unset(cmds);
+                    obj.Enchantment_Property.Unset(cmds);
                     break;
                 case Book_FieldIndex.EnchantmentPoints:
                     obj.EnchantmentPoints_Unset();
@@ -2647,8 +2647,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Enchantment_Property.Enchantment_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Enchantment_Property.Unset(cmds.ToUnsetParams());
             item.EnchantmentPoints_Unset();
             item.Description_Unset();
             item.Flags = default(Book.BookFlag);

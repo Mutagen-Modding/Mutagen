@@ -2676,10 +2676,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Name_Unset();
                     break;
                 case ClothingAbstract_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case ClothingAbstract_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Enchantment_Property.Unset(cmds);
+                    obj.Enchantment_Property.Unset(cmds);
                     break;
                 case ClothingAbstract_FieldIndex.EnchantmentPoints:
                     obj.EnchantmentPoints_Unset();
@@ -2790,8 +2790,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Name_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Enchantment_Property.Enchantment_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Enchantment_Property.Unset(cmds.ToUnsetParams());
             item.EnchantmentPoints_Unset();
             item.BipedFlags = default(BipedFlag);
             item.Flags = default(EquipmentFlag);

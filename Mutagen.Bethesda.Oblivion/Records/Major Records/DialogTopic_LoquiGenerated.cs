@@ -1464,13 +1464,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    return typeof(NotifyingList<FormIDSetLink<Quest>>);
+                    return typeof(SourceSetList<FormIDSetLink<Quest>>);
                 case DialogTopic_FieldIndex.Name:
                     return typeof(String);
                 case DialogTopic_FieldIndex.DialogType:
                     return typeof(DialogType);
                 case DialogTopic_FieldIndex.Items:
-                    return typeof(NotifyingList<DialogItem>);
+                    return typeof(SourceSetList<DialogItem>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

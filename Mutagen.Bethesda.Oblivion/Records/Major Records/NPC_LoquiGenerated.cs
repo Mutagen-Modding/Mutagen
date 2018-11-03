@@ -6842,17 +6842,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.CalcMax:
                     return typeof(UInt16);
                 case NPC_FieldIndex.Factions:
-                    return typeof(NotifyingList<RankPlacement>);
+                    return typeof(SourceSetList<RankPlacement>);
                 case NPC_FieldIndex.DeathItem:
                     return typeof(FormIDSetLink<ItemAbstract>);
                 case NPC_FieldIndex.Race:
                     return typeof(FormIDSetLink<Race>);
                 case NPC_FieldIndex.Spells:
-                    return typeof(NotifyingList<FormIDSetLink<SpellAbstract>>);
+                    return typeof(SourceSetList<FormIDSetLink<SpellAbstract>>);
                 case NPC_FieldIndex.Script:
                     return typeof(FormIDSetLink<Script>);
                 case NPC_FieldIndex.Items:
-                    return typeof(NotifyingList<ItemEntry>);
+                    return typeof(SourceSetList<ItemEntry>);
                 case NPC_FieldIndex.Aggression:
                     return typeof(Byte);
                 case NPC_FieldIndex.Confidence:
@@ -6870,9 +6870,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Fluff:
                     return typeof(Byte[]);
                 case NPC_FieldIndex.AIPackages:
-                    return typeof(NotifyingList<FormIDSetLink<AIPackage>>);
+                    return typeof(SourceSetList<FormIDSetLink<AIPackage>>);
                 case NPC_FieldIndex.Animations:
-                    return typeof(NotifyingList<String>);
+                    return typeof(SourceSetList<String>);
                 case NPC_FieldIndex.Class:
                     return typeof(FormIDSetLink<Class>);
                 case NPC_FieldIndex.Armorer:
@@ -6940,7 +6940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.HairLength:
                     return typeof(Single);
                 case NPC_FieldIndex.Eyes:
-                    return typeof(NotifyingList<FormIDLink<Eye>>);
+                    return typeof(SourceSetList<FormIDLink<Eye>>);
                 case NPC_FieldIndex.HairColor:
                     return typeof(Color);
                 case NPC_FieldIndex.CombatStyle:
@@ -8493,16 +8493,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Factions.Unset();
                     break;
                 case NPC_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.DeathItem_Property.Unset(cmds);
+                    obj.DeathItem_Property.Unset(cmds);
                     break;
                 case NPC_FieldIndex.Race:
-                    obj.Race_Property.Race_Property.Unset(cmds);
+                    obj.Race_Property.Unset(cmds);
                     break;
                 case NPC_FieldIndex.Spells:
                     obj.Spells.Unset();
                     break;
                 case NPC_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case NPC_FieldIndex.Items:
                     obj.Items.Unset();
@@ -8538,7 +8538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Animations.Unset();
                     break;
                 case NPC_FieldIndex.Class:
-                    obj.Class_Property.Class_Property.Unset(cmds);
+                    obj.Class_Property.Unset(cmds);
                     break;
                 case NPC_FieldIndex.Armorer:
                     obj.Armorer = default(Byte);
@@ -8631,7 +8631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Luck = default(Byte);
                     break;
                 case NPC_FieldIndex.Hair:
-                    obj.Hair_Property.Hair_Property.Unset(cmds);
+                    obj.Hair_Property.Unset(cmds);
                     break;
                 case NPC_FieldIndex.HairLength:
                     obj.HairLength_Unset();
@@ -8643,7 +8643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.HairColor_Unset();
                     break;
                 case NPC_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.CombatStyle_Property.Unset(cmds);
+                    obj.CombatStyle_Property.Unset(cmds);
                     break;
                 case NPC_FieldIndex.FaceGenGeometrySymmetric:
                     obj.FaceGenGeometrySymmetric_Unset();
@@ -8917,10 +8917,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CalcMin = default(UInt16);
             item.CalcMax = default(UInt16);
             item.Factions.Unset();
-            item.DeathItem_Property.DeathItem_Property.Unset(cmds.ToUnsetParams());
-            item.Race_Property.Race_Property.Unset(cmds.ToUnsetParams());
+            item.DeathItem_Property.Unset(cmds.ToUnsetParams());
+            item.Race_Property.Unset(cmds.ToUnsetParams());
             item.Spells.Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Items.Unset();
             item.Aggression = default(Byte);
             item.Confidence = default(Byte);
@@ -8932,7 +8932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
             item.AIPackages.Unset();
             item.Animations.Unset();
-            item.Class_Property.Class_Property.Unset(cmds.ToUnsetParams());
+            item.Class_Property.Unset(cmds.ToUnsetParams());
             item.Armorer = default(Byte);
             item.Athletics = default(Byte);
             item.Blade = default(Byte);
@@ -8963,11 +8963,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Endurance = default(Byte);
             item.Personality = default(Byte);
             item.Luck = default(Byte);
-            item.Hair_Property.Hair_Property.Unset(cmds.ToUnsetParams());
+            item.Hair_Property.Unset(cmds.ToUnsetParams());
             item.HairLength_Unset();
             item.Eyes.Unset();
             item.HairColor_Unset();
-            item.CombatStyle_Property.CombatStyle_Property.Unset(cmds.ToUnsetParams());
+            item.CombatStyle_Property.Unset(cmds.ToUnsetParams());
             item.FaceGenGeometrySymmetric_Unset();
             item.FaceGenGeometryAsymmetric_Unset();
             item.FaceGenTextureSymmetric_Unset();

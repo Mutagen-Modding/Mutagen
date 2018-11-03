@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem<K>(
             MutagenFrame frame,
             int fieldIndex,
-            ISourceSetCache<K, T> item,
+            CSharpExt.Rx.ISourceSetCache<T, K> item,
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Binary
         public void ParseRepeatedItem<K>(
             MutagenFrame frame,
             int fieldIndex,
-            ISourceSetCache<T, K> item,
+            CSharpExt.Rx.ISourceSetCache<T, K> item,
             int lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseRecordDelegate<T> transl,

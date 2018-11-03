@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledItem_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledItem_FieldIndex.Entries:
-                    return typeof(NotifyingList<LeveledEntry<ItemAbstract>>);
+                    return typeof(SourceSetList<LeveledEntry<ItemAbstract>>);
                 default:
                     return ItemAbstract_Registration.GetNthType(index);
             }

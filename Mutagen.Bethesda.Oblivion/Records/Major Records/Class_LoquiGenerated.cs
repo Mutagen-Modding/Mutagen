@@ -1866,11 +1866,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.Icon:
                     return typeof(String);
                 case Class_FieldIndex.PrimaryAttributes:
-                    return typeof(NotifyingList<ActorValue>);
+                    return typeof(SourceSetList<ActorValue>);
                 case Class_FieldIndex.Specialization:
                     return typeof(Class.SpecializationFlag);
                 case Class_FieldIndex.SecondaryAttributes:
-                    return typeof(NotifyingList<ActorValue>);
+                    return typeof(SourceSetList<ActorValue>);
                 case Class_FieldIndex.Flags:
                     return typeof(ClassFlag);
                 case Class_FieldIndex.ClassServices:

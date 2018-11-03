@@ -4838,7 +4838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.MaterialID_Unset();
                     break;
                 case Water_FieldIndex.Sound:
-                    obj.Sound_Property.Sound_Property.Unset(cmds);
+                    obj.Sound_Property.Unset(cmds);
                     break;
                 case Water_FieldIndex.WindVelocity:
                     obj.WindVelocity = default(Single);
@@ -5062,7 +5062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Opacity_Unset();
             item.Flags_Unset();
             item.MaterialID_Unset();
-            item.Sound_Property.Sound_Property.Unset(cmds.ToUnsetParams());
+            item.Sound_Property.Unset(cmds.ToUnsetParams());
             item.WindVelocity = default(Single);
             item.WindDirection = default(Single);
             item.WaveAmplitude = default(Single);

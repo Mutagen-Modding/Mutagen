@@ -2237,16 +2237,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedCreature_FieldIndex.Base:
-                    obj.Base_Property.Base_Property.Unset(cmds);
+                    obj.Base_Property.Unset(cmds);
                     break;
                 case PlacedCreature_FieldIndex.Owner:
-                    obj.Owner_Property.Owner_Property.Unset(cmds);
+                    obj.Owner_Property.Unset(cmds);
                     break;
                 case PlacedCreature_FieldIndex.FactionRank:
                     obj.FactionRank_Unset();
                     break;
                 case PlacedCreature_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.GlobalVariable_Property.Unset(cmds);
+                    obj.GlobalVariable_Property.Unset(cmds);
                     break;
                 case PlacedCreature_FieldIndex.EnableParent:
                     obj.EnableParent_Unset();
@@ -2332,10 +2332,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedCreature item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Base_Property.Base_Property.Unset(cmds.ToUnsetParams());
-            item.Owner_Property.Owner_Property.Unset(cmds.ToUnsetParams());
+            item.Base_Property.Unset(cmds.ToUnsetParams());
+            item.Owner_Property.Unset(cmds.ToUnsetParams());
             item.FactionRank_Unset();
-            item.GlobalVariable_Property.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
+            item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
             item.EnableParent_Unset();
             item.RagdollData_Unset();
             item.Scale_Unset();

@@ -1563,13 +1563,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Name:
                     return typeof(String);
                 case Faction_FieldIndex.Relations:
-                    return typeof(NotifyingList<Relation>);
+                    return typeof(SourceSetList<Relation>);
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     return typeof(Single);
                 case Faction_FieldIndex.Ranks:
-                    return typeof(NotifyingList<Rank>);
+                    return typeof(SourceSetList<Rank>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

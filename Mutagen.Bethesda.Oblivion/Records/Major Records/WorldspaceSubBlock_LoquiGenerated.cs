@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case WorldspaceSubBlock_FieldIndex.Items:
-                    return typeof(NotifyingList<Cell>);
+                    return typeof(SourceSetList<Cell>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

@@ -1951,7 +1951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Region_FieldIndex.Worldspace:
                     return typeof(FormIDSetLink<Worldspace>);
                 case Region_FieldIndex.Areas:
-                    return typeof(NotifyingList<RegionArea>);
+                    return typeof(SourceSetList<RegionArea>);
                 case Region_FieldIndex.Objects:
                     return typeof(RegionDataObjects);
                 case Region_FieldIndex.Weather:
@@ -2467,7 +2467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.MapColor_Unset();
                     break;
                 case Region_FieldIndex.Worldspace:
-                    obj.Worldspace_Property.Worldspace_Property.Unset(cmds);
+                    obj.Worldspace_Property.Unset(cmds);
                     break;
                 case Region_FieldIndex.Areas:
                     obj.Areas.Unset();
@@ -2559,7 +2559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Icon_Unset();
             item.MapColor_Unset();
-            item.Worldspace_Property.Worldspace_Property.Unset(cmds.ToUnsetParams());
+            item.Worldspace_Property.Unset(cmds.ToUnsetParams());
             item.Areas.Unset();
             item.Objects_Unset();
             item.Weather_Unset();

@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda
                 dir.Create();
                 List<Task<MajorRecord_ErrorMask>> writeTasks = new List<Task<MajorRecord_ErrorMask>>();
                 int counter = 0;
-                foreach (var item in group.Items.Values)
+                foreach (var item in group.Items)
                 {
                     writeTasks.Add(Task.Run(() =>
                     {

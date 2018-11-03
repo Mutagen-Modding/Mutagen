@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CreatureSound_FieldIndex.SoundType:
                     return typeof(CreatureSound.CreatureSoundType);
                 case CreatureSound_FieldIndex.Sounds:
-                    return typeof(NotifyingList<SoundItem>);
+                    return typeof(SourceSetList<SoundItem>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

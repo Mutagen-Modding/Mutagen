@@ -4189,7 +4189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Model:
                     return typeof(Model);
                 case Weather_FieldIndex.WeatherTypes:
-                    return typeof(NotifyingList<WeatherType>);
+                    return typeof(SourceSetList<WeatherType>);
                 case Weather_FieldIndex.FogDayNear:
                     return typeof(Single);
                 case Weather_FieldIndex.FogDayFar:
@@ -4253,7 +4253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.LightningColor:
                     return typeof(Color);
                 case Weather_FieldIndex.Sounds:
-                    return typeof(NotifyingList<WeatherSound>);
+                    return typeof(SourceSetList<WeatherSound>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

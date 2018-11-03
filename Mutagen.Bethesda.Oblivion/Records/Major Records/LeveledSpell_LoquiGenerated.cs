@@ -1397,7 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledSpell_FieldIndex.Entries:
-                    return typeof(NotifyingList<LeveledEntry<SpellAbstract>>);
+                    return typeof(SourceSetList<LeveledEntry<SpellAbstract>>);
                 default:
                     return SpellAbstract_Registration.GetNthType(index);
             }

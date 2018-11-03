@@ -2174,7 +2174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.Icon:
                     return typeof(String);
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                    return typeof(NotifyingList<UInt32>);
+                    return typeof(SourceSetList<UInt32>);
                 case Tree_FieldIndex.LeafCurvature:
                     return typeof(Single);
                 case Tree_FieldIndex.MinimumLeafAngle:

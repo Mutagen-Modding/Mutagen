@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionArea_FieldIndex.EdgeFallOff:
                     return typeof(UInt32);
                 case RegionArea_FieldIndex.RegionPoints:
-                    return typeof(NotifyingList<P2Float>);
+                    return typeof(SourceSetList<P2Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

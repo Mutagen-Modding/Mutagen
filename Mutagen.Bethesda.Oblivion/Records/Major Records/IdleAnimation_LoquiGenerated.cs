@@ -1439,11 +1439,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.Model:
                     return typeof(Model);
                 case IdleAnimation_FieldIndex.Conditions:
-                    return typeof(NotifyingList<Condition>);
+                    return typeof(SourceSetList<Condition>);
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     return typeof(IdleAnimation.AnimationGroupSectionEnum);
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return typeof(NotifyingList<FormIDLink<IdleAnimation>>);
+                    return typeof(SourceSetList<FormIDLink<IdleAnimation>>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }

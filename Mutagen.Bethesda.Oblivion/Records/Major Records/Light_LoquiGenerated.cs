@@ -2810,7 +2810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Unset();
                     break;
                 case Light_FieldIndex.Script:
-                    obj.Script_Property.Script_Property.Unset(cmds);
+                    obj.Script_Property.Unset(cmds);
                     break;
                 case Light_FieldIndex.Name:
                     obj.Name_Unset();
@@ -2846,7 +2846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Fade_Unset();
                     break;
                 case Light_FieldIndex.Sound:
-                    obj.Sound_Property.Sound_Property.Unset(cmds);
+                    obj.Sound_Property.Unset(cmds);
                     break;
                 default:
                     ItemAbstractCommon.UnsetNthObject(index, obj);
@@ -2932,7 +2932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Model_Unset();
-            item.Script_Property.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Name_Unset();
             item.Icon_Unset();
             item.Time = Light._Time_Default;
@@ -2944,7 +2944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Value = default(UInt32);
             item.Weight = default(Single);
             item.Fade_Unset();
-            item.Sound_Property.Sound_Property.Unset(cmds.ToUnsetParams());
+            item.Sound_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Light_Mask<bool> GetEqualsMask(
