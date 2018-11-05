@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Fluff = default(Byte[]);
                     break;
                 case LeveledEntry_FieldIndex.Reference:
-                    obj.Reference.Reference = default(T);
+                    obj.Reference = default(T);
                     break;
                 case LeveledEntry_FieldIndex.Count:
                     obj.Count_Unset();

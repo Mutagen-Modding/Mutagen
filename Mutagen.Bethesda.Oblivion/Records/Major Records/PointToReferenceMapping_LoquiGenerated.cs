@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
-                    obj.Reference.Reference = default(IPlaced);
+                    obj.Reference = default(IPlaced);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
                     obj.Points.Unset();

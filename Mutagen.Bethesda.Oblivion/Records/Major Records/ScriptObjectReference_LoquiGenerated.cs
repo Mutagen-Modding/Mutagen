@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    obj.Reference.Reference = default(MajorRecord);
+                    obj.Reference = default(MajorRecord);
                     break;
                 default:
                     ScriptReferenceCommon.UnsetNthObject(index, obj);

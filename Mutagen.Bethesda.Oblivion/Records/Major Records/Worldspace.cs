@@ -110,20 +110,34 @@ namespace Mutagen.Bethesda.Oblivion
                     switch (subType.TypeInt)
                     {
                         case 0x44414F52: // "ROAD":
-                            LoquiBinaryTranslation<Road>.Instance.ParseInto(
+                            if (LoquiBinaryTranslation<Road>.Instance.Parse(
                                 frame: subFrame,
-                                item: obj.Road_Property,
+                                item: out var road,
                                 fieldIndex: (int)Worldspace_FieldIndex.Road,
                                 masterReferences: masterReferences,
-                                errorMask: errorMask);
+                                errorMask: errorMask))
+                            {
+                                obj.Road = road;
+                            }
+                            else
+                            {
+                                obj.Road_Unset();
+                            }
                             break;
                         case 0x4C4C4543: // "CELL":
-                            LoquiBinaryTranslation<Cell>.Instance.ParseInto(
+                            if (LoquiBinaryTranslation<Cell>.Instance.Parse(
                                 frame: subFrame,
-                                item: obj.TopCell_Property,
+                                item: out var topCell,
                                 fieldIndex: (int)Worldspace_FieldIndex.TopCell,
                                 masterReferences: masterReferences,
-                                errorMask: errorMask);
+                                errorMask: errorMask))
+                            {
+                                obj.TopCell = topCell;
+                            }
+                            else
+                            {
+                                obj.TopCell_Unset();
+                            }
                             break;
                         case 0x50555247: // "GRUP":
                             Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(

@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionSound_FieldIndex.Sound:
-                    obj.Sound.Sound = default(Sound);
+                    obj.Sound = default(Sound);
                     break;
                 case RegionSound_FieldIndex.Flags:
                     obj.Flags = default(RegionSound.Flag);

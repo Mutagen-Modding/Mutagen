@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    obj.Destination.Destination = default(IPlaced);
+                    obj.Destination = default(IPlaced);
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     obj.Position = default(P3Float);

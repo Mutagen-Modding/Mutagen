@@ -26,6 +26,8 @@ using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
 using System.Collections.Specialized;
+using DynamicData;
+using CSharpExt.Rx;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 
@@ -45,64 +47,66 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
 
         #region Ctor
-        public OblivionMod()
+        protected OblivionMod()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
-            _GameSettings_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Globals_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Classes_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Factions_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Hairs_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Eyes_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Races_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Sounds_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Skills_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _MagicEffects_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Scripts_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _LandTextures_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Enchantments_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Spells_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Birthsigns_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Activators_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _AlchemicalApparatus_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Armors_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Books_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Clothes_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Containers_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Doors_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Ingredients_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Lights_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Miscellaneous_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Statics_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Grasses_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Trees_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Flora_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Furnature_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Weapons_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Ammo_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _NPCs_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Creatures_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _LeveledCreatures_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _SoulGems_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Keys_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Potions_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Subspaces_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _SigilStones_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _LeveledItems_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Weathers_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Climates_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Regions_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Worldspaces_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _DialogTopics_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Quests_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _IdleAnimations_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _AIPackages_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _CombatStyles_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _LoadScreens_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _LeveledSpells_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _AnimatedObjects_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _Waters_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
-            _EffectShaders_Object.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));
+            Observable.Merge(
+                _GameSettings_Object.Items.Connect().Transform<IMajorRecord, GameSetting, FormKey>((i) => i),
+                _Globals_Object.Items.Connect().Transform<IMajorRecord, Global, FormKey>((i) => i),
+                _Classes_Object.Items.Connect().Transform<IMajorRecord, Class, FormKey>((i) => i),
+                _Factions_Object.Items.Connect().Transform<IMajorRecord, Faction, FormKey>((i) => i),
+                _Hairs_Object.Items.Connect().Transform<IMajorRecord, Hair, FormKey>((i) => i),
+                _Eyes_Object.Items.Connect().Transform<IMajorRecord, Eye, FormKey>((i) => i),
+                _Races_Object.Items.Connect().Transform<IMajorRecord, Race, FormKey>((i) => i),
+                _Sounds_Object.Items.Connect().Transform<IMajorRecord, Sound, FormKey>((i) => i),
+                _Skills_Object.Items.Connect().Transform<IMajorRecord, SkillRecord, FormKey>((i) => i),
+                _MagicEffects_Object.Items.Connect().Transform<IMajorRecord, MagicEffect, FormKey>((i) => i),
+                _Scripts_Object.Items.Connect().Transform<IMajorRecord, Script, FormKey>((i) => i),
+                _LandTextures_Object.Items.Connect().Transform<IMajorRecord, LandTexture, FormKey>((i) => i),
+                _Enchantments_Object.Items.Connect().Transform<IMajorRecord, Enchantment, FormKey>((i) => i),
+                _Spells_Object.Items.Connect().Transform<IMajorRecord, SpellUnleveled, FormKey>((i) => i),
+                _Birthsigns_Object.Items.Connect().Transform<IMajorRecord, Birthsign, FormKey>((i) => i),
+                _Activators_Object.Items.Connect().Transform<IMajorRecord, Activator, FormKey>((i) => i),
+                _AlchemicalApparatus_Object.Items.Connect().Transform<IMajorRecord, AlchemicalApparatus, FormKey>((i) => i),
+                _Armors_Object.Items.Connect().Transform<IMajorRecord, Armor, FormKey>((i) => i),
+                _Books_Object.Items.Connect().Transform<IMajorRecord, Book, FormKey>((i) => i),
+                _Clothes_Object.Items.Connect().Transform<IMajorRecord, Clothing, FormKey>((i) => i),
+                _Containers_Object.Items.Connect().Transform<IMajorRecord, Container, FormKey>((i) => i),
+                _Doors_Object.Items.Connect().Transform<IMajorRecord, Door, FormKey>((i) => i),
+                _Ingredients_Object.Items.Connect().Transform<IMajorRecord, Ingredient, FormKey>((i) => i),
+                _Lights_Object.Items.Connect().Transform<IMajorRecord, Light, FormKey>((i) => i),
+                _Miscellaneous_Object.Items.Connect().Transform<IMajorRecord, Miscellaneous, FormKey>((i) => i),
+                _Statics_Object.Items.Connect().Transform<IMajorRecord, Static, FormKey>((i) => i),
+                _Grasses_Object.Items.Connect().Transform<IMajorRecord, Grass, FormKey>((i) => i),
+                _Trees_Object.Items.Connect().Transform<IMajorRecord, Tree, FormKey>((i) => i),
+                _Flora_Object.Items.Connect().Transform<IMajorRecord, Flora, FormKey>((i) => i),
+                _Furnature_Object.Items.Connect().Transform<IMajorRecord, Furnature, FormKey>((i) => i),
+                _Weapons_Object.Items.Connect().Transform<IMajorRecord, Weapon, FormKey>((i) => i),
+                _Ammo_Object.Items.Connect().Transform<IMajorRecord, Ammo, FormKey>((i) => i),
+                _NPCs_Object.Items.Connect().Transform<IMajorRecord, NPC, FormKey>((i) => i),
+                _Creatures_Object.Items.Connect().Transform<IMajorRecord, Creature, FormKey>((i) => i),
+                _LeveledCreatures_Object.Items.Connect().Transform<IMajorRecord, LeveledCreature, FormKey>((i) => i),
+                _SoulGems_Object.Items.Connect().Transform<IMajorRecord, SoulGem, FormKey>((i) => i),
+                _Keys_Object.Items.Connect().Transform<IMajorRecord, Key, FormKey>((i) => i),
+                _Potions_Object.Items.Connect().Transform<IMajorRecord, Potion, FormKey>((i) => i),
+                _Subspaces_Object.Items.Connect().Transform<IMajorRecord, Subspace, FormKey>((i) => i),
+                _SigilStones_Object.Items.Connect().Transform<IMajorRecord, SigilStone, FormKey>((i) => i),
+                _LeveledItems_Object.Items.Connect().Transform<IMajorRecord, LeveledItem, FormKey>((i) => i),
+                _Weathers_Object.Items.Connect().Transform<IMajorRecord, Weather, FormKey>((i) => i),
+                _Climates_Object.Items.Connect().Transform<IMajorRecord, Climate, FormKey>((i) => i),
+                _Regions_Object.Items.Connect().Transform<IMajorRecord, Region, FormKey>((i) => i),
+                _Worldspaces_Object.Items.Connect().Transform<IMajorRecord, Worldspace, FormKey>((i) => i),
+                _DialogTopics_Object.Items.Connect().Transform<IMajorRecord, DialogTopic, FormKey>((i) => i),
+                _Quests_Object.Items.Connect().Transform<IMajorRecord, Quest, FormKey>((i) => i),
+                _IdleAnimations_Object.Items.Connect().Transform<IMajorRecord, IdleAnimation, FormKey>((i) => i),
+                _AIPackages_Object.Items.Connect().Transform<IMajorRecord, AIPackage, FormKey>((i) => i),
+                _CombatStyles_Object.Items.Connect().Transform<IMajorRecord, CombatStyle, FormKey>((i) => i),
+                _LoadScreens_Object.Items.Connect().Transform<IMajorRecord, LoadScreen, FormKey>((i) => i),
+                _LeveledSpells_Object.Items.Connect().Transform<IMajorRecord, LeveledSpell, FormKey>((i) => i),
+                _AnimatedObjects_Object.Items.Connect().Transform<IMajorRecord, AnimatedObject, FormKey>((i) => i),
+                _Waters_Object.Items.Connect().Transform<IMajorRecord, Water, FormKey>((i) => i),
+                _EffectShaders_Object.Items.Connect().Transform<IMajorRecord, EffectShader, FormKey>((i) => i))
+                .PopulateInto(_majorRecords);
             _hasBeenSetTracker[(int)OblivionMod_FieldIndex.TES4] = true;
             CustomCtor();
         }
@@ -2401,11 +2405,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        private NotifyingDictionary<FormKey, IMajorRecord> _majorRecords = new NotifyingDictionary<FormKey, IMajorRecord>();
-        public INotifyingDictionaryGetter<FormKey, IMajorRecord> MajorRecords => _majorRecords;
+        private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);
+        public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;
         public IMajorRecord this[FormKey id]
         {
-            get => _majorRecords[id];
+            get => MajorRecords.Lookup(id).Value;
             set => SetMajorRecord(id, value);
         }
         protected void SetMajorRecord(
@@ -2415,402 +2419,402 @@ namespace Mutagen.Bethesda.Oblivion
             switch (record)
             {
                 case GameSetting gamesettings:
-                    _GameSettings_Object.Items.Set(gamesettings);
+                    _GameSettings_Object.Items.AddOrUpdate(gamesettings);
                     break;
                 case Global globals:
-                    _Globals_Object.Items.Set(globals);
+                    _Globals_Object.Items.AddOrUpdate(globals);
                     break;
                 case Class classes:
-                    _Classes_Object.Items.Set(classes);
+                    _Classes_Object.Items.AddOrUpdate(classes);
                     break;
                 case Faction factions:
-                    _Factions_Object.Items.Set(factions);
+                    _Factions_Object.Items.AddOrUpdate(factions);
                     break;
                 case Hair hairs:
-                    _Hairs_Object.Items.Set(hairs);
+                    _Hairs_Object.Items.AddOrUpdate(hairs);
                     break;
                 case Eye eyes:
-                    _Eyes_Object.Items.Set(eyes);
+                    _Eyes_Object.Items.AddOrUpdate(eyes);
                     break;
                 case Race races:
-                    _Races_Object.Items.Set(races);
+                    _Races_Object.Items.AddOrUpdate(races);
                     break;
                 case Sound sounds:
-                    _Sounds_Object.Items.Set(sounds);
+                    _Sounds_Object.Items.AddOrUpdate(sounds);
                     break;
                 case SkillRecord skills:
-                    _Skills_Object.Items.Set(skills);
+                    _Skills_Object.Items.AddOrUpdate(skills);
                     break;
                 case MagicEffect magiceffects:
-                    _MagicEffects_Object.Items.Set(magiceffects);
+                    _MagicEffects_Object.Items.AddOrUpdate(magiceffects);
                     break;
                 case Script scripts:
-                    _Scripts_Object.Items.Set(scripts);
+                    _Scripts_Object.Items.AddOrUpdate(scripts);
                     break;
                 case LandTexture landtextures:
-                    _LandTextures_Object.Items.Set(landtextures);
+                    _LandTextures_Object.Items.AddOrUpdate(landtextures);
                     break;
                 case Enchantment enchantments:
-                    _Enchantments_Object.Items.Set(enchantments);
+                    _Enchantments_Object.Items.AddOrUpdate(enchantments);
                     break;
                 case SpellUnleveled spells:
-                    _Spells_Object.Items.Set(spells);
+                    _Spells_Object.Items.AddOrUpdate(spells);
                     break;
                 case Birthsign birthsigns:
-                    _Birthsigns_Object.Items.Set(birthsigns);
+                    _Birthsigns_Object.Items.AddOrUpdate(birthsigns);
                     break;
                 case Activator activators:
-                    _Activators_Object.Items.Set(activators);
+                    _Activators_Object.Items.AddOrUpdate(activators);
                     break;
                 case AlchemicalApparatus alchemicalapparatus:
-                    _AlchemicalApparatus_Object.Items.Set(alchemicalapparatus);
+                    _AlchemicalApparatus_Object.Items.AddOrUpdate(alchemicalapparatus);
                     break;
                 case Armor armors:
-                    _Armors_Object.Items.Set(armors);
+                    _Armors_Object.Items.AddOrUpdate(armors);
                     break;
                 case Book books:
-                    _Books_Object.Items.Set(books);
+                    _Books_Object.Items.AddOrUpdate(books);
                     break;
                 case Clothing clothes:
-                    _Clothes_Object.Items.Set(clothes);
+                    _Clothes_Object.Items.AddOrUpdate(clothes);
                     break;
                 case Container containers:
-                    _Containers_Object.Items.Set(containers);
+                    _Containers_Object.Items.AddOrUpdate(containers);
                     break;
                 case Door doors:
-                    _Doors_Object.Items.Set(doors);
+                    _Doors_Object.Items.AddOrUpdate(doors);
                     break;
                 case Ingredient ingredients:
-                    _Ingredients_Object.Items.Set(ingredients);
+                    _Ingredients_Object.Items.AddOrUpdate(ingredients);
                     break;
                 case Light lights:
-                    _Lights_Object.Items.Set(lights);
+                    _Lights_Object.Items.AddOrUpdate(lights);
                     break;
                 case Miscellaneous miscellaneous:
-                    _Miscellaneous_Object.Items.Set(miscellaneous);
+                    _Miscellaneous_Object.Items.AddOrUpdate(miscellaneous);
                     break;
                 case Static statics:
-                    _Statics_Object.Items.Set(statics);
+                    _Statics_Object.Items.AddOrUpdate(statics);
                     break;
                 case Grass grasses:
-                    _Grasses_Object.Items.Set(grasses);
+                    _Grasses_Object.Items.AddOrUpdate(grasses);
                     break;
                 case Tree trees:
-                    _Trees_Object.Items.Set(trees);
+                    _Trees_Object.Items.AddOrUpdate(trees);
                     break;
                 case Flora flora:
-                    _Flora_Object.Items.Set(flora);
+                    _Flora_Object.Items.AddOrUpdate(flora);
                     break;
                 case Furnature furnature:
-                    _Furnature_Object.Items.Set(furnature);
+                    _Furnature_Object.Items.AddOrUpdate(furnature);
                     break;
                 case Weapon weapons:
-                    _Weapons_Object.Items.Set(weapons);
+                    _Weapons_Object.Items.AddOrUpdate(weapons);
                     break;
                 case Ammo ammo:
-                    _Ammo_Object.Items.Set(ammo);
+                    _Ammo_Object.Items.AddOrUpdate(ammo);
                     break;
                 case NPC npcs:
-                    _NPCs_Object.Items.Set(npcs);
+                    _NPCs_Object.Items.AddOrUpdate(npcs);
                     break;
                 case Creature creatures:
-                    _Creatures_Object.Items.Set(creatures);
+                    _Creatures_Object.Items.AddOrUpdate(creatures);
                     break;
                 case LeveledCreature leveledcreatures:
-                    _LeveledCreatures_Object.Items.Set(leveledcreatures);
+                    _LeveledCreatures_Object.Items.AddOrUpdate(leveledcreatures);
                     break;
                 case SoulGem soulgems:
-                    _SoulGems_Object.Items.Set(soulgems);
+                    _SoulGems_Object.Items.AddOrUpdate(soulgems);
                     break;
                 case Key keys:
-                    _Keys_Object.Items.Set(keys);
+                    _Keys_Object.Items.AddOrUpdate(keys);
                     break;
                 case Potion potions:
-                    _Potions_Object.Items.Set(potions);
+                    _Potions_Object.Items.AddOrUpdate(potions);
                     break;
                 case Subspace subspaces:
-                    _Subspaces_Object.Items.Set(subspaces);
+                    _Subspaces_Object.Items.AddOrUpdate(subspaces);
                     break;
                 case SigilStone sigilstones:
-                    _SigilStones_Object.Items.Set(sigilstones);
+                    _SigilStones_Object.Items.AddOrUpdate(sigilstones);
                     break;
                 case LeveledItem leveleditems:
-                    _LeveledItems_Object.Items.Set(leveleditems);
+                    _LeveledItems_Object.Items.AddOrUpdate(leveleditems);
                     break;
                 case Weather weathers:
-                    _Weathers_Object.Items.Set(weathers);
+                    _Weathers_Object.Items.AddOrUpdate(weathers);
                     break;
                 case Climate climates:
-                    _Climates_Object.Items.Set(climates);
+                    _Climates_Object.Items.AddOrUpdate(climates);
                     break;
                 case Region regions:
-                    _Regions_Object.Items.Set(regions);
+                    _Regions_Object.Items.AddOrUpdate(regions);
                     break;
                 case Worldspace worldspaces:
-                    _Worldspaces_Object.Items.Set(worldspaces);
+                    _Worldspaces_Object.Items.AddOrUpdate(worldspaces);
                     break;
                 case DialogTopic dialogtopics:
-                    _DialogTopics_Object.Items.Set(dialogtopics);
+                    _DialogTopics_Object.Items.AddOrUpdate(dialogtopics);
                     break;
                 case Quest quests:
-                    _Quests_Object.Items.Set(quests);
+                    _Quests_Object.Items.AddOrUpdate(quests);
                     break;
                 case IdleAnimation idleanimations:
-                    _IdleAnimations_Object.Items.Set(idleanimations);
+                    _IdleAnimations_Object.Items.AddOrUpdate(idleanimations);
                     break;
                 case AIPackage aipackages:
-                    _AIPackages_Object.Items.Set(aipackages);
+                    _AIPackages_Object.Items.AddOrUpdate(aipackages);
                     break;
                 case CombatStyle combatstyles:
-                    _CombatStyles_Object.Items.Set(combatstyles);
+                    _CombatStyles_Object.Items.AddOrUpdate(combatstyles);
                     break;
                 case LoadScreen loadscreens:
-                    _LoadScreens_Object.Items.Set(loadscreens);
+                    _LoadScreens_Object.Items.AddOrUpdate(loadscreens);
                     break;
                 case LeveledSpell leveledspells:
-                    _LeveledSpells_Object.Items.Set(leveledspells);
+                    _LeveledSpells_Object.Items.AddOrUpdate(leveledspells);
                     break;
                 case AnimatedObject animatedobjects:
-                    _AnimatedObjects_Object.Items.Set(animatedobjects);
+                    _AnimatedObjects_Object.Items.AddOrUpdate(animatedobjects);
                     break;
                 case Water waters:
-                    _Waters_Object.Items.Set(waters);
+                    _Waters_Object.Items.AddOrUpdate(waters);
                     break;
                 case EffectShader effectshaders:
-                    _EffectShaders_Object.Items.Set(effectshaders);
+                    _EffectShaders_Object.Items.AddOrUpdate(effectshaders);
                     break;
                 default:
                     throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
             }
         }
 
-        public INotifyingKeyedCollection<FormKey, T> GetGroup<T>()
+        public ISourceCache<T, FormKey> GetGroup<T>()
             where T : IMajorRecord
         {
             var t = typeof(T);
             if (t.Equals(typeof(GameSetting)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)GameSettings.Items;
+                return (ISourceCache<T, FormKey>)GameSettings.Items;
             }
             if (t.Equals(typeof(Global)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Globals.Items;
+                return (ISourceCache<T, FormKey>)Globals.Items;
             }
             if (t.Equals(typeof(Class)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Classes.Items;
+                return (ISourceCache<T, FormKey>)Classes.Items;
             }
             if (t.Equals(typeof(Faction)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Factions.Items;
+                return (ISourceCache<T, FormKey>)Factions.Items;
             }
             if (t.Equals(typeof(Hair)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Hairs.Items;
+                return (ISourceCache<T, FormKey>)Hairs.Items;
             }
             if (t.Equals(typeof(Eye)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Eyes.Items;
+                return (ISourceCache<T, FormKey>)Eyes.Items;
             }
             if (t.Equals(typeof(Race)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Races.Items;
+                return (ISourceCache<T, FormKey>)Races.Items;
             }
             if (t.Equals(typeof(Sound)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Sounds.Items;
+                return (ISourceCache<T, FormKey>)Sounds.Items;
             }
             if (t.Equals(typeof(SkillRecord)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Skills.Items;
+                return (ISourceCache<T, FormKey>)Skills.Items;
             }
             if (t.Equals(typeof(MagicEffect)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)MagicEffects.Items;
+                return (ISourceCache<T, FormKey>)MagicEffects.Items;
             }
             if (t.Equals(typeof(Script)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Scripts.Items;
+                return (ISourceCache<T, FormKey>)Scripts.Items;
             }
             if (t.Equals(typeof(LandTexture)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)LandTextures.Items;
+                return (ISourceCache<T, FormKey>)LandTextures.Items;
             }
             if (t.Equals(typeof(Enchantment)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Enchantments.Items;
+                return (ISourceCache<T, FormKey>)Enchantments.Items;
             }
             if (t.Equals(typeof(SpellUnleveled)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Spells.Items;
+                return (ISourceCache<T, FormKey>)Spells.Items;
             }
             if (t.Equals(typeof(Birthsign)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Birthsigns.Items;
+                return (ISourceCache<T, FormKey>)Birthsigns.Items;
             }
             if (t.Equals(typeof(Activator)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Activators.Items;
+                return (ISourceCache<T, FormKey>)Activators.Items;
             }
             if (t.Equals(typeof(AlchemicalApparatus)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)AlchemicalApparatus.Items;
+                return (ISourceCache<T, FormKey>)AlchemicalApparatus.Items;
             }
             if (t.Equals(typeof(Armor)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Armors.Items;
+                return (ISourceCache<T, FormKey>)Armors.Items;
             }
             if (t.Equals(typeof(Book)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Books.Items;
+                return (ISourceCache<T, FormKey>)Books.Items;
             }
             if (t.Equals(typeof(Clothing)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Clothes.Items;
+                return (ISourceCache<T, FormKey>)Clothes.Items;
             }
             if (t.Equals(typeof(Container)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Containers.Items;
+                return (ISourceCache<T, FormKey>)Containers.Items;
             }
             if (t.Equals(typeof(Door)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Doors.Items;
+                return (ISourceCache<T, FormKey>)Doors.Items;
             }
             if (t.Equals(typeof(Ingredient)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Ingredients.Items;
+                return (ISourceCache<T, FormKey>)Ingredients.Items;
             }
             if (t.Equals(typeof(Light)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Lights.Items;
+                return (ISourceCache<T, FormKey>)Lights.Items;
             }
             if (t.Equals(typeof(Miscellaneous)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Miscellaneous.Items;
+                return (ISourceCache<T, FormKey>)Miscellaneous.Items;
             }
             if (t.Equals(typeof(Static)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Statics.Items;
+                return (ISourceCache<T, FormKey>)Statics.Items;
             }
             if (t.Equals(typeof(Grass)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Grasses.Items;
+                return (ISourceCache<T, FormKey>)Grasses.Items;
             }
             if (t.Equals(typeof(Tree)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Trees.Items;
+                return (ISourceCache<T, FormKey>)Trees.Items;
             }
             if (t.Equals(typeof(Flora)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Flora.Items;
+                return (ISourceCache<T, FormKey>)Flora.Items;
             }
             if (t.Equals(typeof(Furnature)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Furnature.Items;
+                return (ISourceCache<T, FormKey>)Furnature.Items;
             }
             if (t.Equals(typeof(Weapon)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Weapons.Items;
+                return (ISourceCache<T, FormKey>)Weapons.Items;
             }
             if (t.Equals(typeof(Ammo)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Ammo.Items;
+                return (ISourceCache<T, FormKey>)Ammo.Items;
             }
             if (t.Equals(typeof(NPC)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)NPCs.Items;
+                return (ISourceCache<T, FormKey>)NPCs.Items;
             }
             if (t.Equals(typeof(Creature)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Creatures.Items;
+                return (ISourceCache<T, FormKey>)Creatures.Items;
             }
             if (t.Equals(typeof(LeveledCreature)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)LeveledCreatures.Items;
+                return (ISourceCache<T, FormKey>)LeveledCreatures.Items;
             }
             if (t.Equals(typeof(SoulGem)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)SoulGems.Items;
+                return (ISourceCache<T, FormKey>)SoulGems.Items;
             }
             if (t.Equals(typeof(Key)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Keys.Items;
+                return (ISourceCache<T, FormKey>)Keys.Items;
             }
             if (t.Equals(typeof(Potion)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Potions.Items;
+                return (ISourceCache<T, FormKey>)Potions.Items;
             }
             if (t.Equals(typeof(Subspace)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Subspaces.Items;
+                return (ISourceCache<T, FormKey>)Subspaces.Items;
             }
             if (t.Equals(typeof(SigilStone)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)SigilStones.Items;
+                return (ISourceCache<T, FormKey>)SigilStones.Items;
             }
             if (t.Equals(typeof(LeveledItem)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)LeveledItems.Items;
+                return (ISourceCache<T, FormKey>)LeveledItems.Items;
             }
             if (t.Equals(typeof(Weather)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Weathers.Items;
+                return (ISourceCache<T, FormKey>)Weathers.Items;
             }
             if (t.Equals(typeof(Climate)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Climates.Items;
+                return (ISourceCache<T, FormKey>)Climates.Items;
             }
             if (t.Equals(typeof(Region)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Regions.Items;
+                return (ISourceCache<T, FormKey>)Regions.Items;
             }
             if (t.Equals(typeof(CellBlock)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Cells.Items;
+                return (ISourceCache<T, FormKey>)Cells.Items;
             }
             if (t.Equals(typeof(Worldspace)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Worldspaces.Items;
+                return (ISourceCache<T, FormKey>)Worldspaces.Items;
             }
             if (t.Equals(typeof(DialogTopic)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)DialogTopics.Items;
+                return (ISourceCache<T, FormKey>)DialogTopics.Items;
             }
             if (t.Equals(typeof(Quest)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Quests.Items;
+                return (ISourceCache<T, FormKey>)Quests.Items;
             }
             if (t.Equals(typeof(IdleAnimation)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)IdleAnimations.Items;
+                return (ISourceCache<T, FormKey>)IdleAnimations.Items;
             }
             if (t.Equals(typeof(AIPackage)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)AIPackages.Items;
+                return (ISourceCache<T, FormKey>)AIPackages.Items;
             }
             if (t.Equals(typeof(CombatStyle)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)CombatStyles.Items;
+                return (ISourceCache<T, FormKey>)CombatStyles.Items;
             }
             if (t.Equals(typeof(LoadScreen)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)LoadScreens.Items;
+                return (ISourceCache<T, FormKey>)LoadScreens.Items;
             }
             if (t.Equals(typeof(LeveledSpell)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)LeveledSpells.Items;
+                return (ISourceCache<T, FormKey>)LeveledSpells.Items;
             }
             if (t.Equals(typeof(AnimatedObject)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)AnimatedObjects.Items;
+                return (ISourceCache<T, FormKey>)AnimatedObjects.Items;
             }
             if (t.Equals(typeof(Water)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)Waters.Items;
+                return (ISourceCache<T, FormKey>)Waters.Items;
             }
             if (t.Equals(typeof(EffectShader)))
             {
-                return (INotifyingKeyedCollection<FormKey, T>)EffectShaders.Items;
+                return (ISourceCache<T, FormKey>)EffectShaders.Items;
             }
             throw new ArgumentException($"Unkown group type: {t}");
         }
@@ -2821,179 +2825,179 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (mask?.GameSettings ?? true)
             {
-                this.GameSettings.Items.Set(rhsMod.GameSettings.Items.Values);
+                this.GameSettings.Items.AddOrUpdate(rhsMod.GameSettings.Items);
             }
             if (mask?.Globals ?? true)
             {
-                this.Globals.Items.Set(rhsMod.Globals.Items.Values);
+                this.Globals.Items.AddOrUpdate(rhsMod.Globals.Items);
             }
             if (mask?.Classes ?? true)
             {
-                this.Classes.Items.Set(rhsMod.Classes.Items.Values);
+                this.Classes.Items.AddOrUpdate(rhsMod.Classes.Items);
             }
             if (mask?.Factions ?? true)
             {
-                this.Factions.Items.Set(rhsMod.Factions.Items.Values);
+                this.Factions.Items.AddOrUpdate(rhsMod.Factions.Items);
             }
             if (mask?.Hairs ?? true)
             {
-                this.Hairs.Items.Set(rhsMod.Hairs.Items.Values);
+                this.Hairs.Items.AddOrUpdate(rhsMod.Hairs.Items);
             }
             if (mask?.Eyes ?? true)
             {
-                this.Eyes.Items.Set(rhsMod.Eyes.Items.Values);
+                this.Eyes.Items.AddOrUpdate(rhsMod.Eyes.Items);
             }
             if (mask?.Races ?? true)
             {
-                this.Races.Items.Set(rhsMod.Races.Items.Values);
+                this.Races.Items.AddOrUpdate(rhsMod.Races.Items);
             }
             if (mask?.Sounds ?? true)
             {
-                this.Sounds.Items.Set(rhsMod.Sounds.Items.Values);
+                this.Sounds.Items.AddOrUpdate(rhsMod.Sounds.Items);
             }
             if (mask?.Skills ?? true)
             {
-                this.Skills.Items.Set(rhsMod.Skills.Items.Values);
+                this.Skills.Items.AddOrUpdate(rhsMod.Skills.Items);
             }
             if (mask?.MagicEffects ?? true)
             {
-                this.MagicEffects.Items.Set(rhsMod.MagicEffects.Items.Values);
+                this.MagicEffects.Items.AddOrUpdate(rhsMod.MagicEffects.Items);
             }
             if (mask?.Scripts ?? true)
             {
-                this.Scripts.Items.Set(rhsMod.Scripts.Items.Values);
+                this.Scripts.Items.AddOrUpdate(rhsMod.Scripts.Items);
             }
             if (mask?.LandTextures ?? true)
             {
-                this.LandTextures.Items.Set(rhsMod.LandTextures.Items.Values);
+                this.LandTextures.Items.AddOrUpdate(rhsMod.LandTextures.Items);
             }
             if (mask?.Enchantments ?? true)
             {
-                this.Enchantments.Items.Set(rhsMod.Enchantments.Items.Values);
+                this.Enchantments.Items.AddOrUpdate(rhsMod.Enchantments.Items);
             }
             if (mask?.Spells ?? true)
             {
-                this.Spells.Items.Set(rhsMod.Spells.Items.Values);
+                this.Spells.Items.AddOrUpdate(rhsMod.Spells.Items);
             }
             if (mask?.Birthsigns ?? true)
             {
-                this.Birthsigns.Items.Set(rhsMod.Birthsigns.Items.Values);
+                this.Birthsigns.Items.AddOrUpdate(rhsMod.Birthsigns.Items);
             }
             if (mask?.Activators ?? true)
             {
-                this.Activators.Items.Set(rhsMod.Activators.Items.Values);
+                this.Activators.Items.AddOrUpdate(rhsMod.Activators.Items);
             }
             if (mask?.AlchemicalApparatus ?? true)
             {
-                this.AlchemicalApparatus.Items.Set(rhsMod.AlchemicalApparatus.Items.Values);
+                this.AlchemicalApparatus.Items.AddOrUpdate(rhsMod.AlchemicalApparatus.Items);
             }
             if (mask?.Armors ?? true)
             {
-                this.Armors.Items.Set(rhsMod.Armors.Items.Values);
+                this.Armors.Items.AddOrUpdate(rhsMod.Armors.Items);
             }
             if (mask?.Books ?? true)
             {
-                this.Books.Items.Set(rhsMod.Books.Items.Values);
+                this.Books.Items.AddOrUpdate(rhsMod.Books.Items);
             }
             if (mask?.Clothes ?? true)
             {
-                this.Clothes.Items.Set(rhsMod.Clothes.Items.Values);
+                this.Clothes.Items.AddOrUpdate(rhsMod.Clothes.Items);
             }
             if (mask?.Containers ?? true)
             {
-                this.Containers.Items.Set(rhsMod.Containers.Items.Values);
+                this.Containers.Items.AddOrUpdate(rhsMod.Containers.Items);
             }
             if (mask?.Doors ?? true)
             {
-                this.Doors.Items.Set(rhsMod.Doors.Items.Values);
+                this.Doors.Items.AddOrUpdate(rhsMod.Doors.Items);
             }
             if (mask?.Ingredients ?? true)
             {
-                this.Ingredients.Items.Set(rhsMod.Ingredients.Items.Values);
+                this.Ingredients.Items.AddOrUpdate(rhsMod.Ingredients.Items);
             }
             if (mask?.Lights ?? true)
             {
-                this.Lights.Items.Set(rhsMod.Lights.Items.Values);
+                this.Lights.Items.AddOrUpdate(rhsMod.Lights.Items);
             }
             if (mask?.Miscellaneous ?? true)
             {
-                this.Miscellaneous.Items.Set(rhsMod.Miscellaneous.Items.Values);
+                this.Miscellaneous.Items.AddOrUpdate(rhsMod.Miscellaneous.Items);
             }
             if (mask?.Statics ?? true)
             {
-                this.Statics.Items.Set(rhsMod.Statics.Items.Values);
+                this.Statics.Items.AddOrUpdate(rhsMod.Statics.Items);
             }
             if (mask?.Grasses ?? true)
             {
-                this.Grasses.Items.Set(rhsMod.Grasses.Items.Values);
+                this.Grasses.Items.AddOrUpdate(rhsMod.Grasses.Items);
             }
             if (mask?.Trees ?? true)
             {
-                this.Trees.Items.Set(rhsMod.Trees.Items.Values);
+                this.Trees.Items.AddOrUpdate(rhsMod.Trees.Items);
             }
             if (mask?.Flora ?? true)
             {
-                this.Flora.Items.Set(rhsMod.Flora.Items.Values);
+                this.Flora.Items.AddOrUpdate(rhsMod.Flora.Items);
             }
             if (mask?.Furnature ?? true)
             {
-                this.Furnature.Items.Set(rhsMod.Furnature.Items.Values);
+                this.Furnature.Items.AddOrUpdate(rhsMod.Furnature.Items);
             }
             if (mask?.Weapons ?? true)
             {
-                this.Weapons.Items.Set(rhsMod.Weapons.Items.Values);
+                this.Weapons.Items.AddOrUpdate(rhsMod.Weapons.Items);
             }
             if (mask?.Ammo ?? true)
             {
-                this.Ammo.Items.Set(rhsMod.Ammo.Items.Values);
+                this.Ammo.Items.AddOrUpdate(rhsMod.Ammo.Items);
             }
             if (mask?.NPCs ?? true)
             {
-                this.NPCs.Items.Set(rhsMod.NPCs.Items.Values);
+                this.NPCs.Items.AddOrUpdate(rhsMod.NPCs.Items);
             }
             if (mask?.Creatures ?? true)
             {
-                this.Creatures.Items.Set(rhsMod.Creatures.Items.Values);
+                this.Creatures.Items.AddOrUpdate(rhsMod.Creatures.Items);
             }
             if (mask?.LeveledCreatures ?? true)
             {
-                this.LeveledCreatures.Items.Set(rhsMod.LeveledCreatures.Items.Values);
+                this.LeveledCreatures.Items.AddOrUpdate(rhsMod.LeveledCreatures.Items);
             }
             if (mask?.SoulGems ?? true)
             {
-                this.SoulGems.Items.Set(rhsMod.SoulGems.Items.Values);
+                this.SoulGems.Items.AddOrUpdate(rhsMod.SoulGems.Items);
             }
             if (mask?.Keys ?? true)
             {
-                this.Keys.Items.Set(rhsMod.Keys.Items.Values);
+                this.Keys.Items.AddOrUpdate(rhsMod.Keys.Items);
             }
             if (mask?.Potions ?? true)
             {
-                this.Potions.Items.Set(rhsMod.Potions.Items.Values);
+                this.Potions.Items.AddOrUpdate(rhsMod.Potions.Items);
             }
             if (mask?.Subspaces ?? true)
             {
-                this.Subspaces.Items.Set(rhsMod.Subspaces.Items.Values);
+                this.Subspaces.Items.AddOrUpdate(rhsMod.Subspaces.Items);
             }
             if (mask?.SigilStones ?? true)
             {
-                this.SigilStones.Items.Set(rhsMod.SigilStones.Items.Values);
+                this.SigilStones.Items.AddOrUpdate(rhsMod.SigilStones.Items);
             }
             if (mask?.LeveledItems ?? true)
             {
-                this.LeveledItems.Items.Set(rhsMod.LeveledItems.Items.Values);
+                this.LeveledItems.Items.AddOrUpdate(rhsMod.LeveledItems.Items);
             }
             if (mask?.Weathers ?? true)
             {
-                this.Weathers.Items.Set(rhsMod.Weathers.Items.Values);
+                this.Weathers.Items.AddOrUpdate(rhsMod.Weathers.Items);
             }
             if (mask?.Climates ?? true)
             {
-                this.Climates.Items.Set(rhsMod.Climates.Items.Values);
+                this.Climates.Items.AddOrUpdate(rhsMod.Climates.Items);
             }
             if (mask?.Regions ?? true)
             {
-                this.Regions.Items.Set(rhsMod.Regions.Items.Values);
+                this.Regions.Items.AddOrUpdate(rhsMod.Regions.Items);
             }
             if (mask?.Cells ?? true)
             {
@@ -3004,47 +3008,47 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (mask?.Worldspaces ?? true)
             {
-                this.Worldspaces.Items.Set(rhsMod.Worldspaces.Items.Values);
+                this.Worldspaces.Items.AddOrUpdate(rhsMod.Worldspaces.Items);
             }
             if (mask?.DialogTopics ?? true)
             {
-                this.DialogTopics.Items.Set(rhsMod.DialogTopics.Items.Values);
+                this.DialogTopics.Items.AddOrUpdate(rhsMod.DialogTopics.Items);
             }
             if (mask?.Quests ?? true)
             {
-                this.Quests.Items.Set(rhsMod.Quests.Items.Values);
+                this.Quests.Items.AddOrUpdate(rhsMod.Quests.Items);
             }
             if (mask?.IdleAnimations ?? true)
             {
-                this.IdleAnimations.Items.Set(rhsMod.IdleAnimations.Items.Values);
+                this.IdleAnimations.Items.AddOrUpdate(rhsMod.IdleAnimations.Items);
             }
             if (mask?.AIPackages ?? true)
             {
-                this.AIPackages.Items.Set(rhsMod.AIPackages.Items.Values);
+                this.AIPackages.Items.AddOrUpdate(rhsMod.AIPackages.Items);
             }
             if (mask?.CombatStyles ?? true)
             {
-                this.CombatStyles.Items.Set(rhsMod.CombatStyles.Items.Values);
+                this.CombatStyles.Items.AddOrUpdate(rhsMod.CombatStyles.Items);
             }
             if (mask?.LoadScreens ?? true)
             {
-                this.LoadScreens.Items.Set(rhsMod.LoadScreens.Items.Values);
+                this.LoadScreens.Items.AddOrUpdate(rhsMod.LoadScreens.Items);
             }
             if (mask?.LeveledSpells ?? true)
             {
-                this.LeveledSpells.Items.Set(rhsMod.LeveledSpells.Items.Values);
+                this.LeveledSpells.Items.AddOrUpdate(rhsMod.LeveledSpells.Items);
             }
             if (mask?.AnimatedObjects ?? true)
             {
-                this.AnimatedObjects.Items.Set(rhsMod.AnimatedObjects.Items.Values);
+                this.AnimatedObjects.Items.AddOrUpdate(rhsMod.AnimatedObjects.Items);
             }
             if (mask?.Waters ?? true)
             {
-                this.Waters.Items.Set(rhsMod.Waters.Items.Values);
+                this.Waters.Items.AddOrUpdate(rhsMod.Waters.Items);
             }
             if (mask?.EffectShaders ?? true)
             {
-                this.EffectShaders.Items.Set(rhsMod.EffectShaders.Items.Values);
+                this.EffectShaders.Items.AddOrUpdate(rhsMod.EffectShaders.Items);
             }
         }
 

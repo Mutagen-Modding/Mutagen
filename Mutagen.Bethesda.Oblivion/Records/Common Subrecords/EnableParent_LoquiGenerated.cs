@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    obj.Reference.Reference = default(IPlaced);
+                    obj.Reference = default(IPlaced);
                     break;
                 case EnableParent_FieldIndex.Flags:
                     obj.Flags = default(EnableParent.Flag);

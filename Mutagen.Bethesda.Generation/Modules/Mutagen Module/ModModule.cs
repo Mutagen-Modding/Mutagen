@@ -10,15 +10,25 @@ namespace Mutagen.Bethesda.Generation
 {
     public class ModModule : GenerationModule
     {
+        public override async Task<IEnumerable<string>> RequiredUsingStatements(ObjectGeneration obj)
+        {
+            if (obj.GetObjectData().ObjectType != ObjectType.Mod) return EnumerableExt<string>.Empty;
+            return new string[]
+            {
+                "DynamicData",
+                "CSharpExt.Rx"
+            };
+        }
+
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
-            fg.AppendLine($"private NotifyingDictionary<FormKey, IMajorRecord> _majorRecords = new NotifyingDictionary<FormKey, IMajorRecord>();");
-            fg.AppendLine($"public INotifyingDictionaryGetter<FormKey, IMajorRecord> MajorRecords => _majorRecords;");
+            fg.AppendLine($"private ISourceCache<IMajorRecord, FormKey> _majorRecords = new SourceCache<IMajorRecord, FormKey>(m => m.FormKey);");
+            fg.AppendLine($"public IObservableCache<IMajorRecord, FormKey> MajorRecords => _majorRecords;");
             fg.AppendLine($"public IMajorRecord this[FormKey id]");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("get => _majorRecords[id];");
+                fg.AppendLine("get => MajorRecords.Lookup(id).Value;");
                 fg.AppendLine("set => SetMajorRecord(id, value);");
             }
 
@@ -45,7 +55,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"case {subObj.Name} {field.Name.ToLower()}:");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"{loqui.ProtectedName}.Items.Set({field.Name.ToLower()});");
+                            fg.AppendLine($"{loqui.ProtectedName}.Items.AddOrUpdate({field.Name.ToLower()});");
                             fg.AppendLine($"break;");
                         }
                     }
@@ -59,7 +69,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public INotifyingKeyedCollection<FormKey, T> GetGroup<T>",
+                "public ISourceCache<T, FormKey> GetGroup<T>",
                 wheres: "where T : IMajorRecord"))
             {
             }
@@ -77,7 +87,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"if (t.Equals(typeof({subObj.Name})))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"return (INotifyingKeyedCollection<FormKey, T>){field.Name}.Items;");
+                        fg.AppendLine($"return (ISourceCache<T, FormKey>){field.Name}.Items;");
                     }
                 }
                 fg.AppendLine("throw new ArgumentException($\"Unkown group type: {t}\");");
@@ -101,7 +111,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (loqui.TargetObjectGeneration.Name == "Group")
                         {
-                            fg.AppendLine($"this.{field.Name}.Items.Set(rhsMod.{field.Name}.Items.Values);");
+                            fg.AppendLine($"this.{field.Name}.Items.AddOrUpdate(rhsMod.{field.Name}.Items);");
                         }
                         else
                         {
@@ -120,22 +130,34 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
         }
 
-        public override Task GenerateInCtor(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInCtor(ObjectGeneration obj, FileGeneration fg)
         {
-            foreach (var field in obj.IterateFields())
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            using (var args = new ArgsWrapper(fg,
+                $"Observable.Merge")
             {
-                if (!(field is LoquiType loqui)) continue;
-                if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
+                SemiColon = false
+            })
+            {
+                foreach (var field in obj.IterateFields())
                 {
-                    throw new ArgumentException();
-                }
-                if (subObj.BaseClassTrail().Any((b) => b.Name.Equals("MajorRecord")))
-                {
-                    fg.AppendLine($"{field.ProtectedName}.Items.Subscribe_Enumerable_Single((change) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change));");
+                    if (!(field is LoquiType loqui)) continue;
+                    if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
+                    if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
+                    {
+                        throw new ArgumentException();
+                    }
+                    if (subObj.BaseClassTrail().Any((b) => b.Name.Equals("MajorRecord")))
+                    {
+                        args.Add($"{field.ProtectedName}.Items.Connect().Transform<IMajorRecord, {subObj.Name}, FormKey>((i) => i)");
+                    }
                 }
             }
-            return base.GenerateInCtor(obj, fg);
+            using (new DepthWrapper(fg))
+            {
+                fg.AppendLine(".PopulateInto(_majorRecords);");
+            }
+            await base.GenerateInCtor(obj, fg);
         }
 
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)

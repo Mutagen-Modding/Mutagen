@@ -1958,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Effect_FieldIndex.MagicEffect:
-                    obj.MagicEffect.MagicEffect = default(MagicEffect);
+                    obj.MagicEffect = default(MagicEffect);
                     break;
                 case Effect_FieldIndex.Magnitude:
                     obj.Magnitude = default(UInt32);

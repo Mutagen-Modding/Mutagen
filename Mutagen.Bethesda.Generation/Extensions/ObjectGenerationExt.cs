@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Generation
             var data = await TryGetTriggeringRecordTypes(objGen);
             if (data.Failed)
             {
-                return EnumerableExt<RecordType>.EMPTY;
+                return EnumerableExt<RecordType>.Empty;
             }
             return data.Value;
         }

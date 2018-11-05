@@ -1317,13 +1317,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    obj.RelatedWaterDaytime.RelatedWaterDaytime = default(Water);
+                    obj.RelatedWaterDaytime = default(Water);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    obj.RelatedWaterNighttime.RelatedWaterNighttime = default(Water);
+                    obj.RelatedWaterNighttime = default(Water);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    obj.RelatedWaterUnderwater.RelatedWaterUnderwater = default(Water);
+                    obj.RelatedWaterUnderwater = default(Water);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");

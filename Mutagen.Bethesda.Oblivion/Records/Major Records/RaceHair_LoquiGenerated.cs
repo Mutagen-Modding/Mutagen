@@ -1242,10 +1242,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    obj.Male.Male = default(Hair);
+                    obj.Male = default(Hair);
                     break;
                 case RaceHair_FieldIndex.Female:
-                    obj.Female.Female = default(Hair);
+                    obj.Female = default(Hair);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");

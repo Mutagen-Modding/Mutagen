@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="OblivionMod" objType="Mod" failOnUnknownType="false" GUID="b6f626df-b164-466b-960a-1639d88f66bc" ID="3">
+  <Object name="OblivionMod" objType="Mod" failOnUnknownType="false" publicCtor="false" GUID="b6f626df-b164-466b-960a-1639d88f66bc" ID="3">
     <Fields>
       <RefDirect name="TES4" refName="TES4" nullable="Singleton" />
       <Group name="GameSettings" refName="GameSetting" />

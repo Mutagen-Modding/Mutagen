@@ -107,6 +107,35 @@ namespace Mutagen.Bethesda.Binary
                 masterReferences: masterReferences,
                 recordTypeConverter: null);
         }
+        
+        public bool Parse(
+            MutagenFrame frame,
+            out T item,
+            int fieldIndex,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            try
+            {
+                return Parse(
+                    frame: frame,
+                    item: out item,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null);
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+                item = default;
+                return false;
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
 
         public void ParseInto(
             MutagenFrame frame,

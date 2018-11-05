@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Task TypicalPatch(
             string[] mainArgs,
             ModKey outputMod,
-            Func<ModList<OblivionMod>, Task<OblivionMod>> processor,
+            Func<ModKey, ModList<OblivionMod>, Task<OblivionMod>> processor,
             GroupMask importMask = null)
         {
             return TypicalPatch(
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Task TypicalPatch(
             DirectoryPath dataFolder,
             ModKey outModKey,
-            Func<ModList<OblivionMod>, Task<OblivionMod>> processor,
+            Func<ModKey, ModList<OblivionMod>, Task<OblivionMod>> processor,
             GroupMask importMask = null)
         {
             if (!LoadOrder.TryGetUsualLoadOrder(dataFolder, out var loadOrder))

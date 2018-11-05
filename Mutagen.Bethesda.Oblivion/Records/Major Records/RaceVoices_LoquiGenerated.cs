@@ -1242,10 +1242,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    obj.Male.Male = default(Race);
+                    obj.Male = default(Race);
                     break;
                 case RaceVoices_FieldIndex.Female:
-                    obj.Female.Female = default(Race);
+                    obj.Female = default(Race);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");

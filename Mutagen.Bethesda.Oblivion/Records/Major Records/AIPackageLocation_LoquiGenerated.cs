@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Type = default(AIPackageLocation.LocationType);
                     break;
                 case AIPackageLocation_FieldIndex.LocationReference:
-                    obj.LocationReference.LocationReference = default(IPlaced);
+                    obj.LocationReference = default(IPlaced);
                     break;
                 case AIPackageLocation_FieldIndex.Radius:
                     obj.Radius = default(Single);

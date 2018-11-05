@@ -1694,13 +1694,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptEffect_FieldIndex.Script:
-                    obj.Script.Script = default(Script);
+                    obj.Script = default(Script);
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
                     obj.MagicSchool = default(MagicSchool);
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
-                    obj.VisualEffect.VisualEffect = default(MagicEffect);
+                    obj.VisualEffect = default(MagicEffect);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
                     obj.Flags = default(ScriptEffect.Flag);

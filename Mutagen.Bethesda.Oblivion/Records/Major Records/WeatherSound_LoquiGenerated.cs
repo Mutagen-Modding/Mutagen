@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    obj.Sound.Sound = default(Sound);
+                    obj.Sound = default(Sound);
                     break;
                 case WeatherSound_FieldIndex.Type:
                     obj.Type = default(WeatherSound.SoundType);

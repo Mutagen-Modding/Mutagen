@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda
             ModKey outputMod,
             List<ModKey> loadOrder,
             Func<FilePath, ModKey, Task<TryGet<TMod>>> importer,
-            Func<ModList<TMod>, Task<TMod>> processor)
+            Func<ModKey, ModList<TMod>, Task<TMod>> processor)
             where TMod : IMod<TMod>
         {
             return TypicalPatch(
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda
             ModKey outModKey,
             List<ModKey> loadOrder,
             Func<FilePath, ModKey, Task<TryGet<TMod>>> importer,
-            Func<ModList<TMod>, Task<TMod>> processor)
+            Func<ModKey, ModList<TMod>, Task<TMod>> processor)
             where TMod : IMod<TMod>
         {
             loadOrder.Remove(outModKey);
@@ -40,8 +40,8 @@ namespace Mutagen.Bethesda
                 dataFolder,
                 loadOrder,
                 importer);
-            var outMod = await processor(modList);
-            foreach (var npc in outMod.MajorRecords.Values)
+            var outMod = await processor(outModKey, modList);
+            foreach (var npc in outMod.MajorRecords.Items)
             {
                 npc.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
             }

@@ -16,9 +16,9 @@ namespace Mutagen.Bethesda
             IEnumerable<RecordType> uninterestingTypes = null)
         {
             this.InterestingTypes = new HashSet<RecordType>(
-                interestingTypes ?? EnumerableExt<RecordType>.EMPTY);
+                interestingTypes ?? EnumerableExt<RecordType>.Empty);
             this.UninterestingTypes = new HashSet<RecordType>(
-                uninterestingTypes ?? EnumerableExt<RecordType>.EMPTY);
+                uninterestingTypes ?? EnumerableExt<RecordType>.Empty);
         }
 
         public RecordInterest(

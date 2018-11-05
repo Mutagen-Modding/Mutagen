@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    fg.AppendLine($"{identifier.DirectAccess}.{this.Name} = default({loquiType.TypeName});");
+                    fg.AppendLine($"{identifier.DirectAccess} = default({loquiType.TypeName});");
                 }
             }
             fg.AppendLine("break;");

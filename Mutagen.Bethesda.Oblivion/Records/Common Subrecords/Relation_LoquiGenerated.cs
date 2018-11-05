@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
-                    obj.Faction.Faction = default(Faction);
+                    obj.Faction = default(Faction);
                     break;
                 case Relation_FieldIndex.Modifier:
                     obj.Modifier = default(Int32);

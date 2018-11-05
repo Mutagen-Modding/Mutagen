@@ -2836,7 +2836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObject_FieldIndex.Object:
-                    obj.Object.Object = default(MajorRecord);
+                    obj.Object = default(MajorRecord);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
                     obj.ParentIndex = default(UInt16);

@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case QuestTarget_FieldIndex.Target:
-                    obj.Target.Target = default(IPlaced);
+                    obj.Target = default(IPlaced);
                     break;
                 case QuestTarget_FieldIndex.Flags:
                     obj.Flags = default(QuestTarget.Flag);

@@ -1359,10 +1359,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LoadScreenLocation_FieldIndex.Direct:
-                    obj.Direct.Direct = default(Place);
+                    obj.Direct = default(Place);
                     break;
                 case LoadScreenLocation_FieldIndex.Indirect:
-                    obj.Indirect.Indirect = default(Worldspace);
+                    obj.Indirect = default(Worldspace);
                     break;
                 case LoadScreenLocation_FieldIndex.GridPoint:
                     obj.GridPoint = default(P2Int16);

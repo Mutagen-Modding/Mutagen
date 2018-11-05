@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BaseLayer_FieldIndex.Texture:
-                    obj.Texture.Texture = default(LandTexture);
+                    obj.Texture = default(LandTexture);
                     break;
                 case BaseLayer_FieldIndex.Quadrant:
                     obj.Quadrant = default(AlphaLayer.QuadrantEnum);

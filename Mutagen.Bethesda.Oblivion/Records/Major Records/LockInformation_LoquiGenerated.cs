@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Fluff = default(Byte[]);
                     break;
                 case LockInformation_FieldIndex.Key:
-                    obj.Key.Key = default(Key);
+                    obj.Key = default(Key);
                     break;
                 case LockInformation_FieldIndex.Flags:
                     obj.Flags = default(LockInformation.Flag);

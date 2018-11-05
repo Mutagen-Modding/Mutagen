@@ -2931,13 +2931,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.CounterEffectCount = default(UInt32);
                     break;
                 case MagicEffect_FieldIndex.Light:
-                    obj.Light.Light = default(Light);
+                    obj.Light = default(Light);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                     obj.ProjectileSpeed = default(Single);
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
-                    obj.EffectShader.EffectShader = default(EffectShader);
+                    obj.EffectShader = default(EffectShader);
                     break;
                 case MagicEffect_FieldIndex.SubData:
                     obj.SubData = default(MagicEffectSubData);

@@ -3,6 +3,8 @@ using Noggog.Notifying;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class EDIDLink<T> : FormIDLink<T>, IEDIDLink<T>
-       where T : IMajorRecord
+       where T : class, IMajorRecord
     {
         public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
         private IDisposable edidSub;

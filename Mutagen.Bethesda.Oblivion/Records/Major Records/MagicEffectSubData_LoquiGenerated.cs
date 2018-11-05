@@ -1684,19 +1684,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect.EnchantEffect = default(EffectShader);
+                    obj.EnchantEffect = default(EffectShader);
                     break;
                 case MagicEffectSubData_FieldIndex.CastingSound:
-                    obj.CastingSound.CastingSound = default(Sound);
+                    obj.CastingSound = default(Sound);
                     break;
                 case MagicEffectSubData_FieldIndex.BoltSound:
-                    obj.BoltSound.BoltSound = default(Sound);
+                    obj.BoltSound = default(Sound);
                     break;
                 case MagicEffectSubData_FieldIndex.HitSound:
-                    obj.HitSound.HitSound = default(Sound);
+                    obj.HitSound = default(Sound);
                     break;
                 case MagicEffectSubData_FieldIndex.AreaSound:
-                    obj.AreaSound.AreaSound = default(Sound);
+                    obj.AreaSound = default(Sound);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
                     obj.ConstantEffectEnchantmentFactor = default(Single);

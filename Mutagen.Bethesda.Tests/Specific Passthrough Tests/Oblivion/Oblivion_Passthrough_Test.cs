@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Tests
                     inputPath,
                     modKey: this.ModKey);
 
-                foreach (var record in mod.MajorRecords.Values)
+                foreach (var record in mod.MajorRecords.Items)
                 {
                     if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
                     {

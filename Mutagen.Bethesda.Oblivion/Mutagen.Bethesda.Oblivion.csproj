@@ -1010,13 +1010,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DynamicData">
-      <Version>6.4.0.2419</Version>
+      <Version>6.6.1.2507</Version>
     </PackageReference>
     <PackageReference Include="ReactiveUI">
-      <Version>8.3.1</Version>
+      <Version>9.1.1</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
-      <Version>3.1.1</Version>
+      <Version>4.1.2</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>

@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherChance_FieldIndex.Weather:
-                    obj.Weather.Weather = default(Weather);
+                    obj.Weather = default(Weather);
                     break;
                 case WeatherChance_FieldIndex.Chance:
                     obj.Chance = default(Int32);

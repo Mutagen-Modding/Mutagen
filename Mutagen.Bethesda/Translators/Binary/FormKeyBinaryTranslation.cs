@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Binary
             out EDIDLink<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             if (!frame.TryCheckUpcomingRead(4, out var ex))
             {
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Binary
             out EDIDSetLink<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             if (!frame.TryCheckUpcomingRead(4, out var ex))
             {
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             Int32BinaryTranslation.Instance.Write(
                 writer,
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             Int32BinaryTranslation.Instance.Write(
                 writer,
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             try
             {
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             try
             {

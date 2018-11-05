@@ -38,7 +38,8 @@ namespace Mutagen.Bethesda.Oblivion
         ICell,
         ILoquiObject<Cell>,
         ILoquiObjectSetter,
-        INamed, IPlace,
+        INamed,
+        IPlace,
         ILinkSubContainer,
         IEquatable<Cell>
     {

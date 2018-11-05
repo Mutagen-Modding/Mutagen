@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    obj.Faction.Faction = default(Faction);
+                    obj.Faction = default(Faction);
                     break;
                 case RankPlacement_FieldIndex.Rank:
                     obj.Rank = default(Byte);

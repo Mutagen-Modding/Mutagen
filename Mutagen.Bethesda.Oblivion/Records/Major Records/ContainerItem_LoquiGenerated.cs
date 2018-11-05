@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    obj.Item.Item = default(ItemAbstract);
+                    obj.Item = default(ItemAbstract);
                     break;
                 case ContainerItem_FieldIndex.Count:
                     obj.Count = default(UInt32);

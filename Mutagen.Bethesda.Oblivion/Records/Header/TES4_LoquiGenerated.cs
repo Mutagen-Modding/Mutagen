@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TES4_FieldIndex.Header, nameof(Header_IsSet));
         }
         bool ITES4Getter.Header_IsSet => Header_IsSet;
-        private Header _Header;
+        private Header _Header = new Header();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Header Header
         {
@@ -85,6 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
             Header value,
             bool markSet = true)
         {
+            if (value == null) value = new Header();
             this.RaiseAndSetIfChanged(ref _Header, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Header, nameof(Header), nameof(Header_IsSet));
         }
         public void Header_Unset()
