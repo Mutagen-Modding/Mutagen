@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static GameSettingFloat_Registration Registration => GameSettingFloat_Registration.Instance;
 
         #region Ctor
-        public GameSettingFloat()
+        protected GameSettingFloat()
         {
             CustomCtor();
         }
@@ -544,6 +544,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = GameSettingFloat_Registration.TRIGGERING_RECORD_TYPE;
+        public GameSettingFloat(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

@@ -13,6 +13,11 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public const char TRIGGER_CHAR = 's';
 
+        internal static GlobalShort Factory()
+        {
+            return new GlobalShort();
+        }
+
         partial void CustomCtor()
         {
             this.TypeChar = TRIGGER_CHAR;

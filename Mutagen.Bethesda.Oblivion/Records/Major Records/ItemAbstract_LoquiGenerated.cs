@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static ItemAbstract_Registration Registration => ItemAbstract_Registration.Instance;
 
         #region Ctor
-        public ItemAbstract()
+        protected ItemAbstract()
         {
             CustomCtor();
         }
@@ -361,6 +361,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public ItemAbstract(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

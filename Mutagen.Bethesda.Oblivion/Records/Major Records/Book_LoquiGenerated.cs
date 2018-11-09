@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Book_Registration Registration => Book_Registration.Instance;
 
         #region Ctor
-        public Book()
+        protected Book()
         {
             CustomCtor();
         }
@@ -1033,6 +1033,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Book(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

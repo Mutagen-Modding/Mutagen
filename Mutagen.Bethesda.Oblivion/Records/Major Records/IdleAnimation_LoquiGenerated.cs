@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
 
         #region Ctor
-        public IdleAnimation()
+        protected IdleAnimation()
         {
             CustomCtor();
         }
@@ -726,6 +726,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public IdleAnimation(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

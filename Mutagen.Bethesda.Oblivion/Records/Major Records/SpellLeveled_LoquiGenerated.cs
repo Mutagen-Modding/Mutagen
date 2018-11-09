@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static SpellLeveled_Registration Registration => SpellLeveled_Registration.Instance;
 
         #region Ctor
-        public SpellLeveled()
+        protected SpellLeveled()
         {
             CustomCtor();
         }
@@ -504,6 +504,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = SpellLeveled_Registration.TRIGGERING_RECORD_TYPE;
+        public SpellLeveled(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

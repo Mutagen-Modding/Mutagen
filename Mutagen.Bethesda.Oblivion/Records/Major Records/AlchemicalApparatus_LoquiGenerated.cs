@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
 
         #region Ctor
-        public AlchemicalApparatus()
+        protected AlchemicalApparatus()
         {
             CustomCtor();
         }
@@ -883,6 +883,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public AlchemicalApparatus(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

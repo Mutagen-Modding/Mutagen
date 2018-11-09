@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static LeveledSpell_Registration Registration => LeveledSpell_Registration.Instance;
 
         #region Ctor
-        public LeveledSpell()
+        protected LeveledSpell()
         {
             CustomCtor();
         }
@@ -699,6 +699,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public LeveledSpell(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

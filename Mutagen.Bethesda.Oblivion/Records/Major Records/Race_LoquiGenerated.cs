@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Race_Registration Registration => Race_Registration.Instance;
 
         #region Ctor
-        public Race()
+        protected Race()
         {
             CustomCtor();
         }
@@ -1812,6 +1812,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Race(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

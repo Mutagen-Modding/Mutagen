@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Class_Registration Registration => Class_Registration.Instance;
 
         #region Ctor
-        public Class()
+        protected Class()
         {
             CustomCtor();
         }
@@ -894,6 +894,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1,
             Break0 = 2
+        }
+        public Class(FormKey formKey)
+        {
+            this.FormKey = formKey;
         }
         #endregion
 

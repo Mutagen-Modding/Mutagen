@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Door_Registration Registration => Door_Registration.Instance;
 
         #region Ctor
-        public Door()
+        protected Door()
         {
             CustomCtor();
         }
@@ -852,6 +852,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Door(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

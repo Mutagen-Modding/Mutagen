@@ -85,6 +85,13 @@ namespace Mutagen.Bethesda.Generation
                 val: data.TriggeringRecordTypes);
         }
 
+        public static bool IsMajorRecord(this ObjectGeneration objGen)
+        {
+            if (objGen.GetObjectType() != ObjectType.Record) return false;
+            if (objGen.Name == "MajorRecord") return true;
+            return objGen.BaseClassTrail().Any(bo => bo.Name == "MajorRecord");
+        }
+
         public static ObjectType GetObjectType(this ObjectGeneration objGen)
         {
             var objType = objGen.GetObjectData().ObjectType;

@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Light_Registration Registration => Light_Registration.Instance;
 
         #region Ctor
-        public Light()
+        protected Light()
         {
             CustomCtor();
         }
@@ -1124,6 +1124,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Light(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

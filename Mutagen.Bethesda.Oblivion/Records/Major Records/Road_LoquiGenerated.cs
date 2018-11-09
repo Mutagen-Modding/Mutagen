@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Road_Registration Registration => Road_Registration.Instance;
 
         #region Ctor
-        public Road()
+        protected Road()
         {
             CustomCtor();
         }
@@ -496,6 +496,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Road_Registration.TRIGGERING_RECORD_TYPE;
+        public Road(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

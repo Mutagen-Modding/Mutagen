@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static GlobalFloat_Registration Registration => GlobalFloat_Registration.Instance;
 
         #region Ctor
-        public GlobalFloat()
+        protected GlobalFloat()
         {
             CustomCtor();
         }
@@ -493,6 +493,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = GlobalFloat_Registration.TRIGGERING_RECORD_TYPE;
+        public GlobalFloat(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

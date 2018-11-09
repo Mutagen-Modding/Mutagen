@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Grass_Registration Registration => Grass_Registration.Instance;
 
         #region Ctor
-        public Grass()
+        protected Grass()
         {
             CustomCtor();
         }
@@ -890,6 +890,10 @@ namespace Mutagen.Bethesda.Oblivion
         public enum DATADataType
         {
             Has = 1
+        }
+        public Grass(FormKey formKey)
+        {
+            this.FormKey = formKey;
         }
         #endregion
 

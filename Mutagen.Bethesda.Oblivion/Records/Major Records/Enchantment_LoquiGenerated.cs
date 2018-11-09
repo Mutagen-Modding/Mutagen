@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
 
         #region Ctor
-        public Enchantment()
+        protected Enchantment()
         {
             CustomCtor();
         }
@@ -760,6 +760,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Enchantment(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

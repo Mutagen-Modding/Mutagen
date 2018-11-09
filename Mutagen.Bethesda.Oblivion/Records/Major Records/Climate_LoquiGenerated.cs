@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Climate_Registration Registration => Climate_Registration.Instance;
 
         #region Ctor
-        public Climate()
+        protected Climate()
         {
             CustomCtor();
         }
@@ -1001,6 +1001,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Climate(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

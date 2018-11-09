@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
 
         #region Ctor
-        public SoulGem()
+        protected SoulGem()
         {
             CustomCtor();
         }
@@ -929,6 +929,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public SoulGem(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

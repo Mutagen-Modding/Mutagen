@@ -155,14 +155,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CSharpExt\CSharpExt.ReactiveUI\CSharpExt.ReactiveUI.csproj">
-      <Project>{2d77e882-e15c-4d45-8d7d-72d1b17c5e6b}</Project>
-      <Name>CSharpExt.ReactiveUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CSharpExt\CSharpExt.Rx\CSharpExt.Rx.csproj">
-      <Project>{89be6417-94e1-45e8-9c7b-34a177c2f719}</Project>
-      <Name>CSharpExt.Rx</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
       <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
       <Name>CSharpExt</Name>

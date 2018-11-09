@@ -22,6 +22,6 @@ namespace Mutagen.Bethesda
             string path,
             ModKey modKey);
         ModKey ModKey { get; }
-        //FormKey GetNextAvailableFormKey();
+        FormKey GetNextFormKey();
     }
 }

@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static GlobalShort_Registration Registration => GlobalShort_Registration.Instance;
 
         #region Ctor
-        public GlobalShort()
+        protected GlobalShort()
         {
             CustomCtor();
         }
@@ -493,6 +493,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = GlobalShort_Registration.TRIGGERING_RECORD_TYPE;
+        public GlobalShort(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

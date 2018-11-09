@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Faction_Registration Registration => Faction_Registration.Instance;
 
         #region Ctor
-        public Faction()
+        protected Faction()
         {
             CustomCtor();
         }
@@ -787,6 +787,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Faction(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

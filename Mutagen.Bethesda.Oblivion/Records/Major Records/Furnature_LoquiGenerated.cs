@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Furnature_Registration Registration => Furnature_Registration.Instance;
 
         #region Ctor
-        public Furnature()
+        protected Furnature()
         {
             CustomCtor();
         }
@@ -694,6 +694,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Furnature(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

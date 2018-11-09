@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static DialogItem_Registration Registration => DialogItem_Registration.Instance;
 
         #region Ctor
-        public DialogItem()
+        protected DialogItem()
         {
             _hasBeenSetTracker[(int)DialogItem_FieldIndex.Script] = true;
             CustomCtor();
@@ -994,6 +994,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public DialogItem(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Place_Registration Registration => Place_Registration.Instance;
 
         #region Ctor
-        public Place()
+        protected Place()
         {
             CustomCtor();
         }
@@ -361,6 +361,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Place(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

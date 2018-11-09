@@ -55,13 +55,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (triggerChar)
                 {
                     case GlobalInt.TRIGGER_CHAR:
-                        g = new GlobalInt();
+                        g = GlobalInt.Factory();
                         break;
                     case GlobalShort.TRIGGER_CHAR:
-                        g = new GlobalShort();
+                        g = GlobalShort.Factory();
                         break;
                     case GlobalFloat.TRIGGER_CHAR:
-                        g = new GlobalFloat();
+                        g = GlobalFloat.Factory();
                         break;
                     default:
                         errorMask.ReportExceptionOrThrow(

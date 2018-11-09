@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static LoadScreen_Registration Registration => LoadScreen_Registration.Instance;
 
         #region Ctor
-        public LoadScreen()
+        protected LoadScreen()
         {
             CustomCtor();
         }
@@ -666,6 +666,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public LoadScreen(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

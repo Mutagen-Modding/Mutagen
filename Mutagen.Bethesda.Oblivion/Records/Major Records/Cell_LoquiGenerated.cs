@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Cell_Registration Registration => Cell_Registration.Instance;
 
         #region Ctor
-        public Cell()
+        protected Cell()
         {
             CustomCtor();
         }
@@ -1496,6 +1496,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Cell(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

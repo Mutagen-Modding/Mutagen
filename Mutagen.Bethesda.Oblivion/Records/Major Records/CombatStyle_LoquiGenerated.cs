@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
 
         #region Ctor
-        public CombatStyle()
+        protected CombatStyle()
         {
             CustomCtor();
         }
@@ -1905,6 +1905,10 @@ namespace Mutagen.Bethesda.Oblivion
             Break2 = 8,
             Break3 = 16,
             Break4 = 32
+        }
+        public CombatStyle(FormKey formKey)
+        {
+            this.FormKey = formKey;
         }
         #endregion
 

@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
 
         #region Ctor
-        public PathGrid()
+        protected PathGrid()
         {
             CustomCtor();
         }
@@ -720,6 +720,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public PathGrid(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

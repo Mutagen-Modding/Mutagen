@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Eye_Registration Registration => Eye_Registration.Instance;
 
         #region Ctor
-        public Eye()
+        protected Eye()
         {
             CustomCtor();
         }
@@ -636,6 +636,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Eye_Registration.TRIGGERING_RECORD_TYPE;
+        public Eye(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

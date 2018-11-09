@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
 
         #region Ctor
-        public SkillRecord()
+        protected SkillRecord()
         {
             CustomCtor();
         }
@@ -1074,6 +1074,10 @@ namespace Mutagen.Bethesda.Oblivion
         public enum DATADataType
         {
             Has = 1
+        }
+        public SkillRecord(FormKey formKey)
+        {
+            this.FormKey = formKey;
         }
         #endregion
 

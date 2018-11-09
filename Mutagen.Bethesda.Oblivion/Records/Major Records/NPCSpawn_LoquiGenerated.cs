@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static NPCSpawn_Registration Registration => NPCSpawn_Registration.Instance;
 
         #region Ctor
-        public NPCSpawn()
+        protected NPCSpawn()
         {
             CustomCtor();
         }
@@ -361,6 +361,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public NPCSpawn(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static PlacedObject_Registration Registration => PlacedObject_Registration.Instance;
 
         #region Ctor
-        public PlacedObject()
+        protected PlacedObject()
         {
             CustomCtor();
         }
@@ -1822,6 +1822,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public PlacedObject(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

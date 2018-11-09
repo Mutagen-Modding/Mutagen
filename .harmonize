@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>bab199880581eba9bff33d1a07d74f546e860694</Sha>
+         <Sha>4315a6caeecefa5bff8b5c1ddce77676d60078d0</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-04-2018 23:06:23</CommitDate>
-         <Description>ObservableCacheExt.TryGetValue</Description>
+         <CommitDate>11-04-2018 23:31:27</CommitDate>
+         <Description>Merged in separate Rx libraries into main library</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e1bb55c962af8b77c7fd8b7d356c7401c05e20b3</Sha>
+         <Sha>e2895734df73f232c1e101410b9c2e2958f4146b</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-04-2018 23:11:04</CommitDate>
-         <Description>Added missing not null implementation with recent refactors</Description>
+         <CommitDate>11-08-2018 22:27:31</CommitDate>
+         <Description>Ctor permission level refactor</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

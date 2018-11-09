@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Water_Registration Registration => Water_Registration.Instance;
 
         #region Ctor
-        public Water()
+        protected Water()
         {
             CustomCtor();
         }
@@ -1803,6 +1803,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Water(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

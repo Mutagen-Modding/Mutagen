@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Creature_Registration Registration => Creature_Registration.Instance;
 
         #region Ctor
-        public Creature()
+        protected Creature()
         {
             CustomCtor();
         }
@@ -2768,6 +2768,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Creature(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

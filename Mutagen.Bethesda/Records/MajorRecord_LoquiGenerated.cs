@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
 
         #region Ctor
-        public MajorRecord()
+        protected MajorRecord()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
@@ -556,6 +556,10 @@ namespace Mutagen.Bethesda
                 path: path,
                 errorMask: out errorMask,
                 doMasks: doMasks);
+        }
+        public MajorRecord(FormKey formKey)
+        {
+            this.FormKey = formKey;
         }
         #endregion
 

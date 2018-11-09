@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Quest_Registration Registration => Quest_Registration.Instance;
 
         #region Ctor
-        public Quest()
+        protected Quest()
         {
             CustomCtor();
         }
@@ -904,6 +904,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Quest(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

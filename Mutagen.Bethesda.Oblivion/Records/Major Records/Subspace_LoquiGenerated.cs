@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Subspace_Registration Registration => Subspace_Registration.Instance;
 
         #region Ctor
-        public Subspace()
+        protected Subspace()
         {
             CustomCtor();
         }
@@ -565,6 +565,10 @@ namespace Mutagen.Bethesda.Oblivion
         public enum DNAMDataType
         {
             Has = 1
+        }
+        public Subspace(FormKey formKey)
+        {
+            this.FormKey = formKey;
         }
         #endregion
 

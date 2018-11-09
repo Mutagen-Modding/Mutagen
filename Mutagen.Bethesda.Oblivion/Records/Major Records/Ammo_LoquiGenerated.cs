@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Ammo_Registration Registration => Ammo_Registration.Instance;
 
         #region Ctor
-        public Ammo()
+        protected Ammo()
         {
             CustomCtor();
         }
@@ -978,6 +978,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Ammo(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

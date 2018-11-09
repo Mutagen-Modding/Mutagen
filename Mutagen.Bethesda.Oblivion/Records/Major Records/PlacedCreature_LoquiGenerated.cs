@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
 
         #region Ctor
-        public PlacedCreature()
+        protected PlacedCreature()
         {
             CustomCtor();
         }
@@ -911,6 +911,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public PlacedCreature(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

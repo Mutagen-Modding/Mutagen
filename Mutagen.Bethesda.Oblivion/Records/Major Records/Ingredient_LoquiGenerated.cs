@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
 
         #region Ctor
-        public Ingredient()
+        protected Ingredient()
         {
             CustomCtor();
         }
@@ -937,6 +937,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Ingredient(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

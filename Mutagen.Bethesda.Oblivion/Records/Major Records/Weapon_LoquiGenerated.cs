@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Weapon_Registration Registration => Weapon_Registration.Instance;
 
         #region Ctor
-        public Weapon()
+        protected Weapon()
         {
             CustomCtor();
         }
@@ -1119,6 +1119,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Weapon(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

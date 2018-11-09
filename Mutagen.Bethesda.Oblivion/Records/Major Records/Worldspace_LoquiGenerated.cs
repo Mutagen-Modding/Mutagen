@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
 
         #region Ctor
-        public Worldspace()
+        protected Worldspace()
         {
             CustomCtor();
         }
@@ -1309,6 +1309,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Worldspace(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

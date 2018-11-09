@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Landscape_Registration Registration => Landscape_Registration.Instance;
 
         #region Ctor
-        public Landscape()
+        protected Landscape()
         {
             CustomCtor();
         }
@@ -867,6 +867,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Landscape(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

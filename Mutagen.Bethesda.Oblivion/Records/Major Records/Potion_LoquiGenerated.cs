@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Potion_Registration Registration => Potion_Registration.Instance;
 
         #region Ctor
-        public Potion()
+        protected Potion()
         {
             CustomCtor();
         }
@@ -937,6 +937,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Potion(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

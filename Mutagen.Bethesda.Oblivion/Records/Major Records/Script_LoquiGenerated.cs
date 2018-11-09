@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Script_Registration Registration => Script_Registration.Instance;
 
         #region Ctor
-        public Script()
+        protected Script()
         {
             _hasBeenSetTracker[(int)Script_FieldIndex.Fields] = true;
             CustomCtor();
@@ -532,6 +532,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Script(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

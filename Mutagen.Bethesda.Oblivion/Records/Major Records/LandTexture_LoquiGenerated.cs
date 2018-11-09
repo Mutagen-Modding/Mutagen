@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
 
         #region Ctor
-        public LandTexture()
+        protected LandTexture()
         {
             CustomCtor();
         }
@@ -731,6 +731,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public LandTexture(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

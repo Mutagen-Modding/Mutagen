@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
 
         #region Ctor
-        public LeveledCreature()
+        protected LeveledCreature()
         {
             CustomCtor();
         }
@@ -759,6 +759,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public LeveledCreature(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

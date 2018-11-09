@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Flora_Registration Registration => Flora_Registration.Instance;
 
         #region Ctor
-        public Flora()
+        protected Flora()
         {
             CustomCtor();
         }
@@ -815,6 +815,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Flora(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

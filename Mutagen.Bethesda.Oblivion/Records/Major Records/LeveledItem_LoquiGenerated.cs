@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
 
         #region Ctor
-        public LeveledItem()
+        protected LeveledItem()
         {
             CustomCtor();
         }
@@ -717,6 +717,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public LeveledItem(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

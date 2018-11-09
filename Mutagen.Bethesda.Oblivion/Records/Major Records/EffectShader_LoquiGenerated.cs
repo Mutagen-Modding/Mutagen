@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static EffectShader_Registration Registration => EffectShader_Registration.Instance;
 
         #region Ctor
-        public EffectShader()
+        protected EffectShader()
         {
             CustomCtor();
         }
@@ -2653,6 +2653,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1,
             Break0 = 2
+        }
+        public EffectShader(FormKey formKey)
+        {
+            this.FormKey = formKey;
         }
         #endregion
 

@@ -11,6 +11,7 @@ using Noggog;
 using Noggog.Notifying;
 using CSharpExt.Rx;
 using DynamicData;
+using System.Threading;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -42,6 +43,13 @@ namespace Mutagen.Bethesda.Oblivion
                 .PopulateInto(this._majorRecords);
             //this.SubscribeToWorldspaces();
             //this.SubscribeToDialogs();
+        }
+
+        public FormKey GetNextFormKey()
+        {
+            return new FormKey(
+                this.ModKey,
+                this.TES4.Header.NextObjectID++);
         }
 
         //#region Cell Subscription

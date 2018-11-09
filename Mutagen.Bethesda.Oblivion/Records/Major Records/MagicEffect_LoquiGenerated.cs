@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
 
         #region Ctor
-        public MagicEffect()
+        protected MagicEffect()
         {
             CustomCtor();
         }
@@ -1159,6 +1159,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public MagicEffect(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
 
         #region Ctor
-        public DialogTopic()
+        protected DialogTopic()
         {
             CustomCtor();
         }
@@ -735,6 +735,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public DialogTopic(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

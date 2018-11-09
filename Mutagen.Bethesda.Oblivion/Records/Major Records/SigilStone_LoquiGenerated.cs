@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static SigilStone_Registration Registration => SigilStone_Registration.Instance;
 
         #region Ctor
-        public SigilStone()
+        protected SigilStone()
         {
             CustomCtor();
         }
@@ -912,6 +912,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public SigilStone(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static ClothingAbstract_Registration Registration => ClothingAbstract_Registration.Instance;
 
         #region Ctor
-        public ClothingAbstract()
+        protected ClothingAbstract()
         {
             CustomCtor();
         }
@@ -1050,6 +1050,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public ClothingAbstract(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

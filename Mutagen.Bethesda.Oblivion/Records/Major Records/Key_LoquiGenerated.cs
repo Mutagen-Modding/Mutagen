@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Key_Registration Registration => Key_Registration.Instance;
 
         #region Ctor
-        public Key()
+        protected Key()
         {
             CustomCtor();
         }
@@ -805,6 +805,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Key(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Armor_Registration Registration => Armor_Registration.Instance;
 
         #region Ctor
-        public Armor()
+        protected Armor()
         {
             CustomCtor();
         }
@@ -667,6 +667,10 @@ namespace Mutagen.Bethesda.Oblivion
         public enum DATADataType
         {
             Has = 1
+        }
+        public Armor(FormKey formKey)
+        {
+            this.FormKey = formKey;
         }
         #endregion
 

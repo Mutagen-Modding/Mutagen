@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Birthsign_Registration Registration => Birthsign_Registration.Instance;
 
         #region Ctor
-        public Birthsign()
+        protected Birthsign()
         {
             CustomCtor();
         }
@@ -729,6 +729,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Birthsign(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

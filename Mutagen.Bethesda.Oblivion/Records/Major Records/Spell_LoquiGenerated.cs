@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Spell_Registration Registration => Spell_Registration.Instance;
 
         #region Ctor
-        public Spell()
+        protected Spell()
         {
             CustomCtor();
         }
@@ -467,6 +467,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Spell(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

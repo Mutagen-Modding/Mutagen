@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
 
         #region Ctor
-        public AnimatedObject()
+        protected AnimatedObject()
         {
             CustomCtor();
         }
@@ -567,6 +567,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public AnimatedObject(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

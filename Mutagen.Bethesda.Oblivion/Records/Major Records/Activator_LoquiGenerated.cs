@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Activator_Registration Registration => Activator_Registration.Instance;
 
         #region Ctor
-        public Activator()
+        protected Activator()
         {
             CustomCtor();
         }
@@ -660,6 +660,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Activator(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

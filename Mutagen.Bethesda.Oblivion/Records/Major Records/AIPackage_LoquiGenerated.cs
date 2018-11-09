@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
 
         #region Ctor
-        public AIPackage()
+        protected AIPackage()
         {
             CustomCtor();
         }
@@ -819,6 +819,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public AIPackage(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation

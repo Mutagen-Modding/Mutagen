@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Tree_Registration Registration => Tree_Registration.Instance;
 
         #region Ctor
-        public Tree()
+        protected Tree()
         {
             CustomCtor();
         }
@@ -1017,6 +1017,10 @@ namespace Mutagen.Bethesda.Oblivion
         public enum BNAMDataType
         {
             Has = 1
+        }
+        public Tree(FormKey formKey)
+        {
+            this.FormKey = formKey;
         }
         #endregion
 
