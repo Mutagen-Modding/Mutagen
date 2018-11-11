@@ -52,9 +52,9 @@
       <Data>
         <Fields>
           <Enum name="CreatureType" enumName="Creature.CreatureTypeEnum" byteLength="1" />
-          <UInt8 name="CombatSKill" />
-          <UInt8 name="MagicSKill" />
-          <UInt8 name="StealthSKill" />
+          <UInt8 name="CombatSkill" />
+          <UInt8 name="MagicSkill" />
+          <UInt8 name="StealthSkill" />
           <Enum name="SoulLevel" enumName="SoulLevel" byteLength="2" />
           <UInt32 name="Health" />
           <UInt16 name="AttackDamage" />
