@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public OblivionMod(ModKey modKey)
+            : this()
         {
             this.ModKey = modKey;
         }
