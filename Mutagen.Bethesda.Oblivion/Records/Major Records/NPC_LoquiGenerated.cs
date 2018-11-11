@@ -109,12 +109,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model INPCGetter.Model => this.Model;
         #endregion
-        #region NPCFlags
-        private NPC.NPCFlag _NPCFlags;
-        public NPC.NPCFlag NPCFlags
+        #region Flags
+        private NPC.NPCFlag _Flags;
+        public NPC.NPCFlag Flags
         {
-            get => this._NPCFlags;
-            set => this.RaiseAndSetIfChanged(ref this._NPCFlags, value, nameof(NPCFlags));
+            get => this._Flags;
+            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
         }
         #endregion
         #region BaseSpellPoints
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(this.Model, rhs.Model)) return false;
             }
-            if (this.NPCFlags != rhs.NPCFlags) return false;
+            if (this.Flags != rhs.Flags) return false;
             if (this.BaseSpellPoints != rhs.BaseSpellPoints) return false;
             if (this.Fatigue != rhs.Fatigue) return false;
             if (this.BarterGold != rhs.BarterGold) return false;
@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
             }
-            ret = HashHelper.GetHashCode(NPCFlags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(BaseSpellPoints).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Fatigue).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(BarterGold).CombineHashCode(ret);
@@ -1552,20 +1552,20 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
-                case "NPCFlags":
+                case "Flags":
                     try
                     {
-                        errorMask?.PushIndex((int)NPC_FieldIndex.NPCFlags);
+                        errorMask?.PushIndex((int)NPC_FieldIndex.Flags);
                         if (EnumXmlTranslation<NPC.NPCFlag>.Instance.Parse(
                             root: root,
-                            item: out NPC.NPCFlag NPCFlagsParse,
+                            item: out NPC.NPCFlag FlagsParse,
                             errorMask: errorMask))
                         {
-                            item.NPCFlags = NPCFlagsParse;
+                            item.Flags = FlagsParse;
                         }
                         else
                         {
-                            item.NPCFlags = default(NPC.NPCFlag);
+                            item.Flags = default(NPC.NPCFlag);
                         }
                     }
                     catch (Exception ex)
@@ -3138,7 +3138,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return Eyes.HasBeenSet;
                 case NPC_FieldIndex.CombatStyle:
                     return CombatStyle_Property.HasBeenSet;
-                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.Flags:
                 case NPC_FieldIndex.BaseSpellPoints:
                 case NPC_FieldIndex.Fatigue:
                 case NPC_FieldIndex.BarterGold:
@@ -3638,17 +3638,17 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         try
                         {
-                            errorMask?.PushIndex((int)NPC_FieldIndex.NPCFlags);
+                            errorMask?.PushIndex((int)NPC_FieldIndex.Flags);
                             if (EnumBinaryTranslation<NPC.NPCFlag>.Instance.Parse(
                                 frame: dataFrame.SpawnWithLength(4),
-                                item: out NPC.NPCFlag NPCFlagsParse,
+                                item: out NPC.NPCFlag FlagsParse,
                                 errorMask: errorMask))
                             {
-                                item.NPCFlags = NPCFlagsParse;
+                                item.Flags = FlagsParse;
                             }
                             else
                             {
-                                item.NPCFlags = default(NPC.NPCFlag);
+                                item.Flags = default(NPC.NPCFlag);
                             }
                         }
                         catch (Exception ex)
@@ -5168,8 +5168,8 @@ namespace Mutagen.Bethesda.Oblivion
                 case NPC_FieldIndex.Model:
                     this.Model = (Model)obj;
                     break;
-                case NPC_FieldIndex.NPCFlags:
-                    this.NPCFlags = (NPC.NPCFlag)obj;
+                case NPC_FieldIndex.Flags:
+                    this.Flags = (NPC.NPCFlag)obj;
                     break;
                 case NPC_FieldIndex.BaseSpellPoints:
                     this.BaseSpellPoints = (UInt16)obj;
@@ -5406,8 +5406,8 @@ namespace Mutagen.Bethesda.Oblivion
                 case NPC_FieldIndex.Model:
                     obj.Model = (Model)pair.Value;
                     break;
-                case NPC_FieldIndex.NPCFlags:
-                    obj.NPCFlags = (NPC.NPCFlag)pair.Value;
+                case NPC_FieldIndex.Flags:
+                    obj.Flags = (NPC.NPCFlag)pair.Value;
                     break;
                 case NPC_FieldIndex.BaseSpellPoints:
                     obj.BaseSpellPoints = (UInt16)pair.Value;
@@ -5632,7 +5632,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model item, bool hasBeenSet = true);
         void Model_Unset();
 
-        new NPC.NPCFlag NPCFlags { get; set; }
+        new NPC.NPCFlag Flags { get; set; }
 
         new UInt16 BaseSpellPoints { get; set; }
 
@@ -5778,8 +5778,8 @@ namespace Mutagen.Bethesda.Oblivion
         bool Model_IsSet { get; }
 
         #endregion
-        #region NPCFlags
-        NPC.NPCFlag NPCFlags { get; }
+        #region Flags
+        NPC.NPCFlag Flags { get; }
 
         #endregion
         #region BaseSpellPoints
@@ -6055,7 +6055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         RecordType = 4,
         Name = 5,
         Model = 6,
-        NPCFlags = 7,
+        Flags = 7,
         BaseSpellPoints = 8,
         Fatigue = 9,
         BarterGold = 10,
@@ -6169,8 +6169,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)NPC_FieldIndex.Name;
                 case "MODEL":
                     return (ushort)NPC_FieldIndex.Model;
-                case "NPCFLAGS":
-                    return (ushort)NPC_FieldIndex.NPCFlags;
+                case "FLAGS":
+                    return (ushort)NPC_FieldIndex.Flags;
                 case "BASESPELLPOINTS":
                     return (ushort)NPC_FieldIndex.BaseSpellPoints;
                 case "FATIGUE":
@@ -6314,7 +6314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.Model:
-                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.Flags:
                 case NPC_FieldIndex.BaseSpellPoints:
                 case NPC_FieldIndex.Fatigue:
                 case NPC_FieldIndex.BarterGold:
@@ -6387,7 +6387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Items:
                     return true;
                 case NPC_FieldIndex.Name:
-                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.Flags:
                 case NPC_FieldIndex.BaseSpellPoints:
                 case NPC_FieldIndex.Fatigue:
                 case NPC_FieldIndex.BarterGold:
@@ -6461,7 +6461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.Model:
-                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.Flags:
                 case NPC_FieldIndex.BaseSpellPoints:
                 case NPC_FieldIndex.Fatigue:
                 case NPC_FieldIndex.BarterGold:
@@ -6539,8 +6539,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Name";
                 case NPC_FieldIndex.Model:
                     return "Model";
-                case NPC_FieldIndex.NPCFlags:
-                    return "NPCFlags";
+                case NPC_FieldIndex.Flags:
+                    return "Flags";
                 case NPC_FieldIndex.BaseSpellPoints:
                     return "BaseSpellPoints";
                 case NPC_FieldIndex.Fatigue:
@@ -6677,7 +6677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.Model:
-                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.Flags:
                 case NPC_FieldIndex.BaseSpellPoints:
                 case NPC_FieldIndex.Fatigue:
                 case NPC_FieldIndex.BarterGold:
@@ -6753,7 +6753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case NPC_FieldIndex.Name:
                 case NPC_FieldIndex.Model:
-                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.Flags:
                 case NPC_FieldIndex.BaseSpellPoints:
                 case NPC_FieldIndex.Fatigue:
                 case NPC_FieldIndex.BarterGold:
@@ -6831,7 +6831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case NPC_FieldIndex.Model:
                     return typeof(Model);
-                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.Flags:
                     return typeof(NPC.NPCFlag);
                 case NPC_FieldIndex.BaseSpellPoints:
                     return typeof(UInt16);
@@ -7121,12 +7121,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.NPCFlags ?? true)
+            if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.NPCFlags);
+                errorMask?.PushIndex((int)NPC_FieldIndex.Flags);
                 try
                 {
-                    item.NPCFlags = rhs.NPCFlags;
+                    item.Flags = rhs.Flags;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -8345,7 +8345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
-                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.Flags:
                 case NPC_FieldIndex.BaseSpellPoints:
                 case NPC_FieldIndex.Fatigue:
                 case NPC_FieldIndex.BarterGold:
@@ -8472,8 +8472,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Model:
                     obj.Model_Unset();
                     break;
-                case NPC_FieldIndex.NPCFlags:
-                    obj.NPCFlags = default(NPC.NPCFlag);
+                case NPC_FieldIndex.Flags:
+                    obj.Flags = default(NPC.NPCFlag);
                     break;
                 case NPC_FieldIndex.BaseSpellPoints:
                     obj.BaseSpellPoints = default(UInt16);
@@ -8674,7 +8674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NPC_FieldIndex enu = (NPC_FieldIndex)index;
             switch (enu)
             {
-                case NPC_FieldIndex.NPCFlags:
+                case NPC_FieldIndex.Flags:
                 case NPC_FieldIndex.BaseSpellPoints:
                 case NPC_FieldIndex.Fatigue:
                 case NPC_FieldIndex.BarterGold:
@@ -8776,8 +8776,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Name;
                 case NPC_FieldIndex.Model:
                     return obj.Model;
-                case NPC_FieldIndex.NPCFlags:
-                    return obj.NPCFlags;
+                case NPC_FieldIndex.Flags:
+                    return obj.Flags;
                 case NPC_FieldIndex.BaseSpellPoints:
                     return obj.BaseSpellPoints;
                 case NPC_FieldIndex.Fatigue:
@@ -8913,7 +8913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.NPCFlags = default(NPC.NPCFlag);
+            item.Flags = default(NPC.NPCFlag);
             item.BaseSpellPoints = default(UInt16);
             item.Fatigue = default(UInt16);
             item.BarterGold = default(UInt16);
@@ -8995,7 +8995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.NPCFlags = item.NPCFlags == rhs.NPCFlags;
+            ret.Flags = item.Flags == rhs.Flags;
             ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
             ret.Fatigue = item.Fatigue == rhs.Fatigue;
             ret.BarterGold = item.BarterGold == rhs.BarterGold;
@@ -9216,9 +9216,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Model?.ToString(fg, "Model");
                 }
-                if (printMask?.NPCFlags ?? true)
+                if (printMask?.Flags ?? true)
                 {
-                    fg.AppendLine($"NPCFlags => {item.NPCFlags}");
+                    fg.AppendLine($"Flags => {item.Flags}");
                 }
                 if (printMask?.BaseSpellPoints ?? true)
                 {
@@ -9589,7 +9589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new NPC_Mask<bool>();
             ret.Name = item.Name_IsSet;
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.NPCFlags = true;
+            ret.Flags = true;
             ret.BaseSpellPoints = true;
             ret.Fatigue = true;
             ret.BarterGold = true;
@@ -9784,13 +9784,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.Model));
             }
-            if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.NPCFlags) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<NPC.NPCFlag>.Instance.Write(
                     node: elem,
-                    name: nameof(item.NPCFlags),
-                    item: item.NPCFlags,
-                    fieldIndex: (int)NPC_FieldIndex.NPCFlags,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)NPC_FieldIndex.Flags,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.BaseSpellPoints) ?? true))
@@ -10521,9 +10521,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.NPCFlag>.Instance.Write(
                         writer,
-                        item.NPCFlags,
+                        item.Flags,
                         length: 4,
-                        fieldIndex: (int)NPC_FieldIndex.NPCFlags,
+                        fieldIndex: (int)NPC_FieldIndex.Flags,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                         writer: writer,
@@ -11008,7 +11008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Name = initialValue;
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.NPCFlags = initialValue;
+            this.Flags = initialValue;
             this.BaseSpellPoints = initialValue;
             this.Fatigue = initialValue;
             this.BarterGold = initialValue;
@@ -11077,7 +11077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public T Name;
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
-        public T NPCFlags;
+        public T Flags;
         public T BaseSpellPoints;
         public T Fatigue;
         public T BarterGold;
@@ -11155,7 +11155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Name, rhs.Name)) return false;
             if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.NPCFlags, rhs.NPCFlags)) return false;
+            if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.BaseSpellPoints, rhs.BaseSpellPoints)) return false;
             if (!object.Equals(this.Fatigue, rhs.Fatigue)) return false;
             if (!object.Equals(this.BarterGold, rhs.BarterGold)) return false;
@@ -11225,7 +11225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.NPCFlags?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.BaseSpellPoints?.GetHashCode());
             ret = ret.CombineHashCode(this.Fatigue?.GetHashCode());
             ret = ret.CombineHashCode(this.BarterGold?.GetHashCode());
@@ -11304,7 +11304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (!eval(this.Model.Overall)) return false;
                 if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
             }
-            if (!eval(this.NPCFlags)) return false;
+            if (!eval(this.Flags)) return false;
             if (!eval(this.BaseSpellPoints)) return false;
             if (!eval(this.Fatigue)) return false;
             if (!eval(this.BarterGold)) return false;
@@ -11454,7 +11454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model.Specific = this.Model.Specific.Translate(eval);
                 }
             }
-            obj.NPCFlags = eval(this.NPCFlags);
+            obj.Flags = eval(this.Flags);
             obj.BaseSpellPoints = eval(this.BaseSpellPoints);
             obj.Fatigue = eval(this.Fatigue);
             obj.BarterGold = eval(this.BarterGold);
@@ -11666,9 +11666,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Model?.ToString(fg);
                 }
-                if (printMask?.NPCFlags ?? true)
+                if (printMask?.Flags ?? true)
                 {
-                    fg.AppendLine($"NPCFlags => {NPCFlags}");
+                    fg.AppendLine($"Flags => {Flags}");
                 }
                 if (printMask?.BaseSpellPoints ?? true)
                 {
@@ -12056,7 +12056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public Exception Name;
         public MaskItem<Exception, Model_ErrorMask> Model;
-        public Exception NPCFlags;
+        public Exception Flags;
         public Exception BaseSpellPoints;
         public Exception Fatigue;
         public Exception BarterGold;
@@ -12131,8 +12131,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Name;
                 case NPC_FieldIndex.Model:
                     return Model;
-                case NPC_FieldIndex.NPCFlags:
-                    return NPCFlags;
+                case NPC_FieldIndex.Flags:
+                    return Flags;
                 case NPC_FieldIndex.BaseSpellPoints:
                     return BaseSpellPoints;
                 case NPC_FieldIndex.Fatigue:
@@ -12273,8 +12273,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Model:
                     this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
                     break;
-                case NPC_FieldIndex.NPCFlags:
-                    this.NPCFlags = ex;
+                case NPC_FieldIndex.Flags:
+                    this.Flags = ex;
                     break;
                 case NPC_FieldIndex.BaseSpellPoints:
                     this.BaseSpellPoints = ex;
@@ -12479,8 +12479,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPC_FieldIndex.Model:
                     this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
                     break;
-                case NPC_FieldIndex.NPCFlags:
-                    this.NPCFlags = (Exception)obj;
+                case NPC_FieldIndex.Flags:
+                    this.Flags = (Exception)obj;
                     break;
                 case NPC_FieldIndex.BaseSpellPoints:
                     this.BaseSpellPoints = (Exception)obj;
@@ -12679,7 +12679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Overall != null) return true;
             if (Name != null) return true;
             if (Model != null) return true;
-            if (NPCFlags != null) return true;
+            if (Flags != null) return true;
             if (BaseSpellPoints != null) return true;
             if (Fatigue != null) return true;
             if (BarterGold != null) return true;
@@ -12779,7 +12779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.ToString_FillInternal(fg);
             fg.AppendLine($"Name => {Name}");
             Model?.ToString(fg);
-            fg.AppendLine($"NPCFlags => {NPCFlags}");
+            fg.AppendLine($"Flags => {Flags}");
             fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
             fg.AppendLine($"Fatigue => {Fatigue}");
             fg.AppendLine($"BarterGold => {BarterGold}");
@@ -12977,7 +12977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new NPC_ErrorMask();
             ret.Name = this.Name.Combine(rhs.Name);
             ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
-            ret.NPCFlags = this.NPCFlags.Combine(rhs.NPCFlags);
+            ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.BaseSpellPoints = this.BaseSpellPoints.Combine(rhs.BaseSpellPoints);
             ret.Fatigue = this.Fatigue.Combine(rhs.Fatigue);
             ret.BarterGold = this.BarterGold.Combine(rhs.BarterGold);
@@ -13063,7 +13063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool NPCFlags;
+        public bool Flags;
         public bool BaseSpellPoints;
         public bool Fatigue;
         public bool BarterGold;
@@ -13135,7 +13135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private TranslationCrystal _crystal;
         public bool Name;
         public MaskItem<bool, Model_TranslationMask> Model;
-        public bool NPCFlags;
+        public bool Flags;
         public bool BaseSpellPoints;
         public bool Fatigue;
         public bool BarterGold;
@@ -13205,7 +13205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.GetCrystal(ret);
             ret.Add((Name, null));
             ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((NPCFlags, null));
+            ret.Add((Flags, null));
             ret.Add((BaseSpellPoints, null));
             ret.Add((Fatigue, null));
             ret.Add((BarterGold, null));
