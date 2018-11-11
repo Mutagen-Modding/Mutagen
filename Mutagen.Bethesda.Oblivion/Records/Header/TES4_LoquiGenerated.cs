@@ -68,32 +68,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Header
-        public bool Header_IsSet
-        {
-            get => _hasBeenSetTracker[(int)TES4_FieldIndex.Header];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)TES4_FieldIndex.Header, nameof(Header_IsSet));
-        }
-        bool ITES4Getter.Header_IsSet => Header_IsSet;
-        private Header _Header = new Header();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Header _Header = new Header();
         public Header Header
         {
             get => _Header;
-            set => Header_Set(value);
+            set => _Header = value ?? new Header();
         }
-        public void Header_Set(
-            Header value,
-            bool markSet = true)
-        {
-            if (value == null) value = new Header();
-            this.RaiseAndSetIfChanged(ref _Header, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Header, nameof(Header), nameof(Header_IsSet));
-        }
-        public void Header_Unset()
-        {
-            this.Header_Set(default(Header), false);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Header ITES4Getter.Header => this.Header;
         #endregion
         #region TypeOffsets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -279,11 +260,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
-            if (Header_IsSet != rhs.Header_IsSet) return false;
-            if (Header_IsSet)
-            {
-                if (!object.Equals(this.Header, rhs.Header)) return false;
-            }
+            if (!object.Equals(this.Header, rhs.Header)) return false;
             if (TypeOffsets_IsSet != rhs.TypeOffsets_IsSet) return false;
             if (TypeOffsets_IsSet)
             {
@@ -316,10 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            if (Header_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Header).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Header).CombineHashCode(ret);
             if (TypeOffsets_IsSet)
             {
                 ret = HashHelper.GetHashCode(TypeOffsets).CombineHashCode(ret);
@@ -854,7 +828,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((TES4_FieldIndex)index)
             {
-                case TES4_FieldIndex.Header:
                 case TES4_FieldIndex.TypeOffsets:
                 case TES4_FieldIndex.Deleted:
                 case TES4_FieldIndex.Author:
@@ -863,6 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case TES4_FieldIndex.MasterReferences:
                     return MasterReferences.HasBeenSet;
                 case TES4_FieldIndex.Fluff:
+                case TES4_FieldIndex.Header:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -1558,9 +1532,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[] Fluff { get; set; }
 
         new Header Header { get; set; }
-        new bool Header_IsSet { get; set; }
-        void Header_Set(Header item, bool hasBeenSet = true);
-        void Header_Unset();
 
         new Byte[] TypeOffsets { get; set; }
         new bool TypeOffsets_IsSet { get; set; }
@@ -1593,7 +1564,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Header
         Header Header { get; }
-        bool Header_IsSet { get; }
 
         #endregion
         #region TypeOffsets
@@ -1919,42 +1889,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)TES4_FieldIndex.Header);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Header,
-                        rhsHasBeenSet: rhs.Header_IsSet,
-                        defItem: def?.Header,
-                        defHasBeenSet: def?.Header_IsSet ?? false,
-                        outRhsItem: out var rhsHeaderItem,
-                        outDefItem: out var defHeaderItem))
+                    switch (copyMask?.Header?.Overall ?? CopyOption.Reference)
                     {
-                        switch (copyMask?.Header.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                item.Header = rhsHeaderItem;
-                                break;
-                            case CopyOption.CopyIn:
-                                HeaderCommon.CopyFieldsFrom(
-                                    item: item.Header,
-                                    rhs: rhs.Header,
-                                    def: def?.Header,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Header.Specific,
-                                    cmds: cmds);
-                                break;
-                            case CopyOption.MakeCopy:
+                        case CopyOption.Reference:
+                            item.Header = rhs.Header;
+                            break;
+                        case CopyOption.CopyIn:
+                            HeaderCommon.CopyFieldsFrom(
+                                item: item.Header,
+                                rhs: rhs.Header,
+                                def: def?.Header,
+                                errorMask: errorMask,
+                                copyMask: copyMask?.Header.Specific,
+                                cmds: cmds);
+                            break;
+                        case CopyOption.MakeCopy:
+                            if (rhs.Header == null)
+                            {
+                                item.Header = null;
+                            }
+                            else
+                            {
                                 item.Header = Header.Copy(
-                                    rhsHeaderItem,
+                                    rhs.Header,
                                     copyMask?.Header?.Specific,
-                                    def: defHeaderItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Header?.Overall}. Cannot execute copy.");
-                        }
-                    }
-                    else
-                    {
-                        item.Header_IsSet = false;
-                        item.Header = default(Header);
+                                    def?.Header);
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Header?.Overall}. Cannot execute copy.");
                     }
                 }
                 catch (Exception ex)
@@ -2136,11 +2099,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
+                case TES4_FieldIndex.Header:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case TES4_FieldIndex.Header:
-                    obj.Header_IsSet = on;
-                    break;
                 case TES4_FieldIndex.TypeOffsets:
                     obj.TypeOffsets_IsSet = on;
                     break;
@@ -2173,7 +2134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Fluff = default(Byte[]);
                     break;
                 case TES4_FieldIndex.Header:
-                    obj.Header_Unset();
+                    obj.Header = default(Header);
                     break;
                 case TES4_FieldIndex.TypeOffsets:
                     obj.TypeOffsets_Unset();
@@ -2203,9 +2164,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                    return true;
                 case TES4_FieldIndex.Header:
-                    return obj.Header_IsSet;
+                    return true;
                 case TES4_FieldIndex.TypeOffsets:
                     return obj.TypeOffsets_IsSet;
                 case TES4_FieldIndex.Deleted:
@@ -2252,7 +2212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Fluff = default(Byte[]);
-            item.Header_Unset();
+            item.Header = default(Header);
             item.TypeOffsets_Unset();
             item.Deleted_Unset();
             item.Author_Unset();
@@ -2276,7 +2236,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
-            ret.Header = IHasBeenSetExt.LoquiEqualsHelper(item.Header_IsSet, rhs.Header_IsSet, item.Header, rhs.Header, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Header = new MaskItem<bool, Header_Mask<bool>>();
+            ret.Header.Specific = HeaderCommon.GetEqualsMask(item.Header, rhs.Header);
+            ret.Header.Overall = ret.Header.Specific.AllEqual((b) => b);
             ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && item.TypeOffsets.EqualsFast(rhs.TypeOffsets);
             ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && item.Deleted.EqualsFast(rhs.Deleted);
             ret.Author = item.Author_IsSet == rhs.Author_IsSet && object.Equals(item.Author, rhs.Author);
@@ -2385,8 +2347,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ITES4Getter item,
             TES4_Mask<bool?> checkMask)
         {
-            if (checkMask.Header.Overall.HasValue && checkMask.Header.Overall.Value != item.Header_IsSet) return false;
-            if (checkMask.Header.Specific != null && (item.Header == null || !item.Header.HasBeenSet(checkMask.Header.Specific))) return false;
             if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_IsSet) return false;
             if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != item.Deleted_IsSet) return false;
             if (checkMask.Author.HasValue && checkMask.Author.Value != item.Author_IsSet) return false;
@@ -2399,7 +2359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new TES4_Mask<bool>();
             ret.Fluff = true;
-            ret.Header = new MaskItem<bool, Header_Mask<bool>>(item.Header_IsSet, HeaderCommon.GetHasBeenSetMask(item.Header));
+            ret.Header = new MaskItem<bool, Header_Mask<bool>>(true, HeaderCommon.GetHasBeenSetMask(item.Header));
             ret.TypeOffsets = item.TypeOffsets_IsSet;
             ret.Deleted = item.Deleted_IsSet;
             ret.Author = item.Author_IsSet;
@@ -2450,8 +2410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)TES4_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
-            if (item.Header_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Header) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Header) ?? true))
             {
                 LoquiXmlTranslation<Header>.Instance.Write(
                     node: elem,
@@ -2594,15 +2553,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            if (item.Header_IsSet)
-            {
-                LoquiBinaryTranslation<Header>.Instance.Write(
-                    writer: writer,
-                    item: item.Header,
-                    fieldIndex: (int)TES4_FieldIndex.Header,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
+            LoquiBinaryTranslation<Header>.Instance.Write(
+                writer: writer,
+                item: item.Header,
+                fieldIndex: (int)TES4_FieldIndex.Header,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
             if (item.TypeOffsets_IsSet)
             {
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
