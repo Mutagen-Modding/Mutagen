@@ -15,6 +15,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Global
     {
         protected static readonly RecordType FNAM = new RecordType("FNAM");
+
+        public abstract float RawFloat { get; set; }
         
         public static Global Create_Binary(
             MutagenFrame frame,

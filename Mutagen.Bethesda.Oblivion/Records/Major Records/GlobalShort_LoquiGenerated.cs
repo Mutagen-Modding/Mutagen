@@ -51,11 +51,29 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        public bool Data_IsSet
+        {
+            get => _hasBeenSetTracker[(int)GlobalShort_FieldIndex.Data];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GlobalShort_FieldIndex.Data, nameof(Data_IsSet));
+        }
+        bool IGlobalShortGetter.Data_IsSet => Data_IsSet;
         private Int16 _Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 Data
         {
             get => this._Data;
-            set => this.RaiseAndSetIfChanged(ref this._Data, value, nameof(Data));
+            set => Data_Set(value);
+        }
+        Int16 IGlobalShortGetter.Data => this.Data;
+        public void Data_Set(
+            Int16 value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _Data, value, _hasBeenSetTracker, markSet, (int)GlobalShort_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
+        }
+        public void Data_Unset()
+        {
+            this.Data_Set(default(Int16), false);
         }
         #endregion
 
@@ -112,14 +130,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (this.Data != rhs.Data) return false;
+            if (Data_IsSet != rhs.Data_IsSet) return false;
+            if (Data_IsSet)
+            {
+                if (this.Data != rhs.Data) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            if (Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -511,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((GlobalShort_FieldIndex)index)
             {
                 case GlobalShort_FieldIndex.Data:
-                    return true;
+                    return _hasBeenSetTracker[index];
                 default:
                     return base.GetHasBeenSet(index);
             }
@@ -570,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
-                fillTyped: null);
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static GlobalShort Create_Binary(
@@ -735,6 +760,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        static partial void FillBinary_Data_Custom(
+            MutagenFrame frame,
+            GlobalShort item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        static partial void WriteBinary_Data_Custom(
+            MutagenWriter writer,
+            GlobalShort item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_Data(
+            MutagenWriter writer,
+            GlobalShort item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_Data_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
         protected static void Fill_Binary_Structs(
             GlobalShort item,
             MutagenFrame frame,
@@ -746,29 +796,38 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            try
+        }
+
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
+            GlobalShort item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                reader: frame.Reader,
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
+            switch (nextRecordType.TypeInt)
             {
-                errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
-                if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
-                    item: out Int16 DataParse,
-                    errorMask: errorMask))
-                {
-                    item.Data = DataParse;
-                }
-                else
-                {
-                    item.Data = default(Int16);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                case 0x56544C46: // FLTV
+                    using (var subFrame = frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                    {
+                        FillBinary_Data_Custom(
+                            frame: subFrame,
+                            item: item,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    return TryGet<int?>.Succeed((int)GlobalShort_FieldIndex.Data);
+                default:
+                    return Global.Fill_Binary_RecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
             }
         }
 
@@ -935,6 +994,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IGlobalShort : IGlobalShortGetter, IGlobal, ILoquiClass<IGlobalShort, IGlobalShortGetter>, ILoquiClass<GlobalShort, IGlobalShortGetter>
     {
         new Int16 Data { get; set; }
+        new bool Data_IsSet { get; set; }
+        void Data_Set(Int16 item, bool hasBeenSet = true);
+        void Data_Unset();
 
     }
 
@@ -942,6 +1004,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         Int16 Data { get; }
+        bool Data_IsSet { get; }
 
         #endregion
 
@@ -962,8 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         EditorID = 3,
         RecordType = 4,
         TypeChar = 5,
-        RawFloat = 6,
-        Data = 7,
+        Data = 6,
     }
     #endregion
 
@@ -983,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(GlobalShort_Mask<>);
 
@@ -1103,9 +1165,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
+        public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GLOB_HEADER;
-        public const int NumStructFields = 1;
-        public const int NumTypedFields = 0;
+        public const int NumStructFields = 0;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1160,7 +1223,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
                 try
                 {
-                    item.Data = rhs.Data;
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Data,
+                        rhsHasBeenSet: rhs.Data_IsSet,
+                        defItem: def?.Data ?? default(Int16),
+                        defHasBeenSet: def?.Data_IsSet ?? false,
+                        outRhsItem: out var rhsDataItem,
+                        outDefItem: out var defDataItem))
+                    {
+                        item.Data = rhsDataItem;
+                    }
+                    else
+                    {
+                        item.Data_Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1186,8 +1262,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalShort_FieldIndex.Data:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Data_IsSet = on;
+                    break;
                 default:
                     GlobalCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1203,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalShort_FieldIndex.Data:
-                    obj.Data = default(Int16);
+                    obj.Data_Unset();
                     break;
                 default:
                     GlobalCommon.UnsetNthObject(index, obj);
@@ -1219,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalShort_FieldIndex.Data:
-                    return true;
+                    return obj.Data_IsSet;
                 default:
                     return GlobalCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1243,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGlobalShort item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Data = default(Int16);
+            item.Data_Unset();
         }
 
         public static GlobalShort_Mask<bool> GetEqualsMask(
@@ -1261,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GlobalShort_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Data = item.Data == rhs.Data;
+            ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data == rhs.Data;
             GlobalCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1304,13 +1380,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IGlobalShortGetter item,
             GlobalShort_Mask<bool?> checkMask)
         {
+            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
             return true;
         }
 
         public static GlobalShort_Mask<bool> GetHasBeenSetMask(IGlobalShortGetter item)
         {
             var ret = new GlobalShort_Mask<bool>();
-            ret.Data = true;
+            ret.Data = item.Data_IsSet;
             return ret;
         }
 
@@ -1335,8 +1412,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Global_FieldIndex.RecordType:
                     return (GlobalShort_FieldIndex)((int)index);
                 case Global_FieldIndex.TypeChar:
-                    return (GlobalShort_FieldIndex)((int)index);
-                case Global_FieldIndex.RawFloat:
                     return (GlobalShort_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1401,7 +1476,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GlobalShort");
             }
-            if ((translationMask?.GetShouldTranslate((int)GlobalShort_FieldIndex.Data) ?? true))
+            if (item.Data_IsSet
+                && (translationMask?.GetShouldTranslate((int)GlobalShort_FieldIndex.Data) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
                     node: elem,
@@ -1447,12 +1523,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: GlobalShort_Registration.GLOB_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                GlobalCommon.Write_Binary_RecordTypes(
+                Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -1462,21 +1538,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #endregion
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Binary_RecordTypes(
             GlobalShort item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordCommon.Write_Binary_Embedded(
+            GlobalCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
+            GlobalShort.WriteBinary_Data(
                 writer: writer,
-                item: item.Data,
-                fieldIndex: (int)GlobalShort_FieldIndex.Data,
+                item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
         }
 
