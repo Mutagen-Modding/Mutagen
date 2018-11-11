@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Int16 Data
         {
             get => this._Data;
-            protected set => this.RaiseAndSetIfChanged(ref this._Data, value, nameof(Data));
+            set => this.RaiseAndSetIfChanged(ref this._Data, value, nameof(Data));
         }
         #endregion
 
@@ -467,6 +467,32 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Data":
+                    try
+                    {
+                        errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
+                        if (Int16XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int16 DataParse,
+                            errorMask: errorMask))
+                        {
+                            item.Data = DataParse;
+                        }
+                        else
+                        {
+                            item.Data = default(Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     Global.Fill_Xml_Internal(
                         item: item,
@@ -720,6 +746,30 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
+            try
+            {
+                errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
+                if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int16 DataParse,
+                    errorMask: errorMask))
+                {
+                    item.Data = DataParse;
+                }
+                else
+                {
+                    item.Data = default(Int16);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
         }
 
         #endregion
@@ -833,7 +883,8 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case GlobalShort_FieldIndex.Data:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
+                    this.Data = (Int16)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -865,6 +916,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
+                case GlobalShort_FieldIndex.Data:
+                    obj.Data = (Int16)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -880,6 +934,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IGlobalShort : IGlobalShortGetter, IGlobal, ILoquiClass<IGlobalShort, IGlobalShortGetter>, ILoquiClass<GlobalShort, IGlobalShortGetter>
     {
+        new Int16 Data { get; set; }
+
     }
 
     public partial interface IGlobalShortGetter : IGlobalGetter
@@ -1016,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalShort_FieldIndex.Data:
-                    return true;
+                    return false;
                 default:
                     return Global_Registration.IsNthDerivative(index);
             }
@@ -1028,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalShort_FieldIndex.Data:
-                    return true;
+                    return false;
                 default:
                     return Global_Registration.IsProtected(index);
             }
@@ -1099,6 +1155,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Data ?? true)
+            {
+                errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
+                try
+                {
+                    item.Data = rhs.Data;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -1113,7 +1186,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalShort_FieldIndex.Data:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     GlobalCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1129,7 +1203,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalShort_FieldIndex.Data:
-                    throw new ArgumentException($"Tried to unset at a derivative index {index}");
+                    obj.Data = default(Int16);
+                    break;
                 default:
                     GlobalCommon.UnsetNthObject(index, obj);
                     break;
@@ -1168,6 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGlobalShort item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Data = default(Int16);
         }
 
         public static GlobalShort_Mask<bool> GetEqualsMask(
@@ -1325,6 +1401,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GlobalShort");
             }
+            if ((translationMask?.GetShouldTranslate((int)GlobalShort_FieldIndex.Data) ?? true))
+            {
+                Int16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Data),
+                    item: item.Data,
+                    fieldIndex: (int)GlobalShort_FieldIndex.Data,
+                    errorMask: errorMask);
+            }
         }
         #endregion
 
@@ -1388,6 +1473,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Data,
+                fieldIndex: (int)GlobalShort_FieldIndex.Data,
+                errorMask: errorMask);
         }
 
         #endregion

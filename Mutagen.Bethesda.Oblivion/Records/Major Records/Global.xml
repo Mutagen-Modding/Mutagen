@@ -8,17 +8,17 @@
   </Object>
   <Object name="GlobalInt" recordType="GLOB" baseClass="Global" objType="Record" GUID="fcf8c0ba-4933-42bc-8499-168c84bb2f4e" ID="13">
     <Fields>
-      <Int32 name="Data" derivative="true" />
+      <Int32 name="Data" noBinary="true" />
     </Fields>
   </Object>
   <Object name="GlobalShort" recordType="GLOB" baseClass="Global" objType="Record" GUID="95f041f0-bcdb-4e1e-bd9c-53b06d9d855e" ID="14">
     <Fields>
-      <Int16 name="Data" derivative="true" />
+      <Int16 name="Data" noBinary="true" />
     </Fields>
   </Object>
   <Object name="GlobalFloat" recordType="GLOB" baseClass="Global" objType="Record" GUID="e7bd631f-d97b-4b8b-a44e-2bae41f32674" ID="15">
     <Fields>
-      <Float name="Data" derivative="true" />
+      <Float name="Data" noBinary="true" />
     </Fields>
   </Object>
 </Loqui>

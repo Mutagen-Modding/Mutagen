@@ -21,8 +21,13 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor()
         {
             this.TypeChar = TRIGGER_CHAR;
-            this.WhenAny(x => x.RawFloat).Subscribe((change) => this.Data = (short)Math.Round(change));
-            this.WhenAny(x => x.Data).Subscribe((change) => this.RawFloat = change);
+            this.WhenAny(x => x.RawFloat)
+                .DistinctUntilChanged()
+                .Select(x => (short)Math.Round(x))
+                .BindTo(this, x => x.Data);
+            this.WhenAny(x => x.Data)
+                .DistinctUntilChanged()
+                .BindTo(this, x => x.RawFloat);
         }
     }
 }
