@@ -50,6 +50,7 @@ namespace Mutagen.Bethesda
                     .Select(l => l.FormKey)
                     .Where(fk => !fk.IsNull)
                     .Select(s => s.ModKey)
+                    .Where(modKey => modKey != outModKey)
                     .Distinct()
                     .Select(modKey => new MasterReference()
                     {
