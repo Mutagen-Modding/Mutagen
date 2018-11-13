@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Sound
         public FormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> ISoundItemGetter.Sound_Property => this.Sound_Property;
@@ -927,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (ISoundItemGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

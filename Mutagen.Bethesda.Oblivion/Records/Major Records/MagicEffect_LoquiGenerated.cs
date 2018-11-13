@@ -216,7 +216,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Light
         public FormIDLink<Light> Light_Property { get; } = new FormIDLink<Light>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Light Light { get => Light_Property.Item; set => Light_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Light> IMagicEffectGetter.Light_Property => this.Light_Property;
@@ -231,7 +230,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region EffectShader
         public FormIDLink<EffectShader> EffectShader_Property { get; } = new FormIDLink<EffectShader>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public EffectShader EffectShader { get => EffectShader_Property.Item; set => EffectShader_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<EffectShader> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
@@ -1790,6 +1788,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IMagicEffectGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

@@ -53,7 +53,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region MagicEffect
         public EDIDLink<MagicEffect> MagicEffect_Property { get; } = new EDIDLink<MagicEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicEffect MagicEffect { get => MagicEffect_Property.Item; set => MagicEffect_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         EDIDLink<MagicEffect> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
@@ -1278,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IEffectGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

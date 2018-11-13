@@ -185,14 +185,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region DeathItem
         public FormIDSetLink<ItemAbstract> DeathItem_Property { get; } = new FormIDSetLink<ItemAbstract>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ItemAbstract DeathItem { get => DeathItem_Property.Item; set => DeathItem_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<ItemAbstract> INPCGetter.DeathItem_Property => this.DeathItem_Property;
         #endregion
         #region Race
         public FormIDSetLink<Race> Race_Property { get; } = new FormIDSetLink<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race Race { get => Race_Property.Item; set => Race_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Race> INPCGetter.Race_Property => this.Race_Property;
@@ -217,7 +215,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> INPCGetter.Script_Property => this.Script_Property;
@@ -349,7 +346,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Class
         public FormIDSetLink<Class> Class_Property { get; } = new FormIDSetLink<Class>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Class Class { get => Class_Property.Item; set => Class_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Class> INPCGetter.Class_Property => this.Class_Property;
@@ -596,7 +592,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hair
         public FormIDSetLink<Hair> Hair_Property { get; } = new FormIDSetLink<Hair>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Hair Hair { get => Hair_Property.Item; set => Hair_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Hair> INPCGetter.Hair_Property => this.Hair_Property;
@@ -673,7 +668,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CombatStyle
         public FormIDSetLink<CombatStyle> CombatStyle_Property { get; } = new FormIDSetLink<CombatStyle>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public CombatStyle CombatStyle { get => CombatStyle_Property.Item; set => CombatStyle_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<CombatStyle> INPCGetter.CombatStyle_Property => this.CombatStyle_Property;
@@ -5104,6 +5098,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (INPCGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

@@ -109,28 +109,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IDoorGetter.Script_Property => this.Script_Property;
         #endregion
         #region OpenSound
         public FormIDSetLink<Sound> OpenSound_Property { get; } = new FormIDSetLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound OpenSound { get => OpenSound_Property.Item; set => OpenSound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IDoorGetter.OpenSound_Property => this.OpenSound_Property;
         #endregion
         #region CloseSound
         public FormIDSetLink<Sound> CloseSound_Property { get; } = new FormIDSetLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound CloseSound { get => CloseSound_Property.Item; set => CloseSound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IDoorGetter.CloseSound_Property => this.CloseSound_Property;
         #endregion
         #region LoopSound
         public FormIDSetLink<Sound> LoopSound_Property { get; } = new FormIDSetLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound LoopSound { get => LoopSound_Property.Item; set => LoopSound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IDoorGetter.LoopSound_Property => this.LoopSound_Property;
@@ -1270,6 +1266,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IDoorGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

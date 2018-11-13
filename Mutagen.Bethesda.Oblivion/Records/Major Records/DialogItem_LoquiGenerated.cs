@@ -72,14 +72,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Quest
         public FormIDSetLink<Quest> Quest_Property { get; } = new FormIDSetLink<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Quest Quest { get => Quest_Property.Item; set => Quest_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Quest> IDialogItemGetter.Quest_Property => this.Quest_Property;
         #endregion
         #region PreviousTopic
         public FormIDSetLink<DialogItem> PreviousTopic_Property { get; } = new FormIDSetLink<DialogItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public DialogItem PreviousTopic { get => PreviousTopic_Property.Item; set => PreviousTopic_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<DialogItem> IDialogItemGetter.PreviousTopic_Property => this.PreviousTopic_Property;
@@ -1456,6 +1454,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IDialogItemGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

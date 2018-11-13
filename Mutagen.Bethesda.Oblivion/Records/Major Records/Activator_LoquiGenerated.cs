@@ -107,14 +107,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IActivatorGetter.Script_Property => this.Script_Property;
         #endregion
         #region Sound
         public FormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IActivatorGetter.Sound_Property => this.Sound_Property;
@@ -1022,6 +1020,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IActivatorGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

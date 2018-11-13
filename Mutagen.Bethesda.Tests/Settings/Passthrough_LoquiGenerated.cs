@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Tests
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IPassthroughGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

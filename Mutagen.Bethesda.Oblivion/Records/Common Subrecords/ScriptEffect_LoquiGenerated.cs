@@ -53,7 +53,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Script
         public FormIDLink<Script> Script_Property { get; } = new FormIDLink<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Script> IScriptEffectGetter.Script_Property => this.Script_Property;
@@ -68,7 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VisualEffect
         public EDIDLink<MagicEffect> VisualEffect_Property { get; } = new EDIDLink<MagicEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicEffect VisualEffect { get => VisualEffect_Property.Item; set => VisualEffect_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         EDIDLink<MagicEffect> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
@@ -1117,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IScriptEffectGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

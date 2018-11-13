@@ -125,14 +125,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> ILeveledCreatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region Template
         public FormIDSetLink<NPCAbstract> Template_Property { get; } = new FormIDSetLink<NPCAbstract>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPCAbstract Template { get => Template_Property.Item; set => Template_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<NPCAbstract> ILeveledCreatureGetter.Template_Property => this.Template_Property;
@@ -1153,6 +1151,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ILeveledCreatureGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

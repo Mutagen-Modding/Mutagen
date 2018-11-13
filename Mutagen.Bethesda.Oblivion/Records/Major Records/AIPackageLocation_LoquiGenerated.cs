@@ -60,7 +60,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LocationReference
         public FormIDLink<IPlaced> LocationReference_Property { get; } = new FormIDLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IPlaced LocationReference { get => LocationReference_Property.Item; set => LocationReference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<IPlaced> IAIPackageLocationGetter.LocationReference_Property => this.LocationReference_Property;
@@ -919,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IAIPackageLocationGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

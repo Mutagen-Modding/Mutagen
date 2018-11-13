@@ -1117,6 +1117,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IPathGridGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
         public void CopyFieldsFrom(
             IPathGridGetter rhs,
             PathGrid_CopyMask copyMask,

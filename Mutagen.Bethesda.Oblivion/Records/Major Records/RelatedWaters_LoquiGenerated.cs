@@ -51,21 +51,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region RelatedWaterDaytime
         public FormIDLink<Water> RelatedWaterDaytime_Property { get; } = new FormIDLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Water RelatedWaterDaytime { get => RelatedWaterDaytime_Property.Item; set => RelatedWaterDaytime_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Water> IRelatedWatersGetter.RelatedWaterDaytime_Property => this.RelatedWaterDaytime_Property;
         #endregion
         #region RelatedWaterNighttime
         public FormIDLink<Water> RelatedWaterNighttime_Property { get; } = new FormIDLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Water RelatedWaterNighttime { get => RelatedWaterNighttime_Property.Item; set => RelatedWaterNighttime_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Water> IRelatedWatersGetter.RelatedWaterNighttime_Property => this.RelatedWaterNighttime_Property;
         #endregion
         #region RelatedWaterUnderwater
         public FormIDLink<Water> RelatedWaterUnderwater_Property { get; } = new FormIDLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Water RelatedWaterUnderwater { get => RelatedWaterUnderwater_Property.Item; set => RelatedWaterUnderwater_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Water> IRelatedWatersGetter.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
@@ -838,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IRelatedWatersGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

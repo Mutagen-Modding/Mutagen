@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Destination
         public FormIDLink<IPlaced> Destination_Property { get; } = new FormIDLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IPlaced Destination { get => Destination_Property.Item; set => Destination_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<IPlaced> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;
@@ -919,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (ITeleportDestinationGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

@@ -54,7 +54,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Base
         public FormIDSetLink<MajorRecord> Base_Property { get; } = new FormIDSetLink<MajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MajorRecord Base { get => Base_Property.Item; set => Base_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<MajorRecord> IPlacedObjectGetter.Base_Property => this.Base_Property;
@@ -171,7 +170,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Owner
         public FormIDSetLink<IOwner> Owner_Property { get; } = new FormIDSetLink<IOwner>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IOwner Owner { get => Owner_Property.Item; set => Owner_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<IOwner> IPlacedObjectGetter.Owner_Property => this.Owner_Property;
@@ -204,7 +202,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         public FormIDSetLink<Global> GlobalVariable_Property { get; } = new FormIDSetLink<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Global GlobalVariable { get => GlobalVariable_Property.Item; set => GlobalVariable_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Global> IPlacedObjectGetter.GlobalVariable_Property => this.GlobalVariable_Property;
@@ -238,7 +235,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Target
         public FormIDSetLink<IPlaced> Target_Property { get; } = new FormIDSetLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IPlaced Target { get => Target_Property.Item; set => Target_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<IPlaced> IPlacedObjectGetter.Target_Property => this.Target_Property;
@@ -376,7 +372,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unknown
         public FormIDSetLink<MajorRecord> Unknown_Property { get; } = new FormIDSetLink<MajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MajorRecord Unknown { get => Unknown_Property.Item; set => Unknown_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<MajorRecord> IPlacedObjectGetter.Unknown_Property => this.Unknown_Property;
@@ -524,7 +519,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ContainedSoul
         public FormIDSetLink<SoulGem> ContainedSoul_Property { get; } = new FormIDSetLink<SoulGem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SoulGem ContainedSoul { get => ContainedSoul_Property.Item; set => ContainedSoul_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<SoulGem> IPlacedObjectGetter.ContainedSoul_Property => this.ContainedSoul_Property;
@@ -2691,6 +2685,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IPlacedObjectGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

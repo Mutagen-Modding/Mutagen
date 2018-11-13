@@ -80,7 +80,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region IdleAnimation
         public FormIDSetLink<IdleAnimation> IdleAnimation_Property { get; } = new FormIDSetLink<IdleAnimation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IdleAnimation IdleAnimation { get => IdleAnimation_Property.Item; set => IdleAnimation_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<IdleAnimation> IAnimatedObjectGetter.IdleAnimation_Property => this.IdleAnimation_Property;
@@ -892,6 +891,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IAnimatedObjectGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

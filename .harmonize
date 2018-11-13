@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>d2c20043328da062a08b4c6fde4f3531b207ca13</Sha>
+         <Sha>8105f7aa20e23fe1af6135f7095abfc86f5047ba</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-11-2018 00:42:36</CommitDate>
-         <Description>Bugfix for LoquiNotifyingObject.RaiseAndSetIfChanged</Description>
+         <CommitDate>11-12-2018 21:41:26</CommitDate>
+         <Description>CopyFieldsFrom trickledown fix for generic call</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

@@ -76,7 +76,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Reference
         public FormIDLink<T> Reference_Property { get; } = new FormIDLink<T>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public T Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<T> ILeveledEntryGetter<T>.Reference_Property => this.Reference_Property;
@@ -1156,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T_CopyMask : MajorRecord_CopyMask, new()
         {
             this.CopyFieldsFrom<MajorRecord_ErrorMask, T_CopyMask>(
-                rhs: rhs,
+                rhs: (ILeveledEntryGetter<T>)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

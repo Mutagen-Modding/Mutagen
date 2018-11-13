@@ -949,6 +949,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ISoundGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
         public void CopyFieldsFrom(
             ISoundGetter rhs,
             Sound_CopyMask copyMask,

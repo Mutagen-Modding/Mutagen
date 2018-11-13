@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (ITES4Getter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

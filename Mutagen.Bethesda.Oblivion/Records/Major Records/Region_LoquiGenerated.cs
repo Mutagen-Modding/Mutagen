@@ -108,7 +108,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Worldspace
         public FormIDSetLink<Worldspace> Worldspace_Property { get; } = new FormIDSetLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Worldspace Worldspace { get => Worldspace_Property.Item; set => Worldspace_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Worldspace> IRegionGetter.Worldspace_Property => this.Worldspace_Property;
@@ -1471,6 +1470,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IRegionGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

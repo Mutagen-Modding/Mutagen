@@ -133,7 +133,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Enchantment
         public FormIDSetLink<Enchantment> Enchantment_Property { get; } = new FormIDSetLink<Enchantment>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Enchantment Enchantment { get => Enchantment_Property.Item; set => Enchantment_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Enchantment> IAmmoGetter.Enchantment_Property => this.Enchantment_Property;
@@ -1531,6 +1530,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IAmmoGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

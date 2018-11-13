@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Texture
         public FormIDLink<LandTexture> Texture_Property { get; } = new FormIDLink<LandTexture>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public LandTexture Texture { get => Texture_Property.Item; set => Texture_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<LandTexture> IBaseLayerGetter.Texture_Property => this.Texture_Property;
@@ -959,12 +958,12 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
+        public virtual void CopyFieldsFrom(
             IBaseLayerGetter rhs,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IBaseLayerGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

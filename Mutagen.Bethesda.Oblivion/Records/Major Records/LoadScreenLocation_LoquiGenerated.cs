@@ -52,14 +52,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Direct
         public FormIDLink<Place> Direct_Property { get; } = new FormIDLink<Place>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Place Direct { get => Direct_Property.Item; set => Direct_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Place> ILoadScreenLocationGetter.Direct_Property => this.Direct_Property;
         #endregion
         #region Indirect
         public FormIDLink<Worldspace> Indirect_Property { get; } = new FormIDLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Worldspace Indirect { get => Indirect_Property.Item; set => Indirect_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Worldspace> ILoadScreenLocationGetter.Indirect_Property => this.Indirect_Property;
@@ -886,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (ILoadScreenLocationGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

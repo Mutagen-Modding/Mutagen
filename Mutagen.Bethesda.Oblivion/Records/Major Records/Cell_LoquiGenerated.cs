@@ -232,21 +232,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Climate
         public FormIDSetLink<Climate> Climate_Property { get; } = new FormIDSetLink<Climate>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Climate Climate { get => Climate_Property.Item; set => Climate_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Climate> ICellGetter.Climate_Property => this.Climate_Property;
         #endregion
         #region Water
         public FormIDSetLink<Water> Water_Property { get; } = new FormIDSetLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Water Water { get => Water_Property.Item; set => Water_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Water> ICellGetter.Water_Property => this.Water_Property;
         #endregion
         #region Owner
         public FormIDSetLink<Faction> Owner_Property { get; } = new FormIDSetLink<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Faction Owner { get => Owner_Property.Item; set => Owner_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Faction> ICellGetter.Owner_Property => this.Owner_Property;
@@ -279,7 +276,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         public FormIDSetLink<Global> GlobalVariable_Property { get; } = new FormIDSetLink<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Global GlobalVariable { get => GlobalVariable_Property.Item; set => GlobalVariable_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Global> ICellGetter.GlobalVariable_Property => this.GlobalVariable_Property;
@@ -2073,6 +2069,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ICellGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

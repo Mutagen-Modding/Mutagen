@@ -849,12 +849,12 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public void CopyFieldsFrom(
+        public virtual void CopyFieldsFrom(
             IMajorRecordGetter rhs,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IMajorRecordGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

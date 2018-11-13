@@ -51,14 +51,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Male
         public FormIDLink<Race> Male_Property { get; } = new FormIDLink<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race Male { get => Male_Property.Item; set => Male_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Race> IRaceVoicesGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
         public FormIDLink<Race> Female_Property { get; } = new FormIDLink<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race Female { get => Female_Property.Item; set => Female_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Race> IRaceVoicesGetter.Female_Property => this.Female_Property;
@@ -811,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IRaceVoicesGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

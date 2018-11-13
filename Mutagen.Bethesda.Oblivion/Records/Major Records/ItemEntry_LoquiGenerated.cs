@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Item
         public FormIDLink<ItemAbstract> Item_Property { get; } = new FormIDLink<ItemAbstract>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ItemAbstract Item { get => Item_Property.Item; set => Item_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<ItemAbstract> IItemEntryGetter.Item_Property => this.Item_Property;
@@ -899,7 +898,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IItemEntryGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

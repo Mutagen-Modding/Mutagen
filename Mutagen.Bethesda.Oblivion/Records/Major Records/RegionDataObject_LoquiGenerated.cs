@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Object
         public FormIDLink<MajorRecord> Object_Property { get; } = new FormIDLink<MajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MajorRecord Object { get => Object_Property.Item; set => Object_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<MajorRecord> IRegionDataObjectGetter.Object_Property => this.Object_Property;
@@ -1783,7 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IRegionDataObjectGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
