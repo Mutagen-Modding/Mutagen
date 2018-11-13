@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>204b27b4011dfba18d39760faac534f725fa64bc</Sha>
+         <Sha>90dcb42a4b372bc7304e3c2681bf7b7308d068ef</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-11-2018 00:42:22</CommitDate>
-         <Description>Bugfix for ReactiveObjectExt.RaiseAndSetIfChanged</Description>
+         <CommitDate>11-12-2018 18:41:39</CommitDate>
+         <Description>Nuget updates</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
