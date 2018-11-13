@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>bab199880581eba9bff33d1a07d74f546e860694</Sha>
+         <Sha>0f446dcc323ae57bc5df41be333a0a2cbb77bc75</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-04-2018 23:06:23</CommitDate>
-         <Description>ObservableCacheExt.TryGetValue</Description>
+         <CommitDate>11-13-2018 16:31:59</CommitDate>
+         <Description>ChangeSetExt.ToObservableChangeSet_SingleItemNotNull</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

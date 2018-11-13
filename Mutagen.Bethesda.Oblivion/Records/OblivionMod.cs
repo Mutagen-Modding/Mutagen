@@ -11,6 +11,7 @@ using Noggog;
 using Noggog.Notifying;
 using CSharpExt.Rx;
 using DynamicData;
+using System.Collections.ObjectModel;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -34,248 +35,57 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.TES4.Header.NextObjectID = 0xD62; // first available ID on empty CS plugins
 
-            this.Cells.Items.Connect()
-                .TransformMany(cellBlock => cellBlock.Items)
-                .TransformMany(cellSubBlock => cellSubBlock.Items)
-                .Transform<Cell, IMajorRecord>(c => c)
+            Observable.Merge<IChangeSet<IMajorRecord>>(
+                    this.Cells.Items.Connect()
+                        .TransformMany(cellBlock => cellBlock.Items)
+                        .TransformMany(cellSubBlock => cellSubBlock.Items)
+                        .MergeMany(cell => GetCellRecords(cell)),
+                    this.Worldspaces.Items.Connect()
+                        .RemoveKey()
+                        .MergeMany(worldSpace => GetWorldspaceRecords(worldSpace)),
+                    this.DialogTopics.Items.Connect()
+                        .RemoveKey()
+                        .MergeMany(dialog => GetDialogRecords(dialog)))
                 .AddKey(c => c.FormKey)
                 .PopulateInto(this._majorRecords);
-            //this.SubscribeToWorldspaces();
-            //this.SubscribeToDialogs();
         }
 
-        //#region Cell Subscription
+        private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(Cell cell)
+        {
+            if (cell == null) return Observable.Empty<IChangeSet<IMajorRecord>>();
+            return Observable.Merge<IChangeSet<IMajorRecord>>(
+                Observable
+                    .Return<IMajorRecord>(cell)
+                    .ToObservableChangeSet(),
+                cell.WhenAny(x => x.Landscape)
+                    .Select<Landscape, IMajorRecord>(l => l)
+                    .ToObservableChangeSet_SingleItemNotNull(),
+                Observable.Merge(
+                    cell.Persistent.Connect(),
+                    cell.Temporary.Connect(),
+                    cell.VisibleWhenDistant.Connect())
+                    .Transform<IPlaced, IMajorRecord>(p => p));
+        }
 
-        //protected void SubscribeToCellSubBlock(CellSubBlock subBlock)
-        //{
-        //    subBlock.Items.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
-        //    {
-        //        switch (change.AddRem)
-        //        {
-        //            case AddRemove.Add:
-        //                SubscribeToCell(change.Item);
-        //                break;
-        //            case AddRemove.Remove:
-        //                UnsubscribeFromCell(change.Item);
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //        Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, change);
-        //    });
-        //}
+        private IObservable<IChangeSet<IMajorRecord>> GetWorldspaceRecords(Worldspace worldspace)
+        {
+            return Observable.Merge<IChangeSet<IMajorRecord>>(
+                worldspace.WhenAny(x => x.Road)
+                    .Select<Road, IMajorRecord>(l => l)
+                    .ToObservableChangeSet_SingleItemNotNull(),
+                worldspace.WhenAny(x => x.TopCell)
+                    .Select(c => GetCellRecords(c))
+                    .Switch(),
+                worldspace.SubCells.Connect()
+                    .TransformMany(block => block.Items)
+                    .TransformMany(subBlock => subBlock.Items)
+                    .MergeMany(c => GetCellRecords(c)));
+        }
 
-        //protected void SubscribeToCell(Cell cell)
-        //{
-        //    cell.Persistent.Subscribe_Enumerable_Single(_subscribeObject, (r) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, r));
-        //    cell.Temporary.Subscribe_Enumerable_Single(_subscribeObject, (r) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, r));
-        //    cell.VisibleWhenDistant.Subscribe_Enumerable_Single(_subscribeObject, (r) => Mutagen.Bethesda.Utility.ModifyButThrow(_majorRecords, r));
-        //    cell.Landscape_Property.Subscribe(_subscribeObject, (r) =>
-        //    {
-        //        if (r.Old != null)
-        //        {
-        //            _majorRecords.Remove(r.Old.FormKey);
-        //        }
-        //        if (r.New != null)
-        //        {
-        //            if (_majorRecords.ContainsKey(r.New.FormKey))
-        //            {
-        //                throw new ArgumentException($"Cannot add a landscape {r.New.FormKey} that exists elsewhere in the same mod.");
-        //            }
-        //            _majorRecords[r.New.FormKey] = r.New;
-        //        }
-        //    });
-
-        //    // ToDo
-        //    // Unsubscribe mechanics, add back in remove
-        //    cell.WhenAny(x => x.PathGrid).Subscribe((r) =>
-        //    {
-        //        //if (r.Old != null)
-        //        //{
-        //        //    _majorRecords.Remove(r.Old.FormKey);
-        //        //}
-        //        if (r != null)
-        //        {
-        //            if (_majorRecords.ContainsKey(r.FormKey))
-        //            {
-        //                throw new ArgumentException($"Cannot add a pathgrid {r.FormKey} that exists elsewhere in the same mod.");
-        //            }
-        //            _majorRecords[r.FormKey] = r;
-        //        }
-        //    });
-        //}
-
-        //protected void UnsubscribeFromCellBlock(CellBlock block)
-        //{
-        //    block.Items.Unsubscribe(_subscribeObject);
-        //    foreach (var subBlock in block.Items)
-        //    {
-        //        subBlock.Items.Unsubscribe(_subscribeObject);
-        //        foreach (var cell in subBlock.Items)
-        //        {
-        //            _majorRecords.Remove(cell.FormKey);
-        //        }
-        //    }
-        //}
-
-        //protected void UnsubscribeFromCell(Cell cell)
-        //{
-        //    cell.Persistent.Unsubscribe(_subscribeObject);
-        //    cell.Temporary.Unsubscribe(_subscribeObject);
-        //    cell.VisibleWhenDistant.Unsubscribe(_subscribeObject);
-        //    _majorRecords.Remove(cell.PathGrid.FormID);
-        //    // ToDo
-        //    // Unsubscribe mechanics for pathgrid
-        //}
-        //#endregion
-
-        //#region Worldspace Subscription
-        //protected void SubscribeToWorldspaces()
-        //{
-        //    //_Worldspaces_Object.Items.Subscribe_Enumerable_Single((change) =>
-        //    //{
-        //    //    switch (change.AddRem)
-        //    //    {
-        //    //        case AddRemove.Add:
-        //    //            SubscribeToWorldspace(change.Item.Value);
-        //    //            break;
-        //    //        case AddRemove.Remove:
-        //    //            UnsubscribeFromWorldspace(change.Item.Value);
-        //    //            break;
-        //    //        default:
-        //    //            throw new NotImplementedException();
-        //    //    }
-        //    //});
-        //}
-
-        //protected void SubscribeToWorldspace(Worldspace worldspace)
-        //{
-        //    // ToDo
-        //    // Unsubscribe mechanics, add back in remove
-        //    worldspace.WhenAny(x => x.Road).Subscribe((r) =>
-        //    {
-        //        //if (r.Old != null)
-        //        //{
-        //        //    _majorRecords.Remove(r.Old.FormID);
-        //        //}
-        //        if (r != null)
-        //        {
-        //            if (_majorRecords.ContainsKey(r.FormKey))
-        //            {
-        //                throw new ArgumentException("Cannot add a road that exists elsewhere in the same mod.");
-        //            }
-        //            _majorRecords[r.FormKey] = r;
-        //        }
-        //    });
-        //    // ToDo
-        //    // Unsubscribe mechanics, add back in remove
-        //    worldspace.WhenAny(x => x.TopCell).Subscribe((r) =>
-        //    {
-        //        //if (r.Old != null)
-        //        //{
-        //        //    _majorRecords.Remove(r.Old.FormID);
-        //        //    UnsubscribeFromCell(r.Old);
-        //        //}
-        //        if (r != null)
-        //        {
-        //            SubscribeToCell(r);
-        //            _majorRecords[r.FormKey] = r;
-        //        }
-        //    });
-        //    worldspace.SubCells.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
-        //    {
-        //        switch (change.AddRem)
-        //        {
-        //            case AddRemove.Add:
-        //                SubscribeToWorldspaceBlock(change.Item);
-        //                break;
-        //            case AddRemove.Remove:
-        //                change.Item.Items.Unsubscribe(_subscribeObject);
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //    });
-        //}
-
-        //protected void SubscribeToWorldspaceBlock(WorldspaceBlock block)
-        //{
-        //    block.Items.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
-        //    {
-        //        switch (change.AddRem)
-        //        {
-        //            case AddRemove.Add:
-        //                SubscribeToWorldspaceSubBlock(change.Item);
-        //                break;
-        //            case AddRemove.Remove:
-        //                change.Item.Items.Unsubscribe(_subscribeObject);
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //    });
-        //}
-
-        //protected void SubscribeToWorldspaceSubBlock(WorldspaceSubBlock block)
-        //{
-        //    block.Items.Subscribe_Enumerable_Single(_subscribeObject, (change) =>
-        //    {
-        //        switch (change.AddRem)
-        //        {
-        //            case AddRemove.Add:
-        //                SubscribeToCell(change.Item);
-        //                break;
-        //            case AddRemove.Remove:
-        //                UnsubscribeFromCell(change.Item);
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //        Utility.ModifyButThrow(_majorRecords, change);
-        //    });
-        //}
-
-        //protected void UnsubscribeFromWorldspace(Worldspace worldspace)
-        //{
-        //    worldspace.SubCells.Unsubscribe(_subscribeObject);
-        //    // ToDo
-        //    // Unsubscribe mechanics
-        //    //worldspace.TopCell_Property.Unsubscribe(_subscribeObject);
-        //    //worldspace.Road_Property.Unsubscribe(_subscribeObject);
-        //}
-        //#endregion
-
-        //#region Dialog Subscription
-        //protected void SubscribeToDialogs()
-        //{
-        //    //_DialogTopics_Object.Items.Subscribe_Enumerable_Single((change) =>
-        //    //{
-        //    //    switch (change.AddRem)
-        //    //    {
-        //    //        case AddRemove.Add:
-        //    //            change.Item.Value.Items.Subscribe_Enumerable_Single(
-        //    //                _subscribeObject, 
-        //    //                (r) => Utility.ModifyButThrow(_majorRecords, r));
-        //    //            break;
-        //    //        case AddRemove.Remove:
-        //    //            foreach (var item in change.Item.Value.Items)
-        //    //            {
-        //    //                _majorRecords.Remove(item.FormID);
-        //    //            }
-        //    //            change.Item.Value.Items.Unsubscribe(_subscribeObject);
-        //    //            break;
-        //    //        default:
-        //    //            throw new NotImplementedException();
-        //    //    }
-        //    //});
-        //}
-
-        //public FormKey GetNextAvailableFormKey()
-        //{
-        //    return new FormKey(
-        //        this.ModKey,
-        //        this.TES4.Header.NextObjectID++);
-        //}
-        //#endregion
+        private IObservable<IChangeSet<IMajorRecord>> GetDialogRecords(DialogTopic dialog)
+        {
+            return dialog.Items.Connect()
+                .Transform<DialogItem, IMajorRecord>(i => i);
+        }
     }
 }
