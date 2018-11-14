@@ -54,7 +54,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Target
         public FormIDLink<IPlaced> Target_Property { get; } = new FormIDLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IPlaced Target { get => Target_Property.Item; set => Target_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<IPlaced> IQuestTargetGetter.Target_Property => this.Target_Property;

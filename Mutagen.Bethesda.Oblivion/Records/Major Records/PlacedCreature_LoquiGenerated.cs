@@ -54,14 +54,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Base
         public FormIDSetLink<Creature> Base_Property { get; } = new FormIDSetLink<Creature>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Creature Base { get => Base_Property.Item; set => Base_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Creature> IPlacedCreatureGetter.Base_Property => this.Base_Property;
         #endregion
         #region Owner
         public FormIDSetLink<Faction> Owner_Property { get; } = new FormIDSetLink<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Faction Owner { get => Owner_Property.Item; set => Owner_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Faction> IPlacedCreatureGetter.Owner_Property => this.Owner_Property;
@@ -94,7 +92,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         public FormIDSetLink<Global> GlobalVariable_Property { get; } = new FormIDSetLink<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Global GlobalVariable { get => GlobalVariable_Property.Item; set => GlobalVariable_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Global> IPlacedCreatureGetter.GlobalVariable_Property => this.GlobalVariable_Property;

@@ -108,7 +108,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Worldspace
         public FormIDSetLink<Worldspace> Worldspace_Property { get; } = new FormIDSetLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Worldspace Worldspace { get => Worldspace_Property.Item; set => Worldspace_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Worldspace> IRegionGetter.Worldspace_Property => this.Worldspace_Property;

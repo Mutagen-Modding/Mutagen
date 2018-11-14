@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Destination
         public FormIDLink<IPlaced> Destination_Property { get; } = new FormIDLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IPlaced Destination { get => Destination_Property.Item; set => Destination_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<IPlaced> ITeleportDestinationGetter.Destination_Property => this.Destination_Property;

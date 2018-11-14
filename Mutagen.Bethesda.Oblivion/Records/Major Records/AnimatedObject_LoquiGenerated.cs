@@ -80,7 +80,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region IdleAnimation
         public FormIDSetLink<IdleAnimation> IdleAnimation_Property { get; } = new FormIDSetLink<IdleAnimation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IdleAnimation IdleAnimation { get => IdleAnimation_Property.Item; set => IdleAnimation_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<IdleAnimation> IAnimatedObjectGetter.IdleAnimation_Property => this.IdleAnimation_Property;

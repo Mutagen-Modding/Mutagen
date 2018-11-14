@@ -75,7 +75,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Key
         public FormIDLink<Key> Key_Property { get; } = new FormIDLink<Key>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Key Key { get => Key_Property.Item; set => Key_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Key> ILockInformationGetter.Key_Property => this.Key_Property;

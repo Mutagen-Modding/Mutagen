@@ -3761,7 +3761,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
-            var ret = new OblivionMod();
+            var ret = new OblivionMod(modKey);
             var masterReferences = new MasterReferences(ret.TES4.MasterReferences, modKey);
             try
             {
@@ -3783,6 +3783,11 @@ namespace Mutagen.Bethesda.Oblivion
                             recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
                     }
+                }
+                foreach (var link in ret.Links)
+                {
+                    if (link.Linked) continue;
+                    link.Link(modList: null, sourceMod: ret);
                 }
             }
             catch (Exception ex)

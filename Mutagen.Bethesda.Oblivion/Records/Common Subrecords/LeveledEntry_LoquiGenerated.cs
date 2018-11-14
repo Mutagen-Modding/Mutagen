@@ -76,7 +76,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Reference
         public FormIDLink<T> Reference_Property { get; } = new FormIDLink<T>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public T Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<T> ILeveledEntryGetter<T>.Reference_Property => this.Reference_Property;

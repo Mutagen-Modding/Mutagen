@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Faction
         public FormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Faction Faction { get => Faction_Property.Item; set => Faction_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Faction> IRankPlacementGetter.Faction_Property => this.Faction_Property;

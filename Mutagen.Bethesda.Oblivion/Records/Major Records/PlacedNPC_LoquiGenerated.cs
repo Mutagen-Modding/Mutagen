@@ -54,7 +54,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Base
         public FormIDSetLink<NPC> Base_Property { get; } = new FormIDSetLink<NPC>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPC Base { get => Base_Property.Item; set => Base_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<NPC> IPlacedNPCGetter.Base_Property => this.Base_Property;
@@ -171,14 +170,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MerchantContainer
         public FormIDSetLink<PlacedObject> MerchantContainer_Property { get; } = new FormIDSetLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public PlacedObject MerchantContainer { get => MerchantContainer_Property.Item; set => MerchantContainer_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<PlacedObject> IPlacedNPCGetter.MerchantContainer_Property => this.MerchantContainer_Property;
         #endregion
         #region Horse
         public FormIDSetLink<PlacedCreature> Horse_Property { get; } = new FormIDSetLink<PlacedCreature>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public PlacedCreature Horse { get => Horse_Property.Item; set => Horse_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<PlacedCreature> IPlacedNPCGetter.Horse_Property => this.Horse_Property;

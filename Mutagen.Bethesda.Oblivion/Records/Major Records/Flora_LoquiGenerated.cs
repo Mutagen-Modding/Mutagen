@@ -107,14 +107,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IFloraGetter.Script_Property => this.Script_Property;
         #endregion
         #region Ingredient
         public FormIDSetLink<Ingredient> Ingredient_Property { get; } = new FormIDSetLink<Ingredient>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Ingredient Ingredient { get => Ingredient_Property.Item; set => Ingredient_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Ingredient> IFloraGetter.Ingredient_Property => this.Ingredient_Property;

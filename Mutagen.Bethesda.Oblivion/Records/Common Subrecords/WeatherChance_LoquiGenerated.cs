@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weather
         public FormIDLink<Weather> Weather_Property { get; } = new FormIDLink<Weather>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Weather Weather { get => Weather_Property.Item; set => Weather_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Weather> IWeatherChanceGetter.Weather_Property => this.Weather_Property;

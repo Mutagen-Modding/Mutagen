@@ -265,14 +265,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region DeathItem
         public FormIDSetLink<ItemAbstract> DeathItem_Property { get; } = new FormIDSetLink<ItemAbstract>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ItemAbstract DeathItem { get => DeathItem_Property.Item; set => DeathItem_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<ItemAbstract> ICreatureGetter.DeathItem_Property => this.DeathItem_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> ICreatureGetter.Script_Property => this.Script_Property;
@@ -517,7 +515,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CombatStyle
         public FormIDSetLink<CombatStyle> CombatStyle_Property { get; } = new FormIDSetLink<CombatStyle>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public CombatStyle CombatStyle { get => CombatStyle_Property.Item; set => CombatStyle_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<CombatStyle> ICreatureGetter.CombatStyle_Property => this.CombatStyle_Property;
@@ -654,7 +651,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region InheritsSoundFrom
         public FormIDSetLink<Creature> InheritsSoundFrom_Property { get; } = new FormIDSetLink<Creature>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Creature InheritsSoundFrom { get => InheritsSoundFrom_Property.Item; set => InheritsSoundFrom_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Creature> ICreatureGetter.InheritsSoundFrom_Property => this.InheritsSoundFrom_Property;

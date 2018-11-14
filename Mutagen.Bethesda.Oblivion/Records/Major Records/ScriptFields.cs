@@ -19,6 +19,9 @@ namespace Mutagen.Bethesda.Oblivion
             MagicEffect = 0x100
         }
 
+        public IEnumerable<ScriptObjectReference> ObjectReferences => this.References.Items.WhereCastable<ScriptReference, ScriptObjectReference>();
+        public IEnumerable<ScriptVariableReference> VariableReferences => this.References.Items.WhereCastable<ScriptReference, ScriptVariableReference>();
+
         private readonly static RecordTypeConverter metaConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("SCHR"),

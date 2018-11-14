@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Race
         public FormIDLink<Race> Race_Property { get; } = new FormIDLink<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race Race { get => Race_Property.Item; set => Race_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Race> IRaceRelationGetter.Race_Property => this.Race_Property;

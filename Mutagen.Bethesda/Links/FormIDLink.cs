@@ -107,7 +107,11 @@ namespace Mutagen.Bethesda
                 return false;
             }
             M mod;
-            if (modList != null)
+            if (sourceMod.ModKey == unlinkedForm.Value.ModKey)
+            {
+                mod = sourceMod;
+            }
+            else if (modList != null)
             {
                 if (!modList.TryGetMod(unlinkedForm.Value.ModKey, out var modListing))
                 {
@@ -118,7 +122,8 @@ namespace Mutagen.Bethesda
             }
             else
             {
-                mod = sourceMod;
+                item = default;
+                return false;
             }
             if (!mod.MajorRecords.TryGetValue(unlinkedForm.Value, out var rec))
             {

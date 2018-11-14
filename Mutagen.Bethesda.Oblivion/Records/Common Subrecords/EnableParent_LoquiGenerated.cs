@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Reference
         public FormIDLink<IPlaced> Reference_Property { get; } = new FormIDLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IPlaced Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<IPlaced> IEnableParentGetter.Reference_Property => this.Reference_Property;

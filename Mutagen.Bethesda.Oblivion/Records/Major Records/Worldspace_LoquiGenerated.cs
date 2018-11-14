@@ -83,21 +83,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Parent
         public FormIDSetLink<Worldspace> Parent_Property { get; } = new FormIDSetLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Worldspace Parent { get => Parent_Property.Item; set => Parent_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Worldspace> IWorldspaceGetter.Parent_Property => this.Parent_Property;
         #endregion
         #region Climate
         public FormIDSetLink<Climate> Climate_Property { get; } = new FormIDSetLink<Climate>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Climate Climate { get => Climate_Property.Item; set => Climate_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Climate> IWorldspaceGetter.Climate_Property => this.Climate_Property;
         #endregion
         #region Water
         public FormIDSetLink<Water> Water_Property { get; } = new FormIDSetLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Water Water { get => Water_Property.Item; set => Water_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Water> IWorldspaceGetter.Water_Property => this.Water_Property;
