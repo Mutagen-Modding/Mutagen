@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
 
         #region Ctor
-        public SoulGem()
+        protected SoulGem()
         {
             CustomCtor();
         }
@@ -929,6 +929,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public SoulGem(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -1433,6 +1437,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ISoulGemGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

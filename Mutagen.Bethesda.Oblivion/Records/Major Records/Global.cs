@@ -15,6 +15,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Global
     {
         protected static readonly RecordType FNAM = new RecordType("FNAM");
+
+        public abstract float RawFloat { get; set; }
         
         public static Global Create_Binary(
             MutagenFrame frame,
@@ -55,13 +57,13 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (triggerChar)
                 {
                     case GlobalInt.TRIGGER_CHAR:
-                        g = new GlobalInt();
+                        g = GlobalInt.Factory();
                         break;
                     case GlobalShort.TRIGGER_CHAR:
-                        g = new GlobalShort();
+                        g = GlobalShort.Factory();
                         break;
                     case GlobalFloat.TRIGGER_CHAR:
-                        g = new GlobalFloat();
+                        g = GlobalFloat.Factory();
                         break;
                     default:
                         errorMask.ReportExceptionOrThrow(

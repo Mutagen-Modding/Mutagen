@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Key_Registration Registration => Key_Registration.Instance;
 
         #region Ctor
-        public Key()
+        protected Key()
         {
             CustomCtor();
         }
@@ -805,6 +805,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Key(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -1255,6 +1259,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IKeyGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

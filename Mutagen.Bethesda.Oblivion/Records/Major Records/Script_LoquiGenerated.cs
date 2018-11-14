@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Script_Registration Registration => Script_Registration.Instance;
 
         #region Ctor
-        public Script()
+        protected Script()
         {
             _hasBeenSetTracker[(int)Script_FieldIndex.Fields] = true;
             CustomCtor();
@@ -532,6 +532,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Script(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -839,6 +843,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IScriptGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

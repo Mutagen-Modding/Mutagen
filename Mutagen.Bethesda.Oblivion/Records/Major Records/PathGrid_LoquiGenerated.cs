@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
 
         #region Ctor
-        public PathGrid()
+        protected PathGrid()
         {
             CustomCtor();
         }
@@ -720,6 +720,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public PathGrid(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -1111,6 +1115,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IPathGridGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

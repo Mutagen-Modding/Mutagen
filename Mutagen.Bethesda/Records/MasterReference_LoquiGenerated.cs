@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IMasterReferenceGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

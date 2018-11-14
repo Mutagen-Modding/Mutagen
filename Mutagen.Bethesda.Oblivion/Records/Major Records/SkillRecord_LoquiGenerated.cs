@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
 
         #region Ctor
-        public SkillRecord()
+        protected SkillRecord()
         {
             CustomCtor();
         }
@@ -1075,6 +1075,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        public SkillRecord(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -1685,6 +1689,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ISkillRecordGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

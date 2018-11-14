@@ -87,5 +87,19 @@ namespace Mutagen.Bethesda.Oblivion
                 modKeyExclusionHint);
             return tg.Value;
         }
+
+        public static OblivionMod Flatten(this ModList<OblivionMod> modList, ModKey? modKey = null)
+        {
+            if (modKey == null)
+            {
+                modKey = new ModKey("Flattened", master: false);
+            }
+            OblivionMod ret = new OblivionMod(modKey.Value);
+            foreach (var mod in modList)
+            {
+                ret.AddRecords(mod.Mod);
+            }
+            return ret;
+        }
     }
 }

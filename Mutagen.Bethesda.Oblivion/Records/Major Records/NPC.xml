@@ -8,7 +8,7 @@
       <RefDirect name="Model" refName="Model" />
       <Data recordType="ACBS">
         <Fields>
-          <Enum name="NPCFlags" enumName="NPC.NPCFlag" byteLength="4" />
+          <Enum name="Flags" enumName="NPC.NPCFlag" byteLength="4" />
           <UInt16 name="BaseSpellPoints" />
           <UInt16 name="Fatigue" />
           <UInt16 name="BarterGold" />

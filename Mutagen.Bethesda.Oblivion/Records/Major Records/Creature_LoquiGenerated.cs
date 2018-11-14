@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Creature_Registration Registration => Creature_Registration.Instance;
 
         #region Ctor
-        public Creature()
+        protected Creature()
         {
             CustomCtor();
         }
@@ -377,28 +377,28 @@ namespace Mutagen.Bethesda.Oblivion
             set => this.RaiseAndSetIfChanged(ref this._CreatureType, value, nameof(CreatureType));
         }
         #endregion
-        #region CombatSKill
-        private Byte _CombatSKill;
-        public Byte CombatSKill
+        #region CombatSkill
+        private Byte _CombatSkill;
+        public Byte CombatSkill
         {
-            get => this._CombatSKill;
-            set => this.RaiseAndSetIfChanged(ref this._CombatSKill, value, nameof(CombatSKill));
+            get => this._CombatSkill;
+            set => this.RaiseAndSetIfChanged(ref this._CombatSkill, value, nameof(CombatSkill));
         }
         #endregion
-        #region MagicSKill
-        private Byte _MagicSKill;
-        public Byte MagicSKill
+        #region MagicSkill
+        private Byte _MagicSkill;
+        public Byte MagicSkill
         {
-            get => this._MagicSKill;
-            set => this.RaiseAndSetIfChanged(ref this._MagicSKill, value, nameof(MagicSKill));
+            get => this._MagicSkill;
+            set => this.RaiseAndSetIfChanged(ref this._MagicSkill, value, nameof(MagicSkill));
         }
         #endregion
-        #region StealthSKill
-        private Byte _StealthSKill;
-        public Byte StealthSKill
+        #region StealthSkill
+        private Byte _StealthSkill;
+        public Byte StealthSkill
         {
-            get => this._StealthSKill;
-            set => this.RaiseAndSetIfChanged(ref this._StealthSKill, value, nameof(StealthSKill));
+            get => this._StealthSkill;
+            set => this.RaiseAndSetIfChanged(ref this._StealthSkill, value, nameof(StealthSkill));
         }
         #endregion
         #region SoulLevel
@@ -801,9 +801,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!this.Animations.SequenceEqual(rhs.Animations)) return false;
             }
             if (this.CreatureType != rhs.CreatureType) return false;
-            if (this.CombatSKill != rhs.CombatSKill) return false;
-            if (this.MagicSKill != rhs.MagicSKill) return false;
-            if (this.StealthSKill != rhs.StealthSKill) return false;
+            if (this.CombatSkill != rhs.CombatSkill) return false;
+            if (this.MagicSkill != rhs.MagicSkill) return false;
+            if (this.StealthSkill != rhs.StealthSkill) return false;
             if (this.SoulLevel != rhs.SoulLevel) return false;
             if (this.Health != rhs.Health) return false;
             if (this.AttackDamage != rhs.AttackDamage) return false;
@@ -925,9 +925,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ret = HashHelper.GetHashCode(Animations).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(CreatureType).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CombatSKill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MagicSKill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(StealthSKill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(CombatSkill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(MagicSkill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(StealthSkill).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(SoulLevel).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Health).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(AttackDamage).CombineHashCode(ret);
@@ -2005,20 +2005,20 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
-                case "CombatSKill":
+                case "CombatSkill":
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CombatSKill);
+                        errorMask?.PushIndex((int)Creature_FieldIndex.CombatSkill);
                         if (ByteXmlTranslation.Instance.Parse(
                             root: root,
-                            item: out Byte CombatSKillParse,
+                            item: out Byte CombatSkillParse,
                             errorMask: errorMask))
                         {
-                            item.CombatSKill = CombatSKillParse;
+                            item.CombatSkill = CombatSkillParse;
                         }
                         else
                         {
-                            item.CombatSKill = default(Byte);
+                            item.CombatSkill = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2031,20 +2031,20 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
-                case "MagicSKill":
+                case "MagicSkill":
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.MagicSKill);
+                        errorMask?.PushIndex((int)Creature_FieldIndex.MagicSkill);
                         if (ByteXmlTranslation.Instance.Parse(
                             root: root,
-                            item: out Byte MagicSKillParse,
+                            item: out Byte MagicSkillParse,
                             errorMask: errorMask))
                         {
-                            item.MagicSKill = MagicSKillParse;
+                            item.MagicSkill = MagicSkillParse;
                         }
                         else
                         {
-                            item.MagicSKill = default(Byte);
+                            item.MagicSkill = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2057,20 +2057,20 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     break;
-                case "StealthSKill":
+                case "StealthSkill":
                     try
                     {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.StealthSKill);
+                        errorMask?.PushIndex((int)Creature_FieldIndex.StealthSkill);
                         if (ByteXmlTranslation.Instance.Parse(
                             root: root,
-                            item: out Byte StealthSKillParse,
+                            item: out Byte StealthSkillParse,
                             errorMask: errorMask))
                         {
-                            item.StealthSKill = StealthSKillParse;
+                            item.StealthSkill = StealthSkillParse;
                         }
                         else
                         {
-                            item.StealthSKill = default(Byte);
+                            item.StealthSkill = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -2631,9 +2631,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Creature_FieldIndex.Teaches:
                 case Creature_FieldIndex.MaximumTrainingLevel:
                 case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSKill:
-                case Creature_FieldIndex.MagicSKill:
-                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.CombatSkill:
+                case Creature_FieldIndex.MagicSkill:
+                case Creature_FieldIndex.StealthSkill:
                 case Creature_FieldIndex.SoulLevel:
                 case Creature_FieldIndex.Health:
                 case Creature_FieldIndex.AttackDamage:
@@ -2768,6 +2768,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Creature(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -3606,17 +3610,17 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         try
                         {
-                            errorMask?.PushIndex((int)Creature_FieldIndex.CombatSKill);
+                            errorMask?.PushIndex((int)Creature_FieldIndex.CombatSkill);
                             if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                                 frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Byte CombatSKillParse,
+                                item: out Byte CombatSkillParse,
                                 errorMask: errorMask))
                             {
-                                item.CombatSKill = CombatSKillParse;
+                                item.CombatSkill = CombatSkillParse;
                             }
                             else
                             {
-                                item.CombatSKill = default(Byte);
+                                item.CombatSkill = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -3630,17 +3634,17 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         try
                         {
-                            errorMask?.PushIndex((int)Creature_FieldIndex.MagicSKill);
+                            errorMask?.PushIndex((int)Creature_FieldIndex.MagicSkill);
                             if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                                 frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Byte MagicSKillParse,
+                                item: out Byte MagicSkillParse,
                                 errorMask: errorMask))
                             {
-                                item.MagicSKill = MagicSKillParse;
+                                item.MagicSkill = MagicSkillParse;
                             }
                             else
                             {
-                                item.MagicSKill = default(Byte);
+                                item.MagicSkill = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -3654,17 +3658,17 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         try
                         {
-                            errorMask?.PushIndex((int)Creature_FieldIndex.StealthSKill);
+                            errorMask?.PushIndex((int)Creature_FieldIndex.StealthSkill);
                             if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                                 frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Byte StealthSKillParse,
+                                item: out Byte StealthSkillParse,
                                 errorMask: errorMask))
                             {
-                                item.StealthSKill = StealthSKillParse;
+                                item.StealthSkill = StealthSkillParse;
                             }
                             else
                             {
-                                item.StealthSKill = default(Byte);
+                                item.StealthSkill = default(Byte);
                             }
                         }
                         catch (Exception ex)
@@ -4208,6 +4212,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ICreatureGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
+        }
+
         public void CopyFieldsFrom(
             ICreatureGetter rhs,
             Creature_CopyMask copyMask,
@@ -4346,14 +4363,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case Creature_FieldIndex.CreatureType:
                     this.CreatureType = (Creature.CreatureTypeEnum)obj;
                     break;
-                case Creature_FieldIndex.CombatSKill:
-                    this.CombatSKill = (Byte)obj;
+                case Creature_FieldIndex.CombatSkill:
+                    this.CombatSkill = (Byte)obj;
                     break;
-                case Creature_FieldIndex.MagicSKill:
-                    this.MagicSKill = (Byte)obj;
+                case Creature_FieldIndex.MagicSkill:
+                    this.MagicSkill = (Byte)obj;
                     break;
-                case Creature_FieldIndex.StealthSKill:
-                    this.StealthSKill = (Byte)obj;
+                case Creature_FieldIndex.StealthSkill:
+                    this.StealthSkill = (Byte)obj;
                     break;
                 case Creature_FieldIndex.SoulLevel:
                     this.SoulLevel = (SoulLevel)obj;
@@ -4532,14 +4549,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case Creature_FieldIndex.CreatureType:
                     obj.CreatureType = (Creature.CreatureTypeEnum)pair.Value;
                     break;
-                case Creature_FieldIndex.CombatSKill:
-                    obj.CombatSKill = (Byte)pair.Value;
+                case Creature_FieldIndex.CombatSkill:
+                    obj.CombatSkill = (Byte)pair.Value;
                     break;
-                case Creature_FieldIndex.MagicSKill:
-                    obj.MagicSKill = (Byte)pair.Value;
+                case Creature_FieldIndex.MagicSkill:
+                    obj.MagicSkill = (Byte)pair.Value;
                     break;
-                case Creature_FieldIndex.StealthSKill:
-                    obj.StealthSKill = (Byte)pair.Value;
+                case Creature_FieldIndex.StealthSkill:
+                    obj.StealthSkill = (Byte)pair.Value;
                     break;
                 case Creature_FieldIndex.SoulLevel:
                     obj.SoulLevel = (SoulLevel)pair.Value;
@@ -4673,11 +4690,11 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<String> Animations { get; }
         new Creature.CreatureTypeEnum CreatureType { get; set; }
 
-        new Byte CombatSKill { get; set; }
+        new Byte CombatSkill { get; set; }
 
-        new Byte MagicSKill { get; set; }
+        new Byte MagicSkill { get; set; }
 
-        new Byte StealthSKill { get; set; }
+        new Byte StealthSkill { get; set; }
 
         new SoulLevel SoulLevel { get; set; }
 
@@ -4841,16 +4858,16 @@ namespace Mutagen.Bethesda.Oblivion
         Creature.CreatureTypeEnum CreatureType { get; }
 
         #endregion
-        #region CombatSKill
-        Byte CombatSKill { get; }
+        #region CombatSkill
+        Byte CombatSkill { get; }
 
         #endregion
-        #region MagicSKill
-        Byte MagicSKill { get; }
+        #region MagicSkill
+        Byte MagicSkill { get; }
 
         #endregion
-        #region StealthSKill
-        Byte StealthSKill { get; }
+        #region StealthSkill
+        Byte StealthSkill { get; }
 
         #endregion
         #region SoulLevel
@@ -4983,9 +5000,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         AIPackages = 28,
         Animations = 29,
         CreatureType = 30,
-        CombatSKill = 31,
-        MagicSKill = 32,
-        StealthSKill = 33,
+        CombatSkill = 31,
+        MagicSkill = 32,
+        StealthSkill = 33,
         SoulLevel = 34,
         Health = 35,
         AttackDamage = 36,
@@ -5106,11 +5123,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "CREATURETYPE":
                     return (ushort)Creature_FieldIndex.CreatureType;
                 case "COMBATSKILL":
-                    return (ushort)Creature_FieldIndex.CombatSKill;
+                    return (ushort)Creature_FieldIndex.CombatSkill;
                 case "MAGICSKILL":
-                    return (ushort)Creature_FieldIndex.MagicSKill;
+                    return (ushort)Creature_FieldIndex.MagicSkill;
                 case "STEALTHSKILL":
-                    return (ushort)Creature_FieldIndex.StealthSKill;
+                    return (ushort)Creature_FieldIndex.StealthSkill;
                 case "SOULLEVEL":
                     return (ushort)Creature_FieldIndex.SoulLevel;
                 case "HEALTH":
@@ -5189,9 +5206,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Teaches:
                 case Creature_FieldIndex.MaximumTrainingLevel:
                 case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSKill:
-                case Creature_FieldIndex.MagicSKill:
-                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.CombatSkill:
+                case Creature_FieldIndex.MagicSkill:
+                case Creature_FieldIndex.StealthSkill:
                 case Creature_FieldIndex.SoulLevel:
                 case Creature_FieldIndex.Health:
                 case Creature_FieldIndex.AttackDamage:
@@ -5250,9 +5267,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.AIPackages:
                 case Creature_FieldIndex.Animations:
                 case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSKill:
-                case Creature_FieldIndex.MagicSKill:
-                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.CombatSkill:
+                case Creature_FieldIndex.MagicSkill:
+                case Creature_FieldIndex.StealthSkill:
                 case Creature_FieldIndex.SoulLevel:
                 case Creature_FieldIndex.Health:
                 case Creature_FieldIndex.AttackDamage:
@@ -5309,9 +5326,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.AIPackages:
                 case Creature_FieldIndex.Animations:
                 case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSKill:
-                case Creature_FieldIndex.MagicSKill:
-                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.CombatSkill:
+                case Creature_FieldIndex.MagicSkill:
+                case Creature_FieldIndex.StealthSkill:
                 case Creature_FieldIndex.SoulLevel:
                 case Creature_FieldIndex.Health:
                 case Creature_FieldIndex.AttackDamage:
@@ -5395,12 +5412,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Animations";
                 case Creature_FieldIndex.CreatureType:
                     return "CreatureType";
-                case Creature_FieldIndex.CombatSKill:
-                    return "CombatSKill";
-                case Creature_FieldIndex.MagicSKill:
-                    return "MagicSKill";
-                case Creature_FieldIndex.StealthSKill:
-                    return "StealthSKill";
+                case Creature_FieldIndex.CombatSkill:
+                    return "CombatSkill";
+                case Creature_FieldIndex.MagicSkill:
+                    return "MagicSkill";
+                case Creature_FieldIndex.StealthSkill:
+                    return "StealthSkill";
                 case Creature_FieldIndex.SoulLevel:
                     return "SoulLevel";
                 case Creature_FieldIndex.Health:
@@ -5477,9 +5494,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.AIPackages:
                 case Creature_FieldIndex.Animations:
                 case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSKill:
-                case Creature_FieldIndex.MagicSKill:
-                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.CombatSkill:
+                case Creature_FieldIndex.MagicSkill:
+                case Creature_FieldIndex.StealthSkill:
                 case Creature_FieldIndex.SoulLevel:
                 case Creature_FieldIndex.Health:
                 case Creature_FieldIndex.AttackDamage:
@@ -5537,9 +5554,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.AIPackages:
                 case Creature_FieldIndex.Animations:
                 case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSKill:
-                case Creature_FieldIndex.MagicSKill:
-                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.CombatSkill:
+                case Creature_FieldIndex.MagicSkill:
+                case Creature_FieldIndex.StealthSkill:
                 case Creature_FieldIndex.SoulLevel:
                 case Creature_FieldIndex.Health:
                 case Creature_FieldIndex.AttackDamage:
@@ -5623,11 +5640,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(SourceSetList<String>);
                 case Creature_FieldIndex.CreatureType:
                     return typeof(Creature.CreatureTypeEnum);
-                case Creature_FieldIndex.CombatSKill:
+                case Creature_FieldIndex.CombatSkill:
                     return typeof(Byte);
-                case Creature_FieldIndex.MagicSKill:
+                case Creature_FieldIndex.MagicSkill:
                     return typeof(Byte);
-                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.StealthSkill:
                     return typeof(Byte);
                 case Creature_FieldIndex.SoulLevel:
                     return typeof(SoulLevel);
@@ -6306,12 +6323,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.CombatSKill ?? true)
+            if (copyMask?.CombatSkill ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.CombatSKill);
+                errorMask?.PushIndex((int)Creature_FieldIndex.CombatSkill);
                 try
                 {
-                    item.CombatSKill = rhs.CombatSKill;
+                    item.CombatSkill = rhs.CombatSkill;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6323,12 +6340,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MagicSKill ?? true)
+            if (copyMask?.MagicSkill ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.MagicSKill);
+                errorMask?.PushIndex((int)Creature_FieldIndex.MagicSkill);
                 try
                 {
-                    item.MagicSKill = rhs.MagicSKill;
+                    item.MagicSkill = rhs.MagicSkill;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6340,12 +6357,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.StealthSKill ?? true)
+            if (copyMask?.StealthSkill ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.StealthSKill);
+                errorMask?.PushIndex((int)Creature_FieldIndex.StealthSkill);
                 try
                 {
-                    item.StealthSKill = rhs.StealthSKill;
+                    item.StealthSkill = rhs.StealthSkill;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6827,9 +6844,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Teaches:
                 case Creature_FieldIndex.MaximumTrainingLevel:
                 case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSKill:
-                case Creature_FieldIndex.MagicSKill:
-                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.CombatSkill:
+                case Creature_FieldIndex.MagicSkill:
+                case Creature_FieldIndex.StealthSkill:
                 case Creature_FieldIndex.SoulLevel:
                 case Creature_FieldIndex.Health:
                 case Creature_FieldIndex.AttackDamage:
@@ -6995,14 +7012,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CreatureType:
                     obj.CreatureType = default(Creature.CreatureTypeEnum);
                     break;
-                case Creature_FieldIndex.CombatSKill:
-                    obj.CombatSKill = default(Byte);
+                case Creature_FieldIndex.CombatSkill:
+                    obj.CombatSkill = default(Byte);
                     break;
-                case Creature_FieldIndex.MagicSKill:
-                    obj.MagicSKill = default(Byte);
+                case Creature_FieldIndex.MagicSkill:
+                    obj.MagicSkill = default(Byte);
                     break;
-                case Creature_FieldIndex.StealthSKill:
-                    obj.StealthSKill = default(Byte);
+                case Creature_FieldIndex.StealthSkill:
+                    obj.StealthSkill = default(Byte);
                     break;
                 case Creature_FieldIndex.SoulLevel:
                     obj.SoulLevel = default(SoulLevel);
@@ -7092,9 +7109,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Teaches:
                 case Creature_FieldIndex.MaximumTrainingLevel:
                 case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSKill:
-                case Creature_FieldIndex.MagicSKill:
-                case Creature_FieldIndex.StealthSKill:
+                case Creature_FieldIndex.CombatSkill:
+                case Creature_FieldIndex.MagicSkill:
+                case Creature_FieldIndex.StealthSkill:
                 case Creature_FieldIndex.SoulLevel:
                 case Creature_FieldIndex.Health:
                 case Creature_FieldIndex.AttackDamage:
@@ -7211,12 +7228,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Animations;
                 case Creature_FieldIndex.CreatureType:
                     return obj.CreatureType;
-                case Creature_FieldIndex.CombatSKill:
-                    return obj.CombatSKill;
-                case Creature_FieldIndex.MagicSKill:
-                    return obj.MagicSKill;
-                case Creature_FieldIndex.StealthSKill:
-                    return obj.StealthSKill;
+                case Creature_FieldIndex.CombatSkill:
+                    return obj.CombatSkill;
+                case Creature_FieldIndex.MagicSkill:
+                    return obj.MagicSkill;
+                case Creature_FieldIndex.StealthSkill:
+                    return obj.StealthSkill;
                 case Creature_FieldIndex.SoulLevel:
                     return obj.SoulLevel;
                 case Creature_FieldIndex.Health:
@@ -7292,9 +7309,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.AIPackages.Unset();
             item.Animations.Unset();
             item.CreatureType = default(Creature.CreatureTypeEnum);
-            item.CombatSKill = default(Byte);
-            item.MagicSKill = default(Byte);
-            item.StealthSKill = default(Byte);
+            item.CombatSkill = default(Byte);
+            item.MagicSkill = default(Byte);
+            item.StealthSkill = default(Byte);
             item.SoulLevel = default(SoulLevel);
             item.Health = default(UInt32);
             item.AttackDamage = default(UInt16);
@@ -7478,9 +7495,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Animations.Overall = false;
             }
             ret.CreatureType = item.CreatureType == rhs.CreatureType;
-            ret.CombatSKill = item.CombatSKill == rhs.CombatSKill;
-            ret.MagicSKill = item.MagicSKill == rhs.MagicSKill;
-            ret.StealthSKill = item.StealthSKill == rhs.StealthSKill;
+            ret.CombatSkill = item.CombatSkill == rhs.CombatSkill;
+            ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
+            ret.StealthSkill = item.StealthSkill == rhs.StealthSkill;
             ret.SoulLevel = item.SoulLevel == rhs.SoulLevel;
             ret.Health = item.Health == rhs.Health;
             ret.AttackDamage = item.AttackDamage == rhs.AttackDamage;
@@ -7743,17 +7760,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"CreatureType => {item.CreatureType}");
                 }
-                if (printMask?.CombatSKill ?? true)
+                if (printMask?.CombatSkill ?? true)
                 {
-                    fg.AppendLine($"CombatSKill => {item.CombatSKill}");
+                    fg.AppendLine($"CombatSkill => {item.CombatSkill}");
                 }
-                if (printMask?.MagicSKill ?? true)
+                if (printMask?.MagicSkill ?? true)
                 {
-                    fg.AppendLine($"MagicSKill => {item.MagicSKill}");
+                    fg.AppendLine($"MagicSkill => {item.MagicSkill}");
                 }
-                if (printMask?.StealthSKill ?? true)
+                if (printMask?.StealthSkill ?? true)
                 {
-                    fg.AppendLine($"StealthSKill => {item.StealthSKill}");
+                    fg.AppendLine($"StealthSkill => {item.StealthSkill}");
                 }
                 if (printMask?.SoulLevel ?? true)
                 {
@@ -7910,9 +7927,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.AIPackages = new MaskItem<bool, IEnumerable<bool>>(item.AIPackages.HasBeenSet, null);
             ret.Animations = new MaskItem<bool, IEnumerable<bool>>(item.Animations.HasBeenSet, null);
             ret.CreatureType = true;
-            ret.CombatSKill = true;
-            ret.MagicSKill = true;
-            ret.StealthSKill = true;
+            ret.CombatSkill = true;
+            ret.MagicSkill = true;
+            ret.StealthSkill = true;
             ret.SoulLevel = true;
             ret.Health = true;
             ret.AttackDamage = true;
@@ -8352,31 +8369,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Creature_FieldIndex.CreatureType,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatSKill) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatSkill) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.CombatSKill),
-                    item: item.CombatSKill,
-                    fieldIndex: (int)Creature_FieldIndex.CombatSKill,
+                    name: nameof(item.CombatSkill),
+                    item: item.CombatSkill,
+                    fieldIndex: (int)Creature_FieldIndex.CombatSkill,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.MagicSKill) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.MagicSkill) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.MagicSKill),
-                    item: item.MagicSKill,
-                    fieldIndex: (int)Creature_FieldIndex.MagicSKill,
+                    name: nameof(item.MagicSkill),
+                    item: item.MagicSkill,
+                    fieldIndex: (int)Creature_FieldIndex.MagicSkill,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.StealthSKill) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.StealthSkill) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.StealthSKill),
-                    item: item.StealthSKill,
-                    fieldIndex: (int)Creature_FieldIndex.StealthSKill,
+                    name: nameof(item.StealthSkill),
+                    item: item.StealthSkill,
+                    fieldIndex: (int)Creature_FieldIndex.StealthSkill,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.SoulLevel) ?? true))
@@ -8885,18 +8902,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.CombatSKill,
-                        fieldIndex: (int)Creature_FieldIndex.CombatSKill,
+                        item: item.CombatSkill,
+                        fieldIndex: (int)Creature_FieldIndex.CombatSkill,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.MagicSKill,
-                        fieldIndex: (int)Creature_FieldIndex.MagicSKill,
+                        item: item.MagicSkill,
+                        fieldIndex: (int)Creature_FieldIndex.MagicSkill,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.StealthSKill,
-                        fieldIndex: (int)Creature_FieldIndex.StealthSKill,
+                        item: item.StealthSkill,
+                        fieldIndex: (int)Creature_FieldIndex.StealthSkill,
                         errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Write(
                         writer,
@@ -9099,9 +9116,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.AIPackages = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.Animations = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.CreatureType = initialValue;
-            this.CombatSKill = initialValue;
-            this.MagicSKill = initialValue;
-            this.StealthSKill = initialValue;
+            this.CombatSkill = initialValue;
+            this.MagicSkill = initialValue;
+            this.StealthSkill = initialValue;
             this.SoulLevel = initialValue;
             this.Health = initialValue;
             this.AttackDamage = initialValue;
@@ -9152,9 +9169,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, IEnumerable<T>> AIPackages;
         public MaskItem<T, IEnumerable<T>> Animations;
         public T CreatureType;
-        public T CombatSKill;
-        public T MagicSKill;
-        public T StealthSKill;
+        public T CombatSkill;
+        public T MagicSkill;
+        public T StealthSkill;
         public T SoulLevel;
         public T Health;
         public T AttackDamage;
@@ -9214,9 +9231,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
             if (!object.Equals(this.Animations, rhs.Animations)) return false;
             if (!object.Equals(this.CreatureType, rhs.CreatureType)) return false;
-            if (!object.Equals(this.CombatSKill, rhs.CombatSKill)) return false;
-            if (!object.Equals(this.MagicSKill, rhs.MagicSKill)) return false;
-            if (!object.Equals(this.StealthSKill, rhs.StealthSKill)) return false;
+            if (!object.Equals(this.CombatSkill, rhs.CombatSkill)) return false;
+            if (!object.Equals(this.MagicSkill, rhs.MagicSkill)) return false;
+            if (!object.Equals(this.StealthSkill, rhs.StealthSkill)) return false;
             if (!object.Equals(this.SoulLevel, rhs.SoulLevel)) return false;
             if (!object.Equals(this.Health, rhs.Health)) return false;
             if (!object.Equals(this.AttackDamage, rhs.AttackDamage)) return false;
@@ -9268,9 +9285,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
             ret = ret.CombineHashCode(this.Animations?.GetHashCode());
             ret = ret.CombineHashCode(this.CreatureType?.GetHashCode());
-            ret = ret.CombineHashCode(this.CombatSKill?.GetHashCode());
-            ret = ret.CombineHashCode(this.MagicSKill?.GetHashCode());
-            ret = ret.CombineHashCode(this.StealthSKill?.GetHashCode());
+            ret = ret.CombineHashCode(this.CombatSkill?.GetHashCode());
+            ret = ret.CombineHashCode(this.MagicSkill?.GetHashCode());
+            ret = ret.CombineHashCode(this.StealthSkill?.GetHashCode());
             ret = ret.CombineHashCode(this.SoulLevel?.GetHashCode());
             ret = ret.CombineHashCode(this.Health?.GetHashCode());
             ret = ret.CombineHashCode(this.AttackDamage?.GetHashCode());
@@ -9393,9 +9410,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             if (!eval(this.CreatureType)) return false;
-            if (!eval(this.CombatSKill)) return false;
-            if (!eval(this.MagicSKill)) return false;
-            if (!eval(this.StealthSKill)) return false;
+            if (!eval(this.CombatSkill)) return false;
+            if (!eval(this.MagicSkill)) return false;
+            if (!eval(this.StealthSkill)) return false;
             if (!eval(this.SoulLevel)) return false;
             if (!eval(this.Health)) return false;
             if (!eval(this.AttackDamage)) return false;
@@ -9582,9 +9599,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             obj.CreatureType = eval(this.CreatureType);
-            obj.CombatSKill = eval(this.CombatSKill);
-            obj.MagicSKill = eval(this.MagicSKill);
-            obj.StealthSKill = eval(this.StealthSKill);
+            obj.CombatSkill = eval(this.CombatSkill);
+            obj.MagicSkill = eval(this.MagicSkill);
+            obj.StealthSkill = eval(this.StealthSkill);
             obj.SoulLevel = eval(this.SoulLevel);
             obj.Health = eval(this.Health);
             obj.AttackDamage = eval(this.AttackDamage);
@@ -9894,17 +9911,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"CreatureType => {CreatureType}");
                 }
-                if (printMask?.CombatSKill ?? true)
+                if (printMask?.CombatSkill ?? true)
                 {
-                    fg.AppendLine($"CombatSKill => {CombatSKill}");
+                    fg.AppendLine($"CombatSkill => {CombatSkill}");
                 }
-                if (printMask?.MagicSKill ?? true)
+                if (printMask?.MagicSkill ?? true)
                 {
-                    fg.AppendLine($"MagicSKill => {MagicSKill}");
+                    fg.AppendLine($"MagicSkill => {MagicSkill}");
                 }
-                if (printMask?.StealthSKill ?? true)
+                if (printMask?.StealthSkill ?? true)
                 {
-                    fg.AppendLine($"StealthSKill => {StealthSKill}");
+                    fg.AppendLine($"StealthSkill => {StealthSkill}");
                 }
                 if (printMask?.SoulLevel ?? true)
                 {
@@ -10043,9 +10060,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, IEnumerable<Exception>> AIPackages;
         public MaskItem<Exception, IEnumerable<Exception>> Animations;
         public Exception CreatureType;
-        public Exception CombatSKill;
-        public Exception MagicSKill;
-        public Exception StealthSKill;
+        public Exception CombatSkill;
+        public Exception MagicSkill;
+        public Exception StealthSkill;
         public Exception SoulLevel;
         public Exception Health;
         public Exception AttackDamage;
@@ -10126,12 +10143,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Animations;
                 case Creature_FieldIndex.CreatureType:
                     return CreatureType;
-                case Creature_FieldIndex.CombatSKill:
-                    return CombatSKill;
-                case Creature_FieldIndex.MagicSKill:
-                    return MagicSKill;
-                case Creature_FieldIndex.StealthSKill:
-                    return StealthSKill;
+                case Creature_FieldIndex.CombatSkill:
+                    return CombatSkill;
+                case Creature_FieldIndex.MagicSkill:
+                    return MagicSkill;
+                case Creature_FieldIndex.StealthSkill:
+                    return StealthSkill;
                 case Creature_FieldIndex.SoulLevel:
                     return SoulLevel;
                 case Creature_FieldIndex.Health:
@@ -10260,14 +10277,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CreatureType:
                     this.CreatureType = ex;
                     break;
-                case Creature_FieldIndex.CombatSKill:
-                    this.CombatSKill = ex;
+                case Creature_FieldIndex.CombatSkill:
+                    this.CombatSkill = ex;
                     break;
-                case Creature_FieldIndex.MagicSKill:
-                    this.MagicSKill = ex;
+                case Creature_FieldIndex.MagicSkill:
+                    this.MagicSkill = ex;
                     break;
-                case Creature_FieldIndex.StealthSKill:
-                    this.StealthSKill = ex;
+                case Creature_FieldIndex.StealthSkill:
+                    this.StealthSkill = ex;
                     break;
                 case Creature_FieldIndex.SoulLevel:
                     this.SoulLevel = ex;
@@ -10418,14 +10435,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CreatureType:
                     this.CreatureType = (Exception)obj;
                     break;
-                case Creature_FieldIndex.CombatSKill:
-                    this.CombatSKill = (Exception)obj;
+                case Creature_FieldIndex.CombatSkill:
+                    this.CombatSkill = (Exception)obj;
                     break;
-                case Creature_FieldIndex.MagicSKill:
-                    this.MagicSKill = (Exception)obj;
+                case Creature_FieldIndex.MagicSkill:
+                    this.MagicSkill = (Exception)obj;
                     break;
-                case Creature_FieldIndex.StealthSKill:
-                    this.StealthSKill = (Exception)obj;
+                case Creature_FieldIndex.StealthSkill:
+                    this.StealthSkill = (Exception)obj;
                     break;
                 case Creature_FieldIndex.SoulLevel:
                     this.SoulLevel = (Exception)obj;
@@ -10522,9 +10539,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (AIPackages != null) return true;
             if (Animations != null) return true;
             if (CreatureType != null) return true;
-            if (CombatSKill != null) return true;
-            if (MagicSKill != null) return true;
-            if (StealthSKill != null) return true;
+            if (CombatSkill != null) return true;
+            if (MagicSkill != null) return true;
+            if (StealthSkill != null) return true;
             if (SoulLevel != null) return true;
             if (Health != null) return true;
             if (AttackDamage != null) return true;
@@ -10732,9 +10749,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             fg.AppendLine("]");
             fg.AppendLine($"CreatureType => {CreatureType}");
-            fg.AppendLine($"CombatSKill => {CombatSKill}");
-            fg.AppendLine($"MagicSKill => {MagicSKill}");
-            fg.AppendLine($"StealthSKill => {StealthSKill}");
+            fg.AppendLine($"CombatSkill => {CombatSkill}");
+            fg.AppendLine($"MagicSkill => {MagicSkill}");
+            fg.AppendLine($"StealthSkill => {StealthSkill}");
             fg.AppendLine($"SoulLevel => {SoulLevel}");
             fg.AppendLine($"Health => {Health}");
             fg.AppendLine($"AttackDamage => {AttackDamage}");
@@ -10809,9 +10826,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.AIPackages = new MaskItem<Exception, IEnumerable<Exception>>(this.AIPackages.Overall.Combine(rhs.AIPackages.Overall), new List<Exception>(this.AIPackages.Specific.And(rhs.AIPackages.Specific)));
             ret.Animations = new MaskItem<Exception, IEnumerable<Exception>>(this.Animations.Overall.Combine(rhs.Animations.Overall), new List<Exception>(this.Animations.Specific.And(rhs.Animations.Specific)));
             ret.CreatureType = this.CreatureType.Combine(rhs.CreatureType);
-            ret.CombatSKill = this.CombatSKill.Combine(rhs.CombatSKill);
-            ret.MagicSKill = this.MagicSKill.Combine(rhs.MagicSKill);
-            ret.StealthSKill = this.StealthSKill.Combine(rhs.StealthSKill);
+            ret.CombatSkill = this.CombatSkill.Combine(rhs.CombatSkill);
+            ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
+            ret.StealthSkill = this.StealthSkill.Combine(rhs.StealthSkill);
             ret.SoulLevel = this.SoulLevel.Combine(rhs.SoulLevel);
             ret.Health = this.Health.Combine(rhs.Health);
             ret.AttackDamage = this.AttackDamage.Combine(rhs.AttackDamage);
@@ -10879,9 +10896,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CopyOption AIPackages;
         public CopyOption Animations;
         public bool CreatureType;
-        public bool CombatSKill;
-        public bool MagicSKill;
-        public bool StealthSKill;
+        public bool CombatSkill;
+        public bool MagicSkill;
+        public bool StealthSkill;
         public bool SoulLevel;
         public bool Health;
         public bool AttackDamage;
@@ -10935,9 +10952,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool AIPackages;
         public bool Animations;
         public bool CreatureType;
-        public bool CombatSKill;
-        public bool MagicSKill;
-        public bool StealthSKill;
+        public bool CombatSkill;
+        public bool MagicSkill;
+        public bool StealthSkill;
         public bool SoulLevel;
         public bool Health;
         public bool AttackDamage;
@@ -10989,9 +11006,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((AIPackages, null));
             ret.Add((Animations, null));
             ret.Add((CreatureType, null));
-            ret.Add((CombatSKill, null));
-            ret.Add((MagicSKill, null));
-            ret.Add((StealthSKill, null));
+            ret.Add((CombatSkill, null));
+            ret.Add((MagicSkill, null));
+            ret.Add((StealthSkill, null));
             ret.Add((SoulLevel, null));
             ret.Add((Health, null));
             ret.Add((AttackDamage, null));

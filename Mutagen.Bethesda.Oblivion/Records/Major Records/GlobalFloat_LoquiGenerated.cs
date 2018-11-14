@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static GlobalFloat_Registration Registration => GlobalFloat_Registration.Instance;
 
         #region Ctor
-        public GlobalFloat()
+        protected GlobalFloat()
         {
             CustomCtor();
         }
@@ -51,11 +51,29 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        public bool Data_IsSet
+        {
+            get => _hasBeenSetTracker[(int)GlobalFloat_FieldIndex.Data];
+            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)GlobalFloat_FieldIndex.Data, nameof(Data_IsSet));
+        }
+        bool IGlobalFloatGetter.Data_IsSet => Data_IsSet;
         private Single _Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Data
         {
             get => this._Data;
-            protected set => this.RaiseAndSetIfChanged(ref this._Data, value, nameof(Data));
+            set => Data_Set(value);
+        }
+        Single IGlobalFloatGetter.Data => this.Data;
+        public void Data_Set(
+            Single value,
+            bool markSet = true)
+        {
+            this.RaiseAndSetIfChanged(ref _Data, value, _hasBeenSetTracker, markSet, (int)GlobalFloat_FieldIndex.Data, nameof(Data), nameof(Data_IsSet));
+        }
+        public void Data_Unset()
+        {
+            this.Data_Set(default(Single), false);
         }
         #endregion
 
@@ -112,14 +130,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!this.Data.EqualsWithin(rhs.Data)) return false;
+            if (Data_IsSet != rhs.Data_IsSet) return false;
+            if (Data_IsSet)
+            {
+                if (!this.Data.EqualsWithin(rhs.Data)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            if (Data_IsSet)
+            {
+                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -467,6 +492,32 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Data":
+                    try
+                    {
+                        errorMask?.PushIndex((int)GlobalFloat_FieldIndex.Data);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Single DataParse,
+                            errorMask: errorMask))
+                        {
+                            item.Data = DataParse;
+                        }
+                        else
+                        {
+                            item.Data = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     Global.Fill_Xml_Internal(
                         item: item,
@@ -485,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((GlobalFloat_FieldIndex)index)
             {
                 case GlobalFloat_FieldIndex.Data:
-                    return true;
+                    return _hasBeenSetTracker[index];
                 default:
                     return base.GetHasBeenSet(index);
             }
@@ -493,6 +544,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = GlobalFloat_Registration.TRIGGERING_RECORD_TYPE;
+        public GlobalFloat(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -540,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
                 fillStructs: Fill_Binary_Structs,
-                fillTyped: null);
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         public static GlobalFloat Create_Binary(
@@ -718,6 +773,56 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
+        protected static TryGet<int?> Fill_Binary_RecordTypes(
+            GlobalFloat item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                reader: frame.Reader,
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x56544C46: // FLTV
+                    frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
+                    try
+                    {
+                        errorMask?.PushIndex((int)GlobalFloat_FieldIndex.Data);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            item: out Single DataParse,
+                            errorMask: errorMask))
+                        {
+                            item.Data = DataParse;
+                        }
+                        else
+                        {
+                            item.Data = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    return TryGet<int?>.Succeed((int)GlobalFloat_FieldIndex.Data);
+                default:
+                    return Global.Fill_Binary_RecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+            }
+        }
+
         #endregion
 
         public GlobalFloat Copy(
@@ -770,6 +875,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IGlobalFloatGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(
@@ -829,7 +947,8 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case GlobalFloat_FieldIndex.Data:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
+                    this.Data = (Single)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -861,6 +980,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
+                case GlobalFloat_FieldIndex.Data:
+                    obj.Data = (Single)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -876,12 +998,18 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IGlobalFloat : IGlobalFloatGetter, IGlobal, ILoquiClass<IGlobalFloat, IGlobalFloatGetter>, ILoquiClass<GlobalFloat, IGlobalFloatGetter>
     {
+        new Single Data { get; set; }
+        new bool Data_IsSet { get; set; }
+        void Data_Set(Single item, bool hasBeenSet = true);
+        void Data_Unset();
+
     }
 
     public partial interface IGlobalFloatGetter : IGlobalGetter
     {
         #region Data
         Single Data { get; }
+        bool Data_IsSet { get; }
 
         #endregion
 
@@ -902,8 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         EditorID = 3,
         RecordType = 4,
         TypeChar = 5,
-        RawFloat = 6,
-        Data = 7,
+        Data = 6,
     }
     #endregion
 
@@ -923,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(GlobalFloat_Mask<>);
 
@@ -1012,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalFloat_FieldIndex.Data:
-                    return true;
+                    return false;
                 default:
                     return Global_Registration.IsNthDerivative(index);
             }
@@ -1024,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalFloat_FieldIndex.Data:
-                    return true;
+                    return false;
                 default:
                     return Global_Registration.IsProtected(index);
             }
@@ -1043,9 +1170,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
+        public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GLOB_HEADER;
-        public const int NumStructFields = 1;
-        public const int NumTypedFields = 0;
+        public const int NumStructFields = 0;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1095,6 +1223,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Data ?? true)
+            {
+                errorMask?.PushIndex((int)GlobalFloat_FieldIndex.Data);
+                try
+                {
+                    if (LoquiHelper.DefaultSwitch(
+                        rhsItem: rhs.Data,
+                        rhsHasBeenSet: rhs.Data_IsSet,
+                        defItem: def?.Data ?? default(Single),
+                        defHasBeenSet: def?.Data_IsSet ?? false,
+                        outRhsItem: out var rhsDataItem,
+                        outDefItem: out var defDataItem))
+                    {
+                        item.Data = rhsDataItem;
+                    }
+                    else
+                    {
+                        item.Data_Unset();
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -1109,7 +1267,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalFloat_FieldIndex.Data:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
+                    obj.Data_IsSet = on;
+                    break;
                 default:
                     GlobalCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1125,7 +1284,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalFloat_FieldIndex.Data:
-                    throw new ArgumentException($"Tried to unset at a derivative index {index}");
+                    obj.Data_Unset();
+                    break;
                 default:
                     GlobalCommon.UnsetNthObject(index, obj);
                     break;
@@ -1140,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalFloat_FieldIndex.Data:
-                    return true;
+                    return obj.Data_IsSet;
                 default:
                     return GlobalCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1164,6 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGlobalFloat item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.Data_Unset();
         }
 
         public static GlobalFloat_Mask<bool> GetEqualsMask(
@@ -1181,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GlobalFloat_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Data = item.Data == rhs.Data;
+            ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data == rhs.Data;
             GlobalCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1224,13 +1385,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IGlobalFloatGetter item,
             GlobalFloat_Mask<bool?> checkMask)
         {
+            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_IsSet) return false;
             return true;
         }
 
         public static GlobalFloat_Mask<bool> GetHasBeenSetMask(IGlobalFloatGetter item)
         {
             var ret = new GlobalFloat_Mask<bool>();
-            ret.Data = true;
+            ret.Data = item.Data_IsSet;
             return ret;
         }
 
@@ -1255,8 +1417,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Global_FieldIndex.RecordType:
                     return (GlobalFloat_FieldIndex)((int)index);
                 case Global_FieldIndex.TypeChar:
-                    return (GlobalFloat_FieldIndex)((int)index);
-                case Global_FieldIndex.RawFloat:
                     return (GlobalFloat_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1321,6 +1481,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GlobalFloat");
             }
+            if (item.Data_IsSet
+                && (translationMask?.GetShouldTranslate((int)GlobalFloat_FieldIndex.Data) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.Data),
+                    item: item.Data,
+                    fieldIndex: (int)GlobalFloat_FieldIndex.Data,
+                    errorMask: errorMask);
+            }
         }
         #endregion
 
@@ -1358,12 +1528,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: GlobalFloat_Registration.GLOB_HEADER,
                 type: ObjectType.Record))
             {
-                Write_Binary_Embedded(
+                MajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
-                GlobalCommon.Write_Binary_RecordTypes(
+                Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -1373,17 +1543,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #endregion
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Binary_RecordTypes(
             GlobalFloat item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordCommon.Write_Binary_Embedded(
+            GlobalCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
+            if (item.Data_IsSet)
+            {
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Data,
+                    fieldIndex: (int)GlobalFloat_FieldIndex.Data,
+                    errorMask: errorMask,
+                    header: recordTypeConverter.ConvertToCustom(GlobalFloat_Registration.FLTV_HEADER),
+                    nullable: false);
+            }
         }
 
         #endregion

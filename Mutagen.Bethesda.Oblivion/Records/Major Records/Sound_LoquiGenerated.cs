@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Sound_Registration Registration => Sound_Registration.Instance;
 
         #region Ctor
-        public Sound()
+        protected Sound()
         {
             CustomCtor();
         }
@@ -576,6 +576,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Sound_Registration.TRIGGERING_RECORD_TYPE;
+        public Sound(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -943,6 +947,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ISoundGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

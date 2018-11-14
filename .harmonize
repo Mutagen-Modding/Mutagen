@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0f446dcc323ae57bc5df41be333a0a2cbb77bc75</Sha>
+         <Sha>4ec08b446aad45a264f97216debed14312f29b54</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-13-2018 16:31:59</CommitDate>
-         <Description>ChangeSetExt.ToObservableChangeSet_SingleItemNotNull</Description>
+         <CommitDate>11-13-2018 17:01:08</CommitDate>
+         <Description>Merge branch 'master' of https://github.com/Noggog/CSharpExt</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e1bb55c962af8b77c7fd8b7d356c7401c05e20b3</Sha>
+         <Sha>8105f7aa20e23fe1af6135f7095abfc86f5047ba</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-04-2018 23:11:04</CommitDate>
-         <Description>Added missing not null implementation with recent refactors</Description>
+         <CommitDate>11-12-2018 21:41:26</CommitDate>
+         <Description>CopyFieldsFrom trickledown fix for generic call</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

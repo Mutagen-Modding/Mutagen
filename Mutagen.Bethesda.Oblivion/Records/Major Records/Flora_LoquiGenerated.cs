@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Flora_Registration Registration => Flora_Registration.Instance;
 
         #region Ctor
-        public Flora()
+        protected Flora()
         {
             CustomCtor();
         }
@@ -815,6 +815,10 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        public Flora(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -1279,6 +1283,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IFloraGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

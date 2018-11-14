@@ -102,10 +102,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CSharpExt\CSharpExt.Rx\CSharpExt.Rx.csproj">
-      <Project>{89be6417-94e1-45e8-9c7b-34a177c2f719}</Project>
-      <Name>CSharpExt.Rx</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
       <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
       <Name>CSharpExt</Name>

@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda
             where T_CopyMask : class, new()
         {
             this.CopyFieldsFrom<ErrorMaskPlaceholder, T_CopyMask>(
-                rhs: rhs,
+                rhs: (IListGroupGetter<T>)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

@@ -13,11 +13,31 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public const char TRIGGER_CHAR = 'f';
 
+        public override float RawFloat
+        {
+            get => this.Data;
+            set
+            {
+                if (this.Data != value)
+                {
+                    this.Data = value;
+                    this.RaisePropertyChanged();
+                }
+                else
+                {
+                    this.Data_IsSet = true;
+                }
+            }
+        }
+
+        internal static GlobalFloat Factory()
+        {
+            return new GlobalFloat();
+        }
+
         partial void CustomCtor()
         {
             this.TypeChar = TRIGGER_CHAR;
-            this.WhenAny(x => x.RawFloat).Subscribe((change) => this.Data = change);
-            this.WhenAny(x => x.Data).Subscribe((change) => this.RawFloat = change);
         }
     }
 }

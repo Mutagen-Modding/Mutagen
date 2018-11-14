@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
 
         #region Ctor
-        public PlacedCreature()
+        protected PlacedCreature()
         {
             CustomCtor();
         }
@@ -911,6 +911,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public PlacedCreature(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -1389,6 +1393,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IPlacedCreatureGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

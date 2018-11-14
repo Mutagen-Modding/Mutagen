@@ -1002,12 +1002,12 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
+        public virtual void CopyFieldsFrom(
             ISoundDataGetter rhs,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (ISoundDataGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

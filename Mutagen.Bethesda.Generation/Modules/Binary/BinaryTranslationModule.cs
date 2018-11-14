@@ -1121,6 +1121,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (field.TryGetFieldData(out var fieldData)
                             && fieldData.HasTrigger) continue;
+                        if (fieldData.NoBinary) continue;
                         if (field.Derivative && !fieldData.CustomBinary) continue;
                         List<string> conditions = new List<string>();
                         if (field.HasBeenSet)

@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Cell_Registration Registration => Cell_Registration.Instance;
 
         #region Ctor
-        public Cell()
+        protected Cell()
         {
             CustomCtor();
         }
@@ -1496,6 +1496,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Cell(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -2069,6 +2073,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ICellGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

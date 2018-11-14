@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using Loqui.Internal;
+using System.Collections;
 
 namespace Mutagen.Bethesda
 {
-    public partial class Group<T>
+    public partial class Group<T> : IEnumerable<T>
         where T : ILoquiObject<T>, IFormKey
     {
         static partial void FillBinary_ContainedRecordType_Custom(
@@ -39,6 +40,16 @@ namespace Mutagen.Bethesda
         public override string ToString()
         {
             return $"Group<{typeof(T).Name}>({this.Items.Count})";
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _Items.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _Items.GetEnumerator();
         }
     }
 

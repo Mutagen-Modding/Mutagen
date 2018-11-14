@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Armor_Registration Registration => Armor_Registration.Instance;
 
         #region Ctor
-        public Armor()
+        protected Armor()
         {
             CustomCtor();
         }
@@ -668,6 +668,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        public Armor(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -1095,6 +1099,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IArmorGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

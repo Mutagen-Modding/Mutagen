@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Race_Registration Registration => Race_Registration.Instance;
 
         #region Ctor
-        public Race()
+        protected Race()
         {
             CustomCtor();
         }
@@ -1812,6 +1812,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Race(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -2638,6 +2642,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IRaceGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

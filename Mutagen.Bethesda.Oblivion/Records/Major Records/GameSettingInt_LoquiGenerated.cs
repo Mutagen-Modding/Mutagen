@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static GameSettingInt_Registration Registration => GameSettingInt_Registration.Instance;
 
         #region Ctor
-        public GameSettingInt()
+        protected GameSettingInt()
         {
             CustomCtor();
         }
@@ -544,6 +544,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = GameSettingInt_Registration.TRIGGERING_RECORD_TYPE;
+        public GameSettingInt(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -871,6 +875,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IGameSettingIntGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

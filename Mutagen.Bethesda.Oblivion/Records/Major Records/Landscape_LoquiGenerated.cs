@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Landscape_Registration Registration => Landscape_Registration.Instance;
 
         #region Ctor
-        public Landscape()
+        protected Landscape()
         {
             CustomCtor();
         }
@@ -867,6 +867,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public Landscape(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -1302,6 +1306,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ILandscapeGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

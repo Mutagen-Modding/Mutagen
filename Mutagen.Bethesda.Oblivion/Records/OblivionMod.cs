@@ -12,6 +12,7 @@ using Noggog.Notifying;
 using CSharpExt.Rx;
 using DynamicData;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -27,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public OblivionMod(ModKey modKey)
+            : this()
         {
             this.ModKey = modKey;
         }
@@ -49,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
                 .AddKey(c => c.FormKey)
                 .PopulateInto(this._majorRecords);
         }
-
+        
         private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(Cell cell)
         {
             if (cell == null) return Observable.Empty<IChangeSet<IMajorRecord>>();
@@ -86,6 +88,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return dialog.Items.Connect()
                 .Transform<DialogItem, IMajorRecord>(i => i);
+        }
+
+        public FormKey GetNextFormKey()
+        {
+            return new FormKey(
+                this.ModKey,
+                this.TES4.Header.NextObjectID++);
         }
     }
 }

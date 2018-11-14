@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T_CopyMask : MajorRecord_CopyMask, new()
         {
             this.CopyFieldsFrom<MajorRecord_ErrorMask, T_CopyMask>(
-                rhs: rhs,
+                rhs: (ILeveledEntryGetter<T>)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

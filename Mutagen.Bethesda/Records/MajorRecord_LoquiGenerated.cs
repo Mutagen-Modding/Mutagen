@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
 
         #region Ctor
-        public MajorRecord()
+        protected MajorRecord()
         {
             _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
@@ -557,6 +557,10 @@ namespace Mutagen.Bethesda
                 errorMask: out errorMask,
                 doMasks: doMasks);
         }
+        public MajorRecord(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -845,12 +849,12 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public void CopyFieldsFrom(
+        public virtual void CopyFieldsFrom(
             IMajorRecordGetter rhs,
             NotifyingFireParameters cmds = null)
         {
             this.CopyFieldsFrom(
-                rhs: rhs,
+                rhs: (IMajorRecordGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,

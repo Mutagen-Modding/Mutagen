@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Subspace_Registration Registration => Subspace_Registration.Instance;
 
         #region Ctor
-        public Subspace()
+        protected Subspace()
         {
             CustomCtor();
         }
@@ -566,6 +566,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        public Subspace(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -933,6 +937,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ISubspaceGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

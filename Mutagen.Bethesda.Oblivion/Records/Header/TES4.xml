@@ -2,8 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="TES4" recordType="TES4" objType="Record" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
     <Fields>
-      <ByteArray name="Fluff" length="12" nullable="NotNull" />
-      <RefDirect name="Header" refName="Header" nullable="NotNull" />
+      <ByteArray name="Fluff" length="12" nullable="NotNull" hasBeenSet="False" />
+      <RefDirect name="Header" refName="Header" nullable="NotNull" hasBeenSet="False" />
       <ByteArray name="TypeOffsets" recordType="OFST" hasBeenSet="True" />
       <ByteArray name="Deleted" recordType="DELE" hasBeenSet="True" />
       <String name="Author" recordType="CNAM" maxLength="512" hasBeenSet="True" />

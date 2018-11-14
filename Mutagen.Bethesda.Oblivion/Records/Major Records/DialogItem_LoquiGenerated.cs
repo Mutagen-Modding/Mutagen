@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static DialogItem_Registration Registration => DialogItem_Registration.Instance;
 
         #region Ctor
-        public DialogItem()
+        protected DialogItem()
         {
             _hasBeenSetTracker[(int)DialogItem_FieldIndex.Script] = true;
             CustomCtor();
@@ -994,6 +994,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public DialogItem(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -1452,6 +1456,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (IDialogItemGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(

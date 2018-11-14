@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
 
         #region Ctor
-        public CombatStyle()
+        protected CombatStyle()
         {
             CustomCtor();
         }
@@ -1906,6 +1906,10 @@ namespace Mutagen.Bethesda.Oblivion
             Break3 = 16,
             Break4 = 32
         }
+        public CombatStyle(FormKey formKey)
+        {
+            this.FormKey = formKey;
+        }
         #endregion
 
         #region Binary Translation
@@ -3153,6 +3157,19 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 def: def);
             return ret;
+        }
+
+        public override void CopyFieldsFrom(
+            IMajorRecordGetter rhs,
+            NotifyingFireParameters cmds = null)
+        {
+            this.CopyFieldsFrom(
+                rhs: (ICombatStyleGetter)rhs,
+                def: null,
+                doMasks: false,
+                errorMask: out var errMask,
+                copyMask: null,
+                cmds: cmds);
         }
 
         public void CopyFieldsFrom(
