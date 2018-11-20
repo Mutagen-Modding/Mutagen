@@ -721,6 +721,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(LeveledItem obj, LeveledItem rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new LeveledItem(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2391,6 +2401,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LeveledItem_CopyMask : ItemAbstract_CopyMask
     {
+        public LeveledItem_CopyMask()
+        {
+        }
+
+        public LeveledItem_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.ChanceNone = defaultOn;
+            this.Flags = defaultOn;
+            this.Entries = new MaskItem<CopyOption, LeveledEntry_CopyMask<ItemAbstract_CopyMask>>(deepCopyOption, default);
+        }
+
         #region Members
         public bool ChanceNone;
         public bool Flags;
@@ -2398,6 +2419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LeveledItem_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members

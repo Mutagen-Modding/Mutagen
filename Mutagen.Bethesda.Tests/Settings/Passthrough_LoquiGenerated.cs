@@ -1373,12 +1373,23 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     public class Passthrough_CopyMask
     {
+        public Passthrough_CopyMask()
+        {
+        }
+
+        public Passthrough_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Do = defaultOn;
+            this.Path = defaultOn;
+        }
+
         #region Members
         public bool Do;
         public bool Path;
         #endregion
 
     }
+
     public class Passthrough_TranslationMask : ITranslationMask
     {
         #region Members

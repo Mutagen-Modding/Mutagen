@@ -548,6 +548,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(GameSettingString obj, GameSettingString rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new GameSettingString(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1790,11 +1800,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class GameSettingString_CopyMask : GameSetting_CopyMask
     {
+        public GameSettingString_CopyMask()
+        {
+        }
+
+        public GameSettingString_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Data = defaultOn;
+        }
+
         #region Members
         public bool Data;
         #endregion
 
     }
+
     public class GameSettingString_TranslationMask : GameSetting_TranslationMask
     {
         #region Members

@@ -733,6 +733,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Birthsign obj, Birthsign rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Birthsign(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2462,6 +2472,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Birthsign_CopyMask : MajorRecord_CopyMask
     {
+        public Birthsign_CopyMask()
+        {
+        }
+
+        public Birthsign_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Icon = defaultOn;
+            this.Description = defaultOn;
+            this.Spells = deepCopyOption;
+        }
+
         #region Members
         public bool Name;
         public bool Icon;
@@ -2470,6 +2492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Birthsign_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

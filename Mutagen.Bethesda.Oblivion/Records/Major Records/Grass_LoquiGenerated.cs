@@ -895,6 +895,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Grass(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2097,8 +2107,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3317,6 +3328,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Grass_CopyMask : MajorRecord_CopyMask
     {
+        public Grass_CopyMask()
+        {
+        }
+
+        public Grass_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Density = defaultOn;
+            this.MinSlope = defaultOn;
+            this.MaxSlope = defaultOn;
+            this.UnitFromWaterAmount = defaultOn;
+            this.UnitFromWaterMode = defaultOn;
+            this.PositionRange = defaultOn;
+            this.HeightRange = defaultOn;
+            this.ColorRange = defaultOn;
+            this.WavePeriod = defaultOn;
+            this.Flags = defaultOn;
+        }
+
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public bool Density;
@@ -3332,6 +3362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Grass_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

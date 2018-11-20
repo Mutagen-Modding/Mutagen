@@ -940,6 +940,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Ingredient obj, Ingredient rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Ingredient(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2041,8 +2051,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3298,6 +3309,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Ingredient_CopyMask : ItemAbstract_CopyMask
     {
+        public Ingredient_CopyMask()
+        {
+        }
+
+        public Ingredient_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Icon = defaultOn;
+            this.Script = defaultOn;
+            this.Weight = defaultOn;
+            this.Value = defaultOn;
+            this.Flags = defaultOn;
+            this.Effects = new MaskItem<CopyOption, Effect_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
@@ -3310,6 +3337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Ingredient_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members

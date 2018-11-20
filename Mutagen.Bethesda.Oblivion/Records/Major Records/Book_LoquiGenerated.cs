@@ -1035,6 +1035,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Book obj, Book rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Book(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2285,8 +2295,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3620,6 +3631,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Book_CopyMask : ItemAbstract_CopyMask
     {
+        public Book_CopyMask()
+        {
+        }
+
+        public Book_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Icon = defaultOn;
+            this.Script = defaultOn;
+            this.Enchantment = defaultOn;
+            this.EnchantmentPoints = defaultOn;
+            this.Description = defaultOn;
+            this.Flags = defaultOn;
+            this.Teaches = defaultOn;
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+        }
+
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
@@ -3635,6 +3665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Book_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members

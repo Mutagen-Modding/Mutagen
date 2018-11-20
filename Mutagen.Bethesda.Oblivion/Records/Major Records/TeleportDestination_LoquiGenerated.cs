@@ -1923,6 +1923,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class TeleportDestination_CopyMask
     {
+        public TeleportDestination_CopyMask()
+        {
+        }
+
+        public TeleportDestination_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Destination = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+        }
+
         #region Members
         public bool Destination;
         public bool Position;
@@ -1930,6 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class TeleportDestination_TranslationMask : ITranslationMask
     {
         #region Members

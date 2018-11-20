@@ -428,5 +428,22 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+
+        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey)
+        {
+            if (rhs.PathGrid_IsSet
+                && rhs.PathGrid != null)
+            {
+                obj.PathGrid = (PathGrid)rhs.PathGrid.Duplicate(getNextFormKey);
+            }
+            if (rhs.Landscape_IsSet
+                && rhs.Landscape != null)
+            {
+                obj.Landscape = (Landscape)rhs.Landscape.Duplicate(getNextFormKey);
+            }
+            obj.Persistent.SetTo(rhs.Persistent.Select((i) => (IPlaced)i.Duplicate(getNextFormKey)));
+            obj.Temporary.SetTo(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey)));
+            obj.VisibleWhenDistant.SetTo(rhs.VisibleWhenDistant.Select((i) => (IPlaced)i.Duplicate(getNextFormKey)));
+        }
     }
 }

@@ -1883,12 +1883,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class SoundItem_CopyMask
     {
+        public SoundItem_CopyMask()
+        {
+        }
+
+        public SoundItem_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Sound = defaultOn;
+            this.Chance = defaultOn;
+        }
+
         #region Members
         public bool Sound;
         public bool Chance;
         #endregion
 
     }
+
     public class SoundItem_TranslationMask : ITranslationMask
     {
         #region Members

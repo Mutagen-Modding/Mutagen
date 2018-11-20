@@ -471,6 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
         #endregion
 
         #region Binary Translation
@@ -1576,11 +1577,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Spell_CopyMask : SpellAbstract_CopyMask
     {
+        public Spell_CopyMask()
+        {
+        }
+
+        public Spell_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+        }
+
         #region Members
         public bool Name;
         #endregion
 
     }
+
     public class Spell_TranslationMask : SpellAbstract_TranslationMask
     {
         #region Members

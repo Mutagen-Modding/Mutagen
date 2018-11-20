@@ -1837,12 +1837,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class ItemEntry_CopyMask
     {
+        public ItemEntry_CopyMask()
+        {
+        }
+
+        public ItemEntry_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Item = defaultOn;
+            this.Count = defaultOn;
+        }
+
         #region Members
         public bool Item;
         public bool Count;
         #endregion
 
     }
+
     public class ItemEntry_TranslationMask : ITranslationMask
     {
         #region Members

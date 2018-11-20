@@ -761,6 +761,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(LeveledCreature obj, LeveledCreature rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new LeveledCreature(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2658,6 +2668,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LeveledCreature_CopyMask : NPCSpawn_CopyMask
     {
+        public LeveledCreature_CopyMask()
+        {
+        }
+
+        public LeveledCreature_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.ChanceNone = defaultOn;
+            this.Flags = defaultOn;
+            this.Entries = new MaskItem<CopyOption, LeveledEntry_CopyMask<NPCSpawn_CopyMask>>(deepCopyOption, default);
+            this.Script = defaultOn;
+            this.Template = defaultOn;
+        }
+
         #region Members
         public bool ChanceNone;
         public bool Flags;
@@ -2667,6 +2690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LeveledCreature_TranslationMask : NPCSpawn_TranslationMask
     {
         #region Members

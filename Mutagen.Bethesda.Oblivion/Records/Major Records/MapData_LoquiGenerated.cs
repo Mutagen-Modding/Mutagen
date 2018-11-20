@@ -1935,6 +1935,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class MapData_CopyMask
     {
+        public MapData_CopyMask()
+        {
+        }
+
+        public MapData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.UsableDimensions = defaultOn;
+            this.CellCoordinatesNWCell = defaultOn;
+            this.CellCoordinatesSECell = defaultOn;
+        }
+
         #region Members
         public bool UsableDimensions;
         public bool CellCoordinatesNWCell;
@@ -1942,6 +1953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class MapData_TranslationMask : ITranslationMask
     {
         #region Members

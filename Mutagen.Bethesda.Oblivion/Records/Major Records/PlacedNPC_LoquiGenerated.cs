@@ -1042,6 +1042,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(PlacedNPC obj, PlacedNPC rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new PlacedNPC(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2322,8 +2332,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.DistantLODData_IsSet = false;
-                        item.DistantLODData = default(DistantLODData);
+                        item.DistantLODData_Set(
+                            item: default(DistantLODData),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2375,8 +2386,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.EnableParent_IsSet = false;
-                        item.EnableParent = default(EnableParent);
+                        item.EnableParent_Set(
+                            item: default(EnableParent),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3653,6 +3665,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class PlacedNPC_CopyMask : MajorRecord_CopyMask
     {
+        public PlacedNPC_CopyMask()
+        {
+        }
+
+        public PlacedNPC_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Base = defaultOn;
+            this.XPCIFluff = defaultOn;
+            this.FULLFluff = defaultOn;
+            this.DistantLODData = new MaskItem<CopyOption, DistantLODData_CopyMask>(deepCopyOption, default);
+            this.EnableParent = new MaskItem<CopyOption, EnableParent_CopyMask>(deepCopyOption, default);
+            this.MerchantContainer = defaultOn;
+            this.Horse = defaultOn;
+            this.RagdollData = defaultOn;
+            this.Scale = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+        }
+
         #region Members
         public bool Base;
         public bool XPCIFluff;
@@ -3668,6 +3699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class PlacedNPC_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

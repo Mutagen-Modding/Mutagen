@@ -1496,6 +1496,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Cell(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2987,8 +2997,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Lighting_IsSet = false;
-                        item.Lighting = default(CellLighting);
+                        item.Lighting_Set(
+                            item: default(CellLighting),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3229,8 +3240,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.PathGrid_IsSet = false;
-                        item.PathGrid = default(PathGrid);
+                        item.PathGrid_Set(
+                            item: default(PathGrid),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3282,8 +3294,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Landscape_IsSet = false;
-                        item.Landscape = default(Landscape);
+                        item.Landscape_Set(
+                            item: default(Landscape),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -5378,6 +5391,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Cell_CopyMask : Place_CopyMask
     {
+        public Cell_CopyMask()
+        {
+        }
+
+        public Cell_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Flags = defaultOn;
+            this.Grid = defaultOn;
+            this.Lighting = new MaskItem<CopyOption, CellLighting_CopyMask>(deepCopyOption, default);
+            this.Regions = deepCopyOption;
+            this.MusicType = defaultOn;
+            this.WaterHeight = defaultOn;
+            this.Climate = defaultOn;
+            this.Water = defaultOn;
+            this.Owner = defaultOn;
+            this.FactionRank = defaultOn;
+            this.GlobalVariable = defaultOn;
+            this.PathGrid = new MaskItem<CopyOption, PathGrid_CopyMask>(deepCopyOption, default);
+            this.Landscape = new MaskItem<CopyOption, Landscape_CopyMask>(deepCopyOption, default);
+            this.Persistent = deepCopyOption;
+            this.Temporary = deepCopyOption;
+            this.VisibleWhenDistant = deepCopyOption;
+        }
+
         #region Members
         public bool Name;
         public bool Flags;
@@ -5399,6 +5437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Cell_TranslationMask : Place_TranslationMask
     {
         #region Members

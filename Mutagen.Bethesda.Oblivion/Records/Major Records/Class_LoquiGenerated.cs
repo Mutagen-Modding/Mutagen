@@ -899,6 +899,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Class obj, Class rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Class(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3352,6 +3362,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Class_CopyMask : MajorRecord_CopyMask
     {
+        public Class_CopyMask()
+        {
+        }
+
+        public Class_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Description = defaultOn;
+            this.Icon = defaultOn;
+            this.PrimaryAttributes = deepCopyOption;
+            this.Specialization = defaultOn;
+            this.SecondaryAttributes = deepCopyOption;
+            this.Flags = defaultOn;
+            this.ClassServices = defaultOn;
+            this.Training = new MaskItem<CopyOption, ClassTraining_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Name;
         public bool Description;
@@ -3365,6 +3392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Class_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

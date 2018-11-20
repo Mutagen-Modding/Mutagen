@@ -2430,6 +2430,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class LeveledEntry_CopyMask<T_CopyMask>
         where T_CopyMask : MajorRecord_CopyMask, new()
     {
+        public LeveledEntry_CopyMask()
+        {
+        }
+
+        public LeveledEntry_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Level = defaultOn;
+            this.Fluff = defaultOn;
+            this.Reference = defaultOn;
+            this.Count = defaultOn;
+            this.Fluff2 = defaultOn;
+        }
+
         #region Members
         public bool Level;
         public bool Fluff;
@@ -2439,6 +2452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LeveledEntry_TranslationMask<T_TranslMask> : ITranslationMask
         where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
     {

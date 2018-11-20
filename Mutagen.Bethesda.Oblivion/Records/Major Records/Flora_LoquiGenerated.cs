@@ -817,6 +817,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Flora obj, Flora rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Flora(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1882,8 +1892,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2920,6 +2931,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Flora_CopyMask : MajorRecord_CopyMask
     {
+        public Flora_CopyMask()
+        {
+        }
+
+        public Flora_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Script = defaultOn;
+            this.Ingredient = defaultOn;
+            this.Spring = defaultOn;
+            this.Summer = defaultOn;
+            this.Fall = defaultOn;
+            this.Winter = defaultOn;
+        }
+
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
@@ -2932,6 +2959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Flora_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

@@ -1730,12 +1730,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RaceVoices_CopyMask
     {
+        public RaceVoices_CopyMask()
+        {
+        }
+
+        public RaceVoices_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Male = defaultOn;
+            this.Female = defaultOn;
+        }
+
         #region Members
         public bool Male;
         public bool Female;
         #endregion
 
     }
+
     public class RaceVoices_TranslationMask : ITranslationMask
     {
         #region Members

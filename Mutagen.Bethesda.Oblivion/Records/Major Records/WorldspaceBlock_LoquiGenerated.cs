@@ -2348,6 +2348,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class WorldspaceBlock_CopyMask
     {
+        public WorldspaceBlock_CopyMask()
+        {
+        }
+
+        public WorldspaceBlock_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.BlockNumber = defaultOn;
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<CopyOption, WorldspaceSubBlock_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool BlockNumber;
         public bool GroupType;
@@ -2356,6 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class WorldspaceBlock_TranslationMask : ITranslationMask
     {
         #region Members

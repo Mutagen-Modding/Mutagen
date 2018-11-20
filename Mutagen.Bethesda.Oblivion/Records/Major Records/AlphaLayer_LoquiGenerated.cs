@@ -1713,11 +1713,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class AlphaLayer_CopyMask : BaseLayer_CopyMask
     {
+        public AlphaLayer_CopyMask()
+        {
+        }
+
+        public AlphaLayer_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.AlphaLayerData = defaultOn;
+        }
+
         #region Members
         public bool AlphaLayerData;
         #endregion
 
     }
+
     public class AlphaLayer_TranslationMask : BaseLayer_TranslationMask
     {
         #region Members

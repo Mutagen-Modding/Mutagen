@@ -1769,12 +1769,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class SkillBoost_CopyMask
     {
+        public SkillBoost_CopyMask()
+        {
+        }
+
+        public SkillBoost_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Skill = defaultOn;
+            this.Boost = defaultOn;
+        }
+
         #region Members
         public bool Skill;
         public bool Boost;
         #endregion
 
     }
+
     public class SkillBoost_TranslationMask : ITranslationMask
     {
         #region Members

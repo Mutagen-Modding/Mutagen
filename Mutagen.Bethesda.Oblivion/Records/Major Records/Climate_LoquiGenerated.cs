@@ -1005,6 +1005,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Climate obj, Climate rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Climate(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2338,8 +2348,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3671,6 +3682,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Climate_CopyMask : MajorRecord_CopyMask
     {
+        public Climate_CopyMask()
+        {
+        }
+
+        public Climate_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Weathers = new MaskItem<CopyOption, WeatherChance_CopyMask>(deepCopyOption, default);
+            this.SunTexture = defaultOn;
+            this.SunGlareTexture = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.SunriseBegin = defaultOn;
+            this.SunriseEnd = defaultOn;
+            this.SunsetBegin = defaultOn;
+            this.SunsetEnd = defaultOn;
+            this.Volatility = defaultOn;
+            this.Phase = defaultOn;
+            this.PhaseLength = defaultOn;
+        }
+
         #region Members
         public MaskItem<CopyOption, WeatherChance_CopyMask> Weathers;
         public bool SunTexture;
@@ -3686,6 +3716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Climate_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

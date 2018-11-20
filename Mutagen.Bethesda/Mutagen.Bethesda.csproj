@@ -54,6 +54,7 @@
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Extensions\NoggogRxExt.cs" />
     <Compile Include="FormKey.cs" />
+    <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IFormKey.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Links\EDIDSetLink.cs" />

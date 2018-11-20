@@ -730,6 +730,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(IdleAnimation obj, IdleAnimation rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new IdleAnimation(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1563,8 +1573,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2618,6 +2629,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class IdleAnimation_CopyMask : MajorRecord_CopyMask
     {
+        public IdleAnimation_CopyMask()
+        {
+        }
+
+        public IdleAnimation_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
+            this.AnimationGroupSection = defaultOn;
+            this.RelatedIdleAnimations = deepCopyOption;
+        }
+
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public MaskItem<CopyOption, Condition_CopyMask> Conditions;
@@ -2626,6 +2649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class IdleAnimation_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

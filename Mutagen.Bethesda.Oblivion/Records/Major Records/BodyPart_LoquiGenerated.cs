@@ -1927,12 +1927,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class BodyPart_CopyMask
     {
+        public BodyPart_CopyMask()
+        {
+        }
+
+        public BodyPart_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Index = defaultOn;
+            this.Icon = defaultOn;
+        }
+
         #region Members
         public bool Index;
         public bool Icon;
         #endregion
 
     }
+
     public class BodyPart_TranslationMask : ITranslationMask
     {
         #region Members

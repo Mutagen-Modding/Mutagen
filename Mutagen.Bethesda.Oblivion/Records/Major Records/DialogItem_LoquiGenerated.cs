@@ -996,6 +996,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(DialogItem obj, DialogItem rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new DialogItem(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3934,6 +3944,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class DialogItem_CopyMask : MajorRecord_CopyMask
     {
+        public DialogItem_CopyMask()
+        {
+        }
+
+        public DialogItem_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.DialogType = defaultOn;
+            this.Flags = defaultOn;
+            this.Quest = defaultOn;
+            this.PreviousTopic = defaultOn;
+            this.Topics = deepCopyOption;
+            this.Responses = new MaskItem<CopyOption, DialogResponse_CopyMask>(deepCopyOption, default);
+            this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
+            this.Choices = deepCopyOption;
+            this.LinkFrom = deepCopyOption;
+            this.Script = new MaskItem<bool, ScriptFields_CopyMask>(defaultOn, default);
+        }
+
         #region Members
         public bool DialogType;
         public bool Flags;
@@ -3948,6 +3976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class DialogItem_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

@@ -2743,6 +2743,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Condition_CopyMask
     {
+        public Condition_CopyMask()
+        {
+        }
+
+        public Condition_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.CompareOperator = defaultOn;
+            this.Flags = defaultOn;
+            this.Fluff = defaultOn;
+            this.ComparisonValue = defaultOn;
+            this.Function = defaultOn;
+            this.FirstParameter = defaultOn;
+            this.SecondParameter = defaultOn;
+            this.ThirdParameter = defaultOn;
+        }
+
         #region Members
         public bool CompareOperator;
         public bool Flags;
@@ -2755,6 +2771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Condition_TranslationMask : ITranslationMask
     {
         #region Members

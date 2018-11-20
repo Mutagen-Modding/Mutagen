@@ -1963,6 +1963,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class BaseLayer_CopyMask
     {
+        public BaseLayer_CopyMask()
+        {
+        }
+
+        public BaseLayer_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Texture = defaultOn;
+            this.Quadrant = defaultOn;
+            this.LayerNumber = defaultOn;
+        }
+
         #region Members
         public bool Texture;
         public bool Quadrant;
@@ -1970,6 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class BaseLayer_TranslationMask : ITranslationMask
     {
         #region Members

@@ -1928,12 +1928,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LocalVariable_CopyMask
     {
+        public LocalVariable_CopyMask()
+        {
+        }
+
+        public LocalVariable_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Data = defaultOn;
+            this.Name = defaultOn;
+        }
+
         #region Members
         public bool Data;
         public bool Name;
         #endregion
 
     }
+
     public class LocalVariable_TranslationMask : ITranslationMask
     {
         #region Members

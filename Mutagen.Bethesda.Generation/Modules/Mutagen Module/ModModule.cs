@@ -126,6 +126,37 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            using (var args = new FunctionWrapper(fg,
+                "public void CopyInDuplicate"))
+            {
+                args.Add($"{obj.Name} rhs");
+                args.Add($"GroupMask mask = null");
+            }
+            using (new BraceWrapper(fg))
+            {
+                foreach (var field in obj.IterateFields())
+                {
+                    if (!(field is LoquiType loqui)) continue;
+                    if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                    fg.AppendLine($"if (mask?.{field.Name} ?? true)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"this.{field.Name}.Items.{(loqui.TargetObjectGeneration.Name == "Group" ? "AddOrUpdate" : "AddRange")}(");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"rhs.{field.Name}.Items");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($".Select(i => i.Duplicate(this.GetNextFormKey))");
+                                fg.AppendLine($".Cast<{loqui.GetGroupTarget().Name}>());");
+                            }
+                        }
+                    }
+                }
+            }
+            fg.AppendLine();
+
             await base.GenerateInClass(obj, fg);
             fg.AppendLine();
         }

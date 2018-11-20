@@ -1768,12 +1768,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class InterCellPoint_CopyMask
     {
+        public InterCellPoint_CopyMask()
+        {
+        }
+
+        public InterCellPoint_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.PointID = defaultOn;
+            this.Point = defaultOn;
+        }
+
         #region Members
         public bool PointID;
         public bool Point;
         #endregion
 
     }
+
     public class InterCellPoint_TranslationMask : ITranslationMask
     {
         #region Members

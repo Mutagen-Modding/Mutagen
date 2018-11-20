@@ -2349,6 +2349,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class CellSubBlock_CopyMask
     {
+        public CellSubBlock_CopyMask()
+        {
+        }
+
+        public CellSubBlock_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.BlockNumber = defaultOn;
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<CopyOption, Cell_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool BlockNumber;
         public bool GroupType;
@@ -2357,6 +2369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class CellSubBlock_TranslationMask : ITranslationMask
     {
         #region Members

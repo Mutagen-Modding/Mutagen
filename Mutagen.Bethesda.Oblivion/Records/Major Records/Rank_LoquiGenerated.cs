@@ -2348,6 +2348,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Rank_CopyMask
     {
+        public Rank_CopyMask()
+        {
+        }
+
+        public Rank_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.RankNumber = defaultOn;
+            this.MaleName = defaultOn;
+            this.FemaleName = defaultOn;
+            this.Insignia = defaultOn;
+        }
+
         #region Members
         public bool RankNumber;
         public bool MaleName;
@@ -2356,6 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Rank_TranslationMask : ITranslationMask
     {
         #region Members

@@ -3068,6 +3068,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class TES4_CopyMask
     {
+        public TES4_CopyMask()
+        {
+        }
+
+        public TES4_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Fluff = defaultOn;
+            this.Header = new MaskItem<CopyOption, Header_CopyMask>(deepCopyOption, default);
+            this.TypeOffsets = defaultOn;
+            this.Deleted = defaultOn;
+            this.Author = defaultOn;
+            this.Description = defaultOn;
+            this.MasterReferences = new MaskItem<CopyOption, MasterReference_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Fluff;
         public MaskItem<CopyOption, Header_CopyMask> Header;
@@ -3079,6 +3094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class TES4_TranslationMask : ITranslationMask
     {
         #region Members

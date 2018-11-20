@@ -2039,12 +2039,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class QuestStage_CopyMask
     {
+        public QuestStage_CopyMask()
+        {
+        }
+
+        public QuestStage_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Stage = defaultOn;
+            this.LogEntries = new MaskItem<CopyOption, LogEntry_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Stage;
         public MaskItem<CopyOption, LogEntry_CopyMask> LogEntries;
         #endregion
 
     }
+
     public class QuestStage_TranslationMask : ITranslationMask
     {
         #region Members

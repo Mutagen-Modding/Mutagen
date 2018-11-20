@@ -2768,6 +2768,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Creature(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -5834,8 +5844,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -10865,6 +10876,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Creature_CopyMask : NPCAbstract_CopyMask
     {
+        public Creature_CopyMask()
+        {
+        }
+
+        public Creature_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Items = new MaskItem<CopyOption, ItemEntry_CopyMask>(deepCopyOption, default);
+            this.Spells = deepCopyOption;
+            this.Models = deepCopyOption;
+            this.NIFT = defaultOn;
+            this.Flags = defaultOn;
+            this.BaseSpellPoints = defaultOn;
+            this.Fatigue = defaultOn;
+            this.BarterGold = defaultOn;
+            this.LevelOffset = defaultOn;
+            this.CalcMin = defaultOn;
+            this.CalcMax = defaultOn;
+            this.Factions = new MaskItem<CopyOption, RankPlacement_CopyMask>(deepCopyOption, default);
+            this.DeathItem = defaultOn;
+            this.Script = defaultOn;
+            this.Aggression = defaultOn;
+            this.Confidence = defaultOn;
+            this.EnergyLevel = defaultOn;
+            this.Responsibility = defaultOn;
+            this.BuySellServices = defaultOn;
+            this.Teaches = defaultOn;
+            this.MaximumTrainingLevel = defaultOn;
+            this.AIPackages = deepCopyOption;
+            this.Animations = deepCopyOption;
+            this.CreatureType = defaultOn;
+            this.CombatSkill = defaultOn;
+            this.MagicSkill = defaultOn;
+            this.StealthSkill = defaultOn;
+            this.SoulLevel = defaultOn;
+            this.Health = defaultOn;
+            this.AttackDamage = defaultOn;
+            this.Strength = defaultOn;
+            this.Intelligence = defaultOn;
+            this.Willpower = defaultOn;
+            this.Agility = defaultOn;
+            this.Speed = defaultOn;
+            this.Endurance = defaultOn;
+            this.Personality = defaultOn;
+            this.Luck = defaultOn;
+            this.AttackReach = defaultOn;
+            this.CombatStyle = defaultOn;
+            this.TurningSpeed = defaultOn;
+            this.BaseScale = defaultOn;
+            this.FootWeight = defaultOn;
+            this.BloodSpray = defaultOn;
+            this.BloodDecal = defaultOn;
+            this.InheritsSoundFrom = defaultOn;
+            this.Sounds = new MaskItem<CopyOption, CreatureSound_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
@@ -10918,6 +10986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Creature_TranslationMask : NPCAbstract_TranslationMask
     {
         #region Members

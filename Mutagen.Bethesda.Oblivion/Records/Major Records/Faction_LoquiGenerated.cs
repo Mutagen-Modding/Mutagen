@@ -791,6 +791,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Faction obj, Faction rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Faction(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2832,6 +2842,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Faction_CopyMask : MajorRecord_CopyMask
     {
+        public Faction_CopyMask()
+        {
+        }
+
+        public Faction_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Relations = new MaskItem<CopyOption, Relation_CopyMask>(deepCopyOption, default);
+            this.Flags = defaultOn;
+            this.CrimeGoldMultiplier = defaultOn;
+            this.Ranks = new MaskItem<CopyOption, Rank_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Relation_CopyMask> Relations;
@@ -2841,6 +2864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Faction_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

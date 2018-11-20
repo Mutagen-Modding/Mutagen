@@ -1725,6 +1725,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RegionData_CopyMask
     {
+        public RegionData_CopyMask()
+        {
+        }
+
+        public RegionData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.DataType = defaultOn;
+            this.Flags = defaultOn;
+            this.Priority = defaultOn;
+        }
+
         #region Members
         public bool DataType;
         public bool Flags;
@@ -1732,6 +1743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class RegionData_TranslationMask : ITranslationMask
     {
         #region Members

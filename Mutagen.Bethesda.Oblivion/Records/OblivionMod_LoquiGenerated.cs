@@ -3052,6 +3052,404 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public void CopyInDuplicate(
+            OblivionMod rhs,
+            GroupMask mask = null)
+        {
+            if (mask?.GameSettings ?? true)
+            {
+                this.GameSettings.Items.AddOrUpdate(
+                    rhs.GameSettings.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<GameSetting>());
+            }
+            if (mask?.Globals ?? true)
+            {
+                this.Globals.Items.AddOrUpdate(
+                    rhs.Globals.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Global>());
+            }
+            if (mask?.Classes ?? true)
+            {
+                this.Classes.Items.AddOrUpdate(
+                    rhs.Classes.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Class>());
+            }
+            if (mask?.Factions ?? true)
+            {
+                this.Factions.Items.AddOrUpdate(
+                    rhs.Factions.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Faction>());
+            }
+            if (mask?.Hairs ?? true)
+            {
+                this.Hairs.Items.AddOrUpdate(
+                    rhs.Hairs.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Hair>());
+            }
+            if (mask?.Eyes ?? true)
+            {
+                this.Eyes.Items.AddOrUpdate(
+                    rhs.Eyes.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Eye>());
+            }
+            if (mask?.Races ?? true)
+            {
+                this.Races.Items.AddOrUpdate(
+                    rhs.Races.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Race>());
+            }
+            if (mask?.Sounds ?? true)
+            {
+                this.Sounds.Items.AddOrUpdate(
+                    rhs.Sounds.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Sound>());
+            }
+            if (mask?.Skills ?? true)
+            {
+                this.Skills.Items.AddOrUpdate(
+                    rhs.Skills.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<SkillRecord>());
+            }
+            if (mask?.MagicEffects ?? true)
+            {
+                this.MagicEffects.Items.AddOrUpdate(
+                    rhs.MagicEffects.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<MagicEffect>());
+            }
+            if (mask?.Scripts ?? true)
+            {
+                this.Scripts.Items.AddOrUpdate(
+                    rhs.Scripts.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Script>());
+            }
+            if (mask?.LandTextures ?? true)
+            {
+                this.LandTextures.Items.AddOrUpdate(
+                    rhs.LandTextures.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<LandTexture>());
+            }
+            if (mask?.Enchantments ?? true)
+            {
+                this.Enchantments.Items.AddOrUpdate(
+                    rhs.Enchantments.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Enchantment>());
+            }
+            if (mask?.Spells ?? true)
+            {
+                this.Spells.Items.AddOrUpdate(
+                    rhs.Spells.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<SpellUnleveled>());
+            }
+            if (mask?.Birthsigns ?? true)
+            {
+                this.Birthsigns.Items.AddOrUpdate(
+                    rhs.Birthsigns.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Birthsign>());
+            }
+            if (mask?.Activators ?? true)
+            {
+                this.Activators.Items.AddOrUpdate(
+                    rhs.Activators.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Activator>());
+            }
+            if (mask?.AlchemicalApparatus ?? true)
+            {
+                this.AlchemicalApparatus.Items.AddOrUpdate(
+                    rhs.AlchemicalApparatus.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<AlchemicalApparatus>());
+            }
+            if (mask?.Armors ?? true)
+            {
+                this.Armors.Items.AddOrUpdate(
+                    rhs.Armors.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Armor>());
+            }
+            if (mask?.Books ?? true)
+            {
+                this.Books.Items.AddOrUpdate(
+                    rhs.Books.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Book>());
+            }
+            if (mask?.Clothes ?? true)
+            {
+                this.Clothes.Items.AddOrUpdate(
+                    rhs.Clothes.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Clothing>());
+            }
+            if (mask?.Containers ?? true)
+            {
+                this.Containers.Items.AddOrUpdate(
+                    rhs.Containers.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Container>());
+            }
+            if (mask?.Doors ?? true)
+            {
+                this.Doors.Items.AddOrUpdate(
+                    rhs.Doors.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Door>());
+            }
+            if (mask?.Ingredients ?? true)
+            {
+                this.Ingredients.Items.AddOrUpdate(
+                    rhs.Ingredients.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Ingredient>());
+            }
+            if (mask?.Lights ?? true)
+            {
+                this.Lights.Items.AddOrUpdate(
+                    rhs.Lights.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Light>());
+            }
+            if (mask?.Miscellaneous ?? true)
+            {
+                this.Miscellaneous.Items.AddOrUpdate(
+                    rhs.Miscellaneous.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Miscellaneous>());
+            }
+            if (mask?.Statics ?? true)
+            {
+                this.Statics.Items.AddOrUpdate(
+                    rhs.Statics.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Static>());
+            }
+            if (mask?.Grasses ?? true)
+            {
+                this.Grasses.Items.AddOrUpdate(
+                    rhs.Grasses.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Grass>());
+            }
+            if (mask?.Trees ?? true)
+            {
+                this.Trees.Items.AddOrUpdate(
+                    rhs.Trees.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Tree>());
+            }
+            if (mask?.Flora ?? true)
+            {
+                this.Flora.Items.AddOrUpdate(
+                    rhs.Flora.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Flora>());
+            }
+            if (mask?.Furnature ?? true)
+            {
+                this.Furnature.Items.AddOrUpdate(
+                    rhs.Furnature.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Furnature>());
+            }
+            if (mask?.Weapons ?? true)
+            {
+                this.Weapons.Items.AddOrUpdate(
+                    rhs.Weapons.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Weapon>());
+            }
+            if (mask?.Ammo ?? true)
+            {
+                this.Ammo.Items.AddOrUpdate(
+                    rhs.Ammo.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Ammo>());
+            }
+            if (mask?.NPCs ?? true)
+            {
+                this.NPCs.Items.AddOrUpdate(
+                    rhs.NPCs.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<NPC>());
+            }
+            if (mask?.Creatures ?? true)
+            {
+                this.Creatures.Items.AddOrUpdate(
+                    rhs.Creatures.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Creature>());
+            }
+            if (mask?.LeveledCreatures ?? true)
+            {
+                this.LeveledCreatures.Items.AddOrUpdate(
+                    rhs.LeveledCreatures.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<LeveledCreature>());
+            }
+            if (mask?.SoulGems ?? true)
+            {
+                this.SoulGems.Items.AddOrUpdate(
+                    rhs.SoulGems.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<SoulGem>());
+            }
+            if (mask?.Keys ?? true)
+            {
+                this.Keys.Items.AddOrUpdate(
+                    rhs.Keys.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Key>());
+            }
+            if (mask?.Potions ?? true)
+            {
+                this.Potions.Items.AddOrUpdate(
+                    rhs.Potions.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Potion>());
+            }
+            if (mask?.Subspaces ?? true)
+            {
+                this.Subspaces.Items.AddOrUpdate(
+                    rhs.Subspaces.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Subspace>());
+            }
+            if (mask?.SigilStones ?? true)
+            {
+                this.SigilStones.Items.AddOrUpdate(
+                    rhs.SigilStones.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<SigilStone>());
+            }
+            if (mask?.LeveledItems ?? true)
+            {
+                this.LeveledItems.Items.AddOrUpdate(
+                    rhs.LeveledItems.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<LeveledItem>());
+            }
+            if (mask?.Weathers ?? true)
+            {
+                this.Weathers.Items.AddOrUpdate(
+                    rhs.Weathers.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Weather>());
+            }
+            if (mask?.Climates ?? true)
+            {
+                this.Climates.Items.AddOrUpdate(
+                    rhs.Climates.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Climate>());
+            }
+            if (mask?.Regions ?? true)
+            {
+                this.Regions.Items.AddOrUpdate(
+                    rhs.Regions.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Region>());
+            }
+            if (mask?.Cells ?? true)
+            {
+                this.Cells.Items.AddRange(
+                    rhs.Cells.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<CellBlock>());
+            }
+            if (mask?.Worldspaces ?? true)
+            {
+                this.Worldspaces.Items.AddOrUpdate(
+                    rhs.Worldspaces.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Worldspace>());
+            }
+            if (mask?.DialogTopics ?? true)
+            {
+                this.DialogTopics.Items.AddOrUpdate(
+                    rhs.DialogTopics.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<DialogTopic>());
+            }
+            if (mask?.Quests ?? true)
+            {
+                this.Quests.Items.AddOrUpdate(
+                    rhs.Quests.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Quest>());
+            }
+            if (mask?.IdleAnimations ?? true)
+            {
+                this.IdleAnimations.Items.AddOrUpdate(
+                    rhs.IdleAnimations.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<IdleAnimation>());
+            }
+            if (mask?.AIPackages ?? true)
+            {
+                this.AIPackages.Items.AddOrUpdate(
+                    rhs.AIPackages.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<AIPackage>());
+            }
+            if (mask?.CombatStyles ?? true)
+            {
+                this.CombatStyles.Items.AddOrUpdate(
+                    rhs.CombatStyles.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<CombatStyle>());
+            }
+            if (mask?.LoadScreens ?? true)
+            {
+                this.LoadScreens.Items.AddOrUpdate(
+                    rhs.LoadScreens.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<LoadScreen>());
+            }
+            if (mask?.LeveledSpells ?? true)
+            {
+                this.LeveledSpells.Items.AddOrUpdate(
+                    rhs.LeveledSpells.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<LeveledSpell>());
+            }
+            if (mask?.AnimatedObjects ?? true)
+            {
+                this.AnimatedObjects.Items.AddOrUpdate(
+                    rhs.AnimatedObjects.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<AnimatedObject>());
+            }
+            if (mask?.Waters ?? true)
+            {
+                this.Waters.Items.AddOrUpdate(
+                    rhs.Waters.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<Water>());
+            }
+            if (mask?.EffectShaders ?? true)
+            {
+                this.EffectShaders.Items.AddOrUpdate(
+                    rhs.EffectShaders.Items
+                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Cast<EffectShader>());
+            }
+        }
+
 
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
@@ -12738,6 +13136,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class OblivionMod_CopyMask
     {
+        public OblivionMod_CopyMask()
+        {
+        }
+
+        public OblivionMod_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.TES4 = new MaskItem<bool, TES4_CopyMask>(defaultOn, default);
+            this.GameSettings = new MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>>(defaultOn, default);
+            this.Globals = new MaskItem<bool, Group_CopyMask<Global_CopyMask>>(defaultOn, default);
+            this.Classes = new MaskItem<bool, Group_CopyMask<Class_CopyMask>>(defaultOn, default);
+            this.Factions = new MaskItem<bool, Group_CopyMask<Faction_CopyMask>>(defaultOn, default);
+            this.Hairs = new MaskItem<bool, Group_CopyMask<Hair_CopyMask>>(defaultOn, default);
+            this.Eyes = new MaskItem<bool, Group_CopyMask<Eye_CopyMask>>(defaultOn, default);
+            this.Races = new MaskItem<bool, Group_CopyMask<Race_CopyMask>>(defaultOn, default);
+            this.Sounds = new MaskItem<bool, Group_CopyMask<Sound_CopyMask>>(defaultOn, default);
+            this.Skills = new MaskItem<bool, Group_CopyMask<SkillRecord_CopyMask>>(defaultOn, default);
+            this.MagicEffects = new MaskItem<bool, Group_CopyMask<MagicEffect_CopyMask>>(defaultOn, default);
+            this.Scripts = new MaskItem<bool, Group_CopyMask<Script_CopyMask>>(defaultOn, default);
+            this.LandTextures = new MaskItem<bool, Group_CopyMask<LandTexture_CopyMask>>(defaultOn, default);
+            this.Enchantments = new MaskItem<bool, Group_CopyMask<Enchantment_CopyMask>>(defaultOn, default);
+            this.Spells = new MaskItem<bool, Group_CopyMask<SpellUnleveled_CopyMask>>(defaultOn, default);
+            this.Birthsigns = new MaskItem<bool, Group_CopyMask<Birthsign_CopyMask>>(defaultOn, default);
+            this.Activators = new MaskItem<bool, Group_CopyMask<Activator_CopyMask>>(defaultOn, default);
+            this.AlchemicalApparatus = new MaskItem<bool, Group_CopyMask<AlchemicalApparatus_CopyMask>>(defaultOn, default);
+            this.Armors = new MaskItem<bool, Group_CopyMask<Armor_CopyMask>>(defaultOn, default);
+            this.Books = new MaskItem<bool, Group_CopyMask<Book_CopyMask>>(defaultOn, default);
+            this.Clothes = new MaskItem<bool, Group_CopyMask<Clothing_CopyMask>>(defaultOn, default);
+            this.Containers = new MaskItem<bool, Group_CopyMask<Container_CopyMask>>(defaultOn, default);
+            this.Doors = new MaskItem<bool, Group_CopyMask<Door_CopyMask>>(defaultOn, default);
+            this.Ingredients = new MaskItem<bool, Group_CopyMask<Ingredient_CopyMask>>(defaultOn, default);
+            this.Lights = new MaskItem<bool, Group_CopyMask<Light_CopyMask>>(defaultOn, default);
+            this.Miscellaneous = new MaskItem<bool, Group_CopyMask<Miscellaneous_CopyMask>>(defaultOn, default);
+            this.Statics = new MaskItem<bool, Group_CopyMask<Static_CopyMask>>(defaultOn, default);
+            this.Grasses = new MaskItem<bool, Group_CopyMask<Grass_CopyMask>>(defaultOn, default);
+            this.Trees = new MaskItem<bool, Group_CopyMask<Tree_CopyMask>>(defaultOn, default);
+            this.Flora = new MaskItem<bool, Group_CopyMask<Flora_CopyMask>>(defaultOn, default);
+            this.Furnature = new MaskItem<bool, Group_CopyMask<Furnature_CopyMask>>(defaultOn, default);
+            this.Weapons = new MaskItem<bool, Group_CopyMask<Weapon_CopyMask>>(defaultOn, default);
+            this.Ammo = new MaskItem<bool, Group_CopyMask<Ammo_CopyMask>>(defaultOn, default);
+            this.NPCs = new MaskItem<bool, Group_CopyMask<NPC_CopyMask>>(defaultOn, default);
+            this.Creatures = new MaskItem<bool, Group_CopyMask<Creature_CopyMask>>(defaultOn, default);
+            this.LeveledCreatures = new MaskItem<bool, Group_CopyMask<LeveledCreature_CopyMask>>(defaultOn, default);
+            this.SoulGems = new MaskItem<bool, Group_CopyMask<SoulGem_CopyMask>>(defaultOn, default);
+            this.Keys = new MaskItem<bool, Group_CopyMask<Key_CopyMask>>(defaultOn, default);
+            this.Potions = new MaskItem<bool, Group_CopyMask<Potion_CopyMask>>(defaultOn, default);
+            this.Subspaces = new MaskItem<bool, Group_CopyMask<Subspace_CopyMask>>(defaultOn, default);
+            this.SigilStones = new MaskItem<bool, Group_CopyMask<SigilStone_CopyMask>>(defaultOn, default);
+            this.LeveledItems = new MaskItem<bool, Group_CopyMask<LeveledItem_CopyMask>>(defaultOn, default);
+            this.Weathers = new MaskItem<bool, Group_CopyMask<Weather_CopyMask>>(defaultOn, default);
+            this.Climates = new MaskItem<bool, Group_CopyMask<Climate_CopyMask>>(defaultOn, default);
+            this.Regions = new MaskItem<bool, Group_CopyMask<Region_CopyMask>>(defaultOn, default);
+            this.Cells = new MaskItem<bool, ListGroup_CopyMask<CellBlock_CopyMask>>(defaultOn, default);
+            this.Worldspaces = new MaskItem<bool, Group_CopyMask<Worldspace_CopyMask>>(defaultOn, default);
+            this.DialogTopics = new MaskItem<bool, Group_CopyMask<DialogTopic_CopyMask>>(defaultOn, default);
+            this.Quests = new MaskItem<bool, Group_CopyMask<Quest_CopyMask>>(defaultOn, default);
+            this.IdleAnimations = new MaskItem<bool, Group_CopyMask<IdleAnimation_CopyMask>>(defaultOn, default);
+            this.AIPackages = new MaskItem<bool, Group_CopyMask<AIPackage_CopyMask>>(defaultOn, default);
+            this.CombatStyles = new MaskItem<bool, Group_CopyMask<CombatStyle_CopyMask>>(defaultOn, default);
+            this.LoadScreens = new MaskItem<bool, Group_CopyMask<LoadScreen_CopyMask>>(defaultOn, default);
+            this.LeveledSpells = new MaskItem<bool, Group_CopyMask<LeveledSpell_CopyMask>>(defaultOn, default);
+            this.AnimatedObjects = new MaskItem<bool, Group_CopyMask<AnimatedObject_CopyMask>>(defaultOn, default);
+            this.Waters = new MaskItem<bool, Group_CopyMask<Water_CopyMask>>(defaultOn, default);
+            this.EffectShaders = new MaskItem<bool, Group_CopyMask<EffectShader_CopyMask>>(defaultOn, default);
+        }
+
         #region Members
         public MaskItem<bool, TES4_CopyMask> TES4;
         public MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>> GameSettings;
@@ -12799,6 +13262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class OblivionMod_TranslationMask : ITranslationMask
     {
         #region Members

@@ -1161,6 +1161,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(MagicEffect obj, MagicEffect rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new MagicEffect(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2625,8 +2635,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -4276,6 +4287,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class MagicEffect_CopyMask : MajorRecord_CopyMask
     {
+        public MagicEffect_CopyMask()
+        {
+        }
+
+        public MagicEffect_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Description = defaultOn;
+            this.Icon = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Flags = defaultOn;
+            this.BaseCost = defaultOn;
+            this.Unused = defaultOn;
+            this.MagicSchool = defaultOn;
+            this.Resistance = defaultOn;
+            this.CounterEffectCount = defaultOn;
+            this.Light = defaultOn;
+            this.ProjectileSpeed = defaultOn;
+            this.EffectShader = defaultOn;
+            this.SubData = new MaskItem<CopyOption, MagicEffectSubData_CopyMask>(deepCopyOption, default);
+            this.CounterEffects = deepCopyOption;
+        }
+
         #region Members
         public bool Name;
         public bool Description;
@@ -4295,6 +4329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class MagicEffect_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

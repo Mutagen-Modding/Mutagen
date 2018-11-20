@@ -852,6 +852,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Door obj, Door rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Door(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1881,8 +1891,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3093,6 +3104,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Door_CopyMask : MajorRecord_CopyMask
     {
+        public Door_CopyMask()
+        {
+        }
+
+        public Door_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Script = defaultOn;
+            this.OpenSound = defaultOn;
+            this.CloseSound = defaultOn;
+            this.LoopSound = defaultOn;
+            this.Flags = defaultOn;
+            this.RandomTeleportDestinations = deepCopyOption;
+        }
+
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
@@ -3105,6 +3132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Door_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

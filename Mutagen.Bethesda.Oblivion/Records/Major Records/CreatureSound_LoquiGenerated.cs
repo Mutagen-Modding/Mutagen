@@ -2080,12 +2080,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class CreatureSound_CopyMask
     {
+        public CreatureSound_CopyMask()
+        {
+        }
+
+        public CreatureSound_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.SoundType = defaultOn;
+            this.Sounds = new MaskItem<CopyOption, SoundItem_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool SoundType;
         public MaskItem<CopyOption, SoundItem_CopyMask> Sounds;
         #endregion
 
     }
+
     public class CreatureSound_TranslationMask : ITranslationMask
     {
         #region Members

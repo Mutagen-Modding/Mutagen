@@ -1858,11 +1858,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RegionDataWeather_CopyMask : RegionData_CopyMask
     {
+        public RegionDataWeather_CopyMask()
+        {
+        }
+
+        public RegionDataWeather_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Weathers = new MaskItem<CopyOption, WeatherChance_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public MaskItem<CopyOption, WeatherChance_CopyMask> Weathers;
         #endregion
 
     }
+
     public class RegionDataWeather_TranslationMask : RegionData_TranslationMask
     {
         #region Members

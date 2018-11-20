@@ -871,6 +871,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Landscape obj, Landscape rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new Landscape(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3026,6 +3036,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Landscape_CopyMask : MajorRecord_CopyMask
     {
+        public Landscape_CopyMask()
+        {
+        }
+
+        public Landscape_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Unknown = defaultOn;
+            this.VertexNormals = defaultOn;
+            this.VertexHeightMap = defaultOn;
+            this.VertexColors = defaultOn;
+            this.Layers = new MaskItem<CopyOption, BaseLayer_CopyMask>(deepCopyOption, default);
+            this.Textures = deepCopyOption;
+        }
+
         #region Members
         public bool Unknown;
         public bool VertexNormals;
@@ -3036,6 +3060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Landscape_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

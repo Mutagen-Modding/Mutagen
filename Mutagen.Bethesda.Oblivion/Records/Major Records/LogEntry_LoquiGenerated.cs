@@ -1748,8 +1748,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.ResultScript_IsSet = false;
-                        item.ResultScript = default(ScriptFields);
+                        item.ResultScript_Set(
+                            item: default(ScriptFields),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2561,6 +2562,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LogEntry_CopyMask
     {
+        public LogEntry_CopyMask()
+        {
+        }
+
+        public LogEntry_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Flags = defaultOn;
+            this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
+            this.Entry = defaultOn;
+            this.ResultScript = new MaskItem<CopyOption, ScriptFields_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Flags;
         public MaskItem<CopyOption, Condition_CopyMask> Conditions;
@@ -2569,6 +2582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LogEntry_TranslationMask : ITranslationMask
     {
         #region Members

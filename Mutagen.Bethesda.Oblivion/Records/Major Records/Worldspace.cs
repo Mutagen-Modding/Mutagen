@@ -25,6 +25,43 @@ namespace Mutagen.Bethesda.Oblivion
             NoLODWater = 0x10,
         }
 
+        private static WorldspaceBlock_CopyMask duplicateBlockCopyMask = new WorldspaceBlock_CopyMask(true)
+        {
+            Items = new MaskItem<CopyOption, WorldspaceSubBlock_CopyMask>(CopyOption.Skip, null)
+        };
+
+        private static WorldspaceSubBlock_CopyMask duplicateSubBlockCopyMask = new WorldspaceSubBlock_CopyMask(true)
+        {
+            Items = new MaskItem<CopyOption, Cell_CopyMask>(CopyOption.Skip, null)
+        };
+
+        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey)
+        {
+            if (rhs.Road_IsSet
+                && rhs.Road != null)
+            {
+                obj.Road = (Road)rhs.Road.Duplicate(getNextFormKey);
+            }
+            if (rhs.TopCell_IsSet
+                && rhs.TopCell != null)
+            {
+                obj.TopCell = (Cell)rhs.TopCell.Duplicate(getNextFormKey);
+            }
+            obj.SubCells.SetTo(rhs.SubCells.Items.Select((block) =>
+            {
+                var blockRet = new WorldspaceBlock();
+                blockRet.CopyFieldsFrom(block, duplicateBlockCopyMask);
+                blockRet.Items.SetTo(block.Items.Select((subBlock) =>
+                {
+                    var subBlockRet = new WorldspaceSubBlock();
+                    subBlockRet.CopyFieldsFrom(subBlock, duplicateSubBlockCopyMask);
+                    subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey)));
+                    return subBlockRet;
+                }));
+                return blockRet;
+            }));
+        }
+
         static partial void FillBinary_OffsetLength_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             item.usingOffsetLength = true;

@@ -2032,6 +2032,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Model_CopyMask
     {
+        public Model_CopyMask()
+        {
+        }
+
+        public Model_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.File = defaultOn;
+            this.BoundRadius = defaultOn;
+            this.Hashes = defaultOn;
+        }
+
         #region Members
         public bool File;
         public bool BoundRadius;
@@ -2039,6 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Model_TranslationMask : ITranslationMask
     {
         #region Members

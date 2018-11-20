@@ -508,6 +508,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(SpellLeveled obj, SpellLeveled rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new SpellLeveled(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1597,7 +1607,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class SpellLeveled_CopyMask : Spell_CopyMask
     {
+        public SpellLeveled_CopyMask()
+        {
+        }
+
+        public SpellLeveled_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+        }
+
     }
+
     public class SpellLeveled_TranslationMask : Spell_TranslationMask
     {
         #region Members

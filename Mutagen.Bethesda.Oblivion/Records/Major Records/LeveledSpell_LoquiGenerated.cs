@@ -703,6 +703,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(LeveledSpell obj, LeveledSpell rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new LeveledSpell(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2362,6 +2372,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LeveledSpell_CopyMask : SpellAbstract_CopyMask
     {
+        public LeveledSpell_CopyMask()
+        {
+        }
+
+        public LeveledSpell_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.ChanceNone = defaultOn;
+            this.Flags = defaultOn;
+            this.Entries = new MaskItem<CopyOption, LeveledEntry_CopyMask<SpellAbstract_CopyMask>>(deepCopyOption, default);
+        }
+
         #region Members
         public bool ChanceNone;
         public bool Flags;
@@ -2369,6 +2390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LeveledSpell_TranslationMask : SpellAbstract_TranslationMask
     {
         #region Members

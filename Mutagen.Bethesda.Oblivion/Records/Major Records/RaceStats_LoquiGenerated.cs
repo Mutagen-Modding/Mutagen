@@ -2680,6 +2680,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RaceStats_CopyMask
     {
+        public RaceStats_CopyMask()
+        {
+        }
+
+        public RaceStats_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Strength = defaultOn;
+            this.Intelligence = defaultOn;
+            this.Willpower = defaultOn;
+            this.Agility = defaultOn;
+            this.Speed = defaultOn;
+            this.Endurance = defaultOn;
+            this.Personality = defaultOn;
+            this.Luck = defaultOn;
+        }
+
         #region Members
         public bool Strength;
         public bool Intelligence;
@@ -2692,6 +2708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class RaceStats_TranslationMask : ITranslationMask
     {
         #region Members

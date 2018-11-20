@@ -724,6 +724,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(PathGrid obj, PathGrid rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new PathGrid(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2747,6 +2757,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class PathGrid_CopyMask : MajorRecord_CopyMask
     {
+        public PathGrid_CopyMask()
+        {
+        }
+
+        public PathGrid_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.PointToPointConnections = new MaskItem<CopyOption, PathGridPoint_CopyMask>(deepCopyOption, default);
+            this.Unknown = defaultOn;
+            this.InterCellConnections = new MaskItem<CopyOption, InterCellPoint_CopyMask>(deepCopyOption, default);
+            this.PointToReferenceMappings = new MaskItem<CopyOption, PointToReferenceMapping_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public MaskItem<CopyOption, PathGridPoint_CopyMask> PointToPointConnections;
         public bool Unknown;
@@ -2755,6 +2777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class PathGrid_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

@@ -2227,6 +2227,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class MapMarker_CopyMask
     {
+        public MapMarker_CopyMask()
+        {
+        }
+
+        public MapMarker_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Flags = defaultOn;
+            this.Name = defaultOn;
+            this.Types = deepCopyOption;
+        }
+
         #region Members
         public bool Flags;
         public bool Name;
@@ -2234,6 +2245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class MapMarker_TranslationMask : ITranslationMask
     {
         #region Members

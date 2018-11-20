@@ -1772,12 +1772,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class EnableParent_CopyMask
     {
+        public EnableParent_CopyMask()
+        {
+        }
+
+        public EnableParent_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Reference = defaultOn;
+            this.Flags = defaultOn;
+        }
+
         #region Members
         public bool Reference;
         public bool Flags;
         #endregion
 
     }
+
     public class EnableParent_TranslationMask : ITranslationMask
     {
         #region Members

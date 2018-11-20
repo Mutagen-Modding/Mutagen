@@ -1079,6 +1079,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(SkillRecord obj, SkillRecord rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new SkillRecord(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3761,6 +3771,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class SkillRecord_CopyMask : MajorRecord_CopyMask
     {
+        public SkillRecord_CopyMask()
+        {
+        }
+
+        public SkillRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Skill = defaultOn;
+            this.Description = defaultOn;
+            this.Icon = defaultOn;
+            this.Action = defaultOn;
+            this.Attribute = defaultOn;
+            this.Specialization = defaultOn;
+            this.UseValueFirst = defaultOn;
+            this.UseValueSecond = defaultOn;
+            this.ApprenticeText = defaultOn;
+            this.JourneymanText = defaultOn;
+            this.ExpertText = defaultOn;
+            this.MasterText = defaultOn;
+        }
+
         #region Members
         public bool Skill;
         public bool Description;
@@ -3777,6 +3807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class SkillRecord_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

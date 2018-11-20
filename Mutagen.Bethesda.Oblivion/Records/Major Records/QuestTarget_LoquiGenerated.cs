@@ -2152,6 +2152,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class QuestTarget_CopyMask
     {
+        public QuestTarget_CopyMask()
+        {
+        }
+
+        public QuestTarget_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Target = defaultOn;
+            this.Flags = defaultOn;
+            this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Target;
         public bool Flags;
@@ -2159,6 +2170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class QuestTarget_TranslationMask : ITranslationMask
     {
         #region Members

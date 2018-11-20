@@ -670,6 +670,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(LoadScreen obj, LoadScreen rhs, Func<FormKey> getNextFormKey);
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        {
+            var ret = new LoadScreen(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            PostDuplicate(ret, this, getNextFormKey);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2290,6 +2300,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LoadScreen_CopyMask : MajorRecord_CopyMask
     {
+        public LoadScreen_CopyMask()
+        {
+        }
+
+        public LoadScreen_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Icon = defaultOn;
+            this.Description = defaultOn;
+            this.Locations = new MaskItem<CopyOption, LoadScreenLocation_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Icon;
         public bool Description;
@@ -2297,6 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LoadScreen_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

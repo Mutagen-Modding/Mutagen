@@ -1971,6 +1971,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class SoundDataExtended_CopyMask : SoundData_CopyMask
     {
+        public SoundDataExtended_CopyMask()
+        {
+        }
+
+        public SoundDataExtended_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.StaticAttenuation = defaultOn;
+            this.StopTime = defaultOn;
+            this.StartTime = defaultOn;
+        }
+
         #region Members
         public bool StaticAttenuation;
         public bool StopTime;
@@ -1978,6 +1989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class SoundDataExtended_TranslationMask : SoundData_TranslationMask
     {
         #region Members

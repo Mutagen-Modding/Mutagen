@@ -2346,6 +2346,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class ScriptEffect_CopyMask
     {
+        public ScriptEffect_CopyMask()
+        {
+        }
+
+        public ScriptEffect_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Script = defaultOn;
+            this.MagicSchool = defaultOn;
+            this.VisualEffect = defaultOn;
+            this.Flags = defaultOn;
+            this.Name = defaultOn;
+        }
+
         #region Members
         public bool Script;
         public bool MagicSchool;
@@ -2355,6 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class ScriptEffect_TranslationMask : ITranslationMask
     {
         #region Members
