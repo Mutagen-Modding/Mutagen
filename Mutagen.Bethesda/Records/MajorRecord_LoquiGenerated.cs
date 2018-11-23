@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda
             this.FormKey = formKey;
         }
 
-        public abstract MajorRecord Duplicate(Func<FormKey> getNextFormKey);
+        public abstract MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords = null);
         #endregion
 
         #region Binary Translation

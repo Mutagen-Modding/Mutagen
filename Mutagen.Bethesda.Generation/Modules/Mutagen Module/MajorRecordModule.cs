@@ -34,18 +34,21 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (obj.IsTopClass)
                 {
-                    fg.AppendLine($"public abstract MajorRecord Duplicate(Func<FormKey> getNextFormKey);");
+                    fg.AppendLine($"public abstract MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords = null);");
                 }
             }
             else
             {
-                fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.Name} rhs, Func<FormKey> getNextFormKey);");
-                fg.AppendLine($"public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)");
+                fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.Name} rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);");
+                fg.AppendLine();
+                
+                fg.AppendLine($"public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"var ret = new {obj.Name}(getNextFormKey());");
                     fg.AppendLine("ret.CopyFieldsFrom(this);");
-                    fg.AppendLine("PostDuplicate(ret, this, getNextFormKey);");
+                    fg.AppendLine("duplicatedRecords?.Add((ret, this.FormKey));");
+                    fg.AppendLine("PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);");
                     fg.AppendLine("return ret;");
                 }
                 fg.AppendLine();

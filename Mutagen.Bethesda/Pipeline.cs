@@ -49,7 +49,15 @@ namespace Mutagen.Bethesda
                 outMod.Links
                     .Select(l => l.FormKey)
                     .Where(fk => !fk.IsNull)
-                    .Select(s => s.ModKey)
+                    .Select(s =>
+                    {
+                        if (s.ModKey.Name == "DLLSource")
+                        {
+                            int wer = 23;
+                            wer++;
+                        }
+                        return s.ModKey;
+                    })
                     .Where(modKey => modKey != outModKey)
                     .Distinct()
                     .Select(modKey => new MasterReference()

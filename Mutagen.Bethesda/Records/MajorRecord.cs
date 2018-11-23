@@ -67,9 +67,9 @@ namespace Mutagen.Bethesda
             this.FormKey = formKey;
         }
 
-        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey)
+        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
         {
-            return this.Duplicate(getNextFormKey);
+            return this.Duplicate(getNextFormKey, duplicatedRecordTracker);
         }
     }
 

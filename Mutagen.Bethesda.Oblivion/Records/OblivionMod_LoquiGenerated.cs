@@ -3052,402 +3052,424 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void CopyInDuplicate(
+        public Dictionary<FormKey, MajorRecord> CopyInDuplicate(
             OblivionMod rhs,
             GroupMask mask = null)
         {
+            var duppedRecords = new List<(MajorRecord Record, FormKey OriginalFormKey)>();
             if (mask?.GameSettings ?? true)
             {
                 this.GameSettings.Items.AddOrUpdate(
                     rhs.GameSettings.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<GameSetting>());
             }
             if (mask?.Globals ?? true)
             {
                 this.Globals.Items.AddOrUpdate(
                     rhs.Globals.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Global>());
             }
             if (mask?.Classes ?? true)
             {
                 this.Classes.Items.AddOrUpdate(
                     rhs.Classes.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Class>());
             }
             if (mask?.Factions ?? true)
             {
                 this.Factions.Items.AddOrUpdate(
                     rhs.Factions.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Faction>());
             }
             if (mask?.Hairs ?? true)
             {
                 this.Hairs.Items.AddOrUpdate(
                     rhs.Hairs.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Hair>());
             }
             if (mask?.Eyes ?? true)
             {
                 this.Eyes.Items.AddOrUpdate(
                     rhs.Eyes.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Eye>());
             }
             if (mask?.Races ?? true)
             {
                 this.Races.Items.AddOrUpdate(
                     rhs.Races.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Race>());
             }
             if (mask?.Sounds ?? true)
             {
                 this.Sounds.Items.AddOrUpdate(
                     rhs.Sounds.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Sound>());
             }
             if (mask?.Skills ?? true)
             {
                 this.Skills.Items.AddOrUpdate(
                     rhs.Skills.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<SkillRecord>());
             }
             if (mask?.MagicEffects ?? true)
             {
                 this.MagicEffects.Items.AddOrUpdate(
                     rhs.MagicEffects.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<MagicEffect>());
             }
             if (mask?.Scripts ?? true)
             {
                 this.Scripts.Items.AddOrUpdate(
                     rhs.Scripts.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Script>());
             }
             if (mask?.LandTextures ?? true)
             {
                 this.LandTextures.Items.AddOrUpdate(
                     rhs.LandTextures.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LandTexture>());
             }
             if (mask?.Enchantments ?? true)
             {
                 this.Enchantments.Items.AddOrUpdate(
                     rhs.Enchantments.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Enchantment>());
             }
             if (mask?.Spells ?? true)
             {
                 this.Spells.Items.AddOrUpdate(
                     rhs.Spells.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<SpellUnleveled>());
             }
             if (mask?.Birthsigns ?? true)
             {
                 this.Birthsigns.Items.AddOrUpdate(
                     rhs.Birthsigns.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Birthsign>());
             }
             if (mask?.Activators ?? true)
             {
                 this.Activators.Items.AddOrUpdate(
                     rhs.Activators.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Activator>());
             }
             if (mask?.AlchemicalApparatus ?? true)
             {
                 this.AlchemicalApparatus.Items.AddOrUpdate(
                     rhs.AlchemicalApparatus.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<AlchemicalApparatus>());
             }
             if (mask?.Armors ?? true)
             {
                 this.Armors.Items.AddOrUpdate(
                     rhs.Armors.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Armor>());
             }
             if (mask?.Books ?? true)
             {
                 this.Books.Items.AddOrUpdate(
                     rhs.Books.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Book>());
             }
             if (mask?.Clothes ?? true)
             {
                 this.Clothes.Items.AddOrUpdate(
                     rhs.Clothes.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Clothing>());
             }
             if (mask?.Containers ?? true)
             {
                 this.Containers.Items.AddOrUpdate(
                     rhs.Containers.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Container>());
             }
             if (mask?.Doors ?? true)
             {
                 this.Doors.Items.AddOrUpdate(
                     rhs.Doors.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Door>());
             }
             if (mask?.Ingredients ?? true)
             {
                 this.Ingredients.Items.AddOrUpdate(
                     rhs.Ingredients.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Ingredient>());
             }
             if (mask?.Lights ?? true)
             {
                 this.Lights.Items.AddOrUpdate(
                     rhs.Lights.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Light>());
             }
             if (mask?.Miscellaneous ?? true)
             {
                 this.Miscellaneous.Items.AddOrUpdate(
                     rhs.Miscellaneous.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Miscellaneous>());
             }
             if (mask?.Statics ?? true)
             {
                 this.Statics.Items.AddOrUpdate(
                     rhs.Statics.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Static>());
             }
             if (mask?.Grasses ?? true)
             {
                 this.Grasses.Items.AddOrUpdate(
                     rhs.Grasses.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Grass>());
             }
             if (mask?.Trees ?? true)
             {
                 this.Trees.Items.AddOrUpdate(
                     rhs.Trees.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Tree>());
             }
             if (mask?.Flora ?? true)
             {
                 this.Flora.Items.AddOrUpdate(
                     rhs.Flora.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Flora>());
             }
             if (mask?.Furnature ?? true)
             {
                 this.Furnature.Items.AddOrUpdate(
                     rhs.Furnature.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Furnature>());
             }
             if (mask?.Weapons ?? true)
             {
                 this.Weapons.Items.AddOrUpdate(
                     rhs.Weapons.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Weapon>());
             }
             if (mask?.Ammo ?? true)
             {
                 this.Ammo.Items.AddOrUpdate(
                     rhs.Ammo.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Ammo>());
             }
             if (mask?.NPCs ?? true)
             {
                 this.NPCs.Items.AddOrUpdate(
                     rhs.NPCs.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<NPC>());
             }
             if (mask?.Creatures ?? true)
             {
                 this.Creatures.Items.AddOrUpdate(
                     rhs.Creatures.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Creature>());
             }
             if (mask?.LeveledCreatures ?? true)
             {
                 this.LeveledCreatures.Items.AddOrUpdate(
                     rhs.LeveledCreatures.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LeveledCreature>());
             }
             if (mask?.SoulGems ?? true)
             {
                 this.SoulGems.Items.AddOrUpdate(
                     rhs.SoulGems.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<SoulGem>());
             }
             if (mask?.Keys ?? true)
             {
                 this.Keys.Items.AddOrUpdate(
                     rhs.Keys.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Key>());
             }
             if (mask?.Potions ?? true)
             {
                 this.Potions.Items.AddOrUpdate(
                     rhs.Potions.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Potion>());
             }
             if (mask?.Subspaces ?? true)
             {
                 this.Subspaces.Items.AddOrUpdate(
                     rhs.Subspaces.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Subspace>());
             }
             if (mask?.SigilStones ?? true)
             {
                 this.SigilStones.Items.AddOrUpdate(
                     rhs.SigilStones.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<SigilStone>());
             }
             if (mask?.LeveledItems ?? true)
             {
                 this.LeveledItems.Items.AddOrUpdate(
                     rhs.LeveledItems.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LeveledItem>());
             }
             if (mask?.Weathers ?? true)
             {
                 this.Weathers.Items.AddOrUpdate(
                     rhs.Weathers.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Weather>());
             }
             if (mask?.Climates ?? true)
             {
                 this.Climates.Items.AddOrUpdate(
                     rhs.Climates.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Climate>());
             }
             if (mask?.Regions ?? true)
             {
                 this.Regions.Items.AddOrUpdate(
                     rhs.Regions.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Region>());
             }
             if (mask?.Cells ?? true)
             {
                 this.Cells.Items.AddRange(
                     rhs.Cells.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<CellBlock>());
             }
             if (mask?.Worldspaces ?? true)
             {
                 this.Worldspaces.Items.AddOrUpdate(
                     rhs.Worldspaces.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Worldspace>());
             }
             if (mask?.DialogTopics ?? true)
             {
                 this.DialogTopics.Items.AddOrUpdate(
                     rhs.DialogTopics.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<DialogTopic>());
             }
             if (mask?.Quests ?? true)
             {
                 this.Quests.Items.AddOrUpdate(
                     rhs.Quests.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Quest>());
             }
             if (mask?.IdleAnimations ?? true)
             {
                 this.IdleAnimations.Items.AddOrUpdate(
                     rhs.IdleAnimations.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<IdleAnimation>());
             }
             if (mask?.AIPackages ?? true)
             {
                 this.AIPackages.Items.AddOrUpdate(
                     rhs.AIPackages.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<AIPackage>());
             }
             if (mask?.CombatStyles ?? true)
             {
                 this.CombatStyles.Items.AddOrUpdate(
                     rhs.CombatStyles.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<CombatStyle>());
             }
             if (mask?.LoadScreens ?? true)
             {
                 this.LoadScreens.Items.AddOrUpdate(
                     rhs.LoadScreens.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LoadScreen>());
             }
             if (mask?.LeveledSpells ?? true)
             {
                 this.LeveledSpells.Items.AddOrUpdate(
                     rhs.LeveledSpells.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LeveledSpell>());
             }
             if (mask?.AnimatedObjects ?? true)
             {
                 this.AnimatedObjects.Items.AddOrUpdate(
                     rhs.AnimatedObjects.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<AnimatedObject>());
             }
             if (mask?.Waters ?? true)
             {
                 this.Waters.Items.AddOrUpdate(
                     rhs.Waters.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Water>());
             }
             if (mask?.EffectShaders ?? true)
             {
                 this.EffectShaders.Items.AddOrUpdate(
                     rhs.EffectShaders.Items
-                        .Select(i => i.Duplicate(this.GetNextFormKey))
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<EffectShader>());
             }
+            Dictionary<FormKey, MajorRecord> router = new Dictionary<FormKey, MajorRecord>();
+            router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, MajorRecord>(dup.OriginalFormKey, dup.Record)));
+            foreach (var rec in router.Values)
+            {
+                foreach (var link in rec.Links)
+                {
+                    if (link.FormKey.ModKey == rhs.ModKey
+                        && router.TryGetValue(link.FormKey, out var duppedRecord))
+                    {
+                        link.FormKey = duppedRecord.FormKey;
+                    }
+                }
+            }
+            foreach (var rec in router.Values)
+            {
+                foreach (var link in rec.Links)
+                {
+                    link.Link(modList: null, sourceMod: this);
+                }
+            }
+            return router;
         }
 
 

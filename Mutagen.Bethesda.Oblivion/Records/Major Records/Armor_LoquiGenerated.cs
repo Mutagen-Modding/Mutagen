@@ -673,12 +673,14 @@ namespace Mutagen.Bethesda.Oblivion
             this.FormKey = formKey;
         }
 
-        partial void PostDuplicate(Armor obj, Armor rhs, Func<FormKey> getNextFormKey);
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey)
+        partial void PostDuplicate(Armor obj, Armor rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Armor(getNextFormKey());
             ret.CopyFieldsFrom(this);
-            PostDuplicate(ret, this, getNextFormKey);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
             return ret;
         }
 

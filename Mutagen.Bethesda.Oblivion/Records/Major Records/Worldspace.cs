@@ -35,17 +35,17 @@ namespace Mutagen.Bethesda.Oblivion
             Items = new MaskItem<CopyOption, Cell_CopyMask>(CopyOption.Skip, null)
         };
 
-        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey)
+        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             if (rhs.Road_IsSet
                 && rhs.Road != null)
             {
-                obj.Road = (Road)rhs.Road.Duplicate(getNextFormKey);
+                obj.Road = (Road)rhs.Road.Duplicate(getNextFormKey, duplicatedRecords);
             }
             if (rhs.TopCell_IsSet
                 && rhs.TopCell != null)
             {
-                obj.TopCell = (Cell)rhs.TopCell.Duplicate(getNextFormKey);
+                obj.TopCell = (Cell)rhs.TopCell.Duplicate(getNextFormKey, duplicatedRecords);
             }
             obj.SubCells.SetTo(rhs.SubCells.Items.Select((block) =>
             {
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     var subBlockRet = new WorldspaceSubBlock();
                     subBlockRet.CopyFieldsFrom(subBlock, duplicateSubBlockCopyMask);
-                    subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey)));
+                    subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords)));
                     return subBlockRet;
                 }));
                 return blockRet;
