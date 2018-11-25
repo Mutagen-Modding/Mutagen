@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Relations.SelectMany(f => f.Links))
+            foreach (var item in Relations.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion
                     sourceMod,
                     cmds);
             }
-            foreach (var item in Relations)
+            foreach (var item in Relations.Items)
             {
                 item.Link(
                     modList,

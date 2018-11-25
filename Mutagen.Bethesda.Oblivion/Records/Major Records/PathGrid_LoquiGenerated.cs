@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in PointToReferenceMappings.SelectMany(f => f.Links))
+            foreach (var item in PointToReferenceMappings.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in PointToReferenceMappings)
+            foreach (var item in PointToReferenceMappings.Items)
             {
                 item.Link(
                     modList,

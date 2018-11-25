@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (loqui.TargetObjectGeneration.Name == "Group")
                         {
-                            fg.AppendLine($"this.{field.Name}.Items.AddOrUpdate(rhsMod.{field.Name}.Items);");
+                            fg.AppendLine($"this.{field.Name}.Items.AddOrUpdate(rhsMod.{field.Name}.Items.Items);");
                         }
                         else
                         {
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"this.{field.Name}.Items.{(loqui.TargetObjectGeneration.Name == "Group" ? "AddOrUpdate" : "AddRange")}(");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"rhs.{field.Name}.Items");
+                            fg.AppendLine($"rhs.{field.Name}.Items.Items");
                             using (new DepthWrapper(fg))
                             {
                                 fg.AppendLine($".Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))");

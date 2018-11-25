@@ -861,12 +861,12 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             yield return Script_Property;
-            foreach (var item in Stages.WhereCastable<QuestStage, ILinkContainer>()
+            foreach (var item in Stages.Items.WhereCastable<QuestStage, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
             }
-            foreach (var item in Targets.SelectMany(f => f.Links))
+            foreach (var item in Targets.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -887,14 +887,14 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Stages.WhereCastable<QuestStage, ILinkSubContainer>())
+            foreach (var item in Stages.Items.WhereCastable<QuestStage, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
                     sourceMod,
                     cmds);
             }
-            foreach (var item in Targets)
+            foreach (var item in Targets.Items)
             {
                 item.Link(
                     modList,

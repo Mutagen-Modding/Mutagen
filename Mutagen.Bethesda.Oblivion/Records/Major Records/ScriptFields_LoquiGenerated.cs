@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in References.WhereCastable<ScriptReference, ILinkContainer>()
+            foreach (var item in References.Items.WhereCastable<ScriptReference, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in References.WhereCastable<ScriptReference, ILinkSubContainer>())
+            foreach (var item in References.Items.WhereCastable<ScriptReference, ILinkSubContainer>())
             {
                 item.Link(
                     modList,

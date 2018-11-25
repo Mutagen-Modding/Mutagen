@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             yield return Script_Property;
-            foreach (var item in Effects.SelectMany(f => f.Links))
+            foreach (var item in Effects.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Effects)
+            foreach (var item in Effects.Items)
             {
                 item.Link(
                     modList,

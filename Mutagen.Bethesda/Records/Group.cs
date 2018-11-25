@@ -10,15 +10,31 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using Loqui.Internal;
 using System.Collections;
+using DynamicData;
 
 namespace Mutagen.Bethesda
 {
     public partial class Group<T> : IEnumerable<T>
-        where T : ILoquiObject<T>, IFormKey
+        where T : ILoquiObject<T>, IMajorRecord
     {
+        private Lazy<IObservableCache<T, string>> _editorIDCache;
+        public IObservableCache<T, string> ByEditorID => _editorIDCache.Value;
+
+        partial void CustomCtor()
+        {
+            _editorIDCache = new Lazy<IObservableCache<T, string>>(() =>
+            {
+                return this.Items.Connect()
+                    .RemoveKey()
+                    .AddKey(m => m.EditorID)
+                    .AsObservableCache();
+            },
+            isThreadSafe: true);
+        }
+
         static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame,
-            Group<T> item, 
+            Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -27,7 +43,7 @@ namespace Mutagen.Bethesda
 
         static partial void WriteBinary_ContainedRecordType_Custom(
             MutagenWriter writer,
-            Group<T> item, 
+            Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -44,7 +60,7 @@ namespace Mutagen.Bethesda
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _Items.GetEnumerator();
+            return _Items.Items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -70,7 +86,7 @@ namespace Mutagen.Bethesda
                 dir.Create();
                 List<Task<MajorRecord_ErrorMask>> writeTasks = new List<Task<MajorRecord_ErrorMask>>();
                 int counter = 0;
-                foreach (var item in group.Items)
+                foreach (var item in group)
                 {
                     writeTasks.Add(Task.Run(() =>
                     {

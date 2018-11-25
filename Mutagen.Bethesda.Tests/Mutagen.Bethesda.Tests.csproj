@@ -108,6 +108,10 @@
       <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
       <Name>CSharpExt</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj">
+      <Project>{a5513654-ad62-4cc9-968b-f5f8f72c4142}</Project>
+      <Name>DynamicData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj">
       <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
       <Name>Loqui</Name>

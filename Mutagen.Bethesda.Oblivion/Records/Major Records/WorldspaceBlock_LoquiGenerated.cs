@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.SelectMany(f => f.Links))
+            foreach (var item in Items.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in Items)
+            foreach (var item in Items.Items)
             {
                 item.Link(
                     modList,

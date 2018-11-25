@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -994,6 +994,10 @@
       <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
       <Name>CSharpExt</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj">
+      <Project>{6c3ece8b-4127-4356-b379-8068b08efb37}</Project>
+      <Name>DynamicData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj">
       <Project>{b5f2e08d-4a16-4b38-82e6-ad3bb2bbfb29}</Project>
       <Name>Loqui.Presentation</Name>
@@ -1008,11 +1012,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DynamicData">
-      <Version>6.6.1.2507</Version>
-    </PackageReference>
     <PackageReference Include="ReactiveUI">
-      <Version>9.2.2</Version>
+      <Version>9.3.5</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
       <Version>4.1.2</Version>

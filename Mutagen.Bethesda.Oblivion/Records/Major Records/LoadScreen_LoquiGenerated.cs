@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Locations.SelectMany(f => f.Links))
+            foreach (var item in Locations.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Locations)
+            foreach (var item in Locations.Items)
             {
                 item.Link(
                     modList,

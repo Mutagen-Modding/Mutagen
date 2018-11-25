@@ -1404,17 +1404,17 @@ namespace Mutagen.Bethesda.Oblivion
                     yield return item;
                 }
             }
-            foreach (var item in Persistent.WhereCastable<IPlaced, ILinkContainer>()
+            foreach (var item in Persistent.Items.WhereCastable<IPlaced, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
             }
-            foreach (var item in Temporary.WhereCastable<IPlaced, ILinkContainer>()
+            foreach (var item in Temporary.Items.WhereCastable<IPlaced, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
             }
-            foreach (var item in VisibleWhenDistant.WhereCastable<IPlaced, ILinkContainer>()
+            foreach (var item in VisibleWhenDistant.Items.WhereCastable<IPlaced, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -1469,21 +1469,21 @@ namespace Mutagen.Bethesda.Oblivion
                     sourceMod,
                     cmds);
             }
-            foreach (var item in Persistent.WhereCastable<IPlaced, ILinkSubContainer>())
+            foreach (var item in Persistent.Items.WhereCastable<IPlaced, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
                     sourceMod,
                     cmds);
             }
-            foreach (var item in Temporary.WhereCastable<IPlaced, ILinkSubContainer>())
+            foreach (var item in Temporary.Items.WhereCastable<IPlaced, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
                     sourceMod,
                     cmds);
             }
-            foreach (var item in VisibleWhenDistant.WhereCastable<IPlaced, ILinkSubContainer>())
+            foreach (var item in VisibleWhenDistant.Items.WhereCastable<IPlaced, ILinkSubContainer>())
             {
                 item.Link(
                     modList,

@@ -2,18 +2,26 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>52eefabc24fc9eed20d6d9dc3f621d622ad7a03f</Sha>
+         <Sha>aaa55b47f660580b474788f8d07730cb20954ee7</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-20-2018 00:19:43</CommitDate>
-         <Description>C# 7.3</Description>
+         <CommitDate>11-25-2018 14:51:06</CommitDate>
+         <Description>Swapped DynamicData from official nuget to forked repo.  Updated API to match IList and IReadOnlyDictionary changes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>56da82f89ee79387ee0e2bf933f73bacc2aef23e</Sha>
+         <Sha>60a820023faf3dcad5d35a6b4ee128105c15de67</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-21-2018 23:56:47</CommitDate>
-         <Description>Bugfix for copy fields unset for loqui objects</Description>
+         <CommitDate>11-25-2018 14:51:36</CommitDate>
+         <Description>DynamicData forked dependency.  API update</Description>
+         <Author>Justin Swanson</Author>
+      </RepoListing>
+      <RepoListing>
+         <Nickname>DynamicData</Nickname>
+         <Sha>2dd77c48003f4d53e7da680b2346280b2f52483e</Sha>
+         <Path>../DynamicData</Path>
+         <CommitDate>11-25-2018 14:51:01</CommitDate>
+         <Description>IList and IReadOnlyDictionary implementation</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

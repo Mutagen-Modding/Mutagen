@@ -160,6 +160,10 @@
       <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
       <Name>CSharpExt</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj">
+      <Project>{6c3ece8b-4127-4356-b379-8068b08efb37}</Project>
+      <Name>DynamicData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj">
       <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
       <Name>Loqui</Name>
@@ -169,11 +173,8 @@
     <PackageReference Include="DotNetZip">
       <Version>1.12.0</Version>
     </PackageReference>
-    <PackageReference Include="DynamicData">
-      <Version>6.6.1.2507</Version>
-    </PackageReference>
     <PackageReference Include="ReactiveUI">
-      <Version>9.2.2</Version>
+      <Version>9.3.5</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
       <Version>4.1.2</Version>

@@ -2674,7 +2674,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Items.SelectMany(f => f.Links))
+            foreach (var item in Items.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -2682,7 +2682,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Factions.SelectMany(f => f.Links))
+            foreach (var item in Factions.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -2694,7 +2694,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             yield return CombatStyle_Property;
             yield return InheritsSoundFrom_Property;
-            foreach (var item in Sounds.SelectMany(f => f.Links))
+            foreach (var item in Sounds.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -2711,7 +2711,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Items)
+            foreach (var item in Items.Items)
             {
                 item.Link(
                     modList,
@@ -2725,7 +2725,7 @@ namespace Mutagen.Bethesda.Oblivion
                     sourceMod,
                     cmds);
             }
-            foreach (var item in Factions)
+            foreach (var item in Factions.Items)
             {
                 item.Link(
                     modList,
@@ -2755,7 +2755,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Sounds)
+            foreach (var item in Sounds.Items)
             {
                 item.Link(
                     modList,

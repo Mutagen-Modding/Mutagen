@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.WhereCastable<T, ILinkContainer>()
+            foreach (var item in Items.Items.WhereCastable<T, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in Items.WhereCastable<T, ILinkSubContainer>())
+            foreach (var item in Items.Items.WhereCastable<T, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
