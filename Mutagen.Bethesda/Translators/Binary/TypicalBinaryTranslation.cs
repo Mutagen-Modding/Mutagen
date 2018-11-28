@@ -24,30 +24,27 @@ namespace Mutagen.Bethesda.Binary
             IHasItem<T> item,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-
-                if (Parse(
-                    frame,
-                    out T subItem,
-                    errorMask))
+                try
                 {
-                    item.Item = subItem;
+                    if (Parse(
+                        frame,
+                        out T subItem,
+                        errorMask))
+                    {
+                        item.Item = subItem;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -73,24 +70,22 @@ namespace Mutagen.Bethesda.Binary
             bool nullable,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer,
-                    item,
-                    header,
-                    nullable,
-                    errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer,
+                        item,
+                        header,
+                        nullable,
+                        errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -135,21 +130,19 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer,
-                    item);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer,
+                        item);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -194,18 +187,13 @@ namespace Mutagen.Bethesda.Binary
         {
             if (item == null)
             {
-                if (nullable)
-                {
-                    errorMask = null;
-                    return;
-                }
+                if (nullable) return;
                 errorMask.ReportExceptionOrThrow(
                     new ArgumentException("Non optional string was null."));
             }
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
                 Write(writer, item);
-                errorMask = null;
             }
         }
     }

@@ -20,29 +20,27 @@ namespace Mutagen.Bethesda.Binary
             IHasItem<T> item,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (Parse(
-                    frame,
-                    out T subItem,
-                    errorMask))
+                try
                 {
-                    item.Item = subItem;
+                    if (Parse(
+                        frame,
+                        out T subItem,
+                        errorMask))
+                    {
+                        item.Item = subItem;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -85,30 +83,28 @@ namespace Mutagen.Bethesda.Binary
             IHasItem<T> item,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (Parse(
-                    frame,
-                    length,
-                    out T subItem,
-                    errorMask))
+                try
                 {
-                    item.Item = subItem;
+                    if (Parse(
+                        frame,
+                        length,
+                        out T subItem,
+                        errorMask))
+                    {
+                        item.Item = subItem;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -208,25 +204,23 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             Action<MutagenWriter, T?> write = null)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer,
-                    item,
-                    header,
-                    nullable,
-                    errorMask,
-                    write: write);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer,
+                        item,
+                        header,
+                        nullable,
+                        errorMask,
+                        write: write);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -237,20 +231,18 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             Action<MutagenWriter, T?> write = null)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                write = write ?? WriteValue;
-                write(writer, item);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    write = write ?? WriteValue;
+                    write(writer, item);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 

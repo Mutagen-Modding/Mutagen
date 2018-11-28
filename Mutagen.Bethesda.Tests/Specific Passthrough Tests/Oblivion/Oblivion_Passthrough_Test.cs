@@ -39,7 +39,10 @@ namespace Mutagen.Bethesda.Tests
             {
                 var mod = OblivionMod.Create_Binary(
                     inputPath,
-                    modKey: this.ModKey);
+                    modKey: this.ModKey,
+                    errorMask: out var importMask);
+
+                Assert.False(importMask?.IsInError() ?? false);
 
                 foreach (var record in mod.MajorRecords.Items)
                 {
@@ -48,7 +51,12 @@ namespace Mutagen.Bethesda.Tests
                         record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
                     }
                 }
-                mod.Write_Binary(outputPathStraight, Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                mod.Write_Binary(
+                    outputPathStraight,
+                    Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    errorMask: out var outputMask);
+
+                Assert.False(outputMask?.IsInError() ?? false);
             }
 
             // Do Observable

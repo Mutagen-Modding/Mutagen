@@ -14,52 +14,48 @@ namespace Mutagen.Bethesda.Binary
         public void ParseInto<T>(MutagenFrame frame, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
+                try
                 {
-                    item.Set(val);
+                    if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
+                    {
+                        item.Set(val);
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
         public void ParseInto<T>(MutagenFrame frame, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
+                try
                 {
-                    item.Set(val);
+                    if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
+                    {
+                        item.Set(val);
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -88,22 +84,20 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer,
-                    item,
-                    errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer,
+                        item,
+                        errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -114,23 +108,21 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask)
             where T : MajorRecord
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (!item.HasBeenSet) return;
-                this.Write(
-                    writer,
-                    item,
-                    errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    if (!item.HasBeenSet) return;
+                    this.Write(
+                        writer,
+                        item,
+                        errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -143,24 +135,22 @@ namespace Mutagen.Bethesda.Binary
             bool nullable = false)
             where T : MajorRecord
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer,
-                    item.EDID,
-                    header,
-                    nullable: nullable,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer,
+                        item.EDID,
+                        header,
+                        nullable: nullable,
+                        errorMask: errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -173,25 +163,23 @@ namespace Mutagen.Bethesda.Binary
             bool nullable = false)
             where T : MajorRecord
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (!item.HasBeenSet) return;
-                this.Write(
-                    writer,
-                    item.EDID,
-                    header,
-                    nullable: nullable,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    if (!item.HasBeenSet) return;
+                    this.Write(
+                        writer,
+                        item.EDID,
+                        header,
+                        nullable: nullable,
+                        errorMask: errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 

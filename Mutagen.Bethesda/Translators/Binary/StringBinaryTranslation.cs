@@ -20,29 +20,27 @@ namespace Mutagen.Bethesda.Binary
             IHasItem<string> item,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (Parse(
-                    frame,
-                    out string subItem,
-                    errorMask))
+                try
                 {
-                    item.Item = subItem;
+                    if (Parse(
+                        frame,
+                        out string subItem,
+                        errorMask))
+                    {
+                        item.Item = subItem;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -65,30 +63,28 @@ namespace Mutagen.Bethesda.Binary
             bool parseWhole,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (Parse(
-                    frame,
-                    parseWhole,
-                    out string subItem,
-                    errorMask))
+                try
                 {
-                    item.Item = subItem;
+                    if (Parse(
+                        frame,
+                        parseWhole,
+                        out string subItem,
+                        errorMask))
+                    {
+                        item.Item = subItem;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -141,7 +137,6 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             string item,
-            ErrorMaskBuilder errorMask,
             bool nullTerminate)
         {
             writer.Write(item);
@@ -153,10 +148,17 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
+            string item)
+        {
+            Write(writer, item, nullTerminate: true);
+        }
+
+        public void Write(
+            MutagenWriter writer,
             string item,
             ErrorMaskBuilder errorMask)
         {
-            Write(writer, item, errorMask, nullTerminate: true);
+            Write(writer, item, nullTerminate: true);
         }
 
         public void Write(
@@ -166,23 +168,20 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer,
-                    item,
-                    errorMask,
-                    nullTerminate: nullTerminate);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer,
+                        item,
+                        nullTerminate: nullTerminate);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -193,23 +192,20 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer,
-                    item.Item,
-                    errorMask,
-                    nullTerminate: nullTerminate);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer,
+                        item.Item,
+                        nullTerminate: nullTerminate);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -220,12 +216,22 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                errorMask,
-                nullTerminate: nullTerminate);
+            using (errorMask?.PushIndex(fieldIndex))
+            {
+                try
+                {
+                    if (!item.HasBeenSet) return;
+                    this.Write(
+                        writer,
+                        item.Item,
+                        nullTerminate: nullTerminate);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+            }
         }
 
         public void Write(
@@ -251,7 +257,6 @@ namespace Mutagen.Bethesda.Binary
                 this.Write(
                     writer,
                     item,
-                    errorMask,
                     nullTerminate: nullTerminate);
             }
         }
@@ -265,25 +270,23 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
-            try
+            using (errorMask?.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer,
-                    item,
-                    header,
-                    nullable,
-                    errorMask,
-                    nullTerminate: nullTerminate);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer,
+                        item,
+                        header,
+                        nullable,
+                        errorMask,
+                        nullTerminate: nullTerminate);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -333,7 +336,7 @@ namespace Mutagen.Bethesda.Binary
                 errorMask.ReportExceptionOrThrow(
                     new ArgumentException($"Expected length was {item.Length}, but was passed {length}."));
             }
-            Write(writer, item, errorMask);
+            Write(writer, item);
         }
     }
 }

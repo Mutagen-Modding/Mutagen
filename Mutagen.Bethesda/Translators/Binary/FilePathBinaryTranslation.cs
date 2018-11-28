@@ -20,29 +20,27 @@ namespace Mutagen.Bethesda.Binary
             IHasItem<FilePath> item,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (Parse(
-                    frame,
-                    out FilePath subItem,
-                    errorMask))
+                try
                 {
-                    item.Item = subItem;
+                    if (Parse(
+                        frame,
+                        out FilePath subItem,
+                        errorMask))
+                    {
+                        item.Item = subItem;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -103,24 +101,22 @@ namespace Mutagen.Bethesda.Binary
             bool nullable,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer,
-                    item,
-                    header,
-                    nullable,
-                    errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer,
+                        item,
+                        header,
+                        nullable,
+                        errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 

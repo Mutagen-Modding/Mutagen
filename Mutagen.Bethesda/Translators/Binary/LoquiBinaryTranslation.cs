@@ -66,30 +66,28 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (Parse(
-                    frame,
-                    item: out T subItem,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask))
+                try
                 {
-                    item.Item = subItem;
+                    if (Parse(
+                        frame,
+                        item: out T subItem,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask))
+                    {
+                        item.Item = subItem;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -115,25 +113,24 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                return Parse(
-                    frame: frame,
-                    item: out item,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-                item = default;
-                return false;
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    return Parse(
+                        frame: frame,
+                        item: out item,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                    item = default;
+                    return false;
+                }
             }
         }
 
@@ -145,31 +142,29 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (Parse(
-                    frame,
-                    out T subItem,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: recordTypeConverter))
+                try
                 {
-                    item.Item = subItem;
+                    if (Parse(
+                        frame,
+                        out T subItem,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: recordTypeConverter))
+                    {
+                        item.Item = subItem;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -252,24 +247,22 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                WRITE.Value(
-                    writer: writer,
-                    item: item,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    WRITE.Value(
+                        writer: writer,
+                        item: item,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: recordTypeConverter,
+                        errorMask: errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -393,24 +386,22 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter recordTypeConverter = null)
             where T : ILoquiObjectGetter
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                GetWriteFunc<T>(item.GetType())(
-                    writer: writer,
-                    item: item,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    GetWriteFunc<T>(item.GetType())(
+                        writer: writer,
+                        item: item,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: recordTypeConverter,
+                        errorMask: errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
             }
         }
 
@@ -464,30 +455,28 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask)
             where T : ILoquiObjectGetter, B
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (loquiTrans.Parse(
-                    frame,
-                    out T subItem,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask))
+                try
                 {
-                    item.Item = subItem;
+                    if (loquiTrans.Parse(
+                        frame,
+                        out T subItem,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask))
+                    {
+                        item.Item = subItem;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 

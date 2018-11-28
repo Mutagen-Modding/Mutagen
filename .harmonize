@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>4ec08b446aad45a264f97216debed14312f29b54</Sha>
+         <Sha>1309238eb5070bb4d6019b98ab66acebb407bf24</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-13-2018 17:01:08</CommitDate>
-         <Description>Merge branch 'master' of https://github.com/Noggog/CSharpExt</Description>
+         <CommitDate>11-16-2018 16:39:09</CommitDate>
+         <Description>7.3 C#</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>8105f7aa20e23fe1af6135f7095abfc86f5047ba</Sha>
+         <Sha>a2513f399c656ce16f9e1a388e7479e86e93a821</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-12-2018 21:41:26</CommitDate>
-         <Description>CopyFieldsFrom trickledown fix for generic call</Description>
+         <CommitDate>11-28-2018 08:16:02</CommitDate>
+         <Description>ErrorMask disposable usage</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

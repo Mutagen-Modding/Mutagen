@@ -17,108 +17,96 @@ namespace Mutagen.Bethesda
         public void ParseInto<T>(XElement root, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
             where T : IMajorRecord
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-
-                if (Parse(root, out FormKey val, errorMask))
+                try
                 {
-                    item.Set(val);
+                    if (Parse(root, out FormKey val, errorMask))
+                    {
+                        item.Set(val);
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
         public void ParseInto<T>(XElement root, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
             where T : IMajorRecord
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-
-                if (Parse(root, out FormKey val, errorMask))
+                try
                 {
-                    item.Set(val);
+                    if (Parse(root, out FormKey val, errorMask))
+                    {
+                        item.Set(val);
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
         public void ParseInto<T>(XElement root, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecord
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-
-                if (Parse(root, out FormKey val, errorMask))
+                try
                 {
-                    item.Set(val);
+                    if (Parse(root, out FormKey val, errorMask))
+                    {
+                        item.Set(val);
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
         public void ParseInto<T>(XElement root, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecord
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-
-                if (Parse(root, out FormKey val, errorMask))
+                try
                 {
-                    item.Set(val);
+                    if (Parse(root, out FormKey val, errorMask))
+                    {
+                        item.Set(val);
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 

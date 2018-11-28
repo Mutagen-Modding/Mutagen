@@ -37,34 +37,32 @@ namespace Mutagen.Bethesda.Binary
             int i = 0;
             while ((parseIndefinitely || !frame.Complete) && !frame.Reader.Complete)
             {
-                try
+                using (errorMask.PushIndex(i++))
                 {
-                    errorMask?.PushIndex(i++);
-                    if (!HeaderTranslation.TryGetRecordType(safeFrame.Reader, lengthLength, triggeringRecord)) break;
-                    if (!IsLoqui)
+                    try
                     {
-                        safeFrame.Position += Constants.SUBRECORD_LENGTH;
-                    }
-                    var startingPos = frame.Position;
-                    if (transl(safeFrame, out var subItem, errorMask))
-                    {
-                        ret.Add(subItem);
-                    }
+                        if (!HeaderTranslation.TryGetRecordType(safeFrame.Reader, lengthLength, triggeringRecord)) break;
+                        if (!IsLoqui)
+                        {
+                            safeFrame.Position += Constants.SUBRECORD_LENGTH;
+                        }
+                        var startingPos = frame.Position;
+                        if (transl(safeFrame, out var subItem, errorMask))
+                        {
+                            ret.Add(subItem);
+                        }
 
-                    if (frame.Position == startingPos)
-                    {
-                        frame.Position += Constants.SUBRECORD_LENGTH;
-                        throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
+                        if (frame.Position == startingPos)
+                        {
+                            frame.Position += Constants.SUBRECORD_LENGTH;
+                            throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
+                        }
                     }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
                 }
             }
             item = ret;
@@ -81,33 +79,31 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseDelegate<T> transl,
             bool parseIndefinitely = false)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (ParseRepeatedItem(
-                    frame,
-                    out var enumer,
-                    triggeringRecord,
-                    lengthLength,
-                    errorMask: errorMask,
-                    transl: transl,
-                    parseIndefinitely: parseIndefinitely))
+                try
                 {
-                    item.SetTo(enumer);
+                    if (ParseRepeatedItem(
+                        frame,
+                        out var enumer,
+                        triggeringRecord,
+                        lengthLength,
+                        errorMask: errorMask,
+                        transl: transl,
+                        parseIndefinitely: parseIndefinitely))
+                    {
+                        item.SetTo(enumer);
+                    }
+                    else
+                    {
+                        item.Clear();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Clear();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -149,34 +145,32 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!frame.Complete)
             {
-                try
+                using (errorMask.PushIndex(i++))
                 {
-                    errorMask?.PushIndex(i++);
-                    var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
-                    if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
-                    if (!IsLoqui)
+                    try
                     {
-                        safeFrame.Position += Constants.SUBRECORD_LENGTH;
+                        var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                        if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+                        if (!IsLoqui)
+                        {
+                            safeFrame.Position += Constants.SUBRECORD_LENGTH;
+                        }
+                        var startingPos = frame.Position;
+                        if (transl(safeFrame, nextRecord, out var subIitem, errorMask))
+                        {
+                            ret.Add(subIitem);
+                        }
+                        if (frame.Position == startingPos)
+                        {
+                            errorMask.ReportExceptionOrThrow(
+                                new ArgumentException($"Parsed item on the list consumed no data: {subIitem}"));
+                        }
                     }
-                    var startingPos = frame.Position;
-                    if (transl(safeFrame, nextRecord, out var subIitem, errorMask))
+                    catch (Exception ex)
+                    when (errorMask != null)
                     {
-                        ret.Add(subIitem);
+                        errorMask.ReportException(ex);
                     }
-                    if (frame.Position == startingPos)
-                    {
-                        errorMask.ReportExceptionOrThrow(
-                            new ArgumentException($"Parsed item on the list consumed no data: {subIitem}"));
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
                 }
             }
             enumer = ret;
@@ -212,32 +206,30 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord = null)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (ParseRepeatedItem(
-                    frame,
-                    out var enumer,
-                    lengthLength,
-                    errorMask: errorMask,
-                    transl: transl,
-                    triggeringRecord: triggeringRecord))
+                try
                 {
-                    item.SetTo(enumer);
+                    if (ParseRepeatedItem(
+                        frame,
+                        out var enumer,
+                        lengthLength,
+                        errorMask: errorMask,
+                        transl: transl,
+                        triggeringRecord: triggeringRecord))
+                    {
+                        item.SetTo(enumer);
+                    }
+                    else
+                    {
+                        item.Clear();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Clear();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -278,22 +270,20 @@ namespace Mutagen.Bethesda.Binary
                 int i = 0;
                 while (!safeFrame.Complete)
                 {
-                    try
+                    using (errorMask.PushIndex(i++))
                     {
-                        errorMask?.PushIndex(i++);
-                        if (transl(safeFrame, out var subItem, errorMask))
+                        try
                         {
-                            ret.Add(subItem);
+                            if (transl(safeFrame, out var subItem, errorMask))
+                            {
+                                ret.Add(subItem);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
                     }
                 }
                 enumer = ret;
@@ -309,31 +299,29 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             BinarySubParseDelegate<T> transl)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (ParseRepeatedItem(
-                    frame,
-                    out var enumer,
-                    lengthLength,
-                    errorMask: errorMask,
-                    transl: transl))
+                try
                 {
-                    item.SetTo(enumer);
+                    if (ParseRepeatedItem(
+                        frame,
+                        out var enumer,
+                        lengthLength,
+                        errorMask: errorMask,
+                        transl: transl))
+                    {
+                        item.SetTo(enumer);
+                    }
+                    else
+                    {
+                        item.Clear();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Clear();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -369,22 +357,20 @@ namespace Mutagen.Bethesda.Binary
             var safeFrame = frame.Spawn(snapToFinalPosition: false);
             for (int i = 0; i < amount; i++)
             {
-                try
+                using (errorMask.PushIndex(i))
                 {
-                    errorMask?.PushIndex(i);
-                    if (transl(safeFrame, out var subItem, errorMask))
+                    try
                     {
-                        ret.Add(subItem);
+                        if (transl(safeFrame, out var subItem, errorMask))
+                        {
+                            ret.Add(subItem);
+                        }
                     }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
                 }
             }
             enumer = ret;
@@ -399,31 +385,29 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             BinarySubParseDelegate<T> transl)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (ParseRepeatedItem(
-                    frame,
-                    out var enumer,
-                    amount: amount,
-                    errorMask: errorMask,
-                    transl: transl))
+                try
                 {
-                    item.SetTo(enumer);
+                    if (ParseRepeatedItem(
+                        frame,
+                        out var enumer,
+                        amount: amount,
+                        errorMask: errorMask,
+                        transl: transl))
+                    {
+                        item.SetTo(enumer);
+                    }
+                    else
+                    {
+                        item.Clear();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Clear();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -458,32 +442,30 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             BinarySubParseDelegate<T> transl)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (ParseRepeatedItem(
-                    frame,
-                    out var enumer,
-                    triggeringRecord,
-                    lengthLength,
-                    errorMask: errorMask,
-                    transl: transl))
+                try
                 {
-                    item.SetTo(enumer);
+                    if (ParseRepeatedItem(
+                        frame,
+                        out var enumer,
+                        triggeringRecord,
+                        lengthLength,
+                        errorMask: errorMask,
+                        transl: transl))
+                    {
+                        item.SetTo(enumer);
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unset();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -496,32 +478,30 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord = null)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                if (ParseRepeatedItem(
-                    frame,
-                    out var enumer,
-                    lengthLength,
-                    errorMask: errorMask,
-                    transl: transl,
-                    triggeringRecord: triggeringRecord))
+                try
                 {
-                    item.SetTo(enumer);
+                    if (ParseRepeatedItem(
+                        frame,
+                        out var enumer,
+                        lengthLength,
+                        errorMask: errorMask,
+                        transl: transl,
+                        triggeringRecord: triggeringRecord))
+                    {
+                        item.SetTo(enumer);
+                    }
+                    else
+                    {
+                        item.Clear();
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Clear();
+                    errorMask.ReportException(ex);
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
         #endregion
@@ -567,19 +547,17 @@ namespace Mutagen.Bethesda.Binary
             int i = 0;
             foreach (var item in items)
             {
-                try
+                using (errorMask.PushIndex(i++))
                 {
-                    errorMask?.PushIndex(i++);
-                    this.WriteSingleItem(writer, transl, item, errorMask);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
+                    try
+                    {
+                        this.WriteSingleItem(writer, transl, item, errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
                 }
             }
         }
@@ -606,24 +584,22 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             BinarySubWriteDelegate<T> transl)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.WriteRecordList(
-                    writer: writer,
-                    items: items,
-                    recordType: recordType,
-                    errorMask: errorMask,
-                    transl: transl);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask?.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.WriteRecordList(
+                        writer: writer,
+                        items: items,
+                        recordType: recordType,
+                        errorMask: errorMask,
+                        transl: transl);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask?.ReportException(ex);
+                }
             }
         }
 
@@ -635,24 +611,22 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             BinarySubWriteDelegate<T> transl)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.WriteListOfRecords(
-                    writer: writer,
-                    items: items,
-                    recordType: recordType,
-                    errorMask: errorMask,
-                    transl: transl);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask?.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.WriteListOfRecords(
+                        writer: writer,
+                        items: items,
+                        recordType: recordType,
+                        errorMask: errorMask,
+                        transl: transl);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask?.ReportException(ex);
+                }
             }
         }
 
@@ -663,23 +637,21 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             BinarySubWriteDelegate<T> transl)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.Write(
-                    writer: writer,
-                    items: items,
-                    errorMask: errorMask,
-                    transl: transl);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask?.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.Write(
+                        writer: writer,
+                        items: items,
+                        errorMask: errorMask,
+                        transl: transl);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask?.ReportException(ex);
+                }
             }
         }
 
@@ -691,24 +663,22 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             BinarySubWriteDelegate<T> transl)
         {
-            try
+            using (errorMask.PushIndex(fieldIndex))
             {
-                errorMask?.PushIndex(fieldIndex);
-                this.WriteRecordList(
-                    writer: writer,
-                    items: items,
-                    recordType: recordType,
-                    errorMask: errorMask,
-                    transl: transl);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask?.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                try
+                {
+                    this.WriteRecordList(
+                        writer: writer,
+                        items: items,
+                        recordType: recordType,
+                        errorMask: errorMask,
+                        transl: transl);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask?.ReportException(ex);
+                }
             }
         }
 
@@ -724,19 +694,17 @@ namespace Mutagen.Bethesda.Binary
                 int i = 0;
                 foreach (var item in items.Items)
                 {
-                    try
+                    using (errorMask.PushIndex(i++))
                     {
-                        errorMask?.PushIndex(i++);
-                        this.WriteSingleItem(writer, transl, item, errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        try
+                        {
+                            this.WriteSingleItem(writer, transl, item, errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
                     }
                 }
             }
@@ -752,29 +720,27 @@ namespace Mutagen.Bethesda.Binary
             int i = 0;
             foreach (var item in items)
             {
-                try
+                using (errorMask.PushIndex(i++))
                 {
-                    errorMask?.PushIndex(i++);
-                    if (IsLoqui)
+                    try
                     {
-                        this.WriteSingleItem(writer, transl, item, errorMask);
-                    }
-                    else
-                    {
-                        using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                        if (IsLoqui)
                         {
                             this.WriteSingleItem(writer, transl, item, errorMask);
                         }
+                        else
+                        {
+                            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                            {
+                                this.WriteSingleItem(writer, transl, item, errorMask);
+                            }
+                        }
                     }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
                 }
             }
         }
